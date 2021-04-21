@@ -1,0 +1,11 @@
+@import "mixins";
+
+.link {
+  @include flex;
+  gap: 4px;
+  color: var(--text);
+
+  &:hover {
+    text-decoration: none;
+  }
+}

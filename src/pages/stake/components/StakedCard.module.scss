@@ -1,0 +1,10 @@
+.amount {
+  font-size: 28px;
+  font-weight: var(--bold);
+}
+
+.small,
+.value {
+  color: var(--text-muted);
+  font-size: var(--font-size-small);
+}

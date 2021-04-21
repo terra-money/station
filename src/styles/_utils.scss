@@ -1,0 +1,50 @@
+/* color */
+$colors: (
+  info: var(--info),
+  success: var(--success),
+  warning: var(--warning),
+  danger: var(--danger),
+);
+
+@each $color, $value in $colors {
+  .#{$color} {
+    color: $value;
+  }
+
+  .bg-#{$color} {
+    background: $value;
+  }
+
+  .border-#{$color} {
+    border: var(--border-width) solid $value;
+  }
+}
+
+.fill-primary-dark {
+  fill: hsl(
+    var(--button-primary-bg-h),
+    var(--button-primary-bg-s),
+    calc(var(--button-primary-bg-l) - 5%)
+  );
+}
+
+.fill-primary-light {
+  fill: hsl(
+    var(--button-primary-bg-h),
+    var(--button-primary-bg-s),
+    calc(var(--button-primary-bg-l) + 20%)
+  );
+}
+
+/* text */
+.center {
+  text-align: center;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.small {
+  font-size: var(--font-size-small);
+}

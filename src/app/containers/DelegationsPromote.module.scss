@@ -1,0 +1,23 @@
+@import "mixins";
+
+.vertical {
+  text-align: center;
+  display: grid;
+  gap: 12px;
+
+  .main {
+    display: grid;
+    gap: 12px;
+  }
+}
+
+.horizontal {
+  text-align: left;
+  display: flex;
+  gap: 16px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: var(--bold);
+}

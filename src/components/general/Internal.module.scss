@@ -1,0 +1,25 @@
+@import "mixins";
+
+.item {
+  @include inline-flex;
+
+  color: var(--button-primary-bg);
+  font-size: var(--font-size-small);
+  font-weight: var(--bold);
+  gap: 2px;
+  white-space: nowrap;
+}
+
+.icon {
+  @include flex;
+  font-size: 18px;
+}
+
+.disabled {
+  @include disabled;
+}
+
+.chevron {
+  @include flex;
+  font-size: 16px;
+}

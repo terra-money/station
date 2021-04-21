@@ -1,0 +1,28 @@
+@import "mixins";
+
+.wrapper {
+  --gutter: 4px;
+
+  &.menu {
+    --gutter: 10px;
+  }
+
+  margin: calc(-1 * var(--gutter));
+}
+
+/* item */
+.icon {
+  display: flex;
+  opacity: 0.75;
+  padding: var(--gutter);
+  transition: opacity var(--transition);
+  fill: var(--text);
+
+  .menu & {
+    fill: var(--menu-text);
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+}

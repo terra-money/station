@@ -1,0 +1,15 @@
+.radio {
+  display: inline-block;
+  border-radius: 11px;
+  cursor: pointer;
+  font-size: var(--font-size-small);
+  font-weight: var(--bold);
+  line-height: 22px;
+  padding: 0 15px;
+  user-select: none;
+
+  &.checked {
+    background-color: var(--button-primary-bg);
+    color: var(--button-primary-text);
+  }
+}

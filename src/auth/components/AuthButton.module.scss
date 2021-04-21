@@ -1,0 +1,15 @@
+.button {
+  border: var(--border-width) solid var(--card-border);
+  border-radius: var(--border-radius);
+  font-weight: var(--normal);
+  transition: all var(--transition);
+
+  &:hover,
+  &.active {
+    background: var(--bg-muted);
+  }
+
+  &.active {
+    border-color: var(--button-primary-bg);
+  }
+}

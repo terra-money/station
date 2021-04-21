@@ -1,0 +1,15 @@
+@import "mixins";
+
+.moniker {
+  @include truncate;
+  color: var(--text);
+  font-weight: var(--bold);
+  max-width: 12rem;
+}
+
+.muted {
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: var(--bold);
+  text-transform: uppercase;
+}

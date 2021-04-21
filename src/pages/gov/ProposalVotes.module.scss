@@ -1,0 +1,41 @@
+@import "mixins";
+
+.total {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 4px;
+  font-size: var(--font-size-small);
+}
+
+.list {
+  flex: 1;
+  gap: 24px;
+
+  @include desktop {
+    display: flex;
+  }
+
+  @include mobile {
+    display: grid;
+    grid-template: repeat(2, 1fr) / repeat(2, 1fr);
+  }
+}
+
+.item {
+  flex: 1;
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-small);
+  padding: 16px;
+
+  .title {
+    margin-bottom: 2px;
+  }
+
+  .ratio {
+    font-size: 16px;
+  }
+}
+
+.end {
+  margin-top: 20px;
+}

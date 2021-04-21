@@ -1,0 +1,33 @@
+@import "mixins";
+
+.item {
+  --padding: 12px 16px;
+  @include flex(flex-start, stretch);
+  border: 1px solid var(--card-border);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-small);
+  overflow: hidden;
+  transition: background var(--transition);
+}
+
+.button,
+.delete {
+  transition: background var(--transition);
+
+  &:hover {
+    background: var(--bg);
+  }
+}
+
+.button {
+  flex: 1;
+  padding: var(--padding);
+}
+
+.delete {
+  @include flex;
+  flex: none;
+  border-left: 1px solid var(--card-border);
+  color: var(--text);
+  padding: var(--padding);
+}

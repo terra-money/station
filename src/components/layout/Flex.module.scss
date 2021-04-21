@@ -1,0 +1,22 @@
+@import "mixins";
+
+.flex {
+  @include flex;
+}
+
+.column {
+  @include flex-column;
+}
+
+.inline {
+  @include inline-flex;
+}
+
+/* align */
+.start {
+  justify-content: flex-start;
+}
+
+.wrap {
+  flex-wrap: wrap;
+}

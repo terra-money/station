@@ -1,0 +1,24 @@
+.group {
+  border: solid 1px var(--card-border);
+  border-radius: 12px;
+  font-size: 11px;
+  overflow: hidden;
+}
+
+.item {
+  flex: 1;
+  color: var(--text-muted);
+  font-weight: var(--normal);
+  text-align: center;
+  height: 24px;
+
+  &:not(:first-child) {
+    border-left: 1px solid var(--card-border);
+  }
+}
+
+.active {
+  background: var(--card-border);
+  color: var(--text);
+  font-weight: var(--bold);
+}

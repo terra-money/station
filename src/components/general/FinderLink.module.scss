@@ -1,0 +1,6 @@
+@import "mixins";
+
+.link {
+  @include inline-flex;
+  gap: 2px;
+}

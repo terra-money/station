@@ -1,0 +1,10 @@
+.text {
+  font-weight: var(--bold);
+  padding: 4px;
+}
+
+.warning {
+  background: var(--warning);
+  color: white;
+  text-transform: uppercase;
+}

@@ -1,0 +1,33 @@
+@import "mixins";
+
+.component {
+  font-size: 11px;
+}
+
+.indicator {
+  border-radius: 50%;
+  width: 8px;
+  height: 8px;
+}
+
+.success {
+  background: var(--success);
+}
+
+.loading {
+  background: var(--warning);
+}
+
+.text,
+.link {
+  color: var(--menu-text);
+  opacity: 0.75;
+}
+
+.link {
+  transition: hover var(--transition);
+
+  &:hover {
+    opacity: 1;
+  }
+}

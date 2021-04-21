@@ -1,0 +1,6 @@
+.grid {
+  display: grid;
+  gap: 28px;
+  grid-template-rows: 1fr auto;
+  height: 100%;
+}

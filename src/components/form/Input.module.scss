@@ -1,0 +1,47 @@
+@import "mixins";
+@import "forms";
+
+.wrapper {
+  @include flex;
+  align-items: stretch;
+}
+
+.input {
+  @include border;
+  @include size;
+  flex: 1;
+}
+
+.symbol {
+  @include border;
+  @include size;
+}
+
+.before {
+  @include border;
+  border-right: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  padding: 0 12px;
+}
+
+.after {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+/* search */
+.search {
+  position: relative;
+
+  .input {
+    padding-left: 50px;
+  }
+
+  .icon {
+    top: 50%;
+    left: 16px;
+    position: absolute;
+    transform: translate(0, -50%);
+  }
+}

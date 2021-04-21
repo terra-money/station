@@ -1,0 +1,217 @@
+{
+  "Blockchain": {
+    "Mnemonic": "니모닉",
+    "Address": "주소",
+    "Wallet": "지갑",
+    "Wallets": "지갑",
+    "Coins": "코인",
+    "Tokens": "토큰",
+    "Balance": "잔고",
+    "Tx hash": "트랜잭션 해시",
+    "Gas": "가스",
+    "Tax": "세금",
+    "Fee": "수수료",
+    "Memo": "메모",
+    "decimals": "소수점",
+    "Buy": "구매",
+    "Exchanges": "거래소",
+    "Fiat": "",
+    "APY": "연간 수익률"
+  },
+  "Form": {
+    "Amount": "금액",
+    "Recipient": "받는 사람",
+    "Name": "이름",
+    "optional": "선택",
+    "Submit": "제출",
+    "Confirm": "확인",
+    "Reset": "재설정"
+  },
+  "Validate": {
+    "{{label}} is required": "{{label}}이(가) 필요합니다",
+    "{{label}} is not defined": "{{label}}이(가) 정의되지 않았습니다",
+    "{{label}} is not available": "{{label}}을(를) 사용할 수 없습니다",
+    "{{label}} is not supported": "{{label}}은(는) 지원되지 않습니다",
+    "{{label}} is invalid": "{{label}}이(가) 잘못되었습니다",
+    "{{label}} already exists": "{{label}}이(가) 이미 존재합니다",
+    "{{label}} does not exist": "{{label}}이(가) 존재하지 않습니다",
+    "{{label}} must be longer than {{length}} characters": "{{label}}은(는) {{length}}자보다 길어야 합니다",
+    "Already exists": "이미 존재함",
+    "Invalid": "잘못됨",
+    "Invalid {{label}}": "잘못된 {{label}}"
+  },
+  "Loading": {
+    "Initializing app...": "실행하는 중...",
+    "Loading...": "로딩 중...",
+    "Load more": "더 가져오기",
+    "Loading more...": "더 가져오는 중...",
+    "Nothing more to load": "더 이상 가져올 항목이 없습니다",
+    "Simulating...": "시뮬레이션...",
+    "Broadcasting a tx...": "다른 트랜잭션을 보내는 중...",
+    "Broadcasting transaction": "트랜잭션 보내는 중",
+    "Queued": "대기 중"
+  },
+  "Success": {
+    "Success!": "성공!"
+  },
+  "Failure": {
+    "Failed": "실패",
+    "Simulation failed": "시뮬레이션 실패",
+    "User denied": "사용자가 거부함",
+    "Failed to create tx": "트랜잭션 생성 실패",
+    "Tx failed": "트랜잭션 실패"
+  },
+  "Application": {
+    "Go back": "돌아가기",
+    "View": "보기",
+    "Show all": "모두 표시",
+    "Copy": "복사",
+    "Copied": "복사함",
+    "Active": "활성",
+    "Inactive": "비활성",
+    "Not found": "찾을 수 없음"
+  },
+  "Units": {
+    "year": "년",
+    "day": "일",
+    "{{d}} days": "{{d}}일"
+  },
+  "Preferences": {
+    "Language": "언어",
+    "Currency": "통화"
+  },
+  "Auth": {
+    "Connect": "연결",
+    "Disconnect": "연결 해제",
+    "New wallet": "새 지갑",
+    "Recover wallet": "지갑 복구",
+    "Connect wallet": "지갑 연결",
+    "Password": "비밀번호",
+    "Confirm password": "비밀번호 확인",
+    "Password does not match": "비밀번호가 일치하지 않습니다",
+    "Change password": "비밀번호 변경",
+    "Current password": "현재 비밀번호",
+    "New password": "새 비밀번호",
+    "Confirm new password": "새 비밀번호 확인",
+    "Incorrect password": "잘못된 비밀번호",
+    "Export wallet": "지갑 내보내기",
+    "Delete wallet": "지갑 삭제",
+    "Install extension": "익스텐션 설치"
+  },
+  "Menu": {
+    "Dashboard": "대시보드",
+    "Wallet": "지갑",
+    "NFT": "NFT",
+    "History": "이력",
+    "Stake": "지분",
+    "Governance": "거버넌스",
+    "Contract": "계약"
+  },
+  "Dashboard": {
+    "Luna price": "루나 가격",
+    "Tax rate": "세율",
+    "Issuance": "발행량",
+    "Community pool": "커뮤니티 풀",
+    "Staking ratio": "위임 비율"
+  },
+  "Chart": {
+    "Transaction volume": "거래량",
+    "Staking return": "위임 수익",
+    "Tax rewards": "세금 보상",
+    "Wallets": "지갑"
+  },
+  "Wallet": {
+    "Add tokens": "토큰 추가",
+    "Manage list": "목록 관리"
+  },
+  "Txs": {
+    "Send": "송금",
+    "Swap": "환전",
+    "Stake": "지분",
+    "Delegate": "위임",
+    "Redelegate": "재위임",
+    "Undelegate": "위임 취소",
+    "Withdraw rewards": "보상 인출",
+    "Withdraw commission": "수수료 인출",
+    "New proposal": "제안하기",
+    "Deposit": "보증금",
+    "Vote": "투표",
+    "Transfer NFT": "NFT 전송",
+    "Earn": "이자 받기"
+  },
+  "Swap": {
+    "From": "출발",
+    "To": "도착",
+    "Spread": "차액",
+    "Slippage tolerance": "하락 허용 오차",
+    "Oracle price": "오라클 가격",
+    "Pair price": "페어 가격",
+    "Expected price": "예상 가격",
+    "Minimum received": "최소 수령",
+    "Trading fee": "거래 수수료"
+  },
+  "Stake": {
+    "Delegations": "위임",
+    "Undelegations": "위임 취소",
+    "Delegated": "위임함",
+    "Undelegated": "위임 취소함",
+    "Staking rewards": "위임 보상"
+  },
+  "Validator": {
+    "Validators": "검증인들",
+    "Voting power": "투표권",
+    "Self delegation": "자체 위임",
+    "Commission": "수수료",
+    "Uptime": "가동 시간",
+    "Validator details": "검증인 정보",
+    "Operator address": "운영 주소",
+    "Account address": "계정 주소",
+    "Jailed": "수감됨"
+  },
+  "Governance": {
+    "Voting": "투표",
+    "Votes": "투표",
+    "Initial deposit": "초기 보증금",
+    "Deposited": "보증금",
+    "Depositors": "",
+    "Depositor": "",
+    "Deposit end time": "보증 종료 시간",
+    "Passed": "통과",
+    "Rejected": "거부",
+    "Minimum deposit": "최소 보증금",
+    "Maximum deposit period": "최대 보증 기간",
+    "Voting period": "투표 기간",
+    "Proposal": "제안",
+    "Proposal details": "제안 내용",
+    "Proposal type": "제안 유형",
+    "Title": "제목",
+    "Description": "설명",
+    "Changes": "변경",
+    "Yes": "예",
+    "No": "아니오",
+    "No with veto": "거부권 없음",
+    "Abstain": "기권",
+    "Tallying procedure": "계산 절차",
+    "Quorum": "정족수",
+    "Pass threshold": "통과 임계값",
+    "Veto threshold": "거부 임계값"
+  },
+  "Contract": {
+    "Upload": "업로드",
+    "Instantiate": "",
+    "Query": "쿼리",
+    "Execute": "실행",
+    "Upload a wasm file": "파일 업로드",
+    "File": "파일",
+    "Size": "크기",
+    "Instantiate a code": ""
+  },
+  "NFT": {
+    "Marketplace": "시장",
+    "Collection": "컬렉션"
+  },
+  "Address book": {
+    "Address book": "주소록",
+    "Add a new address": "새 주소 추가"
+  }
+}

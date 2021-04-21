@@ -1,0 +1,46 @@
+/* state */
+@mixin disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* text */
+@mixin truncate($width: 100%) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: $width;
+}
+
+/* layout */
+@mixin flex($justify-content: center, $align-items: center) {
+  display: flex;
+  justify-content: $justify-content;
+  align-items: $align-items;
+}
+
+@mixin flex-column($justify-content: center, $align-items: center) {
+  @include flex($justify-content, $align-items);
+  flex-direction: column;
+}
+
+@mixin inline-flex($justify-content: center, $align-items: center) {
+  display: inline-flex;
+  justify-content: $justify-content;
+  align-items: $align-items;
+}
+
+/* screen */
+$breakpoint: 992px;
+
+@mixin desktop {
+  @media (min-width: $breakpoint) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media (max-width: ($breakpoint - 0.02)) {
+    @content;
+  }
+}

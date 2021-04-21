@@ -1,0 +1,17 @@
+.tooltip {
+  background: var(--chart);
+  border-radius: var(--border-radius);
+  color: var(--button-primary-text);
+  padding: 5px 12px;
+  width: 140px;
+  white-space: nowrap;
+}
+
+.value {
+  font-weight: var(--bold);
+}
+
+.date {
+  font-size: var(--font-size-small);
+  font-weight: var(--normal);
+}

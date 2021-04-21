@@ -1,0 +1,89 @@
+@import "mixins";
+
+.layout {
+  display: grid;
+
+  @include desktop {
+    grid-template-columns: 220px 1fr;
+    grid-template-rows: auto var(--header-height) 1fr;
+    grid-template-areas:
+      "banner banner"
+      "sidebar header"
+      "sidebar main";
+  }
+
+  @include mobile {
+    grid-template-rows: auto repeat(2, var(--header-height)) 1fr;
+    grid-template-areas:
+      "banner"
+      "sidebar"
+      "header"
+      "main";
+  }
+
+  height: 100vh;
+}
+
+.banner {
+  grid-area: banner;
+  text-align: center;
+}
+
+.sidebar {
+  grid-area: sidebar;
+  grid-template-rows: 1fr auto;
+
+  display: grid;
+  background: var(--menu-bg);
+  overflow: hidden;
+}
+
+@mixin border-left {
+  @include desktop {
+    border-left: var(--border-width) solid var(--card-border);
+  }
+}
+
+.header {
+  @include border-left;
+
+  grid-area: header;
+  display: grid;
+
+  background: var(--card-bg);
+  gap: 10px;
+  padding: 0 var(--main-padding-horizontal);
+  position: relative;
+  white-space: nowrap;
+
+  .wrapper {
+    @include flex(flex-end);
+    gap: 10px;
+    width: 100%;
+    height: var(--header-height);
+  }
+
+  -webkit-app-region: drag;
+}
+
+.main {
+  @include border-left;
+
+  grid-area: main;
+  overflow: auto;
+  border-top: var(--border-width) solid var(--card-border);
+  position: relative; // for progress bar from the page
+}
+
+/* menu open */
+@include mobile {
+  .menu {
+    grid-template-rows: auto 1fr;
+    grid-template-areas: "banner" "sidebar";
+
+    .header,
+    .main {
+      display: none;
+    }
+  }
+}

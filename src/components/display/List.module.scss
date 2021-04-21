@@ -1,0 +1,27 @@
+@import "mixins";
+
+.item {
+  @include flex(space-between);
+  border-top: solid 1px var(--card-border);
+  color: var(--text);
+  font-weight: var(--bold);
+  padding: 20px 10px;
+  transition: background var(--transition);
+  width: 100%;
+
+  &:hover {
+    background: var(--bg-muted);
+    text-decoration: none;
+  }
+}
+
+/* list group */
+.group + .group {
+  margin-top: 36px;
+}
+
+.title {
+  font-size: var(--font-size-small);
+  font-weight: var(--bold);
+  margin-bottom: 8px;
+}

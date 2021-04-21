@@ -1,0 +1,119 @@
+@import "mixins";
+
+@mixin border {
+  border: var(--border-width) solid var(--card-border);
+  border-radius: var(--border-radius);
+}
+
+.card {
+  @include border;
+  background: var(--card-bg);
+  overflow: hidden; // truncate title, linear progress
+  position: relative; // for progress bar
+
+  @include mobile {
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+
+    & & {
+      @include border;
+    }
+  }
+}
+
+// as a button
+.link,
+.button {
+  display: grid;
+  justify-content: stretch;
+  text-align: left;
+
+  font-weight: normal;
+  transition: border-color var(--transition);
+
+  &:hover {
+    border-color: var(--button-primary-bg);
+  }
+}
+
+.small {
+  --card-padding: var(--card-padding-small);
+
+  .header {
+    font-size: var(--font-size);
+  }
+}
+
+.grid {
+  // Only when both header and main exist
+  display: grid;
+  gap: 8px;
+  grid-template-rows: auto 1fr;
+  grid-template-areas: "header" "main";
+
+  .header {
+    grid-area: header;
+  }
+
+  .main {
+    grid-area: main;
+  }
+}
+
+/* components */
+.header {
+  @include flex(space-between);
+  font-size: 16px;
+}
+
+.title {
+  @include flex(flex-start);
+  @include truncate;
+  gap: 8px; // for icon
+  width: 100%;
+}
+
+.extra {
+  flex: none;
+}
+
+.main {
+  overflow: hidden;
+
+  &:empty {
+    display: none;
+  }
+}
+
+/* theme */
+.default {
+  padding: var(--card-padding);
+}
+
+.bordered {
+  gap: 0;
+
+  .header {
+    padding: 16px var(--card-padding);
+  }
+
+  .main {
+    // Avoid rendering border-bottom under the title
+    // when the content of the card is empty for a while
+    border-top: 1px solid var(--card-border);
+    padding: var(--card-padding);
+  }
+
+  &.small .header {
+    font-size: var(--font-size-small);
+  }
+}
+
+.bg .header {
+  background: var(--bg);
+}
+
+.error .main {
+  @include flex;
+}

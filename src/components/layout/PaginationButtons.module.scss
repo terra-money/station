@@ -1,0 +1,28 @@
+@import "mixins";
+
+.button {
+  border: 1px solid var(--button-default-bg);
+  width: 38px;
+  height: 38px;
+}
+
+.status {
+  @include flex;
+  background: var(--button-primary-bg);
+  color: var(--button-primary-text);
+  font-size: var(--font-size-small);
+  padding: 0 14px;
+  height: 38px;
+}
+
+.prev {
+  border-right: 0;
+  border-top-left-radius: 2px;
+  border-bottom-left-radius: 2px;
+}
+
+.next {
+  border-left: 0;
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+}

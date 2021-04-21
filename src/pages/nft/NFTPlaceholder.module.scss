@@ -1,0 +1,31 @@
+@import "mixins";
+
+.item {
+  background: 4px solid var(--card-bg);
+  border: 4px solid var(--card-bg);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.item-0 {
+  transform: translate(8px, 4px) rotate(-30deg) scale(0.9);
+}
+
+.item-1 {
+  transform: rotate(5deg);
+}
+
+.item-2 {
+  transform: translate(-12px, 4px) rotate(30deg) scale(0.9);
+}
+
+.hidden {
+  display: none;
+}
+
+.image {
+  background-color: var(--bg-muted);
+  border-radius: 4px;
+  overflow: hidden;
+  filter: grayscale(1);
+}

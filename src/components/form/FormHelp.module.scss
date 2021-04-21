@@ -1,0 +1,26 @@
+@import "mixins";
+
+.component {
+  @include flex(flex-start, flex-start);
+
+  border-radius: 5px;
+  font-size: var(--font-size-small);
+  line-height: 18px;
+  gap: 8px;
+  padding: 8px;
+}
+
+.info {
+  background: var(--info-light);
+  color: var(--info);
+}
+
+.warning {
+  background: var(--warning-light);
+  color: var(--warning);
+}
+
+.error {
+  background: var(--danger-light);
+  color: var(--danger);
+}

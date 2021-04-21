@@ -1,0 +1,33 @@
+@import "mixins";
+
+.links {
+  --gutter: 10px;
+}
+
+/* tutorial */
+.tutorial {
+  border-bottom: 1px solid var(--menu-border);
+}
+
+/* community */
+.community {
+  margin: var(--gutter) 0;
+}
+
+/* item */
+.link {
+  @include flex(flex-start);
+
+  gap: 4px;
+  color: var(--menu-text);
+  font-size: var(--font-size-small);
+  line-height: 1;
+  opacity: 0.75;
+  padding: var(--gutter) 0;
+  transition: opacity var(--transition);
+  width: 100%;
+
+  &:hover {
+    opacity: 1;
+  }
+}

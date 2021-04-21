@@ -1,0 +1,40 @@
+@import "mixins";
+
+.checkbox {
+  @include inline-flex;
+  cursor: pointer;
+  font-size: var(--font-size-small);
+  gap: 8px;
+  user-select: none;
+
+  &.checked .indicator {
+    opacity: 1;
+  }
+
+  &.disabled {
+    @include disabled;
+  }
+
+  .text {
+    flex: 1;
+  }
+}
+
+.track {
+  @include flex;
+
+  border: solid 1px var(--input-border);
+  border-radius: 2px;
+  width: 16px;
+  height: 16px;
+}
+
+.indicator {
+  background: var(--text);
+  border-radius: 2px;
+  width: 8px;
+  height: 8px;
+
+  opacity: 0;
+  transition: opacity var(--transition);
+}

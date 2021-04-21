@@ -1,0 +1,14 @@
+.grid {
+  display: grid;
+  gap: 40px;
+  grid-template-rows: auto 1fr;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: var(--bold);
+
+  small {
+    font-size: var(--font-size-small);
+  }
+}

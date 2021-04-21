@@ -1,0 +1,27 @@
+@import "mixins";
+
+.list {
+  background: var(--card-bg);
+  border: var(--border-width) solid var(--card-border);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.link {
+  @include flex(space-between);
+
+  color: var(--text);
+  font-weight: var(--bold);
+  padding: var(--card-padding-small) var(--card-padding);
+  transition: background var(--transition);
+  width: 100%;
+
+  &:not(:first-child) {
+    border-top: var(--border-width) solid var(--card-border);
+  }
+
+  &:hover {
+    background: var(--bg-muted);
+    text-decoration: none;
+  }
+}

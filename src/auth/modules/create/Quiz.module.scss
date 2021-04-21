@@ -1,0 +1,19 @@
+.hint {
+  display: grid;
+  grid-template: repeat(2, 1fr) / repeat(3, 1fr);
+  gap: 12px;
+}
+
+.item {
+  padding: 12px;
+}
+
+.reset {
+  color: var(--text-muted);
+  font-size: var(--font-size-small);
+  font-weight: var(--normal);
+
+  &:hover {
+    color: var(--text);
+  }
+}

@@ -1,0 +1,43 @@
+@import "mixins";
+
+.main {
+  @include flex(space-between);
+}
+
+.label {
+  font-weight: var(--bold);
+}
+
+.wrapper {
+  border-radius: 14px;
+  border: solid 1px var(--input-border);
+  font-size: var(--font-size-small);
+  font-weight: var(--bold);
+  padding: 0 12px;
+  width: 64px;
+  height: 28px;
+
+  input {
+    text-align: right;
+  }
+}
+
+.feedback-error {
+  border-color: var(--danger);
+}
+
+.error {
+  color: var(--danger);
+  font-size: var(--font-size-small);
+  text-align: right;
+}
+
+.feedback-warning {
+  border-color: var(--warning);
+}
+
+.warning {
+  color: var(--warning);
+  font-size: var(--font-size-small);
+  text-align: right;
+}

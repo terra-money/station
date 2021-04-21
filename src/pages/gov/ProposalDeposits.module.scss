@@ -1,0 +1,42 @@
+@import "mixins";
+
+.main {
+  display: grid;
+  align-items: center;
+}
+
+.horizontal {
+  @include flex(flex-start);
+  gap: 24px;
+}
+
+.vertical {
+  display: grid;
+  gap: 24px;
+  text-align: center;
+}
+
+.orb {
+  flex: none;
+  display: grid;
+  justify-content: center;
+  gap: 8px;
+  font-size: 24px;
+  font-weight: var(--bold);
+}
+
+.details {
+  display: flex;
+  gap: 16px;
+}
+
+.item {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 2px;
+  font-size: var(--font-size-small);
+
+  .vertical & {
+    flex: 1;
+  }
+}

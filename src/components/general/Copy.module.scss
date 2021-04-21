@@ -1,0 +1,14 @@
+@import "mixins";
+
+.button {
+  @include inline-flex;
+
+  border-radius: 10px;
+  border: solid 1px var(--text);
+  color: var(--text);
+  font-size: 10px;
+  gap: 2px;
+  height: 20px;
+  padding: 0 10px;
+  text-transform: uppercase;
+}

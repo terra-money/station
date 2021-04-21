@@ -1,0 +1,21 @@
+@import "mixins";
+
+.header {
+  overflow: hidden;
+}
+
+.meta {
+  @include flex(space-between);
+  font-size: var(--font-size-small);
+  margin-bottom: 12px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: var(--normal);
+  margin-bottom: 4px;
+}
+
+.date {
+  font-size: var(--font-size-small);
+}

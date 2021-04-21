@@ -1,0 +1,20 @@
+@import "mixins";
+
+.offline {
+  @include flex;
+
+  background: hsl(0 0% 0% / 0.85);
+  color: white;
+  text-align: center;
+
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+}
+
+.title {
+  font-size: 24px;
+}

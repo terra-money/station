@@ -1,0 +1,25 @@
+@import "mixins";
+
+.grid {
+  display: grid;
+}
+
+.row {
+  display: flex;
+  gap: var(--grid-gap);
+
+  @include mobile {
+    flex-direction: column;
+  }
+}
+
+@include desktop {
+  .start {
+    align-items: flex-start;
+  }
+}
+
+.col {
+  display: grid;
+  gap: var(--grid-gap);
+}

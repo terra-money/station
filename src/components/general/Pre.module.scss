@@ -1,0 +1,19 @@
+.pre {
+  border: solid 1px var(--input-border);
+  border-radius: var(--border-radius);
+  padding: 12px;
+  overflow: auto;
+}
+
+.normal {
+  white-space: normal;
+}
+
+.break {
+  word-break: break-all;
+}
+
+/* copy */
+.copy {
+  text-align: right;
+}

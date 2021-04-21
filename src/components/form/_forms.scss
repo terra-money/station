@@ -1,0 +1,11 @@
+@mixin border {
+  background: var(--input-bg);
+  border: solid 1px var(--input-border);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+@mixin size {
+  padding: 0 12px;
+  height: var(--input-height);
+}

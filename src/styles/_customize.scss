@@ -1,0 +1,52 @@
+.ReactModal__Body--open {
+  overflow: hidden;
+}
+
+/* tooltip:default */
+.tippy-box {
+  background-color: var(--text);
+  border-radius: 4px;
+  color: var(--card-bg);
+  font-size: var(--font-size-small);
+
+  .tippy-content {
+    padding: 8px 16px;
+  }
+}
+
+.tippy-box[data-placement^="top"] > .tippy-arrow::before {
+  border-top-color: var(--text);
+}
+
+.tippy-box[data-placement^="bottom"] > .tippy-arrow::before {
+  border-bottom-color: var(--text);
+}
+
+.tippy-box[data-placement^="left"] > .tippy-arrow::before {
+  border-left-color: var(--text);
+}
+
+.tippy-box[data-placement^="right"] > .tippy-arrow::before {
+  border-right-color: var(--text);
+}
+
+/* tooltip:theme */
+.tippy-box[data-theme~="none"] {
+  background-color: var(--card-bg);
+  border: var(--border-width) solid var(--card-border);
+  box-shadow: 0 5px 20px 0 hsl(0 0% 0% / 0.15);
+  color: var(--text);
+  overflow: hidden;
+
+  .tippy-content {
+    padding: 0;
+  }
+}
+
+.tippy-box[data-theme~="popover"] {
+  border-radius: var(--border-radius);
+
+  .tippy-content {
+    padding: 24px;
+  }
+}

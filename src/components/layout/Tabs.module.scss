@@ -1,0 +1,78 @@
+@import "mixins";
+
+.card {
+  background: var(--bg-muted);
+  border: var(--border-width) solid var(--card-border);
+  border-radius: var(--border-radius);
+  font-size: 13px;
+  font-weight: var(--bold);
+  margin-bottom: 20px;
+  overflow: hidden;
+
+  @include mobile {
+    display: flex;
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+  }
+}
+
+.tab {
+  @include inline-flex;
+  color: inherit;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.card .tab {
+  height: 60px;
+  border-right: var(--border-width) solid var(--card-border);
+  color: var(--text-muted);
+
+  @include mobile {
+    &:last-child {
+      border-right: 0;
+    }
+  }
+
+  &:hover {
+    color: var(--text);
+  }
+
+  &.active {
+    background: var(--card-bg);
+    color: var(--text);
+  }
+
+  &.disabled {
+    color: var(--text-muted);
+  }
+
+  @include desktop {
+    padding: 0 30px;
+  }
+
+  @include mobile {
+    flex: 1;
+    text-align: center;
+  }
+}
+
+.line .tab {
+  border-bottom: 1px solid var(--card-bg);
+  font-size: var(--font-size-small);
+  font-weight: var(--bold);
+  padding: 0 14px;
+  padding-bottom: 5px;
+
+  &.active {
+    border-bottom: 2px solid var(--card-bg);
+    padding-bottom: 4px;
+  }
+}
+
+.disabled {
+  @include disabled;
+}

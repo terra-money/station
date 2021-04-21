@@ -1,0 +1,22 @@
+@import "mixins";
+
+.actions {
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.end {
+  @include flex(flex-end);
+}
+
+.center {
+  @include flex;
+}
+
+.stretch {
+  @include flex(stretch);
+
+  > * {
+    flex: 1;
+  }
+}

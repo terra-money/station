@@ -1,0 +1,217 @@
+{
+  "Blockchain": {
+    "Mnemonic": "Mnemonic",
+    "Address": "Dirección",
+    "Wallet": "Cartera",
+    "Wallets": "Carteras",
+    "Coins": "Monedas",
+    "Tokens": "Tokens",
+    "Balance": "Saldo",
+    "Tx hash": "Hash de Tx",
+    "Gas": "Gas",
+    "Tax": "Impuesto",
+    "Fee": "Tasa",
+    "Memo": "Memo",
+    "decimals": "decimales",
+    "Buy": "Compra",
+    "Exchanges": "Exchanges",
+    "Fiat": "Fiat",
+    "APY": "APY"
+  },
+  "Form": {
+    "Amount": "Cantidad",
+    "Recipient": "Destinatario",
+    "Name": "Nombre",
+    "optional": "opcional",
+    "Submit": "Enviar",
+    "Confirm": "Confirmar",
+    "Reset": "Resetear"
+  },
+  "Validate": {
+    "{{label}} is required": "{{label}} es obligatorio",
+    "{{label}} is not defined": "{{label}} no definido",
+    "{{label}} is not available": "{{label}} no disponible",
+    "{{label}} is not supported": "{{label}} no soportado",
+    "{{label}} is invalid": "{{label}} no es válido",
+    "{{label}} already exists": "{{label}} ya existe",
+    "{{label}} does not exist": "{{label}} no existe",
+    "{{label}} must be longer than {{length}} characters": "{{label}} debe ser más largo de {{length}} caracteres",
+    "Already exists": "Ya existe",
+    "Invalid": "Inválido",
+    "Invalid {{label}}": "{{label}} invalido"
+  },
+  "Loading": {
+    "Initializing app...": "Inicializando la aplicación...",
+    "Loading...": "Cargando...",
+    "Load more": "Cargar más",
+    "Loading more...": "Cargando más...",
+    "Nothing more to load": "No hay más para cargar",
+    "Simulating...": "Simulando...",
+    "Broadcasting a tx...": "Enviando la tx...",
+    "Broadcasting transaction": "Enviando la transacción",
+    "Queued": "En cola"
+  },
+  "Success": {
+    "Success!": "Éxito!"
+  },
+  "Failure": {
+    "Failed": "Ha fallado",
+    "Simulation failed": "Simulación fallida",
+    "User denied": "Usuario denegado",
+    "Failed to create tx": "No se pudo crear la tx",
+    "Tx failed": "Tx fallida"
+  },
+  "Application": {
+    "Go back": "Volver",
+    "View": "Ver",
+    "Show all": "Ver todo",
+    "Copy": "Copiar",
+    "Copied": "Copiado",
+    "Active": "Activo",
+    "Inactive": "Inactivo",
+    "Not found": "No se ha encontrado"
+  },
+  "Units": {
+    "year": "año",
+    "day": "día",
+    "{{d}} days": "{{d}} días"
+  },
+  "Preferences": {
+    "Language": "Idioma",
+    "Currency": "Moneda"
+  },
+  "Auth": {
+    "Connect": "Conexión",
+    "Disconnect": "Desconectar",
+    "New wallet": "Cartera nueva",
+    "Recover wallet": "Recuperar cartera",
+    "Connect wallet": "Conectar cartera",
+    "Password": "Contraseña",
+    "Confirm password": "Confirmar contraseña",
+    "Password does not match": "La contraseña no coincide",
+    "Change password": "Cambiar contraseña",
+    "Current password": "Contraseña actual",
+    "New password": "Nueva contraseña",
+    "Confirm new password": "Confirmar nueva contraseña",
+    "Incorrect password": "Contraseña incorrecta",
+    "Export wallet": "Exportar cartera",
+    "Delete wallet": "Borra esta cartera",
+    "Install extension": "Instalar extensión"
+  },
+  "Menu": {
+    "Dashboard": "Tablero de mandos",
+    "Wallet": "Cartera",
+    "NFT": "NFT",
+    "History": "Histórico",
+    "Stake": "Stake",
+    "Governance": "Gobierna",
+    "Contract": "Contratos"
+  },
+  "Dashboard": {
+    "Luna price": "Precio Luna",
+    "Tax rate": "Tasa de impuestos",
+    "Issuance": "Emisión",
+    "Community pool": "Fondo de la comunidad",
+    "Staking ratio": "Ratio de staking"
+  },
+  "Chart": {
+    "Transaction volume": "Volumen de transacciones",
+    "Staking return": "Retornos de staking",
+    "Tax rewards": "Recompensas de impuestos",
+    "Wallets": "Número de cuentas"
+  },
+  "Wallet": {
+    "Add tokens": "Añadir tokens",
+    "Manage list": "Editar lista"
+  },
+  "Txs": {
+    "Send": "Enviar",
+    "Swap": "Intercambio",
+    "Stake": "Stake",
+    "Delegate": "Delegar",
+    "Redelegate": "Redelegar",
+    "Undelegate": "Cancelar delegación",
+    "Withdraw rewards": "Retirar recompensas",
+    "Withdraw commission": "Retirar comisiones",
+    "New proposal": "Nueva propuesta",
+    "Deposit": "Depósitar",
+    "Vote": "Vota",
+    "Transfer NFT": "Transifere NFT",
+    "Earn": "Gain"
+  },
+  "Swap": {
+    "From": "De",
+    "To": "A",
+    "Spread": "Spread",
+    "Slippage tolerance": "Tolerancia de slippage",
+    "Oracle price": "Precio de oraculo",
+    "Pair price": "Precio de la pareja",
+    "Expected price": "Precio previsto",
+    "Minimum received": "Mínimo recibido",
+    "Trading fee": "Tasa de intercambio"
+  },
+  "Stake": {
+    "Delegations": "Delegaciones",
+    "Undelegations": "Delegaciones canceladas",
+    "Delegated": "Delegado",
+    "Undelegated": "No delegado",
+    "Staking rewards": "Recompensas de staking"
+  },
+  "Validator": {
+    "Validators": "Validadores",
+    "Voting power": "Poder de voto",
+    "Self delegation": "Autodelegación",
+    "Commission": "Comisión",
+    "Uptime": "Tempo activo",
+    "Validator details": "Información del validador",
+    "Operator address": "Dirección del operador",
+    "Account address": "Dirección de la cuenta",
+    "Jailed": "Enjaulado"
+  },
+  "Governance": {
+    "Voting": "Vota",
+    "Votes": "Votos",
+    "Initial deposit": "Depósito inicial",
+    "Deposited": "Depositado",
+    "Depositors": "Depositantes",
+    "Depositor": "Depositor",
+    "Deposit end time": "Fecha de finalización del depósito",
+    "Passed": "Aprobado",
+    "Rejected": "Rechazado",
+    "Minimum deposit": "Depósito mínimo",
+    "Maximum deposit period": "Plazo máximo de depósito",
+    "Voting period": "Periodo de votación",
+    "Proposal": "Propuesta",
+    "Proposal details": "Detalles de la propuesta",
+    "Proposal type": "Tipo de propuesta",
+    "Title": "Título",
+    "Description": "Descripción",
+    "Changes": "Cambios",
+    "Yes": "Sí",
+    "No": "No",
+    "No with veto": "No con veto",
+    "Abstain": "Abstención",
+    "Tallying procedure": "Procedimiento de recuento",
+    "Quorum": "Quórum",
+    "Pass threshold": "Umbral de aceptación",
+    "Veto threshold": "Umbral de veto"
+  },
+  "Contract": {
+    "Upload": "Subir",
+    "Instantiate": "Instanciar",
+    "Query": "Consulta",
+    "Execute": "Ejecuta",
+    "Upload a wasm file": "Subir archivo wasm",
+    "File": "Archivo",
+    "Size": "Tamaño",
+    "Instantiate a code": "Instanciar un código"
+  },
+  "NFT": {
+    "Marketplace": "Marcado",
+    "Collection": "Colección"
+  },
+  "Address book": {
+    "Address book": "Libro de direcciones",
+    "Add a new address": "Añade una nueva dirección"
+  }
+}

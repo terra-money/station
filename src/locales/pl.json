@@ -1,0 +1,217 @@
+{
+  "Blockchain": {
+    "Mnemonic": "",
+    "Address": "Adres",
+    "Wallet": "Portfel",
+    "Wallets": "",
+    "Coins": "Tokeny",
+    "Tokens": "",
+    "Balance": "",
+    "Tx hash": "",
+    "Gas": "",
+    "Tax": "Podatek",
+    "Fee": "Prowizja",
+    "Memo": "Memo",
+    "decimals": "",
+    "Buy": "",
+    "Exchanges": "",
+    "Fiat": "",
+    "APY": ""
+  },
+  "Form": {
+    "Amount": "Ilość",
+    "Recipient": "Odbiorca",
+    "Name": "Nazwa",
+    "optional": "",
+    "Submit": "",
+    "Confirm": "Potwierdź",
+    "Reset": ""
+  },
+  "Validate": {
+    "{{label}} is required": "{{label}} jest wymagana",
+    "{{label}} is not defined": "",
+    "{{label}} is not available": "",
+    "{{label}} is not supported": "",
+    "{{label}} is invalid": "{{label}} jest nieprawidłowa",
+    "{{label}} already exists": "{{label}} już istnieje",
+    "{{label}} does not exist": "",
+    "{{label}} must be longer than {{length}} characters": "",
+    "Already exists": "",
+    "Invalid": "Nieprawidłowe",
+    "Invalid {{label}}": ""
+  },
+  "Loading": {
+    "Initializing app...": "",
+    "Loading...": "Ładowanie...",
+    "Load more": "",
+    "Loading more...": "",
+    "Nothing more to load": "",
+    "Simulating...": "Symulowanie...",
+    "Broadcasting a tx...": "",
+    "Broadcasting transaction": "",
+    "Queued": ""
+  },
+  "Success": {
+    "Success!": "Sukces!"
+  },
+  "Failure": {
+    "Failed": "",
+    "Simulation failed": "",
+    "User denied": "",
+    "Failed to create tx": "",
+    "Tx failed": ""
+  },
+  "Application": {
+    "Go back": "",
+    "View": "",
+    "Show all": "",
+    "Copy": "Kopiuj",
+    "Copied": "Skopiowano",
+    "Active": "Aktywne",
+    "Inactive": "",
+    "Not found": ""
+  },
+  "Units": {
+    "year": "",
+    "day": "",
+    "{{d}} days": "{{d}} dni"
+  },
+  "Preferences": {
+    "Language": "",
+    "Currency": ""
+  },
+  "Auth": {
+    "Connect": "Połącz",
+    "Disconnect": "",
+    "New wallet": "Nowy portfel",
+    "Recover wallet": "",
+    "Connect wallet": "",
+    "Password": "Hasło",
+    "Confirm password": "Potwierdź hasło",
+    "Password does not match": "Hasła nie są takie same",
+    "Change password": "Zmień hasło",
+    "Current password": "Aktualne hasło",
+    "New password": "Nowe hasło",
+    "Confirm new password": "Potwierdź nowe hasło",
+    "Incorrect password": "Nieprawidłowe hasło",
+    "Export wallet": "",
+    "Delete wallet": "Usuń portfel",
+    "Install extension": ""
+  },
+  "Menu": {
+    "Dashboard": "Panel główny",
+    "Wallet": "Portfel",
+    "NFT": "",
+    "History": "Historia",
+    "Stake": "",
+    "Governance": "Zarządzanie",
+    "Contract": "Kontrakt"
+  },
+  "Dashboard": {
+    "Luna price": "Cena Luny",
+    "Tax rate": "Wysokość podatku",
+    "Issuance": "Emisja",
+    "Community pool": "Pula społeczności",
+    "Staking ratio": "Stosunek stakowania"
+  },
+  "Chart": {
+    "Transaction volume": "Wolumen transakcji",
+    "Staking return": "Zwrot ze stakingu",
+    "Tax rewards": "Nagrody z podatku",
+    "Wallets": ""
+  },
+  "Wallet": {
+    "Add tokens": "",
+    "Manage list": ""
+  },
+  "Txs": {
+    "Send": "Wyślij",
+    "Swap": "Wymień",
+    "Stake": "",
+    "Delegate": "Oddeleguj",
+    "Redelegate": "Redeleguj",
+    "Undelegate": "Cofnij delegację",
+    "Withdraw rewards": "",
+    "Withdraw commission": "",
+    "New proposal": "Nowy wniosek",
+    "Deposit": "Zdeponuj",
+    "Vote": "Głosuj",
+    "Transfer NFT": "",
+    "Earn": ""
+  },
+  "Swap": {
+    "From": "",
+    "To": "",
+    "Spread": "Spread",
+    "Slippage tolerance": "",
+    "Oracle price": "",
+    "Pair price": "",
+    "Expected price": "",
+    "Minimum received": "",
+    "Trading fee": ""
+  },
+  "Stake": {
+    "Delegations": "Delegacje",
+    "Undelegations": "",
+    "Delegated": "Oddelegowano",
+    "Undelegated": "No delegado",
+    "Staking rewards": ""
+  },
+  "Validator": {
+    "Validators": "",
+    "Voting power": "Siła głosowania",
+    "Self delegation": "",
+    "Commission": "Prowizja",
+    "Uptime": "",
+    "Validator details": "Informacje o walidatorze",
+    "Operator address": "Adres operatora",
+    "Account address": "Adres konta",
+    "Jailed": ""
+  },
+  "Governance": {
+    "Voting": "Głosowanie",
+    "Votes": "",
+    "Initial deposit": "Wstępny depozyt",
+    "Deposited": "",
+    "Depositors": "Depozytorzy",
+    "Depositor": "Depozytor",
+    "Deposit end time": "Data końcowa depozytu",
+    "Passed": "Przyjęto",
+    "Rejected": "Odrzucono",
+    "Minimum deposit": "Minimalny depozyt",
+    "Maximum deposit period": "Maksymalny okres depozytu",
+    "Voting period": "Okres głosowania",
+    "Proposal": "",
+    "Proposal details": "Szczegóły wniosku",
+    "Proposal type": "",
+    "Title": "Tytuł",
+    "Description": "Opis",
+    "Changes": "Zmiany",
+    "Yes": "Tak",
+    "No": "Nie",
+    "No with veto": "",
+    "Abstain": "Wstrzymaj się",
+    "Tallying procedure": "Procedura liczenia",
+    "Quorum": "Kworum",
+    "Pass threshold": "Próg przegłosowania",
+    "Veto threshold": "Próg veto"
+  },
+  "Contract": {
+    "Upload": "Wgraj",
+    "Instantiate": "",
+    "Query": "Zapytaj",
+    "Execute": "",
+    "Upload a wasm file": "",
+    "File": "Plik",
+    "Size": "Rozmiar",
+    "Instantiate a code": ""
+  },
+  "NFT": {
+    "Marketplace": "",
+    "Collection": ""
+  },
+  "Address book": {
+    "Address book": "",
+    "Add a new address": ""
+  }
+}

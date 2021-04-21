@@ -1,0 +1,14 @@
+.card .main {
+  // to overwrite
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.icon {
+  border-radius: 2px;
+}
+
+.link {
+  font-size: var(--font-size-small);
+  font-weight: var(--bold);
+}

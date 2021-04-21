@@ -1,0 +1,13 @@
+{
+  "short_name": "Station",
+  "name": "Terra Station",
+  "icons": [
+    {
+      "src": "apple-touch-icon.png",
+      "type": "image/png",
+      "sizes": "128x128"
+    }
+  ],
+  "start_url": ".",
+  "display": "fullscreen"
+}

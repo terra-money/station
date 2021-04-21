@@ -1,0 +1,69 @@
+@import "mixins";
+
+.overlay {
+  @include flex;
+  background: hsl(0 0% 0% / 0.8);
+
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  z-index: 1050;
+}
+
+.modal {
+  display: grid;
+  gap: 32px;
+
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  outline: 0;
+  position: relative;
+  overflow: hidden;
+
+  @include desktop {
+    padding: 40px;
+    width: var(--modal-width);
+  }
+
+  @include mobile {
+    padding: 48px 20px;
+    width: calc(100% - 40px);
+  }
+}
+
+.close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 20px;
+  padding: 16px;
+}
+
+.header {
+  text-align: center;
+}
+
+.icon {
+  font-size: 56px;
+  line-height: 1;
+}
+
+.title {
+  font-size: 20px;
+}
+
+.confirm {
+  font-size: inherit;
+}
+
+.main {
+  overflow: hidden; // Sub components declare their own max-height and overflow-y
+}
+
+.footer {
+  margin-top: 8px;
+}

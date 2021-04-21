@@ -1,0 +1,15 @@
+@import "mixins";
+
+.horizontal {
+  @include flex(space-evenly);
+  text-align: center;
+}
+
+.vertical {
+  display: grid;
+  gap: 20px;
+}
+
+.title {
+  font-size: var(--font-size-small);
+}

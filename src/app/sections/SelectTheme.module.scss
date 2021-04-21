@@ -1,0 +1,41 @@
+@import "mixins";
+
+.locked .preview {
+  opacity: 0.1;
+}
+
+.wrapper {
+  border: 1px solid var(--card-border);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  position: relative;
+
+  .active & {
+    border-color: var(--button-primary-bg);
+  }
+
+  .unlock {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+}
+
+.unlock small {
+  @include mobile {
+    display: none;
+  }
+}
+
+.preview svg {
+  width: 100%;
+  height: auto;
+}
+
+.info {
+  justify-content: flex-start;
+  font-size: var(--font-size-small);
+  line-height: 1;
+}

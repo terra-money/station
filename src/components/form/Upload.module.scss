@@ -1,0 +1,16 @@
+@import "mixins";
+
+.label {
+  @include flex;
+  gap: 8px;
+
+  border: solid 1px var(--input-border);
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 12px;
+}
+
+.footer {
+  font-size: var(--font-size-small);
+  text-align: right;
+}

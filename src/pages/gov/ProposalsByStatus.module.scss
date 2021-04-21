@@ -1,0 +1,19 @@
+@import "mixins";
+
+.list {
+  display: grid;
+  gap: var(--grid-gap);
+
+  @include desktop {
+    grid-template-columns: repeat(2, auto);
+  }
+}
+
+.link {
+  display: grid;
+  color: inherit;
+
+  &:hover {
+    text-decoration: none;
+  }
+}

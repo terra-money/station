@@ -1,0 +1,283 @@
+@import "mixins";
+
+:root {
+  // sizes
+  --border-width: 1px;
+  --border-radius: 8px;
+  --grid-gap: 20px;
+  --card-padding: 28px;
+  --card-padding-small: 20px;
+  --header-height: 64px;
+  --max-width: 1080px;
+  --max-width-small: 640px;
+  --modal-width: 520px;
+  --input-height: 45px;
+
+  // fonts
+  --font-family-monospace: "Source Code Pro", monospace;
+  --font-size: 14px;
+  --font-size-small: 12px;
+  --normal: 400;
+  --bold: 500;
+
+  // components
+  --box-shadow: 0 4px 8px 0 hsl(0 0% 0% / 0.2);
+
+  // miscellaneous
+  --transition: 100ms;
+
+  @include desktop {
+    --main-padding-horizontal: 64px;
+  }
+
+  @include mobile {
+    --main-padding-horizontal: 20px;
+  }
+}
+
+:root {
+  --button-primary-bg-h: 218;
+  --button-primary-bg-s: 94%;
+  --button-primary-bg-l: 47%;
+  --button-primary-bg: hsl(
+    var(--button-primary-bg-h),
+    var(--button-primary-bg-s),
+    var(--button-primary-bg-l)
+  );
+  --button-primary-text: hsl(0 0% 95%);
+  --button-default-bg-h: 222;
+  --button-default-bg-s: 77%;
+  --button-default-bg-l: 95%;
+  --button-default-bg: hsl(
+    var(--button-default-bg-h),
+    var(--button-default-bg-s),
+    var(--button-default-bg-l)
+  );
+  --button-default-text: hsl(226 71% 43%);
+
+  --menu-bg: hsl(215 100% 33%);
+  --menu-border: hsl(0 0% 100% / 0.1);
+  --menu-text: hsl(0 0% 91%);
+
+  --link: hsl(210 89% 61%);
+  --text: hsl(226 70% 42%);
+  --text-muted: hsl(226 50% 59%);
+  --chart: hsl(215 90% 57%);
+
+  --bg: hsl(230 100% 99%);
+  --bg-muted: hsl(229 73% 97%);
+  --card-bg: hsl(0 0% 100%);
+  --card-border: hsl(222 48% 95%);
+  --input-bg: var(--card-bg);
+  --input-border: hsl(220 39% 86%);
+
+  --info: hsl(210 89% 61%);
+  --info-light: hsl(210 89% 61% / 0.1);
+  --warning: hsl(36 98% 50%);
+  --warning-light: hsl(36 98% 50% / 0.1);
+  --success: hsl(168 71% 39%);
+  --success-light: hsl(168 71% 39% / 0.1);
+  --danger: hsl(356 100% 67%);
+  --danger-light: hsl(356 100% 67% / 0.1);
+}
+
+.dark {
+  --button-primary-bg-h: 210;
+  --button-primary-bg-s: 89%;
+  --button-primary-bg-l: 61%;
+  --button-primary-bg: hsl(
+    var(--button-primary-bg-h),
+    var(--button-primary-bg-s),
+    var(--button-primary-bg-l)
+  );
+  --button-primary-text: hsl(0 0% 95%);
+  --button-default-bg-h: 210;
+  --button-default-bg-s: 1%;
+  --button-default-bg-l: 30%;
+  --button-default-bg: hsl(
+    var(--button-default-bg-h),
+    var(--button-default-bg-s),
+    var(--button-default-bg-l)
+  );
+  --button-default-text: hsl(0 0% 87%);
+
+  --menu-bg: hsl(0 0% 13%);
+  --menu-border: hsl(0 0% 100% / 0.1);
+  --menu-text: hsl(0 0% 91%);
+
+  --link: hsl(210 89% 61%);
+  --text: hsl(0 0% 86%);
+  --text-muted: hsl(0 0% 55%);
+  --chart: hsl(215 90% 57%);
+
+  --bg: hsl(0 0% 11%);
+  --bg-muted: hsl(0 0% 13%);
+  --card-bg: hsl(240 1% 15%);
+  --card-border: hsl(210 2% 21%);
+  --input-bg: var(--card-bg);
+  --input-border: hsl(0 0% 30%);
+}
+
+.blossom {
+  --button-primary-bg-h: 341;
+  --button-primary-bg-s: 100%;
+  --button-primary-bg-l: 59%;
+  --button-primary-bg: hsl(
+    var(--button-primary-bg-h),
+    var(--button-primary-bg-s),
+    var(--button-primary-bg-l)
+  );
+  --button-primary-text: hsl(0 0% 95%);
+  --button-default-bg-h: 331;
+  --button-default-bg-s: 100%;
+  --button-default-bg-l: 95%;
+  --button-default-bg: hsl(
+    var(--button-default-bg-h),
+    var(--button-default-bg-s),
+    var(--button-default-bg-l)
+  );
+  --button-default-text: hsl(342 83% 58%);
+
+  --menu-bg: hsl(355 73% 53%);
+  --menu-border: hsl(0 0% 100% / 0.1);
+  --menu-text: hsl(0 0% 91%);
+
+  --link: hsl(321 100% 72%);
+  --text: hsl(342 92% 57%);
+  --text-muted: hsl(356 100% 76%);
+  --chart: hsl(345 99% 46%);
+
+  --bg: hsl(321 100% 96%);
+  --bg-muted: hsl(321 100% 97%);
+  --card-bg: hsl(300 100% 98%);
+  --card-border: hsl(342 100% 94%);
+  --input-bg: var(--card-bg);
+  --input-border: hsl(344 100% 92%);
+}
+
+.moon {
+  --border-width: 0;
+  --border-radius: 16px;
+
+  --button-primary-bg-h: 47;
+  --button-primary-bg-s: 93%;
+  --button-primary-bg-l: 67%;
+  --button-primary-bg: hsl(
+    var(--button-primary-bg-h),
+    var(--button-primary-bg-s),
+    var(--button-primary-bg-l)
+  );
+  --button-primary-text: hsl(248 55% 8%);
+  --button-default-bg-h: 47;
+  --button-default-bg-s: 93%;
+  --button-default-bg-l: 67%;
+  --button-default-bg: hsl(
+    var(--button-default-bg-h),
+    var(--button-default-bg-s),
+    var(--button-default-bg-l)
+  );
+  --button-default-text: var(--button-primary-text);
+
+  --menu-bg: var(--card-bg);
+  --menu-text: var(--text);
+
+  --link: var(--button-primary-bg);
+  --text: hsl(240 9% 66%);
+  --text-muted: hsl(247 9% 40%);
+  --chart: var(--button-primary-bg);
+
+  --bg: hsl(249 54% 3%);
+  --bg-muted: hsl(248 55% 8%);
+  --card-bg: hsl(247 55% 6%);
+  --card-border: hsl(0 0% 100% / 0.1);
+  --input-bg: var(--card-bg);
+  --input-border: hsl(0 0% 100% / 0.1);
+}
+
+.whale {
+  --button-primary-bg-h: 0;
+  --button-primary-bg-s: 0%;
+  --button-primary-bg-l: 0%;
+  --button-primary-bg: hsl(
+    var(--button-primary-bg-h),
+    var(--button-primary-bg-s),
+    var(--button-primary-bg-l)
+  );
+  --button-primary-text: hsl(0 0% 100%);
+  --button-default-bg-h: 0;
+  --button-default-bg-s: 0%;
+  --button-default-bg-l: 83%;
+  --button-default-bg: hsl(
+    var(--button-default-bg-h),
+    var(--button-default-bg-s),
+    var(--button-default-bg-l)
+  );
+  --button-default-text: hsl(0 0% 0%);
+
+  --menu-bg: hsl(0 0% 0%);
+  --menu-border: hsl(0 0% 100% / 0.1);
+  --menu-text: hsl(0 0% 91%);
+
+  --link: hsl(193 82% 49%);
+  --text: hsl(0 0% 0%);
+  --text-muted: hsl(0 0% 41%);
+  --chart: hsl(0 0% 0%);
+
+  --bg: hsl(0 0% 94%);
+  --bg-muted: hsl(0 0% 91%);
+  --card-bg: hsl(0 0% 100%);
+  --card-border: hsl(0 0% 92%);
+  --input-bg: var(--card-bg);
+  --input-border: hsl(0 0% 91%);
+
+  --warning: hsl(356 100% 50%);
+  --warning-light: hsl(356 100% 50% / 0.1);
+}
+
+.madness {
+  --button-primary-bg-h: 116;
+  --button-primary-bg-s: 100%;
+  --button-primary-bg-l: 54%;
+  --button-primary-bg: hsl(
+    var(--button-primary-bg-h),
+    var(--button-primary-bg-s),
+    var(--button-primary-bg-l)
+  );
+  --button-primary-text: hsl(0 0% 8%);
+  --button-default-bg-h: 260;
+  --button-default-bg-s: 86%;
+  --button-default-bg-l: 56%;
+  --button-default-bg: hsl(
+    var(--button-default-bg-h),
+    var(--button-default-bg-s),
+    var(--button-default-bg-l)
+  );
+  --button-default-text: hsl(116 100% 54%);
+
+  --menu-bg: hsl(260 66% 37%);
+  --menu-border: hsl(261 66% 47%);
+  --menu-text: hsl(0 0% 91%);
+
+  --link: hsl(115 100% 54%);
+  --text: hsl(0 0% 100%);
+  --text-muted: hsl(0 0% 100% / 0.5);
+  --chart: hsl(260 100% 61%);
+
+  --bg: hsl(0 0% 8%);
+  --bg-muted: hsl(260 62% 26% / 0.75);
+  --card-bg: hsl(260 66% 37%);
+  --card-border: hsl(261 66% 47%);
+  --input-bg: var(--card-bg);
+  --input-border: hsl(0 0% 100% / 0.3);
+
+  --info: hsl(178 91% 52%);
+  --info-light: hsl(178 91% 52% / 0.1);
+  --warning: hsl(20 100% 55%);
+  --warning-light: hsl(20 100% 55% / 0.1);
+  --success: hsl(115 100% 54%);
+  --success-light: hsl(115 100% 54% / 0.1);
+  --danger: hsl(333 100% 55%);
+  --danger-light: hsl(333 100% 55% / 0.1);
+
+  --border-width: 2px;
+}

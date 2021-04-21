@@ -1,0 +1,22 @@
+@use "sass:math";
+@import "mixins";
+
+@mixin size($height: 22px) {
+  border-radius: math.div($height, 2);
+  height: $height;
+}
+
+.tag {
+  @include size;
+  color: var(--button-primary-text);
+  font-size: var(--font-size-small);
+  font-weight: var(--bold);
+  padding-left: 14px;
+  padding-right: 14px;
+  min-width: 50px;
+}
+
+.small {
+  @include size(18px);
+  font-size: 9px;
+}

@@ -1,0 +1,29 @@
+@import "mixins";
+
+.title {
+  font-size: var(--font-size-small);
+}
+
+.numbers {
+  gap: 36px;
+
+  border-bottom: 1px solid var(--card-border);
+  margin-bottom: 28px;
+  padding-bottom: 28px;
+
+  @include desktop {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .item {
+    gap: 20x;
+  }
+
+  .value {
+    font-size: 28px;
+  }
+}
+
+.addresses .item {
+  gap: 4px;
+}

@@ -1,0 +1,29 @@
+@import "mixins";
+
+.card {
+  background: var(--bg);
+  border: solid 1px var(--card-border);
+}
+
+.validators {
+  max-height: 180px;
+  overflow: auto;
+}
+
+.button {
+  font-size: 10px;
+  font-weight: var(--bold);
+  padding: 6px 0;
+}
+
+.checkbox {
+  @include flex(flex-start);
+  border-top: 1px solid var(--card-border);
+  padding: 12px 0;
+  width: 100%;
+}
+
+.item {
+  @include flex(space-between);
+  flex: 1;
+}

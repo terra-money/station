@@ -1,0 +1,31 @@
+@import "mixins";
+
+.options {
+  gap: 16px;
+
+  @include desktop {
+    @include flex;
+  }
+
+  @include mobile {
+    display: grid;
+    grid-template: repeat(2, 1fr) / repeat(2, 1fr);
+  }
+}
+
+.option {
+  @include flex;
+  flex: 1;
+
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-weight: var(--bold);
+  opacity: 0.3;
+  transition: all var(--transition);
+  user-select: none;
+  height: 80px;
+}
+
+.active {
+  opacity: 1;
+}

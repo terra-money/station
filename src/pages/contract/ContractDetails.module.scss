@@ -1,0 +1,26 @@
+@import "mixins";
+
+.main {
+  overflow: hidden;
+  width: 100%;
+}
+
+.header {
+  @include desktop {
+    @include flex(flex-start);
+    gap: 40px;
+  }
+
+  @include mobile {
+    display: grid;
+    gap: 20px;
+  }
+}
+
+.link {
+  font-weight: var(--normal);
+}
+
+.wrapper {
+  overflow: hidden;
+}

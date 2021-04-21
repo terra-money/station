@@ -1,0 +1,27 @@
+@import "mixins";
+
+.border {
+  border: solid 1px var(--input-border);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.header {
+  @include flex(space-between);
+  font-size: var(--font-size-small);
+  font-weight: var(--bold);
+  padding: 16px 20px 0;
+}
+
+.error {
+  color: var(--danger);
+  font-size: var(--font-size-small);
+}
+
+/* components */
+.input {
+  flex: 1;
+  font-size: 18px;
+  padding: 20px;
+  text-align: right;
+}

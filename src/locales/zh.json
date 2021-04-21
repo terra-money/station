@@ -1,0 +1,217 @@
+{
+  "Blockchain": {
+    "Mnemonic": "",
+    "Address": "地址",
+    "Wallet": "钱包",
+    "Wallets": "",
+    "Coins": "货币",
+    "Tokens": "",
+    "Balance": "",
+    "Tx hash": "",
+    "Gas": "",
+    "Tax": "税金",
+    "Fee": "手续费",
+    "Memo": "Memo",
+    "decimals": "",
+    "Buy": "",
+    "Exchanges": "",
+    "Fiat": "",
+    "APY": ""
+  },
+  "Form": {
+    "Amount": "数量",
+    "Recipient": "接受者",
+    "Name": "智能合约名称",
+    "optional": "",
+    "Submit": "",
+    "Confirm": "确认",
+    "Reset": ""
+  },
+  "Validate": {
+    "{{label}} is required": "请输入{{label}}",
+    "{{label}} is not defined": "",
+    "{{label}} is not available": "",
+    "{{label}} is not supported": "",
+    "{{label}} is invalid": "{{label}}无效",
+    "{{label}} already exists": "{{label}}已存在",
+    "{{label}} does not exist": "",
+    "{{label}} must be longer than {{length}} characters": "",
+    "Already exists": "",
+    "Invalid": "无效",
+    "Invalid {{label}}": ""
+  },
+  "Loading": {
+    "Initializing app...": "",
+    "Loading...": "加载中...",
+    "Load more": "",
+    "Loading more...": "",
+    "Nothing more to load": "",
+    "Simulating...": "模拟中...",
+    "Broadcasting a tx...": "",
+    "Broadcasting transaction": "",
+    "Queued": ""
+  },
+  "Success": {
+    "Success!": "成功！"
+  },
+  "Failure": {
+    "Failed": "",
+    "Simulation failed": "",
+    "User denied": "",
+    "Failed to create tx": "",
+    "Tx failed": ""
+  },
+  "Application": {
+    "Go back": "",
+    "View": "",
+    "Show all": "",
+    "Copy": "复制",
+    "Copied": "复制完成",
+    "Active": "Active",
+    "Inactive": "",
+    "Not found": ""
+  },
+  "Units": {
+    "year": "",
+    "day": "",
+    "{{d}} days": "{{d}} 天"
+  },
+  "Preferences": {
+    "Language": "",
+    "Currency": ""
+  },
+  "Auth": {
+    "Connect": "连接",
+    "Disconnect": "",
+    "New wallet": "新钱包",
+    "Recover wallet": "",
+    "Connect wallet": "",
+    "Password": "密码",
+    "Confirm password": "确认密码",
+    "Password does not match": "密码不匹配",
+    "Change password": "更改密码",
+    "Current password": "当前密码",
+    "New password": "新密码",
+    "Confirm new password": "确认新密码",
+    "Incorrect password": "密码不正确",
+    "Export wallet": "",
+    "Delete wallet": "删除钱包",
+    "Install extension": ""
+  },
+  "Menu": {
+    "Dashboard": "仪表盘",
+    "Wallet": "钱包",
+    "NFT": "",
+    "History": "交易记录",
+    "Stake": "",
+    "Governance": "治理",
+    "Contract": "智能合约"
+  },
+  "Dashboard": {
+    "Luna price": "Luna 价格",
+    "Tax rate": "税率",
+    "Issuance": "发行量",
+    "Community pool": "社区池",
+    "Staking ratio": "质押比率"
+  },
+  "Chart": {
+    "Transaction volume": "交易量",
+    "Staking return": "质押收益",
+    "Tax rewards": "税收奖励",
+    "Wallets": ""
+  },
+  "Wallet": {
+    "Add tokens": "",
+    "Manage list": ""
+  },
+  "Txs": {
+    "Send": "转出",
+    "Swap": "兑换",
+    "Stake": "",
+    "Delegate": "委托",
+    "Redelegate": "再委托",
+    "Undelegate": "取消委托",
+    "Withdraw rewards": "",
+    "Withdraw commission": "",
+    "New proposal": "提案",
+    "Deposit": "保证金",
+    "Vote": "投票",
+    "Transfer NFT": "",
+    "Earn": ""
+  },
+  "Swap": {
+    "From": "",
+    "To": "",
+    "Spread": "价差(Spread)",
+    "Slippage tolerance": "",
+    "Oracle price": "",
+    "Pair price": "",
+    "Expected price": "",
+    "Minimum received": "",
+    "Trading fee": ""
+  },
+  "Stake": {
+    "Delegations": "委托",
+    "Undelegations": "",
+    "Delegated": "委托",
+    "Undelegated": "取消委托",
+    "Staking rewards": ""
+  },
+  "Validator": {
+    "Validators": "",
+    "Voting power": "投票权",
+    "Self delegation": "",
+    "Commission": "手续费",
+    "Uptime": "",
+    "Validator details": "验证人详情",
+    "Operator address": "运营地址",
+    "Account address": "账户地址",
+    "Jailed": ""
+  },
+  "Governance": {
+    "Voting": "投票中",
+    "Votes": "",
+    "Initial deposit": "初始保证金",
+    "Deposited": "",
+    "Depositors": "担保人们",
+    "Depositor": "担保人",
+    "Deposit end time": "保证金结束时间",
+    "Passed": "通过",
+    "Rejected": "拒绝",
+    "Minimum deposit": "最小保证金",
+    "Maximum deposit period": "最大保证金周期",
+    "Voting period": "投票期",
+    "Proposal": "",
+    "Proposal details": "提案详情",
+    "Proposal type": "",
+    "Title": "标题",
+    "Description": "描述",
+    "Changes": "更改的内容",
+    "Yes": "赞成",
+    "No": "反对",
+    "No with veto": "",
+    "Abstain": "弃权",
+    "Tallying procedure": "统计过程",
+    "Quorum": "法定人数(Quorum)",
+    "Pass threshold": "通过门槛",
+    "Veto threshold": "否决门槛"
+  },
+  "Contract": {
+    "Upload": "上传",
+    "Instantiate": "",
+    "Query": "查询",
+    "Execute": "",
+    "Upload a wasm file": "",
+    "File": "文件",
+    "Size": "文件大小",
+    "Instantiate a code": ""
+  },
+  "NFT": {
+    "Marketplace": "",
+    "Collection": ""
+  },
+  "Address book": {
+    "Address book": "",
+    "Add a new address": ""
+  }
+}

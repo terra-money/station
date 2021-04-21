@@ -1,0 +1,51 @@
+@import "mixins";
+@import "forms";
+
+.form {
+  display: grid;
+  gap: 20px;
+}
+
+.submit {
+  margin-top: 20px;
+}
+
+/* form group */
+.group {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+
+  > * {
+    flex: 1;
+  }
+
+  .label {
+    font-weight: var(--normal);
+  }
+
+  .button {
+    @include border;
+    @include size;
+    flex: none;
+    width: var(--input-height);
+  }
+}
+
+/* form item */
+.header {
+  @include flex(space-between);
+}
+
+.label {
+  font-weight: var(--bold);
+}
+
+.extra {
+  font-size: var(--font-size-small);
+}
+
+.error {
+  color: var(--danger);
+  font-size: var(--font-size-small);
+}

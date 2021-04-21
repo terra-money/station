@@ -1,0 +1,22 @@
+@import "mixins";
+
+.item {
+  border-bottom: 1px solid var(--card-border);
+  padding: 12px 0;
+}
+
+.button {
+  @include flex;
+
+  background: var(--button-default-bg);
+  border-radius: 50%;
+  color: var(--button-default-text);
+  width: 24px;
+  height: 24px;
+  transition: all var(--transition);
+}
+
+.added {
+  background: var(--text);
+  color: var(--bg);
+}

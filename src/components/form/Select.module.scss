@@ -1,0 +1,40 @@
+@import "forms";
+
+.wrapper {
+  position: relative;
+}
+
+.select {
+  @include border;
+  @include size;
+  appearance: none;
+  padding-right: 36px;
+  width: 100%;
+}
+
+.before {
+  border-right: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.small {
+  border-radius: 4px;
+  font-size: var(--font-size-small);
+  padding-left: 8px;
+  padding-right: 24px;
+  height: 24px;
+}
+
+/* caret */
+.caret {
+  pointer-events: none;
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translate(0, -50%);
+}
+
+.small + .caret {
+  right: 4px;
+}

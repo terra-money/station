@@ -1,0 +1,17 @@
+@import "mixins";
+
+.list {
+  display: grid;
+  gap: 8px;
+}
+
+.wallet {
+  @include flex(space-between);
+  width: 100%;
+  padding: 12px 16px;
+}
+
+.active {
+  background: var(--button-default-bg);
+  border-color: var(--button-primary-bg);
+}

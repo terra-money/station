@@ -1,0 +1,82 @@
+@import "mixins";
+
+.page {
+  overflow: hidden;
+  // padding here to position progress bar
+
+  @include desktop {
+    padding: 32px var(--main-padding-horizontal);
+  }
+
+  @include mobile {
+    padding: 28px 0;
+  }
+}
+
+.grid {
+  display: grid;
+
+  @include desktop {
+    gap: 18px;
+  }
+
+  @include mobile {
+    gap: 16px;
+  }
+}
+
+.sub {
+  padding: unset;
+  margin-top: 20px;
+}
+
+.header {
+  @include flex(space-between);
+
+  @include desktop {
+    --font-size-page-title: 36px;
+  }
+
+  @include mobile {
+    --font-size-page-title: 24px;
+    padding: 0 var(--main-padding-horizontal);
+  }
+}
+
+.title {
+  font-size: var(--font-size-page-title);
+}
+
+.sub {
+  .header {
+    @include mobile {
+      display: grid;
+      gap: 8px;
+    }
+  }
+
+  .title {
+    font-size: 24px;
+  }
+}
+
+@include desktop {
+  .small {
+    gap: 36px;
+
+    .header {
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 18px;
+    }
+
+    .main {
+      margin: 0 auto;
+      width: var(--max-width-small);
+      max-width: 100%;
+    }
+  }
+}
+
+.main {
+  overflow: hidden;
+}

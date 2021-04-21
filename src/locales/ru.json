@@ -1,0 +1,217 @@
+{
+  "Blockchain": {
+    "Mnemonic": "",
+    "Address": "Адрес",
+    "Wallet": "Кошелёк",
+    "Wallets": "Кошельки",
+    "Coins": "Монеты",
+    "Tokens": "Токены",
+    "Balance": "Баланс",
+    "Tx hash": "Хэш транзакции",
+    "Gas": "",
+    "Tax": "Налог",
+    "Fee": "Комиссия",
+    "Memo": "Памятка",
+    "decimals": "дробь",
+    "Buy": "Купить",
+    "Exchanges": "Обменники",
+    "Fiat": "фиатная валюта",
+    "APY": "ГПД"
+  },
+  "Form": {
+    "Amount": "Количество",
+    "Recipient": "Получатель",
+    "Name": "Имя",
+    "optional": "необязательное",
+    "Submit": "Отправить",
+    "Confirm": "Подтвердить",
+    "Reset": "Сбросить"
+  },
+  "Validate": {
+    "{{label}} is required": "{{etiqueta}} требуется",
+    "{{label}} is not defined": "{{etiqueta}} не имеет определения",
+    "{{label}} is not available": "{{etiqueta}} не доступно",
+    "{{label}} is not supported": "{{etiqueta}} не поддерживается",
+    "{{label}} is invalid": "{{etiqueta}} является недействительным",
+    "{{label}} already exists": "{{etiqueta}} уже существует",
+    "{{label}} does not exist": "{{etiqueta}} не существует",
+    "{{label}} must be longer than {{length}} characters": "{{etiqueta}} должна быть дленее {{length}} символов",
+    "Already exists": "Уже существует",
+    "Invalid": "Недействительный",
+    "Invalid {{label}}": "Недействительное {{label}}"
+  },
+  "Loading": {
+    "Initializing app...": "Загрузка приложения...",
+    "Loading...": "Загрузка...",
+    "Load more": "Загрузить еще",
+    "Loading more...": "Грузим еще...",
+    "Nothing more to load": "Больше ничего грузить",
+    "Simulating...": "Моделирование...",
+    "Broadcasting a tx...": "Вещаем транзакцию...",
+    "Broadcasting transaction": "Вещание транзакции",
+    "Queued": "В очереде"
+  },
+  "Success": {
+    "Success!": "Успешно!"
+  },
+  "Failure": {
+    "Failed": "Не удалось",
+    "Simulation failed": "Не удалось смоделировать",
+    "User denied": "Пользователь запретил",
+    "Failed to create tx": "Не удалось создать транзакцию",
+    "Tx failed": "Транзакция не удалась"
+  },
+  "Application": {
+    "Go back": "Назад",
+    "View": "Просмотр",
+    "Show all": "Показать всё",
+    "Copy": "Копировать",
+    "Copied": "Скопировано",
+    "Active": "Активный",
+    "Inactive": "Неактивный",
+    "Not found": "Не найдено"
+  },
+  "Units": {
+    "year": "год",
+    "day": "день",
+    "{{d}} days": "{{d}} дней"
+  },
+  "Preferences": {
+    "Language": "Язык",
+    "Currency": "Валюта"
+  },
+  "Auth": {
+    "Connect": "Соединять",
+    "Disconnect": "Отсоединить",
+    "New wallet": "Новый кошелёк",
+    "Recover wallet": "Восстановить кошелёк",
+    "Connect wallet": "Привязать кошелёк",
+    "Password": "Пароль",
+    "Confirm password": "Подтвердить Пароль",
+    "Password does not match": "Пароли не совподают",
+    "Change password": "Смена пароля",
+    "Current password": "Текущий пароль",
+    "New password": "Новый пароль",
+    "Confirm new password": "Подтвердите новый пароль",
+    "Incorrect password": "Неверный пароль",
+    "Export wallet": "Экспортировать кошелёк",
+    "Delete wallet": "Удалить кошелёк",
+    "Install extension": "Установить расширение"
+  },
+  "Menu": {
+    "Dashboard": "Приборная панель",
+    "Wallet": "кошелёк",
+    "NFT": "НЗТ",
+    "History": "История",
+    "Stake": "Ставка",
+    "Governance": "Управление",
+    "Contract": "Договор"
+  },
+  "Dashboard": {
+    "Luna price": "Цена Luna",
+    "Tax rate": "Ставка налога",
+    "Issuance": "Выдача",
+    "Community pool": "Общий пул",
+    "Staking ratio": "Соотношение ставок"
+  },
+  "Chart": {
+    "Transaction volume": "Объем транзакций",
+    "Staking return": "Возврат по ставке",
+    "Tax rewards": "Налоговые вознаграждения",
+    "Wallets": "Кошельки"
+  },
+  "Wallet": {
+    "Add tokens": "Добавить токен",
+    "Manage list": "Управление списками"
+  },
+  "Txs": {
+    "Send": "Отправить",
+    "Swap": "Обменять",
+    "Stake": "Ставки",
+    "Delegate": "Делегировать",
+    "Redelegate": "Переделегировать",
+    "Undelegate": "Отменить делегирование",
+    "Withdraw rewards": "Вознаграждения за снятие",
+    "Withdraw commission": "Комиссия за снятие",
+    "New proposal": "Новое предложение",
+    "Deposit": "Внести",
+    "Vote": "Голосование",
+    "Transfer NFT": "Передать НЗТ",
+    "Earn": "Заработать"
+  },
+  "Swap": {
+    "From": "С",
+    "To": "На",
+    "Spread": "разница",
+    "Slippage tolerance": "Допуск отклонения",
+    "Oracle price": "Цена оракула",
+    "Pair price": "Цена пары",
+    "Expected price": "Ожидаемая цена",
+    "Minimum received": "Минимальный итог",
+    "Trading fee": "Комиссия"
+  },
+  "Stake": {
+    "Delegations": "Делегации",
+    "Undelegations": "Отмена Делегаций",
+    "Delegated": "Делегированный",
+    "Undelegated": "Неделегированный",
+    "Staking rewards": "Ставочные награды"
+  },
+  "Validator": {
+    "Validators": "Валидаторы",
+    "Voting power": "Право голоса",
+    "Self delegation": "Самоделигация",
+    "Commission": "Комиссия",
+    "Uptime": "Время работы",
+    "Validator details": "Детали валидатора",
+    "Operator address": "Адрес оператора",
+    "Account address": "Адрес учетной записи",
+    "Jailed": "Заключенный"
+  },
+  "Governance": {
+    "Voting": "Голосование",
+    "Votes": "Голоса",
+    "Initial deposit": "Начальный депозит",
+    "Deposited": "Внесено",
+    "Depositors": "Вкладчики",
+    "Depositor": "Вкладчик",
+    "Deposit end time": "Время окончания депозита",
+    "Passed": "Прошедший",
+    "Rejected": "Отклоненный",
+    "Minimum deposit": "Минимальный депозит",
+    "Maximum deposit period": "Максимальный срок депозита",
+    "Voting period": "Период голосования",
+    "Proposal": "Предложение",
+    "Proposal details": "Детали предложения",
+    "Proposal type": "Тип предложения",
+    "Title": "Заголовок",
+    "Description": "Описание",
+    "Changes": "Изменения",
+    "Yes": "Да",
+    "No": "Нет",
+    "No with veto": "Нет с правом вето",
+    "Abstain": "Воздержаться",
+    "Tallying procedure": "Процедура подсчета",
+    "Quorum": "Кворум",
+    "Pass threshold": "Порого прохождения",
+    "Veto threshold": "Порог вето"
+  },
+  "Contract": {
+    "Upload": "Загрузить",
+    "Instantiate": "Инициализировать",
+    "Query": "Запрос",
+    "Execute": "Выполнить",
+    "Upload a wasm file": "Загрузить wasm файл",
+    "File": "Файл",
+    "Size": "Размер",
+    "Instantiate a code": "Инициализация кода"
+  },
+  "NFT": {
+    "Marketplace": "Торговая площадка",
+    "Collection": "Коллекция"
+  },
+  "Address book": {
+    "Address book": "Адресная книга",
+    "Add a new address": "Добавить новый адрес"
+  }
+}
