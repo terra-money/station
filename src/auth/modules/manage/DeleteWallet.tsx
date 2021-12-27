@@ -18,7 +18,7 @@ interface Values {
 const DeleteWallet = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const { wallet, disconnect, validatePassword } = useAuth()
+  const { getConnectedWallet, disconnect, validatePassword } = useAuth()
 
   /* form */
   const form = useForm<Values>()
@@ -27,8 +27,7 @@ const DeleteWallet = () => {
 
   const [done, setDone] = useState(false)
   const submit = ({ password }: Values) => {
-    if (!wallet) throw new Error("Wallet is not connected")
-    const { name } = wallet
+    const { name } = getConnectedWallet()
     disconnect()
     deleteWallet({ name, password })
     setDone(true)

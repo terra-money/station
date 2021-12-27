@@ -14,28 +14,39 @@ const ManageWallets = () => {
   const { t } = useTranslation()
   const { wallet, available } = useAuth()
 
-  const list = [
-    {
-      to: "./export",
-      children: t("Export wallet"),
-      icon: <QrCodeIcon />,
-    },
-    {
-      to: "./password",
-      children: t("Change password"),
-      icon: <PasswordIcon />,
-    },
-    {
-      to: "./delete",
-      children: t("Delete wallet"),
-      icon: <DeleteOutlineIcon />,
-    },
-    {
-      to: "./disconnect",
-      children: t("Disconnect"),
-      icon: <LogoutIcon />,
-    },
-  ]
+  if (!wallet) return null
+
+  const list =
+    "ledger" in wallet
+      ? [
+          {
+            to: "./disconnect",
+            children: t("Disconnect"),
+            icon: <LogoutIcon />,
+          },
+        ]
+      : [
+          {
+            to: "./export",
+            children: t("Export wallet"),
+            icon: <QrCodeIcon />,
+          },
+          {
+            to: "./password",
+            children: t("Change password"),
+            icon: <PasswordIcon />,
+          },
+          {
+            to: "./delete",
+            children: t("Delete wallet"),
+            icon: <DeleteOutlineIcon />,
+          },
+          {
+            to: "./disconnect",
+            children: t("Disconnect"),
+            icon: <LogoutIcon />,
+          },
+        ]
 
   interface Item {
     to: string

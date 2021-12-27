@@ -68,7 +68,7 @@ const Connected = () => {
         size="small"
         outline
       >
-        {wallet?.name ?? truncate(address)}
+        {wallet && "name" in wallet ? wallet.name : truncate(address)}
       </Button>
     </Popover>
   )

@@ -402,7 +402,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
         />
       ) : (
         <Grid gap={4}>
-          {wallet && (
+          {wallet && "name" in wallet && (
             <FormItem label={t("Password")} error={incorrect}>
               <Input
                 type="password"

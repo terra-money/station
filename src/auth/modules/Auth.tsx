@@ -1,5 +1,8 @@
 import { Route, Routes } from "react-router-dom"
 
+/* connect */
+import AccessWithLedger from "../ledger/AccessWithLedger"
+
 /* create */
 import NewWallet from "./create/NewWallet"
 import RecoverWallet from "./create/RecoverWallet"
@@ -15,6 +18,9 @@ const Auth = () => {
   return (
     <Routes>
       <Route index element={<ManageWallets />} />
+
+      {/* connect */}
+      <Route path="ledger" element={<AccessWithLedger />} />
 
       {/* create */}
       <Route path="new" element={<NewWallet />} />

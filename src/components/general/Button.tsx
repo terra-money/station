@@ -36,7 +36,7 @@ export default Button
 
 /* helpers */
 export const getClassName = (props: ButtonConfig) => {
-  const { size, outline, block, disabled } = props
+  const { size, outline, block, disabled, loading } = props
   const color = props.color ?? (!outline && "default")
-  return cx(styles.button, size, color, { outline, block, disabled })
+  return cx(styles.button, size, color, { outline, block, disabled, loading })
 }

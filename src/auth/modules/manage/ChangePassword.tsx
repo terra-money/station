@@ -20,7 +20,7 @@ interface Values {
 const ChangePassword = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const { wallet, validatePassword } = useAuth()
+  const { getConnectedWallet, validatePassword } = useAuth()
 
   /* form */
   const form = useForm<Values>({ mode: "onChange" })
@@ -30,8 +30,7 @@ const ChangePassword = () => {
 
   const [done, setDone] = useState(false)
   const submit = ({ current, password }: Values) => {
-    if (!wallet) throw new Error("Wallet is not connected")
-    const { name } = wallet
+    const { name } = getConnectedWallet()
     changePassword({ name, oldPassword: current, newPassword: password })
     setDone(true)
   }

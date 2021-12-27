@@ -1,13 +1,12 @@
 import { ReactNode } from "react"
 import { useTranslation } from "react-i18next"
+import UsbIcon from "@mui/icons-material/Usb"
 import { ConnectType, useWallet } from "@terra-money/wallet-provider"
-import { EXTENSION } from "config/constants"
 import { useAddress } from "data/wallet"
-import { Button, ExternalLink } from "components/general"
+import { Button } from "components/general"
 import { Grid } from "components/layout"
 import { List } from "components/display"
 import { ModalButton } from "components/feedback"
-import { FormHelp } from "components/form"
 import { useAuth } from "auth"
 import SwitchWallet from "auth/modules/select/SwitchWallet"
 import Connected from "./Connected"
@@ -39,6 +38,11 @@ const ConnectWallet = ({ renderButton }: Props) => {
       children: type === ConnectType.EXTENSION ? t("Extension") : name,
       onClick: () => connect(type, identifier),
     })),
+    {
+      icon: <UsbIcon />,
+      to: "/auth/ledger",
+      children: t("Access with ledger"),
+    },
     ...availableInstallTypes
       .filter((type) => type === ConnectType.EXTENSION)
       .map((type) => ({
@@ -55,11 +59,6 @@ const ConnectWallet = ({ renderButton }: Props) => {
       <Grid gap={20}>
         <SwitchWallet />
         <List list={available.length ? available : list} />
-        <FormHelp>
-          Use{" "}
-          <ExternalLink href={EXTENSION}>Terra Station Extension</ExternalLink>{" "}
-          to access with Ledger wallet
-        </FormHelp>
       </Grid>
     </ModalButton>
   )

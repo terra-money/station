@@ -5,6 +5,11 @@ interface Wallet {
   address: string
 }
 
+interface LedgerWallet {
+  address: string
+  ledger: true
+}
+
 interface StoredWallet extends Wallet {
   encrypted: string
 }

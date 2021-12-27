@@ -7,12 +7,12 @@ import styles from "./SwitchWallet.module.scss"
 const cx = classNames.bind(styles)
 
 const SwitchWallet = () => {
-  const { wallet, wallets, connect } = useAuth()
+  const { connectedWallet, wallets, connect } = useAuth()
 
   return !wallets.length ? null : (
     <ul className={styles.list}>
       {wallets.map(({ name, address }) => {
-        const active = name === wallet?.name
+        const active = name === connectedWallet?.name
 
         return (
           <li key={name}>

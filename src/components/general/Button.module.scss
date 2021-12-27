@@ -22,7 +22,8 @@
   }
 }
 
-.disabled {
+.disabled,
+.loading {
   @include disabled;
 }
 
