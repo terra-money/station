@@ -21,6 +21,9 @@ export const TERRA_VALIDATORS =
 
 export const STAKE_ID = "https://stake.id/#/validator/"
 
+/* tx */
+export const DEFAULT_GAS_ADJUSTMENT = 1.75
+
 /* swap */
 export const TERRASWAP_COMMISSION_RATE = 0.003
 

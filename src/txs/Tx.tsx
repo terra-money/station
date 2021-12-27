@@ -18,6 +18,7 @@ import { CreateTxFailed, TxFailed } from "@terra-money/wallet-provider"
 import { useWallet, useConnectedWallet } from "@terra-money/wallet-provider"
 
 import { Contents } from "types/components"
+import { DEFAULT_GAS_ADJUSTMENT } from "config/constants"
 import { has } from "utils/num"
 import { getAmount, sortCoins } from "utils/coin"
 import { getErrorMessage } from "utils/error"
@@ -79,7 +80,8 @@ interface RenderProps<TxValues> {
 function Tx<TxValues>(props: Props<TxValues>) {
   const { token, decimals, amount, balance } = props
   const { initialGasDenom, estimationTxValues, createTx } = props
-  const { gasAdjustment = 1, preventTax, excludeGasDenom } = props
+  const { gasAdjustment = DEFAULT_GAS_ADJUSTMENT } = props
+  const { preventTax, excludeGasDenom } = props
   const { children, onChangeMax } = props
   const { onPost, redirectAfterTx, queryKeys } = props
 
