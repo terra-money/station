@@ -6,23 +6,10 @@ const DevTools = () => {
   const queryClient = useQueryClient()
   if (!debug.query) return null
 
-  const list = [
-    {
-      children: "Refetch",
-      onClick: () => queryClient.invalidateQueries(),
-    },
-    {
-      children: "Refresh",
-      onClick: () => queryClient.resetQueries(),
-    },
-  ]
-
   return (
-    <>
-      {list.map((attrs) => (
-        <Button {...attrs} size="small" outline key={attrs.children} />
-      ))}
-    </>
+    <Button onClick={() => queryClient.resetQueries()} size="small" outline>
+      Refresh
+    </Button>
   )
 }
 

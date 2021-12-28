@@ -14,6 +14,7 @@ import Nav from "./sections/Nav"
 import Aside from "./sections/Aside"
 
 /* header */
+import Refresh from "./sections/Refresh"
 import Preferences from "./sections/Preferences"
 import SelectTheme from "./sections/SelectTheme"
 import ConnectWallet from "./sections/ConnectWallet"
@@ -43,6 +44,7 @@ const App = () => {
       <Header>
         <DevTools />
         <section>
+          <Refresh />
           <Preferences />
           <SelectTheme />
         </section>
