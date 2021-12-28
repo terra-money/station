@@ -1,9 +1,9 @@
 import { useTranslation } from "react-i18next"
 import classNames from "classnames/bind"
-import { evolve } from "ramda"
 import LaptopOutlinedIcon from "@mui/icons-material/LaptopOutlined"
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined"
 import { STAKE_ID, TERRA_VALIDATORS } from "config/constants"
+import { Contacts as ContactsParams } from "types/components"
 import { useTerraValidator } from "data/Terra/TerraAPI"
 import { ReactComponent as TerraValidatorProfiles } from "styles/images/stake/TerraValidatorProfiles.svg"
 import { ReactComponent as StakeID } from "styles/images/stake/StakeID.svg"
@@ -83,13 +83,16 @@ const ValidatorCompact = ({ vertical }: { vertical?: boolean }) => {
 export default ValidatorCompact
 
 /* helpers */
-const toLink = (initial: string) => (slug: string) => {
+const toLink = (slug: string, initial: string): string => {
   if (validateLink(slug)) return slug
-  if (slug.startsWith("@")) return toLink(slug.slice(1))
+  if (slug.startsWith("@")) return toLink(slug.slice(1), initial)
   return initial + slug
 }
 
-const parseContacts = evolve({
-  telegram: toLink("https://t.me/"),
-  twitter: toLink("https://twitter.com/"),
-})
+const parseContacts = ({ telegram, twitter, ...contacts }: ContactsParams) => {
+  return {
+    ...contacts,
+    telegram: telegram && toLink(telegram, "https://t.me/"),
+    twitter: twitter && toLink(twitter, "https://twitter.com/"),
+  }
+}
