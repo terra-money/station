@@ -19,6 +19,7 @@ Then, various helper functions will be generated based on the fetched data. */
 export enum SwapMode {
   ONCHAIN = "Market",
   TERRASWAP = "Terraswap",
+  ASTROPORT = "Astroport",
   ROUTESWAP = "Route",
 }
 
@@ -57,15 +58,19 @@ const useSwapUtils = () => {
 
   /* helpers */
   // terraswap
-  const findPairAddress = useCallback(
-    (assets: SwapAssets) => {
+  const findPair = useCallback(
+    (assets: SwapAssets, dex: Dex) => {
       const { offerAsset, askAsset } = assets
-      const [pairAddress] =
-        Object.entries(pairs).find(([, tokens]) =>
-          [offerAsset, askAsset].every((token) => tokens.includes(token))
-        ) ?? []
+      const pair = Object.entries(pairs).find(([, item]) =>
+        [offerAsset, askAsset].every(
+          (asset) => dex === item.dex && item.assets.includes(asset)
+        )
+      )
 
-      return pairAddress
+      if (!pair) return
+
+      const [address, item] = pair
+      return { address, ...item }
     },
     [pairs]
   )
@@ -79,8 +84,13 @@ const useSwapUtils = () => {
   )
 
   const getIsTerraswapAvailable = useCallback(
-    (assets: SwapAssets) => !!findPairAddress(assets),
-    [findPairAddress]
+    (assets: SwapAssets) => !!findPair(assets, "terraswap"),
+    [findPair]
+  )
+
+  const getIsAstroportAvailable = useCallback(
+    (assets: SwapAssets) => !!findPair(assets, "astroport"),
+    [findPair]
   )
 
   const getIsRouteswapAvaialble = useCallback(
@@ -109,6 +119,7 @@ const useSwapUtils = () => {
       const functions = {
         [SwapMode.ONCHAIN]: getIsOnchainAvailable,
         [SwapMode.TERRASWAP]: getIsTerraswapAvailable,
+        [SwapMode.ASTROPORT]: getIsAstroportAvailable,
         [SwapMode.ROUTESWAP]: getIsRouteswapAvaialble,
       }
 
@@ -116,7 +127,12 @@ const useSwapUtils = () => {
         .filter(([, fn]) => fn(assets))
         .map(([key]) => key as SwapMode)
     },
-    [getIsOnchainAvailable, getIsTerraswapAvailable, getIsRouteswapAvaialble]
+    [
+      getIsOnchainAvailable,
+      getIsTerraswapAvailable,
+      getIsAstroportAvailable,
+      getIsRouteswapAvaialble,
+    ]
   )
 
   const getIsSwapAvailable = (assets: Partial<SwapAssets>) =>
@@ -195,14 +211,14 @@ const useSwapUtils = () => {
   }
 
   const getTerraswapParams = useCallback(
-    (params: SwapParams) => {
+    (params: SwapParams, dex: Dex) => {
       const { amount, offerAsset, askAsset, belief_price, max_spread } = params
       const fromNative = isDenom(offerAsset)
-      const pair = findPairAddress({ offerAsset, askAsset })
+      const pair = findPair({ offerAsset, askAsset }, dex)
       const offer_asset = toAsset(offerAsset, amount)
 
       if (!pair) throw new Error("Pair does not exist")
-      const contract = fromNative ? pair : offerAsset
+      const contract = fromNative ? pair.address : offerAsset
 
       /* simulate */
       const query = { simulation: { offer_asset } }
@@ -212,40 +228,57 @@ const useSwapUtils = () => {
         belief_price && max_spread ? { belief_price, max_spread } : {}
       const executeMsg = fromNative
         ? { swap: { ...swap, offer_asset } }
-        : { send: { amount, contract: pair, msg: toBase64({ swap }) } }
+        : { send: { amount, contract: pair.address, msg: toBase64({ swap }) } }
       const coins = fromNative ? new Coins({ [offerAsset]: amount }) : undefined
       const msgs = address
         ? [new MsgExecuteContract(address, contract, executeMsg, coins)]
         : []
 
-      return { simulation: { contract: pair, query }, msgs }
+      return { pair, simulation: { contract: pair.address, query }, msgs }
     },
-    [address, findPairAddress]
+    [address, findPair]
   )
 
-  const simulateTerraswap = async (params: SwapParams) => {
+  const simulateTerraswap = async (
+    params: SwapParams,
+    dex: Dex = "terraswap"
+  ) => {
+    const mode = {
+      terraswap: SwapMode.TERRASWAP,
+      astroport: SwapMode.ASTROPORT,
+    }[dex]
+
+    const query = params
+
     const { amount } = params
-    const { simulation } = getTerraswapParams(params)
+    const { pair, simulation } = getTerraswapParams(params, dex)
 
-    const { assets } = await lcd.wasm.contractQuery<{ assets: [Asset, Asset] }>(
-      simulation.contract,
-      { pool: {} }
-    )
+    if (pair.type === "stable") {
+      const { return_amount: value, commission_amount } =
+        await lcd.wasm.contractQuery<{
+          return_amount: Amount
+          commission_amount: Amount
+        }>(pair.address, simulation.query)
 
-    const { pool, rate } = parsePool(params, assets)
-    const { return_amount: value, commission_amount } = calcXyk(amount, pool)
+      const payload = commission_amount
+      const ratio = toPrice(new BigNumber(amount).div(value))
+      return { mode, query, value, ratio, payload }
+    } else {
+      const { assets } = await lcd.wasm.contractQuery<{
+        assets: [Asset, Asset]
+      }>(simulation.contract, { pool: {} })
 
-    const ratio = toPrice(new BigNumber(amount).div(value))
-
-    return {
-      mode: SwapMode.TERRASWAP,
-      query: params,
-      value,
-      ratio,
-      rate,
-      payload: commission_amount,
+      const { pool, rate } = parsePool(params, assets)
+      const { return_amount: value, commission_amount } = calcXyk(amount, pool)
+      const payload = commission_amount
+      const ratio = toPrice(new BigNumber(amount).div(value))
+      return { mode, query, value, ratio, rate, payload }
     }
   }
+
+  const getAstroportParams = getTerraswapParams
+  const simulateAstroport = (params: SwapParams) =>
+    simulateTerraswap(params, "astroport")
 
   const getRouteswapParams = useCallback(
     (params: SwapParams) => {
@@ -316,6 +349,7 @@ const useSwapUtils = () => {
     const simulationFunctions = {
       [SwapMode.ONCHAIN]: simulateOnchain,
       [SwapMode.TERRASWAP]: simulateTerraswap,
+      [SwapMode.ASTROPORT]: simulateAstroport,
       [SwapMode.ROUTESWAP]: simulateRouteswap,
     }
 
@@ -328,14 +362,21 @@ const useSwapUtils = () => {
         [SwapMode.ONCHAIN]: (params: SwapParams) =>
           getOnchainParams(params).msgs,
         [SwapMode.TERRASWAP]: (params: SwapParams) =>
-          getTerraswapParams(params).msgs,
+          getTerraswapParams(params, "terraswap").msgs,
+        [SwapMode.ASTROPORT]: (params: SwapParams) =>
+          getAstroportParams(params, "astroport").msgs,
         [SwapMode.ROUTESWAP]: (params: SwapParams) =>
           getRouteswapParams(params).msgs,
       }
 
       return getMsgs[mode]
     },
-    [getOnchainParams, getTerraswapParams, getRouteswapParams]
+    [
+      getOnchainParams,
+      getTerraswapParams,
+      getAstroportParams,
+      getRouteswapParams,
+    ]
   )
 
   const getSimulateQuery = (params: Partial<SwapParams>) => ({

@@ -23,7 +23,8 @@ const AssetActions = ({ token, symbol, balance }: Props) => {
 
   const terraswapAvailableList = uniq(flatten(Object.values(pairs)))
   const getIsSwappableToken = (token: TerraAddress) =>
-    isDenomTerraNative(token) || terraswapAvailableList.includes(token)
+    isDenomTerraNative(token) ||
+    terraswapAvailableList.find(({ assets }) => assets.includes(token))
 
   return (
     <ExtraActions>

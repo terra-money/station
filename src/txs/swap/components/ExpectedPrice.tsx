@@ -94,9 +94,15 @@ const ExpectedPrice = ({ mode, input, ...props }: Props) => {
 
     return (
       <>
-        <dt>{t("Pair price")}</dt>
-        <dd>{renderPrice(price)}</dd>
+        {!!price && (
+          <>
+            <dt>{t("Pair price")}</dt>
+            <dd>{renderPrice(price)}</dd>
+          </>
+        )}
+
         {renderExpectedPrice()}
+
         <dt>{t("Trading fee")}</dt>
         <dd>
           {!isLoading && (
@@ -115,6 +121,7 @@ const ExpectedPrice = ({ mode, input, ...props }: Props) => {
     ({
       [SwapMode.ONCHAIN]: renderOnchain,
       [SwapMode.TERRASWAP]: renderTerraswap,
+      [SwapMode.ASTROPORT]: renderTerraswap,
       [SwapMode.ROUTESWAP]: renderRouteswap,
     }[mode]())
 

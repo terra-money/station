@@ -61,7 +61,9 @@ const SingleSwapContext: FC = ({ children }) => {
   const terraswapAvailableList = useMemo(() => {
     if (!(ibcWhitelist && cw20Whitelist)) return
 
-    const terraswapAvailableList = uniq(flatten(Object.values(pairs)))
+    const terraswapAvailableList = uniq(
+      flatten(Object.values(pairs).map(({ assets }) => assets))
+    )
 
     const ibc = terraswapAvailableList
       .filter(isDenomIBC)
