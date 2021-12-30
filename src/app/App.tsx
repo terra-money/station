@@ -16,6 +16,7 @@ import Aside from "./sections/Aside"
 /* header */
 import Refresh from "./sections/Refresh"
 import Preferences from "./sections/Preferences"
+import SelectNetwork from "./sections/SelectNetwork"
 import SelectTheme from "./sections/SelectTheme"
 import ConnectWallet from "./sections/ConnectWallet"
 
@@ -46,6 +47,7 @@ const App = () => {
         <section>
           <Refresh />
           <Preferences />
+          <SelectNetwork />
           <SelectTheme />
         </section>
         <ValidatorButton />

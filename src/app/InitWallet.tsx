@@ -1,17 +1,19 @@
 import { FC, useMemo } from "react"
 import { QueryClient, QueryClientProvider } from "react-query"
 import { useWallet, WalletStatus } from "@terra-money/wallet-provider"
+import { useNetworkName } from "data/wallet"
 import Splash from "auth/modules/Splash"
 import Online from "./containers/Online"
 
 const InitWallet: FC = ({ children }) => {
-  const { status, network } = useWallet()
+  const { status } = useWallet()
   const queryClient = useQueryClient()
+  const networkName = useNetworkName()
 
   return status === WalletStatus.INITIALIZING ? (
     <Splash />
   ) : (
-    <QueryClientProvider client={queryClient} key={network.name}>
+    <QueryClientProvider client={queryClient} key={networkName}>
       {children}
       <Online />
     </QueryClientProvider>
@@ -22,8 +24,7 @@ export default InitWallet
 
 /* hooks */
 const useQueryClient = () => {
-  const { network } = useWallet()
-  const { name } = network
+  const name = useNetworkName()
 
   return useMemo(() => {
     if (!name) throw new Error()

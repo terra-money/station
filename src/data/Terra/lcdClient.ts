@@ -1,9 +1,9 @@
 import { useMemo } from "react"
 import { LCDClient } from "@terra-money/terra.js"
-import { useWallet } from "@terra-money/wallet-provider"
+import { useNetwork } from "data/wallet"
 
 export const useLCDClient = () => {
-  const { network } = useWallet()
+  const network = useNetwork()
   const lcdClient = useMemo(
     () => new LCDClient({ ...network, URL: network.lcd }),
     [network]

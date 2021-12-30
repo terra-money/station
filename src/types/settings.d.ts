@@ -6,7 +6,6 @@ interface AddressBook {
 }
 
 /* Tokens */
-type NetworkName = string
 type CustomTokens = Record<NetworkName, CustomTokensByNetwork>
 
 interface CustomTokensByNetwork {
