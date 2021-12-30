@@ -255,6 +255,9 @@ function Tx<TxValues>(props: Props<TxValues>) {
     setSubmitting(false)
   }
 
+  const submittingLabel =
+    wallet && "ledger" in wallet ? t("Confirm in ledger") : ""
+
   /* render */
   const balanceAfterTx =
     balance &&
@@ -423,7 +426,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
             disabled={!estimatedGas || !!disabled}
             submitting={submitting}
           >
-            {disabled}
+            {submitting ? submittingLabel : disabled}
           </Submit>
         </Grid>
       )}
