@@ -13,7 +13,7 @@ import { isDenomIBC, isDenomTerraNative } from "@terra.kitchen/utils"
 import { isDenom, readDenom } from "@terra.kitchen/utils"
 import { Coin, Coins, LCDClient } from "@terra-money/terra.js"
 import { CreateTxOptions, Fee } from "@terra-money/terra.js"
-import { UserDenied } from "@terra-money/wallet-provider"
+import { ConnectType, UserDenied } from "@terra-money/wallet-provider"
 import { CreateTxFailed, TxFailed } from "@terra-money/wallet-provider"
 import { useWallet, useConnectedWallet } from "@terra-money/wallet-provider"
 
@@ -391,11 +391,16 @@ function Tx<TxValues>(props: Props<TxValues>) {
     )
   }
 
+  const walletError =
+    connectedWallet?.connectType === ConnectType.READONLY
+      ? t("Wallet is connected as read-only mode")
+      : isWalletEmpty
+      ? t("Coins required to post transactions")
+      : ""
+
   const submitButton = (
     <>
-      {isWalletEmpty && (
-        <FormError>{t("Coins required to post transactions")}</FormError>
-      )}
+      {walletError && <FormError>{walletError}</FormError>}
 
       {!address ? (
         <ConnectWallet
