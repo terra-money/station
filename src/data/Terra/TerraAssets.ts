@@ -7,7 +7,6 @@ import { ASSETS } from "config/constants"
 import shuffle from "utils/shuffle"
 import { queryKey, RefetchOptions } from "../query"
 import { useNetworkName } from "../wallet"
-import pairs from "./pairs.json"
 
 const config = { baseURL: ASSETS }
 
@@ -32,8 +31,6 @@ export const useTerraAssetsByNetwork = <T>(
     [queryKey.TerraAssets, path, networkName],
     async () => {
       const { data } = await axios.get<Record<NetworkName, T>>(path, config)
-      if (path === "cw20/pairs.json")
-        return (pairs as unknown as Record<NetworkName, T>)[networkName]
       return callback?.(data[networkName]) ?? data[networkName]
     },
     { ...RefetchOptions.INFINITY, enabled: !disabled }
