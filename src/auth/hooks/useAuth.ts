@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react"
 import { atom, useRecoilState } from "recoil"
 import { encode } from "js-base64"
-import { AccAddress, CreateTxOptions } from "@terra-money/terra.js"
+import { AccAddress, CreateTxOptions, isTxError } from "@terra-money/terra.js"
 import { PublicKey, RawKey, SignatureV2 } from "@terra-money/terra.js"
 import { useChainID } from "data/wallet"
 import { useLCDClient } from "data/Terra/lcdClient"
@@ -113,14 +113,18 @@ const useAuth = () => {
       const unsignedTx = await lcd.tx.create([{ address }], txOptions)
       const options = { chainID, accountNumber, sequence, signMode }
       const signedTx = await key.signTx(unsignedTx, options)
-      return { result: await lcd.tx.broadcastSync(signedTx) }
+      const result = await lcd.tx.broadcastSync(signedTx)
+      if (isTxError(result)) throw new Error(result.raw_log)
+      return { result }
     } else {
       const pk = getKey(password)
       if (!pk) throw new PasswordError("Incorrect password")
       const key = new RawKey(Buffer.from(pk, "hex"))
       const wallet = lcd.wallet(key)
       const signedTx = await wallet.createAndSignTx(txOptions)
-      return { result: await lcd.tx.broadcastSync(signedTx) }
+      const result = await lcd.tx.broadcastSync(signedTx)
+      if (isTxError(result)) throw new Error(result.raw_log)
+      return { result }
     }
   }
 
