@@ -9,7 +9,7 @@ import { getAmount } from "utils/coin"
 import { AnchorEarnAction } from "txs/earn/AnchorEarnForm"
 import { queryKey, RefetchOptions } from "../query"
 import { useAddress, useNetworkName } from "../wallet"
-import { useLCDClient } from "../Terra/lcdClient"
+import { useLCDClient } from "../queries/lcdClient"
 
 const {
   AddressProviderFromJson,

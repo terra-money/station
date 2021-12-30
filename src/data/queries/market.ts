@@ -1,6 +1,6 @@
 import { useQuery } from "react-query"
 import { queryKey, RefetchOptions } from "../query"
-import { useLCDClient } from "../Terra/lcdClient"
+import { useLCDClient } from "./lcdClient"
 
 export const useMarketParams = () => {
   const lcd = useLCDClient()

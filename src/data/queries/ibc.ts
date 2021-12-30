@@ -1,7 +1,7 @@
 import { useQuery } from "react-query"
 import { isDenomIBC } from "@terra.kitchen/utils"
 import { queryKey, RefetchOptions } from "../query"
-import { useLCDClient } from "../Terra/lcdClient"
+import { useLCDClient } from "./lcdClient"
 
 export const useIBCBaseDenom = (denom: Denom, enabled: boolean) => {
   const lcd = useLCDClient()

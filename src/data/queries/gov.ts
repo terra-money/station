@@ -5,7 +5,7 @@ import { sentenceCase } from "sentence-case"
 import { Proposal, Vote } from "@terra-money/terra.js"
 import { Color } from "types/components"
 import { queryKey, RefetchOptions } from "../query"
-import { useLCDClient } from "../Terra/lcdClient"
+import { useLCDClient } from "./lcdClient"
 
 export const useVotingParams = () => {
   const lcd = useLCDClient()

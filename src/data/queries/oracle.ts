@@ -4,7 +4,7 @@ import { getAmount, sortCoins, sortDenoms } from "utils/coin"
 import { toPrice } from "utils/num"
 import { queryKey, RefetchOptions } from "../query"
 import { useCurrency } from "../settings/Currency"
-import { useLCDClient } from "../Terra/lcdClient"
+import { useLCDClient } from "./lcdClient"
 
 export const useActiveDenoms = () => {
   const lcd = useLCDClient()

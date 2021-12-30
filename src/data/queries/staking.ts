@@ -9,7 +9,7 @@ import { has } from "utils/num"
 import { StakeAction } from "txs/stake/StakeForm"
 import { queryKey, Pagination, RefetchOptions } from "../query"
 import { useAddress } from "../wallet"
-import { useLCDClient } from "../Terra/lcdClient"
+import { useLCDClient } from "./lcdClient"
 
 export const useValidators = () => {
   const lcd = useLCDClient()

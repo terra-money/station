@@ -1,7 +1,7 @@
 import { useQueries, useQuery } from "react-query"
 import { isDenom, isDenomLuna } from "@terra.kitchen/utils"
 import { queryKey, RefetchOptions } from "../query"
-import { useLCDClient } from "../Terra/lcdClient"
+import { useLCDClient } from "./lcdClient"
 
 export const useTaxRate = (disabled = false) => {
   const lcd = useLCDClient()

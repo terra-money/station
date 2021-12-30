@@ -9,7 +9,7 @@ import { has, toPrice } from "utils/num"
 import { getAmount, toAsset, toAssetInfo, toTokenItem } from "utils/coin"
 import { toBase64 } from "utils/data"
 import { useAddress } from "data/wallet"
-import { useLCDClient } from "data/Terra/lcdClient"
+import { useLCDClient } from "data/queries/lcdClient"
 import { useSwap } from "./SwapContext"
 import { SwapSpread } from "./SingleSwapContext"
 

@@ -3,12 +3,13 @@ import axios, { AxiosError } from "axios"
 import { fromPairs, toPairs } from "ramda"
 import { flatten, groupBy, map, mergeAll, values } from "ramda"
 import { AccAddress } from "@terra-money/terra.js"
+import { ASSETS } from "config/constants"
 import shuffle from "utils/shuffle"
 import { queryKey, RefetchOptions } from "../query"
 import { useNetworkName } from "../wallet"
 import pairs from "./pairs.json"
 
-const config = { baseURL: "https://assets.terra.money" }
+const config = { baseURL: ASSETS }
 
 export const useTerraAssets = <T>(path: string, callback?: (data: T) => T) => {
   return useQuery<T, AxiosError>(

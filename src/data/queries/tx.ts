@@ -1,7 +1,7 @@
 import { QueryKey, useQuery, useQueryClient } from "react-query"
 import { atom, useSetRecoilState } from "recoil"
 import { queryKey } from "../query"
-import { useLCDClient } from "../Terra/lcdClient"
+import { useLCDClient } from "./lcdClient"
 
 interface LatestTx {
   txhash: string

@@ -2,7 +2,7 @@ import { useQueries, useQuery } from "react-query"
 import { AccAddress } from "@terra-money/terra.js"
 import { queryKey, RefetchOptions } from "../query"
 import { useAddress } from "../wallet"
-import { useLCDClient } from "../Terra/lcdClient"
+import { useLCDClient } from "./lcdClient"
 
 /* contract info */
 export const useContractInfo = (address: TerraAddress) => {
