@@ -1,7 +1,7 @@
 import { FC } from "react"
 import { useTranslation } from "react-i18next"
 import { readPercent } from "@terra.kitchen/utils"
-import { useAnchorAPY } from "data/earn/anchor"
+import { useAnchorAPY } from "data/external/anchor"
 import { Card } from "components/layout"
 import AnchorEarnLogo from "styles/images/AnchorEarn/AnchorEarnLogo"
 import styles from "./AnchorEarnPromote.module.scss"

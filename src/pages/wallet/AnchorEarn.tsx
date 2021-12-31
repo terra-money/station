@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { useAnchorTotalDeposit } from "data/earn/anchor"
+import { useAnchorTotalDeposit } from "data/external/anchor"
 import { has } from "utils/num"
 import { getAmount } from "utils/coin"
 import AnchorEarnLogo from "styles/images/AnchorEarn/AnchorEarnLogo"
