@@ -38,6 +38,14 @@ const input = (
   }
 }
 
+const recipient = () => {
+  return {
+    required: (recipient = "") => !!recipient || "Recipient is required",
+    validate: (recipient = "") =>
+      validateRecipient(recipient) || "Invalid recipient",
+  }
+}
+
 const address = (label = "Recipient", optional = false) => {
   return (address?: string) => {
     if (!address) return optional || `${label} is required`
@@ -67,6 +75,19 @@ const msg = () => {
   }
 }
 
-const validate = { input, decimal, lessThan, address, size, memo, msg }
+const validate = {
+  input,
+  decimal,
+  lessThan,
+  recipient,
+  address,
+  size,
+  memo,
+  msg,
+}
 
 export default validate
+
+/* tns */
+export const validateRecipient = (address: string) =>
+  AccAddress.validate(address) || address.endsWith(".ust")

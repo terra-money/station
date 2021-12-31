@@ -1,15 +1,17 @@
 import { useCallback, useEffect, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
+import PersonIcon from "@mui/icons-material/Person"
 import { AccAddress } from "@terra-money/terra.js"
 import { MsgExecuteContract, MsgSend } from "@terra-money/terra.js"
-import { isDenom, toAmount } from "@terra.kitchen/utils"
+import { isDenom, toAmount, truncate } from "@terra.kitchen/utils"
 import { SAMPLE_ADDRESS } from "config/constants"
 import { queryKey } from "data/query"
 import { useAddress } from "data/wallet"
 import { useBankBalance } from "data/queries/bank"
+import { useTNS } from "data/external/tns"
 import { ExternalLink } from "components/general"
-import { Auto, Card, Grid } from "components/layout"
+import { Auto, Card, Grid, InlineFlex } from "components/layout"
 import { Form, FormItem, FormHelp, Input, FormWarning } from "components/form"
 import AddressBookList from "../AddressBook/AddressBookList"
 import { getPlaceholder, toInput } from "../utils"
@@ -17,7 +19,8 @@ import validate from "../validate"
 import Tx, { getInitialGasDenom } from "../Tx"
 
 interface TxValues {
-  recipient?: AccAddress
+  recipient?: string // AccAddress | TNS
+  address?: AccAddress // hidden input
   input?: number
   memo?: string
 }
@@ -29,7 +32,7 @@ interface Props extends TokenItem {
 
 const SendForm = ({ token, decimals, balance }: Props) => {
   const { t } = useTranslation()
-  const address = useAddress()
+  const connectedAddress = useAddress()
   const bankBalance = useBankBalance()
 
   /* tx context */
@@ -37,7 +40,8 @@ const SendForm = ({ token, decimals, balance }: Props) => {
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })
-  const { register, trigger, watch, setValue, handleSubmit, formState } = form
+  const { register, trigger, watch, setValue, setError, handleSubmit } = form
+  const { formState } = form
   const { errors } = formState
   const { recipient, input, memo } = watch()
   const amount = toAmount(input, { decimals })
@@ -48,30 +52,55 @@ const SendForm = ({ token, decimals, balance }: Props) => {
     await trigger("recipient")
   }
 
+  /* resolve recipient */
+  const { data: resolvedAddress, ...tnsState } = useTNS(recipient ?? "")
   useEffect(() => {
-    if (recipient && AccAddress.validate(recipient)) form.setFocus("input")
-  }, [form, recipient])
+    if (!recipient) {
+      setValue("address", undefined)
+    } else if (AccAddress.validate(recipient)) {
+      setValue("address", recipient)
+      form.setFocus("input")
+    } else if (resolvedAddress) {
+      setValue("address", resolvedAddress)
+    } else {
+      setValue("address", recipient)
+    }
+  }, [form, recipient, resolvedAddress, setValue])
+
+  // validate(tns): not found
+  const invalid =
+    recipient?.endsWith(".ust") && !tnsState.isLoading && !resolvedAddress
+      ? t("Address not found")
+      : ""
+
+  const disabled =
+    invalid || (tnsState.isLoading && t("Searching for address..."))
+
+  useEffect(() => {
+    if (invalid) setError("recipient", { type: "invalid", message: invalid })
+  }, [invalid, setError])
 
   /* tx */
   const createTx = useCallback(
-    ({ recipient, input, memo }: TxValues) => {
-      if (!address || !recipient) return
+    ({ address, input, memo }: TxValues) => {
+      if (!connectedAddress) return
+      if (!(address && AccAddress.validate(address))) return
       const amount = toAmount(input, { decimals })
-      const execute_msg = { transfer: { recipient, amount } }
+      const execute_msg = { transfer: { recipient: address, amount } }
 
       const msgs = isDenom(token)
-        ? [new MsgSend(address, recipient, amount + token)]
-        : [new MsgExecuteContract(address, token, execute_msg)]
+        ? [new MsgSend(connectedAddress, address, amount + token)]
+        : [new MsgExecuteContract(connectedAddress, token, execute_msg)]
 
       return { msgs, memo }
     },
-    [address, decimals, token]
+    [connectedAddress, decimals, token]
   )
 
   /* fee */
   const estimationTxValues = useMemo(
-    () => ({ recipient: address, input: toInput(balance, decimals) }),
-    [address, balance, decimals]
+    () => ({ address: connectedAddress, input: toInput(balance, decimals) }),
+    [connectedAddress, balance, decimals]
   )
 
   const onChangeMax = useCallback(
@@ -90,10 +119,11 @@ const SendForm = ({ token, decimals, balance }: Props) => {
     initialGasDenom,
     estimationTxValues,
     createTx,
+    disabled,
     onChangeMax,
     onSuccess: { label: t("Wallet"), path: "/wallet" },
     queryKeys: AccAddress.validate(token)
-      ? [[queryKey.wasm.contractQuery, token, { balance: address }]]
+      ? [[queryKey.wasm.contractQuery, token, { balance: connectedAddress }]]
       : undefined,
   }
 
@@ -101,10 +131,20 @@ const SendForm = ({ token, decimals, balance }: Props) => {
     <ExternalLink href="https://bridge.terra.money">Terra Bridge</ExternalLink>
   )
 
+  const renderResolvedAddress = () => {
+    if (!resolvedAddress) return null
+    return (
+      <InlineFlex gap={4} className="success">
+        <PersonIcon fontSize="inherit" />
+        {truncate(resolvedAddress)}
+      </InlineFlex>
+    )
+  }
+
   return (
     <Auto
       columns={[
-        <Card>
+        <Card isFetching={tnsState.isLoading}>
           <Tx {...tx}>
             {({ max, fee, submit }) => (
               <Form onSubmit={handleSubmit(submit.fn)}>
@@ -119,15 +159,18 @@ const SendForm = ({ token, decimals, balance }: Props) => {
 
                 <FormItem
                   label={t("Recipient")}
-                  error={errors.recipient?.message}
+                  extra={renderResolvedAddress()}
+                  error={errors.recipient?.message ?? errors.address?.message}
                 >
                   <Input
                     {...register("recipient", {
-                      validate: validate.address(),
+                      validate: validate.recipient(),
                     })}
                     placeholder={SAMPLE_ADDRESS}
                     autoFocus
                   />
+
+                  <input {...register("address")} readOnly hidden />
                 </FormItem>
 
                 <FormItem

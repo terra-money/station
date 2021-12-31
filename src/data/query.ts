@@ -72,4 +72,5 @@ export const queryKey = mirror({
 
   /* external */
   Anchor: { TotalDeposit: "", APY: "", MarketEpochState: "" },
+  TNS: "",
 })
