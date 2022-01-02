@@ -13,7 +13,7 @@ const HistoryItem = ({ txhash, timestamp, ...props }: AccountHistoryItem) => {
 
   const data = [
     { title: t("Fee"), content: <ReadMultiple list={fee} /> },
-    { title: t("Memo"), memo },
+    { title: t("Memo"), content: memo },
     { title: t("Log"), content: !success && raw_log },
   ]
 
