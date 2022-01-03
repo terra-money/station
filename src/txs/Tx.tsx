@@ -203,23 +203,27 @@ function Tx<TxValues>(props: Props<TxValues>) {
   }, [failed, simulationTx])
 
   /* submit */
-  const disabled = taxState.isLoading
-    ? t("Loading tax data...")
-    : taxState.error
-    ? t("Failed to load tax data")
-    : estimatedGasState.isLoading
-    ? t("Estimating fee...")
-    : estimatedGasState.error
-    ? t("Fee estimation failed")
-    : isBroadcasting
-    ? t("Broadcasting a tx...")
-    : props.disabled || ""
+  const passwordRequired = wallet && "name" in wallet
+  const [password, setPassword] = useState("")
+  const [incorrect, setIncorrect] = useState<string>()
+
+  const disabled =
+    passwordRequired && !password
+      ? t("Enter password")
+      : taxState.isLoading
+      ? t("Loading tax data...")
+      : taxState.error
+      ? t("Failed to load tax data")
+      : estimatedGasState.isLoading
+      ? t("Estimating fee...")
+      : estimatedGasState.error
+      ? t("Fee estimation failed")
+      : isBroadcasting
+      ? t("Broadcasting a tx...")
+      : props.disabled || ""
 
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<Error>()
-
-  const [password, setPassword] = useState("")
-  const [incorrect, setIncorrect] = useState<string>()
 
   const submit = async (values: TxValues) => {
     setSubmitting(true)
@@ -415,7 +419,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
         />
       ) : (
         <Grid gap={4}>
-          {wallet && "name" in wallet && (
+          {passwordRequired && (
             <FormItem label={t("Password")} error={incorrect}>
               <Input
                 type="password"
