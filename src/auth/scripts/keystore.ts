@@ -3,16 +3,17 @@ import decrypt from "./decrypt"
 
 /* wallet */
 export const getWallet = () => {
-  const settings = JSON.parse(localStorage.getItem("settings") ?? "{}")
-  return settings.user as Wallet | LedgerWallet | undefined
+  const user = localStorage.getItem("user")
+  if (!user) return
+  return JSON.parse(user) as Wallet | LedgerWallet
 }
 
 export const storeWallet = (user: Wallet | LedgerWallet) => {
-  localStorage.setItem("settings", JSON.stringify({ user }))
+  localStorage.setItem("user", JSON.stringify(user))
 }
 
 export const clearWallet = () => {
-  localStorage.removeItem("settings")
+  localStorage.removeItem("user")
 }
 
 /* stored wallets */
