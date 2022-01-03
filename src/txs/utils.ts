@@ -34,6 +34,8 @@ export const calcTaxes = (
   coins: CoinInput[],
   { taxRate, taxCaps }: TaxParams
 ) => {
+  if (!has(taxRate)) return
+
   return new Coins(
     coins
       .filter(({ input, denom }) => {
