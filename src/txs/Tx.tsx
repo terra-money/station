@@ -24,7 +24,7 @@ import { getAmount, sortCoins } from "utils/coin"
 import { getErrorMessage } from "utils/error"
 import { useCurrency } from "data/settings/Currency"
 import { queryKey, combineState, RefetchOptions } from "data/query"
-import { useAddress } from "data/wallet"
+import { useAddress, useNetwork } from "data/wallet"
 import { isBroadcastingState, latestTxState } from "data/queries/tx"
 import { useBankBalance, useIsWalletEmpty } from "data/queries/bank"
 import { getShouldTax, useTaxCap, useTaxRate } from "data/queries/treasury"
@@ -91,7 +91,8 @@ function Tx<TxValues>(props: Props<TxValues>) {
   /* context */
   const { t } = useTranslation()
   const currency = useCurrency()
-  const { network, post } = useWallet()
+  const network = useNetwork()
+  const { post } = useWallet()
   const connectedWallet = useConnectedWallet()
   const { wallet, validatePassword, ...auth } = useAuth()
   const address = useAddress()
