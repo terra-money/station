@@ -1,4 +1,5 @@
-import { FC, ReactNode, useState } from "react"
+import { FC, ReactNode, useEffect, useState } from "react"
+import { useLocation } from "react-router-dom"
 import ReactModal from "react-modal"
 import classNames from "classnames/bind"
 import CloseIcon from "@mui/icons-material/Close"
@@ -68,14 +69,20 @@ export const [useModal, ModalProvider] = createContext<() => void>("useModal")
 
 interface ModalButtonProps extends ModalProps {
   renderButton: (open: () => void) => ReactNode
+  modalKey?: string
 }
 
 export const ModalButton: FC<ModalButtonProps> = (props) => {
-  const { renderButton, ...rest } = props
+  const { pathname } = useLocation()
+  const { renderButton, modalKey = pathname, ...rest } = props
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const open = () => setIsModalOpen(true)
   const close = () => setIsModalOpen(false)
+
+  useEffect(() => {
+    close()
+  }, [modalKey])
 
   return (
     <ModalProvider value={close}>

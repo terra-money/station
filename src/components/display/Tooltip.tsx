@@ -1,9 +1,12 @@
 import { ReactNode } from "react"
+import { useLocation } from "react-router-dom"
 import Tippy, { TippyProps } from "@tippyjs/react"
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined"
 import { InlineFlex } from "../layout"
 
 export const Popover = ({ theme = "popover", ...props }: TippyProps) => {
+  const { pathname } = useLocation()
+
   return (
     <Tippy
       {...props}
@@ -12,6 +15,7 @@ export const Popover = ({ theme = "popover", ...props }: TippyProps) => {
       trigger="click"
       animation={false}
       interactive
+      key={pathname}
     />
   )
 }
