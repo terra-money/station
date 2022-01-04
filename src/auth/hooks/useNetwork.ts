@@ -1,7 +1,7 @@
 import { atom, useRecoilState, useRecoilValue } from "recoil"
 import { useWallet } from "@terra-money/wallet-provider"
 import { useNetworks } from "app/NetworksProvider"
-import { electron } from "../scripts/env"
+import { sandbox } from "../scripts/env"
 import { getStoredNetwork, storeNetwork } from "../scripts/network"
 
 const networkState = atom({
@@ -24,7 +24,7 @@ export const useNetworkState = () => {
 export const useNetworkOptions = () => {
   const networks = useNetworks()
 
-  if (!electron) return
+  if (!sandbox) return
 
   return Object.values(networks).map(({ name }) => {
     return { value: name, label: name }
@@ -35,7 +35,7 @@ export const useNetwork = () => {
   const networks = useNetworks()
   const network = useRecoilValue(networkState)
   const wallet = useWallet()
-  return electron ? networks[network] : wallet.network
+  return sandbox ? networks[network] : wallet.network
 }
 
 export const useNetworkName = () => {

@@ -1,12 +1,12 @@
 import { useTranslation } from "react-i18next"
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline"
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore"
-import { electron } from "../scripts/env"
+import { sandbox } from "../scripts/env"
 
 const useAvailable = () => {
   const { t } = useTranslation()
 
-  if (!electron) return []
+  if (!sandbox) return []
 
   return [
     {
