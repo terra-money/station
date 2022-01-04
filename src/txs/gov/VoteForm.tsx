@@ -47,7 +47,7 @@ const VoteForm = () => {
   const createTx = useCallback(
     ({ option }: TxValues) => {
       if (!address) return
-      const msgs = [new MsgVote(id, address, option)]
+      const msgs = [new MsgVote(id, address, Number(option))]
       return { msgs }
     },
     [address, id]
