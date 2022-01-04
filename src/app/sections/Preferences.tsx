@@ -49,7 +49,7 @@ const PreferencesInner = () => {
   )
 }
 
-const Prefreneces = () => {
+const Preferences = () => {
   return (
     <Popover content={<PreferencesInner />} placement="bottom">
       <HeaderIconButton>
@@ -59,4 +59,4 @@ const Prefreneces = () => {
   )
 }
 
-export default Prefreneces
+export default Preferences
