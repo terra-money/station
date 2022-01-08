@@ -36,7 +36,7 @@ const AccessWithLedgerForm = () => {
         <UsbIcon style={{ fontSize: 56 }} />
       </p>
 
-      {t("Plug in the Ledger Wallet")}
+      {t("Plug in a Ledger device")}
 
       {error && <FormError>{error.message}</FormError>}
 

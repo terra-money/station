@@ -20,39 +20,18 @@ import styles from "./Coins.module.scss"
 
 const Coins = () => {
   const { t } = useTranslation()
-  const [minimumValue] = useMinimumValue()
   const currency = useCurrency()
-  const bankBalance = useBankBalance()
   const length = useTerraNativeLength()
   const isWalletEmpty = useIsWalletEmpty()
   const { data: denoms, ...state } = useActiveDenoms()
-  const calcValue = useMemoizedCalcValue()
-  const calcValueByUST = useMemoizedCalcValue("uusd")
+  const coins = useCoins(denoms)
 
   const render = () => {
-    if (!denoms) return null
+    if (!coins) return
 
-    const nativeTokenValues = denoms
-      .map((denom) => {
-        const balance = getAmount(bankBalance, denom)
-        const value = calcValue({ amount: balance, denom }) ?? 0
-        const valueByUST = calcValueByUST({ amount: balance, denom }) ?? 0
-        return { denom, balance, value: value, $: valueByUST }
-      })
-      .filter(
-        ({ denom, balance }) =>
-          ["uluna", "uusd"].includes(denom) || has(balance)
-      )
+    const [all, filtered] = coins
 
-    const list = sortByDenom(
-      nativeTokenValues,
-      currency,
-      ({ $: a }, { $: b }) => b - a
-    )
-
-    const listNotSmall = list.filter(({ $ }) => $ >= minimumValue * 1e6)
-
-    const values = list.map(({ value }) => value).filter(Boolean)
+    const values = all.map(({ value }) => value).filter(Boolean)
     const valueTotal = values.length ? BigNumber.sum(...values).toNumber() : 0
 
     return (
@@ -75,7 +54,7 @@ const Coins = () => {
           </Flex>
 
           <section>
-            {listNotSmall.map(({ denom, ...item }) => (
+            {filtered.map(({ denom, ...item }) => (
               <Asset {...readNativeDenom(denom)} {...item} key={denom} />
             ))}
           </section>
@@ -102,3 +81,33 @@ const Coins = () => {
 }
 
 export default Coins
+
+/* hooks */
+export const useCoins = (denoms?: Denom[]) => {
+  const currency = useCurrency()
+  const bankBalance = useBankBalance()
+  const [minimumValue] = useMinimumValue()
+  const calcValue = useMemoizedCalcValue()
+  const calcValueByUST = useMemoizedCalcValue("uusd")
+
+  if (!denoms) return
+
+  const nativeTokenValues = denoms
+    .map((denom) => {
+      const balance = getAmount(bankBalance, denom)
+      const value = calcValue({ amount: balance, denom }) ?? 0
+      const valueByUST = calcValueByUST({ amount: balance, denom }) ?? 0
+      return { denom, balance, value: value, $: valueByUST }
+    })
+    .filter(
+      ({ denom, balance }) => ["uluna", "uusd"].includes(denom) || has(balance)
+    )
+
+  const coins = sortByDenom(
+    nativeTokenValues,
+    currency,
+    ({ $: a }, { $: b }) => b - a
+  )
+
+  return [coins, coins.filter(({ $ }) => $ >= minimumValue * 1e6)] as const
+}

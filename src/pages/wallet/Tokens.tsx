@@ -4,10 +4,10 @@ import { useCustomTokensIBC } from "data/settings/CustomTokens"
 import { useCustomTokensCW20 } from "data/settings/CustomTokens"
 import { InternalButton } from "components/general"
 import { Card } from "components/layout"
-import { ModalButton } from "components/feedback"
-import ManageCustomTokens from "../custom/ManageCustomTokens"
 import IBCAsset from "./IBCAsset"
 import CW20Asset from "./CW20Asset"
+import AddTokens from "./AddTokens"
+import Asset from "./Asset"
 
 const Tokens = () => {
   const { t } = useTranslation()
@@ -22,10 +22,18 @@ const Tokens = () => {
       <>
         {!ibc.length
           ? null
-          : ibc.map(({ denom }) => <IBCAsset denom={denom} key={denom} />)}
+          : ibc.map(({ denom }) => (
+              <IBCAsset denom={denom} key={denom}>
+                {(item) => <Asset {...item} />}
+              </IBCAsset>
+            ))}
         {!cw20.length
           ? null
-          : cw20.map((item) => <CW20Asset {...item} key={item.token} />)}
+          : cw20.map((item) => (
+              <CW20Asset {...item} key={item.token}>
+                {(item) => <Asset {...item} />}
+              </CW20Asset>
+            ))}
       </>
     )
   }
@@ -34,16 +42,13 @@ const Tokens = () => {
     <Card
       title={t("Tokens")}
       extra={
-        <ModalButton
-          title={t("Manage list")}
-          renderButton={(open) => (
+        <AddTokens>
+          {(open) => (
             <InternalButton disabled={!address} onClick={open} chevron>
               {t("Add tokens")}
             </InternalButton>
           )}
-        >
-          <ManageCustomTokens />
-        </ModalButton>
+        </AddTokens>
       }
     >
       {render()}

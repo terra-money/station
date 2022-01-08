@@ -1,15 +1,21 @@
+import { ReactNode } from "react"
+import { getAmount } from "utils/coin"
 import { useBankBalance } from "data/queries/bank"
 import { WithTokenItem } from "data/token"
-import { getAmount } from "utils/coin"
-import Asset from "./Asset"
+import { Props as AssetProps } from "./Asset"
 
-const IBCAsset = ({ denom }: { denom: IBCDenom }) => {
+interface Props {
+  denom: IBCDenom
+  children: (item: AssetProps) => ReactNode
+}
+
+const IBCAsset = ({ denom, children: render }: Props) => {
   const bankBalance = useBankBalance()
   const balance = getAmount(bankBalance, denom)
 
   return (
     <WithTokenItem token={denom} key={denom}>
-      {(item) => <Asset {...item} balance={balance} />}
+      {(item) => render({ ...item, balance })}
     </WithTokenItem>
   )
 }

@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import { Copy } from "components/general"
+import { Grid } from "components/layout"
 import { Form, FormItem, FormWarning, Submit } from "components/form"
 import { Checkbox, Input, TextArea } from "components/form"
 import validate from "../../scripts/validate"
@@ -80,18 +81,19 @@ const CreateWalletForm = () => {
 
       {generated && (
         <>
-          <FormWarning>
-            {t(
-              "We cannot recover your information for you. If you lose your seed phrase it's gone forever. Terra Station does not store your mnemonic."
-            )}
-          </FormWarning>
+          <Grid gap={4}>
+            <FormWarning>
+              {t(
+                "Never share the mnemonic with others or enter it in unverified sites"
+              )}
+            </FormWarning>
+          </Grid>
+
           <Checkbox
             {...register("checked", { required: true })}
             checked={checked}
           >
-            {t(
-              "I have securely written down my seed. I understand that lost seeds cannot be recovered."
-            )}
+            {t("I have written down the mnemonic")}
           </Checkbox>
         </>
       )}
