@@ -4,13 +4,12 @@ import { Tag } from "components/display"
 import TxMessage from "app/containers/TxMessage"
 import styles from "./HistoryMessage.module.scss"
 
-const HistoryMessage = ({
-  success,
-  msg,
-}: {
+interface Props {
   success: boolean
   msg: TxMessage
-}) => {
+}
+
+const HistoryMessage = ({ success, msg }: Props) => {
   const { msgType, canonicalMsg } = msg
   const type = last(msgType.split("/"))
 

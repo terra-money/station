@@ -46,12 +46,12 @@ export const useContractQuery = <T>(contract?: AccAddress, query?: object) => {
 }
 
 /* token info */
-export const useTokenInfoCW20 = (token: TerraAddress, disabled = false) => {
+export const useTokenInfoCW20 = (token: TerraAddress, enabled = true) => {
   const getQuery = useGetContractQuery()
   return useQuery({
     ...getQuery<CW20TokenInfoResponse>(token, { token_info: {} }),
     ...RefetchOptions.INFINITY,
-    enabled: AccAddress.validate(token) && !disabled,
+    enabled: AccAddress.validate(token) && enabled,
   })
 }
 
