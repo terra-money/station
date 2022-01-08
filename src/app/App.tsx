@@ -67,7 +67,7 @@ const App = () => {
 export default App
 
 /* error */
-const fallback = (error: Error) => (
+export const fallback = (error: Error) => (
   <Page>
     <Wrong>{getErrorMessage(error)}</Wrong>
   </Page>
