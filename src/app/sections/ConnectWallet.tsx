@@ -37,7 +37,7 @@ const ConnectWallet = ({ renderButton }: Props) => {
   const list = [
     ...availableConnections.map(({ type, identifier, name, icon }) => ({
       src: icon,
-      children: type === ConnectType.EXTENSION ? t("Extension") : name,
+      children: name,
       onClick: () => connect(type, identifier),
     })),
     {

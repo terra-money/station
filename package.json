@@ -22,7 +22,7 @@
     "@terra-money/ledger-terra-js": "^1.1.0",
     "@terra-money/log-finder-ruleset": "^3.0.0",
     "@terra-money/terra.js": "^3.0.2",
-    "@terra-money/wallet-provider": "^3.6.1",
+    "@terra-money/wallet-provider": "^3.6.5",
     "@terra.kitchen/utils": "^1.0.6",
     "@tippyjs/react": "^4.2.6",
     "axios": "^0.24.0",
