@@ -1,18 +1,17 @@
 import { useTranslation } from "react-i18next"
 import { Card, Page } from "components/layout"
-import CreateWalletWizard from "./CreateWalletWizard"
-import SelectAddress from "./SelectAddress"
+import RecoverWalletForm from "./RecoverWalletForm"
 
-const RecoverWallet = () => {
+const RecoverWalletPage = () => {
   const { t } = useTranslation()
 
   return (
     <Page title={t("Recover wallet")} small>
       <Card>
-        <CreateWalletWizard beforeCreate={<SelectAddress />} />
+        <RecoverWalletForm />
       </Card>
     </Page>
   )
 }
 
-export default RecoverWallet
+export default RecoverWalletPage

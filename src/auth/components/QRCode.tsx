@@ -1,0 +1,19 @@
+import QRCodeReact, { BaseQRCodeProps } from "qrcode.react"
+import variable from "styles/variable"
+import { Flex } from "components/layout"
+
+const QRCode = (props: BaseQRCodeProps) => {
+  return (
+    <Flex>
+      <QRCodeReact
+        {...props}
+        size={320}
+        bgColor={variable("--card-bg")}
+        fgColor={variable("--text")}
+        renderAs="svg"
+      />
+    </Flex>
+  )
+}
+
+export default QRCode

@@ -1,17 +1,17 @@
 import { Route, Routes } from "react-router-dom"
 
 /* connect */
-import AccessWithLedger from "../ledger/AccessWithLedger"
+import AccessWithLedgerPage from "../ledger/AccessWithLedgerPage"
 
 /* create */
-import NewWallet from "./create/NewWallet"
-import RecoverWallet from "./create/RecoverWallet"
+import NewWalletPage from "./create/NewWalletPage"
+import RecoverWalletPage from "./create/RecoverWalletPage"
 
 /* manage */
 import ManageWallets from "./manage/ManageWallets"
-import ExportWallet from "./manage/ExportWallet"
-import ChangePassword from "./manage/ChangePassword"
-import DeleteWallet from "./manage/DeleteWallet"
+import ExportWalletPage from "./manage/ExportWalletPage"
+import ChangePasswordPage from "./manage/ChangePasswordPage"
+import DeleteWalletPage from "./manage/DeleteWalletPage"
 import Disconnect from "./manage/Disconnect"
 
 const Auth = () => {
@@ -20,16 +20,16 @@ const Auth = () => {
       <Route index element={<ManageWallets />} />
 
       {/* connect */}
-      <Route path="ledger" element={<AccessWithLedger />} />
+      <Route path="ledger" element={<AccessWithLedgerPage />} />
 
       {/* create */}
-      <Route path="new" element={<NewWallet />} />
-      <Route path="recover" element={<RecoverWallet />} />
+      <Route path="new" element={<NewWalletPage />} />
+      <Route path="recover" element={<RecoverWalletPage />} />
 
       {/* manage */}
-      <Route path="export" element={<ExportWallet />} />
-      <Route path="password" element={<ChangePassword />} />
-      <Route path="delete" element={<DeleteWallet />} />
+      <Route path="export" element={<ExportWalletPage />} />
+      <Route path="password" element={<ChangePasswordPage />} />
+      <Route path="delete" element={<DeleteWalletPage />} />
       <Route path="disconnect" element={<Disconnect />} />
     </Routes>
   )

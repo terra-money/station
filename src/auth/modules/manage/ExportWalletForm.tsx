@@ -1,16 +1,13 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
-import QRCode from "qrcode.react"
-import variable from "styles/variable"
 import { Pre } from "components/general"
-import { Card, Flex, Grid, Page } from "components/layout"
+import { Grid } from "components/layout"
 import { Form, FormItem, FormWarning } from "components/form"
 import { Input, RadioButton, Submit } from "components/form"
 import { Modal } from "components/feedback"
 import useAuth from "../../hooks/useAuth"
-import ConnectedWallet from "./ConnectedWallet"
-import GoBack from "./GoBack"
+import QRCode from "../../components/QRCode"
 
 enum Mode {
   QR = "QR code",
@@ -22,7 +19,7 @@ interface Values {
   password: string
 }
 
-const ExportWallet = () => {
+const ExportWalletForm = () => {
   const { t } = useTranslation()
   const { validatePassword, encodeEncryptedWallet } = useAuth()
 
@@ -52,15 +49,7 @@ const ExportWallet = () => {
   /* render */
   const render = {
     [Mode.QR]: () => (
-      <Flex>
-        <QRCode
-          value={`terrastation://wallet_recover/?payload=${encoded}`}
-          size={320}
-          bgColor={variable("--card-bg")}
-          fgColor={variable("--text")}
-          renderAs="svg"
-        />
-      </Flex>
+      <QRCode value={`terrastation://wallet_recover/?payload=${encoded}`} />
     ),
     [Mode.KEY]: () => (
       <Pre normal break copy>
@@ -70,7 +59,7 @@ const ExportWallet = () => {
   }
 
   return (
-    <Page title={t("Export wallet")} extra={<GoBack />}>
+    <>
       {encoded && (
         <Modal title={mode} isOpen onRequestClose={reset}>
           <Grid gap={20}>
@@ -80,40 +69,36 @@ const ExportWallet = () => {
         </Modal>
       )}
 
-      <ConnectedWallet>
-        <Card>
-          <Form onSubmit={handleSubmit(submit)}>
-            <section>
-              {Object.values(Mode).map((key) => {
-                const checked = mode === key
+      <Form onSubmit={handleSubmit(submit)}>
+        <section>
+          {Object.values(Mode).map((key) => {
+            const checked = mode === key
 
-                return (
-                  <RadioButton
-                    {...register("mode")}
-                    value={key}
-                    checked={checked}
-                    key={key}
-                  >
-                    {key}
-                  </RadioButton>
-                )
-              })}
-            </section>
+            return (
+              <RadioButton
+                {...register("mode")}
+                value={key}
+                checked={checked}
+                key={key}
+              >
+                {key}
+              </RadioButton>
+            )
+          })}
+        </section>
 
-            <FormItem label={t("Password")} error={errors.password?.message}>
-              <Input
-                {...register("password", { validate: validatePassword })}
-                type="password"
-                autoFocus
-              />
-            </FormItem>
+        <FormItem label={t("Password")} error={errors.password?.message}>
+          <Input
+            {...register("password", { validate: validatePassword })}
+            type="password"
+            autoFocus
+          />
+        </FormItem>
 
-            <Submit />
-          </Form>
-        </Card>
-      </ConnectedWallet>
-    </Page>
+        <Submit />
+      </Form>
+    </>
   )
 }
 
-export default ExportWallet
+export default ExportWalletForm
