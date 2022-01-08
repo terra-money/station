@@ -1,77 +1,62 @@
-import { ReactNode } from "react"
 import { useTranslation } from "react-i18next"
-import { Link } from "react-router-dom"
 import QrCodeIcon from "@mui/icons-material/QrCode"
 import PasswordIcon from "@mui/icons-material/Password"
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
 import LogoutIcon from "@mui/icons-material/Logout"
 import { Col, Page } from "components/layout"
 import useAuth from "../../hooks/useAuth"
+import AuthList from "../../components/AuthList"
 import ConnectedWallet from "./ConnectedWallet"
-import styles from "./ManageWallets.module.scss"
+
+export const useManageWallet = () => {
+  const { t } = useTranslation()
+  const { wallet } = useAuth()
+
+  if (!wallet) return
+
+  return "ledger" in wallet
+    ? [
+        {
+          to: "/auth/disconnect",
+          children: t("Disconnect"),
+          icon: <LogoutIcon />,
+        },
+      ]
+    : [
+        {
+          to: "/auth/export",
+          children: t("Export wallet"),
+          icon: <QrCodeIcon />,
+        },
+        {
+          to: "/auth/password",
+          children: t("Change password"),
+          icon: <PasswordIcon />,
+        },
+        {
+          to: "/auth/delete",
+          children: t("Delete wallet"),
+          icon: <DeleteOutlineIcon />,
+        },
+        {
+          to: "/auth/disconnect",
+          children: t("Disconnect"),
+          icon: <LogoutIcon />,
+        },
+      ]
+}
 
 const ManageWallets = () => {
   const { t } = useTranslation()
-  const { wallet, available } = useAuth()
-
-  if (!wallet) return null
-
-  const list =
-    "ledger" in wallet
-      ? [
-          {
-            to: "./disconnect",
-            children: t("Disconnect"),
-            icon: <LogoutIcon />,
-          },
-        ]
-      : [
-          {
-            to: "./export",
-            children: t("Export wallet"),
-            icon: <QrCodeIcon />,
-          },
-          {
-            to: "./password",
-            children: t("Change password"),
-            icon: <PasswordIcon />,
-          },
-          {
-            to: "./delete",
-            children: t("Delete wallet"),
-            icon: <DeleteOutlineIcon />,
-          },
-          {
-            to: "./disconnect",
-            children: t("Disconnect"),
-            icon: <LogoutIcon />,
-          },
-        ]
-
-  interface Item {
-    to: string
-    children: string
-    icon: ReactNode
-  }
-
-  const renderItem = ({ to, children, icon }: Item) => {
-    return (
-      <Link to={to} className={styles.link} key={to}>
-        {children}
-        {icon}
-      </Link>
-    )
-  }
+  const { available } = useAuth()
+  const list = useManageWallet()
 
   return (
     <Page title={t("Manage wallets")}>
       <Col>
         <ConnectedWallet>
-          {wallet && <div className={styles.list}>{list.map(renderItem)}</div>}
-
-          {!!available.length && (
-            <div className={styles.list}>{available.map(renderItem)}</div>
-          )}
+          {list && <AuthList list={list} />}
+          {!!available.length && <AuthList list={available} />}
         </ConnectedWallet>
       </Col>
     </Page>
