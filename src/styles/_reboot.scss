@@ -1,8 +1,5 @@
 html {
   box-sizing: border-box;
-  line-height: 1.5;
-  font-family: Gotham;
-  font-feature-settings: "tnum";
 }
 
 *,
@@ -14,8 +11,11 @@ html {
 body {
   background: var(--bg);
   color: var(--text);
+  font-family: Gotham;
+  font-feature-settings: "tnum";
   font-size: var(--font-size);
   font-weight: var(--normal);
+  line-height: 1.5;
   margin: 0;
 }
 
