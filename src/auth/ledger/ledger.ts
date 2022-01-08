@@ -113,6 +113,9 @@ const checkLedgerErrors = (response: CommonResponse | null) => {
 
     case "Unknown Status Code: 26628":
       throw new LedgerError("Ledger's screensaver mode is on")
+      
+    case "Unknown Status Code: 27404":
+      throw new LedgerError("Ledger's screensaver mode is on")
 
     case "Instruction not supported":
       throw new LedgerError(
