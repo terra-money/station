@@ -61,6 +61,7 @@ const Selector = () => {
 const SelectTheme = () => {
   const { t } = useTranslation()
   const address = useAddress()
+  const validate = useValidateTheme()
 
   return (
     <ModalButton
@@ -74,7 +75,7 @@ const SelectTheme = () => {
       <Grid gap={20}>
         <Selector />
 
-        {address && (
+        {address && themes.some((theme) => !validate?.(theme)) && (
           <Flex gap={4} className={styles.info}>
             <InfoIcon style={{ fontSize: 18 }} />
             {t("Preview is available if wallet is diconnected")}
