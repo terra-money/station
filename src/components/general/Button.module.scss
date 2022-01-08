@@ -13,6 +13,7 @@
 
   font-weight: var(--bold);
   gap: 5px;
+  line-height: 1;
   padding-left: 20px;
   padding-right: 20px;
   white-space: pre;
@@ -56,6 +57,12 @@ $colors: (
     bg-l: var(--button-primary-bg-l),
     color: var(--button-primary-text),
   ),
+  danger: (
+    bg-h: var(--button-danger-bg-h),
+    bg-s: var(--button-danger-bg-s),
+    bg-l: var(--button-danger-bg-l),
+    color: var(--button-primary-text),
+  ),
 );
 
 @each $color, $value in $colors {
@@ -71,8 +78,8 @@ $colors: (
 
 /* outline */
 .outline {
-  border: 1px solid var(--text);
-  color: var(--text);
+  border: 1px solid currentColor;
+  color: currentColor;
 }
 
 /* block */

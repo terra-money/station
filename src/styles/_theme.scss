@@ -44,6 +44,14 @@
     var(--button-primary-bg-s),
     var(--button-primary-bg-l)
   );
+  --button-danger-bg-h: 356;
+  --button-danger-bg-s: 100%;
+  --button-danger-bg-l: 67%;
+  --button-danger-bg: hsl(
+    var(--button-danger-bg-h),
+    var(--button-danger-bg-s),
+    var(--button-danger-bg-l)
+  );
   --button-primary-text: hsl(0 0% 95%);
   --button-default-bg-h: 222;
   --button-default-bg-s: 77%;
@@ -79,6 +87,9 @@
   --success-light: hsl(168 71% 39% / 0.1);
   --danger: hsl(356 100% 67%);
   --danger-light: hsl(356 100% 67% / 0.1);
+
+  --extension-bg: hsl(227 62% 11%);
+  --extension-text: hsl(210 89% 61%);
 }
 
 .dark {
@@ -116,6 +127,9 @@
   --card-border: hsl(210 2% 21%);
   --input-bg: var(--card-bg);
   --input-border: hsl(0 0% 30%);
+
+  --extension-bg: hsl(240 1% 15%);
+  --extension-text: hsl(210 100% 77%);
 }
 
 .blossom {
@@ -153,6 +167,9 @@
   --card-border: hsl(342 100% 94%);
   --input-bg: var(--card-bg);
   --input-border: hsl(344 100% 92%);
+
+  --extension-bg: hsl(340 100% 90%);
+  --extension-text: hsl(341 100% 62%);
 }
 
 .moon {
@@ -192,6 +209,9 @@
   --card-border: hsl(0 0% 100% / 0.1);
   --input-bg: var(--card-bg);
   --input-border: hsl(0 0% 100% / 0.1);
+
+  --extension-bg: hsl(247 55% 6%);
+  --extension-text: hsl(46 100% 90%);
 }
 
 .whale {
@@ -229,6 +249,9 @@
   --card-border: hsl(0 0% 92%);
   --input-bg: var(--card-bg);
   --input-border: hsl(0 0% 91%);
+
+  --extension-bg: hsl(0 0% 100%);
+  --extension-text: hsl(0 0% 27%);
 
   --warning: hsl(356 100% 50%);
   --warning-light: hsl(356 100% 50% / 0.1);
@@ -269,6 +292,9 @@
   --card-border: hsl(261 66% 47%);
   --input-bg: var(--card-bg);
   --input-border: hsl(0 0% 100% / 0.3);
+
+  --extension-bg: hsl(260 66% 37%);
+  --extension-text: hsl(116 100% 83%);
 
   --info: hsl(178 91% 52%);
   --info-light: hsl(178 91% 52% / 0.1);
