@@ -244,7 +244,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
       const fee = new Fee(estimatedGas, feeCoins)
 
       if (wallet) {
-        const { result } = await auth.post({ ...tx, fee }, password)
+        const result = await auth.post({ ...tx, fee }, password)
         setLatestTx({ txhash: result.txhash, queryKeys, redirectAfterTx })
       } else {
         const { result } = await post({ ...tx, fee })

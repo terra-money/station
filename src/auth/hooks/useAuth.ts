@@ -100,7 +100,8 @@ const useAuth = () => {
 
   /* tx */
   const chainID = useChainID()
-  const post = async (txOptions: CreateTxOptions, password = "") => {
+
+  const sign = async (txOptions: CreateTxOptions, password = "") => {
     if (!wallet) throw new Error("Wallet is not defined")
     const { address } = wallet
 
@@ -112,20 +113,41 @@ const useAuth = () => {
       const signMode = SignatureV2.SignMode.SIGN_MODE_LEGACY_AMINO_JSON
       const unsignedTx = await lcd.tx.create([{ address }], txOptions)
       const options = { chainID, accountNumber, sequence, signMode }
-      const signedTx = await key.signTx(unsignedTx, options)
-      const result = await lcd.tx.broadcastSync(signedTx)
-      if (isTxError(result)) throw new Error(result.raw_log)
-      return { result }
+      return await key.signTx(unsignedTx, options)
     } else {
       const pk = getKey(password)
       if (!pk) throw new PasswordError("Incorrect password")
       const key = new RawKey(Buffer.from(pk, "hex"))
       const wallet = lcd.wallet(key)
-      const signedTx = await wallet.createAndSignTx(txOptions)
-      const result = await lcd.tx.broadcastSync(signedTx)
-      if (isTxError(result)) throw new Error(result.raw_log)
-      return { result }
+      return await wallet.createAndSignTx(txOptions)
     }
+  }
+
+  const signBytes = (bytes: Buffer, password = "") => {
+    if (!wallet) throw new Error("Wallet is not defined")
+
+    if ("ledger" in wallet) {
+      throw new Error("Ledger can not sign arbitrary data")
+    } else {
+      const pk = getKey(password)
+      if (!pk) throw new PasswordError("Incorrect password")
+      const key = new RawKey(Buffer.from(pk, "hex"))
+      const { signature, recid } = key.ecdsaSign(bytes)
+      if (!signature) throw new Error("Signature is undefined")
+      return {
+        recid,
+        signature: Buffer.from(signature).toString("base64"),
+        public_key: key.publicKey?.toAmino().value as string,
+      }
+    }
+  }
+
+  const post = async (txOptions: CreateTxOptions, password = "") => {
+    if (!wallet) throw new Error("Wallet is not defined")
+    const signedTx = await sign(txOptions, password)
+    const result = await lcd.tx.broadcastSync(signedTx)
+    if (isTxError(result)) throw new Error(result.raw_log)
+    return result
   }
 
   return {
@@ -139,6 +161,8 @@ const useAuth = () => {
     available,
     encodeEncryptedWallet,
     validatePassword,
+    signBytes,
+    sign,
     post,
   }
 }
