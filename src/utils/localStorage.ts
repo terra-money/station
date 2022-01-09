@@ -8,7 +8,10 @@ export enum SettingKey {
   AddressBook = "AddressBook",
 }
 
-export const DefaultTheme = themes[0]
+const isSystemDarkMode =
+  window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+
+export const DefaultTheme = themes[Number(isSystemDarkMode)]
 
 const DefaultCustomTokens = {
   mainnet: { ibc: [], cw20: [], cw721: [] },
