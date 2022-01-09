@@ -6,6 +6,7 @@ import AccessWithLedgerPage from "../ledger/AccessWithLedgerPage"
 /* create */
 import NewWalletPage from "./create/NewWalletPage"
 import RecoverWalletPage from "./create/RecoverWalletPage"
+import ImportWalletPage from "./create/ImportWalletPage"
 
 /* manage */
 import ManageWallets from "./manage/ManageWallets"
@@ -25,6 +26,7 @@ const Auth = () => {
       {/* create */}
       <Route path="new" element={<NewWalletPage />} />
       <Route path="recover" element={<RecoverWalletPage />} />
+      <Route path="import" element={<ImportWalletPage />} />
 
       {/* manage */}
       <Route path="export" element={<ExportWalletPage />} />
