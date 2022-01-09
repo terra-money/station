@@ -5,6 +5,7 @@ export enum SettingKey {
   Currency = "Currency",
   MinimumValue = "MinimumValue",
   CustomTokens = "CustomTokens",
+  CustomNetworks = "CustomNetworks",
   AddressBook = "AddressBook",
 }
 
@@ -23,6 +24,7 @@ export const DefaultSettings = {
   [SettingKey.Currency]: "uusd",
   [SettingKey.MinimumValue]: 0,
   [SettingKey.CustomTokens]: DefaultCustomTokens as CustomTokens,
+  [SettingKey.CustomNetworks]: [] as TerraNetwork[],
   [SettingKey.AddressBook]: [] as AddressBook[],
 }
 
