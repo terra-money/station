@@ -1,0 +1,28 @@
+@import "mixins";
+
+.component {
+  @include flex-column(space-between, stretch);
+  background: var(--card-bg);
+  min-width: 260px;
+}
+
+.inner {
+  padding: 24px;
+}
+
+.footer {
+  @include flex;
+
+  background: var(--bg);
+  border-top: solid 1px var(--card-border);
+  color: var(--text-muted);
+  font-weight: var(--bold);
+  line-height: 1;
+  padding: 12px;
+  transition: color var(--transition);
+
+  &:hover {
+    color: var(--text);
+    text-decoration: none;
+  }
+}

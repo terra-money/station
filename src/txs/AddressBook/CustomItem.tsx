@@ -1,18 +1,18 @@
+import { Fragment } from "react"
 import { useTranslation } from "react-i18next"
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
-import { truncate } from "@terra.kitchen/utils"
-import { useAddressBook } from "data/settings/AddressBook"
 import { Dl } from "components/display"
-import styles from "./AddressBookItem.module.scss"
+import styles from "./CustomItem.module.scss"
 
-interface Props extends AddressBook {
+interface Props {
+  name: string
+  contents: { title: string; desc: string }[]
   onClick: () => void
+  onDelete: (name: string) => void
 }
 
-const AddressBookItem = ({ onClick, ...item }: Props) => {
-  const { name, recipient, memo } = item
+const CustomItem = ({ name, contents, onClick, onDelete }: Props) => {
   const { t } = useTranslation()
-  const { remove } = useAddressBook()
 
   return (
     <article className={styles.item}>
@@ -20,10 +20,12 @@ const AddressBookItem = ({ onClick, ...item }: Props) => {
         <Dl>
           <dt>{t("Name")}</dt>
           <dd>{name}</dd>
-          <dt>{t("Address")}</dt>
-          <dd>{truncate(recipient)}</dd>
-          <dt>{t("Memo")}</dt>
-          <dd>{memo}</dd>
+          {contents.map(({ title, desc }) => (
+            <Fragment key={title}>
+              <dt>{title}</dt>
+              <dd>{desc}</dd>
+            </Fragment>
+          ))}
         </Dl>
       </button>
 
@@ -31,7 +33,7 @@ const AddressBookItem = ({ onClick, ...item }: Props) => {
         type="button"
         className={styles.delete}
         onClick={() => {
-          if (window.confirm(t("Delete {{name}}?", { name }))) remove(name)
+          if (window.confirm(t("Delete {{name}}?", { name }))) onDelete(name)
         }}
       >
         <DeleteOutlineIcon style={{ fontSize: 16 }} />
@@ -40,4 +42,4 @@ const AddressBookItem = ({ onClick, ...item }: Props) => {
   )
 }
 
-export default AddressBookItem
+export default CustomItem

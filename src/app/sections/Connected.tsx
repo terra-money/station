@@ -1,6 +1,5 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Link } from "react-router-dom"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import { truncate } from "@terra.kitchen/utils"
 import { useWallet } from "@terra-money/wallet-provider"
@@ -10,6 +9,7 @@ import { Grid } from "components/layout"
 import { Tooltip, Popover } from "components/display"
 import { useAuth } from "auth"
 import SwitchWallet from "auth/modules/select/SwitchWallet"
+import PopoverNone from "../components/PopoverNone"
 import styles from "./Connected.module.scss"
 
 const Connected = () => {
@@ -24,12 +24,16 @@ const Connected = () => {
 
   if (!address) return null
 
+  const footer = wallet
+    ? { to: "/auth", onClick: closePopover, children: t("Manage wallets") }
+    : { onClick: disconnect, children: t("Disconnect") }
+
   return (
     <Popover
       key={key}
       content={
-        <div className={styles.component}>
-          <Grid gap={16} className={styles.inner}>
+        <PopoverNone footer={footer}>
+          <Grid gap={16}>
             <section>
               <Tooltip content={t("View on Terra Finder")}>
                 <FinderLink className={styles.link} short>
@@ -44,21 +48,7 @@ const Connected = () => {
 
             <SwitchWallet />
           </Grid>
-
-          {wallet ? (
-            <Link to="/auth" className={styles.footer} onClick={closePopover}>
-              {t("Manage wallets")}
-            </Link>
-          ) : (
-            <button
-              type="button"
-              className={styles.footer}
-              onClick={disconnect}
-            >
-              {t("Disconnect")}
-            </button>
-          )}
-        </div>
+        </PopoverNone>
       }
       placement="bottom-end"
       theme="none"

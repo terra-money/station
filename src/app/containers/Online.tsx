@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import WifiOffIcon from "@mui/icons-material/WifiOff"
+import Overlay from "../components/Overlay"
 import styles from "./Online.module.scss"
 
 const Online = () => {
@@ -8,13 +9,13 @@ const Online = () => {
   const online = useOnlineStatus()
   if (online) return null
   return (
-    <div className={styles.offline}>
+    <Overlay>
       <article>
         <WifiOffIcon style={{ fontSize: 56 }} />
         <h1 className={styles.title}>{t("No internet connection")}</h1>
         <p>{t("Check the internet connection and retry")}</p>
       </article>
-    </div>
+    </Overlay>
   )
 }
 
