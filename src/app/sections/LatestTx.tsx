@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
+import { useNavigate } from "react-router-dom"
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { intervalToDuration } from "date-fns"
 import DoneAllIcon from "@mui/icons-material/DoneAll"
@@ -30,6 +31,7 @@ enum Status {
 
 const TxIndicator = ({ txhash }: { txhash: string }) => {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const animation = useThemeAnimation()
 
   const [latestTx, setLatestTx] = useRecoilState(latestTxState)
@@ -153,7 +155,10 @@ const TxIndicator = ({ txhash }: { txhash: string }) => {
         )
       }
       isOpen={!minimized}
-      onRequestClose={initLatestTx}
+      onRequestClose={() => {
+        initLatestTx()
+        if (redirectAfterTx) navigate(redirectAfterTx.path)
+      }}
     >
       {data && (
         <ul className={styles.messages}>
