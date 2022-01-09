@@ -29,7 +29,7 @@ const Tabs = ({ tabs, defaultActiveKey, type, reversed, state }: Props) => {
 
   return (
     <>
-      <section className={cx(type, { reversed })}>
+      <section className={cx(styles.tabs, type, { reversed })}>
         {tabs.map(({ key, tab, disabled }) =>
           state ? (
             <button

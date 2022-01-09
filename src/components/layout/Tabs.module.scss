@@ -1,5 +1,9 @@
 @import "mixins";
 
+.tabs {
+  white-space: nowrap;
+}
+
 .card {
   background: var(--bg-muted);
   border: var(--border-width) solid var(--card-border);
