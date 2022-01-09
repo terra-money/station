@@ -4,6 +4,7 @@ import LaptopOutlinedIcon from "@mui/icons-material/LaptopOutlined"
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined"
 import { STAKE_ID, TERRA_VALIDATORS } from "config/constants"
 import { Contacts as ContactsParams } from "types/components"
+import { useValidator } from "data/queries/staking"
 import { useTerraValidator } from "data/Terra/TerraAPI"
 import { ReactComponent as TerraValidatorProfiles } from "styles/images/stake/TerraValidatorProfiles.svg"
 import { ReactComponent as StakeID } from "styles/images/stake/StakeID.svg"
@@ -19,21 +20,22 @@ const cx = classNames.bind(styles)
 const ValidatorCompact = ({ vertical }: { vertical?: boolean }) => {
   const { t } = useTranslation()
   const address = useAddressParams()
-  const { data: validator, ...state } = useTerraValidator(address)
+  const { data: validator, ...state } = useValidator(address)
+  const { data: TerraValidator } = useTerraValidator(address)
 
   if (!validator) return null
 
   const { operator_address } = validator
   const { status, jailed, description } = validator
   const { moniker, details, website } = description
-  const { picture, contact } = validator
-  const email = contact?.email
 
   return (
     <Card {...state}>
       <Grid gap={16}>
         <header className={cx(styles.header, { vertical })}>
-          <ProfileIcon src={picture} size={60} />
+          {TerraValidator && (
+            <ProfileIcon src={TerraValidator.picture} size={60} />
+          )}
 
           <Grid gap={4}>
             <Flex gap={10} start>
@@ -49,10 +51,12 @@ const ValidatorCompact = ({ vertical }: { vertical?: boolean }) => {
               </Flex>
             )}
 
-            {email && (
+            {TerraValidator?.contact?.email && (
               <Flex gap={4} className={styles.link} start>
                 <EmailOutlinedIcon fontSize="inherit" />
-                <ExternalLink href={`mailto:${email}`}>{email}</ExternalLink>
+                <ExternalLink href={`mailto:${TerraValidator.contact.email}`}>
+                  {TerraValidator.contact.email}
+                </ExternalLink>
               </Flex>
             )}
           </Grid>
@@ -73,7 +77,9 @@ const ValidatorCompact = ({ vertical }: { vertical?: boolean }) => {
             </ExternalLink>
           </Flex>
 
-          {contact && <Contacts contacts={parseContacts(contact)} />}
+          {TerraValidator?.contact && (
+            <Contacts contacts={parseContacts(TerraValidator.contact)} />
+          )}
         </Grid>
       </Grid>
     </Card>

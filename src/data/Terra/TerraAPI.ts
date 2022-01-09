@@ -23,24 +23,32 @@ export enum AggregateWallets {
   ACTIVE = "active",
 }
 
-export const useTerraAPIURL = () => {
+export const useTerraAPIURL = (network?: string) => {
   const networkName = useNetworkName()
   return {
     mainnet: "https://api.terra.dev",
     testnet: "https://bombay-api.terra.dev",
-  }[networkName]
+  }[network ?? networkName]
 }
 
-export const useTerraAPI = <T>(path: string) => {
+export const useIsTerraAPIAvailable = () => {
+  const url = useTerraAPIURL()
+  return !!url
+}
+
+export const useTerraAPI = <T>(path: string, fallback?: T) => {
   const baseURL = useTerraAPIURL()
+  const available = useIsTerraAPIAvailable()
+  const shouldFallback = !available && fallback
 
   return useQuery<T, AxiosError>(
     [queryKey.TerraAPI, baseURL, path],
     async () => {
+      if (shouldFallback) return fallback
       const { data } = await axios.get(path, { baseURL })
       return data
     },
-    { ...RefetchOptions.INFINITY, enabled: !!baseURL }
+    { ...RefetchOptions.INFINITY, enabled: !!(baseURL || shouldFallback) }
   )
 }
 
@@ -48,7 +56,19 @@ export const useTerraAPI = <T>(path: string) => {
 export type GasPrices = Record<Denom, Amount>
 
 export const useGasPrices = () => {
-  return useTerraAPI<GasPrices>("/gas-prices")
+  const current = useTerraAPIURL()
+  const mainnet = useTerraAPIURL("mainnet")
+  const baseURL = current ?? mainnet
+  const path = "/gas-prices"
+
+  return useQuery(
+    [queryKey.TerraAPI, baseURL, path],
+    async () => {
+      const { data } = await axios.get<GasPrices>(path, { baseURL })
+      return data
+    },
+    { ...RefetchOptions.INFINITY, enabled: !!baseURL }
+  )
 }
 
 /* charts */
@@ -70,7 +90,7 @@ export const useWallets = (walletsType: AggregateWallets, type: Aggregate) => {
 
 /* validators */
 export const useTerraValidators = () => {
-  return useTerraAPI<TerraValidator[]>("validators")
+  return useTerraAPI<TerraValidator[]>("validators", [])
 }
 
 export const useTerraValidator = (address: ValAddress) => {

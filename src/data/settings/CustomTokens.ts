@@ -17,7 +17,7 @@ interface Params<T> {
 const useCustomTokens = <T extends CustomToken>({ type, key }: Params<T>) => {
   const [customTokens, setCustomTokens] = useRecoilState(customTokensState)
   const networkName = useNetworkName()
-  const list = (customTokens[networkName][type] ?? []) as T[]
+  const list = (customTokens[networkName]?.[type] ?? []) as T[]
 
   const getIsAdded = (param: T) =>
     !!list.find((item) => item[key] === param[key])

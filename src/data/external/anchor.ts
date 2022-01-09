@@ -24,14 +24,26 @@ const {
 
 const market = MARKET_DENOMS.UUSD
 
-const useAddressProvider = () => {
+const useAddresses = () => {
   const name = useNetworkName()
+  return useMemo(
+    () => ({ mainnet: columbus5, testnet: bombay12 }[name]),
+    [name]
+  )
+}
+
+export const useIsAnchorAvailable = () => {
+  const addresses = useAddresses()
+  return !!addresses
+}
+
+const useAddressProvider = () => {
+  const addresses = useAddresses()
 
   const provider = useMemo(() => {
-    const addresses = { mainnet: columbus5, testnet: bombay12 }[name]
-    if (!addresses) throw new Error(`Anchor is not supported: ${name}`)
+    if (!addresses) throw new Error(`Anchor is not supported`)
     return new AddressProviderFromJson(addresses)
-  }, [name])
+  }, [addresses])
 
   return provider
 }
