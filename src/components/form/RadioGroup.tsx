@@ -1,13 +1,17 @@
+import { Key } from "react"
 import Radio from "./Radio"
 import styles from "./RadioGroup.module.scss"
 
-interface Props {
-  options: { value: string; label: string; disabled?: boolean }[]
-  value: string
-  onChange: (value: string) => void
+interface Props<T> {
+  options: { value: T; label: string; disabled?: boolean }[]
+  value: T
+  onChange: (value: T) => void
+  reversed?: boolean
 }
 
-const RadioGroup = ({ options, value, onChange }: Props) => {
+function RadioGroup<T extends Key>(props: Props<T>) {
+  const { options, value, onChange, reversed } = props
+
   return (
     <section className={styles.list}>
       {options.map(({ label, disabled, ...option }) => {
@@ -20,7 +24,7 @@ const RadioGroup = ({ options, value, onChange }: Props) => {
             onClick={() => !disabled && onChange(option.value)}
             disabled={disabled}
             key={option.value}
-            reversed
+            reversed={reversed}
           />
         )
       })}

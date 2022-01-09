@@ -10,10 +10,11 @@ interface Props {
   tabs: { key: string; tab: string; children: ReactNode; disabled?: boolean }[]
   defaultActiveKey?: string
   type: "line" | "card"
+  reversed?: boolean
   state?: boolean
 }
 
-const Tabs = ({ tabs, defaultActiveKey, type, state }: Props) => {
+const Tabs = ({ tabs, defaultActiveKey, type, reversed, state }: Props) => {
   const initial = defaultActiveKey ?? tabs[0].key
   const navigate = useNavigate()
   const location = useLocation()
@@ -28,7 +29,7 @@ const Tabs = ({ tabs, defaultActiveKey, type, state }: Props) => {
 
   return (
     <>
-      <section className={cx(type)}>
+      <section className={cx(type, { reversed })}>
         {tabs.map(({ key, tab, disabled }) =>
           state ? (
             <button

@@ -1,8 +1,8 @@
 import SettingsIcon from "@mui/icons-material/Settings"
+import { useNetworkOptions, useNetworkState } from "data/wallet"
 import { RadioGroup } from "components/form"
 import { Popover } from "components/display"
 import HeaderIconButton from "../components/HeaderIconButton"
-import { useNetworkOptions, useNetworkState } from "data/wallet"
 
 const SelectNetwork = () => {
   const [network, setNetwork] = useNetworkState()
@@ -17,6 +17,7 @@ const SelectNetwork = () => {
           options={networkOptions}
           value={network}
           onChange={setNetwork}
+          reversed
         />
       }
       placement="bottom"

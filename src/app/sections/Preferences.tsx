@@ -26,6 +26,7 @@ const PreferencesInner = () => {
               options={Object.values(Languages)}
               value={i18n.language}
               onChange={(language) => i18n.changeLanguage(language)}
+              reversed
             />
           ),
         },
@@ -39,11 +40,13 @@ const PreferencesInner = () => {
               })}
               value={currency}
               onChange={setCurrency}
+              reversed
             />
           ),
         },
       ]}
       type="line"
+      reversed
       state
     />
   )

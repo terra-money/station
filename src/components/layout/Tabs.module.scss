@@ -60,8 +60,16 @@
   }
 }
 
+.line {
+  --border-color: var(--text);
+}
+
+.reversed {
+  --border-color: var(--card-bg);
+}
+
 .line .tab {
-  border-bottom: 1px solid var(--card-bg);
+  border-bottom: 1px solid var(--border-color);
   margin-bottom: 12px;
   font-size: var(--font-size-small);
   font-weight: var(--bold);
@@ -69,7 +77,7 @@
   padding-bottom: 5px;
 
   &.active {
-    border-bottom: 2px solid var(--card-bg);
+    border-bottom: 2px solid var(--border-color);
     padding-bottom: 4px;
   }
 }
