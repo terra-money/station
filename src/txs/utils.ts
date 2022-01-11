@@ -34,7 +34,7 @@ export const calcTaxes = (
   coins: CoinInput[],
   { taxRate, taxCaps }: TaxParams
 ) => {
-  if (!has(taxRate)) return
+  if (!new BigNumber(taxRate).gt(0)) return
 
   return new Coins(
     coins
