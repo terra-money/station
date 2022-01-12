@@ -9,6 +9,7 @@ import { ParameterChangeProposal, ParamChange } from "@terra-money/terra.js"
 import { readAmount, readDenom, toAmount } from "@terra.kitchen/utils"
 import { SAMPLE_ADDRESS } from "config/constants"
 import { getAmount } from "utils/coin"
+import { has } from "utils/num"
 import { queryKey } from "data/query"
 import { useAddress } from "data/wallet"
 import { useBankBalance } from "data/queries/bank"
@@ -93,7 +94,7 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
     ({ input, title, description, ...values }: TxValues) => {
       if (!address) return
       const amount = toAmount(input)
-      const deposit = new Coins({ uluna: amount })
+      const deposit = has(amount) ? new Coins({ uluna: amount }) : []
 
       const getContent = () => {
         if (values.type === ProposalType.SPEND) {
