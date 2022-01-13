@@ -1,3 +1,9 @@
+@import "mixins";
+
+.header {
+  @include flex(space-between);
+}
+
 .pre {
   border: solid 1px var(--input-border);
   border-radius: var(--border-radius);
@@ -11,9 +17,4 @@
 
 .break {
   word-break: break-all;
-}
-
-/* copy */
-.copy {
-  text-align: right;
 }
