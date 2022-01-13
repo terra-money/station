@@ -7,7 +7,7 @@ const TextArea = forwardRef(
     ref: ForwardedRef<HTMLTextAreaElement>
   ) => {
     return (
-      <textarea {...attrs} className={styles.textarea} rows={3} ref={ref} />
+      <textarea rows={3} {...attrs} className={styles.textarea} ref={ref} />
     )
   }
 )
