@@ -35,9 +35,11 @@ const Modal: FC<Props> = ({ title, children, footer, ...props }) => {
       className={styles.modal}
       overlayClassName={styles.overlay}
     >
-      <button type="button" className={styles.close} onClick={onRequestClose}>
-        {closeIcon ?? <CloseIcon fontSize="inherit" />}
-      </button>
+      {onRequestClose && (
+        <button type="button" className={styles.close} onClick={onRequestClose}>
+          {closeIcon ?? <CloseIcon fontSize="inherit" />}
+        </button>
+      )}
 
       {(title || icon) && (
         <header className={styles.header}>
