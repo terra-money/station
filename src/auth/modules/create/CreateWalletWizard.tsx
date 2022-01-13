@@ -24,7 +24,7 @@ interface CreateWallet {
   setValues: (values: Values) => void
 
   /* create wallet */
-  createdWallet?: Wallet
+  createdWallet?: SingleWallet
   createWallet: (coinType: Bip, index?: number) => void
 }
 
@@ -50,7 +50,7 @@ const CreateWalletWizard = ({ defaultMnemonic = "", beforeCreate }: Props) => {
   const [values, setValues] = useState(initial)
 
   /* create wallet */
-  const [createdWallet, setCreatedWallet] = useState<Wallet>()
+  const [createdWallet, setCreatedWallet] = useState<SingleWallet>()
   const createWallet = (coinType: Bip, index = 0) => {
     const { name, password, mnemonic } = values
     const mk = new MnemonicKey({ mnemonic, coinType, index })
@@ -79,7 +79,8 @@ const CreateWalletWizard = ({ defaultMnemonic = "", beforeCreate }: Props) => {
         return beforeCreate
 
       case 3:
-        return <CreatedWallet />
+        if (!createdWallet) return null
+        return <CreatedWallet {...createdWallet} />
     }
   }
 

@@ -2,6 +2,7 @@ import { Fragment, ReactNode } from "react"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { QueryKey, useQuery } from "react-query"
+import { useNavigate } from "react-router-dom"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import classNames from "classnames"
 import BigNumber from "bignumber.js"
@@ -36,7 +37,8 @@ import { Modal } from "components/feedback"
 import { Details } from "components/display"
 import { Read } from "components/token"
 import ConnectWallet from "app/sections/ConnectWallet"
-import { useAuth } from "auth"
+import useToPostMultisigTx from "pages/multisig/utils/useToPostMultisigTx"
+import { isWallet, useAuth } from "auth"
 import { PasswordError } from "auth/scripts/keystore"
 
 import { toInput } from "./utils"
@@ -203,7 +205,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
   }, [failed, simulationTx])
 
   /* submit */
-  const passwordRequired = wallet && "name" in wallet
+  const passwordRequired = isWallet.single(wallet)
   const [password, setPassword] = useState("")
   const [incorrect, setIncorrect] = useState<string>()
 
@@ -225,6 +227,8 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<Error>()
 
+  const navigate = useNavigate()
+  const toPostMultisigTx = useToPostMultisigTx()
   const submit = async (values: TxValues) => {
     setSubmitting(true)
 
@@ -243,7 +247,10 @@ function Tx<TxValues>(props: Props<TxValues>) {
       const feeCoins = taxCoins ? gasCoins.add(taxCoins) : gasCoins
       const fee = new Fee(estimatedGas, feeCoins)
 
-      if (wallet) {
+      if (isWallet.multisig(wallet)) {
+        const unsignedTx = await auth.create({ ...tx, fee })
+        navigate(toPostMultisigTx(unsignedTx))
+      } else if (wallet) {
         const result = await auth.post({ ...tx, fee }, password)
         setLatestTx({ txhash: result.txhash, queryKeys, redirectAfterTx })
       } else {
@@ -260,8 +267,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
     setSubmitting(false)
   }
 
-  const submittingLabel =
-    wallet && "ledger" in wallet ? t("Confirm in ledger") : ""
+  const submittingLabel = isWallet.ledger(wallet) ? t("Confirm in ledger") : ""
 
   /* render */
   const balanceAfterTx =

@@ -5,16 +5,11 @@ import { Grid } from "components/layout"
 import { Submit } from "components/form"
 import { Details } from "components/display"
 import useAuth from "../../hooks/useAuth"
-import { useCreateWallet } from "./CreateWalletWizard"
 
-const CreatedWallet = () => {
+const CreatedWallet = ({ name, address }: SingleWallet) => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { connect } = useAuth()
-  const { createdWallet } = useCreateWallet()
-
-  if (!createdWallet) return null
-  const { name, address } = createdWallet
 
   const submit = () => {
     connect(name)
@@ -30,12 +25,10 @@ const CreatedWallet = () => {
         </header>
 
         <Details>
-          <dl>
-            <dt>{t("Name")}</dt>
-            <dd>{name}</dd>
-            <dt>{t("Address")}</dt>
-            <dd>{address}</dd>
-          </dl>
+          <article>
+            <h1>{name}</h1>
+            <p>{address}</p>
+          </article>
         </Details>
 
         <Submit type="button" onClick={submit}>

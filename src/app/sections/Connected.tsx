@@ -1,13 +1,14 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
+import GroupsIcon from "@mui/icons-material/Groups"
 import { truncate } from "@terra.kitchen/utils"
 import { useWallet } from "@terra-money/wallet-provider"
 import { useAddress } from "data/wallet"
 import { Button, Copy, FinderLink } from "components/general"
 import { Grid } from "components/layout"
 import { Tooltip, Popover } from "components/display"
-import { useAuth } from "auth"
+import { isWallet, useAuth } from "auth"
 import SwitchWallet from "auth/modules/select/SwitchWallet"
 import PopoverNone from "../components/PopoverNone"
 import styles from "./Connected.module.scss"
@@ -54,11 +55,17 @@ const Connected = () => {
       theme="none"
     >
       <Button
-        icon={<AccountBalanceWalletIcon style={{ fontSize: 16 }} />}
+        icon={
+          isWallet.multisig(wallet) ? (
+            <GroupsIcon style={{ fontSize: 16 }} />
+          ) : (
+            <AccountBalanceWalletIcon style={{ fontSize: 16 }} />
+          )
+        }
         size="small"
         outline
       >
-        {wallet && "name" in wallet ? wallet.name : truncate(address)}
+        {isWallet.local(wallet) ? wallet.name : truncate(address)}
       </Button>
     </Popover>
   )

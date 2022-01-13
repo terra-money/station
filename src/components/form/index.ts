@@ -15,6 +15,7 @@ export * from "./Checkbox"
 export { default as Upload } from "./Upload"
 
 /* modules */
+export { default as Paste } from "./Paste"
 export { default as RadioGroup } from "./RadioGroup"
 
 /* submit button */

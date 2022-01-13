@@ -38,6 +38,8 @@ import StoreCodeTx from "txs/wasm/StoreCodeTx"
 import InstantiateContractTx from "txs/wasm/InstantiateContractTx"
 import ExecuteContractTx from "txs/wasm/ExecuteContractTx"
 import AnchorEarnTx from "txs/earn/AnchorEarnTx"
+import SignMultisigTxPage from "pages/multisig/SignMultisigTxPage"
+import PostMultisigTxPage from "pages/multisig/PostMultisigTxPage"
 
 /* auth */
 import Auth from "auth/modules/Auth"
@@ -105,6 +107,10 @@ export const useNav = () => {
     ...menu,
     { path: "/validator/:address", element: <ValidatorDetails /> },
     { path: "/proposal/:id", element: <ProposalDetails /> },
+
+    /* multisig */
+    { path: "/multisig/sign", element: <SignMultisigTxPage /> },
+    { path: "/multisig/post", element: <PostMultisigTxPage /> },
 
     /* txs */
     { path: "/send", element: <SendTx /> },

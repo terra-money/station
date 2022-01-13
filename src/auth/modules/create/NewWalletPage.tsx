@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next"
 import { Card, Page } from "components/layout"
 import NewWalletForm from "./NewWalletForm"
 
-const NewWallet = () => {
+const NewWalletPage = () => {
   const { t } = useTranslation()
 
   return (
@@ -14,4 +14,4 @@ const NewWallet = () => {
   )
 }
 
-export default NewWallet
+export default NewWalletPage

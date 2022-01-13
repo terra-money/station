@@ -4,29 +4,32 @@ import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import DoneAllIcon from "@mui/icons-material/DoneAll"
 import { Form, FormItem, FormWarning, Input, Submit } from "components/form"
+import { isWallet } from "auth"
 import { deleteWallet } from "../../scripts/keystore"
 import useAuth from "../../hooks/useAuth"
 import ConfirmModal from "./ConfirmModal"
 
 interface Values {
-  password: string
+  name: string
 }
 
 const DeleteWalletForm = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const { getConnectedWallet, disconnect, validatePassword } = useAuth()
+  const { wallet, disconnect } = useAuth()
+  const name = isWallet.local(wallet) ? wallet.name : undefined
 
   /* form */
-  const form = useForm<Values>()
+  const form = useForm<Values>({ mode: "onChange" })
   const { register, handleSubmit, formState } = form
-  const { errors } = formState
+  const { isValid } = formState
 
+  /* submit */
   const [done, setDone] = useState(false)
-  const submit = ({ password }: Values) => {
-    const { name } = getConnectedWallet()
+  const submit = (values: Values) => {
+    if (values.name !== name) return
     disconnect()
-    deleteWallet({ name, password })
+    deleteWallet(name)
     setDone(true)
   }
 
@@ -42,18 +45,24 @@ const DeleteWalletForm = () => {
       )}
 
       <Form onSubmit={handleSubmit(submit)}>
-        <FormItem label={t("Password")} error={errors.password?.message}>
+        <FormItem>
+          <p>
+            Type <strong>{name}</strong> to confirm
+          </p>
+
           <Input
-            {...register("password", { validate: validatePassword })}
-            type="password"
+            {...register("name", { validate: (value) => value === name })}
             autoFocus
           />
         </FormItem>
 
         <FormWarning>
-          {t("Mnemonic is required to recover this wallet")}
+          {t(
+            "This action cannot be undone. Mnemonic is required to recover a deleted wallet."
+          )}
         </FormWarning>
-        <Submit />
+
+        <Submit disabled={!isValid} />
       </Form>
     </>
   )

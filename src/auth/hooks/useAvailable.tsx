@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next"
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline"
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore"
 import KeyIcon from "@mui/icons-material/Key"
+import GroupsIcon from "@mui/icons-material/Groups"
 import { sandbox } from "../scripts/env"
 
 const useAvailable = () => {
@@ -24,6 +25,11 @@ const useAvailable = () => {
       to: "/auth/import",
       children: t("Import wallet"),
       icon: <KeyIcon />,
+    },
+    {
+      to: "/auth/multisig/new",
+      children: t("New multisig wallet"),
+      icon: <GroupsIcon />,
     },
   ]
 }

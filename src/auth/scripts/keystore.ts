@@ -1,3 +1,4 @@
+import is from "./is"
 import encrypt from "./encrypt"
 import decrypt from "./decrypt"
 
@@ -5,10 +6,10 @@ import decrypt from "./decrypt"
 export const getWallet = () => {
   const user = localStorage.getItem("user")
   if (!user) return
-  return JSON.parse(user) as Wallet | LedgerWallet
+  return JSON.parse(user) as Wallet
 }
 
-export const storeWallet = (user: Wallet | LedgerWallet) => {
+export const storeWallet = (user: Wallet) => {
   localStorage.setItem("user", JSON.stringify(user))
 }
 
@@ -17,12 +18,13 @@ export const clearWallet = () => {
 }
 
 /* stored wallets */
+type StoredKey = StoredWallet | StoredWalletLegacy | MultisigWallet
 export const getStoredWallets = () => {
   const keys = localStorage.getItem("keys") ?? "[]"
-  return JSON.parse(keys) as (StoredWallet | StoredWalletLegacy)[]
+  return JSON.parse(keys) as StoredKey[]
 }
 
-const storeWallets = (wallets: (StoredWallet | StoredWalletLegacy)[]) => {
+const storeWallets = (wallets: StoredKey[]) => {
   localStorage.setItem("keys", JSON.stringify(wallets))
 }
 
@@ -42,11 +44,19 @@ interface Params {
 export const getDecryptedKey = ({ name, password }: Params) => {
   const wallet = getStoredWallet(name)
 
-  if ("encrypted" in wallet) return decrypt(wallet.encrypted, password)
-
-  // legacy
-  const { privateKey: key } = JSON.parse(decrypt(wallet.wallet, password))
-  return key as string
+  try {
+    if ("encrypted" in wallet) {
+      return decrypt(wallet.encrypted, password)
+    } else if ("wallet" in wallet) {
+      // legacy
+      const { privateKey: key } = JSON.parse(decrypt(wallet.wallet, password))
+      return key as string
+    } else {
+      return ""
+    }
+  } catch {
+    throw new PasswordError("Incorrect password")
+  }
 }
 
 export class PasswordError extends Error {}
@@ -55,18 +65,25 @@ export const testPassword = (params: Params) => {
   return true
 }
 
-interface AddWalletParams extends Params, Wallet {
-  key: Buffer
-}
+type AddWalletParams =
+  | { name: string; address: string; password: string; key: Buffer }
+  | { name: string; address: string; multisig: true }
 
 export const addWallet = (params: AddWalletParams) => {
-  const { name, password, address, key } = params
   const wallets = getStoredWallets()
-  if (wallets.find((wallet) => wallet.name === name))
+
+  if (wallets.find((wallet) => wallet.name === params.name))
     throw new Error("Wallet already exists")
-  const encrypted = encrypt(key.toString("hex"), password)
-  const next = wallets.filter((wallet) => wallet.address !== address)
-  storeWallets([...next, { name, address, encrypted }])
+
+  const next = wallets.filter((wallet) => wallet.address !== params.address)
+
+  if (is.multisig(params)) {
+    storeWallets([...next, params])
+  } else {
+    const { name, password, address, key } = params
+    const encrypted = encrypt(key.toString("hex"), password)
+    storeWallets([...next, { name, address, encrypted }])
+  }
 }
 
 interface ChangePasswordParams {
@@ -93,9 +110,8 @@ export const changePassword = (params: ChangePasswordParams) => {
   storeWallets(next)
 }
 
-export const deleteWallet = (params: Params) => {
-  testPassword(params)
+export const deleteWallet = (name: string) => {
   const wallets = getStoredWallets()
-  const next = wallets.filter((wallet) => wallet.name !== params.name)
+  const next = wallets.filter((wallet) => wallet.name !== name)
   storeWallets(next)
 }
