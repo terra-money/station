@@ -7,9 +7,12 @@ import { Grid } from "components/layout"
 import { FormError } from "components/form"
 import useAuth from "../hooks/useAuth"
 import * as ledger from "./ledger"
-
-const TERRA_DEFAULT_PATH = [44, 118, 0, 0, 0]
-const COSMOS_DEFAULT_PATH = [44, 330, 0, 0, 0]
+import {
+  TERRA_APP_NUMBER,
+  COSMOS_APP_NUMBER,
+  DEFAULT_PATH_TERRA,
+  DEFAULT_PATH_COSMOS,
+} from "./ledger"
 
 const AccessWithLedgerForm = () => {
   const { t } = useTranslation()
@@ -20,8 +23,7 @@ const AccessWithLedgerForm = () => {
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false)
   const [customDerivationIsEnabled, setCustomDerivationIsEnabled] =
     useState(false)
-  const [appInteger, setAppInteger] = useState(118)
-  const [pathState, setPathState] = useState(TERRA_DEFAULT_PATH)
+  const [pathState, setPathState] = useState([...DEFAULT_PATH_TERRA])
 
   const handleDerivation = (e: React.ChangeEvent) => {
     let target = e.target as HTMLElement
@@ -29,9 +31,10 @@ const AccessWithLedgerForm = () => {
     let targetValue = 0
     let pathIdx = 0
     switch (tid) {
+      case "path0":
+        break
       case "path1":
         targetValue = parseInt((target as HTMLSelectElement).value)
-        setAppInteger(targetValue)
         pathIdx = 1
         break
       case "path2":
@@ -47,11 +50,9 @@ const AccessWithLedgerForm = () => {
         targetValue = parseInt((target as HTMLInputElement).value)
         break
     }
-    let newPath = pathState
+    let newPath = [...pathState]
     newPath[pathIdx] = targetValue
     setPathState(newPath)
-
-    console.log(pathState)
   }
 
   const connect = async () => {
@@ -59,7 +60,7 @@ const AccessWithLedgerForm = () => {
     setError(undefined)
 
     try {
-      const address = await ledger.getTerraAddress()
+      const address = await ledger.getTerraAddress(pathState)
       connectLedger(address)
       navigate("/wallet", { replace: true })
     } catch (error) {
@@ -76,6 +77,7 @@ const AccessWithLedgerForm = () => {
         name="path0"
         id="path0"
         disabled={!customDerivationIsEnabled}
+        value={pathState[0]}
       >
         <option value="44">44</option>
       </select>
@@ -85,7 +87,7 @@ const AccessWithLedgerForm = () => {
         name="path1"
         id="path1"
         disabled={!customDerivationIsEnabled}
-        value={appInteger}
+        value={pathState[1]}
       >
         <option value="118">118</option>
         <option value="330">330</option>
@@ -97,7 +99,7 @@ const AccessWithLedgerForm = () => {
         name="path2"
         id="path2"
         disabled={!customDerivationIsEnabled}
-        defaultValue="0"
+        value={pathState[2]}
       ></input>
       /&nbsp;
       <input
@@ -106,7 +108,7 @@ const AccessWithLedgerForm = () => {
         name="path3"
         id="path3"
         disabled={!customDerivationIsEnabled}
-        defaultValue="0"
+        value={pathState[3]}
       ></input>
       /&nbsp;
       <input
@@ -115,7 +117,7 @@ const AccessWithLedgerForm = () => {
         name="path4"
         id="path4"
         disabled={!customDerivationIsEnabled}
-        defaultValue="0"
+        value={pathState[4]}
       ></input>
     </div>
   )
@@ -138,17 +140,15 @@ const AccessWithLedgerForm = () => {
         <div>
           <select
             name="derivationPath"
-            onClick={(e) => {
+            onChange={(e) => {
               const target = e.target as HTMLSelectElement
               switch (target.value) {
                 case "terraDefaults":
-                  setAppInteger(118)
-                  setPathState(TERRA_DEFAULT_PATH)
+                  setPathState(DEFAULT_PATH_TERRA)
                   setCustomDerivationIsEnabled(false)
                   break
                 case "cosmosDefaults":
-                  setAppInteger(330)
-                  setPathState(COSMOS_DEFAULT_PATH)
+                  setPathState(DEFAULT_PATH_COSMOS)
                   setCustomDerivationIsEnabled(false)
                   break
                 case "custom":
@@ -172,8 +172,11 @@ const AccessWithLedgerForm = () => {
     )
   } else {
     // if user closes Advanced Settings, return everything back to defaults
-    if (pathState != TERRA_DEFAULT_PATH) {
-      setPathState(TERRA_DEFAULT_PATH)
+    if (customDerivationIsEnabled) {
+      setCustomDerivationIsEnabled(false)
+    }
+    if (pathState !== DEFAULT_PATH_TERRA) {
+      setPathState(DEFAULT_PATH_TERRA)
     }
   }
 

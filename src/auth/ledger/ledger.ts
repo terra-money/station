@@ -4,6 +4,10 @@ import semver from "semver"
 
 const INTERACTION_TIMEOUT = 120
 const REQUIRED_APP_VERSION = "1.0.0"
+export const TERRA_APP_NUMBER = 330
+export const COSMOS_APP_NUMBER = 118
+export const DEFAULT_PATH_TERRA = [44, TERRA_APP_NUMBER, 0, 0, 0]
+export const DEFAULT_PATH_COSMOS = [44, COSMOS_APP_NUMBER, 0, 0, 0]
 
 declare global {
   interface Window {
@@ -78,12 +82,21 @@ const handleConnectError = (err: Error) => {
   throw err
 }
 
+enum LEDGER_APP_SELECTIONS {
+  TERRA,
+  COSMOS,
+}
+
+let selectedLedgerApp = LEDGER_APP_SELECTIONS.TERRA
+
 const checkLedgerErrors = (response: CommonResponse | null) => {
   if (!response) {
     return
   }
 
   const { error_message, device_locked } = response
+  const ledgerAppString =
+    selectedLedgerApp === LEDGER_APP_SELECTIONS.TERRA ? "Terra" : "Cosmos"
 
   if (device_locked) {
     throw new LedgerError("Ledger's screensaver mode is on")
@@ -93,7 +106,7 @@ const checkLedgerErrors = (response: CommonResponse | null) => {
     throw new LedgerError("Finish previous action in Ledger")
   } else if (error_message.startsWith("DisconnectedDeviceDuringOperation")) {
     app = path = null
-    throw new LedgerError("Open the Terra app in the Ledger")
+    throw new LedgerError(`Open the ${ledgerAppString} app in the Ledger`)
   }
 
   switch (error_message) {
@@ -103,7 +116,7 @@ const checkLedgerErrors = (response: CommonResponse | null) => {
       )
 
     case "App does not seem to be open":
-      throw new LedgerError("Open the Terra app in the Ledger")
+      throw new LedgerError(`Open the ${ledgerAppString} app in the Ledger`)
 
     case "Command not allowed":
       throw new LedgerError("Transaction rejected")
@@ -116,7 +129,7 @@ const checkLedgerErrors = (response: CommonResponse | null) => {
 
     case "Instruction not supported":
       throw new LedgerError(
-        "Check the Ledger is running latest version of Terra"
+        `Check the Ledger is running latest version of ${ledgerAppString}`
       )
 
     case "No errors":
@@ -166,28 +179,49 @@ async function createTerraApp(): Promise<TerraApp> {
   return app
 }
 
-const connect = async () => {
-  if (app) {
+function updatePath(requestedLedgerPath: number[]) {
+  const appNumber = requestedLedgerPath[1]
+  switch (appNumber) {
+    case TERRA_APP_NUMBER:
+      selectedLedgerApp = LEDGER_APP_SELECTIONS.TERRA
+      break
+    case COSMOS_APP_NUMBER:
+      selectedLedgerApp = LEDGER_APP_SELECTIONS.COSMOS
+      break
+    default:
+      throw new LedgerError(
+        `${requestedLedgerPath} is not a valid derivation for a Terra address`
+      )
+  }
+
+  path = requestedLedgerPath
+}
+
+const connect = async (requestedLedgerPath = DEFAULT_PATH_TERRA) => {
+  if (app && path === requestedLedgerPath) {
     return
   }
 
+  updatePath(requestedLedgerPath)
+  let targetApp =
+    selectedLedgerApp === LEDGER_APP_SELECTIONS.TERRA ? "Terra" : "Cosmos"
   app = await createTerraApp()
   const { app_name: appName } = app.getInfo()
 
-  if (appName !== "Terra") {
-    throw new LedgerError("Open the Terra app in the Ledger")
+  if (appName !== targetApp) {
+    path = null
+    throw new LedgerError(`Open the ${targetApp} app in the Ledger`)
   }
 
   const { major, minor, patch } = app.getVersion()
   const version = `${major}.${minor}.${patch}`
 
   if (appName === "Terra" && semver.lt(version, REQUIRED_APP_VERSION)) {
+    path = null
     throw new LedgerError(
       "Outdated version: Update Ledger Terra App to the latest version"
     )
   }
-
-  path = [44, 330, 0, 0, 0]
 }
 
 export const close = async () => {
@@ -220,8 +254,8 @@ export const showAddressInLedger = async () => {
   checkLedgerErrors(response)
 }
 
-export const getTerraAddress = async () => {
-  await connect().catch(handleConnectError)
+export const getTerraAddress = async (ledgerPath = DEFAULT_PATH_TERRA) => {
+  await connect(ledgerPath).catch(handleConnectError)
 
   if (!app) {
     return ""
