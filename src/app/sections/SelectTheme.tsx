@@ -78,7 +78,7 @@ const SelectTheme = () => {
         {address && themes.some((theme) => !validate?.(theme)) && (
           <Flex gap={4} className={styles.info}>
             <InfoIcon style={{ fontSize: 18 }} />
-            {t("Preview is available if wallet is diconnected")}
+            {t("Preview is available if wallet is disconnected")}
           </Flex>
         )}
       </Grid>
