@@ -9,7 +9,8 @@ import { useLCDClient } from "data/queries/lcdClient"
 import is from "../scripts/is"
 import { PasswordError } from "../scripts/keystore"
 import { getDecryptedKey, testPassword } from "../scripts/keystore"
-import { getWallet, storeWallet, clearWallet } from "../scripts/keystore"
+import { getWallet, storeWallet } from "../scripts/keystore"
+import { clearWallet, lockWallet } from "../scripts/keystore"
 import { getStoredWallet, getStoredWallets } from "../scripts/keystore"
 import encrypt from "../scripts/encrypt"
 import * as ledger from "../ledger/ledger"
@@ -28,11 +29,13 @@ const useAuth = () => {
   const [wallet, setWallet] = useRecoilState(walletState)
   const wallets = getStoredWallets()
 
-  /* connect | disconnect */
+  /* connect  */
   const connect = useCallback(
     (name: string) => {
       const storedWallet = getStoredWallet(name)
-      const { address } = storedWallet
+      const { address, lock } = storedWallet
+
+      if (lock) throw new Error("Wallet is locked")
 
       const wallet = is.multisig(storedWallet)
         ? { name, address, multisig: true }
@@ -53,22 +56,30 @@ const useAuth = () => {
     [setWallet]
   )
 
-  const disconnect = useCallback(() => {
-    clearWallet()
-    setWallet(undefined)
-  }, [setWallet])
-
-  /* helpers */
+  /* connected */
   const connectedWallet = useMemo(() => {
     if (!is.local(wallet)) return
     return wallet
   }, [wallet])
 
-  const getConnectedWallet = () => {
+  const getConnectedWallet = useCallback(() => {
     if (!connectedWallet) throw new Error("Wallet is not defined")
     return connectedWallet
-  }
+  }, [connectedWallet])
 
+  /* disconnected */
+  const disconnect = useCallback(() => {
+    clearWallet()
+    setWallet(undefined)
+  }, [setWallet])
+
+  const lock = useCallback(() => {
+    const { name } = getConnectedWallet()
+    lockWallet(name)
+    disconnect()
+  }, [disconnect, getConnectedWallet])
+
+  /* helpers */
   const getKey = (password: string) => {
     const { name } = getConnectedWallet()
     return getDecryptedKey({ name, password })
@@ -198,6 +209,7 @@ const useAuth = () => {
     connect,
     connectLedger,
     disconnect,
+    lock,
     available,
     encodeEncryptedWallet,
     validatePassword,

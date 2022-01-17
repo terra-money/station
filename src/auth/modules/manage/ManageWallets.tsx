@@ -1,9 +1,11 @@
 import { useTranslation } from "react-i18next"
+import { useNavigate } from "react-router-dom"
 import QrCodeIcon from "@mui/icons-material/QrCode"
 import PasswordIcon from "@mui/icons-material/Password"
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
 import FactCheckOutlinedIcon from "@mui/icons-material/FactCheckOutlined"
 import LogoutIcon from "@mui/icons-material/Logout"
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
 import { Col, Page } from "components/layout"
 import is from "../../scripts/is"
 import useAuth from "../../hooks/useAuth"
@@ -12,7 +14,8 @@ import ConnectedWallet from "./ConnectedWallet"
 
 export const useManageWallet = () => {
   const { t } = useTranslation()
-  const { wallet } = useAuth()
+  const navigate = useNavigate()
+  const { wallet, disconnect, lock } = useAuth()
 
   const toExport = {
     to: "/auth/export",
@@ -44,19 +47,31 @@ export const useManageWallet = () => {
     icon: <FactCheckOutlinedIcon />,
   }
 
-  const toDisconnect = {
-    to: "/auth/disconnect",
+  const disconnectWallet = {
+    onClick: () => {
+      disconnect()
+      navigate("/", { replace: true })
+    },
     children: t("Disconnect"),
     icon: <LogoutIcon />,
   }
 
+  const lockWallet = {
+    onClick: () => {
+      lock()
+      navigate("/", { replace: true })
+    },
+    children: t("Lock"),
+    icon: <LockOutlinedIcon />,
+  }
+
   if (!wallet) return
 
-  return is.ledger(wallet)
-    ? [toSignMultisig, toDisconnect]
-    : is.multisig(wallet)
-    ? [toPostMultisig, toDelete, toDisconnect]
-    : [toExport, toPassword, toDelete, toSignMultisig, toDisconnect]
+  return is.multisig(wallet)
+    ? [toPostMultisig, toDelete, disconnectWallet]
+    : is.ledger(wallet)
+    ? [toSignMultisig, disconnectWallet]
+    : [toExport, toPassword, toDelete, toSignMultisig, lockWallet]
 }
 
 const ManageWallets = () => {

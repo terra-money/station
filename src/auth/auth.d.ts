@@ -6,6 +6,7 @@ type LocalWallet = SingleWallet | MultisigWallet // wallet with name
 interface SingleWallet {
   address: string
   name: string
+  lock?: boolean
 }
 
 interface MultisigWallet extends SingleWallet {

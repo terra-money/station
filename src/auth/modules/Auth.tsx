@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom"
 
 /* connect */
+import UnlockPage from "./select/UnlockPage"
 import AccessWithLedgerPage from "../ledger/AccessWithLedgerPage"
 
 /* create */
@@ -14,7 +15,6 @@ import ManageWallets from "./manage/ManageWallets"
 import ExportWalletPage from "./manage/ExportWalletPage"
 import ChangePasswordPage from "./manage/ChangePasswordPage"
 import DeleteWalletPage from "./manage/DeleteWalletPage"
-import Disconnect from "./manage/Disconnect"
 
 const Auth = () => {
   return (
@@ -22,6 +22,7 @@ const Auth = () => {
       <Route index element={<ManageWallets />} />
 
       {/* connect */}
+      <Route path="unlock/:name" element={<UnlockPage />} />
       <Route path="ledger" element={<AccessWithLedgerPage />} />
 
       {/* create */}
@@ -34,7 +35,6 @@ const Auth = () => {
       <Route path="export" element={<ExportWalletPage />} />
       <Route path="password" element={<ChangePasswordPage />} />
       <Route path="delete" element={<DeleteWalletPage />} />
-      <Route path="disconnect" element={<Disconnect />} />
     </Routes>
   )
 }

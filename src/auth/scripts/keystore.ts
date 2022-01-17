@@ -67,7 +67,7 @@ export const testPassword = (params: Params) => {
 
 type AddWalletParams =
   | { name: string; address: string; password: string; key: Buffer }
-  | { name: string; address: string; multisig: true }
+  | MultisigWallet
 
 export const addWallet = (params: AddWalletParams) => {
   const wallets = getStoredWallets()
@@ -113,5 +113,27 @@ export const changePassword = (params: ChangePasswordParams) => {
 export const deleteWallet = (name: string) => {
   const wallets = getStoredWallets()
   const next = wallets.filter((wallet) => wallet.name !== name)
+  storeWallets(next)
+}
+
+export const lockWallet = (name: string) => {
+  const wallets = getStoredWallets()
+  const next = wallets.map((wallet) =>
+    wallet.name === name ? { ...wallet, lock: true } : wallet
+  )
+
+  storeWallets(next)
+}
+
+export const unlockWallet = (name: string, password = "") => {
+  const wallets = getStoredWallets()
+
+  testPassword({ name, password })
+
+  const next = wallets.map((wallet) => {
+    const { lock, ...rest } = wallet
+    return wallet.name === name ? rest : wallet
+  })
+
   storeWallets(next)
 }

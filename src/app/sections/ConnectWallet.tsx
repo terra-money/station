@@ -57,6 +57,7 @@ const ConnectWallet = ({ renderButton }: Props) => {
     <ModalButton
       title={t("Connect wallet")}
       renderButton={renderButton ?? defaultRenderButton}
+      maxHeight
     >
       <Grid gap={20}>
         <SwitchWallet />
