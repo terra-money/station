@@ -1,12 +1,14 @@
-import { FC, useMemo } from "react"
+import { FC, useEffect, useMemo } from "react"
 import { QueryClient, QueryClientProvider } from "react-query"
 import { useWallet, WalletStatus } from "@terra-money/wallet-provider"
-import { useNetworkName } from "data/wallet"
+import { useNetwork, useNetworkName } from "data/wallet"
+import { isWallet, useAuth } from "auth"
 import Splash from "auth/modules/Splash"
 import Online from "./containers/Online"
 import WithNodeInfo from "./WithNodeInfo"
 
 const InitWallet: FC = ({ children }) => {
+  useOnNetworkChange()
   const { status } = useWallet()
   const queryClient = useQueryClient()
   const networkName = useNetworkName()
@@ -24,6 +26,17 @@ const InitWallet: FC = ({ children }) => {
 export default InitWallet
 
 /* hooks */
+const useOnNetworkChange = () => {
+  const { preconfigure } = useNetwork()
+  const { wallet, disconnect } = useAuth()
+  const isPreconfiguredWallet = isWallet.preconfigured(wallet)
+  const shouldDisconnect = !preconfigure && isPreconfiguredWallet
+
+  useEffect(() => {
+    if (shouldDisconnect) disconnect()
+  }, [disconnect, shouldDisconnect])
+}
+
 const useQueryClient = () => {
   const name = useNetworkName()
 
