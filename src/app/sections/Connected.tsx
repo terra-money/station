@@ -33,19 +33,21 @@ const Connected = () => {
     <Popover
       key={key}
       content={
-        <PopoverNone footer={footer}>
+        <PopoverNone className={styles.popover} footer={footer}>
           <Grid gap={16}>
-            <section>
-              <Tooltip content={t("View on Terra Finder")}>
-                <FinderLink className={styles.link} short>
-                  {address}
-                </FinderLink>
-              </Tooltip>
+            <Grid gap={4}>
+              <section>
+                <Tooltip content={t("View on Terra Finder")}>
+                  <FinderLink className={styles.link} short>
+                    {address}
+                  </FinderLink>
+                </Tooltip>
+              </section>
 
-              <footer>
+              <section>
                 <Copy text={address} />
-              </footer>
-            </section>
+              </section>
+            </Grid>
 
             <SwitchWallet />
           </Grid>

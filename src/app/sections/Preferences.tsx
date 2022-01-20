@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next"
 import LanguageIcon from "@mui/icons-material/Language"
 import { Tabs } from "components/layout"
 import { Popover } from "components/display"
+import { sandbox } from "auth/scripts/env"
 import PopoverNone from "../components/PopoverNone"
 import HeaderIconButton from "../components/HeaderIconButton"
 import NetworkSetting from "./NetworkSetting"
@@ -11,11 +12,25 @@ import CurrencySetting from "./CurrencySetting"
 const Preferences = () => {
   const { t } = useTranslation()
 
-  const tabs = [
-    { key: "network", tab: t("Network"), children: <NetworkSetting /> },
-    { key: "lang", tab: t("Language"), children: <LanguageSetting /> },
-    { key: "currency", tab: t("Currency"), children: <CurrencySetting /> },
-  ].filter(({ children }) => children)
+  const network = {
+    key: "network",
+    tab: t("Network"),
+    children: <NetworkSetting />,
+  }
+
+  const lang = {
+    key: "lang",
+    tab: t("Language"),
+    children: <LanguageSetting />,
+  }
+
+  const currency = {
+    key: "currency",
+    tab: t("Currency"),
+    children: <CurrencySetting />,
+  }
+
+  const tabs = sandbox ? [network, lang, currency] : [lang, currency]
 
   return (
     <Popover

@@ -3,7 +3,6 @@
 .component {
   @include flex-column(space-between, stretch);
   background: var(--card-bg);
-  min-width: 260px;
 }
 
 .inner {
