@@ -4,6 +4,7 @@ import { useWallet, WalletStatus } from "@terra-money/wallet-provider"
 import { useNetworkName } from "data/wallet"
 import Splash from "auth/modules/Splash"
 import Online from "./containers/Online"
+import WithNodeInfo from "./WithNodeInfo"
 
 const InitWallet: FC = ({ children }) => {
   const { status } = useWallet()
@@ -14,7 +15,7 @@ const InitWallet: FC = ({ children }) => {
     <Splash />
   ) : (
     <QueryClientProvider client={queryClient} key={networkName}>
-      {children}
+      <WithNodeInfo>{children}</WithNodeInfo>
       <Online />
     </QueryClientProvider>
   )

@@ -43,6 +43,8 @@ import PostMultisigTxPage from "pages/multisig/PostMultisigTxPage"
 
 /* auth */
 import Auth from "auth/modules/Auth"
+import ManageNetworksPage from "auth/networks/ManageNetworksPage"
+import AddNetworkPage from "auth/networks/AddNetworkPage"
 
 /* labs */
 import Labs from "pages/labs/Labs"
@@ -129,6 +131,8 @@ export const useNav = () => {
 
     /* auth */
     { path: "/auth/*", element: <Auth /> },
+    { path: "/networks", element: <ManageNetworksPage /> },
+    { path: "/network/new", element: <AddNetworkPage /> },
 
     /* dev */
     { path: "/labs", element: <Labs /> },

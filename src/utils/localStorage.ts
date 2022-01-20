@@ -24,7 +24,7 @@ export const DefaultSettings = {
   [SettingKey.Currency]: "uusd",
   [SettingKey.MinimumValue]: 0,
   [SettingKey.CustomTokens]: DefaultCustomTokens as CustomTokens,
-  [SettingKey.CustomNetworks]: [] as TerraNetwork[],
+  [SettingKey.CustomNetworks]: [] as CustomNetwork[],
   [SettingKey.AddressBook]: [] as AddressBook[],
 }
 

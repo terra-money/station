@@ -3,8 +3,8 @@
 .overlay {
   @include flex;
 
-  background: hsl(0 0% 0% / 0.85);
-  color: white;
+  background: var(--bg);
+  color: var(--text);
   text-align: center;
 
   position: fixed;

@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { useNetworkState } from "data/wallet"
 import { useCustomNetworks } from "data/settings/CustomNetworks"
-import { Form, FormItem, Submit, Input } from "components/form"
-import { useNetworks } from "app/NetworksProvider"
+import { Form, FormItem, Submit, Input, Checkbox } from "components/form"
+import { useNetworks } from "app/InitNetworks"
 
 const AddNetwork = () => {
   const { t } = useTranslation()
@@ -14,11 +14,12 @@ const AddNetwork = () => {
   const { add, validateName } = useCustomNetworks()
 
   /* form */
-  const form = useForm<TerraNetwork>({ mode: "onChange" })
-  const { register, handleSubmit, formState } = form
-  const { errors } = formState
+  const form = useForm<CustomNetwork>({ mode: "onChange" })
+  const { register, watch, handleSubmit, formState } = form
+  const { errors, isValid } = formState
+  const { preconfigure } = watch()
 
-  const submit = (values: TerraNetwork) => {
+  const submit = (values: CustomNetwork) => {
     add(values)
     setNetwork(values.name)
     navigate("/")
@@ -54,7 +55,11 @@ const AddNetwork = () => {
         />
       </FormItem>
 
-      <Submit />
+      <Checkbox {...register("preconfigure")} checked={preconfigure}>
+        {t("Preconfigure accounts")}
+      </Checkbox>
+
+      <Submit disabled={!isValid} />
     </Form>
   )
 }

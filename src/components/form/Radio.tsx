@@ -28,7 +28,7 @@ const Radio: FC<Props> = ({ label, children, checked, disabled, ...props }) => {
   return (
     <button type="button" className={className} onClick={onClick}>
       <Grid gap={4}>
-        <Flex gap={4} start className={cx({ reversed })}>
+        <Flex gap={8} start className={cx({ reversed })}>
           {reversed ? (
             <>
               {label}

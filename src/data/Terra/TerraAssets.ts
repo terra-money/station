@@ -5,7 +5,6 @@ import { flatten, groupBy, map, mergeAll, values } from "ramda"
 import { AccAddress } from "@terra-money/terra.js"
 import { ASSETS } from "config/constants"
 import shuffle from "utils/shuffle"
-import { useNetworks } from "app/NetworksProvider"
 import { queryKey, RefetchOptions } from "../query"
 import { useNetworkName } from "../wallet"
 
@@ -27,14 +26,13 @@ export const useTerraAssetsByNetwork = <T>(
   disabled = false,
   callback?: (data: T) => T
 ) => {
-  const networks = useNetworks()
   const networkName = useNetworkName()
 
   return useQuery<T | undefined, AxiosError>(
     [queryKey.TerraAssets, path, networkName],
     async () => {
-      if (!networks[networkName]) return {} as T
       const { data } = await axios.get<Record<NetworkName, T>>(path, config)
+      if (!data[networkName]) return {} as T
       return callback?.(data[networkName]) ?? data[networkName]
     },
     { ...RefetchOptions.INFINITY, enabled: !disabled }

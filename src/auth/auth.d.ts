@@ -1,12 +1,16 @@
 type Bip = 118 | 330
 
-type Wallet = SingleWallet | MultisigWallet | LedgerWallet
+type Wallet = SingleWallet | PreconfiguredWallet | MultisigWallet | LedgerWallet
 type LocalWallet = SingleWallet | MultisigWallet // wallet with name
 
 interface SingleWallet {
   address: string
   name: string
   lock?: boolean
+}
+
+interface PreconfiguredWallet extends SingleWallet {
+  mnemonic: string
 }
 
 interface MultisigWallet extends SingleWallet {

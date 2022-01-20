@@ -26,14 +26,3 @@ interface CustomTokenCW20 extends CW20TokenInfoResponse {
 interface CustomTokenCW721 extends CW721ContractInfoResponse {
   contract: TerraAddress
 }
-
-/* Network */
-interface TerraNetworks {
-  [name: string]: TerraNetwork
-}
-
-interface TerraNetwork {
-  name: string
-  chainID: string
-  lcd: string
-}

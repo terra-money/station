@@ -1,60 +1,32 @@
 import { useTranslation } from "react-i18next"
-import { readDenom } from "@terra.kitchen/utils"
 import LanguageIcon from "@mui/icons-material/Language"
-import { Languages } from "config/lang"
-import { useActiveDenoms } from "data/queries/oracle"
-import { useCurrencyState } from "data/settings/Currency"
 import { Tabs } from "components/layout"
-import { RadioGroup } from "components/form"
 import { Popover } from "components/display"
+import PopoverNone from "../components/PopoverNone"
 import HeaderIconButton from "../components/HeaderIconButton"
-
-const PreferencesInner = () => {
-  const { t, i18n } = useTranslation()
-
-  const { data: activeDenoms = [] } = useActiveDenoms()
-  const [currency, setCurrency] = useCurrencyState()
-
-  return (
-    <Tabs
-      tabs={[
-        {
-          key: "lang",
-          tab: t("Language"),
-          children: (
-            <RadioGroup
-              options={Object.values(Languages)}
-              value={i18n.language}
-              onChange={(language) => i18n.changeLanguage(language)}
-              reversed
-            />
-          ),
-        },
-        {
-          key: "currency",
-          tab: t("Currency"),
-          children: (
-            <RadioGroup
-              options={activeDenoms.map((denom) => {
-                return { value: denom, label: readDenom(denom) }
-              })}
-              value={currency}
-              onChange={setCurrency}
-              reversed
-            />
-          ),
-        },
-      ]}
-      type="line"
-      reversed
-      state
-    />
-  )
-}
+import NetworkSetting from "./NetworkSetting"
+import LanguageSetting from "./LanguageSetting"
+import CurrencySetting from "./CurrencySetting"
 
 const Preferences = () => {
+  const { t } = useTranslation()
+
+  const tabs = [
+    { key: "network", tab: t("Network"), children: <NetworkSetting /> },
+    { key: "lang", tab: t("Language"), children: <LanguageSetting /> },
+    { key: "currency", tab: t("Currency"), children: <CurrencySetting /> },
+  ].filter(({ children }) => children)
+
   return (
-    <Popover content={<PreferencesInner />} placement="bottom">
+    <Popover
+      content={
+        <PopoverNone>
+          <Tabs tabs={tabs} type="line" state />
+        </PopoverNone>
+      }
+      placement="bottom"
+      theme="none"
+    >
       <HeaderIconButton>
         <LanguageIcon style={{ fontSize: 18 }} />
       </HeaderIconButton>

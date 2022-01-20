@@ -11,8 +11,8 @@ import { BRIDGE } from "config/constants"
 import { debug } from "utils/env"
 
 import "index.scss"
-import { convert, NetworksProvider } from "app/NetworksProvider"
 import ScrollToTop from "app/ScrollToTop"
+import InitNetworks from "app/InitNetworks"
 import InitWallet from "app/InitWallet"
 import InitTheme from "app/InitTheme"
 import App from "app/App"
@@ -25,14 +25,14 @@ getChainOptions().then((chainOptions) =>
       <RecoilRoot>
         <BrowserRouter>
           <ScrollToTop />
-          <NetworksProvider value={convert(chainOptions)}>
-            <WalletProvider {...chainOptions} connectorOpts={connectorOpts}>
+          <WalletProvider {...chainOptions} connectorOpts={connectorOpts}>
+            <InitNetworks>
               <InitWallet>
                 <InitTheme />
                 <App />
               </InitWallet>
-            </WalletProvider>
-          </NetworksProvider>
+            </InitNetworks>
+          </WalletProvider>
           {debug.query && <ReactQueryDevtools position="bottom-right" />}
         </BrowserRouter>
       </RecoilRoot>

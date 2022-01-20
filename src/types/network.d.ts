@@ -6,3 +6,9 @@ interface TerraNetwork {
   chainID: string
   lcd: string
 }
+
+type CustomNetworks = Record<NetworkName, CustomNetwork>
+
+interface CustomNetwork extends TerraNetwork {
+  preconfigure?: boolean
+}

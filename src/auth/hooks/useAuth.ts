@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from "react"
 import { atom, useRecoilState } from "recoil"
 import { encode } from "js-base64"
-import { AccAddress, SignDoc } from "@terra-money/terra.js"
 import { CreateTxOptions, Tx, isTxError } from "@terra-money/terra.js"
-import { PublicKey, RawKey, SignatureV2 } from "@terra-money/terra.js"
+import { AccAddress, SignDoc, PublicKey } from "@terra-money/terra.js"
+import { MnemonicKey, RawKey, SignatureV2 } from "@terra-money/terra.js"
 import { useChainID } from "data/wallet"
 import { useLCDClient } from "data/queries/lcdClient"
 import is from "../scripts/is"
@@ -29,7 +29,7 @@ const useAuth = () => {
   const [wallet, setWallet] = useRecoilState(walletState)
   const wallets = getStoredWallets()
 
-  /* connect  */
+  /* connect */
   const connect = useCallback(
     (name: string) => {
       const storedWallet = getStoredWallet(name)
@@ -41,6 +41,14 @@ const useAuth = () => {
         ? { name, address, multisig: true }
         : { name, address }
 
+      storeWallet(wallet)
+      setWallet(wallet)
+    },
+    [setWallet]
+  )
+
+  const connectPreconfigured = useCallback(
+    (wallet: PreconfiguredWallet) => {
       storeWallet(wallet)
       setWallet(wallet)
     },
@@ -165,6 +173,9 @@ const useAuth = () => {
       const unsignedTx = await create(txOptions)
       const options = { chainID, accountNumber, sequence, signMode }
       return await key.signTx(unsignedTx, options)
+    } else if (is.preconfigured(wallet)) {
+      const key = new MnemonicKey({ mnemonic: wallet.mnemonic })
+      return await lcd.wallet(key).createAndSignTx(txOptions)
     } else {
       const pk = getKey(password)
       if (!pk) throw new PasswordError("Incorrect password")
@@ -207,6 +218,7 @@ const useAuth = () => {
     getConnectedWallet,
     connectedWallet,
     connect,
+    connectPreconfigured,
     connectLedger,
     disconnect,
     lock,
