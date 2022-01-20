@@ -5,17 +5,13 @@
   gap: var(--grid-gap);
 
   @include desktop {
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
 @media (min-width: $breakpoint) and (max-width: (1400px - 0.02)) {
   .header {
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: auto repeat(2, 1fr);
-  }
-
-  .price {
-    grid-column: 1 / span 2;
+    grid-template-rows: repeat(2, 1fr);
   }
 }

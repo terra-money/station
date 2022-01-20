@@ -13,10 +13,9 @@ import { useAddress } from "data/wallet"
 import { useBankBalance } from "data/queries/bank"
 import { Form, FormGroup, FormItem } from "components/form"
 import { Input, Select, TextArea } from "components/form"
-import { calcTaxes, getCoins, getPlaceholder } from "../utils"
+import { getCoins, getPlaceholder } from "../utils"
 import validate from "../validate"
 import Tx, { getInitialGasDenom } from "../Tx"
-import { useTaxParams } from "./TaxParams"
 
 interface TxValues {
   msg: string
@@ -33,7 +32,6 @@ const ExecuteContractForm = () => {
   const bankBalance = useBankBalance()
 
   /* tx context */
-  const taxParams = useTaxParams()
   const initialGasDenom = getInitialGasDenom(bankBalance)
   const defaultItem = { denom: initialGasDenom }
 
@@ -46,7 +44,6 @@ const ExecuteContractForm = () => {
   const { register, control, watch, handleSubmit, formState } = form
   const { errors } = formState
   const values = watch()
-  const { coins } = values
   const { fields, append, remove } = useFieldArray({ control, name: "coins" })
 
   /* tx */
@@ -67,11 +64,9 @@ const ExecuteContractForm = () => {
 
   /* fee */
   const estimationTxValues = useMemo(() => values, [values])
-  const taxes = calcTaxes(coins, taxParams)
   const tx = {
     initialGasDenom,
     estimationTxValues,
-    taxes,
     createTx,
     onSuccess: { label: t("Contract"), path: "/contract" },
     queryKeys: [

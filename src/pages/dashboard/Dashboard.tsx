@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next"
 import { Col, Page } from "components/layout"
 import LunaPrice from "./LunaPrice"
-import TaxRate from "./TaxRate"
 import Issuance from "./Issuance"
 import CommunityPool from "./CommunityPool"
 import StakingRatio from "./StakingRatio"
@@ -16,7 +15,6 @@ const Dashboard = () => {
       <Col>
         <header className={styles.header}>
           <LunaPrice />
-          <TaxRate />
           <Issuance />
           <CommunityPool />
           <StakingRatio />

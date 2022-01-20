@@ -4,7 +4,6 @@ import { useQuery } from "react-query"
 import { useForm } from "react-hook-form"
 import BigNumber from "bignumber.js"
 import { flatten, fromPairs } from "ramda"
-import { Coin, Coins } from "@terra-money/terra.js"
 
 /* helpers */
 import { has } from "utils/num"
@@ -36,7 +35,7 @@ interface TxValues {
 
 // available > simulatable > simulated > selectable > offers
 // available: all assets
-// simulatable: non-askAsset, balance exists except tax.
+// simulatable: non-askAsset, balance.
 // selectable: simulated result value exists
 // offers: selected by the user
 const SwapMultipleForm = () => {
@@ -47,7 +46,7 @@ const SwapMultipleForm = () => {
   const utils = useSwapUtils()
   const { getSwapMode, getSimulateFunction, getMsgsFunction } = utils
   const { activeDenoms } = useSwap()
-  const { taxRate, taxCaps, available } = useMultipleSwap()
+  const { available } = useMultipleSwap()
   const initialGasDenom = "uluna"
 
   /* options: askAsset */
@@ -75,14 +74,12 @@ const SwapMultipleForm = () => {
         .map((item) => {
           const { token: offerAsset, balance } = item
           const mode = getSwapMode({ offerAsset, askAsset })
-          if (mode === SwapMode.ONCHAIN)
-            return { ...item, max: balance, tax: "0" }
-          const cap = taxCaps[offerAsset]
-          const max = calcMax({ balance, rate: taxRate, cap, gasAmount: "0" })
-          return { ...item, ...max }
+          if (mode === SwapMode.ONCHAIN) return { ...item, max: balance }
+          const max = calcMax({ balance, gasAmount: "0" })
+          return { ...item, max }
         })
         .filter(({ token, max }) => token !== askAsset && has(max)),
-    [askAsset, available, getSwapMode, taxCaps, taxRate]
+    [askAsset, available, getSwapMode]
   )
 
   /* simulate */
@@ -90,16 +87,16 @@ const SwapMultipleForm = () => {
     ["simulate.swap.multiple", simulatable, askAsset],
     async () => {
       const simulated = await Promise.allSettled(
-        simulatable.map(async ({ token: offerAsset, max: amount, tax }) => {
+        simulatable.map(async ({ token: offerAsset, max: amount }) => {
           const mode = getSwapMode({ offerAsset, askAsset })
 
           try {
             const params = { amount, offerAsset, askAsset }
             const { value } = await getSimulateFunction(mode)(params)
-            return { offerAsset, mode, amount, tax, value }
+            return { offerAsset, mode, amount, value }
           } catch (error) {
             // errors because too small amount is simulated
-            return { offerAsset, mode, amount, tax, value: "0" }
+            return { offerAsset, mode, amount, value: "0" }
           }
         })
       )
@@ -149,22 +146,12 @@ const SwapMultipleForm = () => {
   /* fee */
   const estimationTxValues = useMemo(() => ({ askAsset }), [askAsset])
 
-  const taxes = new Coins(
-    offers
-      .filter(({ tax }) => has(tax))
-      .map(({ offerAsset, tax }) => {
-        if (!tax) throw new Error()
-        return new Coin(offerAsset, tax)
-      })
-  )
-
   const excludeGasDenom = useCallback((denom) => !!state[denom], [state])
 
   const tx = {
     initialGasDenom,
     estimationTxValues,
     createTx,
-    taxes,
     excludeGasDenom,
     onSuccess: { label: t("Wallet"), path: "/wallet" },
   }
