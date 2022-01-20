@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import DoneAllIcon from "@mui/icons-material/DoneAll"
 import { Form, FormItem, FormWarning, Input, Submit } from "components/form"
+import { Wrong } from "components/feedback"
 import { isWallet } from "auth"
 import { deleteWallet } from "../../scripts/keystore"
 import useAuth from "../../hooks/useAuth"
@@ -44,26 +45,30 @@ const DeleteWalletForm = () => {
         </ConfirmModal>
       )}
 
-      <Form onSubmit={handleSubmit(submit)}>
-        <FormItem>
-          <p>
-            Type <strong>{name}</strong> to confirm
-          </p>
+      {!name ? (
+        <Wrong>{t("Wallet is not connected")}</Wrong>
+      ) : (
+        <Form onSubmit={handleSubmit(submit)}>
+          <FormItem>
+            <p>
+              Type <strong>{name}</strong> to confirm
+            </p>
 
-          <Input
-            {...register("name", { validate: (value) => value === name })}
-            autoFocus
-          />
-        </FormItem>
+            <Input
+              {...register("name", { validate: (value) => value === name })}
+              autoFocus
+            />
+          </FormItem>
 
-        <FormWarning>
-          {t(
-            "This action cannot be undone. Mnemonic is required to recover a deleted wallet."
-          )}
-        </FormWarning>
+          <FormWarning>
+            {t(
+              "This action cannot be undone. Mnemonic is required to recover a deleted wallet."
+            )}
+          </FormWarning>
 
-        <Submit disabled={!isValid} />
-      </Form>
+          <Submit disabled={!isValid} />
+        </Form>
+      )}
     </>
   )
 }
