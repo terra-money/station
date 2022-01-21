@@ -216,7 +216,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
     try {
       if (disabled) throw new Error(disabled)
       if (!estimatedGas || !has(gasAmount))
-        throw new Error("Gas is not estimated")
+        throw new Error("Fee is not estimated")
 
       const tx = createTx(values)
 
@@ -312,7 +312,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
           ))}
 
           <dt className={styles.gas}>
-            {t("Gas")}
+            {t("Fee")}
             {availableGasDenoms.length > 1 && (
               <Select
                 value={gasDenom}
