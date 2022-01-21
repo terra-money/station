@@ -5,7 +5,7 @@ import { AccAddress, Coin, Coins, ValAddress } from "@terra-money/terra.js"
 import { useAddress } from "data/wallet"
 import { useValidators } from "data/queries/staking"
 import { WithTokenItem } from "data/token"
-import { useCW20Contracts } from "data/Terra/TerraAssets"
+import { useCW20Contracts, useCW20Whitelist } from "data/Terra/TerraAssets"
 import { FinderLink } from "components/general"
 import { Read } from "components/token"
 
@@ -24,16 +24,17 @@ const ValidatorAddress = ({ children: address }: { children: string }) => {
 
 const TerraAddress = ({ children: address }: { children: string }) => {
   const { data: contracts } = useCW20Contracts()
+  const { data: tokens } = useCW20Whitelist()
   const connectedAddress = useAddress()
 
   const name = useMemo(() => {
     if (address === connectedAddress) return "my wallet" // Do not translate this
-    if (!contracts) return
-    const contract = contracts[address]
+    if (!(contracts && tokens)) return
+    const contract = contracts[address] ?? tokens[address]
     if (!contract) return
     const { protocol, name } = contract
     return [protocol, name].join(" ")
-  }, [address, connectedAddress, contracts])
+  }, [address, connectedAddress, contracts, tokens])
 
   return <FinderLink value={address}>{name ?? truncate(address)}</FinderLink>
 }
