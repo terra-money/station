@@ -163,7 +163,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
   /* max */
   const getNativeMax = () => {
     if (!balance) return
-    const gasAmount = gasFee.denom === initialGasDenom ? gasFee.amount : "0"
+    const gasAmount = gasFee.denom === token ? gasFee.amount : "0"
     return calcMax({ balance, gasAmount })
   }
 
