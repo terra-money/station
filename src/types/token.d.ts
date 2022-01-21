@@ -62,7 +62,14 @@ interface IBCTokenItem extends IBCTokenInfoResponse {
 }
 
 /* cw20 */
+type CW20Contracts = Record<TerraAddress, CW20ContractItem>
 type CW20Whitelist = Record<TerraAddress, CW20TokenItem>
+
+interface CW20ContractItem {
+  protocol: string
+  name: string
+  icon: string
+}
 
 interface CW20TokenInfoResponse {
   symbol: string

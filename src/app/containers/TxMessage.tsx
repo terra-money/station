@@ -1,10 +1,11 @@
-import { ReactNode } from "react"
+import { ReactNode, useMemo } from "react"
 import capitalize from "@mui/utils/capitalize"
-import { isDenom } from "@terra.kitchen/utils"
+import { isDenom, truncate } from "@terra.kitchen/utils"
 import { AccAddress, Coin, Coins, ValAddress } from "@terra-money/terra.js"
 import { useAddress } from "data/wallet"
 import { useValidators } from "data/queries/staking"
 import { WithTokenItem } from "data/token"
+import { useCW20Contracts } from "data/Terra/TerraAssets"
 import { FinderLink } from "components/general"
 import { Read } from "components/token"
 
@@ -19,6 +20,22 @@ const ValidatorAddress = ({ children: address }: { children: string }) => {
       {moniker ?? address}
     </FinderLink>
   )
+}
+
+const TerraAddress = ({ children: address }: { children: string }) => {
+  const { data: contracts } = useCW20Contracts()
+  const connectedAddress = useAddress()
+
+  const name = useMemo(() => {
+    if (address === connectedAddress) return "my wallet" // Do not translate this
+    if (!contracts) return
+    const contract = contracts[address]
+    if (!contract) return
+    const { protocol, name } = contract
+    return [protocol, name].join(" ")
+  }, [address, connectedAddress, contracts])
+
+  return <FinderLink value={address}>{name ?? truncate(address)}</FinderLink>
 }
 
 const Tokens = ({ children: coins }: { children: string }) => {
@@ -54,14 +71,11 @@ const TxMessage = ({ children: sentence, className }: Props) => {
   const parse = (word: string, index: number): ReactNode => {
     if (!word) return null
     if (word.endsWith(",")) return <>{parse(word.slice(0, -1), index)},</>
-    const isMe = word === address
 
     return validateTokens(word) ? (
       <Tokens>{word}</Tokens>
     ) : AccAddress.validate(word) ? (
-      <FinderLink value={word} short={!isMe}>
-        {isMe ? "my wallet" /* Do not translate this */ : word}
-      </FinderLink>
+      <TerraAddress>{word}</TerraAddress>
     ) : ValAddress.validate(word) ? (
       <ValidatorAddress>{word}</ValidatorAddress>
     ) : !index ? (
