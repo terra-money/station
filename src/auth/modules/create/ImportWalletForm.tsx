@@ -23,7 +23,7 @@ const ImportWalletForm = () => {
   const form = useForm<Values>({ mode: "onChange" })
 
   const { register, handleSubmit, formState } = form
-  const { errors } = formState
+  const { errors, isValid } = formState
 
   const [error, setError] = useState<Error>()
 
@@ -52,19 +52,34 @@ const ImportWalletForm = () => {
   /* render */
   return (
     <Form onSubmit={handleSubmit(submit)}>
-      <FormItem label={t("Key")} error={errors.password?.message}>
-        <TextArea {...register("key")} />
+      <FormItem label={t("Key")} error={errors.key?.message}>
+        <TextArea
+          {...register("key", {
+            required: true,
+            validate: (value) => isEncodedJSON(value) || "Invalid",
+          })}
+        />
       </FormItem>
 
       <FormItem label={t("Password")} error={errors.password?.message}>
-        <Input {...register("password")} type="password" />
+        <Input {...register("password", { required: true })} type="password" />
       </FormItem>
 
       {error && <FormError>{error.message}</FormError>}
 
-      <Submit />
+      <Submit disabled={!isValid} />
     </Form>
   )
 }
 
 export default ImportWalletForm
+
+/* helpers */
+const isEncodedJSON = (encoded: string) => {
+  try {
+    JSON.parse(decode(encoded))
+    return true
+  } catch {
+    return false
+  }
+}
