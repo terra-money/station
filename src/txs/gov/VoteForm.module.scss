@@ -21,11 +21,12 @@
   cursor: pointer;
   font-weight: var(--bold);
   opacity: 0.3;
-  transition: all var(--transition);
+  transition: opacity var(--transition);
   user-select: none;
   height: 80px;
-}
 
-.active {
-  opacity: 1;
+  &:hover,
+  &.active {
+    opacity: 1;
+  }
 }
