@@ -4,7 +4,7 @@ import wordlist from "./wordlist.json"
 const validate = {
   name: {
     alphanumeric: (name: string) =>
-      /^[a-z0-9]+$/.test(name) || "Enter alphanumeric characters",
+      /^[a-z0-9-_]+$/.test(name) || "Enter alphanumeric characters",
     length: (name: string) =>
       (name.length >= 3 && name.length <= 20) ||
       "Enter 3-20 alphanumeric characters",
