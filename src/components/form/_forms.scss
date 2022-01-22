@@ -5,7 +5,11 @@
   overflow: hidden;
 }
 
-@mixin size {
+@mixin padding {
   padding: 0 12px;
+}
+
+@mixin size {
+  @include padding;
   height: var(--input-height);
 }

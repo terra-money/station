@@ -8,7 +8,7 @@
 
 .editor {
   @include border;
-  @include size;
+  @include padding;
   font-family: var(--font-family-monospace);
   overflow: auto;
 }
