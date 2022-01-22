@@ -14,6 +14,7 @@ export const Popover = ({ theme = "popover", ...props }: TippyProps) => {
       arrow={theme !== "none"}
       trigger="click"
       animation={false}
+      maxWidth={360}
       interactive
       key={pathname}
     />
