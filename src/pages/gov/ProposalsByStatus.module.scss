@@ -5,7 +5,7 @@
   gap: var(--grid-gap);
 
   @include desktop {
-    grid-template-columns: repeat(2, auto);
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
