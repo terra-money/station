@@ -21,12 +21,12 @@ const LunaPriceChart = () => {
   )
 
   const tickFormat = {
-    "1m": "h:mm a",
-    "5m": "h:mm a",
-    "15m": "h:mm a",
-    "30m": "h:mm a",
-    "1h": "d MMM h a",
-    "1d": "d MMM",
+    "1m": "h:mm aaa",
+    "5m": "h:mm aaa",
+    "15m": "h:mm aaa",
+    "30m": "h:mm aaa",
+    "1h": "h aaa",
+    "1d": "MMM d",
   }[chartInterval]
 
   const render = () => {
