@@ -2,3 +2,12 @@
   font-size: 20px;
   font-weight: var(--bold);
 }
+
+.footer button {
+  cursor: zoom-in;
+  font-size: 12px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

@@ -7,7 +7,7 @@ import { Wrong } from "components/feedback"
 import Chart, { ChartProps, CHART_HEIGHT } from "./Chart"
 import styles from "./ChartContainer.module.scss"
 
-const LOADING = {
+export const LOADING = {
   width: CHART_HEIGHT / 2,
   height: CHART_HEIGHT / 2,
   style: { margin: CHART_HEIGHT / 4 },
@@ -62,7 +62,7 @@ const ChartContainer = (props: Props) => {
 export default ChartContainer
 
 /* utils */
-const convert = (formatValue: Props["formatValue"]) => {
+export const convert = (formatValue: Props["formatValue"]) => {
   return ({ datetime, value }: ChartDataItem) => {
     return {
       t: new Date(datetime),

@@ -36,16 +36,16 @@ export const useIsTerraAPIAvailable = () => {
   return !!url
 }
 
-export const useTerraAPI = <T>(path: string, fallback?: T) => {
+export const useTerraAPI = <T>(path: string, params?: object, fallback?: T) => {
   const baseURL = useTerraAPIURL()
   const available = useIsTerraAPIAvailable()
   const shouldFallback = !available && fallback
 
   return useQuery<T, AxiosError>(
-    [queryKey.TerraAPI, baseURL, path],
+    [queryKey.TerraAPI, baseURL, path, params],
     async () => {
       if (shouldFallback) return fallback
-      const { data } = await axios.get(path, { baseURL })
+      const { data } = await axios.get(path, { baseURL, params })
       return data
     },
     { ...RefetchOptions.INFINITY, enabled: !!(baseURL || shouldFallback) }
@@ -72,6 +72,19 @@ export const useGasPrices = () => {
 }
 
 /* charts */
+export enum ChartInterval {
+  "1m" = "1m",
+  "5m" = "5m",
+  "15m" = "15m",
+  "30m" = "30m",
+  "1h" = "1h",
+  "1d" = "1d",
+}
+
+export const useLunaPriceChart = (denom: Denom, interval: ChartInterval) => {
+  return useTerraAPI<ChartDataItem[]>(`chart/price/${denom}`, { interval })
+}
+
 export const useTxVolume = (denom: Denom, type: Aggregate) => {
   return useTerraAPI<ChartDataItem[]>(`chart/tx-volume/${denom}/${type}`)
 }
@@ -90,7 +103,7 @@ export const useWallets = (walletsType: AggregateWallets, type: Aggregate) => {
 
 /* validators */
 export const useTerraValidators = () => {
-  return useTerraAPI<TerraValidator[]>("validators", [])
+  return useTerraAPI<TerraValidator[]>("validators", undefined, [])
 }
 
 export const useTerraValidator = (address: ValAddress) => {

@@ -19,9 +19,12 @@ export interface ChartPoint {
 export interface ChartProps {
   type: "bar" | "area"
   formatY: (value: string) => string
+  formatTooltipDate?: (date: Date) => string
 
   /* customize */
   ticks?: number[]
+  tickFormat?: string
+  padding?: number
 
   /* filled bar */
   filled?: boolean
@@ -31,7 +34,9 @@ interface Props extends ChartProps {
   data: ChartPoint[]
 }
 
-const Chart = ({ type = "area", data, formatY, filled, ticks }: Props) => {
+const Chart = ({ type = "area", data, formatY, filled, ...props }: Props) => {
+  const { ticks, tickFormat, formatTooltipDate, padding } = props
+
   const COLORS = {
     // Call this fn inside the component to get the latest theme
     STROKE: variable("--chart"),
@@ -78,7 +83,7 @@ const Chart = ({ type = "area", data, formatY, filled, ticks }: Props) => {
             minTickGap={30} // Margin between each text
             tick={{ fill: COLORS.MUTED }} // Text color
             tickFormatter={(t) =>
-              format(t, data.length > 30 ? "yyyy QQQ" : "MMM d")
+              format(t, tickFormat ?? (data.length > 30 ? "yyyy QQQ" : "MMM d"))
             }
             tickMargin={8} // Padding between text and chart
             tickSize={0} // Line between text and chart
@@ -94,11 +99,11 @@ const Chart = ({ type = "area", data, formatY, filled, ticks }: Props) => {
             tickFormatter={formatY}
             tickMargin={4} // Padding between text and chart
             tickSize={0} // Line between text and chart
-            width={40} // Space including padding
+            width={padding ?? 40} // Space including padding
           />
           <Tooltip
             cursor={{ fill: COLORS.BORDER, stroke: COLORS.BORDER }}
-            content={<ChartTooltip />}
+            content={<ChartTooltip formatDate={formatTooltipDate} />}
           />
           <CartesianGrid stroke={COLORS.BORDER} vertical={false} />
         </>

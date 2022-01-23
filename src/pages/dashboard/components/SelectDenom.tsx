@@ -3,7 +3,6 @@ import { isDenomTerraNative } from "@terra.kitchen/utils"
 import { WithTokenItem } from "data/token"
 import { ModalButton } from "components/feedback"
 import { TokenCard, TokenCardGrid } from "components/token"
-import styles from "./SelectDenom.module.scss"
 
 interface Item extends CoinData {
   value?: Value
@@ -20,11 +19,7 @@ const SelectDenom = ({ title, list }: Props) => {
   return (
     <ModalButton
       title={title}
-      renderButton={(open) => (
-        <button className={styles.button} onClick={open}>
-          {t("Show all")}
-        </button>
-      )}
+      renderButton={(open) => <button onClick={open}>{t("Show all")}</button>}
     >
       <TokenCardGrid maxHeight>
         {list
