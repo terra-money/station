@@ -1,17 +1,17 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import ManageSearchIcon from "@mui/icons-material/ManageSearch"
-import { AccAddress } from "@terra-money/terra.js"
+import { AccAddress, ContractInfo } from "@terra-money/terra.js"
 import createContext from "utils/createContext"
 import { useContractInfo } from "data/queries/wasm"
 import { Page, Card, Grid } from "components/layout"
 import { Fetching, State, Empty } from "components/feedback"
 import { SearchInput } from "components/form"
 import ContractActions from "./ContractActions"
-import ContractDetails from "./ContractDetails"
+import ContractItem from "./ContractItem"
 
 export const [useContract, ContractProvider] =
-  createContext<AccAddress>("useContract")
+  createContext<ContractInfo>("useContract")
 
 const Contract = () => {
   const { t } = useTranslation()
@@ -41,8 +41,8 @@ const Contract = () => {
         ) : (
           <Fetching {...state}>
             {result && (
-              <ContractProvider value={address}>
-                <ContractDetails {...result} />
+              <ContractProvider value={result}>
+                <ContractItem {...result} />
               </ContractProvider>
             )}
           </Fetching>

@@ -18,7 +18,7 @@ interface Values {
 
 const ContractQuery = () => {
   const { t } = useTranslation()
-  const contract = useContract()
+  const { address } = useContract()
 
   /* form */
   const form = useForm<Values>({ mode: "onChange" })
@@ -32,7 +32,7 @@ const ContractQuery = () => {
   const [query, setQuery] = useState<object>({})
 
   const { data, error, ...state } = useQuery({
-    ...getContractQuery<object>(contract, query),
+    ...getContractQuery<object>(address, query),
     enabled: !isEmpty(query),
     retry: false,
   })

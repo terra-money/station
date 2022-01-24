@@ -37,6 +37,7 @@ import VoteTx from "txs/gov/VoteTx"
 import StoreCodeTx from "txs/wasm/StoreCodeTx"
 import InstantiateContractTx from "txs/wasm/InstantiateContractTx"
 import ExecuteContractTx from "txs/wasm/ExecuteContractTx"
+import MigrateContractTx from "txs/wasm/MigrateContractTx"
 import AnchorEarnTx from "txs/earn/AnchorEarnTx"
 import SignMultisigTxPage from "pages/multisig/SignMultisigTxPage"
 import PostMultisigTxPage from "pages/multisig/PostMultisigTxPage"
@@ -127,6 +128,7 @@ export const useNav = () => {
     { path: "/contract/instantiate", element: <InstantiateContractTx /> },
     { path: "/contract/store", element: <StoreCodeTx /> },
     { path: "/contract/execute/:contract", element: <ExecuteContractTx /> },
+    { path: "/contract/migrate/:contract", element: <MigrateContractTx /> },
     { path: "/earn", element: <AnchorEarnTx /> },
 
     /* auth */

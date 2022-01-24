@@ -1,10 +1,5 @@
 @import "mixins";
 
-.main {
-  overflow: hidden;
-  width: 100%;
-}
-
 .header {
   @include desktop {
     @include flex(flex-start);
@@ -19,8 +14,4 @@
 
 .link {
   font-weight: var(--normal);
-}
-
-.wrapper {
-  overflow: hidden;
 }
