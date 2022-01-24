@@ -113,6 +113,7 @@ interface CW721ContractItem extends CW721ContractInfoResponse {
 type CW721Whitelist = Record<TerraAddress, CW721ContractItem>
 
 interface NFTTokenItem {
+  token_uri?: string
   extension?: Extension
 }
 

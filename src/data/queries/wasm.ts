@@ -1,4 +1,5 @@
 import { useQueries, useQuery } from "react-query"
+import axios from "axios"
 import { AccAddress } from "@terra-money/terra.js"
 import { queryKey, RefetchOptions } from "../query"
 import { useAddress } from "../wallet"
@@ -56,11 +57,28 @@ export const useTokenInfoCW20 = (token: TerraAddress, enabled = true) => {
 }
 
 export const useTokenInfoCW721 = (contract: AccAddress, token_id: string) => {
-  const getQuery = useGetContractQuery()
-  return useQuery({
-    ...getQuery<NFTTokenItem>(contract, { nft_info: { token_id } }),
-    ...RefetchOptions.INFINITY,
-  })
+  const lcd = useLCDClient()
+
+  return useQuery(
+    [queryKey.wasm.contractQuery, contract, token_id],
+    async () => {
+      const data = await lcd.wasm.contractQuery<NFTTokenItem>(contract, {
+        nft_info: { token_id },
+      })
+
+      const { token_uri } = data
+      if (!token_uri) return data
+
+      try {
+        const uri = getIpfsGateway(token_uri)
+        const { data: extension } = await axios.get(uri)
+        return { ...data, extension: { ...data.extension, ...extension } }
+      } catch {
+        return data
+      }
+    },
+    { ...RefetchOptions.INFINITY }
+  )
 }
 
 /* token balance */
@@ -103,3 +121,9 @@ export const useCW721Tokens = (contract: AccAddress) => {
     getQuery<{ tokens: string[] }>(contract, { tokens: { owner: address } })
   )
 }
+
+/* helpers */
+export const getIpfsGateway = (src: string) =>
+  src.startsWith("ipfs://")
+    ? src.replace("ipfs://", "https://cloudflare-ipfs.com/ipfs/")
+    : src
