@@ -449,7 +449,7 @@ export const getInitialGasDenom = (bankBalance: Coins, token?: Token) => {
     ? token
     : head(sortCoins(bankBalance))?.denom
 
-  return denom ?? "uluna"
+  return denom ?? "uusd"
 }
 
 interface Params {
