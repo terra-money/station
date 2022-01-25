@@ -28,7 +28,9 @@ const MigrateContractForm = ({ contract }: { contract: AccAddress }) => {
   const form = useForm<TxValues>({ mode: "onChange" })
   const { register, watch, handleSubmit, formState } = form
   const { errors } = formState
-  const values = watch()
+  
+  /* fee */
+  const estimationTxValues = watch()
 
   /* tx */
   const createTx = useCallback(
@@ -44,8 +46,6 @@ const MigrateContractForm = ({ contract }: { contract: AccAddress }) => {
     [address, contract]
   )
 
-  /* fee */
-  const estimationTxValues = useMemo(() => values, [values])
 
   const tx = {
     initialGasDenom,
