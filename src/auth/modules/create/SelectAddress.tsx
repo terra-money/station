@@ -59,7 +59,7 @@ const SelectAddress = () => {
   const { watch, setValue, handleSubmit } = form
   const { bip } = watch()
 
-  const submit = ({ bip, index }: { bip?: Bip; index: number }) => {
+  const submit = ({ bip }: { bip?: Bip }) => {
     if (!bip) return
     createWallet(bip, index)
   }
