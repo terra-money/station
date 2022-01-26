@@ -32,7 +32,7 @@ const AnchorEarnForm = ({ tab, deposit, rate }: Props) => {
 
   /* tx context */
   const token = tab === AnchorEarnAction.DEPOSIT ? "uusd" : ""
-  const initialGasDenom = getInitialGasDenom(bankBalance, token)
+  const initialGasDenom = getInitialGasDenom(bankBalance)
 
   /* context */
   const getMsgs = useAnchorGetMsgs(rate)

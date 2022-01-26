@@ -53,7 +53,7 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
     )
 
   /* tx context */
-  const initialGasDenom = getInitialGasDenom(bankBalance, "uluna")
+  const initialGasDenom = getInitialGasDenom(bankBalance)
 
   /* form */
   const form = useForm<TxValues>({

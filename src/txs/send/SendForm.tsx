@@ -36,7 +36,7 @@ const SendForm = ({ token, decimals, balance }: Props) => {
   const bankBalance = useBankBalance()
 
   /* tx context */
-  const initialGasDenom = getInitialGasDenom(bankBalance, token)
+  const initialGasDenom = getInitialGasDenom(bankBalance)
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })

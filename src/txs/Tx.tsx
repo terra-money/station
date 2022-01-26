@@ -10,8 +10,7 @@ import { head, isNil } from "ramda"
 
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline"
-import { isDenomIBC, isDenomTerraNative } from "@terra.kitchen/utils"
-import { isDenom, readDenom } from "@terra.kitchen/utils"
+import { isDenom, isDenomIBC, readDenom } from "@terra.kitchen/utils"
 import { Coin, Coins, LCDClient } from "@terra-money/terra.js"
 import { CreateTxOptions, Fee } from "@terra-money/terra.js"
 import { ConnectType, UserDenied } from "@terra-money/wallet-provider"
@@ -444,12 +443,10 @@ function Tx<TxValues>(props: Props<TxValues>) {
 export default Tx
 
 /* utils */
-export const getInitialGasDenom = (bankBalance: Coins, token?: Token) => {
-  const denom = isDenomTerraNative(token)
-    ? token
-    : head(sortCoins(bankBalance))?.denom
-
-  return denom ?? "uusd"
+export const getInitialGasDenom = (bankBalance: Coins) => {
+  const denom = head(sortCoins(bankBalance))?.denom ?? "uusd"
+  const uusd = getAmount(bankBalance, "uusd")
+  return has(uusd) ? "uusd" : denom
 }
 
 interface Params {

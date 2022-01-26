@@ -26,7 +26,7 @@ const DepositForm = () => {
   const balance = getAmount(bankBalance, "uluna")
 
   /* tx context */
-  const initialGasDenom = getInitialGasDenom(bankBalance, "uluna")
+  const initialGasDenom = getInitialGasDenom(bankBalance)
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })
