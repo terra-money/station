@@ -13,7 +13,6 @@ import { Copy } from "components/general"
 import { Form, FormError, FormGroup, FormItem } from "components/form"
 import { Input, Submit, TextArea } from "components/form"
 import { SAMPLE_ENCODED_TX, SAMPLE_SIGNATURE } from "./utils/placeholder"
-import decodeTx from "./utils/decodeTx"
 import ReadTx from "./ReadTx"
 
 interface Values {
@@ -64,7 +63,7 @@ const PostMultisigTxForm = ({ publicKey, sequence, ...props }: Props) => {
     setError(undefined)
 
     try {
-      const tx = decodeTx(encoded.trim())
+      const tx = lcd.tx.decode(encoded.trim())
       if (!tx) throw new Error("Invalid tx")
 
       // signatures

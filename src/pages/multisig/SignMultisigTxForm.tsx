@@ -3,16 +3,15 @@ import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import { AccAddress, SignatureV2 } from "@terra-money/terra.js"
 import { SAMPLE_ADDRESS } from "config/constants"
+import { useLCDClient } from "data/queries/lcdClient"
 import { Pre } from "components/general"
 import { Form, FormError, FormItem } from "components/form"
 import { Input, Submit, TextArea } from "components/form"
 import { Modal } from "components/feedback"
 import { isWallet, useAuth } from "auth"
 import { PasswordError } from "auth/scripts/keystore"
-import decodeTx from "./utils/decodeTx"
-import SignatureV2ToData from "./utils/SignatureV2ToData"
-import ReadTx from "./ReadTx"
 import { SAMPLE_ENCODED_TX } from "./utils/placeholder"
+import ReadTx from "./ReadTx"
 
 interface TxValues {
   address: AccAddress
@@ -26,6 +25,7 @@ interface Props {
 const SignMultisigTxForm = ({ defaultValues }: Props) => {
   const { t } = useTranslation()
   const { wallet, createSignature } = useAuth()
+  const lcd = useLCDClient()
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange", defaultValues })
@@ -48,7 +48,7 @@ const SignMultisigTxForm = ({ defaultValues }: Props) => {
     setSubmitting(true)
 
     try {
-      const decoded = decodeTx(tx.trim())
+      const decoded = lcd.tx.decode(tx.trim())
       if (!decoded) throw new Error("Invalid tx")
       const signature = await createSignature(decoded, address, password)
       setSignature(signature)
@@ -120,6 +120,6 @@ export default SignMultisigTxForm
 
 /* utils */
 const toBytes = (signature: SignatureV2) => {
-  const string = JSON.stringify(SignatureV2ToData(signature))
+  const string = JSON.stringify(signature.toData())
   return Buffer.from(string).toString("base64")
 }

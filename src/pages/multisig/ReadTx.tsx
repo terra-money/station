@@ -1,18 +1,27 @@
 import { FC } from "react"
 import { useTranslation } from "react-i18next"
+import { useLCDClient } from "data/queries/lcdClient"
 import { Pre } from "components/general"
 import { Auto, Card, Grid } from "components/layout"
 import { Wrong } from "components/feedback"
 import { ReadMultiple } from "components/token"
-import decodeTx from "./utils/decodeTx"
 
 const ReadTx: FC<{ tx: string }> = ({ tx: encoded, children }) => {
   const { t } = useTranslation()
+  const lcd = useLCDClient()
+
+  const decodeTx = (encoded: string) => {
+    try {
+      return lcd.tx.decode(encoded)
+    } catch {
+      return
+    }
+  }
 
   const render = () => {
-    const tx = decodeTx(encoded)
-
     if (!encoded) return <Wrong>{t("Tx is not defined")}</Wrong>
+
+    const tx = decodeTx(encoded)
     if (!tx) return <Wrong>{t("Invalid tx")}</Wrong>
 
     const { body, auth_info } = tx
