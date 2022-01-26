@@ -15,6 +15,7 @@ import ScrollToTop from "app/ScrollToTop"
 import InitNetworks from "app/InitNetworks"
 import InitWallet from "app/InitWallet"
 import InitTheme from "app/InitTheme"
+import ElectronVersion from "app/ElectronVersion"
 import App from "app/App"
 
 const connectorOpts = { bridge: BRIDGE }
@@ -29,6 +30,7 @@ getChainOptions().then((chainOptions) =>
             <InitNetworks>
               <InitWallet>
                 <InitTheme />
+                <ElectronVersion />
                 <App />
               </InitWallet>
             </InitNetworks>

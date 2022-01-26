@@ -1,0 +1,20 @@
+@import "mixins";
+
+.title {
+  font-size: 16px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.card {
+  text-align: left;
+}
+
+.link {
+  @include inline-flex;
+  gap: 4px;
+}
