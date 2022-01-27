@@ -3,54 +3,10 @@ import semver from "semver"
 import DownloadIcon from "@mui/icons-material/Download"
 import { Card, Grid } from "components/layout"
 import Overlay from "./components/Overlay"
+import electron, { links } from "./electron"
 import styles from "./ElectronVersion.module.scss"
 
-declare global {
-  interface Window {
-    electron: any
-  }
-}
-
-const electron = window.electron?.sendSync
 const REQUIRED_VERSION = "1.2.0"
-
-const links = [
-  {
-    title: "Windows",
-    list: [
-      {
-        label: "Installer",
-        link: "https://github.com/terra-money/station-desktop/releases/download/v1.2.0/Terra.Station.Setup.1.2.0.exe",
-      },
-    ],
-  },
-  {
-    title: "Mac",
-    list: [
-      {
-        label: "Apple silicon",
-        link: "https://github.com/terra-money/station-desktop/releases/download/v1.2.0/Terra.Station-1.2.0-arm64.dmg",
-      },
-      {
-        label: "Intel chip",
-        link: "https://github.com/terra-money/station-desktop/releases/download/v1.2.0/Terra.Station-1.2.0.dmg",
-      },
-    ],
-  },
-  {
-    title: "Linux",
-    list: [
-      {
-        label: "Debian",
-        link: "https://github.com/terra-money/station-desktop/releases/download/v1.2.0/Terra.Station_1.2.0_amd64.deb",
-      },
-      {
-        label: "Red hat",
-        link: "https://github.com/terra-money/station-desktop/releases/download/v1.2.0/Terra.Station-1.2.0.x86_64.rpm",
-      },
-    ],
-  },
-]
 
 const ElectronVersion = () => {
   const { t } = useTranslation()
