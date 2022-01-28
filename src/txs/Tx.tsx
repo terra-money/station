@@ -129,9 +129,10 @@ function Tx<TxValues>(props: Props<TxValues>) {
       const unsignedTx = await lcd.tx.create([{ address }], {
         ...simulationTx,
         feeDenoms: [initialGasDenom],
+        gasAdjustment,
       })
 
-      return Math.ceil(unsignedTx.auth_info.fee.gas_limit * gasAdjustment)
+      return unsignedTx.auth_info.fee.gas_limit
     },
     {
       ...RefetchOptions.INFINITY,
