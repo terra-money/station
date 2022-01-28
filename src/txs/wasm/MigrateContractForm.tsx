@@ -36,8 +36,11 @@ const MigrateContractForm = ({ contract }: { contract: AccAddress }) => {
       if (!address || !(id && msg)) return
       if (!validateMsg(msg)) return
 
+      const code_id = Number(id)
       const migrate_msg = parseJSON(msg)
-      const msgs = [new MsgMigrateContract(address, contract, id, migrate_msg)]
+      const msgs = [
+        new MsgMigrateContract(address, contract, code_id, migrate_msg),
+      ]
 
       return { msgs }
     },
