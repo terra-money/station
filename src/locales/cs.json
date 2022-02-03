@@ -1,0 +1,217 @@
+{
+  "Blockchain": {
+    "Mnemonic": "Mnemotechnicky",
+    "Address": "Adresa",
+    "Wallet": "Peněženka",
+    "Wallets": "Peněženky",
+    "Coins": "Mince",
+    "Tokens": "Tokeny",
+    "Balance": "Zůstatek",
+    "Tx hash": "Hash transakce",
+    "Gas": "Palivo",
+    "Tax": "Daň",
+    "Fee": "Poplatek",
+    "Memo": "Poznámka (Memo)",
+    "decimals": "decimální",
+    "Buy": "Koupit",
+    "Exchanges": "Vyměnit",
+    "Fiat": "Fiat peníze",
+    "APY": "APY"
+  },
+  "Form": {
+    "Amount": "Množství",
+    "Recipient": "Příjemce",
+    "Name": "Jméno",
+    "optional": "volitelný",
+    "Submit": "Odeslat",
+    "Confirm": "Potvrdit",
+    "Reset": "Vynulovat"
+  },
+  "Validate": {
+    "{{label}} is required": "{{label}} je povinný",
+    "{{label}} is not defined": "{{label}} není definován",
+    "{{label}} is not available": "{{label}} není dostupný",
+    "{{label}} is not supported": "{{label}} není podporován",
+    "{{label}} is invalid": "{{label}} je neplatný",
+    "{{label}} already exists": "{{label}} již existuje",
+    "{{label}} does not exist": "{{label}} neexistuje",
+    "{{label}} must be longer than {{length}} characters": "{{label}} musí být delší než {{length}} znaků",
+    "Already exists": "Již existuje",
+    "Invalid": "Neplatný",
+    "Invalid {{label}}": "{{label}} neplatný"
+  },
+  "Loading": {
+    "Initializing app...": "Spouštím aplikaci...",
+    "Loading...": "Načítám...",
+    "Load more": "Načíst více",
+    "Loading more...": "Načitám více...",
+    "Nothing more to load": "Vše je načteno",
+    "Simulating...": "Simuluji...",
+    "Broadcasting a tx...": "Odesílám transakci...",
+    "Broadcasting transaction": "Odesílám transakci",
+    "Queued": "V řadě"
+  },
+  "Success": {
+    "Success!": "Úspěšně provedeno!"
+  },
+  "Failure": {
+    "Failed": "Neúspěšný",
+    "Simulation failed": "Simulace neúspěšná",
+    "User denied": "Uživatel zamítnul",
+    "Failed to create tx": "Nepodařilo se vytvořit transakci",
+    "Tx failed": "Zařazený do fronty"
+  },
+  "Application": {
+    "Go back": "Zpět",
+    "View": "Zobrazit",
+    "Show all": "Zobrazit vše",
+    "Copy": "Kopírovat",
+    "Copied": "Zkopírováno",
+    "Active": "Aktivoat",
+    "Inactive": "Neaktivní",
+    "Not found": "Nenalezeno"
+  },
+  "Units": {
+    "year": "rok",
+    "day": "den",
+    "{{d}} days": "{{d}} dnů"
+  },
+  "Preferences": {
+    "Language": "Jazyk",
+    "Currency": "Měna"
+  },
+  "Auth": {
+    "Connect": "Připojit",
+    "Disconnect": "Odpojit",
+    "New wallet": "Nová peněženka",
+    "Recover wallet": "Obnovit peněženku",
+    "Connect wallet": "Připojit peněženku",
+    "Password": "Heslo",
+    "Confirm password": "Potvrdit heslo",
+    "Password does not match": "Hesla se neshodují",
+    "Change password": "Změnit heslo",
+    "Current password": "Stávající heslo",
+    "New password": "Nové heslo",
+    "Confirm new password": "Potvrdit nové heslo",
+    "Incorrect password": "Nesprávné heslo",
+    "Export wallet": "Exportovat peněženku",
+    "Delete wallet": "Smazat peněženku",
+    "Install extension": "Nainstalovat rozšíření"
+  },
+  "Menu": {
+    "Dashboard": "Palubní deska",
+    "Wallet": "Peněženka",
+    "NFT": "NFT",
+    "History": "Historie",
+    "Stake": "Stake",
+    "Governance": "Vládnutí",
+    "Contract": "Smlouvy"
+  },
+  "Dashboard": {
+    "Luna price": "Cena Luny",
+    "Tax rate": "Daň",
+    "Issuance": "Vydávání",
+    "Community pool": "Komunitní zásoba",
+    "Staking ratio": "Poměr stakingu"
+  },
+  "Chart": {
+    "Transaction volume": "Objem transakcí",
+    "Staking return": "Výnos stakingu",
+    "Tax rewards": "Odměny z daní",
+    "Wallets": "Počet peněženek"
+  },
+  "Wallet": {
+    "Add tokens": "Přidat tokeny",
+    "Manage list": "Upravit seznam"
+  },
+  "Txs": {
+    "Send": "Odeslat",
+    "Swap": "Vyměnit",
+    "Stake": "Stake",
+    "Delegate": "Delegovat",
+    "Redelegate": "Re-delegovat",
+    "Undelegate": "Zrušit delegaci",
+    "Withdraw rewards": "Vybrat Odměny",
+    "Withdraw commission": "Vybrat poplatky",
+    "New proposal": "Nový návrh",
+    "Deposit": "Vložit",
+    "Vote": "Hlasovat",
+    "Transfer NFT": "Převést NFT",
+    "Earn": "Zisk"
+  },
+  "Swap": {
+    "From": "Od",
+    "To": "Do",
+    "Spread": "Rozpětí",
+    "Slippage tolerance": "Tolerance rozdílu",
+    "Oracle price": "Cena od Oracle",
+    "Pair price": "Cena páru",
+    "Expected price": "Očekávaná cena",
+    "Minimum received": "Minimálně obdržíze",
+    "Trading fee": "Poplatek za obchod"
+  },
+  "Stake": {
+    "Delegations": "Delegace",
+    "Undelegations": "Zrušené delegace",
+    "Delegated": "Delegováno",
+    "Undelegated": "Nedelegováno",
+    "Staking rewards": "Odmeny za staking"
+  },
+  "Validator": {
+    "Validators": "Validátory",
+    "Voting power": "Síla hlasu",
+    "Self delegation": "Vlastní delegování",
+    "Commission": "Poplatek",
+    "Uptime": "Doba provozuschopnosti",
+    "Validator details": "Detail validátoru",
+    "Operator address": "Adresa operátora",
+    "Account address": "Adresa účtu",
+    "Jailed": "Uvězněn"
+  },
+  "Governance": {
+    "Voting": "Hlasování",
+    "Votes": "Hlasy ",
+    "Initial deposit": "Počáteční vklad",
+    "Deposited": "Vloženo",
+    "Depositors": "Vkladatelé",
+    "Depositor": "Vkladatel",
+    "Deposit end time": "Čas ukončení vkladu",
+    "Passed": "Schváleno",
+    "Rejected": "Odmítnuto",
+    "Minimum deposit": "Minimální vklad",
+    "Maximum deposit period": "Maximální čas vkladu",
+    "Voting period": "Doba hlasování",
+    "Proposal": "Návrh",
+    "Proposal details": "Detail návrhu",
+    "Proposal type": "Typ návhru",
+    "Title": "Nadpis",
+    "Description": "Popis",
+    "Changes": "Změny",
+    "Yes": "Ano",
+    "No": "Ne",
+    "No with veto": "Ne s veto",
+    "Abstain": "Zdržet se hlasování",
+    "Tallying procedure": "Postup sčítání",
+    "Quorum": "Kvorum",
+    "Pass threshold": "Potřeba k schválení",
+    "Veto threshold": "Potřeba k veto"
+  },
+  "Contract": {
+    "Upload": "Nahrát",
+    "Instantiate": "Doložit",
+    "Query": "Dotaz",
+    "Execute": "Provést",
+    "Upload a wasm file": "Nahrát soubor wasm",
+    "File": "Soubor",
+    "Size": "Velikost",
+    "Instantiate a code": "Doložit kód"
+  },
+  "NFT": {
+    "Marketplace": "Obchod",
+    "Collection": "Kolekce"
+  },
+  "Address book": {
+    "Address book": "Adresář",
+    "Add a new address": "Přidat novou adresu"
+  }
+}
