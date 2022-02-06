@@ -187,7 +187,7 @@ const Validators = () => {
               { commission: { commission_rates: b } }
             ) => a.rate.toNumber() - b.rate.toNumber(),
             render: ({ rate }: Validator.CommissionRates) =>
-              readPercent(rate.toString(), { fixed: 1 }),
+              readPercent(rate.toString(), { fixed: 2 }),
             align: "right",
           },
           {
