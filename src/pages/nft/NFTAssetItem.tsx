@@ -41,19 +41,20 @@ const NFTAssetItem = ({ contract, id, compact }: Props) => {
     const { extension } = data
     const name = extension?.name ?? truncate(id)
     const image = extension?.image
+    const src = getIpfsGateway(image)
 
     return (
       <article className={className}>
-        {image && (
+        {src && (
           <ModalButton
             title={name}
             renderButton={(open) => (
               <button type="button" onClick={open} className={styles.image}>
-                <img src={getIpfsGateway(image)} alt="" {...SIZE} />
+                <img src={src} alt="" {...SIZE} />
               </button>
             )}
           >
-            <img src={getIpfsGateway(image)} alt="" className={styles.large} />
+            <img src={src} alt="" className={styles.large} />
           </ModalButton>
         )}
 
@@ -71,13 +72,7 @@ const NFTAssetItem = ({ contract, id, compact }: Props) => {
               )}
             >
               <Grid gap={12}>
-                {image && (
-                  <img
-                    src={getIpfsGateway(image)}
-                    alt=""
-                    className={styles.large}
-                  />
-                )}
+                {src && <img src={src} alt="" className={styles.large} />}
 
                 {extension && <NFTDetails data={extension} />}
               </Grid>

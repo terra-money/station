@@ -67,10 +67,10 @@ export const useTokenInfoCW721 = (contract: AccAddress, token_id: string) => {
       })
 
       const { token_uri } = data
-      if (!token_uri) return data
+      const uri = getIpfsGateway(token_uri)
+      if (!token_uri || !uri) return data
 
       try {
-        const uri = getIpfsGateway(token_uri)
         const { data: extension } = await axios.get(uri)
         return { ...data, extension: { ...data.extension, ...extension } }
       } catch {
@@ -123,7 +123,9 @@ export const useCW721Tokens = (contract: AccAddress) => {
 }
 
 /* helpers */
-export const getIpfsGateway = (src: string) =>
+export const getIpfsGateway = (src = "") =>
   src.startsWith("ipfs://")
     ? src.replace("ipfs://", "https://cloudflare-ipfs.com/ipfs/")
-    : src
+    : src.startsWith("https://")
+    ? src
+    : undefined
