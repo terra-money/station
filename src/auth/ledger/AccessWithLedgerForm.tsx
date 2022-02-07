@@ -6,7 +6,7 @@ import { Button } from "components/general"
 import { Grid } from "components/layout"
 import { FormError } from "components/form"
 import useAuth from "../hooks/useAuth"
-import * as ledger from "./ledger"
+import { LedgerKey } from "@terra-money/ledger-terra-js"
 
 const AccessWithLedgerForm = () => {
   const { t } = useTranslation()
@@ -20,8 +20,7 @@ const AccessWithLedgerForm = () => {
     setError(undefined)
 
     try {
-      const address = await ledger.getTerraAddress()
-      connectLedger(address)
+      connectLedger((await LedgerKey.create()).accAddress)
       navigate("/wallet", { replace: true })
     } catch (error) {
       setError(error as Error)

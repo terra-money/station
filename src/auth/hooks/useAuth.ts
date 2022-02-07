@@ -2,8 +2,9 @@ import { useCallback, useMemo } from "react"
 import { atom, useRecoilState } from "recoil"
 import { encode } from "js-base64"
 import { CreateTxOptions, Tx, isTxError } from "@terra-money/terra.js"
-import { AccAddress, SignDoc, PublicKey } from "@terra-money/terra.js"
+import { AccAddress, SignDoc } from "@terra-money/terra.js"
 import { MnemonicKey, RawKey, SignatureV2 } from "@terra-money/terra.js"
+import { LedgerKey } from "@terra-money/ledger-terra-js"
 import { useChainID } from "data/wallet"
 import { useLCDClient } from "data/queries/lcdClient"
 import is from "../scripts/is"
@@ -13,8 +14,6 @@ import { getWallet, storeWallet } from "../scripts/keystore"
 import { clearWallet, lockWallet } from "../scripts/keystore"
 import { getStoredWallet, getStoredWallets } from "../scripts/keystore"
 import encrypt from "../scripts/encrypt"
-import * as ledger from "../ledger/ledger"
-import LedgerKey from "../ledger/LedgerKey"
 import useAvailable from "./useAvailable"
 
 const walletState = atom({
@@ -94,16 +93,7 @@ const useAuth = () => {
   }
 
   const getLedgerKey = async () => {
-    const pk = await ledger.getPubKey()
-    if (!pk) throw new Error("Public key is not defined")
-
-    const publicKey = PublicKey.fromAmino({
-      type: "tendermint/PubKeySecp256k1",
-      value: pk.toString("base64"),
-    })
-
-    const key = new LedgerKey(publicKey)
-    return key
+    return LedgerKey.create()
   }
 
   /* manage: export */

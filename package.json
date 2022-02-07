@@ -15,8 +15,6 @@
   },
   "dependencies": {
     "@anchor-protocol/anchor.js": "^4.0.0",
-    "@ledgerhq/hw-transport-webhid": "^6.20.0",
-    "@ledgerhq/hw-transport-webusb": "^6.20.0",
     "@mui/icons-material": "^5.3.1",
     "@mui/material": "^5.3.1",
     "@terra-money/ledger-terra-js": "^1.1.0",
