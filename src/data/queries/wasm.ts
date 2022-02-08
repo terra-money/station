@@ -123,9 +123,14 @@ export const useCW721Tokens = (contract: AccAddress) => {
 }
 
 /* helpers */
-export const getIpfsGateway = (src = "") =>
-  src.startsWith("ipfs://")
-    ? src.replace("ipfs://", "https://cloudflare-ipfs.com/ipfs/")
-    : src.startsWith("https://")
-    ? src
-    : undefined
+export const getIpfsGateway = (src: any = "") => {
+  if (typeof src === "string") {
+    return src.startsWith("ipfs://")
+      ? src.replace("ipfs://", "https://cloudflare-ipfs.com/ipfs/")
+      : src.startsWith("https://")
+      ? src
+      : undefined
+  } else {
+    return
+  }
+}
