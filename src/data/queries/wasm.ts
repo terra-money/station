@@ -129,8 +129,47 @@ export const getIpfsGateway = (src: any = "") => {
       ? src.replace("ipfs://", "https://cloudflare-ipfs.com/ipfs/")
       : src.startsWith("https://")
       ? src
-      : undefined
+      : svgChecker(src)
   } else {
     return
   }
+}
+
+// checks data:image/svg+xml for script tag & on events.
+// returns undefined if contains dangerous tags
+// returns src if clean
+const svgChecker = (src: string) => {
+  if (src.startsWith("data:image/svg+xml")) {
+    let parsedSrc = src
+
+    if (src.match(/;base64,/)) {
+      // decode first if base 64
+      parsedSrc = src.substring(src.indexOf(","))
+      parsedSrc = Buffer.from(parsedSrc, "base64").toString()
+    }
+
+    // ensure does not have script tag
+    if (parsedSrc.match(/<script/)) return undefined
+
+    const div = window.document.createElement("div")
+    div.innerHTML = parsedSrc
+    const svgEl = div.firstElementChild!
+    if (svgChildElementChecker(svgEl)) return src
+  }
+  return undefined
+}
+
+// returns true if clean, returns false if contains bad elements.
+const svgChildElementChecker = (element: Element) => {
+  for (const child in element.children) {
+    const svgEl = element.children.item(parseInt(child))
+    if (!svgEl) continue
+
+    // ensure inner elements does not have onclick / onenter ... on events
+    const attributes = Array.from(svgEl.attributes).map(({ name }) => name)
+    const hasScriptAttr = !!attributes.find((attr) => attr.startsWith("on"))
+
+    if (hasScriptAttr) return false
+  }
+  return true
 }
