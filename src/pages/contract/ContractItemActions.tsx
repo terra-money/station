@@ -28,11 +28,14 @@ const ContractItemActions = () => {
         {t("Execute")}
       </LinkButton>
 
-      {admin && connectedAddress === admin && (
-        <LinkButton to={`/contract/migrate/${address}`} size="small" outline>
-          {t("Migrate")}
-        </LinkButton>
-      )}
+      <LinkButton
+        to={`/contract/migrate/${address}`}
+        disabled={!admin || connectedAddress !== admin}
+        size="small"
+        outline
+      >
+        {t("Migrate")}
+      </LinkButton>
     </ExtraActions>
   )
 }
