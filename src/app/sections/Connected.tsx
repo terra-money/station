@@ -12,12 +12,14 @@ import { isWallet, useAuth } from "auth"
 import SwitchWallet from "auth/modules/select/SwitchWallet"
 import PopoverNone from "../components/PopoverNone"
 import styles from "./Connected.module.scss"
+import { useTnsName } from "data/external/tns"
 
 const Connected = () => {
   const { t } = useTranslation()
   const { disconnect } = useWallet()
   const address = useAddress()
   const { wallet } = useAuth()
+  const { data: name } = useTnsName(address ?? "")
 
   /* hack to close popover */
   const [key, setKey] = useState(0)
@@ -28,6 +30,9 @@ const Connected = () => {
   const footer = wallet
     ? { to: "/auth", onClick: closePopover, children: t("Manage wallets") }
     : { onClick: disconnect, children: t("Disconnect") }
+
+  const displayName =
+    name && name.length >= 20 ? name.substring(0, 20) + "..." : name
 
   return (
     <Popover
@@ -67,7 +72,9 @@ const Connected = () => {
         size="small"
         outline
       >
-        {isWallet.local(wallet) ? wallet.name : truncate(address)}
+        {isWallet.local(wallet)
+          ? wallet.name
+          : displayName || truncate(address)}
       </Button>
     </Popover>
   )

@@ -59,7 +59,12 @@ export const useCW20Pairs = () => {
   return useTerraAssetsByNetwork<CW20Pairs>("cw20/pairs.dex.json")
 }
 
-export type ContractNames = "assertLimitOrder" | "routeswap" | "tnsRegistry"
+export type ContractNames =
+  | "assertLimitOrder"
+  | "routeswap"
+  | "tnsRegistry"
+  | "tnsReverseRecord"
+
 export type TerraContracts = Record<ContractNames, AccAddress>
 export const useTerraContracts = () => {
   return useTerraAssetsByNetwork<TerraContracts>("contracts.json")

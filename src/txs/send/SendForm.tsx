@@ -9,7 +9,7 @@ import { SAMPLE_ADDRESS } from "config/constants"
 import { queryKey } from "data/query"
 import { useAddress } from "data/wallet"
 import { useBankBalance } from "data/queries/bank"
-import { useTNS } from "data/external/tns"
+import { useTnsAddress } from "data/external/tns"
 import { ExternalLink } from "components/general"
 import { Auto, Card, Grid, InlineFlex } from "components/layout"
 import { Form, FormItem, FormHelp, Input, FormWarning } from "components/form"
@@ -53,7 +53,7 @@ const SendForm = ({ token, decimals, balance }: Props) => {
   }
 
   /* resolve recipient */
-  const { data: resolvedAddress, ...tnsState } = useTNS(recipient ?? "")
+  const { data: resolvedAddress, ...tnsState } = useTnsAddress(recipient ?? "")
   useEffect(() => {
     if (!recipient) {
       setValue("address", undefined)
