@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import { Copy } from "components/general"
@@ -22,9 +23,13 @@ const CreateWalletForm = () => {
     defaultValues: { ...values, confirm: "", checked: false },
   })
 
-  const { register, watch, handleSubmit, formState } = form
+  const { register, watch, handleSubmit, formState, reset } = form
   const { errors, isValid } = formState
   const { password, mnemonic, index, checked } = watch()
+
+  useEffect(() => {
+    return () => reset()
+  }, [reset])
 
   const submit = ({ name, password, mnemonic, index }: Values) => {
     setValues({ name, password, mnemonic: mnemonic.trim(), index })
