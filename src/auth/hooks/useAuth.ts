@@ -55,8 +55,8 @@ const useAuth = () => {
   )
 
   const connectLedger = useCallback(
-    (address: AccAddress) => {
-      const wallet = { address, ledger: true as const }
+    (address: AccAddress, index = 0) => {
+      const wallet = { address, ledger: true as const, index }
       storeWallet(wallet)
       setWallet(wallet)
     },
@@ -93,7 +93,9 @@ const useAuth = () => {
   }
 
   const getLedgerKey = async () => {
-    return LedgerKey.create()
+    if (!is.ledger(wallet)) throw new Error("Ledger device is not connected")
+    const { index } = wallet
+    return LedgerKey.create(undefined, index)
   }
 
   /* manage: export */

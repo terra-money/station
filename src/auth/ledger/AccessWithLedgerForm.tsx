@@ -35,7 +35,8 @@ const AccessWithLedgerForm = () => {
     setError(undefined)
 
     try {
-      connectLedger((await LedgerKey.create(undefined, index)).accAddress)
+      const { accAddress } = await LedgerKey.create(undefined, index)
+      connectLedger(accAddress, index)
       navigate("/wallet", { replace: true })
     } catch (error) {
       setError(error as Error)

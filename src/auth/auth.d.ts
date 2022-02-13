@@ -20,6 +20,7 @@ interface MultisigWallet extends SingleWallet {
 interface LedgerWallet {
   address: string
   ledger: true
+  index: number
 }
 
 interface StoredWallet extends SingleWallet {
