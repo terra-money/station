@@ -68,9 +68,11 @@ const ValidatorCompact = ({ vertical }: { vertical?: boolean }) => {
           <h2>{t("View on")}</h2>
 
           <Flex start gap={8} wrap className={styles.links}>
-            <ExternalLink href={TERRA_VALIDATORS + operator_address}>
-              <TerraValidatorProfiles height={36} />
-            </ExternalLink>
+            {TerraValidator?.contact?.email && (
+              <ExternalLink href={TERRA_VALIDATORS + operator_address}>
+                <TerraValidatorProfiles height={36} />
+              </ExternalLink>
+            )}
 
             <ExternalLink href={STAKE_ID + operator_address}>
               <StakeID height={36} />
