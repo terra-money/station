@@ -6,6 +6,7 @@ import { ReactComponent as KuCoin } from "styles/images/exchanges/KuCoin.svg"
 import { ReactComponent as Huobi } from "styles/images/exchanges/Huobi.svg"
 import { ReactComponent as Bitfinex } from "styles/images/exchanges/Bitfinex.svg"
 import Transak from "styles/images/exchanges/Transak.png"
+import Kado from "styles/images/exchanges/Kado.svg"
 import { ListGroup } from "components/display"
 
 export const exchanges = {
@@ -55,6 +56,8 @@ export const exchanges = {
   ],
 }
 
+const KADO_URL = "https://ramp.kado.money"
+
 const TRANSAK_URL = "https://global.transak.com"
 const TRANSAK_API_KEY = "f619d86d-48e0-4f2f-99a1-f827b719ac0b"
 
@@ -82,6 +85,11 @@ const Buy = ({ token }: { token: "uluna" | "uusd" }) => {
         {
           title: t("Fiat"),
           list: [
+            {
+              children: "Kado Ramp",
+              href: KADO_URL,
+              icon: <img src={Kado} alt="Kado Ramp" width={24} height={24} />
+            },
             {
               children: "Transak",
               href: getTransakLink(token),
