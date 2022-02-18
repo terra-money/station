@@ -10,6 +10,7 @@ import fr from "locales/fr.json"
 import it from "locales/it.json"
 // import ko from "locales/ko.json"
 import pl from "locales/pl.json"
+import pt from "locales/pt.json"
 import ru from "locales/ru.json"
 import zh from "locales/zh.json"
 
@@ -30,6 +31,7 @@ export const Languages = {
   it: { value: "it", label: "Italiano", translation: flatten(it) },
   // ko: { value: "ko", label: "한국어", translation: flatten(ko) },
   pl: { value: "pl", label: "Polish", translation: flatten(pl) },
+  pt: { value: "pt", label: "Português", translation: flatten(pt) },
   ru: { value: "ru", label: "Русский", translation: flatten(ru) },
   zh: { value: "zh", label: "中文", translation: flatten(zh) },
 }
