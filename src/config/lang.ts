@@ -5,6 +5,7 @@ import { Dictionary } from "ramda"
 import { debug } from "utils/env"
 
 import cs from "locales/cs.json"
+import de from "locales/de.json"
 import es from "locales/es.json"
 import fr from "locales/fr.json"
 import it from "locales/it.json"
@@ -24,6 +25,7 @@ const flatten = (obj: object, initial = {}): Dictionary<string> => {
 
 export const Languages = {
   cs: { value: "cs", label: "Čeština", translation: flatten(cs) },
+  de: { value: "de", label: "Deutsch", translation: flatten(de) },
   en: { value: "en", label: "English", translation: {} },
   es: { value: "es", label: "Español", translation: flatten(es) },
   fr: { value: "fr", label: "Français", translation: flatten(fr) },
