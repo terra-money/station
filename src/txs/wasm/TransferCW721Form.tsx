@@ -9,7 +9,7 @@ import { SAMPLE_ADDRESS } from "config/constants"
 import { queryKey } from "data/query"
 import { useAddress } from "data/wallet"
 import { useBankBalance } from "data/queries/bank"
-import { useTNS } from "data/external/tns"
+import { useTnsAddress } from "data/external/tns"
 import { Auto, Card, InlineFlex } from "components/layout"
 import { Form, FormItem, FormHelp, Input } from "components/form"
 import NFTAssetItem from "pages/nft/NFTAssetItem"
@@ -50,7 +50,7 @@ const TransferCW721Form = ({ contract, id }: Props) => {
   }
 
   /* resolve recipient */
-  const { data: resolvedAddress, ...tnsState } = useTNS(recipient ?? "")
+  const { data: resolvedAddress, ...tnsState } = useTnsAddress(recipient ?? "")
   useEffect(() => {
     if (!recipient) {
       setValue("address", undefined)

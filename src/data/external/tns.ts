@@ -11,7 +11,7 @@ import { useTerraContracts } from "../Terra/TerraAssets"
  * @param name - A TNS identifier such as "alice.ust"
  * @returns The terra address of the specified name, null if not resolvable
  */
-export const useTNS = (name: string) => {
+export const useTnsAddress = (name: string) => {
   const lcd = useLCDClient()
   const { data: contracts } = useTerraContracts()
 
@@ -45,6 +45,34 @@ export const useTNS = (name: string) => {
       return address
     },
     { ...RefetchOptions.INFINITY, enabled: name.endsWith(".ust") }
+  )
+}
+
+/**
+ * Resolve TNS name from a terra address.
+ *
+ * @param address - A terra address
+ * @returns The TNS name of the specified address, null if not resolvable
+ */
+export const useTnsName = (address: string) => {
+  const lcd = useLCDClient()
+  const { data: contracts } = useTerraContracts()
+
+  return useQuery(
+    [queryKey.TNS, address],
+    async () => {
+      if (!contracts || !address) return
+
+      const { tnsReverseRecord: reverseRecord } = contracts
+
+      const { name } = await lcd.wasm.contractQuery<{ name: string | null }>(
+        reverseRecord,
+        { get_name: { address } }
+      )
+
+      return name
+    },
+    { ...RefetchOptions.INFINITY, enabled: Boolean(contracts) }
   )
 }
 

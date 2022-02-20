@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form"
 import PersonIcon from "@mui/icons-material/Person"
 import { truncate } from "@terra.kitchen/utils"
 import { useAddressBook } from "data/settings/AddressBook"
-import { useTNS } from "data/external/tns"
+import { useTnsAddress } from "data/external/tns"
 import { InlineFlex } from "components/layout"
 import { Form, FormItem, Submit, Input } from "components/form"
 import { Fetching, useModal } from "components/feedback"
@@ -27,7 +27,7 @@ const AddAddressBookItem = () => {
   }
 
   /* resolve recipient */
-  const { data: resolvedAddress, ...tnsState } = useTNS(recipient ?? "")
+  const { data: resolvedAddress, ...tnsState } = useTnsAddress(recipient ?? "")
 
   // validate(tns): not found
   const invalid =

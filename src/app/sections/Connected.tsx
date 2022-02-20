@@ -5,6 +5,7 @@ import GroupsIcon from "@mui/icons-material/Groups"
 import { truncate } from "@terra.kitchen/utils"
 import { useWallet } from "@terra-money/wallet-provider"
 import { useAddress } from "data/wallet"
+import { useTnsName } from "data/external/tns"
 import { Button, Copy, FinderLink } from "components/general"
 import { Grid } from "components/layout"
 import { Tooltip, Popover } from "components/display"
@@ -18,6 +19,7 @@ const Connected = () => {
   const { disconnect } = useWallet()
   const address = useAddress()
   const { wallet } = useAuth()
+  const { data: name } = useTnsName(address ?? "")
 
   /* hack to close popover */
   const [key, setKey] = useState(0)
@@ -67,7 +69,7 @@ const Connected = () => {
         size="small"
         outline
       >
-        {isWallet.local(wallet) ? wallet.name : truncate(address)}
+        {isWallet.local(wallet) ? wallet.name : truncate(name ?? address)}
       </Button>
     </Popover>
   )
