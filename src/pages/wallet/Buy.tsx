@@ -76,25 +76,28 @@ const getTransakLink = (denom: "uluna" | "uusd") => {
 
 const Buy = ({ token }: { token: "uluna" | "uusd" }) => {
   const { t } = useTranslation()
+  const TRANSAK = {
+    children: "Transak",
+    href: getTransakLink(token),
+    icon: <img src={Transak} alt="" width={24} height={24} />,
+  }
+
+  const KADO = {
+    children: "Kado Ramp",
+    href: KADO_URL,
+    icon: <img src={Kado} alt="Kado Ramp" width={24} height={24} />,
+  }
 
   return (
     <ListGroup
       groups={[
-        { title: t("Exchanges"), list: exchanges[token] },
+        {
+          title: t("Exchanges"),
+          list: exchanges[token],
+        },
         {
           title: t("Fiat"),
-          list: [
-            {
-              children: "Transak",
-              href: getTransakLink(token),
-              icon: <img src={Transak} alt="" width={24} height={24} />,
-            },
-            {
-              children: "Kado Ramp",
-              href: KADO_URL,
-              icon: <img src={Kado} alt="Kado Ramp" width={24} height={24} />,
-            },
-          ],
+          list: token === "uusd" ? [TRANSAK, KADO] : [TRANSAK],
         },
       ]}
     />
