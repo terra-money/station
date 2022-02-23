@@ -18,7 +18,7 @@ const flatten = (obj: object, initial = {}): Dictionary<string> => {
   return Object.entries(obj).reduce((prev, [key, value]) => {
     if (!value) return prev
     const next =
-        typeof value === "string" ? { [key]: value } : flatten(value, prev)
+      typeof value === "string" ? { [key]: value } : flatten(value, prev)
     return Object.assign({}, prev, next)
   }, initial)
 }
