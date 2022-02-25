@@ -1,14 +1,14 @@
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
-import UsbIcon from '@mui/icons-material/Usb'
-import { LedgerKey } from '@terra-money/ledger-terra-js'
-import BluetoothTransport from '@ledgerhq/hw-transport-web-ble'
-import { Checkbox, Form, FormError, FormItem, FormWarning } from 'components/form'
-import { Input, Submit } from 'components/form'
-import validate from '../scripts/validate'
-import useAuth from '../hooks/useAuth'
+import { useState } from "react"
+import { useTranslation } from "react-i18next"
+import { useNavigate } from "react-router-dom"
+import { useForm } from "react-hook-form"
+import UsbIcon from "@mui/icons-material/Usb"
+import { LedgerKey } from "@terra-money/ledger-terra-js"
+import BluetoothTransport from "@ledgerhq/hw-transport-web-ble"
+import { Checkbox, Form, FormError, FormItem, FormWarning } from "components/form"
+import { Input, Submit } from "components/form"
+import validate from "../scripts/validate"
+import useAuth from "../hooks/useAuth"
 
 interface Values {
   index: number
@@ -24,7 +24,7 @@ const AccessWithLedgerForm = () => {
 
   /* form */
   const form = useForm<Values>({
-    mode: 'onChange',
+    mode: "onChange",
     defaultValues: { index: 0 },
   })
 
@@ -42,7 +42,7 @@ const AccessWithLedgerForm = () => {
         index,
       )
       connectLedger(accAddress, index, bluetooth)
-      navigate('/wallet', { replace: true })
+      navigate("/wallet", { replace: true })
     } catch (error) {
       setError(error as Error)
     } finally {
@@ -54,12 +54,15 @@ const AccessWithLedgerForm = () => {
     <Form onSubmit={handleSubmit(submit)}>
       <section className="center">
         <UsbIcon style={{ fontSize: 56 }} />
-        <p>{t('Plug in a Ledger device')}</p>
+        <p>{t("Plug in a Ledger device")}</p>
       </section>
 
-      <FormItem /* do not translate this */ label="Index" error={errors.index?.message}>
+      <FormItem /* do not translate this */ 
+        label="Index" 
+        error={errors.index?.message}
+      >
         <Input
-          {...register('index', {
+          {...register("index", {
             valueAsNumber: true,
             validate: validate.index,
           })}
@@ -67,12 +70,12 @@ const AccessWithLedgerForm = () => {
         <Checkbox checked={bluetooth} onChange={() => setBluetooth(!bluetooth)}>
           Use Bluetooth (only for Nano X)
         </Checkbox>
-        {index !== 0 && <FormWarning>{t('Default index is 0')}</FormWarning>}
+        {index !== 0 && <FormWarning>{t("Default index is 0")}</FormWarning>}
       </FormItem>
 
       {error && <FormError>{error.message}</FormError>}
 
-      <Submit submitting={isLoading}>{t('Connect')}</Submit>
+      <Submit submitting={isLoading}>{t("Connect")}</Submit>
     </Form>
   )
 }
