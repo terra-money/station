@@ -21,6 +21,7 @@ interface LedgerWallet {
   address: string
   ledger: true
   index: number
+  bluetooth: boolean
 }
 
 interface StoredWallet extends SingleWallet {

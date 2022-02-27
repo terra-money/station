@@ -5,6 +5,8 @@ import { CreateTxOptions, Tx, isTxError } from "@terra-money/terra.js"
 import { AccAddress, SignDoc } from "@terra-money/terra.js"
 import { MnemonicKey, RawKey, SignatureV2 } from "@terra-money/terra.js"
 import { LedgerKey } from "@terra-money/ledger-terra-js"
+import BluetoothTransport from "@ledgerhq/hw-transport-web-ble"
+import { LEDGER_TRANSPORT_TIMEOUT } from "config/constants"
 import { useChainID } from "data/wallet"
 import { useLCDClient } from "data/queries/lcdClient"
 import is from "../scripts/is"
@@ -55,8 +57,8 @@ const useAuth = () => {
   )
 
   const connectLedger = useCallback(
-    (address: AccAddress, index = 0) => {
-      const wallet = { address, ledger: true as const, index }
+    (address: AccAddress, index = 0, bluetooth = false) => {
+      const wallet = { address, ledger: true as const, index, bluetooth }
       storeWallet(wallet)
       setWallet(wallet)
     },
@@ -94,8 +96,12 @@ const useAuth = () => {
 
   const getLedgerKey = async () => {
     if (!is.ledger(wallet)) throw new Error("Ledger device is not connected")
-    const { index } = wallet
-    return LedgerKey.create(undefined, index)
+    const { index, bluetooth } = wallet
+    const transport = bluetooth
+      ? await BluetoothTransport.create(LEDGER_TRANSPORT_TIMEOUT)
+      : undefined
+
+    return LedgerKey.create(transport, index)
   }
 
   /* manage: export */

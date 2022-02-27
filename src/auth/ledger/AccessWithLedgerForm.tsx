@@ -4,13 +4,16 @@ import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import UsbIcon from "@mui/icons-material/Usb"
 import { LedgerKey } from "@terra-money/ledger-terra-js"
+import BluetoothTransport from "@ledgerhq/hw-transport-web-ble"
+import { LEDGER_TRANSPORT_TIMEOUT } from "config/constants"
 import { Form, FormError, FormItem, FormWarning } from "components/form"
-import { Input, Submit } from "components/form"
+import { Checkbox, Input, Submit } from "components/form"
 import validate from "../scripts/validate"
 import useAuth from "../hooks/useAuth"
 
 interface Values {
   index: number
+  bluetooth: boolean
 }
 
 const AccessWithLedgerForm = () => {
@@ -23,20 +26,24 @@ const AccessWithLedgerForm = () => {
   /* form */
   const form = useForm<Values>({
     mode: "onChange",
-    defaultValues: { index: 0 },
+    defaultValues: { index: 0, bluetooth: false },
   })
 
   const { register, watch, handleSubmit, formState } = form
   const { errors } = formState
-  const { index } = watch()
+  const { index, bluetooth } = watch()
 
-  const submit = async () => {
+  const submit = async ({ index, bluetooth }: Values) => {
     setIsLoading(true)
     setError(undefined)
 
     try {
-      const { accAddress } = await LedgerKey.create(undefined, index)
-      connectLedger(accAddress, index)
+      const transport = bluetooth
+        ? await BluetoothTransport.create(LEDGER_TRANSPORT_TIMEOUT)
+        : undefined
+
+      const { accAddress } = await LedgerKey.create(transport, index)
+      connectLedger(accAddress, index, bluetooth)
       navigate("/wallet", { replace: true })
     } catch (error) {
       setError(error as Error)
@@ -62,7 +69,12 @@ const AccessWithLedgerForm = () => {
             validate: validate.index,
           })}
         />
+
         {index !== 0 && <FormWarning>{t("Default index is 0")}</FormWarning>}
+
+        <Checkbox {...register("bluetooth")} checked={bluetooth}>
+          Use Bluetooth
+        </Checkbox>
       </FormItem>
 
       {error && <FormError>{error.message}</FormError>}
