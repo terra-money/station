@@ -216,8 +216,8 @@ const Validators = () => {
 export default Validators
 
 /* helpers */
-const getIsBonded = (status: BondStatus) =>
+export const getIsBonded = (status: BondStatus) =>
   bondStatusFromJSON(BondStatus[status]) === BondStatus.BOND_STATUS_BONDED
 
-const getIsUnbonded = (status: BondStatus) =>
+export const getIsUnbonded = (status: BondStatus) =>
   bondStatusFromJSON(BondStatus[status]) === BondStatus.BOND_STATUS_UNBONDED

@@ -10,6 +10,7 @@ import ProposalSummary from "./ProposalSummary"
 import ProposalDeposits from "./ProposalDeposits"
 import ProposalDepositors from "./ProposalDepositors"
 import ProposalVotes from "./ProposalVotes"
+import ProposalVotesByValidator from "./ProposalVotesByValidator"
 import ProposalParams from "./ProposalParams"
 import useProposalId from "./useProposalId"
 
@@ -55,6 +56,10 @@ const ProposalDetails = () => {
           status !== Proposal.Status.PROPOSAL_STATUS_REJECTED && (
             <ProposalVotes id={id} card />
           )
+        )}
+
+        {status !== Proposal.Status.PROPOSAL_STATUS_DEPOSIT_PERIOD && (
+          <ProposalVotesByValidator id={id} />
         )}
 
         <ProposalParams />

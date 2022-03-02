@@ -4,6 +4,7 @@ import axios, { AxiosError } from "axios"
 import BigNumber from "bignumber.js"
 import { OracleParams, ValAddress } from "@terra-money/terra.js"
 import { TerraValidator } from "types/validator"
+import { TerraProposalItem } from "types/proposal"
 import { useNetworkName } from "data/wallet"
 import { useOracleParams } from "data/queries/oracle"
 import { queryKey, RefetchOptions } from "../query"
@@ -108,6 +109,10 @@ export const useTerraValidators = () => {
 
 export const useTerraValidator = (address: ValAddress) => {
   return useTerraAPI<TerraValidator>(`validators/${address}`)
+}
+
+export const useTerraProposal = (id: number) => {
+  return useTerraAPI<TerraProposalItem[]>(`proposals/${id}`)
 }
 
 /* helpers */

@@ -1,0 +1,46 @@
+@import "mixins";
+
+.filter {
+  overflow: hidden;
+
+  @include mobile {
+    display: grid;
+    gap: 12px;
+  }
+
+  @include desktop {
+    @include flex(space-between);
+  }
+}
+
+.tabs {
+  overflow-x: auto;
+
+  .inner {
+    white-space: nowrap;
+  }
+}
+
+.tab {
+  border-radius: 11px;
+  font-size: 12px;
+  font-weight: var(--normal);
+  height: 22px;
+  padding: 0 15px;
+
+  &.active {
+    background-color: var(--button-primary-bg);
+    color: var(--button-primary-text);
+    font-weight: var(--bold);
+  }
+}
+
+/* content */
+.link {
+  @include inline-flex;
+
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.2;
+  }
+}

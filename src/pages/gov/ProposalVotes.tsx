@@ -15,7 +15,7 @@ import { ToNow } from "components/display"
 import VoteProgress from "./components/VoteProgress"
 import styles from "./ProposalVotes.module.scss"
 
-const options = [
+export const options = [
   Vote.Option.VOTE_OPTION_YES,
   Vote.Option.VOTE_OPTION_ABSTAIN,
   Vote.Option.VOTE_OPTION_NO,
