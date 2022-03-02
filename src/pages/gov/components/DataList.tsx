@@ -16,7 +16,7 @@ const DataList = ({ list, type }: Props) => {
       {list.map(({ title, content }) => (
         <Grid gap={4} key={title}>
           <h1 className={styles.title}>{title}</h1>
-          <p>{content}</p>
+          <section>{content}</section>
         </Grid>
       ))}
     </div>
