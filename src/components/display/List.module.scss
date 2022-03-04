@@ -9,6 +9,10 @@
   transition: background var(--transition);
   width: 100%;
 
+  @include mobile {
+    padding: 12px 10px;
+  }
+
   &:hover {
     background: var(--bg-muted);
     text-decoration: none;
