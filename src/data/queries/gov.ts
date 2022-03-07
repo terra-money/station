@@ -4,7 +4,7 @@ import { last } from "ramda"
 import { sentenceCase } from "sentence-case"
 import { Proposal, Vote } from "@terra-money/terra.js"
 import { Color } from "types/components"
-import { queryKey, RefetchOptions } from "../query"
+import { Pagination, queryKey, RefetchOptions } from "../query"
 import { useLCDClient } from "./lcdClient"
 
 export const useVotingParams = () => {
@@ -41,7 +41,10 @@ export const useProposals = (status: Proposal.Status) => {
       // TODO: Pagination
       // Required when the number of results exceed 100
       // About 50 passed propsals from 2019 to 2021
-      const [proposals] = await lcd.gov.proposals({ proposal_status: status })
+      const [proposals] = await lcd.gov.proposals({
+        proposal_status: status,
+        ...Pagination,
+      })
       return proposals
     },
     { ...RefetchOptions.DEFAULT }
