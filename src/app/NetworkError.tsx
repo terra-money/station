@@ -18,7 +18,7 @@ const NetworkError = () => {
       <article>
         <h1 className={styles.title}>
           {network === "mainnet"
-            ? t("Too many request. Try again later.")
+            ? t("Too many requests. Try again later.")
             : isLocalTerra
             ? t("LocalTerra is not running")
             : t(`${network} is not running`)}
