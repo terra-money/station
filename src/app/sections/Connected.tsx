@@ -13,6 +13,7 @@ import { isWallet, useAuth } from "auth"
 import SwitchWallet from "auth/modules/select/SwitchWallet"
 import PopoverNone from "../components/PopoverNone"
 import styles from "./Connected.module.scss"
+import QRCodeButton from "components/general/QRCodeButton"
 
 const Connected = () => {
   const { t } = useTranslation()
@@ -48,6 +49,7 @@ const Connected = () => {
 
               <section>
                 <Copy text={address} />
+                <QRCodeButton />
               </section>
             </Grid>
 
