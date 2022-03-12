@@ -2,16 +2,19 @@ import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import GroupsIcon from "@mui/icons-material/Groups"
+import QrCodeIcon from "@mui/icons-material/QrCode"
 import { truncate } from "@terra.kitchen/utils"
 import { useWallet } from "@terra-money/wallet-provider"
 import { useAddress } from "data/wallet"
 import { useTnsName } from "data/external/tns"
 import { Button, Copy, FinderLink } from "components/general"
-import { Grid } from "components/layout"
+import CopyStyles from "components/general/Copy.module.scss"
+import { Flex, Grid } from "components/layout"
 import { Tooltip, Popover } from "components/display"
 import { isWallet, useAuth } from "auth"
 import SwitchWallet from "auth/modules/select/SwitchWallet"
 import PopoverNone from "../components/PopoverNone"
+import WalletQR from "./WalletQR"
 import styles from "./Connected.module.scss"
 
 const Connected = () => {
@@ -46,9 +49,16 @@ const Connected = () => {
                 </Tooltip>
               </section>
 
-              <section>
+              <Flex gap={4} start>
                 <Copy text={address} />
-              </section>
+                <WalletQR
+                  renderButton={(open) => (
+                    <button className={CopyStyles.button} onClick={open}>
+                      <QrCodeIcon fontSize="inherit" />
+                    </button>
+                  )}
+                />
+              </Flex>
             </Grid>
 
             <SwitchWallet />
