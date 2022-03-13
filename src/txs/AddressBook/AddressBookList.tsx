@@ -1,8 +1,8 @@
-import { ReactNode } from "react"
 import { useTranslation } from "react-i18next"
 import AddIcon from "@mui/icons-material/Add"
 import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined"
 import { truncate } from "@terra.kitchen/utils"
+import { RenderButton } from "types/components"
 import { useAddressBook } from "data/settings/AddressBook"
 import { InternalButton } from "components/general"
 import { Card, Grid } from "components/layout"
@@ -18,7 +18,7 @@ const AddressBookList = ({ onClick }: Props) => {
   const { t } = useTranslation()
   const { list, remove } = useAddressBook()
 
-  const renderModalButton = (renderButton: (open: () => void) => ReactNode) => (
+  const renderModalButton = (renderButton: RenderButton) => (
     <ModalButton title={t("Add a new address")} renderButton={renderButton}>
       <AddAddressBookItem />
     </ModalButton>

@@ -1,8 +1,8 @@
-import { ReactNode } from "react"
 import { useTranslation } from "react-i18next"
 import UsbIcon from "@mui/icons-material/Usb"
 import { ConnectType, useWallet } from "@terra-money/wallet-provider"
 import { STATION } from "config/constants"
+import { RenderButton } from "types/components"
 import { useAddress } from "data/wallet"
 import { Button, ExternalLink } from "components/general"
 import { Grid } from "components/layout"
@@ -14,7 +14,7 @@ import SwitchWallet from "auth/modules/select/SwitchWallet"
 import Connected from "./Connected"
 
 interface Props {
-  renderButton?: (open: () => void) => ReactNode
+  renderButton?: RenderButton
 }
 
 const ConnectWallet = ({ renderButton }: Props) => {

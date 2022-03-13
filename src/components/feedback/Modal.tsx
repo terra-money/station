@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom"
 import ReactModal from "react-modal"
 import classNames from "classnames/bind"
 import CloseIcon from "@mui/icons-material/Close"
+import { RenderButton } from "types/components"
 import createContext from "utils/createContext"
 import { getMaxHeightStyle } from "utils/style"
 import styles from "./Modal.module.scss"
@@ -70,7 +71,7 @@ export default Modal
 export const [useModal, ModalProvider] = createContext<() => void>("useModal")
 
 interface ModalButtonProps extends ModalProps {
-  renderButton: (open: () => void) => ReactNode
+  renderButton: RenderButton
   modalKey?: string
 }
 
