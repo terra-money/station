@@ -5,6 +5,11 @@
   border: solid 1px var(--card-border);
 }
 
+.target {
+  border-bottom: 1px solid var(--card-border);
+  padding-bottom: 10px;
+}
+
 .validators {
   max-height: 180px;
   overflow: auto;

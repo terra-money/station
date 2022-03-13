@@ -7,6 +7,7 @@ export enum SettingKey {
   CustomTokens = "CustomTokens",
   CustomNetworks = "CustomNetworks",
   AddressBook = "AddressBook",
+  WithdrawAs = "WithdrawAs",
 }
 
 const isSystemDarkMode =
@@ -26,6 +27,7 @@ export const DefaultSettings = {
   [SettingKey.CustomTokens]: DefaultCustomTokens as CustomTokens,
   [SettingKey.CustomNetworks]: [] as CustomNetwork[],
   [SettingKey.AddressBook]: [] as AddressBook[],
+  [SettingKey.WithdrawAs]: "",
 }
 
 export const getLocalSetting = <T>(key: SettingKey): T => {

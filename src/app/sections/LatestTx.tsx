@@ -159,6 +159,7 @@ const TxIndicator = ({ txhash }: { txhash: string }) => {
         initLatestTx()
         if (redirectAfterTx) navigate(redirectAfterTx.path)
       }}
+      maxHeight
     >
       {data && (
         <ul className={styles.messages}>

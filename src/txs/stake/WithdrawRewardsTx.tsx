@@ -4,7 +4,7 @@ import { calcRewardsValues, useRewards } from "data/queries/distribution"
 import { useDelegations, useValidators } from "data/queries/staking"
 import { has } from "utils/num"
 import { useCurrency } from "data/settings/Currency"
-import { useMemoizedCalcValue } from "data/queries/oracle"
+import { useActiveDenoms, useMemoizedCalcValue } from "data/queries/oracle"
 import { useIBCWhitelist } from "data/Terra/TerraAssets"
 import { Page, Card } from "components/layout"
 import DelegationsPromote from "app/containers/DelegationsPromote"
@@ -16,12 +16,14 @@ const WithdrawRewardsTx = () => {
   const currency = useCurrency()
   const calcValue = useMemoizedCalcValue()
 
+  const { data: activeDenoms, ...activeDenomsState } = useActiveDenoms()
   const { data: rewards, ...rewardsState } = useRewards()
   const { data: delegations, ...delegationsState } = useDelegations()
   const { data: validators, ...validatorsState } = useValidators()
   const { data: IBCWhitelist, ...IBCWhitelistState } = useIBCWhitelist()
 
   const state = combineState(
+    activeDenomsState,
     rewardsState,
     delegationsState,
     validatorsState,
@@ -29,6 +31,7 @@ const WithdrawRewardsTx = () => {
   )
 
   const render = () => {
+    if (!activeDenoms) return null
     if (!(rewards && delegations && validators && IBCWhitelist)) return null
 
     const { total } = calcRewardsValues(rewards, currency, calcValue)
@@ -46,6 +49,7 @@ const WithdrawRewardsTx = () => {
       <Card>
         <TxContext>
           <WithdrawRewardsForm
+            activeDenoms={activeDenoms}
             rewards={rewards}
             validators={validators}
             IBCWhitelist={IBCWhitelist}
