@@ -26,7 +26,7 @@ export const STAKE_ID = "https://stake.id/#/validator/"
 export const LEDGER_TRANSPORT_TIMEOUT = 120000
 
 /* tx */
-export const DEFAULT_GAS_ADJUSTMENT = 1.75
+export const DEFAULT_GAS_ADJUSTMENT = 2
 
 /* swap */
 export const TERRASWAP_COMMISSION_RATE = 0.003

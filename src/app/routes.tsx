@@ -47,6 +47,9 @@ import Auth from "auth/modules/Auth"
 import ManageNetworksPage from "auth/networks/ManageNetworksPage"
 import AddNetworkPage from "auth/networks/AddNetworkPage"
 
+/* settings */
+import Settings from "pages/Settings"
+
 /* labs */
 import Labs from "pages/labs/Labs"
 
@@ -135,6 +138,7 @@ export const useNav = () => {
     { path: "/auth/*", element: <Auth /> },
     { path: "/networks", element: <ManageNetworksPage /> },
     { path: "/network/new", element: <AddNetworkPage /> },
+    { path: "/settings", element: <Settings /> },
 
     /* dev */
     { path: "/labs", element: <Labs /> },

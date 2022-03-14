@@ -18,10 +18,10 @@ import { CreateTxFailed, TxFailed } from "@terra-money/wallet-provider"
 import { useWallet, useConnectedWallet } from "@terra-money/wallet-provider"
 
 import { Contents } from "types/components"
-import { DEFAULT_GAS_ADJUSTMENT } from "config/constants"
 import { has } from "utils/num"
 import { getAmount, sortCoins } from "utils/coin"
 import { getErrorMessage } from "utils/error"
+import { getLocalSetting, SettingKey } from "utils/localStorage"
 import { useCurrency } from "data/settings/Currency"
 import { queryKey, RefetchOptions } from "data/query"
 import { useAddress, useNetwork } from "data/wallet"
@@ -54,7 +54,6 @@ interface Props<TxValues> {
   initialGasDenom: CoinDenom
   estimationTxValues?: TxValues
   createTx: (values: TxValues) => CreateTxOptions | undefined
-  gasAdjustment?: number
   excludeGasDenom?: (denom: string) => boolean
 
   /* render */
@@ -78,7 +77,6 @@ interface RenderProps<TxValues> {
 function Tx<TxValues>(props: Props<TxValues>) {
   const { token, decimals, amount, balance } = props
   const { initialGasDenom, estimationTxValues, createTx } = props
-  const { gasAdjustment = DEFAULT_GAS_ADJUSTMENT } = props
   const { excludeGasDenom } = props
   const { children, onChangeMax } = props
   const { onPost, redirectAfterTx, queryKeys } = props
@@ -102,6 +100,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   /* simulation: estimate gas */
   const simulationTx = estimationTxValues && createTx(estimationTxValues)
+  const gasAdjustment = getLocalSetting<number>(SettingKey.GasAdjustment)
   const key = {
     address,
     network,
@@ -121,6 +120,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
       const config = {
         ...network,
         URL: network.lcd,
+        gasAdjustment,
         gasPrices: { [initialGasDenom]: gasPrices[initialGasDenom] },
       }
 
@@ -131,7 +131,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
         feeDenoms: [initialGasDenom],
       })
 
-      return Math.ceil(unsignedTx.auth_info.fee.gas_limit * gasAdjustment)
+      return unsignedTx.auth_info.fee.gas_limit
     },
     {
       ...RefetchOptions.INFINITY,
