@@ -7,10 +7,6 @@
 .numbers {
   gap: 36px;
 
-  border-bottom: 1px solid var(--card-border);
-  margin-bottom: 28px;
-  padding-bottom: 28px;
-
   @include desktop {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -22,8 +18,4 @@
   .value {
     font-size: 28px;
   }
-}
-
-.addresses .item {
-  gap: 4px;
 }

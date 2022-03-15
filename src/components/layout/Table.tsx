@@ -49,7 +49,7 @@ function Table<T>({ columns, dataSource, filter, rowKey, ...props }: Props<T>) {
   const renderPagination = () => {
     if (!pagination) return null
     const total = Math.ceil(dataSource.length / pagination)
-    if (!total) return null
+    if (!total || total === 1) return null
     const prevPage = page > 1 ? () => setPage((p) => p - 1) : undefined
     const nextPage = page < total ? () => setPage((p) => p + 1) : undefined
 

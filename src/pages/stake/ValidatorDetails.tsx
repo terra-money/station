@@ -6,6 +6,9 @@ import { useGoBackOnError } from "app/routes"
 import useAddressParams from "./useAddressParams"
 import ValidatorCompact from "./ValidatorCompact"
 import ValidatorSummary from "./ValidatorSummary"
+import ValidatorCommission from "./ValidatorCommission"
+import ValidatorVotes from "./ValidatorVotes"
+import ValidatorAddresses from "./ValidatorAddresses"
 import ValidatorActions from "./ValidatorActions"
 
 const ValidatorDetails = () => {
@@ -24,7 +27,16 @@ const ValidatorDetails = () => {
         columns={[
           <Col>
             <ValidatorCompact />
-            {TerraValidator && <ValidatorSummary validator={TerraValidator} />}
+
+            {TerraValidator && (
+              <>
+                <ValidatorSummary validator={TerraValidator} />
+                <ValidatorCommission validator={TerraValidator} />
+                <ValidatorVotes validator={TerraValidator} />
+              </>
+            )}
+
+            <ValidatorAddresses validator={validator} />
           </Col>,
           <ValidatorActions destination={validator.operator_address} />,
         ]}

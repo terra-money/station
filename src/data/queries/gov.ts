@@ -126,7 +126,7 @@ export const useTally = (id: number) => {
 export const useGetVoteOptionItem = () => {
   const { t } = useTranslation()
 
-  return (status: Vote.Option) =>
+  const getItem = (status: Vote.Option) =>
     ({
       [Vote.Option.VOTE_OPTION_YES]: {
         label: t("Yes"),
@@ -153,6 +153,11 @@ export const useGetVoteOptionItem = () => {
         color: "danger" as Color,
       },
     }[status])
+
+  return (param: Vote.Option | string) => {
+    const option = typeof param === "string" ? Vote.Option[param as any] : param
+    return getItem(option as Vote.Option)
+  }
 }
 
 /* helpers */
