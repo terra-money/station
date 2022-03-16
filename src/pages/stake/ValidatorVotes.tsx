@@ -1,6 +1,7 @@
 import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
+import { reverse } from "ramda"
 import { readPercent } from "@terra.kitchen/utils"
 import { TerraValidator } from "types/validator"
 import { useGetVoteOptionItem } from "data/queries/gov"
@@ -51,7 +52,7 @@ const ValidatorVotes = ({ validator }: { validator: TerraValidator }) => {
                 align: "right",
               },
             ]}
-            dataSource={votes}
+            dataSource={reverse(votes)}
             pagination={5}
             size="small"
           />
