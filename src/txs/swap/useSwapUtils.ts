@@ -161,7 +161,7 @@ const useSwapUtils = () => {
 
       const getAssertMessage = () => {
         if (!getAssertRequired({ offerAsset, askAsset })) return
-        if (!(contracts && minimum_receive)) return
+        if (!(contracts?.assertLimitOrder && minimum_receive)) return
 
         return new MsgExecuteContract(address, contracts.assertLimitOrder, {
           assert_limit_order: {
