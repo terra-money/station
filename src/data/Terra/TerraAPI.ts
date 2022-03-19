@@ -21,6 +21,7 @@ export enum AggregateStakingReturn {
 
 export enum AggregateWallets {
   TOTAL = "total",
+  NEW = "new",
   ACTIVE = "active",
 }
 
@@ -98,7 +99,9 @@ export const useTaxRewards = (type: Aggregate) => {
   return useTerraAPI<ChartDataItem[]>(`chart/tax-rewards/${type}`)
 }
 
-export const useWallets = (walletsType: AggregateWallets, type: Aggregate) => {
+export const useWallets = (walletsType: AggregateWallets) => {
+  const type =
+    walletsType === AggregateWallets.TOTAL ? "cumulative" : "periodic"
   return useTerraAPI<ChartDataItem[]>(`chart/wallets/${walletsType}/${type}`)
 }
 
