@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
 import UsbIcon from "@mui/icons-material/Usb"
-import { ConnectType, useWallet } from "@terra-money/wallet-provider"
+import { useWallet } from "@terra-money/wallet-provider"
 import { STATION } from "config/constants"
 import { RenderButton } from "types/components"
 import { useAddress } from "data/wallet"
@@ -20,9 +20,7 @@ interface Props {
 const ConnectWallet = ({ renderButton }: Props) => {
   const { t } = useTranslation()
 
-  const { connect, install, availableConnections, availableInstallations } =
-    useWallet()
-
+  const { connect, availableConnections, availableInstallations } = useWallet()
   const { available } = useAuth()
 
   const address = useAddress()
