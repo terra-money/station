@@ -20,7 +20,7 @@ interface Props {
 const ConnectWallet = ({ renderButton }: Props) => {
   const { t } = useTranslation()
 
-  const { connect, install, availableConnections, availableInstallTypes } =
+  const { connect, install, availableConnections, availableInstallations } =
     useWallet()
 
   const { available } = useAuth()
@@ -45,12 +45,11 @@ const ConnectWallet = ({ renderButton }: Props) => {
       to: "/auth/ledger",
       children: t("Access with ledger"),
     },
-    ...availableInstallTypes
-      .filter((type) => type === ConnectType.EXTENSION)
-      .map((type) => ({
-        children: t("Install extension"),
-        onClick: () => install(type),
-      })),
+    ...availableInstallations.map(({ name, icon, url }) => ({
+      src: icon,
+      children: t(`Install ${name}`),
+      href: url,
+    })),
   ]
 
   return (

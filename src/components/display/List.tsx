@@ -10,7 +10,8 @@ interface InternalLinkItem {
 }
 
 interface ExternalLinkItem {
-  icon: ReactNode
+  src?: string
+  icon?: ReactNode
   children: string
   href: string
 }
@@ -36,6 +37,7 @@ const List = ({ list }: { list: ListProps }) => {
           <ExternalLink href={item.href} className={styles.item} key={children}>
             {children}
             {item.icon}
+            {item.src && <img src={item.src} alt="" width={24} height={24} />}
           </ExternalLink>
         ) : (
           <button
