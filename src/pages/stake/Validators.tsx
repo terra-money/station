@@ -12,8 +12,9 @@ import { useOracleParams } from "data/queries/oracle"
 import { useValidators } from "data/queries/staking"
 import { useDelegations, useUnbondings } from "data/queries/staking"
 import { getCalcUptime, getCalcVotingPowerRate } from "data/Terra/TerraAPI"
-import { calcSelfDelegation, useTerraValidators } from "data/Terra/TerraAPI"
+import { useTerraValidators } from "data/Terra/TerraAPI"
 import { Page, Card, Table, Flex, Grid } from "components/layout"
+import { Read } from "components/token"
 import WithSearchInput from "pages/custom/WithSearchInput"
 import ProfileIcon from "./components/ProfileIcon"
 import Uptime from "./components/Uptime"
@@ -54,23 +55,21 @@ const Validators = () => {
         )
 
         const voting_power_rate = calcRate(operator_address)
-        const selfDelegation = calcSelfDelegation(TerraValidator)
         const uptime = calcUptime(TerraValidator)
 
         return {
           ...TerraValidator,
           ...validator,
           voting_power_rate,
-          selfDelegation,
           uptime,
         }
       })
       .sort(
         (a, b) =>
+          Number(b.rewards_30d) - Number(a.rewards_30d) ||
           Number(b.uptime) - Number(a.uptime) ||
           Number(a.commission.commission_rates.rate) -
             Number(b.commission.commission_rates.rate) ||
-          Number(b.selfDelegation) - Number(a.selfDelegation) ||
           Number(b.voting_power_rate) - Number(a.voting_power_rate)
       )
   }, [TerraValidators, oracleParams, validators])
@@ -93,11 +92,8 @@ const Validators = () => {
             text.includes(keyword.toLowerCase())
           )
         }}
-        sorter={(a, b) =>
-          Number(a.jailed) - Number(b.jailed) ||
-          Number(!!b.voting_power_rate) - Number(!!a.voting_power_rate)
-        }
-        initialSorterKey="uptime"
+        sorter={(a, b) => Number(a.jailed) - Number(b.jailed)}
+        initialSorterKey="rewards"
         rowKey={({ operator_address }) => operator_address}
         columns={[
           {
@@ -166,16 +162,7 @@ const Validators = () => {
               { voting_power_rate: a = 0 },
               { voting_power_rate: b = 0 }
             ) => a - b,
-            render: (value) => !!value && readPercent(value),
-            align: "right",
-          },
-          {
-            title: t("Self-delegation"),
-            dataIndex: "selfDelegation",
-            defaultSortOrder: "desc",
-            sorter: ({ selfDelegation: a = 0 }, { selfDelegation: b = 0 }) =>
-              a - b,
-            render: (value) => !!value && readPercent(value),
+            render: (value = 0) => readPercent(value),
             align: "right",
           },
           {
@@ -194,9 +181,28 @@ const Validators = () => {
             title: t("Uptime"),
             dataIndex: "uptime",
             defaultSortOrder: "desc",
-            key: "uptime", // initial sorter key
+            key: "uptime",
             sorter: ({ uptime: a = 0 }, { uptime: b = 0 }) => a - b,
             render: (value) => !!value && <Uptime>{value}</Uptime>,
+            align: "right",
+          },
+          {
+            title: t("Rewards"),
+            tooltip: t("Estimated monthly rewards with 100 Luna staked"),
+            dataIndex: "rewards_30d",
+            defaultSortOrder: "desc",
+            key: "rewards", // initial sorter key
+            sorter: ({ rewards_30d: a = "0" }, { rewards_30d: b = "0" }) =>
+              Number(a) - Number(b),
+            render: (value) =>
+              !!value && (
+                <Read
+                  amount={Number(value) * 100}
+                  denom="uluna"
+                  decimals={0}
+                  fixed={6}
+                />
+              ),
             align: "right",
           },
         ]}

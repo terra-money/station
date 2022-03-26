@@ -1,7 +1,7 @@
 import { readPercent } from "@terra.kitchen/utils"
 
 const Uptime = ({ children: value }: { children: number }) => {
-  return <span>{readPercent(value, { fixed: 4 })}</span>
+  return <span>{readPercent(value, { fixed: 2 })}</span>
 }
 
 export default Uptime
