@@ -100,9 +100,11 @@ export const useTaxRewards = (type: Aggregate) => {
 }
 
 export const useWallets = (walletsType: AggregateWallets) => {
-  const type =
-    walletsType === AggregateWallets.TOTAL ? "cumulative" : "periodic"
-  return useTerraAPI<ChartDataItem[]>(`chart/wallets/${walletsType}/${type}`)
+  return useTerraAPI<ChartDataItem[]>(`chart/wallets/${walletsType}`)
+}
+
+export const useSumActiveWallets = () => {
+  return useTerraAPI<Record<string, string>>(`chart/wallets/active/sum`)
 }
 
 /* validators */

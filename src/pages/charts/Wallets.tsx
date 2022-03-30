@@ -1,9 +1,11 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { last } from "ramda"
+import BigNumber from "bignumber.js"
 import capitalize from "@mui/utils/capitalize"
 import { formatNumber } from "@terra.kitchen/utils"
-import { AggregateWallets } from "data/Terra/TerraAPI"
+import { combineState } from "data/query"
+import { AggregateWallets, useSumActiveWallets } from "data/Terra/TerraAPI"
 import { useWallets } from "data/Terra/TerraAPI"
 import { Select } from "components/form"
 import { Card } from "components/layout"
@@ -17,7 +19,11 @@ const Wallets = () => {
 
   /* data */
   const [walletsType, setWalletsType] = useState(AggregateWallets.TOTAL)
-  const { data, ...state } = useWallets(walletsType)
+  const { data, ...dataState } = useWallets(walletsType)
+  const { data: sumActiveWallets, ...sumActiveWalletsState } =
+    useSumActiveWallets()
+
+  const state = combineState(dataState, sumActiveWalletsState)
 
   /* render */
   const renderFilter = () => {
@@ -44,13 +50,21 @@ const Wallets = () => {
       <Range>
         {(range) => {
           const filled = !isCumulative && !range
+          const values = data?.slice(-1 * range).map(({ value }) => value)
+          const total = {
+            [AggregateWallets.TOTAL]: data && last(data)?.value,
+            [AggregateWallets.NEW]:
+              values && BigNumber.sum(...values).toString(),
+            [AggregateWallets.ACTIVE]: sumActiveWallets?.[range],
+          }[walletsType]
+
           return (
             <ChartContainer
               type={isCumulative || filled ? "area" : "bar"}
               filled={filled}
               result={data}
               range={range}
-              total={data && last(data)?.value}
+              total={total}
               unit={t("wallets")}
               formatValue={(value) => formatNumber(value, { prefix: true })}
               formatY={(value) =>
