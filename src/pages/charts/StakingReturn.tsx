@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { last } from "ramda"
-import capitalize from "@mui/utils/capitalize"
+import { capitalize } from "@mui/material"
 import { readPercent } from "@terra.kitchen/utils"
 import { AggregateStakingReturn } from "data/Terra/TerraAPI"
 import { useStakingReturn } from "data/Terra/TerraAPI"

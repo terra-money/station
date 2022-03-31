@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useState } from "react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import classNames from "classnames/bind"
-import capitalize from "@mui/utils/capitalize"
+import { capitalize } from "@mui/material"
 import styles from "./Tabs.module.scss"
 
 const cx = classNames.bind(styles)
