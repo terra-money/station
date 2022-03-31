@@ -88,9 +88,9 @@ const Validators = () => {
         dataSource={activeValidators}
         filter={({ description: { moniker }, operator_address }) => {
           if (!keyword) return true
-          return [moniker.toLowerCase(), operator_address].some((text) =>
-            text.includes(keyword.toLowerCase())
-          )
+          if (moniker.toLowerCase().includes(keyword.toLowerCase())) return true
+          if (operator_address === keyword) return true
+          return false
         }}
         sorter={(a, b) => Number(a.jailed) - Number(b.jailed)}
         initialSorterKey="rewards"
