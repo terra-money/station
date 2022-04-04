@@ -1,6 +1,11 @@
 type Bip = 118 | 330
 
-type Wallet = SingleWallet | PreconfiguredWallet | MultisigWallet | LedgerWallet
+type Wallet =
+  | SingleWallet
+  | PreconfiguredWallet
+  | MultisigWallet
+  | LedgerWallet
+  | RNWallet
 type LocalWallet = SingleWallet | MultisigWallet // wallet with name
 
 interface SingleWallet {
@@ -30,4 +35,10 @@ interface StoredWallet extends SingleWallet {
 
 interface StoredWalletLegacy extends SingleWallet {
   wallet: string
+}
+
+interface RNWallet extends SingleWallet {
+  password: string
+  encryptedKey: string
+  ledger: true
 }

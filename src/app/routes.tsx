@@ -26,6 +26,7 @@ import ProposalDetails from "pages/gov/ProposalDetails"
 
 /* txs */
 import SendTx from "txs/send/SendTx"
+import ConfirmTx from "txs/confirm/ConfirmTx"
 import TransferCW721Tx from "txs/wasm/TransferCW721Tx"
 import SwapTx from "txs/swap/SwapTx"
 import SwapMultipleTx from "txs/swap/SwapMultipleTx"
@@ -127,6 +128,7 @@ export const useNav = () => {
 
     /* txs */
     { path: "/send", element: <SendTx /> },
+    { path: "/confirm", element: <ConfirmTx /> },
     { path: "/nft/transfer", element: <TransferCW721Tx /> },
     { path: "/swap/multiple", element: <SwapMultipleTx /> },
     { path: "/stake/:address", element: <StakeTx /> },

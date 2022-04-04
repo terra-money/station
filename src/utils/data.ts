@@ -6,6 +6,14 @@ export const toBase64 = (object: object) => {
   }
 }
 
+export const fromBase64 = (value: string): string => {
+  try {
+    return Buffer.from(value, "base64").toString()
+  } catch (error) {
+    return ""
+  }
+}
+
 export const parseJSON = (query: string) => {
   try {
     return JSON.parse(query)
