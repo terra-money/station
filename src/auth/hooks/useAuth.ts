@@ -210,6 +210,23 @@ const useAuth = () => {
     return result
   }
 
+  const getSignKey = async (password = "") => {
+    if (!wallet) throw new Error("Wallet is not defined")
+
+    if (is.ledger(wallet)) {
+      const key = await getLedgerKey()
+      return lcd.wallet(key)
+    } else if (is.preconfigured(wallet)) {
+      const key = new MnemonicKey({ mnemonic: wallet.mnemonic })
+      return await lcd.wallet(key)
+    } else {
+      const pk = getKey(password)
+      if (!pk) throw new PasswordError("Incorrect password")
+      const key = new RawKey(Buffer.from(pk, "hex"))
+      return lcd.wallet(key)
+    }
+  }
+
   return {
     wallet,
     wallets,

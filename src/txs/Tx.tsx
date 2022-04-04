@@ -11,7 +11,7 @@ import { head, isNil } from "ramda"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline"
 import { isDenom, isDenomIBC, readDenom } from "@terra.kitchen/utils"
-import { Coin, Coins, LCDClient } from "@terra-money/terra.js"
+import { Coin, Coins, LCDClient, Msg } from "@terra-money/terra.js"
 import { CreateTxOptions, Fee } from "@terra-money/terra.js"
 import { ConnectType, UserDenied } from "@terra-money/wallet-provider"
 import { CreateTxFailed, TxFailed } from "@terra-money/wallet-provider"
@@ -49,6 +49,7 @@ interface Props<TxValues> {
   decimals?: number
   amount?: Amount
   balance?: Amount
+  txData?: any
 
   /* tx simulation */
   initialGasDenom: CoinDenom
@@ -72,10 +73,13 @@ interface RenderProps<TxValues> {
   max: { amount: Amount; render: RenderMax; reset: () => void }
   fee: { render: (descriptions?: Contents) => ReactNode }
   submit: { fn: (values: TxValues) => Promise<void>; button: ReactNode }
+  confirm: { fn: (values: TxValues) => Promise<void>; button: ReactNode }
 }
 
+export default Tx
+
 function Tx<TxValues>(props: Props<TxValues>) {
-  const { token, decimals, amount, balance } = props
+  const { token, decimals, amount, balance, txData } = props
   const { initialGasDenom, estimationTxValues, createTx } = props
   const { excludeGasDenom } = props
   const { children, onChangeMax } = props
@@ -246,6 +250,38 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   const submittingLabel = isWallet.ledger(wallet) ? t("Confirm in ledger") : ""
 
+  const confirm = async () => {
+    setSubmitting(true)
+
+    try {
+      if (disabled) throw new Error(disabled)
+
+      const msgs = txData.params.msgs
+        ? txData.params.msgs.map((data: string) =>
+            Msg.fromData(JSON.parse(data))
+          )
+        : undefined
+
+      const fee = txData.params.fee
+        ? Fee.fromData(JSON.parse(txData.params.fee))
+        : undefined
+
+      console.log(msgs, fee)
+
+      const result = await auth.post({ msgs, fee }, password)
+      console.log("postTx", result)
+      setLatestTx({ txhash: result.txhash, queryKeys, redirectAfterTx })
+
+      onPost?.()
+    } catch (error) {
+      console.log(error)
+      if (error instanceof PasswordError) setIncorrect(error.message)
+      else setError(error as Error)
+    }
+
+    setSubmitting(false)
+  }
+
   /* render */
   const balanceAfterTx =
     balance &&
@@ -401,6 +437,46 @@ function Tx<TxValues>(props: Props<TxValues>) {
     </>
   )
 
+  const confirmButton = (
+    <>
+      {walletError && <FormError>{walletError}</FormError>}
+
+      {!address ? (
+        <ConnectWallet
+          renderButton={(open) => (
+            <Submit type="button" onClick={open}>
+              {t("Connect wallet")}
+            </Submit>
+          )}
+        />
+      ) : (
+        <Grid gap={4}>
+          {passwordRequired && (
+            <FormItem label={t("Password")} error={incorrect}>
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => {
+                  setIncorrect(undefined)
+                  setPassword(e.target.value)
+                }}
+              />
+            </FormItem>
+          )}
+
+          {failed && <FormError>{failed}</FormError>}
+
+          <Submit
+            // disabled={!estimatedGas || !!disabled}
+            submitting={submitting}
+          >
+            {submitting ? submittingLabel : disabled}
+          </Submit>
+        </Grid>
+      )}
+    </>
+  )
+
   const modal = !error
     ? undefined
     : {
@@ -426,6 +502,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
         max: { amount: max ?? "0", render: renderMax, reset: resetMax },
         fee: { render: renderFee },
         submit: { fn: submit, button: submitButton },
+        confirm: { fn: confirm, button: confirmButton },
       })}
 
       {modal && (
@@ -439,8 +516,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
     </>
   )
 }
-
-export default Tx
 
 /* utils */
 export const getInitialGasDenom = (bankBalance: Coins) => {
