@@ -214,6 +214,7 @@ const useAuth = () => {
     wallet,
     wallets,
     getConnectedWallet,
+    getLedgerKey,
     connectedWallet,
     connect,
     connectPreconfigured,

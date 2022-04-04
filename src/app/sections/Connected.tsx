@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import GroupsIcon from "@mui/icons-material/Groups"
 import QrCodeIcon from "@mui/icons-material/QrCode"
+import UsbIcon from "@mui/icons-material/Usb"
 import { truncate } from "@terra.kitchen/utils"
 import { useWallet } from "@terra-money/wallet-provider"
 import { useAddress } from "data/wallet"
@@ -21,7 +22,7 @@ const Connected = () => {
   const { t } = useTranslation()
   const { disconnect } = useWallet()
   const address = useAddress()
-  const { wallet } = useAuth()
+  const { wallet, getLedgerKey } = useAuth()
   const { data: name } = useTnsName(address ?? "")
 
   /* hack to close popover */
@@ -53,11 +54,27 @@ const Connected = () => {
                 <Copy text={address} />
                 <WalletQR
                   renderButton={(open) => (
-                    <button className={CopyStyles.button} onClick={open}>
-                      <QrCodeIcon fontSize="inherit" />
-                    </button>
+                    <Tooltip content={t("Show address as QR code")}>
+                      <button className={CopyStyles.button} onClick={open}>
+                        <QrCodeIcon fontSize="inherit" />
+                      </button>
+                    </Tooltip>
                   )}
                 />
+
+                {isWallet.ledger(wallet) && (
+                  <Tooltip content={t("Show address in Ledger device")}>
+                    <button
+                      className={CopyStyles.button}
+                      onClick={async () => {
+                        const lk = await getLedgerKey()
+                        lk.showAddressAndPubKey()
+                      }}
+                    >
+                      <UsbIcon fontSize="inherit" />
+                    </button>
+                  </Tooltip>
+                )}
               </Flex>
             </Grid>
 
