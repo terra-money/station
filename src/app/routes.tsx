@@ -133,6 +133,10 @@ export const useNav = () => {
     { path: "/contract/store", element: <StoreCodeTx /> },
     { path: "/contract/execute/:contract", element: <ExecuteContractTx /> },
     { path: "/contract/migrate/:contract", element: <MigrateContractTx /> },
+    {
+      path: "/contract/updateadmin/:contract",
+      element: <UpdateAdminContractTx />,
+    },
     { path: "/earn", element: <AnchorEarnTx /> },
 
     /* auth */
