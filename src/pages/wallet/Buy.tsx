@@ -7,6 +7,7 @@ import { ReactComponent as Huobi } from "styles/images/exchanges/Huobi.svg"
 import { ReactComponent as Bitfinex } from "styles/images/exchanges/Bitfinex.svg"
 import Transak from "styles/images/exchanges/Transak.png"
 import Kado from "styles/images/exchanges/Kado.svg"
+import Ramp from "styles/images/exchanges/Ramp.svg"
 import { ListGroup } from "components/display"
 
 export const exchanges = {
@@ -59,6 +60,7 @@ export const exchanges = {
 const TRANSAK_URL = "https://global.transak.com"
 const TRANSAK_API_KEY = "f619d86d-48e0-4f2f-99a1-f827b719ac0b"
 const KADO_URL = "https://ramp.kado.money"
+const RAMP_URL = "https://ramp.network/buy"
 
 const getTransakLink = (denom: "uluna" | "uusd") => {
   const queryString = qs.stringify(
@@ -72,6 +74,13 @@ const getTransakLink = (denom: "uluna" | "uusd") => {
   )
 
   return `${TRANSAK_URL}/?${queryString}`
+}
+
+const getRampLink = (denom: "uluna" | "uusd") => {
+  const url = new URL(RAMP_URL)
+  const defaultAsset = denom === "uluna" ? "TERRA_LUNA" : "TERRA_UST"
+  url.searchParams.append("defaultAsset",  defaultAsset)
+  return url.href
 }
 
 const Buy = ({ token }: { token: "uluna" | "uusd" }) => {
@@ -88,6 +97,12 @@ const Buy = ({ token }: { token: "uluna" | "uusd" }) => {
     icon: <img src={Kado} alt="Kado Ramp" width={24} height={24} />,
   }
 
+  const RAMP = {
+    children: "Ramp",
+    href: getRampLink(token),
+    icon: <img src={Ramp} alt="Ramp" width={24} height={24} />,
+  }
+
   return (
     <ListGroup
       groups={[
@@ -97,7 +112,7 @@ const Buy = ({ token }: { token: "uluna" | "uusd" }) => {
         },
         {
           title: t("Fiat"),
-          list: token === "uusd" ? [TRANSAK, KADO] : [TRANSAK],
+          list: token === "uusd" ? [RAMP, TRANSAK, KADO] : [RAMP, TRANSAK],
         },
       ]}
     />
