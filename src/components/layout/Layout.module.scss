@@ -26,6 +26,7 @@
 
 .banner {
   grid-area: banner;
+  -webkit-app-region: drag;
 }
 
 .sidebar {
