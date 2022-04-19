@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next"
 import { useCallback, useMemo } from "react"
 import { useForm } from "react-hook-form"
 import { toAmount } from "@terra.kitchen/utils"
+import { has } from "utils/num"
 import { getAmount } from "utils/coin"
 import { queryKey } from "data/query"
 import { useBankBalance } from "data/queries/bank"
@@ -48,6 +49,7 @@ const AnchorEarnForm = ({ tab, deposit, rate }: Props) => {
   const createTx = useCallback(
     ({ input }: TxValues) => {
       const amount = toAmount(input)
+      if (!has(amount)) return
       return { msgs: getMsgs(amount, tab) ?? [] }
     },
     [getMsgs, tab]
