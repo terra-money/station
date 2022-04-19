@@ -11,7 +11,7 @@ import { head, isNil } from "ramda"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline"
 import { isDenom, isDenomIBC, readDenom } from "@terra.kitchen/utils"
-import { Coin, Coins, LCDClient, Msg } from "@terra-money/terra.js"
+import { Coin, Coins, LCDClient } from "@terra-money/terra.js"
 import { CreateTxOptions, Fee } from "@terra-money/terra.js"
 import { ConnectType, UserDenied } from "@terra-money/wallet-provider"
 import { CreateTxFailed, TxFailed } from "@terra-money/wallet-provider"
@@ -42,6 +42,7 @@ import { PasswordError } from "auth/scripts/keystore"
 import { toInput } from "./utils"
 import { useTx } from "./TxContext"
 import styles from "./Tx.module.scss"
+import { parseTx, RN_APIS, WebViewMessage } from "../utils/rnModule"
 
 interface Props<TxValues> {
   /* Only when the token is paid out of the balance held */
@@ -256,25 +257,32 @@ function Tx<TxValues>(props: Props<TxValues>) {
     try {
       if (disabled) throw new Error(disabled)
 
-      const msgs = txData.params.msgs
-        ? txData.params.msgs.map((data: string) =>
-            Msg.fromData(JSON.parse(data))
-          )
-        : undefined
+      const tx = parseTx(txData.params)
 
-      const fee = txData.params.fee
-        ? Fee.fromData(JSON.parse(txData.params.fee))
-        : undefined
+      console.log(tx)
 
-      console.log(msgs, fee)
-
-      const result = await auth.post({ msgs, fee }, password)
+      const result = await auth.post(tx, password)
       console.log("postTx", result)
+      // if (isTxError(result)) {
+      //   // rejectWalletConnectRequest
+      //
+      //   throw new Error(result.raw_log)
+      // } else {
       setLatestTx({ txhash: result.txhash, queryKeys, redirectAfterTx })
-
-      onPost?.()
+      console.log("APPROVE_TX", txData.id, result)
+      const res = await WebViewMessage(RN_APIS.APPROVE_TX, {
+        id: txData.id,
+        result,
+      })
+      console.log("APPROVE_TX", res)
+      // }
     } catch (error) {
       console.log(error)
+      const res = await WebViewMessage(RN_APIS.REJECT_TX, {
+        id: txData.id,
+        error,
+      })
+      console.log("REJECT_TX", res)
       if (error instanceof PasswordError) setIncorrect(error.message)
       else setError(error as Error)
     }

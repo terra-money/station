@@ -1,3 +1,5 @@
+import { CreateTxOptions, Fee, Msg } from "@terra-money/terra.js"
+
 declare global {
   interface Window {
     ReactNativeWebView: any
@@ -12,6 +14,8 @@ export const RN_APIS = {
   READY_CONNECT_WALLET: "READY_CONNECT_WALLET",
   CONNECT_WALLET: "CONNECT_WALLET",
   CONFIRM_TX: "CONFIRM_TX",
+  APPROVE_TX: "APPROVE_TX",
+  REJECT_TX: "REJECT_TX",
 } as const
 
 export type RN_API = typeof RN_APIS[keyof typeof RN_APIS] // type
@@ -25,6 +29,8 @@ type RN_API_REQ_TYPES = {
   [RN_APIS.READY_CONNECT_WALLET]: unknown
   [RN_APIS.CONNECT_WALLET]: unknown
   [RN_APIS.CONFIRM_TX]: unknown
+  [RN_APIS.APPROVE_TX]: unknown
+  [RN_APIS.REJECT_TX]: unknown
 }
 
 // 응답 타입
@@ -36,6 +42,55 @@ type RN_API_RES_TYPES = {
   [RN_APIS.READY_CONNECT_WALLET]: string
   [RN_APIS.CONNECT_WALLET]: string
   [RN_APIS.CONFIRM_TX]: string
+  [RN_APIS.APPROVE_TX]: string
+  [RN_APIS.REJECT_TX]: string
+}
+
+/* primitive */
+export interface PrimitiveDefaultRequest {
+  id: number
+  origin: string
+}
+
+export interface PrimitiveTxRequest
+  extends Partial<TxResponse>,
+    PrimitiveDefaultRequest {
+  msgs: string[]
+  fee?: string
+  memo?: string
+}
+
+export interface DefaultRequest extends PrimitiveDefaultRequest {
+  timestamp: Date
+}
+
+export type RequestType = "sign" | "post" | "signBytes"
+
+export interface TxRequest extends DefaultRequest {
+  tx: CreateTxOptions
+  requestType: "sign" | "post"
+}
+
+export interface TxResponse<T = any> {
+  success: boolean
+  result?: T
+  error?: { code: number; message?: string }
+}
+
+export const parseTx = (request: PrimitiveTxRequest): TxRequest["tx"] => {
+  const { msgs, fee, memo } = request
+  const isProto = "@type" in JSON.parse(msgs[0])
+  return isProto
+    ? {
+        msgs: msgs.map((msg) => Msg.fromData(JSON.parse(msg))),
+        fee: fee ? Fee.fromData(JSON.parse(fee)) : undefined,
+        memo,
+      }
+    : {
+        msgs: msgs.map((msg) => Msg.fromAmino(JSON.parse(msg))),
+        fee: fee ? Fee.fromAmino(JSON.parse(fee)) : undefined,
+        memo,
+      }
 }
 
 export const WebViewMessage = async <T extends RN_API>(
