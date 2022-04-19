@@ -67,14 +67,14 @@ const ConfirmForm = ({ action, payload }: Props) => {
     return res
   }
 
-  const readyConnect = useCallback(async () => {
+  const readyConnect = async () => {
     const res = await WebViewMessage(RN_APIS.READY_CONNECT_WALLET, {
       uri: decodeURIComponent(payload),
     })
     console.log("ready connect", res)
 
     setPeerData(res)
-  }, [payload, setPeerData])
+  }
 
   useEffect(() => {
     peerData && setPeerData(null)
@@ -96,7 +96,7 @@ const ConfirmForm = ({ action, payload }: Props) => {
           setMsgs(payload?.params?.msgs.map((item: string) => JSON.parse(item)))
       }
     }
-  }, [action, payload, peerData, readyConnect])
+  }, [action, payload])
 
   return (
     <Auto
