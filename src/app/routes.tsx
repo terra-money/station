@@ -38,6 +38,7 @@ import StoreCodeTx from "txs/wasm/StoreCodeTx"
 import InstantiateContractTx from "txs/wasm/InstantiateContractTx"
 import ExecuteContractTx from "txs/wasm/ExecuteContractTx"
 import MigrateContractTx from "txs/wasm/MigrateContractTx"
+import UpdateAdminContractTx from "txs/wasm/UpdateAdminContractTx"
 import AnchorEarnTx from "txs/earn/AnchorEarnTx"
 import SignMultisigTxPage from "pages/multisig/SignMultisigTxPage"
 import PostMultisigTxPage from "pages/multisig/PostMultisigTxPage"
@@ -132,6 +133,10 @@ export const useNav = () => {
     { path: "/contract/store", element: <StoreCodeTx /> },
     { path: "/contract/execute/:contract", element: <ExecuteContractTx /> },
     { path: "/contract/migrate/:contract", element: <MigrateContractTx /> },
+    {
+      path: "/contract/updateadmin/:contract",
+      element: <UpdateAdminContractTx />,
+    },
     { path: "/earn", element: <AnchorEarnTx /> },
 
     /* auth */

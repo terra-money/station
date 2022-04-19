@@ -36,6 +36,15 @@ const ContractItemActions = () => {
       >
         {t("Migrate")}
       </LinkButton>
+
+      <LinkButton
+        to={`/contract/updateadmin/${address}`}
+        disabled={!admin || connectedAddress !== admin}
+        size="small"
+        outline
+      >
+        {t("Update Admin")}
+      </LinkButton>
     </ExtraActions>
   )
 }
