@@ -11,6 +11,12 @@ import { Form } from "components/form"
 import Tx from "../Tx"
 import { RN_APIS, WebViewMessage } from "../../utils/rnModule"
 import styles from "../../components/form/Form.module.scss"
+import {
+  getStoredSessions,
+  connectorsState,
+  storeSessions,
+} from "../../auth/scripts/sessions"
+import { useRecoilState } from "recoil"
 
 interface TxValues {
   recipient?: string // AccAddress | TNS
@@ -29,6 +35,7 @@ const ConfirmForm = ({ action, payload }: Props) => {
   // const navigate = useNavigate()
   const connectedAddress = useAddress()
   const chainID = useChainID()
+  const [connectors, setConnectors] = useRecoilState(connectorsState)
 
   const [peerData, setPeerData] = useState<any>(null)
   const [tx, setTx] = useState<any>(null)
@@ -53,18 +60,36 @@ const ConfirmForm = ({ action, payload }: Props) => {
     if (invalid) setError("recipient", { type: "invalid", message: invalid })
   }, [invalid, setError])
 
+  const saveSession = (connector: any) => {
+    // setConnectors((ori: any) => {
+    //   return {
+    //     ...ori,
+    //     [connector?.handshakeTopic]: connector,
+    //   }
+    // })
+    const connectors = getStoredSessions()
+
+    const sessions = {
+      ...connectors,
+      [connector.handshakeTopic]: connector,
+    }
+
+    storeSessions(sessions)
+  }
+
   const connectWallet = async () => {
     console.log(payload, chainID, connectedAddress)
-    const res = await WebViewMessage(RN_APIS.CONNECT_WALLET, {
+    const connector = await WebViewMessage(RN_APIS.CONNECT_WALLET, {
       chainID,
       userAddress: connectedAddress,
     })
-    console.log("connectWallet", res)
+    console.log("connectWallet", JSON.stringify(connector))
+    saveSession(connector)
 
-    if (res) {
+    if (connector) {
       alert("wallet connected")
     }
-    return res
+    return connector
   }
 
   const readyConnect = async () => {
@@ -103,7 +128,7 @@ const ConfirmForm = ({ action, payload }: Props) => {
       columns={[
         <Card isFetching={tnsState.isLoading}>
           <Tx {...tx}>
-            {({ max, fee, submit, confirm }) => (
+            {({ confirm }) => (
               <Form onSubmit={handleSubmit(confirm.fn)}>
                 {peerData ? (
                   <dl>

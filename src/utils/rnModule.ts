@@ -1,4 +1,5 @@
 import { CreateTxOptions, Fee, Msg } from "@terra-money/terra.js"
+import { getStoredSessions } from "../auth/scripts/sessions"
 
 declare global {
   interface Window {
@@ -11,6 +12,7 @@ export const RN_APIS = {
   AUTH_BIO: "AUTH_BIO",
   DEEPLINK: "DEEPLINK",
   QR_SCAN: "QR_SCAN",
+  RECOVER_SESSIONS: "RECOVER_SESSIONS",
   READY_CONNECT_WALLET: "READY_CONNECT_WALLET",
   CONNECT_WALLET: "CONNECT_WALLET",
   CONFIRM_TX: "CONFIRM_TX",
@@ -26,6 +28,7 @@ type RN_API_REQ_TYPES = {
   [RN_APIS.AUTH_BIO]: unknown
   [RN_APIS.DEEPLINK]: unknown
   [RN_APIS.QR_SCAN]: unknown
+  [RN_APIS.RECOVER_SESSIONS]: unknown
   [RN_APIS.READY_CONNECT_WALLET]: unknown
   [RN_APIS.CONNECT_WALLET]: unknown
   [RN_APIS.CONFIRM_TX]: unknown
@@ -39,6 +42,7 @@ type RN_API_RES_TYPES = {
   [RN_APIS.AUTH_BIO]: string
   [RN_APIS.DEEPLINK]: string
   [RN_APIS.QR_SCAN]: string
+  [RN_APIS.RECOVER_SESSIONS]: string
   [RN_APIS.READY_CONNECT_WALLET]: string
   [RN_APIS.CONNECT_WALLET]: string
   [RN_APIS.CONFIRM_TX]: string
@@ -91,6 +95,18 @@ export const parseTx = (request: PrimitiveTxRequest): TxRequest["tx"] => {
         fee: fee ? Fee.fromAmino(JSON.parse(fee)) : undefined,
         memo,
       }
+}
+
+export const getWallets = async () => {
+  const wallets = await WebViewMessage(RN_APIS.MIGRATE_KEYSTORE)
+  return wallets
+}
+
+export const recoverSessions = async () => {
+  const sessions = getStoredSessions()
+  console.log("sessions", sessions)
+  const result = await WebViewMessage(RN_APIS.RECOVER_SESSIONS, sessions)
+  return result
 }
 
 export const WebViewMessage = async <T extends RN_API>(

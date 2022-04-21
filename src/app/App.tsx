@@ -25,7 +25,7 @@ import Bio from "./sections/Bio"
 import LatestTx from "./sections/LatestTx"
 import ValidatorButton from "./sections/ValidatorButton"
 import DevTools from "./sections/DevTools"
-import { RN_APIS, WebViewMessage } from "utils/rnModule"
+import { RN_APIS, getWallets, recoverSessions } from "utils/rnModule"
 
 /* init */
 import InitBankBalance from "./InitBankBalance"
@@ -37,16 +37,12 @@ const App = () => {
   const { element: routes } = useNav()
   const navigate = useNavigate()
 
-  const getWallets = async () => {
-    const wallets = await WebViewMessage(RN_APIS.MIGRATE_KEYSTORE)
-    return wallets
-  }
-
   const RNListener = () => {
     const listener = async (event: any) => {
       if (event.data.includes("setImmediate$0")) return
 
       const { data, type } = JSON.parse(event.data)
+
       console.log("Webview", type, data)
       if (type === RN_APIS.DEEPLINK && data?.payload !== "null") {
         navigate("/confirm", {
@@ -65,29 +61,31 @@ const App = () => {
   }
 
   useLayoutEffect(() => {
-    RNListener()
+    if (window.ReactNativeWebView) {
+      RNListener()
+      recoverSessions()
+      getWallets().then((res: any) => {
+        console.log(res)
+        const wallets = getStoredWallets()
+        const walletAddresses = wallets.map((item) => item.address)
 
-    getWallets().then((res: any) => {
-      console.log(res)
-      const wallets = getStoredWallets()
-      const walletAddresses = wallets.map((item) => item.address)
+        const rnWallets = res
+          ?.filter((item: Wallet) => {
+            if (walletAddresses.includes(item.address)) return false
+            else return true
+          })
+          .map((item: RNWallet) => ({
+            name: item.name,
+            address: item.address,
+            encrypted: item.encryptedKey,
+          }))
 
-      const rnWallets = res
-        ?.filter((item: Wallet) => {
-          if (walletAddresses.includes(item.address)) return false
-          else return true
-        })
-        .map((item: RNWallet) => ({
-          name: item.name,
-          address: item.address,
-          encrypted: item.encryptedKey,
-        }))
-
-      // console.log(rnWallets)
-      if (rnWallets?.length) {
-        storeWallets([...wallets, ...rnWallets])
-      }
-    })
+        // console.log(rnWallets)
+        if (rnWallets?.length) {
+          storeWallets([...wallets, ...rnWallets])
+        }
+      })
+    }
   }, [])
 
   return (

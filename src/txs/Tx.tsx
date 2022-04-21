@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { QueryKey, useQuery } from "react-query"
 import { useNavigate } from "react-router-dom"
-import { useRecoilValue, useSetRecoilState } from "recoil"
+import { useRecoilValue, useRecoilState } from "recoil"
 import classNames from "classnames"
 import BigNumber from "bignumber.js"
 import { head, isNil } from "ramda"
@@ -12,7 +12,7 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline"
 import { isDenom, isDenomIBC, readDenom } from "@terra.kitchen/utils"
 import { Coin, Coins, LCDClient } from "@terra-money/terra.js"
-import { CreateTxOptions, Fee } from "@terra-money/terra.js"
+import { CreateTxOptions, Fee, isTxError } from "@terra-money/terra.js"
 import { ConnectType, UserDenied } from "@terra-money/wallet-provider"
 import { CreateTxFailed, TxFailed } from "@terra-money/wallet-provider"
 import { useWallet, useConnectedWallet } from "@terra-money/wallet-provider"
@@ -25,7 +25,7 @@ import { getLocalSetting, SettingKey } from "utils/localStorage"
 import { useCurrency } from "data/settings/Currency"
 import { queryKey, RefetchOptions } from "data/query"
 import { useAddress, useNetwork } from "data/wallet"
-import { isBroadcastingState, latestTxState } from "data/queries/tx"
+import { isBroadcastingState, latestTxState, useTxInfo } from "data/queries/tx"
 import { useBankBalance, useIsWalletEmpty } from "data/queries/bank"
 
 import { Pre } from "components/general"
@@ -43,6 +43,7 @@ import { toInput } from "./utils"
 import { useTx } from "./TxContext"
 import styles from "./Tx.module.scss"
 import { parseTx, RN_APIS, WebViewMessage } from "../utils/rnModule"
+import { SyncTxBroadcastResult } from "@terra-money/terra.js/dist/client/lcd/api/TxAPI"
 
 interface Props<TxValues> {
   /* Only when the token is paid out of the balance held */
@@ -77,6 +78,12 @@ interface RenderProps<TxValues> {
   confirm: { fn: (values: TxValues) => Promise<void>; button: ReactNode }
 }
 
+enum Status {
+  LOADING = "LOADING",
+  SUCCESS = "SUCCESS",
+  FAILURE = "FAILURE",
+}
+
 export default Tx
 
 function Tx<TxValues>(props: Props<TxValues>) {
@@ -98,10 +105,17 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const { wallet, validatePassword, ...auth } = useAuth()
   const address = useAddress()
   const isWalletEmpty = useIsWalletEmpty()
-  const setLatestTx = useSetRecoilState(latestTxState)
+  const [latestTx, setLatestTx] = useRecoilState(latestTxState)
   const isBroadcasting = useRecoilValue(isBroadcastingState)
   const bankBalance = useBankBalance()
   const { gasPrices } = useTx()
+  const { data } = useTxInfo(latestTx)
+
+  const status = !data
+    ? Status.LOADING
+    : isTxError(data)
+    ? Status.FAILURE
+    : Status.SUCCESS
 
   /* simulation: estimate gas */
   const simulationTx = estimationTxValues && createTx(estimationTxValues)
@@ -258,37 +272,54 @@ function Tx<TxValues>(props: Props<TxValues>) {
       if (disabled) throw new Error(disabled)
 
       const tx = parseTx(txData.params)
-
       console.log(tx)
 
       const result = await auth.post(tx, password)
-      console.log("postTx", result)
-      // if (isTxError(result)) {
-      //   // rejectWalletConnectRequest
-      //
-      //   throw new Error(result.raw_log)
-      // } else {
-      setLatestTx({ txhash: result.txhash, queryKeys, redirectAfterTx })
-      console.log("APPROVE_TX", txData.id, result)
-      const res = await WebViewMessage(RN_APIS.APPROVE_TX, {
-        id: txData.id,
-        result,
+      console.log("postTx", result, redirectAfterTx)
+
+      setLatestTx({
+        ...result,
+        // redirectAfterTx: {
+        //   label: 'Confirm',
+        //   path: '/'
+        // }
       })
-      console.log("APPROVE_TX", res)
-      // }
     } catch (error) {
       console.log(error)
-      const res = await WebViewMessage(RN_APIS.REJECT_TX, {
-        id: txData.id,
-        error,
-      })
-      console.log("REJECT_TX", res)
       if (error instanceof PasswordError) setIncorrect(error.message)
       else setError(error as Error)
     }
 
     setSubmitting(false)
   }
+
+  useEffect(() => {
+    console.log("APPROVE_TX", status, latestTx)
+
+    if (latestTx.txhash && txData) {
+      // @ts-ignore
+      if (isTxError(latestTx)) {
+        WebViewMessage(RN_APIS.REJECT_TX, {
+          id: txData.id,
+          handshakeTopic: txData.handshakeTopic,
+          error: {
+            errorCode: 3,
+            message: latestTx.raw_log,
+            txHash: latestTx.txhash,
+            raw_message: latestTx,
+          },
+        })
+      } else {
+        if (status === Status.SUCCESS) {
+          WebViewMessage(RN_APIS.APPROVE_TX, {
+            id: txData.id,
+            handshakeTopic: txData.handshakeTopic,
+            result: latestTx,
+          })
+        }
+      }
+    }
+  }, [status, latestTx, txData])
 
   /* render */
   const balanceAfterTx =
