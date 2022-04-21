@@ -5,6 +5,7 @@ import { ReactComponent as Binance } from "styles/images/exchanges/Binance.svg"
 import { ReactComponent as KuCoin } from "styles/images/exchanges/KuCoin.svg"
 import { ReactComponent as Huobi } from "styles/images/exchanges/Huobi.svg"
 import { ReactComponent as Bitfinex } from "styles/images/exchanges/Bitfinex.svg"
+import { ReactComponent as Kraken } from "styles/images/exchanges/Kraken.svg"
 import Transak from "styles/images/exchanges/Transak.png"
 import Kado from "styles/images/exchanges/Kado.svg"
 import Ramp from "styles/images/exchanges/Ramp.svg"
@@ -53,6 +54,11 @@ export const exchanges = {
       children: "Bitfinex",
       href: "https://trading.bitfinex.com/t/TERRAUST:USD",
       icon: <Bitfinex width={24} height={24} />,
+    },
+    {
+      children: "Kraken",
+      href: "https://www.kraken.com/u/trade?receive=UST&spend=USD",
+      icon: <Kraken width={24} height={24} />,
     },
   ],
 }
