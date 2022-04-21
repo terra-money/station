@@ -57,7 +57,7 @@ export const exchanges = {
     },
     {
       children: "Kraken",
-      href: "https://www.kraken.com/u/trade?receive=UST&spend=USD",
+      href: "https://trade.kraken.com/charts/KRAKEN:UST-USD",
       icon: <Kraken width={24} height={24} />,
     },
   ],
