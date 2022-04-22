@@ -43,44 +43,15 @@ const ConfirmForm = ({ action, payload }: Props) => {
   /* resolve recipient */
   const { ...tnsState } = useTnsAddress("")
 
-  const saveSession = (connector: any) => {
-    const connectors = getStoredSessions()
-
-    const sessions = {
-      ...connectors,
-      [connector.handshakeTopic]: connector,
-    }
-
-    storeSessions(sessions)
-  }
-
-  const connectWallet = async () => {
-    console.log(payload, chainID, connectedAddress)
-    const connector = await WebViewMessage(RN_APIS.CONNECT_WALLET, {
-      chainID,
-      userAddress: connectedAddress,
-    })
-    console.log("connectWallet", JSON.stringify(connector))
-    saveSession(connector)
-
-    if (connector) {
-      alert("wallet connected")
-    }
-    return connector
-  }
-
   const readyConnect = async () => {
     const res = await WebViewMessage(RN_APIS.READY_CONNECT_WALLET, {
       uri: decodeURIComponent(payload),
     })
-    console.log("ready connect", res)
-
     setPeerData(res)
   }
 
   useEffect(() => {
     peerData && setPeerData(null)
-    console.log(payload)
     if (payload) {
       setTx({
         txData: payload,
@@ -100,8 +71,12 @@ const ConfirmForm = ({ action, payload }: Props) => {
       columns={[
         <Card isFetching={tnsState.isLoading}>
           <Tx {...tx}>
-            {({ confirm }) => (
-              <Form onSubmit={handleSubmit(confirm.fn)}>
+            {({ confirm, connect }) => (
+              <Form
+                onSubmit={handleSubmit(
+                  action === "wallet_connect" ? connect.fn : confirm.fn
+                )}
+              >
                 {peerData ? (
                   <dl>
                     {Object.entries(peerData).map(([key, value]) => {
@@ -144,19 +119,7 @@ const ConfirmForm = ({ action, payload }: Props) => {
                     </dl>
                   ))
                 )}
-                <br />
-                <br />
-                {peerData && (
-                  <button
-                    type="button"
-                    className={styles.button}
-                    onClick={connectWallet}
-                  >
-                    Connect
-                  </button>
-                )}
-
-                {confirm.button}
+                {action === "wallet_connect" ? connect.button : confirm.button}
               </Form>
             )}
           </Tx>

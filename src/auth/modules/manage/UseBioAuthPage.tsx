@@ -9,11 +9,9 @@ const UseBioAuthPage = () => {
 
   return (
     <Page title={t("Use Bio Auth")} extra={<GoBack />}>
-      <ConnectedWallet>
-        <Card>
-          <UseBioAuthForm />
-        </Card>
-      </ConnectedWallet>
+      <Card>
+        <UseBioAuthForm />
+      </Card>
     </Page>
   )
 }

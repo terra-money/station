@@ -24,7 +24,7 @@ import { getErrorMessage } from "utils/error"
 import { getLocalSetting, SettingKey } from "utils/localStorage"
 import { useCurrency } from "data/settings/Currency"
 import { queryKey, RefetchOptions } from "data/query"
-import { useAddress, useNetwork } from "data/wallet"
+import { useAddress, useChainID, useNetwork } from "data/wallet"
 import { isBroadcastingState, latestTxState, useTxInfo } from "data/queries/tx"
 import { useBankBalance, useIsWalletEmpty } from "data/queries/bank"
 
@@ -44,6 +44,7 @@ import { useTx } from "./TxContext"
 import styles from "./Tx.module.scss"
 import { parseTx, RN_APIS, WebViewMessage } from "../utils/rnModule"
 import { SyncTxBroadcastResult } from "@terra-money/terra.js/dist/client/lcd/api/TxAPI"
+import { getStoredSessions, storeSessions } from "../auth/scripts/sessions"
 
 interface Props<TxValues> {
   /* Only when the token is paid out of the balance held */
@@ -76,6 +77,7 @@ interface RenderProps<TxValues> {
   fee: { render: (descriptions?: Contents) => ReactNode }
   submit: { fn: (values: TxValues) => Promise<void>; button: ReactNode }
   confirm: { fn: (values: TxValues) => Promise<void>; button: ReactNode }
+  connect: { fn: (values: TxValues) => Promise<void>; button: ReactNode }
 }
 
 enum Status {
@@ -111,6 +113,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const bankBalance = useBankBalance()
   const { gasPrices } = useTx()
   const { data } = useTxInfo(latestTx)
+  const chainID = useChainID()
 
   const status = !data
     ? Status.LOADING
@@ -248,8 +251,14 @@ function Tx<TxValues>(props: Props<TxValues>) {
         const unsignedTx = await auth.create({ ...tx, fee })
         navigate(toPostMultisigTx(unsignedTx))
       } else if (wallet) {
-        const result = await auth.post({ ...tx, fee }, password)
-        setLatestTx({ txhash: result.txhash, queryKeys, redirectAfterTx })
+        if (isUseBio) {
+          const bioKey = await decodeBioAuthKey()
+          const result = await auth.post({ ...tx, fee }, bioKey)
+          setLatestTx({ txhash: result.txhash, queryKeys, redirectAfterTx })
+        } else {
+          const result = await auth.post({ ...tx, fee }, password)
+          setLatestTx({ txhash: result.txhash, queryKeys, redirectAfterTx })
+        }
       } else {
         const { result } = await post({ ...tx, fee })
         setLatestTx({ txhash: result.txhash, queryKeys, redirectAfterTx })
@@ -265,6 +274,30 @@ function Tx<TxValues>(props: Props<TxValues>) {
   }
 
   const submittingLabel = isWallet.ledger(wallet) ? t("Confirm in ledger") : ""
+
+  const saveSession = (connector: any) => {
+    const connectors = getStoredSessions()
+
+    const sessions = {
+      ...connectors,
+      [connector.handshakeTopic]: connector,
+    }
+
+    storeSessions(sessions)
+  }
+
+  const connectSession = async () => {
+    const connector = await WebViewMessage(RN_APIS.CONNECT_WALLET, {
+      chainID,
+      userAddress: address,
+    })
+    console.log("connectWallet", JSON.stringify(connector))
+    saveSession(connector)
+
+    if (connector) {
+      navigate("/")
+    }
+  }
 
   const confirm = async () => {
     setSubmitting(true)
@@ -527,6 +560,12 @@ function Tx<TxValues>(props: Props<TxValues>) {
     </>
   )
 
+  const connectButton = (
+    <Grid gap={4}>
+      <Submit submitting={submitting}>Allow</Submit>
+    </Grid>
+  )
+
   const modal = !error
     ? undefined
     : {
@@ -553,6 +592,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
         fee: { render: renderFee },
         submit: { fn: submit, button: submitButton },
         confirm: { fn: confirm, button: confirmButton },
+        connect: { fn: connectSession, button: connectButton },
       })}
 
       {modal && (
