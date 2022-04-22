@@ -26,7 +26,9 @@ const ConfirmTx = () => {
   }, [state])
 
   return (
-    <Page title={t("Confirm")}>
+    <Page
+      title={action === "wallet_connect" ? t("Wallet Connect") : t("Confirm")}
+    >
       <TxContext>
         {parsedPayload && (
           <ConfirmForm action={action} payload={parsedPayload} />

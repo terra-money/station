@@ -295,7 +295,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
     saveSession(connector)
 
     if (connector) {
-      navigate("/")
+      navigate("/", { replace: true })
     }
   }
 
