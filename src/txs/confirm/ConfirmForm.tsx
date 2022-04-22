@@ -12,6 +12,8 @@ import Tx from "../Tx"
 import { RN_APIS, WebViewMessage } from "../../utils/rnModule"
 import styles from "../../components/form/Form.module.scss"
 import { getStoredSessions, storeSessions } from "../../auth/scripts/sessions"
+import { useNavigate } from "react-router-dom"
+import { replace } from "ramda"
 
 interface TxValues {
   recipient?: string // AccAddress | TNS
@@ -27,8 +29,7 @@ interface Props {
 
 const ConfirmForm = ({ action, payload }: Props) => {
   // const { t } = useTranslation()
-  const connectedAddress = useAddress()
-  const chainID = useChainID()
+  const navigate = useNavigate()
 
   const [peerData, setPeerData] = useState<any>(null)
   const [tx, setTx] = useState<any>(null)
@@ -56,6 +57,10 @@ const ConfirmForm = ({ action, payload }: Props) => {
       setTx({
         txData: payload,
         initialGasDenom: "uluna",
+        onPost() {
+          console.log("onPost")
+          navigate("/", { replace: true })
+        },
       })
       if (action === "wallet_connect") {
         readyConnect()

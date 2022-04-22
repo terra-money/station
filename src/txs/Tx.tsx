@@ -310,21 +310,10 @@ function Tx<TxValues>(props: Props<TxValues>) {
       if (isUseBio) {
         const bioKey = await decodeBioAuthKey()
         const result = await auth.post(tx, bioKey)
-
-        setLatestTx({
-          ...result,
-        })
+        setLatestTx(result)
       } else {
         const result = await auth.post(tx, password)
-        console.log("postTx", result, redirectAfterTx)
-
-        setLatestTx({
-          ...result,
-          // redirectAfterTx: {
-          //   label: 'Confirm',
-          //   path: '/'
-          // }
-        })
+        setLatestTx(result)
       }
     } catch (error) {
       console.log(error)
@@ -334,6 +323,17 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
     setSubmitting(false)
   }
+
+  const approve = useCallback(async () => {
+    const res = await WebViewMessage(RN_APIS.APPROVE_TX, {
+      id: txData.id,
+      handshakeTopic: txData.handshakeTopic,
+      result: latestTx,
+    })
+    if (res) {
+      onPost?.()
+    }
+  }, [latestTx, txData])
 
   useEffect(() => {
     if (latestTx.txhash && txData) {
@@ -351,11 +351,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
         })
       } else {
         if (status === Status.SUCCESS) {
-          WebViewMessage(RN_APIS.APPROVE_TX, {
-            id: txData.id,
-            handshakeTopic: txData.handshakeTopic,
-            result: latestTx,
-          })
+          approve()
         }
       }
     }
