@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react"
+import { useCallback, useEffect, useMemo } from "react"
 import { atom, useRecoilState } from "recoil"
 import { encode } from "js-base64"
 import { CreateTxOptions, Tx, isTxError } from "@terra-money/terra.js"
@@ -17,10 +17,17 @@ import { clearWallet, lockWallet } from "../scripts/keystore"
 import { getStoredWallet, getStoredWallets } from "../scripts/keystore"
 import encrypt from "../scripts/encrypt"
 import useAvailable from "./useAvailable"
+import decrypt from "../scripts/decrypt"
+import { RN_APIS, WebViewMessage } from "../../utils/rnModule"
 
 const walletState = atom({
   key: "wallet",
   default: getWallet(),
+})
+
+const isUseBioState = atom({
+  key: "bio",
+  default: false,
 })
 
 const useAuth = () => {
@@ -28,7 +35,17 @@ const useAuth = () => {
   const available = useAvailable()
 
   const [wallet, setWallet] = useRecoilState(walletState)
+  const [isUseBio, setIsUseBio] = useRecoilState(isUseBioState)
   const wallets = getStoredWallets()
+
+  useEffect(() => {
+    const bioKey = localStorage.getItem("bio_auth_key")
+    if (bioKey) {
+      setIsUseBio(true)
+    } else {
+      setIsUseBio(false)
+    }
+  }, [wallet])
 
   /* connect */
   const connect = useCallback(
@@ -110,6 +127,39 @@ const useAuth = () => {
     const key = getKey(password)
     const data = { name, address, encrypted_key: encrypt(key, password) }
     return encode(JSON.stringify(data))
+  }
+
+  /* manage: bio auth */
+  const disableBioAuth = () => {
+    localStorage.removeItem("timestamp")
+    localStorage.removeItem("bio_auth_key")
+    setIsUseBio(false)
+    return true
+  }
+
+  const encodeBioAuthKey = (password: string) => {
+    const { address } = getConnectedWallet()
+    const timestamp = Date.now()
+    localStorage.setItem("timestamp", String(timestamp))
+    localStorage.setItem(
+      "bio_auth_key",
+      encrypt(password, String(address + timestamp))
+    )
+    setIsUseBio(true)
+    return true
+  }
+
+  const decodeBioAuthKey = async () => {
+    const res = await WebViewMessage(RN_APIS.AUTH_BIO, "test")
+    if (res) {
+      const { address } = getConnectedWallet()
+      const bioKey = localStorage.getItem("bio_auth_key") || ""
+      const timestamp = localStorage.getItem("timestamp")
+      const decrypted = decrypt(bioKey, String(address + timestamp))
+      return decrypted
+    } else {
+      throw new Error("failed bio")
+    }
   }
 
   /* form */
@@ -213,6 +263,7 @@ const useAuth = () => {
   return {
     wallet,
     wallets,
+    isUseBio,
     getConnectedWallet,
     getLedgerKey,
     connectedWallet,
@@ -223,6 +274,9 @@ const useAuth = () => {
     lock,
     available,
     encodeEncryptedWallet,
+    encodeBioAuthKey,
+    decodeBioAuthKey,
+    disableBioAuth,
     validatePassword,
     createSignature,
     create,

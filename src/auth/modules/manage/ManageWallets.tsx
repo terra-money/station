@@ -6,6 +6,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
 import FactCheckOutlinedIcon from "@mui/icons-material/FactCheckOutlined"
 import LogoutIcon from "@mui/icons-material/Logout"
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
+import FingerprintIcon from "@mui/icons-material/Fingerprint"
 import { Col, Page } from "components/layout"
 import is from "../../scripts/is"
 import useAuth from "../../hooks/useAuth"
@@ -65,13 +66,19 @@ export const useManageWallet = () => {
     icon: <LockOutlinedIcon />,
   }
 
+  const useBioAuth = {
+    to: "/auth/bio",
+    children: t("Use Bio Auth"),
+    icon: <FingerprintIcon />,
+  }
+
   if (!wallet) return
 
   return is.multisig(wallet)
     ? [toPostMultisig, toDelete, disconnectWallet]
     : is.ledger(wallet)
     ? [toSignMultisig, disconnectWallet]
-    : [toExport, toPassword, toDelete, toSignMultisig, lockWallet]
+    : [useBioAuth, toExport, toPassword, toDelete, toSignMultisig, lockWallet]
 }
 
 const ManageWallets = () => {

@@ -11,12 +11,7 @@ import { Form } from "components/form"
 import Tx from "../Tx"
 import { RN_APIS, WebViewMessage } from "../../utils/rnModule"
 import styles from "../../components/form/Form.module.scss"
-import {
-  getStoredSessions,
-  connectorsState,
-  storeSessions,
-} from "../../auth/scripts/sessions"
-import { useRecoilState } from "recoil"
+import { getStoredSessions, storeSessions } from "../../auth/scripts/sessions"
 
 interface TxValues {
   recipient?: string // AccAddress | TNS
@@ -32,10 +27,8 @@ interface Props {
 
 const ConfirmForm = ({ action, payload }: Props) => {
   // const { t } = useTranslation()
-  // const navigate = useNavigate()
   const connectedAddress = useAddress()
   const chainID = useChainID()
-  const [connectors, setConnectors] = useRecoilState(connectorsState)
 
   const [peerData, setPeerData] = useState<any>(null)
   const [tx, setTx] = useState<any>(null)
@@ -50,23 +43,7 @@ const ConfirmForm = ({ action, payload }: Props) => {
   /* resolve recipient */
   const { ...tnsState } = useTnsAddress("")
 
-  // validate(tns): not found
-  const invalid = ""
-
-  // const disabled =
-  //   invalid || (tnsState.isLoading && t("Searching for address..."))
-
-  useEffect(() => {
-    if (invalid) setError("recipient", { type: "invalid", message: invalid })
-  }, [invalid, setError])
-
   const saveSession = (connector: any) => {
-    // setConnectors((ori: any) => {
-    //   return {
-    //     ...ori,
-    //     [connector?.handshakeTopic]: connector,
-    //   }
-    // })
     const connectors = getStoredSessions()
 
     const sessions = {
@@ -108,11 +85,6 @@ const ConfirmForm = ({ action, payload }: Props) => {
       setTx({
         txData: payload,
         initialGasDenom: "uluna",
-        // onPost: async (id: any, result: any) => {
-        //   console.log('onPost', id, result)
-        //   const res = await WebViewMessage(RN_APIS.APPROVE_TX, { id, result })
-        //   console.log('onPost', res)
-        // }
       })
       if (action === "wallet_connect") {
         readyConnect()

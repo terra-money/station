@@ -102,7 +102,8 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const network = useNetwork()
   const { post } = useWallet()
   const connectedWallet = useConnectedWallet()
-  const { wallet, validatePassword, ...auth } = useAuth()
+  const { wallet, validatePassword, isUseBio, decodeBioAuthKey, ...auth } =
+    useAuth()
   const address = useAddress()
   const isWalletEmpty = useIsWalletEmpty()
   const [latestTx, setLatestTx] = useRecoilState(latestTxState)
@@ -208,7 +209,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
   }, [failed, simulationTx])
 
   /* submit */
-  const passwordRequired = isWallet.single(wallet)
+  const passwordRequired = !isUseBio && isWallet.single(wallet)
   const [password, setPassword] = useState("")
   const [incorrect, setIncorrect] = useState<string>()
 
@@ -273,17 +274,25 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
       const tx = parseTx(txData.params)
       console.log(tx)
+      if (isUseBio) {
+        const bioKey = await decodeBioAuthKey()
+        const result = await auth.post(tx, bioKey)
 
-      const result = await auth.post(tx, password)
-      console.log("postTx", result, redirectAfterTx)
+        setLatestTx({
+          ...result,
+        })
+      } else {
+        const result = await auth.post(tx, password)
+        console.log("postTx", result, redirectAfterTx)
 
-      setLatestTx({
-        ...result,
-        // redirectAfterTx: {
-        //   label: 'Confirm',
-        //   path: '/'
-        // }
-      })
+        setLatestTx({
+          ...result,
+          // redirectAfterTx: {
+          //   label: 'Confirm',
+          //   path: '/'
+          // }
+        })
+      }
     } catch (error) {
       console.log(error)
       if (error instanceof PasswordError) setIncorrect(error.message)
@@ -294,8 +303,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
   }
 
   useEffect(() => {
-    console.log("APPROVE_TX", status, latestTx)
-
     if (latestTx.txhash && txData) {
       // @ts-ignore
       if (isTxError(latestTx)) {
@@ -490,7 +497,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
         />
       ) : (
         <Grid gap={4}>
-          {passwordRequired && (
+          {!isUseBio && passwordRequired && (
             <FormItem label={t("Password")} error={incorrect}>
               <Input
                 type="password"
@@ -509,7 +516,11 @@ function Tx<TxValues>(props: Props<TxValues>) {
             // disabled={!estimatedGas || !!disabled}
             submitting={submitting}
           >
-            {submitting ? submittingLabel : disabled}
+            {submitting
+              ? submittingLabel
+              : isUseBio
+              ? submittingLabel
+              : disabled}
           </Submit>
         </Grid>
       )}
