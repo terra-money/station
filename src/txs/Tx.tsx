@@ -38,13 +38,16 @@ import ConnectWallet from "app/sections/ConnectWallet"
 import useToPostMultisigTx from "pages/multisig/utils/useToPostMultisigTx"
 import { isWallet, useAuth } from "auth"
 import { PasswordError } from "auth/scripts/keystore"
+import {
+  getStoredSessions,
+  Sessions,
+  storeSessions,
+} from "auth/scripts/sessions"
 
 import { toInput } from "./utils"
+import { parseTx, RN_APIS, WebViewMessage } from "utils/rnModule"
 import { useTx } from "./TxContext"
 import styles from "./Tx.module.scss"
-import { parseTx, RN_APIS, WebViewMessage } from "../utils/rnModule"
-import { SyncTxBroadcastResult } from "@terra-money/terra.js/dist/client/lcd/api/TxAPI"
-import { getStoredSessions, storeSessions } from "../auth/scripts/sessions"
 
 interface Props<TxValues> {
   /* Only when the token is paid out of the balance held */
@@ -275,29 +278,29 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   const submittingLabel = isWallet.ledger(wallet) ? t("Confirm in ledger") : ""
 
-  const saveSession = (connector: any) => {
+  const saveSession = (address: string, connector: any) => {
     const connectors = getStoredSessions()
 
-    const sessions = {
-      ...connectors,
+    const sessions: Sessions = {
+      ...connectors?.[address],
       [connector.handshakeTopic]: connector,
     }
 
     storeSessions(sessions)
   }
 
-  const connectSession = async () => {
+  const connectSession = useCallback(async () => {
     const connector = await WebViewMessage(RN_APIS.CONNECT_WALLET, {
       chainID,
       userAddress: address,
     })
-    console.log("connectWallet", JSON.stringify(connector))
-    saveSession(connector)
+    console.log("connectWallet", address, JSON.stringify(connector))
+    saveSession(address as string, connector)
 
     if (connector) {
       navigate("/", { replace: true })
     }
-  }
+  }, [address])
 
   const confirm = async () => {
     setSubmitting(true)
@@ -309,8 +312,12 @@ function Tx<TxValues>(props: Props<TxValues>) {
       console.log(tx)
       if (isUseBio) {
         const bioKey = await decodeBioAuthKey()
-        const result = await auth.post(tx, bioKey)
-        setLatestTx(result)
+        if (bioKey) {
+          const result = await auth.post(tx, bioKey)
+          setLatestTx(result)
+        } else {
+          throw new Error("failed bio")
+        }
       } else {
         const result = await auth.post(tx, password)
         setLatestTx(result)

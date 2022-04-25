@@ -1,19 +1,15 @@
-import { Fragment, useCallback, useEffect, useState } from "react"
+import { Fragment, useEffect, useState } from "react"
 // import { useTranslation } from "react-i18next"
 // import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 
 import { AccAddress } from "@terra-money/terra.js"
-import { useAddress, useChainID } from "data/wallet"
 import { useTnsAddress } from "data/external/tns"
 import { Auto, Card } from "components/layout"
 import { Form } from "components/form"
 import Tx from "../Tx"
-import { RN_APIS, WebViewMessage } from "../../utils/rnModule"
-import styles from "../../components/form/Form.module.scss"
-import { getStoredSessions, storeSessions } from "../../auth/scripts/sessions"
+import { RN_APIS, WebViewMessage } from "utils/rnModule"
 import { useNavigate } from "react-router-dom"
-import { replace } from "ramda"
 
 interface TxValues {
   recipient?: string // AccAddress | TNS
@@ -37,7 +33,7 @@ const ConfirmForm = ({ action, payload }: Props) => {
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })
-  const { setError, handleSubmit } = form
+  const { handleSubmit } = form
   // const { formState } = form
   // const { errors } = formState
 
@@ -107,9 +103,9 @@ const ConfirmForm = ({ action, payload }: Props) => {
                   msgs &&
                   msgs.map((msg: any) => (
                     <dl key={msg.contact}>
-                      {Object.entries(msg).map(([key, value]) => {
+                      {Object.entries(msg).map(([key, value], idx) => {
                         return (
-                          <Fragment key={key}>
+                          <Fragment key={`${key}-${idx}`}>
                             <dt>{key}</dt>
                             <dd
                               style={{

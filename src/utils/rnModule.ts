@@ -13,6 +13,7 @@ export const RN_APIS = {
   DEEPLINK: "DEEPLINK",
   QR_SCAN: "QR_SCAN",
   RECOVER_SESSIONS: "RECOVER_SESSIONS",
+  DISCONNECT_SESSIONS: "DISCONNECT_SESSIONS",
   READY_CONNECT_WALLET: "READY_CONNECT_WALLET",
   CONNECT_WALLET: "CONNECT_WALLET",
   CONFIRM_TX: "CONFIRM_TX",
@@ -29,6 +30,7 @@ type RN_API_REQ_TYPES = {
   [RN_APIS.DEEPLINK]: unknown
   [RN_APIS.QR_SCAN]: unknown
   [RN_APIS.RECOVER_SESSIONS]: unknown
+  [RN_APIS.DISCONNECT_SESSIONS]: unknown
   [RN_APIS.READY_CONNECT_WALLET]: unknown
   [RN_APIS.CONNECT_WALLET]: unknown
   [RN_APIS.CONFIRM_TX]: unknown
@@ -43,6 +45,7 @@ type RN_API_RES_TYPES = {
   [RN_APIS.DEEPLINK]: string
   [RN_APIS.QR_SCAN]: string
   [RN_APIS.RECOVER_SESSIONS]: string
+  [RN_APIS.DISCONNECT_SESSIONS]: string
   [RN_APIS.READY_CONNECT_WALLET]: string
   [RN_APIS.CONNECT_WALLET]: string
   [RN_APIS.CONFIRM_TX]: string
@@ -102,10 +105,11 @@ export const getWallets = async () => {
   return wallets
 }
 
-export const recoverSessions = async () => {
+export const recoverSessions = async (address: string) => {
   const sessions = getStoredSessions()
-  console.log("sessions", sessions)
-  const result = await WebViewMessage(RN_APIS.RECOVER_SESSIONS, sessions)
+  const currentSessions = sessions?.[address] || null
+  console.log("recoverSessions", currentSessions)
+  const result = await WebViewMessage(RN_APIS.RECOVER_SESSIONS, currentSessions)
   return result
 }
 

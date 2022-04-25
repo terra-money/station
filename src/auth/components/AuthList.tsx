@@ -1,12 +1,15 @@
-import { ReactNode } from "react"
+import { ReactNode, useEffect } from "react"
 import { Link } from "react-router-dom"
 import styles from "./AuthList.module.scss"
+import { RN_APIS, WebViewMessage } from "../../utils/rnModule"
 
 type Item =
   | { to: string; children: string; icon: ReactNode }
   | { onClick: () => void; children: string; icon: ReactNode }
 
 const AuthList = ({ list }: { list: Item[] }) => {
+  useEffect(() => {})
+
   const renderItem = ({ children, icon, ...props }: Item) => {
     if ("onClick" in props) {
       const { onClick } = props

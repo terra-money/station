@@ -36,14 +36,32 @@ export const getStoredWallet = (name: string) => {
   return wallet
 }
 
-/* stored dapps */
-export const getStoredDapps = () => {
-  const dapps = localStorage.getItem("dapps") ?? "[]"
-  return JSON.parse(dapps) as any[]
+/* stored bio keys */
+export const getBioKeys = () => {
+  const keys = localStorage.getItem("bio_auth_key") ?? "{}"
+  return JSON.parse(keys) as any
 }
 
-export const storeDapps = (dapps: any[]) => {
-  localStorage.setItem("dapps", JSON.stringify(dapps))
+export const getBioStamps = () => {
+  const timestamp = localStorage.getItem("timestamp") ?? "{}"
+  return JSON.parse(timestamp) as any
+}
+
+export const setBioKeys = (keys: any) => {
+  localStorage.setItem("bio_auth_key", JSON.stringify(keys))
+}
+
+export const setBioStamps = (stamps: any) => {
+  localStorage.setItem("timestamp", JSON.stringify(stamps))
+}
+
+export const getBioState = () => {
+  const user = getWallet()
+  if (!user) return false
+  const keys = getBioKeys()
+  if (!keys) return false
+
+  return keys?.[user.address] ? true : false
 }
 
 interface Params {

@@ -17,6 +17,7 @@ import Aside from "./sections/Aside"
 import Refresh from "./sections/Refresh"
 import Preferences from "./sections/Preferences"
 import SelectTheme from "./sections/SelectTheme"
+import WalletConnect from "./sections/WalletConnect"
 import ConnectWallet from "./sections/ConnectWallet"
 // import QRScan from "./sections/QRScan"
 // import Bio from "./sections/Bio"
@@ -25,12 +26,16 @@ import ConnectWallet from "./sections/ConnectWallet"
 import LatestTx from "./sections/LatestTx"
 import ValidatorButton from "./sections/ValidatorButton"
 import DevTools from "./sections/DevTools"
-import { RN_APIS, getWallets, recoverSessions } from "utils/rnModule"
+import { RN_APIS, getWallets, recoverSessions } from "../utils/rnModule"
 
 /* init */
 import InitBankBalance from "./InitBankBalance"
 import { useLayoutEffect } from "react"
-import { getStoredWallets, storeWallets } from "../auth/scripts/keystore"
+import {
+  getStoredWallets,
+  getWallet,
+  storeWallets,
+} from "../auth/scripts/keystore"
 import { useNavigate } from "react-router-dom"
 
 const App = () => {
@@ -63,7 +68,7 @@ const App = () => {
   useLayoutEffect(() => {
     if (window.ReactNativeWebView) {
       RNListener()
-      recoverSessions()
+
       getWallets().then((res: any) => {
         console.log(res)
         const wallets = getStoredWallets()
@@ -85,6 +90,12 @@ const App = () => {
           storeWallets([...wallets, ...rnWallets])
         }
       })
+
+      const wallet = getWallet()
+      if (wallet) {
+        console.log("wallet", wallet)
+        recoverSessions(wallet?.address)
+      }
     }
   }, [])
 
@@ -105,8 +116,8 @@ const App = () => {
           <Refresh />
           <Preferences />
           <SelectTheme />
+          <WalletConnect />
           {/*<QRScan />*/}
-          {/*<Bio />*/}
         </section>
         <ValidatorButton />
         <ConnectWallet />

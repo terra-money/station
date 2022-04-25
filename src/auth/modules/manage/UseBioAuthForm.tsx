@@ -1,23 +1,11 @@
-import { useCallback, useEffect, useLayoutEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
-import { Pre } from "components/general"
-import { Grid } from "components/layout"
-import { Form, FormItem, FormWarning } from "components/form"
-import { Input, RadioButton, Submit } from "components/form"
-import { Modal } from "components/feedback"
+import { Form, FormItem } from "components/form"
+import { Input, Submit } from "components/form"
 import useAuth from "../../hooks/useAuth"
-import QRCode from "../../components/QRCode"
-import encrypt from "../../scripts/encrypt"
 import { RN_APIS, WebViewMessage } from "../../../utils/rnModule"
 
-enum Mode {
-  QR = "QR code",
-  KEY = "Private key",
-}
-
 interface Values {
-  mode: Mode
   password: string
 }
 
@@ -35,11 +23,9 @@ const UseBioAuthForm = () => {
 
   const submitAble = async ({ password }: Values) => {
     if (!password) return
-    const res = await WebViewMessage(RN_APIS.AUTH_BIO, "test")
+    const res = await WebViewMessage(RN_APIS.AUTH_BIO)
     if (res) {
       encodeBioAuthKey(password)
-      // const key = decodeBioAuthKey()
-      // console.log(key)
     } else {
       setError("password", { type: "invalid", message: "failed bio" })
     }

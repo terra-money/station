@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from "react"
+import { useCallback, useMemo } from "react"
 import { atom, useRecoilState } from "recoil"
 import { encode } from "js-base64"
 import { CreateTxOptions, Tx, isTxError } from "@terra-money/terra.js"
@@ -10,15 +10,22 @@ import { LEDGER_TRANSPORT_TIMEOUT } from "config/constants"
 import { useChainID } from "data/wallet"
 import { useLCDClient } from "data/queries/lcdClient"
 import is from "../scripts/is"
-import { PasswordError } from "../scripts/keystore"
+import {
+  getBioStamps,
+  PasswordError,
+  setBioKeys,
+  setBioStamps,
+} from "../scripts/keystore"
 import { getDecryptedKey, testPassword } from "../scripts/keystore"
 import { getWallet, storeWallet } from "../scripts/keystore"
 import { clearWallet, lockWallet } from "../scripts/keystore"
 import { getStoredWallet, getStoredWallets } from "../scripts/keystore"
+import { getBioState, getBioKeys } from "../scripts/keystore"
 import encrypt from "../scripts/encrypt"
 import useAvailable from "./useAvailable"
 import decrypt from "../scripts/decrypt"
-import { RN_APIS, WebViewMessage } from "../../utils/rnModule"
+import { recoverSessions, RN_APIS, WebViewMessage } from "../../utils/rnModule"
+import { removeSessions } from "../scripts/sessions"
 
 const walletState = atom({
   key: "wallet",
@@ -27,7 +34,7 @@ const walletState = atom({
 
 const isUseBioState = atom({
   key: "bio",
-  default: false,
+  default: getBioState(),
 })
 
 const useAuth = () => {
@@ -38,14 +45,19 @@ const useAuth = () => {
   const [isUseBio, setIsUseBio] = useRecoilState(isUseBioState)
   const wallets = getStoredWallets()
 
-  useEffect(() => {
-    const bioKey = localStorage.getItem("bio_auth_key")
+  const initBio = async (address: string) => {
+    const keys = getBioKeys()
+    const bioKey = keys?.[address]
     if (bioKey) {
+      await WebViewMessage(RN_APIS.DISCONNECT_SESSIONS)
+      removeSessions()
+
       setIsUseBio(true)
+      recoverSessions(address)
     } else {
       setIsUseBio(false)
     }
-  }, [wallet])
+  }
 
   /* connect */
   const connect = useCallback(
@@ -61,6 +73,7 @@ const useAuth = () => {
 
       storeWallet(wallet)
       setWallet(wallet)
+      initBio(address)
     },
     [setWallet]
   )
@@ -131,8 +144,16 @@ const useAuth = () => {
 
   /* manage: bio auth */
   const disableBioAuth = () => {
-    localStorage.removeItem("timestamp")
-    localStorage.removeItem("bio_auth_key")
+    const { address } = getConnectedWallet()
+    const storedBioKey = getBioKeys()
+    const storedTimestamp = getBioStamps()
+
+    delete storedBioKey?.[address]
+    delete storedTimestamp?.[address]
+
+    setBioKeys(storedTimestamp)
+    setBioStamps(storedBioKey)
+
     setIsUseBio(false)
     return true
   }
@@ -140,22 +161,33 @@ const useAuth = () => {
   const encodeBioAuthKey = (password: string) => {
     const { address } = getConnectedWallet()
     const timestamp = Date.now()
-    localStorage.setItem("timestamp", String(timestamp))
-    localStorage.setItem(
-      "bio_auth_key",
-      encrypt(password, String(address + timestamp))
-    )
+
+    const storedBioKey = getBioKeys()
+    const storedTimestamp = getBioStamps()
+
+    setBioKeys({
+      ...storedBioKey,
+      [address]: encrypt(password, String(timestamp)),
+    })
+    setBioStamps({
+      ...storedTimestamp,
+      [address]: String(timestamp),
+    })
     setIsUseBio(true)
     return true
   }
 
   const decodeBioAuthKey = async () => {
-    const res = await WebViewMessage(RN_APIS.AUTH_BIO, "test")
+    const res = await WebViewMessage(RN_APIS.AUTH_BIO)
     if (res) {
       const { address } = getConnectedWallet()
-      const bioKey = localStorage.getItem("bio_auth_key") || ""
-      const timestamp = localStorage.getItem("timestamp")
-      const decrypted = decrypt(bioKey, String(address + timestamp))
+      const storedBioKey = getBioKeys()?.[address]
+      console.log("decodeBioAuthKey1", storedBioKey)
+
+      const storedTimestamp = getBioStamps()?.[address]
+      console.log("decodeBioAuthKey2", storedTimestamp)
+      const decrypted = decrypt(storedBioKey, storedTimestamp)
+      console.log("decodeBioAuthKey3", decrypted)
       return decrypted
     } else {
       throw new Error("failed bio")

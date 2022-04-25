@@ -12,6 +12,7 @@ import is from "../../scripts/is"
 import useAuth from "../../hooks/useAuth"
 import AuthList from "../../components/AuthList"
 import ConnectedWallet from "./ConnectedWallet"
+import { RN_APIS, WebViewMessage } from "../../../utils/rnModule"
 
 export const useManageWallet = () => {
   const { t } = useTranslation()
