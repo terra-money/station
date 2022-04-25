@@ -11,7 +11,7 @@ import { combineState } from "data/query"
 import { useOracleParams } from "data/queries/oracle"
 import { useValidators } from "data/queries/staking"
 import { useDelegations, useUnbondings } from "data/queries/staking"
-import { getCalcUptime, getCalcVotingPowerRate } from "data/Terra/TerraAPI"
+import { getCalcVotingPowerRate } from "data/Terra/TerraAPI"
 import { useTerraValidators } from "data/Terra/TerraAPI"
 import { Page, Card, Table, Flex, Grid } from "components/layout"
 import { Read } from "components/token"
@@ -43,7 +43,6 @@ const Validators = () => {
     if (!(oracleParams && validators && TerraValidators)) return null
 
     const calcRate = getCalcVotingPowerRate(TerraValidators)
-    const calcUptime = getCalcUptime(oracleParams)
 
     return validators
       .filter(({ status }) => !getIsUnbonded(status))
@@ -55,19 +54,17 @@ const Validators = () => {
         )
 
         const voting_power_rate = calcRate(operator_address)
-        const uptime = calcUptime(TerraValidator)
 
         return {
           ...TerraValidator,
           ...validator,
           voting_power_rate,
-          uptime,
         }
       })
       .sort(
         (a, b) =>
           Number(b.rewards_30d) - Number(a.rewards_30d) ||
-          Number(b.uptime) - Number(a.uptime) ||
+          Number(b.time_weighted_uptime) - Number(a.time_weighted_uptime) ||
           Number(a.commission.commission_rates.rate) -
             Number(b.commission.commission_rates.rate) ||
           Number(b.voting_power_rate) - Number(a.voting_power_rate)
@@ -179,10 +176,14 @@ const Validators = () => {
           },
           {
             title: t("Uptime"),
-            dataIndex: "uptime",
+            tooltip: t("90 days uptime EMA"),
+            dataIndex: "time_weighted_uptime",
             defaultSortOrder: "desc",
             key: "uptime",
-            sorter: ({ uptime: a = 0 }, { uptime: b = 0 }) => a - b,
+            sorter: (
+              { time_weighted_uptime: a = 0 },
+              { time_weighted_uptime: b = 0 }
+            ) => a - b,
             render: (value) => !!value && <Uptime>{value}</Uptime>,
             align: "right",
           },

@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next"
 import { readPercent } from "@terra.kitchen/utils"
 import { TerraValidator } from "types/validator"
-import { useUptime } from "data/Terra/TerraAPI"
 import { Card } from "components/layout"
 import { ToNow } from "components/display"
 import ValidatorNumbers from "./components/ValidatorNumbers"
@@ -12,8 +11,6 @@ const ValidatorCommission = ({ validator }: { validator: TerraValidator }) => {
   const { commission } = validator
   const { commission_rates, update_time } = commission
   const { max_change_rate, max_rate, rate } = commission_rates
-
-  const { data: uptime, ...uptimeState } = useUptime(validator)
 
   const commissions = [
     {
@@ -35,7 +32,7 @@ const ValidatorCommission = ({ validator }: { validator: TerraValidator }) => {
   ]
 
   return (
-    <Card {...uptimeState} title={t("Commission")} bordered>
+    <Card title={t("Commission")} bordered>
       <ValidatorNumbers contents={commissions} />
     </Card>
   )

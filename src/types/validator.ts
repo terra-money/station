@@ -9,6 +9,7 @@ export interface TerraValidator extends Validator.Data {
   self?: string
   votes?: Vote[]
   rewards_30d?: string
+  time_weighted_uptime?: number
 }
 
 interface Vote {
