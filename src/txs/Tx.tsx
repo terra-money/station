@@ -282,7 +282,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
     const connectors = getStoredSessions()
 
     const sessions: Sessions = {
-      ...connectors?.[address],
+      ...connectors,
       [connector.handshakeTopic]: connector,
     }
 
@@ -294,7 +294,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
       chainID,
       userAddress: address,
     })
-    console.log("connectWallet", address, JSON.stringify(connector))
     saveSession(address as string, connector)
 
     if (connector) {
@@ -309,7 +308,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
       if (disabled) throw new Error(disabled)
 
       const tx = parseTx(txData.params)
-      console.log(tx)
       if (isUseBio) {
         const bioKey = await decodeBioAuthKey()
         if (bioKey) {
@@ -323,7 +321,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
         setLatestTx(result)
       }
     } catch (error) {
-      console.log(error)
       if (error instanceof PasswordError) setIncorrect(error.message)
       else setError(error as Error)
     }

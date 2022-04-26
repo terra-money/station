@@ -49,11 +49,7 @@ const useAuth = () => {
     const keys = getBioKeys()
     const bioKey = keys?.[address]
     if (bioKey) {
-      await WebViewMessage(RN_APIS.DISCONNECT_SESSIONS)
-      removeSessions()
-
       setIsUseBio(true)
-      recoverSessions(address)
     } else {
       setIsUseBio(false)
     }
@@ -61,7 +57,7 @@ const useAuth = () => {
 
   /* connect */
   const connect = useCallback(
-    (name: string) => {
+    async (name: string) => {
       const storedWallet = getStoredWallet(name)
       const { address, lock } = storedWallet
 
@@ -73,7 +69,9 @@ const useAuth = () => {
 
       storeWallet(wallet)
       setWallet(wallet)
+
       initBio(address)
+      await removeSessions()
     },
     [setWallet]
   )

@@ -94,7 +94,7 @@ const App = () => {
       const wallet = getWallet()
       if (wallet) {
         console.log("wallet", wallet)
-        recoverSessions(wallet?.address)
+        recoverSessions()
       }
     }
   }, [])

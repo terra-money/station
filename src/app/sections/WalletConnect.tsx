@@ -1,45 +1,26 @@
 import { useTranslation } from "react-i18next"
-import classNames from "classnames/bind"
-import LockIcon from "@mui/icons-material/Lock"
-import { capitalize } from "@mui/material"
-import { readAmount } from "@terra.kitchen/utils"
-import { themes } from "styles/themes/themes"
-import { useAddress } from "data/wallet"
-import { useThemeState, useValidateTheme } from "data/settings/Theme"
-import { Flex, FlexColumn, Grid } from "components/layout"
-import { Radio } from "components/form"
+import { isEmpty } from "ramda"
+import { Grid } from "components/layout"
 import { ModalButton } from "components/feedback"
 import HeaderIconButton from "../components/HeaderIconButton"
-import styles from "./SelectTheme.module.scss"
 import WalletConnectIcon from "styles/images/walletconnect_blue.png"
 import { getStoredSessions } from "../../auth/scripts/sessions"
-
-const cx = classNames.bind(styles)
+import AssetWallet from "../../pages/wallet/AssetWallet"
+import { FormError } from "../../components/form"
 
 const Selector = () => {
-  const { t } = useTranslation()
-  const address = useAddress()
   const connectors = getStoredSessions()
+  const { t } = useTranslation()
 
-  console.log(connectors)
   return (
-    <Grid gap={28} columns={2}>
-      {connectors &&
-        Object.entries(connectors).map(([key, value]: [string, any]) => {
-          return (
-            <Radio
-              checked={true}
-              label={capitalize(value?.peerMeta.name)}
-              onClick={() => {}}
-              // disabled={!unlocked}
-              key={key}
-            >
-              <div className={styles.wrapper}>
-                <Flex className={styles.preview}>{value?.peerMeta.name}</Flex>
-              </div>
-            </Radio>
-          )
-        })}
+    <Grid gap={28}>
+      {connectors && !isEmpty(connectors) ? (
+        Object.values(connectors).map((value: any) => {
+          return <AssetWallet {...value} />
+        })
+      ) : (
+        <FormError>{t("Don't have connected sessions")}</FormError>
+      )}
     </Grid>
   )
 }

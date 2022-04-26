@@ -105,11 +105,10 @@ export const getWallets = async () => {
   return wallets
 }
 
-export const recoverSessions = async (address: string) => {
+export const recoverSessions = async () => {
   const sessions = getStoredSessions()
-  const currentSessions = sessions?.[address] || null
-  console.log("recoverSessions", currentSessions)
-  const result = await WebViewMessage(RN_APIS.RECOVER_SESSIONS, currentSessions)
+  console.log("recoverSessions", sessions)
+  const result = await WebViewMessage(RN_APIS.RECOVER_SESSIONS, sessions)
   return result
 }
 
