@@ -17,6 +17,7 @@ import AddressBookList from "../AddressBook/AddressBookList"
 import { getPlaceholder, toInput } from "../utils"
 import validate from "../validate"
 import Tx, { getInitialGasDenom } from "../Tx"
+import { useLocation } from "react-router-dom"
 
 interface TxValues {
   recipient?: string // AccAddress | TNS
@@ -34,6 +35,7 @@ const SendForm = ({ token, decimals, balance }: Props) => {
   const { t } = useTranslation()
   const connectedAddress = useAddress()
   const bankBalance = useBankBalance()
+  const { state }: { state: any } = useLocation()
 
   /* tx context */
   const initialGasDenom = getInitialGasDenom(bankBalance)
@@ -66,6 +68,13 @@ const SendForm = ({ token, decimals, balance }: Props) => {
       setValue("address", recipient)
     }
   }, [form, recipient, resolvedAddress, setValue])
+
+  useEffect(() => {
+    console.log("recipient", state)
+    if (state) {
+      setValue("recipient", state)
+    }
+  }, [state])
 
   // validate(tns): not found
   const invalid =

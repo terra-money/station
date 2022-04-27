@@ -70,10 +70,10 @@ const App = () => {
           console.log("onlyIfScan", AccAddress.validate(data))
           if (AccAddress.validate(data)) {
             // send
-            // navigate("/confirm", {
-            //   replace: true,
-            //   state: data,
-            // })
+            navigate("/send", {
+              replace: true,
+              state: data,
+            })
           }
           if (schemeUrl.recoverWallet.test(data)) {
             // recover

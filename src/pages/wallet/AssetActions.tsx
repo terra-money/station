@@ -1,3 +1,4 @@
+import { useLocation } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import { flatten, uniq } from "ramda"
 import ShortcutOutlinedIcon from "@mui/icons-material/ShortcutOutlined"
@@ -13,6 +14,8 @@ import { Props } from "./Asset"
 
 const AssetActions = ({ token, symbol, balance }: Props) => {
   const { t } = useTranslation()
+  const { state: stateAddress }: { state: any } = useLocation()
+
   const isWalletEmpty = useIsWalletEmpty()
   const isClassic = useIsClassic()
   const getIsSwappableToken = useGetIsSwappableToken()
@@ -22,6 +25,7 @@ const AssetActions = ({ token, symbol, balance }: Props) => {
       <InternalLink
         icon={<ShortcutOutlinedIcon style={{ fontSize: 18 }} />}
         to={`/send?token=${token}`}
+        state={stateAddress}
         disabled={isWalletEmpty || !has(balance)}
       >
         {t("Send")}

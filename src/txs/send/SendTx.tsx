@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { useSearchParams } from "react-router-dom"
+import { useLocation, useSearchParams } from "react-router-dom"
 import { AccAddress } from "@terra-money/terra.js"
 import { getAmount } from "utils/coin"
 import { useTokenBalance } from "data/queries/wasm"
@@ -8,15 +8,17 @@ import { useTokenItem } from "data/token"
 import { Page } from "components/layout"
 import TxContext from "../TxContext"
 import SendForm from "./SendForm"
+import Coins from "../../pages/wallet/Coins"
+import Tokens from "../../pages/wallet/Tokens"
 
 const SendTx = () => {
   const { t } = useTranslation()
   const bankBalance = useBankBalance()
 
   const [searchParams] = useSearchParams()
-  const token = searchParams.get("token")
+  const token = searchParams.get("token") ?? ""
 
-  if (!token) throw new Error("Token is not defined")
+  // if (!token) throw new Error("Token is not defined")
 
   const { data: cw20Balance, ...state } = useTokenBalance(token)
   const tokenItem = useTokenItem(token)
@@ -26,11 +28,16 @@ const SendTx = () => {
     ? cw20Balance
     : getAmount(bankBalance, token)
 
-  return (
+  return token ? (
     <Page {...state} title={t("Send {{symbol}}", { symbol })}>
       <TxContext>
         {tokenItem && balance && <SendForm {...tokenItem} balance={balance} />}
       </TxContext>
+    </Page>
+  ) : (
+    <Page {...state} title={t("Select Token")}>
+      <Coins />
+      <Tokens />
     </Page>
   )
 }
