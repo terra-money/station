@@ -1,3 +1,5 @@
+import { blue } from "@mui/material/colors"
+
 const isLocal = (wallet?: Wallet): wallet is LocalWallet => {
   if (!wallet) return false
   return "name" in wallet
@@ -23,12 +25,23 @@ const isLedger = (wallet?: Wallet): wallet is LedgerWallet => {
   return "ledger" in wallet
 }
 
+declare global {
+  interface Window {
+    ReactNativeWebView: any
+  }
+}
+
+const isMobile = (): boolean => {
+  return !!window.ReactNativeWebView
+}
+
 const is = {
   local: isLocal,
   preconfigured: isPreconfigured,
   multisig: isMultisig,
   single: isSingle,
   ledger: isLedger,
+  mobile: isMobile,
 }
 
 export default is

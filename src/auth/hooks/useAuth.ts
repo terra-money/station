@@ -11,6 +11,7 @@ import { useChainID } from "data/wallet"
 import { useLCDClient } from "data/queries/lcdClient"
 import is from "../scripts/is"
 import {
+  getBioAble,
   getBioStamps,
   PasswordError,
   setBioKeys,
@@ -24,12 +25,17 @@ import { getBioState, getBioKeys } from "../scripts/keystore"
 import encrypt from "../scripts/encrypt"
 import useAvailable from "./useAvailable"
 import decrypt from "../scripts/decrypt"
-import { recoverSessions, RN_APIS, WebViewMessage } from "../../utils/rnModule"
+import { RN_APIS, WebViewMessage } from "../../utils/rnModule"
 import { removeSessions } from "../scripts/sessions"
 
 const walletState = atom({
   key: "wallet",
   default: getWallet(),
+})
+
+const isAbleBioState = atom({
+  key: "ableBio",
+  default: getBioAble(),
 })
 
 const isUseBioState = atom({
@@ -42,6 +48,7 @@ const useAuth = () => {
   const available = useAvailable()
 
   const [wallet, setWallet] = useRecoilState(walletState)
+  const [isAbleBio] = useRecoilState(isAbleBioState)
   const [isUseBio, setIsUseBio] = useRecoilState(isUseBioState)
   const wallets = getStoredWallets()
 
@@ -293,6 +300,7 @@ const useAuth = () => {
   return {
     wallet,
     wallets,
+    isAbleBio,
     isUseBio,
     getConnectedWallet,
     getLedgerKey,

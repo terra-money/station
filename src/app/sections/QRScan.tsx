@@ -4,7 +4,7 @@ import { WebViewMessage, RN_APIS } from "utils/rnModule"
 
 const QRScan = () => {
   const getCamera = async () => {
-    const res = await WebViewMessage(RN_APIS.QR_SCAN, "test")
+    const res = await WebViewMessage(RN_APIS.QR_SCAN)
     return res
   }
 
@@ -12,7 +12,7 @@ const QRScan = () => {
     <HeaderIconButton
       onClick={async () => {
         const result = await getCamera()
-        alert(result)
+        console.log(result)
       }}
     >
       <QRIcon style={{ fontSize: 18 }} />

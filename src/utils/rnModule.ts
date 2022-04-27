@@ -1,15 +1,11 @@
 import { CreateTxOptions, Fee, Msg } from "@terra-money/terra.js"
 import { getStoredSessions } from "../auth/scripts/sessions"
-
-declare global {
-  interface Window {
-    ReactNativeWebView: any
-  }
-}
+import is from "../auth/scripts/is"
 
 export const RN_APIS = {
   MIGRATE_KEYSTORE: "MIGRATE_KEYSTORE",
   AUTH_BIO: "AUTH_BIO",
+  CHECK_BIO: "CHECK_BIO",
   DEEPLINK: "DEEPLINK",
   QR_SCAN: "QR_SCAN",
   RECOVER_SESSIONS: "RECOVER_SESSIONS",
@@ -23,10 +19,15 @@ export const RN_APIS = {
 
 export type RN_API = typeof RN_APIS[keyof typeof RN_APIS] // type
 
+export const schemeUrl = {
+  recoverWallet: /^terrastation:(|\/\/)wallet_recover\/\?payload=/,
+  send: /^terrastation:(|\/\/)send\/\?payload=/,
+}
 // 요청 타입
 type RN_API_REQ_TYPES = {
   [RN_APIS.MIGRATE_KEYSTORE]: unknown
   [RN_APIS.AUTH_BIO]: unknown
+  [RN_APIS.CHECK_BIO]: unknown
   [RN_APIS.DEEPLINK]: unknown
   [RN_APIS.QR_SCAN]: unknown
   [RN_APIS.RECOVER_SESSIONS]: unknown
@@ -42,6 +43,7 @@ type RN_API_REQ_TYPES = {
 type RN_API_RES_TYPES = {
   [RN_APIS.MIGRATE_KEYSTORE]: string
   [RN_APIS.AUTH_BIO]: string
+  [RN_APIS.CHECK_BIO]: string
   [RN_APIS.DEEPLINK]: string
   [RN_APIS.QR_SCAN]: string
   [RN_APIS.RECOVER_SESSIONS]: string
@@ -107,7 +109,6 @@ export const getWallets = async () => {
 
 export const recoverSessions = async () => {
   const sessions = getStoredSessions()
-  console.log("recoverSessions", sessions)
   const result = await WebViewMessage(RN_APIS.RECOVER_SESSIONS, sessions)
   return result
 }
@@ -117,14 +118,13 @@ export const WebViewMessage = async <T extends RN_API>(
   data?: RN_API_REQ_TYPES[T]
 ): Promise<RN_API_RES_TYPES[T] | null> =>
   new Promise((resolve, reject) => {
-    if (!window.ReactNativeWebView) {
-      // alert('ReactNativeWebView 객체가 없습니다.');
-      reject("ReactNativeWebView 객체가 없습니다.")
+    if (!is.mobile()) {
+      reject("There is no ReactNativeWebView")
       return
     }
 
     const reqId = Date.now()
-    const TIMEOUT = 10000
+    const TIMEOUT = 100000
 
     const timer = setTimeout(() => {
       /** android */
@@ -135,21 +135,21 @@ export const WebViewMessage = async <T extends RN_API>(
     }, TIMEOUT)
 
     const listener = (event: any) => {
-      if (event.data.includes("setImmediate$0")) return
+      if (event?.data.includes("setImmediate$0")) return
 
-      const {
-        data: listenerData,
-        reqId: listenerReqId,
-      }: { data: RN_API_RES_TYPES[T]; reqId: typeof reqId } = JSON.parse(
-        event.data
-      )
-      if (listenerReqId === reqId) {
-        clearTimeout(timer)
-        /** android */
-        document.removeEventListener("message", listener)
-        /** ios */
-        window.removeEventListener("message", listener)
-        resolve(listenerData)
+      if (event?.data) {
+        const { data: listenerData, reqId: listenerReqId } = JSON.parse(
+          event.data
+        )
+
+        if (listenerReqId === reqId) {
+          clearTimeout(timer)
+          /** android */
+          document.removeEventListener("message", listener)
+          /** ios */
+          window.removeEventListener("message", listener)
+          resolve(listenerData)
+        }
       }
     }
     window.ReactNativeWebView.postMessage(

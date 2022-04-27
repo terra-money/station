@@ -1,6 +1,7 @@
 import is from "./is"
 import encrypt from "./encrypt"
 import decrypt from "./decrypt"
+import { RN_APIS, WebViewMessage } from "../../utils/rnModule"
 
 /* wallet */
 export const getWallet = () => {
@@ -62,6 +63,11 @@ export const getBioState = () => {
   if (!keys) return false
 
   return keys?.[user.address] ? true : false
+}
+
+export const getBioAble = async () => {
+  const res = await WebViewMessage(RN_APIS.CHECK_BIO)
+  return res ? true : false
 }
 
 interface Params {

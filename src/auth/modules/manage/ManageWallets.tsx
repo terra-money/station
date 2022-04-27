@@ -12,12 +12,11 @@ import is from "../../scripts/is"
 import useAuth from "../../hooks/useAuth"
 import AuthList from "../../components/AuthList"
 import ConnectedWallet from "./ConnectedWallet"
-import { RN_APIS, WebViewMessage } from "../../../utils/rnModule"
 
 export const useManageWallet = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const { wallet, disconnect, lock } = useAuth()
+  const { wallet, disconnect, lock, isAbleBio } = useAuth()
 
   const toExport = {
     to: "/auth/export",
@@ -79,7 +78,9 @@ export const useManageWallet = () => {
     ? [toPostMultisig, toDelete, disconnectWallet]
     : is.ledger(wallet)
     ? [toSignMultisig, disconnectWallet]
-    : [useBioAuth, toExport, toPassword, toDelete, toSignMultisig, lockWallet]
+    : is.mobile() && isAbleBio
+    ? [useBioAuth, toExport, toPassword, toDelete, toSignMultisig, lockWallet]
+    : [toExport, toPassword, toDelete, toSignMultisig, lockWallet]
 }
 
 const ManageWallets = () => {

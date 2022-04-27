@@ -1,3 +1,5 @@
+import { AccAddress } from "@terra-money/terra.js"
+
 import { getErrorMessage } from "utils/error"
 import Layout from "components/layout"
 import { Banner, Content, Header, Sidebar, Page } from "components/layout"
@@ -19,14 +21,19 @@ import Preferences from "./sections/Preferences"
 import SelectTheme from "./sections/SelectTheme"
 import WalletConnect from "./sections/WalletConnect"
 import ConnectWallet from "./sections/ConnectWallet"
-// import QRScan from "./sections/QRScan"
+import QRScan from "./sections/QRScan"
 // import Bio from "./sections/Bio"
 
 /* extra */
 import LatestTx from "./sections/LatestTx"
 import ValidatorButton from "./sections/ValidatorButton"
 import DevTools from "./sections/DevTools"
-import { RN_APIS, getWallets, recoverSessions } from "../utils/rnModule"
+import {
+  RN_APIS,
+  getWallets,
+  recoverSessions,
+  schemeUrl,
+} from "../utils/rnModule"
 
 /* init */
 import InitBankBalance from "./InitBankBalance"
@@ -37,6 +44,7 @@ import {
   storeWallets,
 } from "../auth/scripts/keystore"
 import { useNavigate } from "react-router-dom"
+import is from "../auth/scripts/is"
 
 const App = () => {
   const { element: routes } = useNav()
@@ -47,30 +55,54 @@ const App = () => {
       if (event.data.includes("setImmediate$0")) return
 
       const { data, type } = JSON.parse(event.data)
-
       console.log("Webview", type, data)
-      if (type === RN_APIS.DEEPLINK && data?.payload !== "null") {
-        navigate("/confirm", {
-          replace: true,
-          state: data,
-        })
+      switch (type) {
+        case RN_APIS.DEEPLINK: {
+          if (data?.payload !== "null") {
+            navigate("/confirm", {
+              replace: true,
+              state: data,
+            })
+          }
+          break
+        }
+        case RN_APIS.QR_SCAN: {
+          console.log("onlyIfScan", AccAddress.validate(data))
+          if (AccAddress.validate(data)) {
+            // send
+            // navigate("/confirm", {
+            //   replace: true,
+            //   state: data,
+            // })
+          }
+          if (schemeUrl.recoverWallet.test(data)) {
+            // recover
+            const url = new URL(data)
+            const payload = url.searchParams.get("payload")
+
+            navigate("/auth/import", {
+              replace: true,
+              state: payload,
+            })
+          }
+          break
+        }
+        default:
+          break
       }
     }
 
-    if (window.ReactNativeWebView) {
-      /** android */
-      document.addEventListener("message", listener)
-      /** ios */
-      window.addEventListener("message", listener)
-    }
+    /** android */
+    document.addEventListener("message", listener)
+    /** ios */
+    window.addEventListener("message", listener)
   }
 
   useLayoutEffect(() => {
-    if (window.ReactNativeWebView) {
+    if (is.mobile()) {
       RNListener()
 
       getWallets().then((res: any) => {
-        console.log(res)
         const wallets = getStoredWallets()
         const walletAddresses = wallets.map((item) => item.address)
 
@@ -93,7 +125,6 @@ const App = () => {
 
       const wallet = getWallet()
       if (wallet) {
-        console.log("wallet", wallet)
         recoverSessions()
       }
     }
@@ -116,8 +147,8 @@ const App = () => {
           <Refresh />
           <Preferences />
           <SelectTheme />
-          <WalletConnect />
-          {/*<QRScan />*/}
+          {is.mobile() && <WalletConnect />}
+          <QRScan />
         </section>
         <ValidatorButton />
         <ConnectWallet />
