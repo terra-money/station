@@ -1,5 +1,3 @@
-import { blue } from "@mui/material/colors"
-
 const isLocal = (wallet?: Wallet): wallet is LocalWallet => {
   if (!wallet) return false
   return "name" in wallet

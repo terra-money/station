@@ -147,8 +147,12 @@ const App = () => {
           <Refresh />
           <Preferences />
           <SelectTheme />
-          {is.mobile() && <WalletConnect />}
-          <QRScan />
+          {is.mobile() && (
+            <>
+              <WalletConnect />
+              <QRScan />
+            </>
+          )}
         </section>
         <ValidatorButton />
         <ConnectWallet />

@@ -66,8 +66,12 @@ export const getBioState = () => {
 }
 
 export const getBioAble = async () => {
-  const res = await WebViewMessage(RN_APIS.CHECK_BIO)
-  return res ? true : false
+  if (is.mobile()) {
+    const res = await WebViewMessage(RN_APIS.CHECK_BIO)
+    return res ? true : false
+  } else {
+    return false
+  }
 }
 
 interface Params {

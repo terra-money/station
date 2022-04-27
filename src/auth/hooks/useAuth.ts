@@ -187,12 +187,9 @@ const useAuth = () => {
     if (res) {
       const { address } = getConnectedWallet()
       const storedBioKey = getBioKeys()?.[address]
-      console.log("decodeBioAuthKey1", storedBioKey)
 
       const storedTimestamp = getBioStamps()?.[address]
-      console.log("decodeBioAuthKey2", storedTimestamp)
       const decrypted = decrypt(storedBioKey, storedTimestamp)
-      console.log("decodeBioAuthKey3", decrypted)
       return decrypted
     } else {
       throw new Error("failed bio")
