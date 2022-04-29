@@ -12,6 +12,11 @@
   .tippy-content {
     padding: 8px 16px;
   }
+
+  ul {
+    list-style: initial;
+    padding-left: 12px;
+  }
 }
 
 .tippy-box[data-placement^="top"] > .tippy-arrow::before {

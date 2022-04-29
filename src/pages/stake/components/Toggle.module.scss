@@ -1,0 +1,40 @@
+@import "mixins";
+
+.toggle {
+  @include inline-flex;
+  cursor: pointer;
+  font-size: var(--font-size-small);
+  gap: 8px;
+  user-select: none;
+
+  .text {
+    flex: 1;
+  }
+}
+
+.track {
+  @include flex;
+
+  background: var(--card-border);
+  border-radius: 10px;
+  width: 40px;
+  height: 20px;
+  transition: background var(--transition);
+
+  .checked & {
+    background: var(--button-default-text);
+  }
+}
+
+.indicator {
+  background: var(--card-bg);
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  transform: translate(-10px, 0);
+  transition: transform var(--transition);
+
+  .checked & {
+    transform: translate(10px, 0);
+  }
+}

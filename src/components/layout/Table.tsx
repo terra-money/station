@@ -32,6 +32,7 @@ interface Props<T> {
   sorter?: (a: T, b: T) => number
   rowKey?: (record: T) => string
   initialSorterKey?: string
+  onSort?: () => void
 
   size?: "default" | "small"
   style?: CSSProperties
@@ -110,6 +111,7 @@ function Table<T>({ columns, dataSource, filter, rowKey, ...props }: Props<T>) {
 
     setSorterIndex(index)
     setSortOrder(next)
+    props.onSort?.()
   }
 
   return (

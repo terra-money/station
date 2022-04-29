@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next"
-import styles from "./RewardsTooltip.module.scss"
 
 const RewardsTooltip = () => {
   const { t } = useTranslation()
@@ -8,7 +7,7 @@ const RewardsTooltip = () => {
     <article>
       <h1>{t("Staking rewards are withdrawn automatically on")}</h1>
 
-      <ul className={styles.list}>
+      <ul>
         <li>{t("Delegation")}</li>
         <li>{t("Redelegation")}</li>
         <li>{t("Undelegation")}</li>
