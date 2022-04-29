@@ -1,5 +1,5 @@
 import { StrictMode } from "react"
-import { render } from "react-dom"
+import { createRoot } from "react-dom/client"
 import { BrowserRouter } from "react-router-dom"
 import { ReactQueryDevtools } from "react-query/devtools"
 import { RecoilRoot } from "recoil"
@@ -20,8 +20,10 @@ import App from "app/App"
 
 const connectorOpts = { bridge: BRIDGE }
 
+const root = createRoot(document.getElementById("station") as HTMLElement)
+
 getChainOptions().then((chainOptions) =>
-  render(
+  root.render(
     <StrictMode>
       <RecoilRoot>
         <BrowserRouter>
@@ -38,7 +40,6 @@ getChainOptions().then((chainOptions) =>
           {debug.query && <ReactQueryDevtools position="bottom-right" />}
         </BrowserRouter>
       </RecoilRoot>
-    </StrictMode>,
-    document.getElementById("station")
+    </StrictMode>
   )
 )
