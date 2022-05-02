@@ -1,4 +1,4 @@
-import { ForwardedRef, forwardRef, TextareaHTMLAttributes } from "react"
+import { FC, ForwardedRef, forwardRef, TextareaHTMLAttributes } from "react"
 import styles from "./TextArea.module.scss"
 
 const TextArea = forwardRef(
@@ -23,3 +23,7 @@ export const EditorInput = forwardRef(
     return <textarea {...attrs} className={styles.editor} rows={6} ref={ref} />
   }
 )
+
+export const Value: FC = ({ children }) => {
+  return <div className={styles.textarea}>{children}</div>
+}
