@@ -15,6 +15,8 @@ export const RN_APIS = {
   CONFIRM_TX: "CONFIRM_TX",
   APPROVE_TX: "APPROVE_TX",
   REJECT_TX: "REJECT_TX",
+  GET_LEDGER_LIST: "GET_LEDGER_LIST",
+  GET_LEDGER_KEY: "GET_LEDGER_KEY",
 } as const
 
 export type RN_API = typeof RN_APIS[keyof typeof RN_APIS] // type
@@ -37,6 +39,8 @@ type RN_API_REQ_TYPES = {
   [RN_APIS.CONFIRM_TX]: unknown
   [RN_APIS.APPROVE_TX]: unknown
   [RN_APIS.REJECT_TX]: unknown
+  [RN_APIS.GET_LEDGER_LIST]: unknown
+  [RN_APIS.GET_LEDGER_KEY]: unknown
 }
 
 // 응답 타입
@@ -53,6 +57,8 @@ type RN_API_RES_TYPES = {
   [RN_APIS.CONFIRM_TX]: string
   [RN_APIS.APPROVE_TX]: string
   [RN_APIS.REJECT_TX]: string
+  [RN_APIS.GET_LEDGER_LIST]: string
+  [RN_APIS.GET_LEDGER_KEY]: string
 }
 
 /* primitive */
@@ -116,7 +122,7 @@ export const recoverSessions = async () => {
 export const WebViewMessage = async <T extends RN_API>(
   type: RN_API,
   data?: RN_API_REQ_TYPES[T]
-): Promise<RN_API_RES_TYPES[T] | null> =>
+): Promise<unknown> =>
   new Promise((resolve, reject) => {
     if (!is.mobile()) {
       reject("There is no ReactNativeWebView")
@@ -124,15 +130,15 @@ export const WebViewMessage = async <T extends RN_API>(
     }
 
     const reqId = Date.now()
-    const TIMEOUT = 100000
-
-    const timer = setTimeout(() => {
-      /** android */
-      document.removeEventListener("message", listener)
-      /** ios */
-      window.removeEventListener("message", listener)
-      reject("TIMEOUT")
-    }, TIMEOUT)
+    // const TIMEOUT = 100000
+    //
+    // const timer = setTimeout(() => {
+    //   /** android */
+    //   document.removeEventListener("message", listener)
+    //   /** ios */
+    //   window.removeEventListener("message", listener)
+    //   reject("TIMEOUT")
+    // }, TIMEOUT)
 
     const listener = (event: any) => {
       if (event?.data.includes("setImmediate$0")) return
@@ -143,11 +149,12 @@ export const WebViewMessage = async <T extends RN_API>(
         )
 
         if (listenerReqId === reqId) {
-          clearTimeout(timer)
+          // clearTimeout(timer)
           /** android */
           document.removeEventListener("message", listener)
           /** ios */
           window.removeEventListener("message", listener)
+
           resolve(listenerData)
         }
       }

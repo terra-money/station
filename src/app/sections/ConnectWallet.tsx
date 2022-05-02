@@ -40,7 +40,7 @@ const ConnectWallet = ({ renderButton }: Props) => {
     })),
     {
       icon: <UsbIcon />,
-      to: "/auth/ledger",
+      to: "/auth/ledger/device",
       children: t("Access with ledger"),
     },
     ...availableInstallations.map(({ name, icon, url }) => ({

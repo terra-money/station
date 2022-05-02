@@ -1,5 +1,4 @@
 import { AccAddress } from "@terra-money/terra.js"
-
 import { getErrorMessage } from "utils/error"
 import Layout from "components/layout"
 import { Banner, Content, Header, Sidebar, Page } from "components/layout"
@@ -22,7 +21,6 @@ import SelectTheme from "./sections/SelectTheme"
 import WalletConnect from "./sections/WalletConnect"
 import ConnectWallet from "./sections/ConnectWallet"
 import QRScan from "./sections/QRScan"
-// import Bio from "./sections/Bio"
 
 /* extra */
 import LatestTx from "./sections/LatestTx"
@@ -111,13 +109,25 @@ const App = () => {
             if (walletAddresses.includes(item.address)) return false
             else return true
           })
-          .map((item: RNWallet) => ({
-            name: item.name,
-            address: item.address,
-            encrypted: item.encryptedKey,
-          }))
+          .map((item: RNWallet) => {
+            console.log(item)
+            if (item?.ledger) {
+              return {
+                name: item.name,
+                address: item.address,
+                ledger: item.ledger,
+                index: item.path,
+              }
+            } else {
+              return {
+                name: item.name,
+                address: item.address,
+                encrypted: item.encryptedKey,
+              }
+            }
+          })
 
-        // console.log(rnWallets)
+        console.log(rnWallets)
         if (rnWallets?.length) {
           storeWallets([...wallets, ...rnWallets])
         }

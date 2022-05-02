@@ -74,6 +74,7 @@ export const useManageWallet = () => {
 
   if (!wallet) return
 
+  console.log("is.ledger", is.ledger(wallet), wallet)
   return is.multisig(wallet)
     ? [toPostMultisig, toDelete, disconnectWallet]
     : is.ledger(wallet)

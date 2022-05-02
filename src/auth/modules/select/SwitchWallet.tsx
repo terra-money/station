@@ -41,7 +41,7 @@ const SwitchWallet = () => {
             {lock ? (
               <AuthButton {...attrs} to={`/auth/unlock/${name}`} />
             ) : (
-              <AuthButton {...attrs} onClick={() => connect(name)} />
+              <AuthButton {...attrs} onClick={() => connect(name as string)} />
             )}
           </li>
         )

@@ -215,7 +215,8 @@ function Tx<TxValues>(props: Props<TxValues>) {
   }, [failed, simulationTx])
 
   /* submit */
-  const passwordRequired = !isUseBio && isWallet.single(wallet)
+  const passwordRequired =
+    !isUseBio && !isWallet.ledger(wallet) && isWallet.single(wallet)
   const [password, setPassword] = useState("")
   const [incorrect, setIncorrect] = useState<string>()
 
@@ -250,6 +251,13 @@ function Tx<TxValues>(props: Props<TxValues>) {
       const gasCoins = new Coins([Coin.fromData(gasFee)])
       const fee = new Fee(estimatedGas, gasCoins)
 
+      if (isWallet.ledger(wallet)) {
+        console.log({ ...tx, fee })
+        return navigate("/auth/ledger/device", {
+          state: JSON.stringify({ ...tx, fee }),
+        })
+      }
+
       if (isWallet.multisig(wallet)) {
         const unsignedTx = await auth.create({ ...tx, fee })
         navigate(toPostMultisigTx(unsignedTx))
@@ -269,6 +277,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
       onPost?.()
     } catch (error) {
+      console.log(error)
       if (error instanceof PasswordError) setIncorrect(error.message)
       else setError(error as Error)
     }
@@ -321,6 +330,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
         setLatestTx(result)
       }
     } catch (error) {
+      console.log(error)
       if (error instanceof PasswordError) setIncorrect(error.message)
       else setError(error as Error)
     }
@@ -530,7 +540,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
         />
       ) : (
         <Grid gap={4}>
-          {!isUseBio && passwordRequired && (
+          {passwordRequired && (
             <FormItem label={t("Password")} error={incorrect}>
               <Input
                 type="password"

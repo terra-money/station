@@ -19,7 +19,11 @@ export const clearWallet = () => {
 }
 
 /* stored wallets */
-type StoredKey = StoredWallet | StoredWalletLegacy | MultisigWallet
+type StoredKey =
+  | StoredWallet
+  | StoredWalletLegacy
+  | MultisigWallet
+  | LedgerWallet
 export const getStoredWallets = () => {
   const keys = localStorage.getItem("keys") ?? "[]"
   return JSON.parse(keys) as StoredKey[]
@@ -106,6 +110,7 @@ export const testPassword = (params: Params) => {
 type AddWalletParams =
   | { name: string; address: string; password: string; key: Buffer }
   | MultisigWallet
+  | LedgerWallet
 
 export const addWallet = (params: AddWalletParams) => {
   const wallets = getStoredWallets()
@@ -115,7 +120,7 @@ export const addWallet = (params: AddWalletParams) => {
 
   const next = wallets.filter((wallet) => wallet.address !== params.address)
 
-  if (is.multisig(params)) {
+  if (is.multisig(params) || is.ledger(params)) {
     storeWallets([...next, params])
   } else {
     const { name, password, address, key } = params

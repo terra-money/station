@@ -11,6 +11,7 @@ import { useChainID } from "data/wallet"
 import { useLCDClient } from "data/queries/lcdClient"
 import is from "../scripts/is"
 import {
+  addWallet,
   getBioAble,
   getBioStamps,
   PasswordError,
@@ -27,6 +28,7 @@ import useAvailable from "./useAvailable"
 import decrypt from "../scripts/decrypt"
 import { RN_APIS, WebViewMessage } from "../../utils/rnModule"
 import { removeSessions } from "../scripts/sessions"
+import { useNavigate } from "react-router-dom"
 
 const walletState = atom({
   key: "wallet",
@@ -51,6 +53,7 @@ const useAuth = () => {
   const [isAbleBio] = useRecoilState(isAbleBioState)
   const [isUseBio, setIsUseBio] = useRecoilState(isUseBioState)
   const wallets = getStoredWallets()
+  const navigate = useNavigate()
 
   const initBio = async (address: string) => {
     const keys = getBioKeys()
@@ -72,6 +75,8 @@ const useAuth = () => {
 
       const wallet = is.multisig(storedWallet)
         ? { name, address, multisig: true }
+        : is.ledger(storedWallet)
+        ? { name, address, ledger: true }
         : { name, address }
 
       storeWallet(wallet)
@@ -93,7 +98,15 @@ const useAuth = () => {
 
   const connectLedger = useCallback(
     (address: AccAddress, index = 0, bluetooth = false) => {
-      const wallet = { address, ledger: true as const, index, bluetooth }
+      console.log("connectLedger", address)
+      const wallet = {
+        name: "Ledger",
+        address,
+        ledger: true as const,
+        index,
+        bluetooth,
+      }
+      addWallet(wallet)
       storeWallet(wallet)
       setWallet(wallet)
     },
@@ -129,14 +142,32 @@ const useAuth = () => {
     return getDecryptedKey({ name, password })
   }
 
-  const getLedgerKey = async () => {
+  const getLedgerKey = async (id?: string) => {
     if (!is.ledger(wallet)) throw new Error("Ledger device is not connected")
     const { index, bluetooth } = wallet
-    const transport = bluetooth
-      ? await BluetoothTransport.create(LEDGER_TRANSPORT_TIMEOUT)
-      : undefined
 
-    return LedgerKey.create(transport, index)
+    if (is.mobile()) {
+      const ledgerKey = await WebViewMessage(RN_APIS.GET_LEDGER_KEY, {
+        id,
+        path: 0,
+      })
+      // @ts-ignore
+      if (ledgerKey?.includes("Error")) {
+        return ledgerKey
+      } else {
+        // @ts-ignore
+        const parsed1 = JSON.parse(ledgerKey)
+        return {
+          ...parsed1,
+          publicKey: JSON.parse(parsed1.publicKey),
+        }
+      }
+    } else {
+      const transport = bluetooth
+        ? await BluetoothTransport.create(LEDGER_TRANSPORT_TIMEOUT)
+        : undefined
+      return LedgerKey.create(transport, index)
+    }
   }
 
   /* manage: export */
@@ -247,7 +278,8 @@ const useAuth = () => {
     if (!wallet) throw new Error("Wallet is not defined")
 
     if (is.ledger(wallet)) {
-      const key = await getLedgerKey()
+      const key = await getLedgerKey(password)
+      console.log("sign", key)
       const wallet = lcd.wallet(key)
       const { account_number: accountNumber, sequence } =
         await wallet.accountNumberAndSequence()

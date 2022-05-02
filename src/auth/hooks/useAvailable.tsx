@@ -3,6 +3,8 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline"
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore"
 import KeyIcon from "@mui/icons-material/Key"
 import GroupsIcon from "@mui/icons-material/Groups"
+import UsbIcon from "@mui/icons-material/Usb"
+
 import { sandbox } from "../scripts/env"
 
 const useAvailable = () => {
@@ -30,6 +32,11 @@ const useAvailable = () => {
       to: "/auth/multisig/new",
       children: t("New multisig wallet"),
       icon: <GroupsIcon />,
+    },
+    {
+      to: "/auth/ledger/device",
+      children: t("Access Ledger"),
+      icon: <UsbIcon />,
     },
   ]
 }

@@ -2,7 +2,8 @@ import { Route, Routes } from "react-router-dom"
 
 /* connect */
 import UnlockPage from "./select/UnlockPage"
-import AccessWithLedgerPage from "../ledger/AccessWithLedgerPage"
+import SelectLedgerPage from "../ledger/SelectLedgerPage"
+import AddLedgerPage from "../ledger/AddLedgerPage"
 
 /* create */
 import NewWalletPage from "./create/NewWalletPage"
@@ -16,6 +17,7 @@ import ExportWalletPage from "./manage/ExportWalletPage"
 import ChangePasswordPage from "./manage/ChangePasswordPage"
 import DeleteWalletPage from "./manage/DeleteWalletPage"
 import UseBioAuthPage from "./manage/UseBioAuthPage"
+import AccessWithLedgerPage from "../ledger/AccessWithLedgerPage"
 
 const Auth = () => {
   return (
@@ -24,7 +26,9 @@ const Auth = () => {
 
       {/* connect */}
       <Route path="unlock/:name" element={<UnlockPage />} />
-      <Route path="ledger" element={<AccessWithLedgerPage />} />
+      {/*<Route path="ledger/device" element={<AccessWithLedgerPage />} />*/}
+      <Route path="ledger/device" element={<SelectLedgerPage />} />
+      <Route path="ledger/add" element={<AddLedgerPage />} />
 
       {/* create */}
       <Route path="new" element={<NewWalletPage />} />
