@@ -14,7 +14,7 @@
     "analyze": "source-map-explorer 'build/static/js/*.js'"
   },
   "dependencies": {
-    "@anchor-protocol/anchor.js": "^5.0.2",
+    "@anchor-protocol/anchor.js": "^5.1.1",
     "@ledgerhq/hw-transport-web-ble": "^6.27.1",
     "@mui/icons-material": "^5.6.1",
     "@mui/material": "^5.6.1",
