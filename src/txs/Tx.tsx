@@ -317,6 +317,13 @@ function Tx<TxValues>(props: Props<TxValues>) {
       if (disabled) throw new Error(disabled)
 
       const tx = parseTx(txData.params)
+
+      if (isWallet.ledger(wallet)) {
+        return navigate("/auth/ledger/device", {
+          state: JSON.stringify(tx),
+        })
+      }
+
       if (isUseBio) {
         const bioKey = await decodeBioAuthKey()
         if (bioKey) {

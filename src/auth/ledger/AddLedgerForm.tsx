@@ -47,7 +47,11 @@ const AddLedgerForm = () => {
     try {
       // const ledger: unknown = await WebViewMessage(RN_APIS.GET_LEDGER_KEY, { id: state.id, path: index })
       //
-      const ledger = await getLedgerKey(state.id)
+      const ledger = await WebViewMessage(RN_APIS.GET_LEDGER_KEY, {
+        id: state.id,
+        path: 0,
+      })
+
       console.log("GET_LEDGER_KEY", ledger)
 
       // @ts-ignore
@@ -56,7 +60,8 @@ const AddLedgerForm = () => {
         setError({ message: ledger })
       } else {
         // @ts-ignore
-        connectLedger(ledger._accAddress, index, bluetooth)
+        const key = JSON.parse(ledger)
+        connectLedger(key._accAddress, index, bluetooth)
         navigate("/wallet", { replace: true })
       }
     } catch (error) {

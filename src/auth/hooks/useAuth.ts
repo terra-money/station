@@ -29,6 +29,7 @@ import decrypt from "../scripts/decrypt"
 import { RN_APIS, WebViewMessage } from "../../utils/rnModule"
 import { removeSessions } from "../scripts/sessions"
 import { useNavigate } from "react-router-dom"
+import { SyncTxBroadcastResult } from "@terra-money/terra.js/dist/client/lcd/api/TxAPI"
 
 const walletState = atom({
   key: "wallet",
@@ -76,7 +77,7 @@ const useAuth = () => {
       const wallet = is.multisig(storedWallet)
         ? { name, address, multisig: true }
         : is.ledger(storedWallet)
-        ? { name, address, ledger: true }
+        ? { name, address, ledger: true, index: storedWallet.index }
         : { name, address }
 
       storeWallet(wallet)
@@ -142,32 +143,23 @@ const useAuth = () => {
     return getDecryptedKey({ name, password })
   }
 
-  const getLedgerKey = async (id?: string) => {
+  const parseWithFunctions = (obj: string) => {
+    return JSON.parse(obj, (k, v) => {
+      if (typeof v === "string" && v.indexOf("function") >= 0) {
+        return eval(v)
+      }
+      return v
+    })
+  }
+
+  const getLedgerKey = async () => {
     if (!is.ledger(wallet)) throw new Error("Ledger device is not connected")
     const { index, bluetooth } = wallet
 
-    if (is.mobile()) {
-      const ledgerKey = await WebViewMessage(RN_APIS.GET_LEDGER_KEY, {
-        id,
-        path: 0,
-      })
-      // @ts-ignore
-      if (ledgerKey?.includes("Error")) {
-        return ledgerKey
-      } else {
-        // @ts-ignore
-        const parsed1 = JSON.parse(ledgerKey)
-        return {
-          ...parsed1,
-          publicKey: JSON.parse(parsed1.publicKey),
-        }
-      }
-    } else {
-      const transport = bluetooth
-        ? await BluetoothTransport.create(LEDGER_TRANSPORT_TIMEOUT)
-        : undefined
-      return LedgerKey.create(transport, index)
-    }
+    const transport = bluetooth
+      ? await BluetoothTransport.create(LEDGER_TRANSPORT_TIMEOUT)
+      : undefined
+    return LedgerKey.create(transport, index)
   }
 
   /* manage: export */
@@ -278,8 +270,7 @@ const useAuth = () => {
     if (!wallet) throw new Error("Wallet is not defined")
 
     if (is.ledger(wallet)) {
-      const key = await getLedgerKey(password)
-      console.log("sign", key)
+      const key = await getLedgerKey()
       const wallet = lcd.wallet(key)
       const { account_number: accountNumber, sequence } =
         await wallet.accountNumberAndSequence()
@@ -320,10 +311,30 @@ const useAuth = () => {
 
   const post = async (txOptions: CreateTxOptions, password = "") => {
     if (!wallet) throw new Error("Wallet is not defined")
-    const signedTx = await sign(txOptions, password)
-    const result = await lcd.tx.broadcastSync(signedTx)
-    if (isTxError(result)) throw new Error(result.raw_log)
-    return result
+    if (is.mobile() && is.ledger(wallet)) {
+      console.log(txOptions)
+      const result = await WebViewMessage(RN_APIS.GET_LEDGER_KEY, {
+        id: password,
+        path: wallet.index,
+        address: wallet.address,
+        txOptions,
+        lcdConfigs: lcd.config,
+      })
+      console.log(result)
+
+      // @ts-ignore
+      if (result?.includes("Error")) {
+        throw new Error(result as string)
+      } else {
+        // @ts-ignore
+        return JSON.parse(result) as SyncTxBroadcastResult
+      }
+    } else {
+      const signedTx = await sign(txOptions, password)
+      const result = await lcd.tx.broadcastSync(signedTx)
+      if (isTxError(result)) throw new Error(result.raw_log)
+      return result
+    }
   }
 
   return {
