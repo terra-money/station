@@ -4,6 +4,7 @@ import { readPercent } from "@terra.kitchen/utils"
 import { TerraValidator } from "types/validator"
 import { calcSelfDelegation } from "data/Terra/TerraAPI"
 import { Card } from "components/layout"
+import { TooltipIcon } from "components/display"
 import Uptime from "./components/Uptime"
 import ValidatorNumbers from "./components/ValidatorNumbers"
 
@@ -21,7 +22,13 @@ const ValidatorSummary = ({ validator }: { validator: TerraValidator }) => {
         content: readPercent(calcSelfDelegation(validator)),
       },
       {
-        title: `${t("Uptime")} (${t("Last 10k blocks")})`,
+        title: (
+          <TooltipIcon
+            content={t("90 days uptime EMA (Exponential Moving Average)")}
+          >
+            {t("Uptime")}
+          </TooltipIcon>
+        ),
         content: <Uptime>{time_weighted_uptime}</Uptime>,
       },
     ]

@@ -13,8 +13,8 @@ interface Props {
 const DataList = ({ list, type }: Props) => {
   return (
     <div className={cx(styles.list, type)}>
-      {list.map(({ title, content }) => (
-        <Grid gap={4} key={title}>
+      {list.map(({ title, content }, index) => (
+        <Grid gap={4} key={index}>
           <h1 className={styles.title}>{title}</h1>
           <section>{content}</section>
         </Grid>

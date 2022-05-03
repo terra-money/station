@@ -303,8 +303,8 @@ function Tx<TxValues>(props: Props<TxValues>) {
     return (
       <Details>
         <dl>
-          {descriptions?.map(({ title, content }) => (
-            <Fragment key={title}>
+          {descriptions?.map(({ title, content }, index) => (
+            <Fragment key={index}>
               <dt>{title}</dt>
               <dd>{content}</dd>
             </Fragment>

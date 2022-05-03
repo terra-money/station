@@ -14,8 +14,8 @@ export const ValidatorNumber = ({ title, content }: Content) => {
 const ValidatorNumbers = ({ contents }: { contents: Contents }) => {
   return (
     <Grid className={styles.numbers}>
-      {contents.map((content) => (
-        <ValidatorNumber {...content} key={content.title} />
+      {contents.map((content, index) => (
+        <ValidatorNumber {...content} key={index} />
       ))}
     </Grid>
   )
