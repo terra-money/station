@@ -10,12 +10,9 @@
   background: var(--card-bg);
   overflow: hidden; // truncate title, linear progress
   position: relative; // for progress bar
+  margin: 0 20px;
 
   @include mobile {
-    border-left: 0;
-    border-right: 0;
-    border-radius: 0;
-
     & & {
       @include border;
     }
@@ -89,6 +86,9 @@
 /* theme */
 .default {
   padding: var(--card-padding);
+  @include mobile {
+    padding: var(--card-padding-small);
+  }
 }
 
 .bordered {

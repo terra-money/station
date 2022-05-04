@@ -13,12 +13,12 @@
   }
 
   @include mobile {
-    grid-template-rows: auto repeat(2, var(--header-height)) 1fr;
+    grid-template-rows: auto auto 1fr var(--header-height);
     grid-template-areas:
       "banner"
-      "sidebar"
       "header"
-      "main";
+      "main"
+      "sidebar";
   }
 
   height: 100vh;
@@ -36,6 +36,10 @@
   display: grid;
   background: var(--menu-bg);
   overflow: hidden;
+
+  @include mobile {
+    background: var(--card-bg);
+  }
 }
 
 @mixin border-left {
@@ -88,6 +92,12 @@
     .header,
     .main {
       display: none;
+    }
+    .sidebar {
+      background: var(--bg);
+      section {
+        margin-top: 0;
+      }
     }
   }
 }

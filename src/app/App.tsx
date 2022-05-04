@@ -18,9 +18,7 @@ import Aside from "./sections/Aside"
 import Refresh from "./sections/Refresh"
 import Preferences from "./sections/Preferences"
 import SelectTheme from "./sections/SelectTheme"
-import WalletConnect from "./sections/WalletConnect"
 import ConnectWallet from "./sections/ConnectWallet"
-import QRScan from "./sections/QRScan"
 
 /* extra */
 import LatestTx from "./sections/LatestTx"
@@ -153,17 +151,13 @@ const App = () => {
 
       <Header>
         <DevTools />
-        <section>
-          <Refresh />
-          <Preferences />
-          <SelectTheme />
-          {is.mobile() && (
-            <>
-              <WalletConnect />
-              <QRScan />
-            </>
-          )}
-        </section>
+        {!is.mobile() && (
+          <section>
+            <Refresh />
+            <Preferences />
+            <SelectTheme />
+          </section>
+        )}
         <ValidatorButton />
         <ConnectWallet />
         <LatestTx />
