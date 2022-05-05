@@ -88,19 +88,21 @@ const Validators = () => {
               <article>
                 <ul className={styles.tooltip}>
                   <li>
-                    40%: 90 days uptime <small>(time weighted)</small>
+                    40%: Uptime <small>(time-weighted, 90 days)</small>
                   </li>
-                  <li>30%: 30 days rewards</li>
                   <li>
-                    30%: Governance participation rate{" "}
-                    <small>(since Columbus-5)</small>
+                    30%: Rewards <small>(past 30 days)</small>
+                  </li>
+                  <li>
+                    30%: Gov participation rate{" "}
+                    <small>(time-weighted, since Col-5)</small>
                   </li>
                 </ul>
 
                 <p>
                   <small>
-                    Up to 5% can be deducted to the supermajority validators
-                    within top 33% voting power
+                    Up to 5% is deducted to the validators whose voting power is
+                    within top 33%
                   </small>
                 </p>
               </article>
