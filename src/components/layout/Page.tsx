@@ -10,6 +10,7 @@ const cx = classNames.bind(styles)
 
 interface Props extends QueryState {
   title?: string
+  modalType?: string
   extra?: ReactNode
   mainClassName?: string
   small?: boolean
@@ -34,8 +35,8 @@ const Page: FC<Props> = ({ title, extra, children, small, sub, ...props }) => {
                 </header>
               )}
 
-              {is.mobile() && !title && (
-                <div className={styles.extra}>{extra}</div>
+              {is.mobile() && !title && extra && (
+                <div className={styles.extraMobile}>{extra}</div>
               )}
 
               <section className={classNames(styles.main, mainClassName)}>

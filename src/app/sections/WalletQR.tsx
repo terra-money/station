@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next"
 import { RenderButton } from "types/components"
 import { useAddress } from "data/wallet"
 import { Grid } from "components/layout"
-import { ModalButton } from "components/feedback"
+import { ModalButton, Mode } from "components/feedback"
 import QRCode from "auth/components/QRCode"
 
 const WalletQR = ({ renderButton }: { renderButton: RenderButton }) => {
@@ -12,7 +12,11 @@ const WalletQR = ({ renderButton }: { renderButton: RenderButton }) => {
   if (!address) return null
 
   return (
-    <ModalButton title={t("Wallet address")} renderButton={renderButton}>
+    <ModalButton
+      title={t("Wallet address")}
+      renderButton={renderButton}
+      modalType={Mode.FULL}
+    >
       <Grid gap={20}>
         <QRCode value={address} />
         <p className="small center">{address}</p>

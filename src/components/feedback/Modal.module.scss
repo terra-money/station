@@ -35,6 +35,35 @@
   }
 }
 
+.full {
+  gap: 0;
+  grid-template-rows: var(--header-height) auto;
+  padding: 0;
+  width: 100%;
+  height: 100vh;
+  border-radius: 0;
+  background: var(--bg);
+  .header {
+    padding: 18px 25px;
+    background: var(--card-bg);
+    border-bottom: var(--border-width) solid var(--card-border);
+  }
+  .title {
+    font-size: 16px;
+    line-height: 28px;
+  }
+  .main {
+    padding: 20px;
+    background: var(--card-bg);
+  }
+
+  .close {
+    left: 0;
+    width: 64px;
+    height: 64px;
+  }
+}
+
 .close {
   position: absolute;
   top: 0;

@@ -5,7 +5,7 @@ import { calcRewardsValues, useRewards } from "data/queries/distribution"
 import { useExchangeRates } from "data/queries/oracle"
 import { useMemoizedCalcValue } from "data/queries/oracle"
 import { WithTokenItem } from "data/token"
-import { ModalButton } from "components/feedback"
+import { ModalButton, Mode } from "components/feedback"
 import { TokenCard, TokenCardGrid } from "components/token"
 import { TooltipIcon } from "components/display"
 import StakedCard from "./components/StakedCard"
@@ -31,6 +31,7 @@ const Rewards = () => {
     return (
       <ModalButton
         title={title}
+        modalType={Mode.FULL}
         renderButton={(open) => (
           <StakedCard
             {...state}

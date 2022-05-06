@@ -1,7 +1,6 @@
 import { FC } from "react"
 import { atom, useRecoilValue } from "recoil"
 import { useState, useEffect } from "react"
-import { useTranslation } from "react-i18next"
 import { useLocation, useNavigate } from "react-router-dom"
 import classNames from "classnames/bind"
 import Container from "./Container"
@@ -27,18 +26,13 @@ export const Sidebar: FC = ({ children }) => {
 }
 
 export const Header: FC = ({ children }) => {
-  const { t } = useTranslation()
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const { mobileMenu } = useNav()
   const [title, setTitle] = useState("")
 
   useEffect(() => {
-    const currentMenu =
-      pathname === "/"
-        ? { title: t("Dashboard") }
-        : mobileMenu.find((a) => a.path === pathname)
-
+    const currentMenu = mobileMenu.find((a) => a.path === pathname)
     if (currentMenu) {
       setTitle(currentMenu.title)
     } else {

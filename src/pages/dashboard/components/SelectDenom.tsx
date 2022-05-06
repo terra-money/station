@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next"
 import { isDenomTerraNative } from "@terra.kitchen/utils"
 import { WithTokenItem } from "data/token"
-import { ModalButton } from "components/feedback"
+import { ModalButton, Mode } from "components/feedback"
 import { TokenCard, TokenCardGrid } from "components/token"
 
 interface Item extends CoinData {
@@ -21,6 +21,7 @@ const SelectDenom = ({ title, list }: Props) => {
   return (
     <ModalButton
       title={title}
+      modalType={Mode.FULL}
       renderButton={(open) => <button onClick={open}>{t("Show all")}</button>}
     >
       <TokenCardGrid maxHeight>

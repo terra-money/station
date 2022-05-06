@@ -10,7 +10,7 @@ import { useAddress } from "data/wallet"
 import { useThemeState, useValidateTheme } from "data/settings/Theme"
 import { Flex, FlexColumn, Grid } from "components/layout"
 import { Radio } from "components/form"
-import { ModalButton } from "components/feedback"
+import { ModalButton, Mode } from "components/feedback"
 import HeaderIconButton from "../components/HeaderIconButton"
 import styles from "./SelectTheme.module.scss"
 
@@ -66,6 +66,7 @@ const SelectTheme = () => {
   return (
     <ModalButton
       title={t("Select theme")}
+      modalType={Mode.FULL}
       renderButton={(open) => (
         <HeaderIconButton onClick={open}>
           <PaletteOutlinedIcon style={{ fontSize: 18 }} />

@@ -3,6 +3,8 @@ import { getErrorMessage } from "utils/error"
 import Layout from "components/layout"
 import { Banner, Content, Header, Sidebar, Page } from "components/layout"
 import { ErrorBoundary, Wrong } from "components/feedback"
+import { useNavigate } from "react-router-dom"
+import is from "../auth/scripts/is"
 
 /* routes */
 import { useNav } from "./routes"
@@ -39,9 +41,6 @@ import {
   getWallet,
   storeWallets,
 } from "../auth/scripts/keystore"
-import { useNavigate } from "react-router-dom"
-import is from "../auth/scripts/is"
-import HeaderTitle from "./components/HeaderTitle"
 
 const App = () => {
   const { element: routes } = useNav()
@@ -64,7 +63,6 @@ const App = () => {
           break
         }
         case RN_APIS.QR_SCAN: {
-          console.log("onlyIfScan", AccAddress.validate(data))
           if (AccAddress.validate(data)) {
             // send
             navigate("/send", {

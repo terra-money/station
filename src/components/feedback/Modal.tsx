@@ -15,6 +15,7 @@ ReactModal.setAppElement("#station")
 interface ModalProps {
   closeIcon?: ReactNode
   icon?: ReactNode
+  modalType?: string
 
   /* content */
   title?: ReactNode
@@ -27,13 +28,19 @@ interface ModalProps {
 
 export interface Props extends ModalProps, ReactModal.Props {}
 
-const Modal: FC<Props> = ({ title, children, footer, ...props }) => {
+export enum Mode {
+  DEFAULT = "default",
+  FULL = "full",
+  SELECT = "select",
+}
+
+const Modal: FC<Props> = ({ title, children, footer, modalType, ...props }) => {
   const { icon, closeIcon, onRequestClose, confirm, maxHeight } = props
 
   return (
     <ReactModal
       {...props}
-      className={styles.modal}
+      className={cx(styles.modal, { full: modalType === Mode.FULL })}
       overlayClassName={styles.overlay}
     >
       {onRequestClose && (

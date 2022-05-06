@@ -96,9 +96,7 @@ const Connected = () => {
         size="small"
         outline
       >
-        {isWallet.local(wallet)
-          ? wallet.name
-          : truncate(name ?? address, isWallet.mobile() ? [0, 6] : undefined)}
+        {isWallet.local(wallet) ? wallet.name : truncate(name ?? address)}
       </Button>
     </Popover>
   )

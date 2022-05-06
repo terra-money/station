@@ -4,7 +4,7 @@ import { useAddress } from "data/wallet"
 import { useCustomTokensCW721 } from "data/settings/CustomTokens"
 import { InternalButton } from "components/general"
 import { Col, Card, Grid } from "components/layout"
-import { ModalButton } from "components/feedback"
+import { ModalButton, Mode } from "components/feedback"
 import ManageCustomTokensCW721 from "../custom/ManageCustomTokensCW721"
 import NFTPlaceholder from "./NFTPlaceholder"
 import NFTAssetGroup from "./NFTAssetGroup"
@@ -21,6 +21,7 @@ const NFTAssets = () => {
   const renderExtra = (render: boolean) => (
     <ModalButton
       title={t("NFT")}
+      modalType={Mode.FULL}
       renderButton={(open) => {
         if (!render) return null
 
