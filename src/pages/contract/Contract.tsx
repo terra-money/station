@@ -9,6 +9,7 @@ import { Fetching, State, Empty } from "components/feedback"
 import { SearchInput } from "components/form"
 import ContractActions from "./ContractActions"
 import ContractItem from "./ContractItem"
+import is from "auth/scripts/is"
 
 export const [useContract, ContractProvider] =
   createContext<ContractInfo>("useContract")
@@ -21,7 +22,7 @@ const Contract = () => {
   const { data: result, ...state } = useContractInfo(address)
 
   return (
-    <Page title={t("Contract")} extra={<ContractActions />}>
+    <Page title={is.mobile() ? "" : t("Contract")} extra={<ContractActions />}>
       <Grid gap={20}>
         <SearchInput
           value={address}

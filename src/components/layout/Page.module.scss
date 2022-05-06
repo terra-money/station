@@ -9,7 +9,7 @@
   }
 
   @include mobile {
-    padding: 28px 0;
+    padding: 8px 0;
   }
 }
 
@@ -40,6 +40,14 @@
   @include mobile {
     --font-size-page-title: 24px;
     padding: 0 var(--main-padding-horizontal);
+  }
+}
+
+.extra {
+  @include flex(space-around);
+  padding: 0 20px;
+  * {
+    flex: 1;
   }
 }
 

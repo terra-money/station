@@ -3,7 +3,6 @@ import { NavLink, useLocation } from "react-router-dom"
 import { useRecoilState, useSetRecoilState } from "recoil"
 import { useTranslation } from "react-i18next"
 import classNames from "classnames/bind"
-import CloseIcon from "@mui/icons-material/Close"
 import { mobileIsMenuOpenState } from "components/layout"
 import { useNav } from "../routes"
 import styles from "./Nav.module.scss"
@@ -12,8 +11,6 @@ import { ReactComponent as MenuIcon } from "styles/images/menu/Menu.svg"
 import { ReactComponent as WalletIcon } from "styles/images/menu/Wallet.svg"
 import { ReactComponent as SwapIcon } from "styles/images/menu/Swap.svg"
 import { ReactComponent as StakeIcon } from "styles/images/menu/Stake.svg"
-import { ReactComponent as SettingsIcon } from "styles/images/menu/Settings.svg"
-import { ReactComponent as DashboardIcon } from "styles/images/menu/Dashboard.svg"
 
 import is from "auth/scripts/is"
 import QRScan from "./QRScan"
@@ -23,9 +20,10 @@ const cx = classNames.bind(styles)
 const Nav = () => {
   useCloseMenuOnNavigate()
   const { t } = useTranslation()
-  const { menu } = useNav()
+  const { menu, mobileMenu } = useNav()
   const [isOpen, setIsOpen] = useRecoilState(mobileIsMenuOpenState)
   const toggle = () => setIsOpen(!isOpen)
+  const close = () => setIsOpen(false)
   const ICON_SIZE = { width: 28, height: 28 }
 
   return (
@@ -37,6 +35,7 @@ const Nav = () => {
 
         <NavLink
           to="/wallet"
+          onClick={close}
           className={({ isActive }) =>
             cx(styles.mobileItem, { active: isActive })
           }
@@ -47,6 +46,7 @@ const Nav = () => {
 
         <NavLink
           to="/swap"
+          onClick={close}
           className={({ isActive }) =>
             cx(styles.mobileItem, { active: isActive })
           }
@@ -57,6 +57,7 @@ const Nav = () => {
 
         <NavLink
           to="/stake"
+          onClick={close}
           className={({ isActive }) =>
             cx(styles.mobileItem, { active: isActive })
           }
@@ -71,16 +72,15 @@ const Nav = () => {
         >
           <MenuIcon {...ICON_SIZE} />
           {t("MORE")}
-          {/*{isOpen ? <CloseIcon /> : }*/}
         </button>
       </header>
 
       <section className={styles.menu}>
         <div className={classNames(styles.menuTitle)}>
-          <NavLink to="/">
+          <NavLink to="/" onClick={close}>
             <strong>Terra</strong> Station
           </NavLink>
-          {is.mobile() && (
+          {is.mobileNative() && (
             <>
               {/*<WalletConnect />*/}
               <QRScan />
@@ -88,40 +88,19 @@ const Nav = () => {
           )}
         </div>
         <div className={classNames(styles.menuList)}>
-          {is.mobile() && (
-            <NavLink
-              to={"/"}
-              className={({ isActive }) =>
-                cx(styles.item, styles.link, { active: isActive })
-              }
-            >
-              <DashboardIcon />
-              {t("Dashboard")}
-            </NavLink>
-          )}
-          {menu.map(({ path, title, icon }) => (
+          {(is.mobile() ? mobileMenu : menu).map(({ path, title, icon }) => (
             <NavLink
               to={path}
               className={({ isActive }) =>
                 cx(styles.item, styles.link, { active: isActive })
               }
               key={path}
+              onClick={close}
             >
               {icon}
               {title}
             </NavLink>
           ))}
-          {is.mobile() && (
-            <NavLink
-              to={"/auth"}
-              className={({ isActive }) =>
-                cx(styles.item, styles.link, { active: isActive })
-              }
-            >
-              <SettingsIcon />
-              {t("Settings")}
-            </NavLink>
-          )}
         </div>
       </section>
     </nav>

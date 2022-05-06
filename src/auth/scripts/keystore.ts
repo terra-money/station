@@ -70,7 +70,7 @@ export const getBioState = () => {
 }
 
 export const getBioAble = async () => {
-  if (is.mobile()) {
+  if (is.mobileNative()) {
     const res = await WebViewMessage(RN_APIS.CHECK_BIO)
     return res ? true : false
   } else {

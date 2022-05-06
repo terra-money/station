@@ -13,7 +13,7 @@
   }
 
   @include mobile {
-    grid-template-rows: auto auto 1fr var(--header-height);
+    grid-template-rows: auto auto 1fr var(--mobile-tab-height);
     grid-template-areas:
       "banner"
       "header"
@@ -59,12 +59,32 @@
   padding: 0 var(--main-padding-horizontal);
   position: relative;
   white-space: nowrap;
-
+  @include mobile {
+    background: var(--bg);
+  }
   .wrapper {
     @include flex(flex-end);
     gap: 10px;
     width: 100%;
     height: var(--header-height);
+    @include mobile {
+      @include flex(space-between);
+      h1 {
+        font-size: 24px;
+      }
+    }
+    @include desktop {
+      h1 {
+        display: none;
+      }
+    }
+  }
+
+  &.subPage {
+    @include flex(flex-start);
+    background: var(--card-bg);
+    border-bottom: var(--border-width) solid var(--card-border);
+    fill: var(--text);
   }
 
   -webkit-app-region: drag;
@@ -79,8 +99,10 @@
 
   grid-area: main;
   overflow: auto;
-  border-top: var(--border-width) solid var(--card-border);
   position: relative; // for progress bar from the page
+  @include desktop {
+    border-top: var(--border-width) solid var(--card-border);
+  }
 }
 
 /* menu open */

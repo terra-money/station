@@ -4,6 +4,7 @@ import { ErrorBoundary, WithFetching } from "../feedback"
 import Container from "./Container"
 import Card from "./Card"
 import styles from "./Page.module.scss"
+import is from "auth/scripts/is"
 
 const cx = classNames.bind(styles)
 
@@ -31,6 +32,10 @@ const Page: FC<Props> = ({ title, extra, children, small, sub, ...props }) => {
                   <h1 className={styles.title}>{title}</h1>
                   {extra}
                 </header>
+              )}
+
+              {is.mobile() && !title && (
+                <div className={styles.extra}>{extra}</div>
               )}
 
               <section className={classNames(styles.main, mainClassName)}>

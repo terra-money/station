@@ -29,8 +29,12 @@ declare global {
   }
 }
 
-const isMobile = (): boolean => {
+const isMobileNative = (): boolean => {
   return !!window.ReactNativeWebView
+}
+
+const isMobile = (): boolean => {
+  return navigator.userAgent.indexOf("Mobi") > -1
 }
 
 const is = {
@@ -39,6 +43,7 @@ const is = {
   multisig: isMultisig,
   single: isSingle,
   ledger: isLedger,
+  mobileNative: isMobileNative,
   mobile: isMobile,
 }
 

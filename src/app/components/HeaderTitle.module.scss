@@ -1,0 +1,8 @@
+@import "mixins";
+
+.title {
+  font-size: 24px;
+  @include desktop {
+    display: none;
+  }
+}

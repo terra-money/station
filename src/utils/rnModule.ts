@@ -124,7 +124,7 @@ export const WebViewMessage = async <T extends RN_API>(
   data?: RN_API_REQ_TYPES[T]
 ): Promise<unknown> =>
   new Promise((resolve, reject) => {
-    if (!is.mobile()) {
+    if (!is.mobileNative()) {
       reject("There is no ReactNativeWebView")
       return
     }

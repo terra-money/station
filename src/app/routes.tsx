@@ -9,8 +9,13 @@ import { ReactComponent as SwapIcon } from "styles/images/menu/Swap.svg"
 import { ReactComponent as StakeIcon } from "styles/images/menu/Stake.svg"
 import { ReactComponent as GovernanceIcon } from "styles/images/menu/Governance.svg"
 import { ReactComponent as ContractIcon } from "styles/images/menu/Contract.svg"
+<<<<<<< HEAD
 import { useIsClassic } from "data/query"
 
+=======
+import { ReactComponent as SettingsIcon } from "styles/images/menu/Settings.svg"
+import { ReactComponent as DashboardIcon } from "styles/images/menu/Dashboard.svg"
+>>>>>>> b43288f (update header styles)
 /* menu */
 import Dashboard from "pages/dashboard/Dashboard"
 import Wallet from "pages/wallet/Wallet"
@@ -114,6 +119,22 @@ export const useNav = () => {
     return !classic
   })
 
+  const mobileMenu = [
+    {
+      path: "/",
+      element: <Dashboard />,
+      title: t("Dashboard"),
+      icon: <DashboardIcon {...ICON_SIZE} />,
+    },
+    ...menu,
+    {
+      path: "/auth",
+      element: <Auth />,
+      title: t("Settings"),
+      icon: <SettingsIcon {...ICON_SIZE} />,
+    },
+  ]
+
   const routes = [
     { path: "/", element: <Dashboard /> },
 
@@ -160,7 +181,7 @@ export const useNav = () => {
     { path: "*", element: <NotFound /> },
   ]
 
-  return { menu, element: useRoutes(routes) }
+  return { menu, mobileMenu, element: useRoutes(routes) }
 }
 
 /* helpers */

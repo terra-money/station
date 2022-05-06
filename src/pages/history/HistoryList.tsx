@@ -9,6 +9,7 @@ import { Button } from "components/general"
 import { Card, Col, Page } from "components/layout"
 import { Empty } from "components/feedback"
 import HistoryItem from "./HistoryItem"
+import is from "../../auth/scripts/is"
 
 const HistoryList = () => {
   const { t } = useTranslation()
@@ -79,7 +80,7 @@ const HistoryList = () => {
   }
 
   return (
-    <Page {...state} title={t("History")}>
+    <Page {...state} title={is.mobile() ? "" : t("History")}>
       {render()}
     </Page>
   )

@@ -79,7 +79,7 @@ export const useManageWallet = () => {
     ? [toPostMultisig, toDelete, disconnectWallet]
     : is.ledger(wallet)
     ? [toSignMultisig, disconnectWallet]
-    : is.mobile() && isAbleBio
+    : is.mobileNative() && isAbleBio
     ? [useBioAuth, toExport, toPassword, toDelete, toSignMultisig, lockWallet]
     : [toExport, toPassword, toDelete, toSignMultisig, lockWallet]
 }

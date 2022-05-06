@@ -41,6 +41,7 @@ import {
 } from "../auth/scripts/keystore"
 import { useNavigate } from "react-router-dom"
 import is from "../auth/scripts/is"
+import HeaderTitle from "./components/HeaderTitle"
 
 const App = () => {
   const { element: routes } = useNav()
@@ -95,7 +96,7 @@ const App = () => {
   }
 
   useLayoutEffect(() => {
-    if (is.mobile()) {
+    if (is.mobileNative()) {
       RNListener()
 
       getWallets().then((res: any) => {
@@ -151,15 +152,17 @@ const App = () => {
 
       <Header>
         <DevTools />
-        {!is.mobile() && (
-          <section>
-            <Refresh />
-            <Preferences />
-          </section>
-        )}
-        <SelectTheme />
+        <section>
+          {!is.mobile() && (
+            <>
+              <Refresh />
+              <Preferences />
+              <SelectTheme />
+            </>
+          )}
+          <ConnectWallet />
+        </section>
         <ValidatorButton />
-        <ConnectWallet />
         <LatestTx />
       </Header>
 

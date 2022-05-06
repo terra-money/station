@@ -1,8 +1,14 @@
 import { FC } from "react"
 import { atom, useRecoilValue } from "recoil"
+import { useState, useEffect } from "react"
+import { useTranslation } from "react-i18next"
+import { useLocation, useNavigate } from "react-router-dom"
 import classNames from "classnames/bind"
 import Container from "./Container"
 import styles from "./Layout.module.scss"
+import { useNav } from "../../app/routes"
+import is from "auth/scripts/is"
+import { ReactComponent as BackIcon } from "styles/images/icons/Back.svg"
 
 const cx = classNames.bind(styles)
 
@@ -21,10 +27,46 @@ export const Sidebar: FC = ({ children }) => {
 }
 
 export const Header: FC = ({ children }) => {
+  const { t } = useTranslation()
+  const navigate = useNavigate()
+  const { pathname } = useLocation()
+  const { mobileMenu } = useNav()
+  const [title, setTitle] = useState("")
+
+  useEffect(() => {
+    const currentMenu =
+      pathname === "/"
+        ? { title: t("Dashboard") }
+        : mobileMenu.find((a) => a.path === pathname)
+
+    if (currentMenu) {
+      setTitle(currentMenu.title)
+    } else {
+      setTitle("")
+    }
+  }, [pathname])
+
   return (
-    <header className={styles.header}>
+    <header className={cx(styles.header, { subPage: !title })}>
       <Container className={styles.container}>
-        <div className={styles.wrapper}>{children}</div>
+        <div className={styles.wrapper}>
+          {is.mobile() ? (
+            title ? (
+              <>
+                <h1>{title}</h1>
+                {children}
+              </>
+            ) : (
+              <>
+                <button onClick={() => navigate(-1)}>
+                  <BackIcon {...{ width: 24, height: 24 }} />
+                </button>
+              </>
+            )
+          ) : (
+            children
+          )}
+        </div>
       </Container>
     </header>
   )
