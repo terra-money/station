@@ -155,9 +155,9 @@ const App = () => {
           <section>
             <Refresh />
             <Preferences />
-            <SelectTheme />
           </section>
         )}
+        <SelectTheme />
         <ValidatorButton />
         <ConnectWallet />
         <LatestTx />

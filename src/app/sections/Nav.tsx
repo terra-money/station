@@ -3,17 +3,17 @@ import { NavLink, useLocation } from "react-router-dom"
 import { useRecoilState, useSetRecoilState } from "recoil"
 import { useTranslation } from "react-i18next"
 import classNames from "classnames/bind"
-import MenuIcon from "@mui/icons-material/Menu"
 import CloseIcon from "@mui/icons-material/Close"
-import AutoAwesomeMosaicIcon from "@mui/icons-material/AutoAwesomeMosaic"
-import SettingsIcon from "@mui/icons-material/Settings"
 import { mobileIsMenuOpenState } from "components/layout"
 import { useNav } from "../routes"
 import styles from "./Nav.module.scss"
 
+import { ReactComponent as MenuIcon } from "styles/images/menu/Menu.svg"
 import { ReactComponent as WalletIcon } from "styles/images/menu/Wallet.svg"
 import { ReactComponent as SwapIcon } from "styles/images/menu/Swap.svg"
 import { ReactComponent as StakeIcon } from "styles/images/menu/Stake.svg"
+import { ReactComponent as SettingsIcon } from "styles/images/menu/Settings.svg"
+import { ReactComponent as DashboardIcon } from "styles/images/menu/Dashboard.svg"
 
 import is from "auth/scripts/is"
 import QRScan from "./QRScan"
@@ -26,7 +26,7 @@ const Nav = () => {
   const { menu } = useNav()
   const [isOpen, setIsOpen] = useRecoilState(mobileIsMenuOpenState)
   const toggle = () => setIsOpen(!isOpen)
-  const ICON_SIZE = { width: 24, height: 24 }
+  const ICON_SIZE = { width: 28, height: 28 }
 
   return (
     <nav>
@@ -42,6 +42,7 @@ const Nav = () => {
           }
         >
           <WalletIcon {...ICON_SIZE} />
+          {t("WALLET")}
         </NavLink>
 
         <NavLink
@@ -51,6 +52,7 @@ const Nav = () => {
           }
         >
           <SwapIcon {...ICON_SIZE} />
+          {t("SWAP")}
         </NavLink>
 
         <NavLink
@@ -60,10 +62,16 @@ const Nav = () => {
           }
         >
           <StakeIcon {...ICON_SIZE} />
+          {t("STAKE")}
         </NavLink>
 
-        <button className={styles.toggle} onClick={toggle}>
-          {isOpen ? <CloseIcon /> : <MenuIcon />}
+        <button
+          className={classNames(styles.toggle, styles.mobileItem)}
+          onClick={toggle}
+        >
+          <MenuIcon {...ICON_SIZE} />
+          {t("MORE")}
+          {/*{isOpen ? <CloseIcon /> : }*/}
         </button>
       </header>
 
@@ -87,7 +95,7 @@ const Nav = () => {
                 cx(styles.item, styles.link, { active: isActive })
               }
             >
-              <AutoAwesomeMosaicIcon />
+              <DashboardIcon />
               {t("Dashboard")}
             </NavLink>
           )}
