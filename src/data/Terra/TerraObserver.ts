@@ -17,7 +17,7 @@ export const useTerraObserver = () => {
       ws.current.onopen = () => {
         setConnected(true)
         ws.current?.send(
-          JSON.stringify({ subscribe: "new_block", chain_id: chainID })
+          JSON.stringify({ subscribe: "new_block_height", chain_id: chainID })
         )
       }
 
