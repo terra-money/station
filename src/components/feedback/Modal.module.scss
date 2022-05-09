@@ -72,6 +72,16 @@
   padding: 16px;
 }
 
+.action {
+  @include flex;
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 20px;
+  width: 64px;
+  height: 64px;
+}
+
 .header {
   text-align: center;
 }

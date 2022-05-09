@@ -16,6 +16,7 @@ interface ModalProps {
   closeIcon?: ReactNode
   icon?: ReactNode
   modalType?: string
+  subAction?: () => ReactNode
 
   /* content */
   title?: ReactNode
@@ -35,7 +36,8 @@ export enum Mode {
 }
 
 const Modal: FC<Props> = ({ title, children, footer, modalType, ...props }) => {
-  const { icon, closeIcon, onRequestClose, confirm, maxHeight } = props
+  const { icon, closeIcon, onRequestClose, subAction, confirm, maxHeight } =
+    props
 
   return (
     <ReactModal
@@ -48,6 +50,8 @@ const Modal: FC<Props> = ({ title, children, footer, modalType, ...props }) => {
           {closeIcon ?? <CloseIcon fontSize="inherit" />}
         </button>
       )}
+
+      {subAction && <div className={styles.action}>{subAction()}</div>}
 
       {(title || icon) && (
         <header className={styles.header}>

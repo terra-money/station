@@ -13,6 +13,7 @@ import { Radio } from "components/form"
 import { ModalButton, Mode } from "components/feedback"
 import HeaderIconButton from "../components/HeaderIconButton"
 import styles from "./SelectTheme.module.scss"
+import is from "auth/scripts/is"
 
 const cx = classNames.bind(styles)
 
@@ -66,7 +67,7 @@ const SelectTheme = () => {
   return (
     <ModalButton
       title={t("Select theme")}
-      modalType={Mode.FULL}
+      modalType={is.mobile() ? Mode.FULL : Mode.DEFAULT}
       renderButton={(open) => (
         <HeaderIconButton onClick={open}>
           <PaletteOutlinedIcon style={{ fontSize: 18 }} />

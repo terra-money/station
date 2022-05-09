@@ -20,7 +20,7 @@ const Wallet = () => {
             <Tokens />
           </>,
           <>
-            <Rewards />
+            {!is.mobile() && <Rewards />}
             {isAnchorAvailable && <AnchorEarn />}
           </>,
         ]}

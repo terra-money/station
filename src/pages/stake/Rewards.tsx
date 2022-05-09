@@ -10,6 +10,7 @@ import { TokenCard, TokenCardGrid } from "components/token"
 import { TooltipIcon } from "components/display"
 import StakedCard from "./components/StakedCard"
 import RewardsTooltip from "./RewardsTooltip"
+import is from "auth/scripts/is"
 
 const Rewards = () => {
   const { t } = useTranslation()
@@ -31,7 +32,7 @@ const Rewards = () => {
     return (
       <ModalButton
         title={title}
-        modalType={Mode.FULL}
+        modalType={is.mobile() ? Mode.FULL : Mode.DEFAULT}
         renderButton={(open) => (
           <StakedCard
             {...state}
@@ -49,7 +50,7 @@ const Rewards = () => {
           </StakedCard>
         )}
       >
-        <TokenCardGrid maxHeight>
+        <TokenCardGrid>
           {list.map(({ amount, denom }) => (
             <WithTokenItem token={denom} key={denom}>
               {(item) => (

@@ -9,6 +9,7 @@ import ManageCustomTokensCW721 from "../custom/ManageCustomTokensCW721"
 import NFTPlaceholder from "./NFTPlaceholder"
 import NFTAssetGroup from "./NFTAssetGroup"
 import styles from "./NFTAssets.module.scss"
+import is from "auth/scripts/is"
 
 const cx = classNames.bind(styles)
 
@@ -21,7 +22,7 @@ const NFTAssets = () => {
   const renderExtra = (render: boolean) => (
     <ModalButton
       title={t("NFT")}
-      modalType={Mode.FULL}
+      modalType={is.mobile() ? Mode.FULL : Mode.DEFAULT}
       renderButton={(open) => {
         if (!render) return null
 

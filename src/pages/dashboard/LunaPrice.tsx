@@ -7,6 +7,7 @@ import { ModalButton, Mode } from "components/feedback"
 import LunaPriceChart from "../charts/LunaPriceChart"
 import DashboardContent from "./components/DashboardContent"
 import styles from "./Dashboard.module.scss"
+import is from "auth/scripts/is"
 
 const LunaPrice = () => {
   const { t } = useTranslation()
@@ -23,7 +24,7 @@ const LunaPrice = () => {
         footer={
           <ModalButton
             title={t("Luna price")}
-            modalType={Mode.FULL}
+            modalType={is.mobile() ? Mode.FULL : Mode.DEFAULT}
             renderButton={(open) => (
               <button onClick={open}>{t("Show chart")}</button>
             )}
