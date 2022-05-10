@@ -41,6 +41,8 @@ import {
   getWallet,
   storeWallets,
 } from "../auth/scripts/keystore"
+import WalletConnect from "../pages/wallet/WalletConnect"
+import { disconnectSession } from "../auth/scripts/sessions"
 
 const App = () => {
   const { element: routes } = useNav()
@@ -62,10 +64,17 @@ const App = () => {
           }
           break
         }
+        case RN_APIS.DISCONNECT_SESSIONS: {
+          console.log(data)
+          if (typeof data === "string") {
+            disconnectSession(data)
+          }
+          break
+        }
         case RN_APIS.QR_SCAN: {
           if (AccAddress.validate(data)) {
             // send
-            navigate("/send", {
+            navigate("/send/select", {
               replace: true,
               state: data,
             })
@@ -107,7 +116,6 @@ const App = () => {
             else return true
           })
           .map((item: RNWallet) => {
-            console.log(item)
             if (item?.ledger) {
               return {
                 name: item.name,
@@ -124,7 +132,6 @@ const App = () => {
             }
           })
 
-        console.log(rnWallets)
         if (rnWallets?.length) {
           storeWallets([...wallets, ...rnWallets])
         }
@@ -169,6 +176,8 @@ const App = () => {
           <InitBankBalance>{routes}</InitBankBalance>
         </ErrorBoundary>
       </Content>
+
+      <WalletConnect />
     </Layout>
   )
 }

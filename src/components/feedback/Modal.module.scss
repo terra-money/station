@@ -11,6 +11,11 @@
   right: 0;
 
   z-index: 1050;
+
+  &.bottom {
+    @include flex(center, flex-end);
+    background: hsl(0 0% 0% / 0.8);
+  }
 }
 
 .modal {
@@ -54,13 +59,42 @@
   }
   .main {
     padding: 20px;
-    background: var(--card-bg);
+    background: var(--bg);
   }
 
   .close {
     left: 0;
     width: 64px;
     height: 64px;
+  }
+}
+
+.bottom {
+  gap: 0;
+  padding: 0;
+  width: 100%;
+  background: var(--card-bg);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  .header {
+    display: none;
+    padding: 18px 25px;
+    background: var(--card-bg);
+    border-bottom: var(--border-width) solid var(--card-border);
+  }
+  .title {
+    font-size: 16px;
+    line-height: 28px;
+  }
+  .main {
+    display: grid;
+    gap: 16px;
+    padding: 40px 20px 60px;
+    background: var(--card-bg);
+  }
+
+  .close {
+    display: none;
   }
 }
 

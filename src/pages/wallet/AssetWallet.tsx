@@ -1,5 +1,11 @@
-import AssetWalletActions from "./AssetWalletActions"
-import styles from "./Asset.module.scss"
+import { useTranslation } from "react-i18next"
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
+import is from "auth/scripts/is"
+import { disconnectSession } from "auth/scripts/sessions"
+import { ModalButton, Mode, useModal } from "components/feedback"
+import { Button, InternalButton } from "components/general"
+import { Card } from "components/layout"
+import styles from "./AssetWallet.module.scss"
 
 export interface Props {
   handshakeTopic: string
@@ -11,24 +17,59 @@ export interface Props {
 }
 
 const AssetWallet = (props: Props) => {
+  const { t } = useTranslation()
+  const close = useModal()
+
   const {
     handshakeTopic,
     peerMeta: { name, url, icons },
   } = props
 
   return (
-    <article className={styles.asset} key={handshakeTopic}>
-      <section className={styles.details}>
-        <img src={icons?.[0] || ""} alt={name} width={22} height={22} />
-
-        <div>
-          <h1 className={styles.symbol}>{name}</h1>
+    <Card
+      className={styles.asset}
+      title={
+        <section className={styles.wrapper}>
+          <div className={styles.title}>
+            <img src={icons?.[0] || ""} alt={name} />
+            <h1>{name}</h1>
+          </div>
           <p className={styles.value}>{url}</p>
-        </div>
-      </section>
-
-      <AssetWalletActions {...props} />
-    </article>
+        </section>
+      }
+      extra={
+        <ModalButton
+          modalType={is.mobile() ? Mode.BOTTOM : Mode.DEFAULT}
+          title={"ss"}
+          renderButton={(open) => (
+            <InternalButton
+              icon={<ArrowForwardIosIcon style={{ fontSize: 12 }} />}
+              onClick={open}
+            ></InternalButton>
+          )}
+          maxHeight={false}
+          cancelButton={{
+            name: t("Cancel"),
+            type: "default",
+          }}
+        >
+          <Button
+            block
+            color="danger"
+            onClick={async () => {
+              try {
+                await disconnectSession(handshakeTopic)
+                close()
+              } catch (error) {
+                console.log(error)
+              }
+            }}
+          >
+            {t("Disconnect {{name}}", { name })}
+          </Button>
+        </ModalButton>
+      }
+    />
   )
 }
 

@@ -64,6 +64,9 @@ import Labs from "pages/labs/Labs"
 /* 404 */
 import NotFound from "pages/NotFound"
 
+/* Deep Link */
+import SelectSend from "txs/send/SelectSend"
+
 const ICON_SIZE = { width: 20, height: 20 }
 
 export const useNav = () => {
@@ -119,19 +122,21 @@ export const useNav = () => {
     return !classic
   })
 
-  const mobileMenu = [
+  const deepLinkPage = [
     {
-      path: "/",
-      element: <Dashboard />,
-      title: t("Dashboard"),
-      icon: <DashboardIcon {...ICON_SIZE} />,
+      path: "/send/select",
+      title: "Select a coin to send",
+      element: <SelectSend />,
     },
-    ...menu,
     {
-      path: "/auth",
-      element: <Auth />,
-      title: t("Settings"),
-      icon: <SettingsIcon {...ICON_SIZE} />,
+      path: "/confirm",
+      title: "Confirm",
+      element: <ConfirmTx />,
+    },
+    {
+      path: "/connect",
+      title: "Wallet connect",
+      element: <ConfirmTx />,
     },
   ]
 
@@ -149,7 +154,6 @@ export const useNav = () => {
 
     /* txs */
     { path: "/send", element: <SendTx /> },
-    { path: "/confirm", element: <ConfirmTx /> },
     { path: "/nft/transfer", element: <TransferCW721Tx /> },
     { path: "/swap/multiple", element: <SwapMultipleTx /> },
     { path: "/stake/:address", element: <StakeTx /> },
@@ -179,9 +183,28 @@ export const useNav = () => {
 
     /* 404 */
     { path: "*", element: <NotFound /> },
+
+    /* Deep Link */
+    ...deepLinkPage,
   ]
 
-  return { menu, mobileMenu, element: useRoutes(routes) }
+  const mobileMenu = [
+    {
+      path: "/",
+      element: <Dashboard />,
+      title: t("Dashboard"),
+      icon: <DashboardIcon {...ICON_SIZE} />,
+    },
+    ...menu,
+    {
+      path: "/auth",
+      element: <Auth />,
+      title: t("Settings"),
+      icon: <SettingsIcon {...ICON_SIZE} />,
+    },
+  ]
+
+  return { menu, mobileMenu, deepLinkPage, element: useRoutes(routes) }
 }
 
 /* helpers */

@@ -7,6 +7,7 @@ import { RenderButton } from "types/components"
 import createContext from "utils/createContext"
 import { getMaxHeightStyle } from "utils/style"
 import styles from "./Modal.module.scss"
+import { Button } from "../general"
 
 const cx = classNames.bind(styles)
 
@@ -15,7 +16,7 @@ ReactModal.setAppElement("#station")
 interface ModalProps {
   closeIcon?: ReactNode
   icon?: ReactNode
-  modalType?: string
+  modalType?: string | undefined
   subAction?: () => ReactNode
 
   /* content */
@@ -25,6 +26,10 @@ interface ModalProps {
   /* style */
   confirm?: boolean
   maxHeight?: boolean | number
+  cancelButton?: {
+    name: string
+    type: string
+  }
 }
 
 export interface Props extends ModalProps, ReactModal.Props {}
@@ -32,18 +37,26 @@ export interface Props extends ModalProps, ReactModal.Props {}
 export enum Mode {
   DEFAULT = "default",
   FULL = "full",
+  BOTTOM = "bottom",
   SELECT = "select",
 }
 
 const Modal: FC<Props> = ({ title, children, footer, modalType, ...props }) => {
-  const { icon, closeIcon, onRequestClose, subAction, confirm, maxHeight } =
-    props
+  const {
+    icon,
+    closeIcon,
+    onRequestClose,
+    subAction,
+    confirm,
+    maxHeight,
+    cancelButton,
+  } = props
 
   return (
     <ReactModal
       {...props}
-      className={cx(styles.modal, { full: modalType === Mode.FULL })}
-      overlayClassName={styles.overlay}
+      className={cx(styles.modal, { [`${modalType}`]: !!modalType })}
+      overlayClassName={cx(styles.overlay, { [`${modalType}`]: !!modalType })}
     >
       {onRequestClose && (
         <button type="button" className={styles.close} onClick={onRequestClose}>
@@ -66,6 +79,11 @@ const Modal: FC<Props> = ({ title, children, footer, modalType, ...props }) => {
           style={getMaxHeightStyle(maxHeight, 320)}
         >
           {children}
+          {modalType === Mode.BOTTOM && cancelButton && (
+            <Button block color="default" onClick={onRequestClose}>
+              {cancelButton.name}
+            </Button>
+          )}
         </section>
       )}
 

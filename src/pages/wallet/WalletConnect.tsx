@@ -1,12 +1,14 @@
 import { useTranslation } from "react-i18next"
 import { isEmpty } from "ramda"
 import { Grid } from "components/layout"
-import { ModalButton } from "components/feedback"
-import HeaderIconButton from "../components/HeaderIconButton"
-import WalletConnectIcon from "styles/images/walletconnect_blue.png"
+import { ModalButton, Mode } from "components/feedback"
+import { FormError } from "components/form"
 import { getStoredSessions } from "../../auth/scripts/sessions"
-import AssetWallet from "../../pages/wallet/AssetWallet"
-import { FormError } from "../../components/form"
+import AssetWallet from "./AssetWallet"
+import { ReactComponent as WalletConnectIcon } from "styles/images/menu/Walletconnect.svg"
+import styles from "./WalletConnect.module.scss"
+import { useEffect, useState } from "react"
+import is from "../../auth/scripts/is"
 
 const Selector = () => {
   const connectors = getStoredSessions()
@@ -27,25 +29,24 @@ const Selector = () => {
 
 const WalletConnect = () => {
   const { t } = useTranslation()
+  const connectors = getStoredSessions()
 
-  return (
+  return connectors && !isEmpty(connectors) ? (
     <ModalButton
       title={t("WalletConnect")}
+      modalType={is.mobile() ? Mode.FULL : Mode.DEFAULT}
       renderButton={(open) => (
-        <HeaderIconButton onClick={open}>
-          <img
-            src={WalletConnectIcon}
-            alt={t("wallet connect")}
-            width={18}
-            height={18}
-          />
-        </HeaderIconButton>
+        <button onClick={open} className={styles.fab}>
+          <WalletConnectIcon {...{ width: 24, height: 24 }} />
+        </button>
       )}
     >
       <Grid gap={20}>
         <Selector />
       </Grid>
     </ModalButton>
+  ) : (
+    <></>
   )
 }
 

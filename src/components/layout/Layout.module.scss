@@ -85,6 +85,12 @@
     background: var(--card-bg);
     border-bottom: var(--border-width) solid var(--card-border);
     fill: var(--text);
+    h1 {
+      font-size: 16px;
+    }
+    button {
+      width: 24px;
+    }
   }
 
   -webkit-app-region: drag;

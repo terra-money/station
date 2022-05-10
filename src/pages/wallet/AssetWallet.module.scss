@@ -1,0 +1,50 @@
+@import "mixins";
+
+.asset {
+  @include flex(space-between, center);
+  margin: 0;
+  header {
+    flex: 1;
+  }
+}
+
+.wrapper {
+  @include flex-column(space-between, flex-start);
+}
+
+.title {
+  @include flex(flex-start, center);
+  img {
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.detailsContainer {
+  @include mobile {
+    flex: 1;
+    @include flex(space-between, center);
+  }
+}
+
+.symbol,
+.amount {
+  font-size: 16px;
+}
+
+.amount {
+  font-weight: var(--normal);
+}
+
+.amountContainer {
+  @include mobile {
+    margin-right: 12px;
+    text-align: right;
+  }
+}
+
+.value {
+  color: var(--text-muted);
+  font-size: var(--font-size-small);
+}

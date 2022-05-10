@@ -28,15 +28,23 @@ export const Sidebar: FC = ({ children }) => {
 export const Header: FC = ({ children }) => {
   const navigate = useNavigate()
   const { pathname } = useLocation()
-  const { mobileMenu } = useNav()
+  const { mobileMenu, deepLinkPage } = useNav()
   const [title, setTitle] = useState("")
+  const [subTitle, setSubTitle] = useState("")
 
   useEffect(() => {
     const currentMenu = mobileMenu.find((a) => a.path === pathname)
+    const deeplinkMenu = deepLinkPage.find((a) => a.path === pathname)
     if (currentMenu) {
       setTitle(currentMenu.title)
     } else {
       setTitle("")
+    }
+
+    if (deeplinkMenu) {
+      setSubTitle(deeplinkMenu.title)
+    } else {
+      setSubTitle("")
     }
   }, [pathname])
 
@@ -55,6 +63,12 @@ export const Header: FC = ({ children }) => {
                 <button onClick={() => navigate(-1)}>
                   <BackIcon {...{ width: 24, height: 24 }} />
                 </button>
+                {subTitle && (
+                  <>
+                    <h1>{subTitle}</h1>
+                    <button />
+                  </>
+                )}
               </>
             )
           ) : (
