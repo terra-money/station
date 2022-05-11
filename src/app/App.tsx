@@ -56,7 +56,13 @@ const App = () => {
       console.log("Webview", type, data)
       switch (type) {
         case RN_APIS.DEEPLINK: {
-          if (data?.payload !== "null") {
+          if (data?.payload !== "null" && data?.action === "wallet_connect") {
+            navigate("/connect", {
+              replace: true,
+              state: data,
+            })
+          }
+          if (data?.payload !== "null" && data?.action !== "wallet_connect") {
             navigate("/confirm", {
               replace: true,
               state: data,
@@ -165,6 +171,7 @@ const App = () => {
               <SelectTheme />
             </>
           )}
+          <SelectTheme />
           <ConnectWallet />
         </section>
         <ValidatorButton />

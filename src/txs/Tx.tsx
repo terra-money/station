@@ -28,7 +28,7 @@ import { useAddress, useChainID, useNetwork } from "data/wallet"
 import { isBroadcastingState, latestTxState, useTxInfo } from "data/queries/tx"
 import { useBankBalance, useIsWalletEmpty } from "data/queries/bank"
 
-import { Pre } from "components/general"
+import { Button, Pre } from "components/general"
 import { Flex, Grid } from "components/layout"
 import { FormError, Submit, Select, Input, FormItem } from "components/form"
 import { Modal } from "components/feedback"
@@ -337,7 +337,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
         setLatestTx(result)
       }
     } catch (error) {
-      console.log(error)
       if (error instanceof PasswordError) setIncorrect(error.message)
       else setError(error as Error)
     }
@@ -578,8 +577,13 @@ function Tx<TxValues>(props: Props<TxValues>) {
   )
 
   const connectButton = (
-    <Grid gap={4}>
-      <Submit submitting={submitting}>Allow</Submit>
+    <Grid columns={2} gap={12}>
+      <Button color="danger" onClick={() => {}}>
+        {t("Deny")}
+      </Button>
+      <Button color="primary" type="submit">
+        {t("Allow")}
+      </Button>
     </Grid>
   )
 

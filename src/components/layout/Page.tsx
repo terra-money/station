@@ -12,13 +12,14 @@ interface Props extends QueryState {
   title?: string
   modalType?: string
   extra?: ReactNode
+  className?: string
   mainClassName?: string
   small?: boolean
   sub?: boolean // used as a page in a page
 }
 
 const Page: FC<Props> = ({ title, extra, children, small, sub, ...props }) => {
-  const { mainClassName } = props
+  const { className, mainClassName } = props
 
   return (
     <WithFetching {...props}>
@@ -26,7 +27,7 @@ const Page: FC<Props> = ({ title, extra, children, small, sub, ...props }) => {
         <>
           {progress}
 
-          <article className={cx(styles.page, { sub, small })}>
+          <article className={cx(styles.page, className, { sub, small })}>
             <Container className={styles.grid}>
               {title && (
                 <header className={styles.header}>

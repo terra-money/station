@@ -54,7 +54,6 @@ const ConfirmForm = ({ action, payload }: Props) => {
         txData: payload,
         initialGasDenom: "uluna",
         onPost() {
-          console.log("onPost")
           navigate("/", { replace: true })
         },
       })

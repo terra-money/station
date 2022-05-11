@@ -32,6 +32,7 @@ import ProposalDetails from "pages/gov/ProposalDetails"
 /* txs */
 import SendTx from "txs/send/SendTx"
 import ConfirmTx from "txs/confirm/ConfirmTx"
+import ConnectTx from "txs/connect/ConnectTx"
 import TransferCW721Tx from "txs/wasm/TransferCW721Tx"
 import SwapTx from "txs/swap/SwapTx"
 import SwapMultipleTx from "txs/swap/SwapMultipleTx"
@@ -135,8 +136,8 @@ export const useNav = () => {
     },
     {
       path: "/connect",
-      title: "Wallet connect",
-      element: <ConfirmTx />,
+      title: "",
+      element: <ConnectTx />,
     },
   ]
 

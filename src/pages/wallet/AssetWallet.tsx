@@ -57,12 +57,8 @@ const AssetWallet = (props: Props) => {
             block
             color="danger"
             onClick={async () => {
-              try {
-                await disconnectSession(handshakeTopic)
-                close()
-              } catch (error) {
-                console.log(error)
-              }
+              await disconnectSession(handshakeTopic)
+              close()
             }}
           >
             {t("Disconnect {{name}}", { name })}
