@@ -17,7 +17,7 @@ const LunaPriceChart = () => {
   const animation = useThemeAnimation()
 
   const formatValue = (value: string) => (
-    <Read amount={value} denom={denom} decimals={0} auto />
+    <Read amount={Number(value) * 1e6} denom={denom} auto />
   )
 
   const tickFormat = {
