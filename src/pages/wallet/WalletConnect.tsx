@@ -1,21 +1,16 @@
 import { useTranslation } from "react-i18next"
 import { useLocation } from "react-router-dom"
 import { isEmpty } from "ramda"
-import { Auto, Grid } from "components/layout"
-import { Button, InternalButton } from "components/general"
-import { ModalButton, Mode, useModal } from "components/feedback"
+import { Grid } from "components/layout"
+import { Button } from "components/general"
+import { ModalButton, Mode } from "components/feedback"
 import { FormError } from "components/form"
-import {
-  disconnectSession,
-  getStoredSessions,
-  removeSessions,
-} from "auth/scripts/sessions"
+import { getStoredSessions, removeSessions } from "auth/scripts/sessions"
 import AssetWallet from "./AssetWallet"
 import { ReactComponent as WalletConnectIcon } from "styles/images/menu/Walletconnect.svg"
 import styles from "./WalletConnect.module.scss"
 import is from "auth/scripts/is"
 import GridConfirm from "../../components/layout/GridConfirm"
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
 
 const Selector = () => {
   const connectors = getStoredSessions()

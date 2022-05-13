@@ -7,11 +7,12 @@ import { useAddress } from "data/wallet"
 import { Button, ExternalLink } from "components/general"
 import { Grid } from "components/layout"
 import { List } from "components/display"
-import { ModalButton } from "components/feedback"
+import { ModalButton, Mode } from "components/feedback"
 import { FormHelp } from "components/form"
 import { useAuth } from "auth"
 import SwitchWallet from "auth/modules/select/SwitchWallet"
 import Connected from "./Connected"
+import is from "auth/scripts/is"
 
 interface Props {
   renderButton?: RenderButton
@@ -54,6 +55,7 @@ const ConnectWallet = ({ renderButton }: Props) => {
     <ModalButton
       title={t("Connect wallet")}
       renderButton={renderButton ?? defaultRenderButton}
+      modalType={is.mobile() ? Mode.BOTTOM : Mode.DEFAULT}
       maxHeight
     >
       <Grid gap={20}>

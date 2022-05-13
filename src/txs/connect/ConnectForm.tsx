@@ -66,13 +66,6 @@ const ConnectForm = ({ action, payload }: Props) => {
     }
   }, [action, payload])
 
-  // {
-  //   description: "Terra Station is a web application to interact with Terra Core.",
-  //   url: "https://station.terra.money",
-  //   icons: ["https://station.terra.money/static/media/favicon.1e08d51d.svg"],
-  //   name: "Terra Station"
-  // }
-
   return (
     <Tx {...tx}>
       {({ connect }) => (
