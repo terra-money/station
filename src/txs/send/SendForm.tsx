@@ -99,8 +99,8 @@ const SendForm = ({ token, decimals, balance }: Props) => {
 
   /* fee */
   const estimationTxValues = useMemo(
-    () => ({ address: connectedAddress, input: toInput(balance, decimals) }),
-    [connectedAddress, balance, decimals]
+    () => ({ address: connectedAddress, input: toInput(1, decimals) }),
+    [connectedAddress, decimals]
   )
 
   const onChangeMax = useCallback(
