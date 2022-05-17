@@ -9,6 +9,7 @@ import { isDenomTerraNative, readDenom } from "@terra.kitchen/utils"
 import { Validator, ValAddress, Coin, MsgSwap } from "@terra-money/terra.js"
 import { Rewards } from "@terra-money/terra.js"
 import { MsgWithdrawDelegatorReward } from "@terra-money/terra.js"
+import { has } from "utils/num"
 import { sortDenoms } from "utils/coin"
 import { SettingKey } from "utils/localStorage"
 import { getLocalSetting, setLocalSetting } from "utils/localStorage"
@@ -96,21 +97,21 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
 
   /* simulate swap */
   const lcd = useLCDClient()
-  const { data: simulated } = useQuery(
+  const { data: simulation } = useQuery(
     ["simulate.swap.withdraw", selectedTotal, target] as const,
     async ({ queryKey: [, selectedTotal, target] }) => {
       const responses = await Promise.allSettled(
         Object.entries(selectedTotal)
           .filter(([denom]) => isDenomTerraNative(denom))
           .map(async ([denom, amount]) => {
-            if (denom === target) return amount
+            if (denom === target) return { denom, amount }
 
             const received = await lcd.market.swapRate(
               new Coin(denom, amount),
               target
             )
 
-            return received.amount.toString()
+            return { denom, amount: received.amount.toString() }
           })
       )
 
@@ -119,10 +120,15 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
         return result.value
       })
 
-      return BigNumber.sum(...results).toNumber()
+      return {
+        results,
+        total: BigNumber.sum(...results.map(({ amount }) => amount)).toNumber(),
+      }
     },
     { enabled: swap }
   )
+
+  const simulated = simulation?.total
 
   const selectedValidatorsText = !selected.length
     ? t("Not selected")
@@ -145,18 +151,23 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
     })
 
     if (swap) {
+      if (!simulation) return
+
       const swapMsgs = Object.entries(selectedTotal)
         .filter(([denom]) => isDenomTerraNative(denom) && denom !== target)
-        .map(
-          ([denom, amount]) =>
-            new MsgSwap(address, new Coin(denom, amount), target)
-        )
+        .filter(([denom]) => {
+          const result = simulation.results.find((item) => item.denom === denom)
+          return has(result?.amount)
+        })
+        .map(([denom, amount]) => {
+          return new MsgSwap(address, new Coin(denom, amount), target)
+        })
 
       return { msgs: [...msgs, ...swapMsgs] }
     }
 
     return { msgs }
-  }, [address, selected, selectedTotal, swap, target])
+  }, [address, selected, selectedTotal, simulation, swap, target])
 
   /* fee */
   const estimationTxValues = useMemo(() => ({ swap }), [swap])
