@@ -10,7 +10,12 @@ import ProposalItem from "./ProposalItem"
 import GovernanceParams from "./GovernanceParams"
 import styles from "./ProposalsByStatus.module.scss"
 
-const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
+interface Props {
+  status: Proposal.Status
+  excludeSpam?: boolean
+}
+
+const ProposalsByStatus = ({ status, excludeSpam }: Props) => {
   const { t } = useTranslation()
 
   const { data: whitelist, ...whitelistState } = useTerraAssets<number[]>(
@@ -26,7 +31,7 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
     if (!(data && whitelist)) return null
 
     const proposals =
-      status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD
+      excludeSpam && status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD
         ? data.filter(({ id }) => whitelist.includes(id))
         : data
 
