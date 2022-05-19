@@ -73,7 +73,7 @@ export const useGetProposalStatusItem = () => {
         color: "danger" as Color,
       },
       [Proposal.Status.PROPOSAL_STATUS_FAILED]: {
-        label: "",
+        label: t("Error during execution"),
         color: "danger" as Color,
       },
       [Proposal.Status.PROPOSAL_STATUS_UNSPECIFIED]: {
