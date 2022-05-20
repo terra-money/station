@@ -4,14 +4,19 @@ import ProposalVotes from "./ProposalVotes"
 import ProposalHeader from "./ProposalHeader"
 import styles from "./ProposalItem.module.scss"
 
-const ProposalItem = ({ proposal }: { proposal: Proposal }) => {
+interface Props {
+  proposal: Proposal
+  showVotes: boolean
+}
+
+const ProposalItem = ({ proposal, showVotes }: Props) => {
   const { id, status } = proposal
 
   return (
     <FlexColumn gap={36} className={styles.item}>
       <ProposalHeader proposal={proposal} />
 
-      {status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD ? (
+      {showVotes && status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD ? (
         <ProposalVotes id={id} />
       ) : null}
     </FlexColumn>

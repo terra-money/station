@@ -12,6 +12,7 @@ export { default as Radio } from "./Radio"
 export { default as RadioButton } from "./RadioButton"
 export { default as Checkbox } from "./Checkbox"
 export * from "./Checkbox"
+export { default as Toggle } from "./Toggle"
 export { default as Upload } from "./Upload"
 
 /* modules */

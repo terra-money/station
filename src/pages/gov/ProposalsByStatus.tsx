@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { reverse } from "ramda"
 import { Proposal } from "@terra-money/terra.js"
@@ -6,12 +7,16 @@ import { useProposals, useProposalStatusItem } from "data/queries/gov"
 import { useTerraAssets } from "data/Terra/TerraAssets"
 import { Col, Card } from "components/layout"
 import { Fetching, Empty } from "components/feedback"
+import { Toggle } from "components/form"
 import ProposalItem from "./ProposalItem"
 import GovernanceParams from "./GovernanceParams"
 import styles from "./ProposalsByStatus.module.scss"
 
 const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   const { t } = useTranslation()
+
+  const [showAll, setShowAll] = useState(false)
+  const toggle = () => setShowAll((state) => !state)
 
   const { data: whitelist, ...whitelistState } = useTerraAssets<number[]>(
     "/station/proposals.json"
@@ -26,7 +31,7 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
     if (!(data && whitelist)) return null
 
     const proposals =
-      status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD
+      status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && !showAll
         ? data.filter(({ id }) => whitelist.includes(id))
         : data
 
@@ -43,6 +48,14 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
       </Col>
     ) : (
       <Col>
+        <section>
+          {status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && (
+            <Toggle checked={showAll} onChange={toggle}>
+              {t("Show all")}
+            </Toggle>
+          )}
+        </section>
+
         <section className={styles.list}>
           {reverse(proposals).map((item) => (
             <Card
@@ -50,7 +63,7 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
               className={styles.link}
               key={item.id}
             >
-              <ProposalItem proposal={item} />
+              <ProposalItem proposal={item} showVotes={!showAll} />
             </Card>
           ))}
         </section>
