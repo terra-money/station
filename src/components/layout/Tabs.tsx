@@ -7,7 +7,7 @@ import styles from "./Tabs.module.scss"
 const cx = classNames.bind(styles)
 
 interface Props {
-  tabs: { key: string; tab?: string; children: ReactNode; disabled?: boolean }[]
+  tabs: { key: string; tab: string; children: ReactNode; disabled?: boolean }[]
   defaultActiveKey?: string
   type: "line" | "card"
   reversed?: boolean
@@ -30,9 +30,8 @@ const Tabs = ({ tabs, defaultActiveKey, type, reversed, state }: Props) => {
   return (
     <>
       <section className={cx(styles.tabs, type, { reversed })}>
-        {tabs.map(({ key, tab, disabled }) => {
-          if (!tab) return null
-          return state ? (
+        {tabs.map(({ key, tab, disabled }) =>
+          state ? (
             <button
               type="button"
               className={cx(styles.tab, {
@@ -58,7 +57,7 @@ const Tabs = ({ tabs, defaultActiveKey, type, reversed, state }: Props) => {
               {capitalize(tab)}
             </Link>
           )
-        })}
+        )}
       </section>
 
       {tabs.find((tab) => tab.key === (state ? activeKey : hash))?.children}

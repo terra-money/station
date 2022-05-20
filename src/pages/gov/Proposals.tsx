@@ -6,13 +6,6 @@ import ProposalsByStatus from "./ProposalsByStatus"
 const Proposals = () => {
   const getTranslation = useGetProposalStatusItem()
 
-  const initialContent = (
-    <ProposalsByStatus
-      status={Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD}
-      excludeSpam
-    />
-  )
-
   const tabs = [
     Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD,
     Proposal.Status.PROPOSAL_STATUS_DEPOSIT_PERIOD,
@@ -24,9 +17,7 @@ const Proposals = () => {
     children: <ProposalsByStatus status={key} />,
   }))
 
-  return (
-    <Tabs tabs={[{ key: "", children: initialContent }, ...tabs]} type="card" />
-  )
+  return <Tabs tabs={tabs} type="card" />
 }
 
 export default Proposals
