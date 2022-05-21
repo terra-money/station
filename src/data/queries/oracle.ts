@@ -1,30 +1,21 @@
 import { useCallback, useMemo } from "react"
 import { useQuery } from "react-query"
-import { getAmount, sortCoins, sortDenoms } from "utils/coin"
+import { getAmount, sortCoins } from "utils/coin"
 import { toPrice } from "utils/num"
 import { queryKey, RefetchOptions } from "../query"
 import { useCurrency } from "../settings/Currency"
 import { useLCDClient } from "./lcdClient"
 
 export const useActiveDenoms = () => {
-  const lcd = useLCDClient()
-  return useQuery(
-    [queryKey.oracle.activeDenoms],
-    async () => {
-      const activeDenoms = await lcd.oracle.activeDenoms()
-      return sortDenoms(["uluna", ...activeDenoms])
-    },
-    { ...RefetchOptions.INFINITY }
-  )
+  return useQuery([queryKey.oracle.activeDenoms], () => ["uluna"], {
+    ...RefetchOptions.INFINITY,
+  })
 }
 
 export const useExchangeRates = () => {
-  const lcd = useLCDClient()
-  return useQuery(
-    [queryKey.oracle.exchangeRates],
-    () => lcd.oracle.exchangeRates(),
-    { ...RefetchOptions.DEFAULT }
-  )
+  return useQuery([queryKey.oracle.exchangeRates], () => {}, {
+    ...RefetchOptions.DEFAULT,
+  })
 }
 
 export const useOracleParams = () => {
