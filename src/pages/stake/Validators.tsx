@@ -8,7 +8,6 @@ import { Validator } from "@terra-money/terra.js"
 import { BondStatus } from "@terra-money/terra.proto/cosmos/staking/v1beta1/staking"
 import { bondStatusFromJSON } from "@terra-money/terra.proto/cosmos/staking/v1beta1/staking"
 import { combineState } from "data/query"
-import { useOracleParams } from "data/queries/oracle"
 import { useValidators } from "data/queries/staking"
 import { useDelegations, useUnbondings } from "data/queries/staking"
 import { getCalcVotingPowerRate } from "data/Terra/TerraAPI"
@@ -26,7 +25,6 @@ import styles from "./Validators.module.scss"
 const Validators = () => {
   const { t } = useTranslation()
 
-  const { data: oracleParams, ...oracleParamsState } = useOracleParams()
   const { data: validators, ...validatorsState } = useValidators()
   const { data: delegations, ...delegationsState } = useDelegations()
   const { data: undelegations, ...undelegationsState } = useUnbondings()
@@ -34,7 +32,6 @@ const Validators = () => {
     useTerraValidators()
 
   const state = combineState(
-    oracleParamsState,
     validatorsState,
     delegationsState,
     undelegationsState,
@@ -42,7 +39,7 @@ const Validators = () => {
   )
 
   const activeValidators = useMemo(() => {
-    if (!(oracleParams && validators && TerraValidators)) return null
+    if (!(validators && TerraValidators)) return null
 
     const calcRate = getCalcVotingPowerRate(TerraValidators)
 
@@ -68,7 +65,7 @@ const Validators = () => {
         }
       })
       .sort(({ rank: a }, { rank: b }) => a - b)
-  }, [TerraValidators, oracleParams, validators])
+  }, [TerraValidators, validators])
 
   const renderCount = () => {
     if (!validators) return null

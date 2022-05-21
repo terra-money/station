@@ -1,10 +1,10 @@
+import { OracleParams } from "@terra-money/terra.js"
 import { useCallback, useMemo } from "react"
 import { useQuery } from "react-query"
 import { getAmount, sortCoins } from "utils/coin"
 import { toPrice } from "utils/num"
 import { queryKey, RefetchOptions } from "../query"
 import { useCurrency } from "../settings/Currency"
-import { useLCDClient } from "./lcdClient"
 
 export const useActiveDenoms = () => {
   return useQuery([queryKey.oracle.activeDenoms], () => ["uluna"], {
@@ -19,10 +19,11 @@ export const useExchangeRates = () => {
 }
 
 export const useOracleParams = () => {
-  const lcd = useLCDClient()
-  return useQuery([queryKey.oracle.params], () => lcd.oracle.parameters(), {
-    ...RefetchOptions.INFINITY,
-  })
+  return useQuery<OracleParams | undefined>(
+    [queryKey.oracle.params],
+    () => undefined,
+    { ...RefetchOptions.INFINITY }
+  )
 }
 
 /* helpers */
