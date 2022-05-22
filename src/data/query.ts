@@ -1,4 +1,10 @@
+import { useNetworkName } from "auth/hooks/useNetwork"
 import { LAZY_LIMIT } from "config/constants"
+
+export const useIsClassic = () => {
+  const networkName = useNetworkName()
+  return networkName !== "localterra" // TODO
+}
 
 /* refetch */
 export const RefetchOptions = {
