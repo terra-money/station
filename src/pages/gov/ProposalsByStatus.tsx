@@ -2,7 +2,7 @@ import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { reverse } from "ramda"
 import { Proposal } from "@terra-money/terra.js"
-import { combineState } from "data/query"
+import { combineState, useIsClassic } from "data/query"
 import { useProposals, useProposalStatusItem } from "data/queries/gov"
 import { useTerraAssets } from "data/Terra/TerraAssets"
 import { Col, Card } from "components/layout"
@@ -14,8 +14,9 @@ import styles from "./ProposalsByStatus.module.scss"
 
 const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   const { t } = useTranslation()
+  const isClassic = useIsClassic()
 
-  const [showAll, setShowAll] = useState(false)
+  const [showAll, setShowAll] = useState(!isClassic)
   const toggle = () => setShowAll((state) => !state)
 
   const { data: whitelist, ...whitelistState } = useTerraAssets<number[]>(
@@ -68,7 +69,7 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   return (
     <Fetching {...state}>
       <Col>
-        {status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && (
+        {isClassic && status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && (
           <section>
             <Toggle checked={showAll} onChange={toggle}>
               {t("Show all")}
