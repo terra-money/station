@@ -36,7 +36,7 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
         : data
 
     return !proposals.length ? (
-      <Col>
+      <>
         <Card>
           <Empty>
             {t("No proposals in {{label}} period", {
@@ -45,17 +45,9 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
           </Empty>
         </Card>
         <GovernanceParams />
-      </Col>
+      </>
     ) : (
-      <Col>
-        <section>
-          {status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && (
-            <Toggle checked={showAll} onChange={toggle}>
-              {t("Show all")}
-            </Toggle>
-          )}
-        </section>
-
+      <>
         <section className={styles.list}>
           {reverse(proposals).map((item) => (
             <Card
@@ -69,11 +61,25 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
         </section>
 
         <GovernanceParams />
-      </Col>
+      </>
     )
   }
 
-  return <Fetching {...state}>{render()}</Fetching>
+  return (
+    <Fetching {...state}>
+      <Col>
+        {status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && (
+          <section>
+            <Toggle checked={showAll} onChange={toggle}>
+              {t("Show all")}
+            </Toggle>
+          </section>
+        )}
+
+        {render()}
+      </Col>
+    </Fetching>
+  )
 }
 
 export default ProposalsByStatus
