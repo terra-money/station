@@ -22,7 +22,11 @@ const SwapTx = () => {
   )
 
   return (
-    <Page title={is.mobile() ? "" : t("Swap")} small extra={extra}>
+    <Page
+      title={is.mobile() ? "" : t("Swap")}
+      extra={is.mobile() ? null : extra}
+      small
+    >
       <TxContext>
         <SwapContext>
           <SingleSwapContext>
@@ -30,6 +34,13 @@ const SwapTx = () => {
           </SingleSwapContext>
         </SwapContext>
       </TxContext>
+      {is.mobile() && (
+        <div className="row bottom top">
+          <LinkButton to="/swap/multiple" block>
+            {t("Swap multiple coins")}
+          </LinkButton>
+        </div>
+      )}
     </Page>
   )
 }

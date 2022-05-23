@@ -10,6 +10,7 @@ import { SearchInput } from "components/form"
 import ContractActions from "./ContractActions"
 import ContractItem from "./ContractItem"
 import is from "auth/scripts/is"
+import { LinkButton } from "../../components/general"
 
 export const [useContract, ContractProvider] =
   createContext<ContractInfo>("useContract")
@@ -21,13 +22,14 @@ const Contract = () => {
   const [address, setAddress] = useState("")
   const { data: result, ...state } = useContractInfo(address)
 
+  const searchInput = (
+    <SearchInput value={address} onChange={(e) => setAddress(e.target.value)} />
+  )
+
   return (
     <Page title={is.mobile() ? "" : t("Contract")} extra={<ContractActions />}>
       <Grid gap={20}>
-        <SearchInput
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-        />
+        {is.mobile() ? <div className="row">{searchInput}</div> : searchInput}
 
         {state.error ? (
           <Card>

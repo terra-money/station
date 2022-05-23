@@ -32,7 +32,7 @@ const Asset = (props: Props) => {
           <div
             className={styles.amountContainer}
             onClick={() => {
-              if (is.mobile()) {
+              if (is.mobile() && has(balance)) {
                 toSend(token)
               }
             }}

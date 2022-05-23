@@ -1,11 +1,11 @@
 import { useTranslation } from "react-i18next"
-import { useLocation, useSearchParams } from "react-router-dom"
+import { useSearchParams } from "react-router-dom"
 import { AccAddress } from "@terra-money/terra.js"
 import { getAmount } from "utils/coin"
 import { useTokenBalance } from "data/queries/wasm"
 import { useBankBalance } from "data/queries/bank"
 import { useTokenItem } from "data/token"
-import { Page } from "components/layout"
+import { Auto, Page } from "components/layout"
 import TxContext from "../TxContext"
 import SendForm from "./SendForm"
 import Coins from "../../pages/wallet/Coins"
@@ -35,9 +35,8 @@ const SendTx = () => {
       </TxContext>
     </Page>
   ) : (
-    <Page {...state} title={t("Select Token")}>
-      <Coins />
-      <Tokens />
+    <Page {...state} title={t("Select a coin to send")}>
+      <Auto columns={[<Coins />, <Tokens />]} />
     </Page>
   )
 }

@@ -15,9 +15,12 @@
 
   @include mobile {
     display: flex;
-    border-left: 0;
-    border-right: 0;
-    border-radius: 0;
+    margin: 0 20px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    //border-left: 0;
+    //border-right: 0;
+    //border-radius: 0;
   }
 }
 
