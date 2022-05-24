@@ -50,16 +50,21 @@ const ConfirmForm = ({ action, payload }: Props) => {
 
   useEffect(() => {
     if (payload) {
-      console.log(payload)
       const parsedTx = parseTx(payload.params)
+
+      const origin =
+        (connectors?.[payload.handshakeTopic].peerMeta.url as string) || ""
 
       const txData: TxRequest = {
         ...parseDefault(payload),
-        // origin:
+        origin,
         tx: parsedTx,
         requestType: "post",
       }
+
       setTx(txData)
+
+      console.log(txData)
 
       setTxProps({
         confirmData: txData,

@@ -8,14 +8,14 @@ import { getIsNativeMsgFromExternal, TxRequest } from "utils/rnModule"
 import Message from "./Message"
 import styles from "./TxDetails.module.scss"
 
-const TxDetails = ({ tx }: TxRequest) => {
+const TxDetails = ({ tx, origin }: TxRequest) => {
   const { msgs, memo, fee } = tx
 
   const { t } = useTranslation()
 
   const fees = fee?.amount.toData()
   const contents = [
-    // { title: t("Origin"), content: origin },
+    { title: t("Origin"), content: origin },
     { title: t("Fee"), content: fees && <ReadMultiple list={fees} /> },
     { title: t("Memo"), content: memo },
   ]

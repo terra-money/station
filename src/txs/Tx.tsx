@@ -323,8 +323,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
     try {
       if (disabled) throw new Error(disabled)
 
-      // const tx = parseTx(confirmData.params)
-
       if (isWallet.ledger(wallet)) {
         return navigate("/auth/ledger/device", {
           state: JSON.stringify(confirmData.tx),
