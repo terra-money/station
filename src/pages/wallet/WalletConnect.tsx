@@ -19,7 +19,7 @@ const Selector = () => {
     <Grid gap={20}>
       {connectors && !isEmpty(connectors) ? (
         Object.values(connectors).map((value: any) => {
-          if (!isEmpty(value?.peerMeta)) return
+          // if (!isEmpty(value?.peerMeta)) return
           return <AssetWallet {...value} />
         })
       ) : (
