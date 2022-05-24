@@ -1,10 +1,11 @@
-import { FC, ReactNode } from "react"
+import { PropsWithChildren, ReactNode } from "react"
 import classNames from "classnames/bind"
 import styles from "./Grid.module.scss"
 
 const cx = classNames.bind(styles)
 
-export const Row: FC<{ align?: "start" }> = ({ align, children }) => {
+export const Row = (props: PropsWithChildren<{ align?: "start" }>) => {
+  const { align, children } = props
   return <div className={cx(styles.row, align)}>{children}</div>
 }
 
@@ -12,7 +13,7 @@ interface ColProps {
   span?: number
 }
 
-export const Col: FC<ColProps> = ({ span = 1, children }) => {
+export const Col = ({ span = 1, children }: PropsWithChildren<ColProps>) => {
   return (
     <div className={styles.col} style={{ flex: span }}>
       {children}
@@ -27,7 +28,9 @@ interface Props {
   rows?: number
 }
 
-const Grid: FC<Props> = ({ gap, className, columns, rows, children }) => {
+const Grid = (props: PropsWithChildren<Props>) => {
+  const { gap, className, columns, rows, children } = props
+
   const style = {
     gap,
     gridTemplateColumns: columns && `repeat(${columns}, 1fr)`,

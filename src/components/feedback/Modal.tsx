@@ -1,4 +1,4 @@
-import { FC, ReactNode, useEffect, useState } from "react"
+import { PropsWithChildren, ReactNode, useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
 import ReactModal from "react-modal"
 import classNames from "classnames/bind"
@@ -27,7 +27,8 @@ interface ModalProps {
 
 export interface Props extends ModalProps, ReactModal.Props {}
 
-const Modal: FC<Props> = ({ title, children, footer, ...props }) => {
+const Modal = (props: PropsWithChildren<Props>) => {
+  const { title, children, footer } = props
   const { icon, closeIcon, onRequestClose, confirm, maxHeight } = props
 
   return (
@@ -75,7 +76,7 @@ interface ModalButtonProps extends ModalProps {
   modalKey?: string
 }
 
-export const ModalButton: FC<ModalButtonProps> = (props) => {
+export const ModalButton = (props: PropsWithChildren<ModalButtonProps>) => {
   const { pathname } = useLocation()
   const { renderButton, modalKey = pathname, ...rest } = props
 

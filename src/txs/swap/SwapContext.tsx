@@ -1,4 +1,4 @@
-import { FC } from "react"
+import { PropsWithChildren } from "react"
 import { Coins } from "@terra-money/terra.js"
 import createContext from "utils/createContext"
 import { combineState } from "data/query"
@@ -17,7 +17,7 @@ interface Swap {
 
 export const [useSwap, SwapProvider] = createContext<Swap>("useSwap")
 
-const SwapContext: FC = ({ children }) => {
+const SwapContext = ({ children }: PropsWithChildren<{}>) => {
   const { data: activeDenoms, ...activeDenomsState } = useActiveDenoms()
   const { data: exchangeRates, ...exchangeRatesState } = useExchangeRates()
   const { data: pairs, ...cw20PairsState } = useCW20Pairs()

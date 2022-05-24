@@ -1,7 +1,7 @@
-import { FC } from "react"
+import { PropsWithChildren } from "react"
 import styles from "./Details.module.scss"
 
-const Details: FC = ({ children }) => {
+const Details = ({ children }: PropsWithChildren<{}>) => {
   return <div className={styles.component}>{children}</div>
 }
 

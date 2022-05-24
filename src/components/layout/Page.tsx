@@ -1,4 +1,4 @@
-import { FC, ReactNode } from "react"
+import { PropsWithChildren, ReactNode } from "react"
 import classNames from "classnames/bind"
 import { ErrorBoundary, WithFetching } from "../feedback"
 import Container from "./Container"
@@ -15,8 +15,8 @@ interface Props extends QueryState {
   sub?: boolean // used as a page in a page
 }
 
-const Page: FC<Props> = ({ title, extra, children, small, sub, ...props }) => {
-  const { mainClassName } = props
+const Page = (props: PropsWithChildren<Props>) => {
+  const { title, extra, children, small, sub, mainClassName } = props
 
   return (
     <WithFetching {...props}>

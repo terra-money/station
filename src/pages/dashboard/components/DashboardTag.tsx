@@ -1,7 +1,7 @@
-import { FC } from "react"
+import { PropsWithChildren } from "react"
 import styles from "./DashboardTag.module.scss"
 
-const DashboardTag: FC = ({ children }) => {
+const DashboardTag = ({ children }: PropsWithChildren<{}>) => {
   return <span className={styles.tag}>{children}</span>
 }
 

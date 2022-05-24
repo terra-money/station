@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo } from "react"
+import { PropsWithChildren, useEffect, useMemo } from "react"
 import { QueryClient, QueryClientProvider } from "react-query"
 import { useWallet, WalletStatus } from "@terra-money/wallet-provider"
 import { useNetwork, useNetworkName } from "data/wallet"
@@ -7,7 +7,7 @@ import Splash from "auth/modules/Splash"
 import Online from "./containers/Online"
 import WithNodeInfo from "./WithNodeInfo"
 
-const InitWallet: FC = ({ children }) => {
+const InitWallet = ({ children }: PropsWithChildren<{}>) => {
   useOnNetworkChange()
   const { status } = useWallet()
   const queryClient = useQueryClient()

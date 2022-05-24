@@ -1,7 +1,7 @@
-import { FC } from "react"
+import { PropsWithChildren } from "react"
 import styles from "./Overlay.module.scss"
 
-const Overlay: FC = ({ children }) => {
+const Overlay = ({ children }: PropsWithChildren<{}>) => {
   return <div className={styles.overlay}>{children}</div>
 }
 

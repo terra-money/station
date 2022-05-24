@@ -1,4 +1,4 @@
-import { FC, ReactNode, useState } from "react"
+import { PropsWithChildren, ReactNode, useState } from "react"
 import LinearProgress from "@mui/material/LinearProgress"
 import { getErrorMessage } from "utils/error"
 import useTimeout from "utils/hooks/useTimeout"
@@ -43,7 +43,7 @@ export const WithFetching = (props: WithFetchingProps) => {
   )
 }
 
-const Fetching: FC<Props> = ({ children, ...state }) => {
+const Fetching = ({ children, ...state }: PropsWithChildren<Props>) => {
   return (
     <WithFetching {...state}>
       {(progress, wrong) => (

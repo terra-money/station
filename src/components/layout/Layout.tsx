@@ -1,4 +1,4 @@
-import { FC } from "react"
+import { PropsWithChildren } from "react"
 import { atom, useRecoilValue } from "recoil"
 import classNames from "classnames/bind"
 import Container from "./Container"
@@ -12,15 +12,15 @@ export const mobileIsMenuOpenState = atom({
 })
 
 /* components */
-export const Banner: FC = ({ children }) => {
+export const Banner = ({ children }: PropsWithChildren<{}>) => {
   return <div className={styles.banner}>{children}</div>
 }
 
-export const Sidebar: FC = ({ children }) => {
+export const Sidebar = ({ children }: PropsWithChildren<{}>) => {
   return <div className={styles.sidebar}>{children}</div>
 }
 
-export const Header: FC = ({ children }) => {
+export const Header = ({ children }: PropsWithChildren<{}>) => {
   return (
     <header className={styles.header}>
       <Container className={styles.container}>
@@ -30,11 +30,11 @@ export const Header: FC = ({ children }) => {
   )
 }
 
-export const Content: FC = ({ children }) => {
+export const Content = ({ children }: PropsWithChildren<{}>) => {
   return <main className={styles.main}>{children}</main>
 }
 
-const Layout: FC = ({ children }) => {
+const Layout = ({ children }: PropsWithChildren<{}>) => {
   const isMenuOpen = useRecoilValue(mobileIsMenuOpenState)
 
   return (

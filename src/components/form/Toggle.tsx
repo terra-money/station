@@ -1,4 +1,4 @@
-import { FC } from "react"
+import { PropsWithChildren } from "react"
 import classNames from "classnames/bind"
 import styles from "./Toggle.module.scss"
 
@@ -9,7 +9,9 @@ interface Props {
   onChange: () => void
 }
 
-const Toggle: FC<Props> = ({ checked, onChange, children }) => {
+const Toggle = (props: PropsWithChildren<Props>) => {
+  const { checked, onChange, children } = props
+
   return (
     <button className={cx(styles.toggle, { checked })} onClick={onChange}>
       <span className={styles.track}>

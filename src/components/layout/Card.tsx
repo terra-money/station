@@ -1,4 +1,4 @@
-import { FC, ReactNode } from "react"
+import { PropsWithChildren, ReactNode } from "react"
 import { Link, To } from "react-router-dom"
 import classNames from "classnames/bind"
 import { Flex } from "../layout"
@@ -27,7 +27,8 @@ export interface Props extends QueryState {
   to?: To
 }
 
-const Card: FC<Props> = ({ title, extra, children, onClick, to, ...props }) => {
+const Card = (props: PropsWithChildren<Props>) => {
+  const { title, extra, children, onClick, to } = props
   const { size, bordered, bg, disabled, className, mainClassName } = props
 
   return (

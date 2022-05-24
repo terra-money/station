@@ -1,7 +1,7 @@
-import { FC } from "react"
+import { PropsWithChildren } from "react"
 import { Flex } from "components/layout"
 
-const Filter: FC = ({ children }) => {
+const Filter = ({ children }: PropsWithChildren<{}>) => {
   return <Flex gap={8}>{children}</Flex>
 }
 

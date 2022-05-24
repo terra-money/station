@@ -1,4 +1,4 @@
-import { FC } from "react"
+import { PropsWithChildren } from "react"
 import classNames from "classnames/bind"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import { FormatConfig } from "@terra.kitchen/utils"
@@ -73,7 +73,9 @@ interface GridProps {
   maxHeight?: number | true
 }
 
-export const TokenCardGrid: FC<GridProps> = ({ children, maxHeight }) => {
+export const TokenCardGrid = (props: PropsWithChildren<GridProps>) => {
+  const { children, maxHeight } = props
+
   return (
     <section className={styles.grid} style={getMaxHeightStyle(maxHeight, 320)}>
       {children}

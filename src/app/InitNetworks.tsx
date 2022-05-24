@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react"
+import { PropsWithChildren, useEffect, useState } from "react"
 import { fromPairs } from "ramda"
 import axios from "axios"
 import { ASSETS } from "config/constants"
@@ -8,7 +8,7 @@ import { useCustomNetworks } from "data/settings/CustomNetworks"
 export const [useNetworks, NetworksProvider] =
   createContext<CustomNetworks>("useNetworks")
 
-const InitNetworks: FC = ({ children }) => {
+const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
   const [networks, setNetworks] = useState<CustomNetworks>()
   const { list } = useCustomNetworks()
 

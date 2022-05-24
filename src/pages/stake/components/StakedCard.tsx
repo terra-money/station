@@ -1,4 +1,4 @@
-import { FC } from "react"
+import { PropsWithChildren } from "react"
 import { has } from "utils/num"
 import { useCurrency } from "data/settings/Currency"
 import { Grid, Card } from "components/layout"
@@ -11,7 +11,8 @@ interface Props extends CardProps {
   value?: Value
 }
 
-const StakedCard: FC<Props> = ({ amount, value, children, ...props }) => {
+const StakedCard = (props: PropsWithChildren<Props>) => {
+  const { amount, value, children } = props
   const currency = useCurrency()
 
   return (

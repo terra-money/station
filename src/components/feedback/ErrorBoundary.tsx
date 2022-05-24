@@ -1,4 +1,4 @@
-import { Component, ReactNode } from "react"
+import { Component, PropsWithChildren, ReactNode } from "react"
 import { AxiosError } from "axios"
 import { getErrorMessage } from "utils/error"
 import Wrong from "./Wrong"
@@ -14,7 +14,7 @@ export interface State {
 
 const initialState = { error: null } as State
 
-class ErrorBoundary extends Component<Props, State> {
+class ErrorBoundary extends Component<PropsWithChildren<Props>, State> {
   state = initialState
 
   static getDerivedStateFromError(error: Error) {

@@ -1,4 +1,5 @@
-import { FC, ForwardedRef, forwardRef, HTMLAttributes } from "react"
+import { ForwardedRef, HTMLAttributes, PropsWithChildren } from "react"
+import { forwardRef } from "react"
 import classNames from "classnames"
 import { truncate } from "@terra.kitchen/utils"
 import { FINDER } from "config/constants"
@@ -18,8 +19,11 @@ interface Props extends HTMLAttributes<HTMLAnchorElement> {
   short?: boolean
 }
 
-const FinderLink: FC<Props> = forwardRef(
-  ({ children, short, ...rest }, ref: ForwardedRef<HTMLAnchorElement>) => {
+const FinderLink = forwardRef(
+  (
+    { children, short, ...rest }: PropsWithChildren<Props>,
+    ref: ForwardedRef<HTMLAnchorElement>
+  ) => {
     const { block, tx, validator, ...attrs } = rest
     const networkName = useNetworkName()
     const path = tx

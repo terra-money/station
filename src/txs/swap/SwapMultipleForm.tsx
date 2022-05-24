@@ -146,7 +146,10 @@ const SwapMultipleForm = () => {
   /* fee */
   const estimationTxValues = useMemo(() => ({ askAsset }), [askAsset])
 
-  const excludeGasDenom = useCallback((denom) => !!state[denom], [state])
+  const excludeGasDenom = useCallback(
+    (denom: string) => !!state[denom],
+    [state]
+  )
 
   const tx = {
     initialGasDenom,

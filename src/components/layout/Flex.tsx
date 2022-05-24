@@ -1,4 +1,4 @@
-import { FC } from "react"
+import { PropsWithChildren } from "react"
 import classNames from "classnames/bind"
 import styles from "./Flex.module.scss"
 
@@ -11,7 +11,7 @@ interface Props {
   wrap?: boolean
 }
 
-export const InlineFlex: FC<Props> = (props) => {
+export const InlineFlex = (props: PropsWithChildren<Props>) => {
   const { gap, start, wrap, className, children } = props
   return (
     <span
@@ -23,7 +23,7 @@ export const InlineFlex: FC<Props> = (props) => {
   )
 }
 
-export const FlexColumn: FC<Props> = (props) => {
+export const FlexColumn = (props: PropsWithChildren<Props>) => {
   const { gap, start, wrap, className, children } = props
   return (
     <div
@@ -35,7 +35,7 @@ export const FlexColumn: FC<Props> = (props) => {
   )
 }
 
-const Flex: FC<Props> = (props) => {
+const Flex = (props: PropsWithChildren<Props>) => {
   const { gap, start, wrap, className, children } = props
   return (
     <div
