@@ -291,10 +291,10 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const saveSession = (connector: Connector) => {
     const currentConnectors = getStoredSessions()
 
-    if (!isEmpty(connector?.peerMeta)) {
-      alert("don't have peerMeta")
-      return navigate("/", { replace: true })
-    }
+    // if (!isEmpty(connector?.peerMeta)) {
+    //   alert("don't have peerMeta")
+    //   return navigate("/", { replace: true })
+    // }
 
     const sessions: Sessions = {
       ...currentConnectors,
