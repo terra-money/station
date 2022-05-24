@@ -6,6 +6,7 @@ import TxContext from "../TxContext"
 import ConfirmForm from "./ConfirmForm"
 
 import { fromBase64 } from "utils/data"
+import styles from "../connect/Connect.module.scss"
 
 const ConfirmTx = () => {
   const { t } = useTranslation()

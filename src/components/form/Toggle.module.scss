@@ -38,3 +38,20 @@
     transform: translate(10px, 0);
   }
 }
+
+.large {
+  .track {
+    width: 50px;
+    height: 30px;
+    border-radius: 15px;
+  }
+  //&.checked {
+  //  .track {
+  //    background: var(--button-primary-bg);
+  //  }
+  //}
+  .indicator {
+    width: 28px;
+    height: 28px;
+  }
+}

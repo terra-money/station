@@ -60,7 +60,15 @@ export const Header: FC = ({ children }) => {
               </>
             ) : (
               <>
-                <button onClick={() => navigate(-1)}>
+                <button
+                  onClick={() => {
+                    if (window.history.length <= 1) {
+                      navigate("/", { replace: true })
+                    } else {
+                      navigate(-1)
+                    }
+                  }}
+                >
                   <BackIcon {...{ width: 24, height: 24 }} />
                 </button>
                 {subTitle && (

@@ -1,7 +1,30 @@
 import { atom } from "recoil"
 import { RN_APIS, WebViewMessage } from "../../utils/rnModule"
 
-export type Sessions = Record<string, any>
+export type PeerMeta = {
+  name: string
+  url?: string
+  icons?: string[]
+}
+export type Connector = {
+  accounts: string[]
+  bridge: string
+  chainId: string
+  clientId: string
+  clientMeta: {
+    description: string
+    url: string
+    icons: string[]
+    name: string
+  }
+  connected: boolean
+  handshakeId: number
+  handshakeTopic: string
+  key: string
+  peerId: string
+  peerMeta: PeerMeta
+}
+export type Sessions = Record<string, Connector>
 
 export const getStoredSessions = (): Sessions | undefined => {
   const sessions = localStorage.getItem("sessions")

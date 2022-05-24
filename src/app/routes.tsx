@@ -1,6 +1,7 @@
 import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useRoutes } from "react-router-dom"
+import { useIsClassic } from "data/query"
 
 import { ReactComponent as WalletIcon } from "styles/images/menu/Wallet.svg"
 import { ReactComponent as NFTIcon } from "styles/images/menu/NFT.svg"
@@ -9,13 +10,9 @@ import { ReactComponent as SwapIcon } from "styles/images/menu/Swap.svg"
 import { ReactComponent as StakeIcon } from "styles/images/menu/Stake.svg"
 import { ReactComponent as GovernanceIcon } from "styles/images/menu/Governance.svg"
 import { ReactComponent as ContractIcon } from "styles/images/menu/Contract.svg"
-<<<<<<< HEAD
-import { useIsClassic } from "data/query"
-
-=======
 import { ReactComponent as SettingsIcon } from "styles/images/menu/Settings.svg"
 import { ReactComponent as DashboardIcon } from "styles/images/menu/Dashboard.svg"
->>>>>>> b43288f (update header styles)
+
 /* menu */
 import Dashboard from "pages/dashboard/Dashboard"
 import Wallet from "pages/wallet/Wallet"
@@ -67,6 +64,7 @@ import NotFound from "pages/NotFound"
 
 /* Deep Link */
 import SelectSend from "txs/send/SelectSend"
+import WalletSettings from "../auth/modules/manage/WalletSettings"
 
 const ICON_SIZE = { width: 20, height: 20 }
 
@@ -187,6 +185,12 @@ export const useNav = () => {
 
     /* Deep Link */
     ...deepLinkPage,
+
+    /* Mobile preference */
+    {
+      path: "/preference",
+      element: <WalletSettings />,
+    },
   ]
 
   const mobileMenu = [
@@ -198,8 +202,8 @@ export const useNav = () => {
     },
     ...menu,
     {
-      path: "/auth",
-      element: <Auth />,
+      path: "/preference",
+      element: <WalletSettings />,
       title: t("Settings"),
       icon: <SettingsIcon {...ICON_SIZE} />,
     },

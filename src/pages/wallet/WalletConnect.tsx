@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next"
-import { useLocation } from "react-router-dom"
 import { isEmpty } from "ramda"
 import { Grid } from "components/layout"
 import { Button } from "components/general"
@@ -20,6 +19,7 @@ const Selector = () => {
     <Grid gap={20}>
       {connectors && !isEmpty(connectors) ? (
         Object.values(connectors).map((value: any) => {
+          if (!isEmpty(value?.peerMeta)) return
           return <AssetWallet {...value} />
         })
       ) : (
@@ -32,7 +32,6 @@ const Selector = () => {
 const WalletConnect = () => {
   const { t } = useTranslation()
   const connectors = getStoredSessions()
-  const { pathname } = useLocation()
 
   return connectors && !isEmpty(connectors) ? (
     <ModalButton
@@ -48,7 +47,6 @@ const WalletConnect = () => {
         button={
           <ModalButton
             modalType={is.mobile() ? Mode.BOTTOM : Mode.DEFAULT}
-            title={"ss"}
             renderButton={(open) => (
               <Button block color="danger" onClick={open}>
                 {t("Disconnect all sessions")}

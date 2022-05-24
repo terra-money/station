@@ -1,15 +1,18 @@
 import { Fragment, useEffect, useState } from "react"
-// import { useTranslation } from "react-i18next"
+import { useTranslation } from "react-i18next"
 // import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 
 import { AccAddress } from "@terra-money/terra.js"
 import { useTnsAddress } from "data/external/tns"
-import { Auto, Card } from "components/layout"
+import { Auto, Card, Flex, Grid } from "components/layout"
 import { Form } from "components/form"
 import Tx from "../Tx"
 import { RN_APIS, WebViewMessage } from "utils/rnModule"
 import { useNavigate } from "react-router-dom"
+import styles from "../connect/Connect.module.scss"
+import { ReactComponent as WalletConnectIcon } from "../../styles/images/menu/Walletconnect.svg"
+import GridConfirm from "../../components/layout/GridConfirm"
 
 interface TxValues {
   recipient?: string // AccAddress | TNS
@@ -24,7 +27,7 @@ interface Props {
 }
 
 const ConfirmForm = ({ action, payload }: Props) => {
-  // const { t } = useTranslation()
+  const { t } = useTranslation()
   const navigate = useNavigate()
 
   const [peerData, setPeerData] = useState<any>(null)
@@ -67,66 +70,35 @@ const ConfirmForm = ({ action, payload }: Props) => {
   }, [action, payload])
 
   return (
-    <Auto
-      columns={[
-        <Card isFetching={tnsState.isLoading}>
-          <Tx {...tx}>
-            {({ confirm, connect }) => (
-              <Form
-                onSubmit={handleSubmit(
-                  action === "wallet_connect" ? connect.fn : confirm.fn
-                )}
-              >
-                {peerData ? (
-                  <dl>
-                    {Object.entries(peerData).map(([key, value]) => {
-                      if (["name", "url"].includes(key)) {
-                        return (
-                          <Fragment key={key}>
-                            <dt>{key}</dt>
-                            <dd
-                              style={{
-                                maxWidth: "200px",
-                              }}
-                            >
-                              {JSON.stringify(value)}
-                            </dd>
-                          </Fragment>
-                        )
-                      } else {
-                        return null
-                      }
-                    })}
-                  </dl>
-                ) : (
-                  msgs &&
-                  msgs.map((msg: any) => (
-                    <dl key={msg.contact}>
-                      {Object.entries(msg).map(([key, value], idx) => {
-                        return (
-                          <Fragment key={`${key}-${idx}`}>
-                            <dt>{key}</dt>
-                            <dd
-                              style={{
-                                maxWidth: "200px",
-                              }}
-                            >
-                              {JSON.stringify(value)}
-                            </dd>
-                          </Fragment>
-                        )
-                      })}
-                    </dl>
-                  ))
-                )}
-                {action === "wallet_connect" ? connect.button : confirm.button}
-              </Form>
-            )}
-          </Tx>
-        </Card>,
-        <></>,
-      ]}
-    />
+    <Tx {...tx}>
+      {({ confirm }) => (
+        <Form onSubmit={handleSubmit(confirm.fn)}>
+          {msgs && (
+            <GridConfirm button={confirm.button} className={styles.connect}>
+              <Grid>
+                <Flex>confirm</Flex>
+                <Card className={styles.detail} isFetching={tnsState.isLoading}>
+                  <Grid gap={16}>
+                    {msgs.map((msg: any) => (
+                      <div key={msg.contact}>
+                        {Object.entries(msg).map(([key, value], idx) => {
+                          return (
+                            <div key={`${key}-${idx}`}>
+                              <h2>{key}</h2>
+                              <p>{JSON.stringify(value)}</p>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    ))}
+                  </Grid>
+                </Card>
+              </Grid>
+            </GridConfirm>
+          )}
+        </Form>
+      )}
+    </Tx>
   )
 }
 

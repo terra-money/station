@@ -16,8 +16,7 @@ import ManageWallets from "./manage/ManageWallets"
 import ExportWalletPage from "./manage/ExportWalletPage"
 import ChangePasswordPage from "./manage/ChangePasswordPage"
 import DeleteWalletPage from "./manage/DeleteWalletPage"
-import UseBioAuthPage from "./manage/UseBioAuthPage"
-import AccessWithLedgerPage from "../ledger/AccessWithLedgerPage"
+// import AccessWithLedgerPage from "../ledger/AccessWithLedgerPage"
 
 const Auth = () => {
   return (
@@ -40,7 +39,6 @@ const Auth = () => {
       <Route path="export" element={<ExportWalletPage />} />
       <Route path="password" element={<ChangePasswordPage />} />
       <Route path="delete" element={<DeleteWalletPage />} />
-      <Route path="bio" element={<UseBioAuthPage />} />
     </Routes>
   )
 }

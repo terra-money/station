@@ -2,8 +2,9 @@ import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import { Form, FormItem } from "components/form"
 import { Input, Submit } from "components/form"
-import useAuth from "../../hooks/useAuth"
-import { RN_APIS, WebViewMessage } from "../../../utils/rnModule"
+import useAuth from "auth/hooks/useAuth"
+import { RN_APIS, WebViewMessage } from "utils/rnModule"
+import styles from "app/sections/MobileItem.module.scss"
 
 interface Values {
   password: string
@@ -32,7 +33,8 @@ const UseBioAuthForm = () => {
   }
 
   return (
-    <>
+    <div className={styles.container}>
+      <h1>{t("Use Bio Auth")}</h1>
       <Form onSubmit={handleSubmit(isUseBio ? submitDisable : submitAble)}>
         {isUseBio ? (
           <>
@@ -41,18 +43,21 @@ const UseBioAuthForm = () => {
           </>
         ) : (
           <>
-            <FormItem label={t("Password")} error={errors.password?.message}>
+            <FormItem
+              label={t("Confirm with password")}
+              error={errors.password?.message}
+            >
               <Input
                 {...register("password", { validate: validatePassword })}
                 type="password"
                 autoFocus
               />
             </FormItem>
-            <Submit />
+            <Submit>Allow</Submit>
           </>
         )}
       </Form>
-    </>
+    </div>
   )
 }
 

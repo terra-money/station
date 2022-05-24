@@ -53,25 +53,24 @@ const App = () => {
       if (event.data.includes("setImmediate$0")) return
 
       const { data, type } = JSON.parse(event.data)
-      console.log("Webview", type, data)
       switch (type) {
         case RN_APIS.DEEPLINK: {
-          if (data?.payload !== "null" && data?.action === "wallet_connect") {
-            navigate("/connect", {
-              replace: true,
-              state: data,
-            })
-          }
-          if (data?.payload !== "null" && data?.action !== "wallet_connect") {
-            navigate("/confirm", {
-              replace: true,
-              state: data,
-            })
+          if (data?.payload !== "null") {
+            if (data?.action === "wallet_connect") {
+              navigate("/connect", {
+                replace: true,
+                state: data,
+              })
+            } else if (data?.action !== "wallet_connect") {
+              navigate("/confirm", {
+                replace: true,
+                state: data,
+              })
+            }
           }
           break
         }
         case RN_APIS.DISCONNECT_SESSIONS: {
-          console.log(data)
           if (typeof data === "string") {
             disconnectSession(data)
           }
@@ -171,7 +170,6 @@ const App = () => {
               <SelectTheme />
             </>
           )}
-          <SelectTheme />
           <ConnectWallet />
         </section>
         <ValidatorButton />

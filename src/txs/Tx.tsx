@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom"
 import { useRecoilValue, useRecoilState } from "recoil"
 import classNames from "classnames"
 import BigNumber from "bignumber.js"
-import { head, isNil } from "ramda"
+import { head, isEmpty, isNil } from "ramda"
 
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline"
@@ -39,8 +39,9 @@ import useToPostMultisigTx from "pages/multisig/utils/useToPostMultisigTx"
 import { isWallet, useAuth } from "auth"
 import { PasswordError } from "auth/scripts/keystore"
 import {
-  getStoredSessions,
+  Connector,
   Sessions,
+  getStoredSessions,
   storeSessions,
 } from "auth/scripts/sessions"
 
@@ -287,11 +288,16 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   const submittingLabel = isWallet.ledger(wallet) ? t("Confirm in ledger") : ""
 
-  const saveSession = (address: string, connector: any) => {
-    const connectors = getStoredSessions()
+  const saveSession = (connector: Connector) => {
+    const currentConnectors = getStoredSessions()
+
+    if (!isEmpty(connector?.peerMeta)) {
+      alert("don't have peerMeta")
+      return navigate("/", { replace: true })
+    }
 
     const sessions: Sessions = {
-      ...connectors,
+      ...currentConnectors,
       [connector.handshakeTopic]: connector,
     }
 
@@ -303,9 +309,10 @@ function Tx<TxValues>(props: Props<TxValues>) {
       chainID,
       userAddress: address,
     })
-    saveSession(address as string, connector)
 
     if (connector) {
+      console.log("connectSession", connector)
+      saveSession(connector as Connector)
       navigate("/", { replace: true })
     }
   }, [address])
@@ -561,16 +568,24 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
           {failed && <FormError>{failed}</FormError>}
 
-          <Submit
-            // disabled={!estimatedGas || !!disabled}
-            submitting={submitting}
-          >
-            {submitting
-              ? submittingLabel
-              : isUseBio
-              ? submittingLabel
-              : disabled}
-          </Submit>
+          {/*<Submit*/}
+          {/*  // disabled={!estimatedGas || !!disabled}*/}
+          {/*  submitting={submitting}*/}
+          {/*>*/}
+          {/*  {submitting*/}
+          {/*    ? submittingLabel*/}
+          {/*    : isUseBio*/}
+          {/*    ? submittingLabel*/}
+          {/*    : disabled}*/}
+          {/*</Submit>*/}
+          <Grid columns={2} gap={12}>
+            <Button color="danger" onClick={() => {}}>
+              {t("Cancel")}
+            </Button>
+            <Button color="primary" type="submit">
+              {t("Sign")}
+            </Button>
+          </Grid>
         </Grid>
       )}
     </>

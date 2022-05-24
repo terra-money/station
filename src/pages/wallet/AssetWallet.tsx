@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next"
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
 import is from "auth/scripts/is"
-import { disconnectSession } from "auth/scripts/sessions"
+import { disconnectSession, PeerMeta } from "auth/scripts/sessions"
 import { ModalButton, Mode, useModal } from "components/feedback"
 import { Button, InternalButton } from "components/general"
 import { Card } from "components/layout"
@@ -9,11 +9,7 @@ import styles from "./AssetWallet.module.scss"
 
 export interface Props {
   handshakeTopic: string
-  peerMeta: {
-    name: string
-    url?: string
-    icons?: string[]
-  }
+  peerMeta: PeerMeta
 }
 
 const AssetWallet = (props: Props) => {

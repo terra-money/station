@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next"
 import { flatten, uniq } from "ramda"
 import ShortcutOutlinedIcon from "@mui/icons-material/ShortcutOutlined"
 import RestartAltIcon from "@mui/icons-material/RestartAlt"
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
 import { isDenomTerraNative } from "@terra.kitchen/utils"
 import { has } from "utils/num"
 import { useIsClassic } from "data/query"
@@ -11,6 +12,7 @@ import { useCW20Pairs } from "data/Terra/TerraAssets"
 import { InternalLink } from "components/general"
 import { ExtraActions } from "components/layout"
 import { Props } from "./Asset"
+import is from "auth/scripts/is"
 
 const AssetActions = ({ token, symbol, balance }: Props) => {
   const { t } = useTranslation()
@@ -20,12 +22,18 @@ const AssetActions = ({ token, symbol, balance }: Props) => {
   const isClassic = useIsClassic()
   const getIsSwappableToken = useGetIsSwappableToken()
 
-  return (
+  return is.mobile() ? (
+    <InternalLink
+      icon={<ArrowForwardIosIcon style={{ fontSize: 12 }} />}
+      to={`/send?token=${token}`}
+      state={stateAddress}
+      disabled={isWalletEmpty || !has(balance)}
+    />
+  ) : (
     <ExtraActions>
       <InternalLink
         icon={<ShortcutOutlinedIcon style={{ fontSize: 18 }} />}
         to={`/send?token=${token}`}
-        state={stateAddress}
         disabled={isWalletEmpty || !has(balance)}
       >
         {t("Send")}

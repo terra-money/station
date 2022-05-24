@@ -1,16 +1,28 @@
 import { ReactNode, useEffect } from "react"
 import { Link } from "react-router-dom"
 import styles from "./AuthList.module.scss"
-import { RN_APIS, WebViewMessage } from "../../utils/rnModule"
+import classNames from "classnames/bind"
+
+const cx = classNames.bind(styles)
 
 type Item =
   | { to: string; children: string; icon: ReactNode }
   | { onClick: () => void; children: string; icon: ReactNode }
+  | { children: string; icon: ReactNode }
 
-const AuthList = ({ list }: { list: Item[] }) => {
-  useEffect(() => {})
+const AuthList = ({ list, isModal }: { list: Item[]; isModal?: boolean }) => {
+  const className = cx(styles.list, { isModal })
 
   const renderItem = ({ children, icon, ...props }: Item) => {
+    if (!("onClick" in props) && !("to" in props)) {
+      return (
+        <button className={styles.link} key={children}>
+          {children}
+          {icon && <div className={styles.action}>{icon}</div>}
+        </button>
+      )
+    }
+
     if ("onClick" in props) {
       const { onClick } = props
       return (
@@ -30,7 +42,7 @@ const AuthList = ({ list }: { list: Item[] }) => {
     )
   }
 
-  return <div className={styles.list}>{list.map(renderItem)}</div>
+  return <div className={className}>{list.map(renderItem)}</div>
 }
 
 export default AuthList

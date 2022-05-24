@@ -54,7 +54,6 @@ const useAuth = () => {
   const [isAbleBio] = useRecoilState(isAbleBioState)
   const [isUseBio, setIsUseBio] = useRecoilState(isUseBioState)
   const wallets = getStoredWallets()
-  const navigate = useNavigate()
 
   const initBio = async (address: string) => {
     const keys = getBioKeys()
@@ -141,15 +140,6 @@ const useAuth = () => {
   const getKey = (password: string) => {
     const { name } = getConnectedWallet()
     return getDecryptedKey({ name, password })
-  }
-
-  const parseWithFunctions = (obj: string) => {
-    return JSON.parse(obj, (k, v) => {
-      if (typeof v === "string" && v.indexOf("function") >= 0) {
-        return eval(v)
-      }
-      return v
-    })
   }
 
   const getLedgerKey = async () => {

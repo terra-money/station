@@ -3,6 +3,7 @@ import classNames from "classnames/bind"
 import PaletteOutlinedIcon from "@mui/icons-material/PaletteOutlined"
 import LockIcon from "@mui/icons-material/Lock"
 import InfoIcon from "@mui/icons-material/Info"
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
 import { capitalize } from "@mui/material"
 import { readAmount } from "@terra.kitchen/utils"
 import { themes } from "styles/themes/themes"
@@ -63,16 +64,26 @@ const SelectTheme = () => {
   const { t } = useTranslation()
   const address = useAddress()
   const validate = useValidateTheme()
+  const [currentTheme] = useThemeState()
 
   return (
     <ModalButton
       title={t("Select theme")}
       modalType={is.mobile() ? Mode.FULL : Mode.DEFAULT}
-      renderButton={(open) => (
-        <HeaderIconButton onClick={open}>
-          <PaletteOutlinedIcon style={{ fontSize: 18 }} />
-        </HeaderIconButton>
-      )}
+      renderButton={
+        is.mobile()
+          ? (open) => (
+              <HeaderIconButton onClick={open}>
+                {capitalize(currentTheme?.name)}
+                <ArrowForwardIosIcon />
+              </HeaderIconButton>
+            )
+          : (open) => (
+              <HeaderIconButton onClick={open}>
+                <PaletteOutlinedIcon style={{ fontSize: 18 }} />
+              </HeaderIconButton>
+            )
+      }
     >
       <Grid gap={20}>
         <Selector />

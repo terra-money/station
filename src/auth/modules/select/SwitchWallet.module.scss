@@ -3,12 +3,18 @@
 .list {
   display: grid;
   gap: 8px;
+  @include mobile {
+    gap: 0;
+  }
 }
 
 .wallet {
   @include flex(space-between);
   width: 100%;
   padding: 12px 16px;
+  @include mobile {
+    padding: 20px;
+  }
 }
 
 .active {

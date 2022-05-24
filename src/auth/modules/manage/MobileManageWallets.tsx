@@ -75,20 +75,16 @@ export const useManageWallet = () => {
     : [toExport, toPassword, toDelete, toSignMultisig, lockWallet]
 }
 
-const ManageWallets = () => {
-  const { t } = useTranslation()
+export const ManageConnecting = () => {
   const { available } = useAuth()
-  const list = useManageWallet()
 
   return (
-    <Page title={t("Manage wallets")}>
-      <Col>
-        <ConnectedWallet>
-          {list && <AuthList list={list} />}
-          {!!available.length && <AuthList list={available} />}
-        </ConnectedWallet>
-      </Col>
-    </Page>
+    <>{!!available.length && <AuthList list={available} isModal={true} />}</>
   )
 }
-export default ManageWallets
+
+export const ManageConnected = () => {
+  const list = useManageWallet()
+
+  return <>{list && <AuthList list={list} isModal={true} />}</>
+}

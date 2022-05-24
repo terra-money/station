@@ -1,0 +1,60 @@
+@import "mixins";
+
+.container {
+  @include mobile {
+    padding: 20px;
+    h1 {
+      margin-bottom: 40px;
+      font-size: 18px;
+      text-align: center;
+    }
+  }
+}
+
+.menuContainer {
+  background: var(--card-bg);
+  border-top: var(--border-width) solid var(--card-border);
+}
+.menuButton {
+  @include mobile {
+    @include flex;
+    padding: 20px;
+    width: 100%;
+    color: var(--text);
+    font-size: 16px;
+    font-weight: var(--bold);
+    transition: background var(--transition);
+    border-bottom: var(--border-width) solid var(--card-border);
+  }
+}
+
+.item {
+  @include mobile {
+    @include flex(flex-start, center);
+    padding: 20px;
+    font-weight: var(--bold);
+    svg {
+      margin-right: 4px;
+      width: 18px;
+      fill: currentColor;
+    }
+  }
+}
+
+.wallet {
+  @include mobile {
+    @include flex;
+    position: absolute;
+    top: 40px;
+    right: 20px;
+
+    width: 32px;
+    height: 32px;
+    background: var(--button-default-bg);
+    border-radius: 50%;
+    svg {
+      width: 18px;
+      fill: currentColor;
+    }
+  }
+}
