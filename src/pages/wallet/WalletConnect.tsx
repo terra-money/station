@@ -10,6 +10,9 @@ import { ReactComponent as WalletConnectIcon } from "styles/images/menu/Walletco
 import styles from "./WalletConnect.module.scss"
 import is from "auth/scripts/is"
 import GridConfirm from "../../components/layout/GridConfirm"
+import { useLocation } from "react-router-dom"
+import { useNav } from "../../app/routes"
+import { useEffect, useState } from "react"
 
 const Selector = () => {
   const connectors = getStoredSessions()
@@ -31,9 +34,23 @@ const Selector = () => {
 
 const WalletConnect = () => {
   const { t } = useTranslation()
+  const { pathname } = useLocation()
+  const { deepLinkPage } = useNav()
+  const [buttonView, setButtonView] = useState(true)
+
   const connectors = getStoredSessions()
 
-  return connectors && !isEmpty(connectors) ? (
+  useEffect(() => {
+    const deeplinkMenu = deepLinkPage.find((a) => a.path === pathname)
+
+    if (deeplinkMenu) {
+      setButtonView(false)
+    } else {
+      setButtonView(true)
+    }
+  }, [pathname])
+
+  return buttonView && connectors && !isEmpty(connectors) ? (
     <ModalButton
       title={t("Wallet connect")}
       modalType={is.mobile() ? Mode.FULL : Mode.DEFAULT}

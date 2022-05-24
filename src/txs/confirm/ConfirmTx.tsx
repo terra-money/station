@@ -1,15 +1,11 @@
 import { useMemo, useState } from "react"
-import { useTranslation } from "react-i18next"
 import { useLocation } from "react-router-dom"
 import { Page } from "components/layout"
 import TxContext from "../TxContext"
 import ConfirmForm from "./ConfirmForm"
-
 import { fromBase64 } from "utils/data"
-import styles from "../connect/Connect.module.scss"
 
 const ConfirmTx = () => {
-  const { t } = useTranslation()
   const { state }: { state: any } = useLocation()
   const [action, setAction] = useState<string>("")
 
@@ -23,7 +19,7 @@ const ConfirmTx = () => {
   }, [state])
 
   return (
-    <Page title={t("Confirm")}>
+    <Page>
       <TxContext>
         {parsedPayload && (
           <ConfirmForm action={action} payload={parsedPayload} />

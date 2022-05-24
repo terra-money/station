@@ -1,18 +1,24 @@
-import { Fragment, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
-// import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 
-import { AccAddress } from "@terra-money/terra.js"
+import { AccAddress, CreateTxOptions } from "@terra-money/terra.js"
 import { useTnsAddress } from "data/external/tns"
-import { Auto, Card, Flex, Grid } from "components/layout"
+import { Card, Flex, Grid } from "components/layout"
 import { Form } from "components/form"
 import Tx from "../Tx"
-import { RN_APIS, WebViewMessage } from "utils/rnModule"
+import {
+  parseDefault,
+  parseTx,
+  RN_APIS,
+  TxRequest,
+  WebViewMessage,
+} from "utils/rnModule"
 import { useNavigate } from "react-router-dom"
-import styles from "../connect/Connect.module.scss"
-import { ReactComponent as WalletConnectIcon } from "../../styles/images/menu/Walletconnect.svg"
 import GridConfirm from "../../components/layout/GridConfirm"
+import styles from "./Confirm.module.scss"
+import TxDetails from "./components/TxDetails"
+import { getStoredSessions } from "../../auth/scripts/sessions"
 
 interface TxValues {
   recipient?: string // AccAddress | TNS
@@ -27,12 +33,11 @@ interface Props {
 }
 
 const ConfirmForm = ({ action, payload }: Props) => {
-  const { t } = useTranslation()
   const navigate = useNavigate()
+  const connectors = getStoredSessions()
 
-  const [peerData, setPeerData] = useState<any>(null)
-  const [tx, setTx] = useState<any>(null)
-  const [msgs, setMsgs] = useState<any>(null)
+  const [txProps, setTxProps] = useState<any>(null)
+  const [tx, setTx] = useState<TxRequest>()
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })
@@ -41,61 +46,36 @@ const ConfirmForm = ({ action, payload }: Props) => {
   // const { errors } = formState
 
   /* resolve recipient */
-  const { ...tnsState } = useTnsAddress("")
-
-  const readyConnect = async () => {
-    const res = await WebViewMessage(RN_APIS.READY_CONNECT_WALLET, {
-      uri: decodeURIComponent(payload),
-    })
-    setPeerData(res)
-  }
+  // const { ...tnsState } = useTnsAddress("")
 
   useEffect(() => {
-    peerData && setPeerData(null)
     if (payload) {
+      const parsedTx = parseTx(payload.params)
+      console.log(parsedTx)
+
       setTx({
-        txData: payload,
-        initialGasDenom: "uluna",
+        ...parseDefault(payload),
+        // origin:
+        tx: parsedTx,
+        requestType: "post",
+      })
+
+      setTxProps({
+        txData: parsedTx,
         onPost() {
           navigate("/", { replace: true })
         },
       })
-      if (action === "wallet_connect") {
-        readyConnect()
-      } else {
-        payload?.params?.msgs &&
-          setMsgs(payload?.params?.msgs.map((item: string) => JSON.parse(item)))
-      }
     }
   }, [action, payload])
 
   return (
-    <Tx {...tx}>
+    <Tx {...txProps}>
       {({ confirm }) => (
         <Form onSubmit={handleSubmit(confirm.fn)}>
-          {msgs && (
-            <GridConfirm button={confirm.button} className={styles.connect}>
-              <Grid>
-                <Flex>confirm</Flex>
-                <Card className={styles.detail} isFetching={tnsState.isLoading}>
-                  <Grid gap={16}>
-                    {msgs.map((msg: any) => (
-                      <div key={msg.contact}>
-                        {Object.entries(msg).map(([key, value], idx) => {
-                          return (
-                            <div key={`${key}-${idx}`}>
-                              <h2>{key}</h2>
-                              <p>{JSON.stringify(value)}</p>
-                            </div>
-                          )
-                        })}
-                      </div>
-                    ))}
-                  </Grid>
-                </Card>
-              </Grid>
-            </GridConfirm>
-          )}
+          <GridConfirm button={confirm.button} className={styles.container}>
+            {tx && <TxDetails {...tx} />}
+          </GridConfirm>
         </Form>
       )}
     </Tx>

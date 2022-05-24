@@ -323,24 +323,24 @@ function Tx<TxValues>(props: Props<TxValues>) {
     try {
       if (disabled) throw new Error(disabled)
 
-      const tx = parseTx(txData.params)
+      // const tx = parseTx(txData.params)
 
       if (isWallet.ledger(wallet)) {
         return navigate("/auth/ledger/device", {
-          state: JSON.stringify(tx),
+          state: JSON.stringify(txData),
         })
       }
 
       if (isUseBio) {
         const bioKey = await decodeBioAuthKey()
         if (bioKey) {
-          const result = await auth.post(tx, bioKey)
+          const result = await auth.post(txData, bioKey)
           setLatestTx(result)
         } else {
           throw new Error("failed bio")
         }
       } else {
-        const result = await auth.post(tx, password)
+        const result = await auth.post(txData, password)
         setLatestTx(result)
       }
     } catch (error) {
@@ -552,7 +552,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
           )}
         />
       ) : (
-        <Grid gap={4}>
+        <Grid gap={20}>
           {passwordRequired && (
             <FormItem label={t("Password")} error={incorrect}>
               <Input
@@ -579,7 +579,10 @@ function Tx<TxValues>(props: Props<TxValues>) {
           {/*    : disabled}*/}
           {/*</Submit>*/}
           <Grid columns={2} gap={12}>
-            <Button color="danger" onClick={() => {}}>
+            <Button
+              color="danger"
+              onClick={() => navigate("/", { replace: true })}
+            >
               {t("Cancel")}
             </Button>
             <Button color="primary" type="submit">
@@ -593,7 +596,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   const connectButton = (
     <Grid columns={2} gap={12}>
-      <Button color="danger" onClick={() => {}}>
+      <Button color="danger" onClick={() => navigate("/", { replace: true })}>
         {t("Deny")}
       </Button>
       <Button color="primary" type="submit">

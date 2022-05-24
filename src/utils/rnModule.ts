@@ -76,7 +76,7 @@ export interface PrimitiveTxRequest
 }
 
 export interface DefaultRequest extends PrimitiveDefaultRequest {
-  timestamp: Date
+  timestamp?: Date
 }
 
 export type RequestType = "sign" | "post" | "signBytes"
@@ -90,6 +90,20 @@ export interface TxResponse<T = any> {
   success: boolean
   result?: T
   error?: { code: number; message?: string }
+}
+
+/* helpers */
+export const getIsNativeMsgFromExternal = (origin: string) => {
+  return (msg: Msg) => {
+    if (origin.includes("https://station.terra.money")) return false
+    return msg.toData()["@type"] !== "/terra.wasm.v1beta1.MsgExecuteContract"
+  }
+}
+
+export const parseDefault = (
+  request: PrimitiveDefaultRequest
+): DefaultRequest => {
+  return { ...request, timestamp: new Date(request.id) }
 }
 
 export const parseTx = (request: PrimitiveTxRequest): TxRequest["tx"] => {

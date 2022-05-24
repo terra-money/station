@@ -41,7 +41,7 @@ const ConnectForm = ({ action, payload }: Props) => {
   // const { errors } = formState
 
   /* resolve recipient */
-  const { ...tnsState } = useTnsAddress("")
+  // const { ...tnsState } = useTnsAddress("")
 
   const readyConnect = async () => {
     const res = await WebViewMessage(RN_APIS.READY_CONNECT_WALLET, {
