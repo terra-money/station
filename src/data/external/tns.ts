@@ -22,6 +22,8 @@ export const useTnsAddress = (name: string) => {
 
       const { tnsRegistry: registry } = contracts
 
+      if (!registry) return
+
       /**
        * Get the resolver address of a given domain name.
        *
@@ -64,6 +66,8 @@ export const useTnsName = (address: string) => {
       if (!contracts || !address) return
 
       const { tnsReverseRecord: reverseRecord } = contracts
+
+      if (!reverseRecord) return
 
       const { name } = await lcd.wasm.contractQuery<{ name: string | null }>(
         reverseRecord,
