@@ -17,6 +17,12 @@
       @include border;
     }
   }
+  &.blank {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+  }
 }
 
 // as a button

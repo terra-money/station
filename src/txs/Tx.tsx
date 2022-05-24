@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom"
 import { useRecoilValue, useRecoilState } from "recoil"
 import classNames from "classnames"
 import BigNumber from "bignumber.js"
-import { head, isEmpty, isNil } from "ramda"
+import { head, isNil } from "ramda"
 
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline"
@@ -46,7 +46,7 @@ import {
 } from "auth/scripts/sessions"
 
 import { toInput } from "./utils"
-import { parseTx, RN_APIS, WebViewMessage } from "utils/rnModule"
+import { RN_APIS, WebViewMessage } from "utils/rnModule"
 import { useTx } from "./TxContext"
 import styles from "./Tx.module.scss"
 
@@ -56,7 +56,7 @@ interface Props<TxValues> {
   decimals?: number
   amount?: Amount
   balance?: Amount
-  txData?: any
+  confirmData?: any
 
   /* tx simulation */
   initialGasDenom: CoinDenom
@@ -93,7 +93,7 @@ enum Status {
 export default Tx
 
 function Tx<TxValues>(props: Props<TxValues>) {
-  const { token, decimals, amount, balance, txData } = props
+  const { token, decimals, amount, balance, confirmData } = props
   const { initialGasDenom, estimationTxValues, createTx } = props
   const { excludeGasDenom } = props
   const { children, onChangeMax } = props
@@ -323,24 +323,25 @@ function Tx<TxValues>(props: Props<TxValues>) {
     try {
       if (disabled) throw new Error(disabled)
 
-      // const tx = parseTx(txData.params)
+      // const tx = parseTx(confirmData.params)
 
       if (isWallet.ledger(wallet)) {
         return navigate("/auth/ledger/device", {
-          state: JSON.stringify(txData),
+          state: JSON.stringify(confirmData.tx),
         })
       }
 
       if (isUseBio) {
         const bioKey = await decodeBioAuthKey()
         if (bioKey) {
-          const result = await auth.post(txData, bioKey)
+          const result = await auth.post(confirmData.tx, bioKey)
           setLatestTx(result)
         } else {
           throw new Error("failed bio")
         }
       } else {
-        const result = await auth.post(txData, password)
+        const result = await auth.post(confirmData.tx, password)
+        console.log("confirm", result)
         setLatestTx(result)
       }
     } catch (error) {
@@ -353,22 +354,22 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   const approve = useCallback(async () => {
     const res = await WebViewMessage(RN_APIS.APPROVE_TX, {
-      id: txData.id,
-      handshakeTopic: txData.handshakeTopic,
+      id: confirmData.id,
+      handshakeTopic: confirmData.handshakeTopic,
       result: latestTx,
     })
     if (res) {
       onPost?.()
     }
-  }, [latestTx, txData])
+  }, [latestTx, confirmData])
 
   useEffect(() => {
-    if (latestTx.txhash && txData) {
+    if (latestTx.txhash && confirmData) {
       // @ts-ignore
       if (isTxError(latestTx)) {
         WebViewMessage(RN_APIS.REJECT_TX, {
-          id: txData.id,
-          handshakeTopic: txData.handshakeTopic,
+          id: confirmData.id,
+          handshakeTopic: confirmData.handshakeTopic,
           error: {
             errorCode: 3,
             message: latestTx.raw_log,
@@ -382,7 +383,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
         }
       }
     }
-  }, [status, latestTx, txData])
+  }, [status, latestTx, confirmData])
 
   /* render */
   const balanceAfterTx =
@@ -568,16 +569,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
           {failed && <FormError>{failed}</FormError>}
 
-          {/*<Submit*/}
-          {/*  // disabled={!estimatedGas || !!disabled}*/}
-          {/*  submitting={submitting}*/}
-          {/*>*/}
-          {/*  {submitting*/}
-          {/*    ? submittingLabel*/}
-          {/*    : isUseBio*/}
-          {/*    ? submittingLabel*/}
-          {/*    : disabled}*/}
-          {/*</Submit>*/}
           <Grid columns={2} gap={12}>
             <Button
               color="danger"
@@ -588,6 +579,16 @@ function Tx<TxValues>(props: Props<TxValues>) {
             <Button color="primary" type="submit">
               {t("Sign")}
             </Button>
+            {/*<Submit*/}
+            {/*  // disabled={!estimatedGas || !!disabled}*/}
+            {/*  submitting={submitting}*/}
+            {/*>*/}
+            {/*  {submitting*/}
+            {/*    ? submittingLabel*/}
+            {/*    : isUseBio*/}
+            {/*    ? submittingLabel*/}
+            {/*    : disabled}*/}
+            {/*</Submit>*/}
           </Grid>
         </Grid>
       )}

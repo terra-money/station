@@ -18,9 +18,18 @@ const InitNetworks: FC = ({ children }) => {
         baseURL: ASSETS,
       })
 
+      console.log(chains)
+
       const networks = {
         ...chains,
         localterra: { ...chains.localterra, preconfigure: true },
+        testnet: {
+          name: "testnet",
+          chainID: "pisco-1",
+          lcd: "https://pisco-lcd.terra.dev",
+          mantle: "https://pisco-mantle.terra.dev",
+          walletconnectID: 0,
+        },
       }
 
       setNetworks({

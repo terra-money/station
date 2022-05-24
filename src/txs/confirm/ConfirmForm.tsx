@@ -46,22 +46,23 @@ const ConfirmForm = ({ action, payload }: Props) => {
   // const { errors } = formState
 
   /* resolve recipient */
-  // const { ...tnsState } = useTnsAddress("")
+  const { ...tnsState } = useTnsAddress("")
 
   useEffect(() => {
     if (payload) {
+      console.log(payload)
       const parsedTx = parseTx(payload.params)
-      console.log(parsedTx)
 
-      setTx({
+      const txData: TxRequest = {
         ...parseDefault(payload),
         // origin:
         tx: parsedTx,
         requestType: "post",
-      })
+      }
+      setTx(txData)
 
       setTxProps({
-        txData: parsedTx,
+        confirmData: txData,
         onPost() {
           navigate("/", { replace: true })
         },
@@ -70,15 +71,17 @@ const ConfirmForm = ({ action, payload }: Props) => {
   }, [action, payload])
 
   return (
-    <Tx {...txProps}>
-      {({ confirm }) => (
-        <Form onSubmit={handleSubmit(confirm.fn)}>
-          <GridConfirm button={confirm.button} className={styles.container}>
-            {tx && <TxDetails {...tx} />}
-          </GridConfirm>
-        </Form>
-      )}
-    </Tx>
+    <Card isFetching={tnsState.isLoading} className="blank">
+      <Tx {...txProps}>
+        {({ confirm }) => (
+          <Form onSubmit={handleSubmit(confirm.fn)}>
+            <GridConfirm button={confirm.button} className={styles.container}>
+              {tx && <TxDetails {...tx} />}
+            </GridConfirm>
+          </Form>
+        )}
+      </Tx>
+    </Card>
   )
 }
 
