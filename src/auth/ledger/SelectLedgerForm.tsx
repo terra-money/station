@@ -12,8 +12,9 @@ import { latestTxState } from "data/queries/tx"
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
 import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen"
 import { isWallet } from "auth"
-import { Modal, Mode } from "components/feedback"
+import { LoadingCircular, Modal, Mode } from "components/feedback"
 import { useThemeAnimation } from "data/settings/Theme"
+import { CreateTxOptions } from "@terra-money/terra.js/dist/client/lcd/api/TxAPI"
 
 interface DeviceInterface {
   name: string
@@ -23,21 +24,36 @@ interface DeviceInterface {
 const SelectLedgerForm = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const [ledgers, setLedgers] = useState<DeviceInterface[]>([])
-  const [tx, setTx] = useState<any>(null)
+  const { state }: { state: any } = useLocation()
+  const animation = useThemeAnimation()
   const setLatestTx = useSetRecoilState(latestTxState)
   const { wallet, validatePassword, isUseBio, decodeBioAuthKey, ...auth } =
     useAuth()
-  const { state }: { state: any } = useLocation()
-  const animation = useThemeAnimation()
+
+  const [tx, setTx] = useState<CreateTxOptions>()
+  const [ledgers, setLedgers] = useState<DeviceInterface[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const [isTxLoading, setIsTxLoading] = useState(false)
   const [error, setError] = useState<Error>()
 
   const getLedgers = async () => {
-    const ledgers: unknown = await WebViewMessage(RN_APIS.GET_LEDGER_LIST)
-    console.log(ledgers)
-    // @ts-ignore
-    setLedgers(ledgers)
+    setIsLoading(true)
+    setError(undefined)
+    try {
+      const ledgers: any = await WebViewMessage(RN_APIS.GET_LEDGER_LIST)
+      if (typeof ledgers === "string" && ledgers?.includes("Error")) {
+        // @ts-ignore
+        setError({ message: ledgers })
+      } else {
+        console.log("getLedgers", ledgers)
+        // @ts-ignore
+        setLedgers(ledgers)
+      }
+    } catch (error) {
+      setError(error as Error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -50,19 +66,32 @@ const SelectLedgerForm = () => {
 
   useLayoutEffect(() => {
     getLedgers()
+    return () => {
+      setLedgers([])
+    }
   }, [])
 
-  return (
+  if (isLoading) {
+    return <LoadingCircular size={18} />
+  }
+
+  return isTxLoading ? (
+    <Modal
+      modalType={isWallet.mobile() ? Mode.LOADING : Mode.DEFAULT}
+      icon={<img src={animation} width={100} height={100} alt="" />}
+      closeIcon={<CloseFullscreenIcon fontSize="inherit" />}
+      title={t("Confirm in your Ledger")}
+      isOpen
+    >
+      {""}
+    </Modal>
+  ) : (
     <Form>
-      {/*{isLoading && (*/}
-      {/*  <Modal*/}
-      {/*    modalType={isWallet.mobile() ? Mode.TX : Mode.DEFAULT}*/}
-      {/*    icon={<img src={animation} width={100} height={100} alt="" />}*/}
-      {/*    closeIcon={<CloseFullscreenIcon fontSize="inherit" />}*/}
-      {/*    title={t("Confirm in your Ledger")}*/}
-      {/*    isOpen*/}
-      {/*  />*/}
-      {/*)}*/}
+      {error && (
+        <Card className="blankWithPad">
+          <FormError>{error.message}</FormError>
+        </Card>
+      )}
       {!!ledgers.length ? (
         tx ? (
           ledgers?.map((item, idx) => (
@@ -72,10 +101,10 @@ const SelectLedgerForm = () => {
               extra={<ArrowForwardIosIcon className={styles.mobileExtra} />}
               onClick={async () => {
                 console.log(tx)
-                setIsLoading(true)
+                setIsTxLoading(true)
                 setError(undefined)
                 try {
-                  const result = await auth.post(tx, item.id)
+                  const result: any = await auth.post(tx, item.id)
                   // @ts-ignore
                   if (typeof result === "string" && result?.includes("Error")) {
                     // @ts-ignore
@@ -86,7 +115,7 @@ const SelectLedgerForm = () => {
                 } catch (error) {
                   setError(error as Error)
                 } finally {
-                  setIsLoading(false)
+                  setIsTxLoading(false)
                 }
               }}
             >
@@ -110,10 +139,10 @@ const SelectLedgerForm = () => {
           ))
         )
       ) : (
-        <FormError>No ledgers</FormError>
+        <Card className="blankWithPad">
+          <FormError>No ledgers</FormError>
+        </Card>
       )}
-
-      {error && <FormError>{error.message}</FormError>}
     </Form>
   )
 }

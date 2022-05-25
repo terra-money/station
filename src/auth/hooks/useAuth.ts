@@ -309,9 +309,10 @@ const useAuth = () => {
         lcdConfigs: lcd.config,
       })
       console.log("GET_LEDGER_KEY", result)
+
       // @ts-ignore
       if (result?.includes("Error")) {
-        throw new Error(result as string)
+        return result
       } else {
         // @ts-ignore
         return JSON.parse(result) as SyncTxBroadcastResult

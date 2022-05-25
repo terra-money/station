@@ -266,9 +266,11 @@ function Tx<TxValues>(props: Props<TxValues>) {
         if (isUseBio) {
           const bioKey = await decodeBioAuthKey()
           const result = await auth.post({ ...tx, fee }, bioKey)
+          // @ts-ignore
           setLatestTx({ txhash: result.txhash, queryKeys, redirectAfterTx })
         } else {
           const result = await auth.post({ ...tx, fee }, password)
+          // @ts-ignore
           setLatestTx({ txhash: result.txhash, queryKeys, redirectAfterTx })
         }
       } else {
@@ -326,6 +328,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
       if (isWallet.ledger(wallet)) {
         return navigate("/auth/ledger/device", {
           state: JSON.stringify(confirmData.tx),
+          replace: true,
         })
       }
 
@@ -334,7 +337,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
         if (bioKey) {
           const result = await auth.post(confirmData.tx, bioKey)
           console.log("confirm", result)
-
+          // @ts-ignore
           setLatestTx(result)
         } else {
           throw new Error("failed bio")
@@ -342,6 +345,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
       } else {
         const result = await auth.post(confirmData.tx, password)
         console.log("confirm", result)
+        // @ts-ignore
         setLatestTx(result)
       }
     } catch (error) {

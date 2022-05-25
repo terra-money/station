@@ -41,6 +41,7 @@ export enum Mode {
   BOTTOM = "bottom",
   BOTTOM_CONFIRM = "bottomConfirm",
   SELECT = "select",
+  LOADING = "loading",
 }
 
 const Modal: FC<Props> = ({ title, children, footer, modalType, ...props }) => {
