@@ -35,15 +35,15 @@ const Selector = () => {
 const WalletConnect = () => {
   const { t } = useTranslation()
   const { pathname } = useLocation()
-  const { deepLinkPage } = useNav()
+  const { subPage } = useNav()
   const [buttonView, setButtonView] = useState(true)
 
   const connectors = getStoredSessions()
 
   useEffect(() => {
-    const deeplinkMenu = deepLinkPage.find((a) => a.path === pathname)
+    const subMenu = subPage.find((a) => a.path === pathname)
 
-    if (deeplinkMenu) {
+    if (subMenu) {
       setButtonView(false)
     } else {
       setButtonView(true)

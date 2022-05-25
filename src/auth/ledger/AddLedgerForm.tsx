@@ -2,15 +2,13 @@ import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
-import UsbIcon from "@mui/icons-material/Usb"
-import { LedgerKey } from "@terra-money/ledger-terra-js"
-import BluetoothTransport from "@ledgerhq/hw-transport-web-ble"
-import { LEDGER_TRANSPORT_TIMEOUT } from "config/constants"
 import { Form, FormError, FormItem, FormWarning } from "components/form"
 import { Checkbox, Input, Submit } from "components/form"
+import { FlexColumn } from "components/layout"
 import validate from "../scripts/validate"
 import useAuth from "../hooks/useAuth"
 import { RN_APIS, WebViewMessage } from "../../utils/rnModule"
+import { ReactComponent as LedgerIcon } from "styles/images/menu/Ledger.svg"
 
 interface Values {
   index: number
@@ -74,6 +72,10 @@ const AddLedgerForm = () => {
 
   return (
     <Form onSubmit={handleSubmit(submit)}>
+      <FlexColumn>
+        <LedgerIcon {...{ width: 56, height: 56, fill: "currentColor" }} />
+        <p>Plug in a Ledger device</p>
+      </FlexColumn>
       <FormItem /* do not translate this */
         label="Index"
         error={errors.index?.message}

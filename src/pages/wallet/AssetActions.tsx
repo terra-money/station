@@ -16,19 +16,21 @@ import is from "auth/scripts/is"
 
 const AssetActions = ({ token, symbol, balance }: Props) => {
   const { t } = useTranslation()
-  const { state: stateAddress }: { state: any } = useLocation()
+  const { state }: { state: any } = useLocation()
 
   const isWalletEmpty = useIsWalletEmpty()
   const isClassic = useIsClassic()
   const getIsSwappableToken = useGetIsSwappableToken()
 
   return is.mobile() ? (
-    <InternalLink
-      icon={<ArrowForwardIosIcon style={{ fontSize: 12 }} />}
-      to={`/send?token=${token}`}
-      state={stateAddress}
-      disabled={isWalletEmpty || !has(balance)}
-    />
+    <ExtraActions>
+      <InternalLink
+        icon={<ArrowForwardIosIcon style={{ fontSize: 12 }} />}
+        to={`/send?token=${token}`}
+        state={state}
+        disabled={isWalletEmpty || !has(balance)}
+      />
+    </ExtraActions>
   ) : (
     <ExtraActions>
       <InternalLink

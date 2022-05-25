@@ -6,7 +6,7 @@ const AddLedgerPage = () => {
   const { t } = useTranslation()
 
   return (
-    <Page title={t("add ledger")} small>
+    <Page title={t("Access with ledger")}>
       <Card>
         <AddLedgerForm />
       </Card>

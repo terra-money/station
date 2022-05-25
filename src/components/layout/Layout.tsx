@@ -8,6 +8,7 @@ import styles from "./Layout.module.scss"
 import { useNav } from "../../app/routes"
 import is from "auth/scripts/is"
 import { ReactComponent as BackIcon } from "styles/images/icons/Back.svg"
+import SelectSend from "../../txs/send/SelectSend"
 
 const cx = classNames.bind(styles)
 
@@ -28,21 +29,30 @@ export const Sidebar: FC = ({ children }) => {
 export const Header: FC = ({ children }) => {
   const navigate = useNavigate()
   const { pathname } = useLocation()
-  const { mobileMenu, deepLinkPage } = useNav()
+  const { mobileMenu, subPage } = useNav()
   const [title, setTitle] = useState("")
   const [subTitle, setSubTitle] = useState("")
 
   useEffect(() => {
+    const subPages = [
+      ...subPage,
+      {
+        path: "/auth/ledger/device",
+        title: "Select a ledger device",
+      },
+    ]
+
+    const subMenu = subPages.find((a) => a.path === pathname)
     const currentMenu = mobileMenu.find((a) => a.path === pathname)
-    const deeplinkMenu = deepLinkPage.find((a) => a.path === pathname)
+
     if (currentMenu) {
       setTitle(currentMenu.title)
     } else {
       setTitle("")
     }
 
-    if (deeplinkMenu) {
-      setSubTitle(deeplinkMenu.title)
+    if (subMenu) {
+      setSubTitle(subMenu.title)
     } else {
       setSubTitle("")
     }

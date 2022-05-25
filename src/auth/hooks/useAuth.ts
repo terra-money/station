@@ -302,7 +302,6 @@ const useAuth = () => {
   const post = async (txOptions: CreateTxOptions, password = "") => {
     if (!wallet) throw new Error("Wallet is not defined")
     if (is.mobileNative() && is.ledger(wallet)) {
-      console.log(txOptions)
       const result = await WebViewMessage(RN_APIS.GET_LEDGER_KEY, {
         id: password,
         path: wallet.index,
@@ -310,7 +309,6 @@ const useAuth = () => {
         txOptions,
         lcdConfigs: lcd.config,
       })
-      console.log(result)
 
       // @ts-ignore
       if (result?.includes("Error")) {

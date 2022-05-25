@@ -121,7 +121,7 @@ export const useNav = () => {
     return !classic
   })
 
-  const deepLinkPage = [
+  const subPage = [
     {
       path: "/send/select",
       title: "Select a coin to send",
@@ -178,7 +178,7 @@ export const useNav = () => {
     { path: "/settings", element: <Settings /> },
 
     /* Deep Link */
-    ...deepLinkPage,
+    ...subPage,
 
     /* Mobile preference */
     {
@@ -209,7 +209,7 @@ export const useNav = () => {
     },
   ]
 
-  return { menu, mobileMenu, deepLinkPage, element: useRoutes(routes) }
+  return { menu, mobileMenu, subPage, element: useRoutes(routes) }
 }
 
 /* helpers */

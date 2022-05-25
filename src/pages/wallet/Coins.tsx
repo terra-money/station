@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next"
 import BigNumber from "bignumber.js"
 import BoltIcon from "@mui/icons-material/Bolt"
+import { useLocation } from "react-router-dom"
 import { has } from "utils/num"
 import { getAmount, sortByDenom } from "utils/coin"
 import { useCurrency } from "data/settings/Currency"
@@ -15,6 +16,7 @@ import { InternalLink } from "components/general"
 import { Card, Flex, Grid } from "components/layout"
 import { FormError } from "components/form"
 import { Read } from "components/token"
+import { isWallet } from "auth"
 import Asset from "./Asset"
 import SelectMinimumValue from "./SelectMinimumValue"
 import styles from "./Coins.module.scss"
@@ -27,6 +29,7 @@ const Coins = () => {
   const isWalletEmpty = useIsWalletEmpty()
   const { data: denoms, ...state } = useActiveDenoms()
   const coins = useCoins(denoms)
+  const { pathname } = useLocation()
 
   const render = () => {
     if (!coins) return
@@ -38,7 +41,7 @@ const Coins = () => {
 
     return (
       <>
-        {isClassic && (
+        {isClassic && pathname === "/wallet" && (
           <Read
             className={styles.total}
             amount={valueTotal}
@@ -53,7 +56,7 @@ const Coins = () => {
             <FormError>{t("Coins required to post transactions")}</FormError>
           )}
 
-          {isClassic && (
+          {isClassic && !isWallet.mobile() && (
             <Flex className={styles.select}>
               {!isWalletEmpty && <SelectMinimumValue />}
             </Flex>
@@ -80,7 +83,7 @@ const Coins = () => {
   )
 
   return (
-    <Card {...state} title={t("Coins")} extra={extra}>
+    <Card {...state} title={t("Coins")} extra={!isWallet.mobile() && extra}>
       <Grid gap={32}>{render()}</Grid>
     </Card>
   )

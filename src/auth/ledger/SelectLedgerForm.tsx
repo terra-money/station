@@ -2,16 +2,11 @@ import { useEffect, useLayoutEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
-import UsbIcon from "@mui/icons-material/Usb"
-import { LedgerKey } from "@terra-money/ledger-terra-js"
-import BluetoothTransport from "@ledgerhq/hw-transport-web-ble"
-import { LEDGER_TRANSPORT_TIMEOUT } from "config/constants"
-import { Form, FormError, FormItem, FormWarning } from "components/form"
-import { Checkbox, Input, Submit } from "components/form"
-import validate from "../scripts/validate"
+import { truncate } from "@terra.kitchen/utils"
+import { Card } from "components/layout"
+import { Form, FormError } from "components/form"
 import useAuth from "../hooks/useAuth"
 import { parseTx, RN_APIS, WebViewMessage } from "../../utils/rnModule"
-import { Button, LinkButton } from "../../components/general"
 import { useRecoilState } from "recoil"
 import { latestTxState } from "../../data/queries/tx"
 
@@ -71,34 +66,35 @@ const SelectLedgerForm = () => {
       {!!ledgers.length ? (
         tx ? (
           ledgers?.map((item, idx) => (
-            <Button
+            <Card
               key={item.id}
-              color="primary"
-              block
+              title={item.name}
               onClick={async () => {
                 console.log(tx)
                 const result = await auth.post(tx, item.id)
                 setLatestTx({ txhash: result.txhash })
               }}
             >
-              {item.name}
-            </Button>
+              {truncate(item.id)}
+            </Card>
           ))
         ) : (
           ledgers?.map((item, idx) => (
-            <LinkButton
+            <Card
               key={item.id}
-              to={"/auth/ledger/add"}
-              state={ledgers[idx]}
-              color="primary"
-              block
+              title={item.name}
+              onClick={() => {
+                navigate("/auth/ledger/add", {
+                  state: ledgers[idx],
+                })
+              }}
             >
-              {item.name}
-            </LinkButton>
+              {truncate(item.id)}
+            </Card>
           ))
         )
       ) : (
-        <FormError>no ledgers</FormError>
+        <FormError>No ledgers</FormError>
       )}
 
       {error && <FormError>{error.message}</FormError>}

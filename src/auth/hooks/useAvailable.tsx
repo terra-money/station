@@ -3,7 +3,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline"
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore"
 import KeyIcon from "@mui/icons-material/Key"
 import GroupsIcon from "@mui/icons-material/Groups"
-import UsbIcon from "@mui/icons-material/Usb"
+import { ReactComponent as LedgerIcon } from "styles/images/menu/Ledger.svg"
 
 import { sandbox } from "../scripts/env"
 
@@ -35,8 +35,8 @@ const useAvailable = () => {
     },
     {
       to: "/auth/ledger/device",
-      children: t("Access Ledger"),
-      icon: <UsbIcon />,
+      children: t("Access with ledger"),
+      icon: <LedgerIcon />,
     },
   ]
 }

@@ -22,6 +22,12 @@
   transition: background var(--transition);
   width: 100%;
 
+  svg {
+    width: 24px;
+    height: 24px;
+    fill: currentcolor;
+  }
+
   &:not(:first-child) {
     border-top: var(--border-width) solid var(--card-border);
   }

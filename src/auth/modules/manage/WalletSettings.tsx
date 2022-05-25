@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next"
+import { useWallet } from "@terra-money/wallet-provider"
 import { Col, Page } from "components/layout"
 import useAuth from "auth/hooks/useAuth"
 import AuthList from "auth/components/AuthList"
@@ -6,8 +7,8 @@ import BioToggle from "./BioToggle"
 import SelectTheme from "app/sections/SelectTheme"
 import SelectNetwork from "app/sections/SelectNetwork"
 import SelectLanguage from "app/sections/SelectLanguage"
+import { isWallet } from "auth"
 import styles from "app/sections/MobileItem.module.scss"
-import { useWallet } from "@terra-money/wallet-provider"
 
 export const useManageWallet = () => {
   const { t } = useTranslation()
@@ -18,7 +19,7 @@ export const useManageWallet = () => {
     icon: <BioToggle />,
   }
 
-  if (!wallet) return
+  if (!wallet || isWallet.ledger(wallet)) return
 
   return [BioAuth]
 }
