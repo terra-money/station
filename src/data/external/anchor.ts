@@ -1,12 +1,14 @@
-import { useCallback, useMemo } from "react"
+/*
+ * @Author: lmk
+ * @Date: 2022-05-25 11:23:10
+ * @LastEditTime: 2022-05-25 17:16:15
+ * @LastEditors: lmk
+ * @Description:
+ */
+import { useMemo } from "react"
 import { useQuery } from "react-query"
-import BigNumber from "bignumber.js"
 import * as anchor from "@anchor-protocol/anchor.js"
-import { readAmount, toAmount } from "@terra.kitchen/utils"
-import { Coins } from "@terra-money/terra.js"
-import { has } from "utils/num"
-import { getAmount } from "utils/coin"
-import { AnchorEarnAction } from "txs/earn/AnchorEarnForm"
+import { toAmount } from "@terra.kitchen/utils"
 import { queryKey, RefetchOptions } from "../query"
 import { useAddress, useNetworkName } from "../wallet"
 import { useLCDClient } from "../queries/lcdClient"
@@ -15,8 +17,6 @@ const {
   AddressProviderFromJson,
   columbus5,
   Earn,
-  fabricateMarketDepositStableCoin,
-  fabricateMarketRedeemStable,
   MARKET_DENOMS,
   queryMarketEpochState,
   bombay12,
@@ -97,46 +97,4 @@ export const useAnchorExchangeRate = () => {
     },
     { ...RefetchOptions.DEFAULT }
   )
-}
-
-export const useAnchorGetMsgs = (rate: string) => {
-  const address = useAddress()
-  const addressProvider = useAddressProvider()
-
-  const getMsgs = useCallback(
-    (value: string, type: AnchorEarnAction) => {
-      if (!address) return
-      if (!has(value)) throw new Error(`Anchor tx: Invalid amount ${value}`)
-
-      const amount = {
-        [AnchorEarnAction.DEPOSIT]: readAmount(value),
-        [AnchorEarnAction.WITHDRAW]: readAmount(
-          new BigNumber(value).div(rate).toString()
-        ),
-      }[type]
-
-      const params = { address, amount, market }
-
-      return {
-        [AnchorEarnAction.DEPOSIT]:
-          fabricateMarketDepositStableCoin(params)(addressProvider),
-        [AnchorEarnAction.WITHDRAW]:
-          fabricateMarketRedeemStable(params)(addressProvider),
-      }[type]
-    },
-    [address, addressProvider, rate]
-  )
-
-  return getMsgs
-}
-
-/* helpers */
-export const getAvailableAnchorEarnActions = (
-  deposit: Amount,
-  bankBalance: Coins
-) => {
-  return {
-    [AnchorEarnAction.DEPOSIT]: has(getAmount(bankBalance, "uusd")),
-    [AnchorEarnAction.WITHDRAW]: has(deposit),
-  }
 }
