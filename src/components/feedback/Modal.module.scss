@@ -13,7 +13,8 @@
   z-index: 1050;
 
   &.select,
-  &.bottom {
+  &.bottom,
+  &.bottomConfirm {
     @include flex(center, flex-end);
     background: hsl(0 0% 0% / 0.8);
   }
@@ -38,6 +39,62 @@
   @include mobile {
     padding: 48px 20px;
     width: calc(100% - 40px);
+  }
+}
+
+.close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 20px;
+  padding: 16px;
+}
+
+.action {
+  @include flex;
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 20px;
+  width: 64px;
+  height: 64px;
+}
+
+.header {
+  text-align: center;
+}
+
+.icon {
+  font-size: 56px;
+  line-height: 1;
+}
+
+.title {
+  font-size: 20px;
+}
+
+.confirm {
+  font-size: inherit;
+}
+
+.main {
+  overflow: hidden; // Sub components declare their own max-height and overflow-y
+}
+
+.footer {
+  margin-top: 8px;
+}
+
+.tx {
+  width: 100%;
+  height: 100vh;
+  border-radius: 0;
+  .header {
+    @include flex-column(flex-end);
+    img {
+      width: 160px;
+      height: 160px;
+    }
   }
 }
 
@@ -99,6 +156,35 @@
   }
 }
 
+.bottomConfirm {
+  gap: 0;
+  padding: 0;
+  width: 100%;
+  .modal {
+    padding: 20px 20px 40px;
+    background: var(--card-bg);
+    border-radius: 12px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    .header {
+      display: none;
+    }
+    .title {
+      font-size: 16px;
+      line-height: 28px;
+    }
+    .main {
+      display: grid;
+      gap: 16px;
+      padding: 0;
+      background: var(--card-bg);
+    }
+    .close {
+      display: none;
+    }
+  }
+}
+
 .select {
   padding: 0;
   .modal {
@@ -117,47 +203,4 @@
       display: none;
     }
   }
-}
-
-.close {
-  position: absolute;
-  top: 0;
-  right: 0;
-  font-size: 20px;
-  padding: 16px;
-}
-
-.action {
-  @include flex;
-  position: absolute;
-  top: 0;
-  right: 0;
-  font-size: 20px;
-  width: 64px;
-  height: 64px;
-}
-
-.header {
-  text-align: center;
-}
-
-.icon {
-  font-size: 56px;
-  line-height: 1;
-}
-
-.title {
-  font-size: 20px;
-}
-
-.confirm {
-  font-size: inherit;
-}
-
-.main {
-  overflow: hidden; // Sub components declare their own max-height and overflow-y
-}
-
-.footer {
-  margin-top: 8px;
 }

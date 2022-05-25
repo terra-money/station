@@ -22,7 +22,7 @@ const Selector = () => {
     <Grid gap={20}>
       {connectors && !isEmpty(connectors) ? (
         Object.values(connectors).map((value: any) => {
-          // if (!isEmpty(value?.peerMeta)) return
+          if (!value?.peerMeta) return
           return <AssetWallet {...value} />
         })
       ) : (
@@ -63,7 +63,7 @@ const WalletConnect = () => {
       <GridConfirm
         button={
           <ModalButton
-            modalType={is.mobile() ? Mode.BOTTOM : Mode.DEFAULT}
+            modalType={is.mobile() ? Mode.BOTTOM_CONFIRM : Mode.DEFAULT}
             renderButton={(open) => (
               <Button block color="danger" onClick={open}>
                 {t("Disconnect all sessions")}

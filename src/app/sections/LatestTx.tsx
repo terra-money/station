@@ -126,7 +126,7 @@ const TxIndicator = ({ txhash }: { txhash: string }) => {
     </div>
   ) : status === Status.LOADING ? (
     <Modal
-      modalType={isWallet.mobile() ? Mode.FULL : Mode.DEFAULT}
+      modalType={isWallet.mobile() ? Mode.TX : Mode.DEFAULT}
       icon={<img src={animation} width={100} height={100} alt="" />}
       closeIcon={<CloseFullscreenIcon fontSize="inherit" />}
       title={t("Broadcasting transaction")}
@@ -190,7 +190,6 @@ const LatestTx = () => {
   const setIsBroadcasting = useSetRecoilState(isBroadcastingState)
 
   useEffect(() => {
-    console.log("LatestTx", txhash)
     setIsBroadcasting(!!txhash)
   }, [setIsBroadcasting, txhash])
 

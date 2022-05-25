@@ -36,8 +36,10 @@ export interface Props extends ModalProps, ReactModal.Props {}
 
 export enum Mode {
   DEFAULT = "default",
+  TX = "tx",
   FULL = "full",
   BOTTOM = "bottom",
+  BOTTOM_CONFIRM = "bottomConfirm",
   SELECT = "select",
 }
 
@@ -50,12 +52,13 @@ const Modal: FC<Props> = ({ title, children, footer, modalType, ...props }) => {
     confirm,
     maxHeight,
     cancelButton,
+    className,
   } = props
 
   return (
     <ReactModal
       {...props}
-      className={cx(styles.modal, { [`${modalType}`]: !!modalType })}
+      className={cx(styles.modal, { className, [`${modalType}`]: !!modalType })}
       overlayClassName={cx(styles.overlay, { [`${modalType}`]: !!modalType })}
     >
       {onRequestClose && (
@@ -79,11 +82,12 @@ const Modal: FC<Props> = ({ title, children, footer, modalType, ...props }) => {
           style={getMaxHeightStyle(maxHeight, 320)}
         >
           {children}
-          {modalType === Mode.BOTTOM && cancelButton && (
-            <Button block color="default" onClick={onRequestClose}>
-              {cancelButton.name}
-            </Button>
-          )}
+          {(modalType === Mode.BOTTOM || modalType === Mode.BOTTOM_CONFIRM) &&
+            cancelButton && (
+              <Button block color="default" onClick={onRequestClose}>
+                {cancelButton.name}
+              </Button>
+            )}
         </section>
       )}
 

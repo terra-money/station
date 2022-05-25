@@ -174,7 +174,6 @@ const App = () => {
           <ConnectWallet />
         </section>
         <ValidatorButton />
-        <LatestTx />
       </Header>
 
       <Content>
@@ -183,6 +182,7 @@ const App = () => {
         </ErrorBoundary>
       </Content>
 
+      <LatestTx />
       <WalletConnect />
     </Layout>
   )

@@ -35,7 +35,7 @@ const AssetWallet = (props: Props) => {
       }
       extra={
         <ModalButton
-          modalType={is.mobile() ? Mode.BOTTOM : Mode.DEFAULT}
+          modalType={is.mobile() ? Mode.BOTTOM_CONFIRM : Mode.DEFAULT}
           title={"ss"}
           renderButton={(open) => (
             <InternalButton

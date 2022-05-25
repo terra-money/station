@@ -177,12 +177,6 @@ export const useNav = () => {
     { path: "/network/new", element: <AddNetworkPage /> },
     { path: "/settings", element: <Settings /> },
 
-    /* dev */
-    { path: "/labs", element: <Labs /> },
-
-    /* 404 */
-    { path: "*", element: <NotFound /> },
-
     /* Deep Link */
     ...deepLinkPage,
 
@@ -191,6 +185,12 @@ export const useNav = () => {
       path: "/preference",
       element: <WalletSettings />,
     },
+
+    /* dev */
+    { path: "/labs", element: <Labs /> },
+
+    /* 404 */
+    { path: "*", element: <NotFound /> },
   ]
 
   const mobileMenu = [

@@ -333,6 +333,8 @@ function Tx<TxValues>(props: Props<TxValues>) {
         const bioKey = await decodeBioAuthKey()
         if (bioKey) {
           const result = await auth.post(confirmData.tx, bioKey)
+          console.log("confirm", result)
+
           setLatestTx(result)
         } else {
           throw new Error("failed bio")

@@ -42,8 +42,6 @@ const ConfirmForm = ({ action, payload }: Props) => {
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })
   const { handleSubmit } = form
-  // const { formState } = form
-  // const { errors } = formState
 
   /* resolve recipient */
   const { ...tnsState } = useTnsAddress("")
@@ -63,8 +61,6 @@ const ConfirmForm = ({ action, payload }: Props) => {
       }
 
       setTx(txData)
-
-      console.log(txData)
 
       setTxProps({
         confirmData: txData,
