@@ -2,17 +2,23 @@ import { useCallback, useMemo } from "react"
 import { useQuery } from "react-query"
 import { getAmount, sortCoins, sortDenoms } from "utils/coin"
 import { toPrice } from "utils/num"
-import { queryKey, RefetchOptions } from "../query"
+import { queryKey, RefetchOptions, useIsClassic } from "../query"
 import { useCurrency } from "../settings/Currency"
 import { useLCDClient } from "./lcdClient"
 
 export const useActiveDenoms = () => {
   const lcd = useLCDClient()
+  const isClassic = useIsClassic()
+
   return useQuery(
-    [queryKey.oracle.activeDenoms],
+    [queryKey.oracle.activeDenoms, isClassic],
     async () => {
-      const activeDenoms = await lcd.oracle.activeDenoms()
-      return sortDenoms(["uluna", ...activeDenoms])
+      if (isClassic) {
+        const activeDenoms = await lcd.oracle.activeDenoms()
+        return sortDenoms(["uluna", ...activeDenoms])
+      } else {
+        return ["uluna"]
+      }
     },
     { ...RefetchOptions.INFINITY }
   )
@@ -20,18 +26,28 @@ export const useActiveDenoms = () => {
 
 export const useExchangeRates = () => {
   const lcd = useLCDClient()
+  const isClassic = useIsClassic()
+
   return useQuery(
-    [queryKey.oracle.exchangeRates],
-    () => lcd.oracle.exchangeRates(),
+    [queryKey.oracle.exchangeRates, isClassic],
+    async () => {
+      if (isClassic) return await lcd.oracle.exchangeRates()
+    },
     { ...RefetchOptions.DEFAULT }
   )
 }
 
 export const useOracleParams = () => {
   const lcd = useLCDClient()
-  return useQuery([queryKey.oracle.params], () => lcd.oracle.parameters(), {
-    ...RefetchOptions.INFINITY,
-  })
+  const isClassic = useIsClassic()
+
+  return useQuery(
+    [queryKey.oracle.params, isClassic],
+    async () => {
+      if (isClassic) return await lcd.oracle.parameters()
+    },
+    { ...RefetchOptions.INFINITY }
+  )
 }
 
 /* helpers */

@@ -41,7 +41,7 @@ const Asset = (props: Props) => {
             </WithFetching>
           </h2>
 
-          {token !== currency && has(balance) && value && (
+          {token !== currency && has(balance) && has(value) && (
             <p className={styles.value}>
               <Read amount={value} token={currency} auto approx />
             </p>

@@ -16,6 +16,8 @@ interface Props {
 const SelectDenom = ({ title, list }: Props) => {
   const { t } = useTranslation()
 
+  if (!(list.length > 1)) return null
+
   return (
     <ModalButton
       title={title}

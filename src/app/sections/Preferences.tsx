@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next"
 import LanguageIcon from "@mui/icons-material/Language"
+import { useIsClassic } from "data/query"
 import { Tabs } from "components/layout"
 import { Popover } from "components/display"
 import { sandbox } from "auth/scripts/env"
@@ -11,26 +12,35 @@ import CurrencySetting from "./CurrencySetting"
 
 const Preferences = () => {
   const { t } = useTranslation()
+  const isClassic = useIsClassic()
 
   const network = {
     key: "network",
     tab: t("Network"),
     children: <NetworkSetting />,
+    condition: ["sandbox"],
   }
 
   const lang = {
     key: "lang",
     tab: t("Language"),
     children: <LanguageSetting />,
+    condition: undefined,
   }
 
   const currency = {
     key: "currency",
     tab: t("Currency"),
     children: <CurrencySetting />,
+    condition: ["classic"],
   }
 
-  const tabs = sandbox ? [network, lang, currency] : [lang, currency]
+  const tabs = [network, lang, currency].filter(({ condition }) => {
+    if (!condition) return true
+    if (condition.includes("sandbox")) return sandbox
+    if (condition.includes("classic")) return isClassic
+    return true
+  })
 
   return (
     <Popover
