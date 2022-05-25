@@ -137,7 +137,6 @@ const TxIndicator = ({ txhash }: { txhash: string }) => {
     </Modal>
   ) : (
     <Modal
-      // modalType={isWallet.mobile() ? Mode.BOTTOM : Mode.DEFAULT}
       icon={icon}
       closeIcon={false}
       title={title}

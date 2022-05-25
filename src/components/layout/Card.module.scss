@@ -68,6 +68,14 @@
 .header {
   @include flex(space-between);
   font-size: 16px;
+
+  .mobileExtra {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    fill: var(--button-primary-bg);
+  }
 }
 
 .title {

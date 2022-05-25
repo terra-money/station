@@ -28,7 +28,6 @@ import useAvailable from "./useAvailable"
 import decrypt from "../scripts/decrypt"
 import { RN_APIS, WebViewMessage } from "../../utils/rnModule"
 import { removeSessions } from "../scripts/sessions"
-import { useNavigate } from "react-router-dom"
 import { SyncTxBroadcastResult } from "@terra-money/terra.js/dist/client/lcd/api/TxAPI"
 
 const walletState = atom({
@@ -309,7 +308,7 @@ const useAuth = () => {
         txOptions,
         lcdConfigs: lcd.config,
       })
-
+      console.log("GET_LEDGER_KEY", result)
       // @ts-ignore
       if (result?.includes("Error")) {
         throw new Error(result as string)
