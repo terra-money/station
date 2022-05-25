@@ -97,7 +97,6 @@ const useAuth = () => {
 
   const connectLedger = useCallback(
     (address: AccAddress, index = 0, bluetooth = false) => {
-      console.log("connectLedger", address)
       const wallet = {
         name: "Ledger",
         address,

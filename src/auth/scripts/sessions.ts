@@ -24,12 +24,12 @@ export type Connector = {
   peerId: string
   peerMeta: PeerMeta
 }
-export type Sessions = Record<string, Connector>
+export type Sessions = Record<string, Connector> | undefined
 
-export const getStoredSessions = (): Sessions | undefined => {
+export const getStoredSessions = (): Sessions => {
   const sessions = localStorage.getItem("sessions")
-  if (!sessions) return undefined
-  return JSON.parse(sessions)
+  if (!sessions || sessions === "undefined") return undefined
+  return JSON.parse(sessions) as Sessions
 }
 
 export const storeSessions = (connectors: any) => {
