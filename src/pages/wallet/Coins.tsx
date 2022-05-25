@@ -6,6 +6,7 @@ import { getAmount, sortByDenom } from "utils/coin"
 import { useCurrency } from "data/settings/Currency"
 import { useMinimumValue } from "data/settings/MinimumValue"
 import { readNativeDenom } from "data/token"
+import { useIsClassic } from "data/query"
 import { useBankBalance } from "data/queries/bank"
 import { useIsWalletEmpty, useTerraNativeLength } from "data/queries/bank"
 import { useActiveDenoms } from "data/queries/oracle"
@@ -20,6 +21,7 @@ import styles from "./Coins.module.scss"
 
 const Coins = () => {
   const { t } = useTranslation()
+  const isClassic = useIsClassic()
   const currency = useCurrency()
   const length = useTerraNativeLength()
   const isWalletEmpty = useIsWalletEmpty()
@@ -36,22 +38,26 @@ const Coins = () => {
 
     return (
       <>
-        <Read
-          className={styles.total}
-          amount={valueTotal}
-          token={currency}
-          auto
-          approx
-        />
+        {isClassic && (
+          <Read
+            className={styles.total}
+            amount={valueTotal}
+            token={currency}
+            auto
+            approx
+          />
+        )}
 
         <Grid gap={12}>
           {isWalletEmpty && (
             <FormError>{t("Coins required to post transactions")}</FormError>
           )}
 
-          <Flex className={styles.select}>
-            {!isWalletEmpty && <SelectMinimumValue />}
-          </Flex>
+          {isClassic && (
+            <Flex className={styles.select}>
+              {!isWalletEmpty && <SelectMinimumValue />}
+            </Flex>
+          )}
 
           <section>
             {filtered.map(({ denom, ...item }) => (
@@ -63,7 +69,7 @@ const Coins = () => {
     )
   }
 
-  const extra = (
+  const extra = isClassic && (
     <InternalLink
       icon={<BoltIcon style={{ fontSize: 18 }} />}
       to="/swap/multiple"

@@ -1,6 +1,7 @@
 import { PropsWithChildren, useEffect, useMemo } from "react"
 import { QueryClient, QueryClientProvider } from "react-query"
-import { useWallet, WalletStatus } from "@terra-money/wallet-provider"
+import { WalletStatus } from "@terra-money/wallet-types"
+import { useWallet } from "@terra-money/use-wallet"
 import { useNetwork, useNetworkName } from "data/wallet"
 import { isWallet, useAuth } from "auth"
 import Splash from "auth/modules/Splash"

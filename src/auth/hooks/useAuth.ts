@@ -8,6 +8,7 @@ import { LedgerKey } from "@terra-money/ledger-terra-js"
 import BluetoothTransport from "@ledgerhq/hw-transport-web-ble"
 import { LEDGER_TRANSPORT_TIMEOUT } from "config/constants"
 import { useChainID } from "data/wallet"
+import { useIsClassic } from "data/query"
 import { useLCDClient } from "data/queries/lcdClient"
 import is from "../scripts/is"
 import { PasswordError } from "../scripts/keystore"
@@ -24,6 +25,7 @@ const walletState = atom({
 })
 
 const useAuth = () => {
+  const isClassic = useIsClassic()
   const lcd = useLCDClient()
   const available = useAvailable()
 
@@ -150,12 +152,12 @@ const useAuth = () => {
 
     if (is.ledger(wallet)) {
       const key = await getLedgerKey()
-      return await key.createSignatureAmino(doc)
+      return await key.createSignatureAmino(doc, isClassic)
     } else {
       const pk = getKey(password)
       if (!pk) throw new PasswordError("Incorrect password")
       const key = new RawKey(Buffer.from(pk, "hex"))
-      return await key.createSignatureAmino(doc)
+      return await key.createSignatureAmino(doc, isClassic)
     }
   }
 

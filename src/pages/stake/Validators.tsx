@@ -7,8 +7,7 @@ import { Validator } from "@terra-money/terra.js"
 /* FIXME(terra.js): Import from terra.js */
 import { BondStatus } from "@terra-money/terra.proto/cosmos/staking/v1beta1/staking"
 import { bondStatusFromJSON } from "@terra-money/terra.proto/cosmos/staking/v1beta1/staking"
-import { combineState } from "data/query"
-import { useOracleParams } from "data/queries/oracle"
+import { combineState, useIsClassic } from "data/query"
 import { useValidators } from "data/queries/staking"
 import { useDelegations, useUnbondings } from "data/queries/staking"
 import { getCalcVotingPowerRate } from "data/Terra/TerraAPI"
@@ -25,8 +24,8 @@ import styles from "./Validators.module.scss"
 
 const Validators = () => {
   const { t } = useTranslation()
+  const isClassic = useIsClassic()
 
-  const { data: oracleParams, ...oracleParamsState } = useOracleParams()
   const { data: validators, ...validatorsState } = useValidators()
   const { data: delegations, ...delegationsState } = useDelegations()
   const { data: undelegations, ...undelegationsState } = useUnbondings()
@@ -34,7 +33,6 @@ const Validators = () => {
     useTerraValidators()
 
   const state = combineState(
-    oracleParamsState,
     validatorsState,
     delegationsState,
     undelegationsState,
@@ -42,7 +40,7 @@ const Validators = () => {
   )
 
   const activeValidators = useMemo(() => {
-    if (!(oracleParams && validators && TerraValidators)) return null
+    if (!(validators && TerraValidators)) return null
 
     const calcRate = getCalcVotingPowerRate(TerraValidators)
 
@@ -68,7 +66,7 @@ const Validators = () => {
         }
       })
       .sort(({ rank: a }, { rank: b }) => a - b)
-  }, [TerraValidators, oracleParams, validators])
+  }, [TerraValidators, validators])
 
   const renderCount = () => {
     if (!validators) return null
@@ -76,43 +74,45 @@ const Validators = () => {
     return t("{{count}} active validators", { count })
   }
 
-  const [byRank, setByRank] = useState(true)
+  const [byRank, setByRank] = useState(isClassic)
   const render = (keyword: string) => {
     if (!activeValidators) return null
 
     return (
       <>
-        <section>
-          <TooltipIcon
-            content={
-              <article>
-                <ul className={styles.tooltip}>
-                  <li>
-                    40%: Uptime <small>(time-weighted, 90 days)</small>
-                  </li>
-                  <li>
-                    30%: Rewards <small>(past 30 days)</small>
-                  </li>
-                  <li>
-                    30%: Gov participation rate{" "}
-                    <small>(time-weighted, since Col-5)</small>
-                  </li>
-                </ul>
+        {isClassic && (
+          <section>
+            <TooltipIcon
+              content={
+                <article>
+                  <ul className={styles.tooltip}>
+                    <li>
+                      40%: Uptime <small>(time-weighted, 90 days)</small>
+                    </li>
+                    <li>
+                      30%: Rewards <small>(past 30 days)</small>
+                    </li>
+                    <li>
+                      30%: Gov participation rate{" "}
+                      <small>(time-weighted, since Col-5)</small>
+                    </li>
+                  </ul>
 
-                <p>
-                  <small>
-                    Up to 5% is deducted to the validators whose voting power is
-                    within top 33%
-                  </small>
-                </p>
-              </article>
-            }
-          >
-            <Toggle checked={byRank} onChange={() => setByRank(!byRank)}>
-              {t("Weighted score")}
-            </Toggle>
-          </TooltipIcon>
-        </section>
+                  <p>
+                    <small>
+                      Up to 5% is deducted to the validators whose voting power
+                      is within top 33%
+                    </small>
+                  </p>
+                </article>
+              }
+            >
+              <Toggle checked={byRank} onChange={() => setByRank(!byRank)}>
+                {t("Weighted score")}
+              </Toggle>
+            </TooltipIcon>
+          </section>
+        )}
 
         <Table
           key={Number(byRank)}
@@ -222,6 +222,7 @@ const Validators = () => {
               ) => a - b,
               render: (value) => !!value && <Uptime>{value}</Uptime>,
               align: "right",
+              hidden: !isClassic,
             },
             {
               title: t("Rewards"),

@@ -10,6 +10,7 @@ import { SAMPLE_ADDRESS } from "config/constants"
 import { sortCoins } from "utils/coin"
 import { parseJSON, validateMsg } from "utils/data"
 import { useAddress } from "data/wallet"
+import { useIsClassic } from "data/query"
 import { useBankBalance } from "data/queries/bank"
 import { Form, FormGroup, FormItem } from "components/form"
 import { Input, EditorInput, Select } from "components/form"
@@ -22,12 +23,14 @@ interface TxValues {
   id?: number
   msg?: string
   coins: { input?: number; denom: CoinDenom }[]
+  label?: string
 }
 
 const InstantiateContractForm = () => {
   const { t } = useTranslation()
   const address = useAddress()
   const bankBalance = useBankBalance()
+  const isClassic = useIsClassic()
 
   /* tx context */
   const initialGasDenom = getInitialGasDenom(bankBalance)
@@ -46,7 +49,7 @@ const InstantiateContractForm = () => {
 
   /* tx */
   const createTx = useCallback(
-    ({ id, msg, ...values }: TxValues) => {
+    ({ id, msg, label, ...values }: TxValues) => {
       if (!address || !(id && msg)) return
       if (!validateMsg(msg)) return
 
@@ -55,7 +58,14 @@ const InstantiateContractForm = () => {
       const init_msg = parseJSON(msg)
       const coins = getCoins(values.coins)
       const msgs = [
-        new MsgInstantiateContract(address, admin, code_id, init_msg, coins),
+        new MsgInstantiateContract(
+          address,
+          admin,
+          code_id,
+          init_msg,
+          coins,
+          label || undefined
+        ),
       ]
 
       return { msgs }
@@ -154,6 +164,12 @@ const InstantiateContractForm = () => {
               </FormGroup>
             ))}
           </FormItem>
+
+          {!isClassic && (
+            <FormItem label={t("Label")} error={errors.label?.message}>
+              <Input {...register("label")} />
+            </FormItem>
+          )}
 
           {fee.render()}
           {submit.button}
