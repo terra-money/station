@@ -15,7 +15,6 @@ export const useNetworkState = () => {
 
   const changeNetwork = (network: NetworkName) => {
     WebViewMessage(RN_APIS.SET_NETWORK, network)
-    console.log("useNetworkState", network)
     setNetwork(network)
     storeNetwork(network)
   }

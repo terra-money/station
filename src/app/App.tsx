@@ -56,8 +56,6 @@ const App = () => {
       const { data, type } = JSON.parse(event.data)
       switch (type) {
         case RN_APIS.DEEPLINK: {
-          console.log(data)
-          // if (data?.payload !== "null") {
           if (data?.action === "wallet_connect") {
             navigate("/connect", {
               replace: true,
@@ -163,7 +161,7 @@ const App = () => {
       </Sidebar>
 
       <Header>
-        {/*<IsClassicNetwork />*/}
+        <IsClassicNetwork />
 
         <Actions>
           <DevTools />

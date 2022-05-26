@@ -50,8 +50,6 @@ const AddLedgerForm = () => {
         path: 0,
       })
 
-      console.log("GET_LEDGER_KEY", ledger)
-
       // @ts-ignore
       if (typeof ledger === "string" && ledger?.includes("Error")) {
         // @ts-ignore
@@ -63,7 +61,6 @@ const AddLedgerForm = () => {
         navigate("/wallet", { replace: true })
       }
     } catch (error) {
-      console.log(error)
       setError(error as Error)
     } finally {
       setIsLoading(false)

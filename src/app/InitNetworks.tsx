@@ -18,8 +18,6 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
         baseURL: ASSETS,
       })
 
-      console.log(chains)
-
       const networks = {
         ...chains,
         localterra: { ...chains.localterra, preconfigure: true },

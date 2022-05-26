@@ -251,7 +251,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
       const fee = new Fee(estimatedGas, gasCoins)
 
       if (isWallet.ledger(wallet)) {
-        console.log({ ...tx, fee })
         return navigate("/auth/ledger/device", {
           state: JSON.stringify({ ...tx, fee }),
         })
@@ -308,7 +307,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
     })
 
     if (connector) {
-      console.log("connectSession", connector)
       saveSession(connector as Connector)
       navigate("/", { replace: true })
     }
@@ -331,7 +329,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
         const bioKey = await decodeBioAuthKey()
         if (bioKey) {
           const result = await auth.post(confirmData.tx, bioKey)
-          console.log("confirm", result)
           // @ts-ignore
           setLatestTx(result)
         } else {
@@ -339,7 +336,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
         }
       } else {
         const result = await auth.post(confirmData.tx, password)
-        console.log("confirm", result)
         // @ts-ignore
         setLatestTx(result)
       }

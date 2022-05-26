@@ -71,7 +71,6 @@ const SendForm = ({ token, decimals, balance }: Props) => {
   }, [form, recipient, resolvedAddress, setValue])
 
   useEffect(() => {
-    console.log("recipient", stateRecipient)
     if (stateRecipient) {
       setValue("recipient", stateRecipient)
     }

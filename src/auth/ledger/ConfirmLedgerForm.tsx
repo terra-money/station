@@ -43,7 +43,6 @@ const ConfirmLedgerForm = () => {
 
   const getLedgers = async () => {
     const ledgers: unknown = await WebViewMessage(RN_APIS.GET_LEDGER_LIST)
-    console.log(ledgers)
     // @ts-ignore
     setLedgers(ledgers)
   }

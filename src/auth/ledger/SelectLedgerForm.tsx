@@ -45,7 +45,6 @@ const SelectLedgerForm = () => {
         // @ts-ignore
         setError({ message: ledgers })
       } else {
-        console.log("getLedgers", ledgers)
         // @ts-ignore
         setLedgers(ledgers)
       }
@@ -59,7 +58,6 @@ const SelectLedgerForm = () => {
   useEffect(() => {
     if (state) {
       const tx = parseTx(JSON.parse(state))
-      console.log(tx)
       setTx(tx)
     }
   }, [state])
@@ -100,7 +98,6 @@ const SelectLedgerForm = () => {
               title={item.name}
               extra={<ArrowForwardIosIcon className={styles.mobileExtra} />}
               onClick={async () => {
-                console.log(tx)
                 setIsTxLoading(true)
                 setError(undefined)
                 try {
