@@ -1,7 +1,7 @@
 import { AccAddress } from "@terra-money/terra.js"
 import { getErrorMessage } from "utils/error"
-import Layout from "components/layout"
-import { Banner, Content, Header, Sidebar, Page } from "components/layout"
+import Layout, { Page } from "components/layout"
+import { Banner, Content, Header, Actions, Sidebar } from "components/layout"
 import { ErrorBoundary, Wrong } from "components/feedback"
 import { useNavigate } from "react-router-dom"
 import is from "../auth/scripts/is"
@@ -17,6 +17,7 @@ import Nav from "./sections/Nav"
 import Aside from "./sections/Aside"
 
 /* header */
+import IsClassicNetwork from "./sections/IsClassicNetwork"
 import Refresh from "./sections/Refresh"
 import Preferences from "./sections/Preferences"
 import SelectTheme from "./sections/SelectTheme"
@@ -162,18 +163,22 @@ const App = () => {
       </Sidebar>
 
       <Header>
-        <DevTools />
-        <section>
-          {!is.mobile() && (
-            <>
-              <Refresh />
-              <Preferences />
-              <SelectTheme />
-            </>
-          )}
+        <IsClassicNetwork />
+
+        <Actions>
+          <DevTools />
+          <section>
+            {!is.mobile() && (
+              <>
+                <Refresh />
+                <Preferences />
+                <SelectTheme />
+              </>
+            )}
+          </section>
+          <ValidatorButton />
           <ConnectWallet />
-        </section>
-        <ValidatorButton />
+        </Actions>
         {!is.mobile() && <LatestTx />}
       </Header>
 
