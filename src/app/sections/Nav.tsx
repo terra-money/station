@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { NavLink, useLocation } from "react-router-dom"
 import { useRecoilState, useSetRecoilState } from "recoil"
 import { useTranslation } from "react-i18next"
@@ -21,14 +21,26 @@ const cx = classNames.bind(styles)
 const Nav = () => {
   useCloseMenuOnNavigate()
   const { t } = useTranslation()
-  const { menu, mobileMenu } = useNav()
+  const { menu, mobileMenu, subPage } = useNav()
   const [isOpen, setIsOpen] = useRecoilState(mobileIsMenuOpenState)
   const toggle = () => setIsOpen(!isOpen)
   const close = () => setIsOpen(false)
   const ICON_SIZE = { width: 28, height: 28 }
   const isClassic = useIsClassic()
+  const { pathname } = useLocation()
+  const [buttonView, setButtonView] = useState(true)
 
-  return (
+  useEffect(() => {
+    const subMenu = subPage.find((a) => a.path === pathname)
+
+    if (subMenu) {
+      setButtonView(false)
+    } else {
+      setButtonView(true)
+    }
+  }, [pathname])
+
+  return buttonView ? (
     <nav>
       <header className={styles.header}>
         <NavLink to="/" className={classNames(styles.item, styles.logo)}>
@@ -113,6 +125,8 @@ const Nav = () => {
         </div>
       </section>
     </nav>
+  ) : (
+    <></>
   )
 }
 

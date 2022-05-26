@@ -174,6 +174,7 @@ const App = () => {
           <ConnectWallet />
         </section>
         <ValidatorButton />
+        {!is.mobile() && <LatestTx />}
       </Header>
 
       <Content>
@@ -181,8 +182,7 @@ const App = () => {
           <InitBankBalance>{routes}</InitBankBalance>
         </ErrorBoundary>
       </Content>
-
-      <LatestTx />
+      {is.mobile() && <LatestTx />}
       <WalletConnect />
     </Layout>
   )

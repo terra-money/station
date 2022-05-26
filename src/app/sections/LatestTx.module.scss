@@ -6,6 +6,10 @@
   position: absolute;
   top: calc(100% + var(--grid-gap));
   right: var(--grid-gap);
+  @include mobile {
+    top: var(--grid-gap);
+    right: var(--grid-gap);
+  }
   z-index: 1;
 
   background: var(--card-bg);
