@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { Form, FormError, FormItem, FormWarning } from "components/form"
-import { Checkbox, Input, Submit } from "components/form"
+import { Input, Submit } from "components/form"
 import { FlexColumn } from "components/layout"
 import validate from "../scripts/validate"
 import useAuth from "../hooks/useAuth"
@@ -15,15 +15,10 @@ interface Values {
   bluetooth: boolean
 }
 
-interface DeviceInterface {
-  name: string
-  id: string
-}
-
 const AddLedgerForm = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const { connectLedger, getLedgerKey } = useAuth()
+  const { connectLedger } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<Error>()
   const { state }: { state: any } = useLocation()
@@ -36,7 +31,7 @@ const AddLedgerForm = () => {
 
   const { register, watch, handleSubmit, formState } = form
   const { errors } = formState
-  const { index, bluetooth } = watch()
+  const { index } = watch()
 
   const submit = async ({ index, bluetooth }: Values) => {
     setIsLoading(true)

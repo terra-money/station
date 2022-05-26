@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useMemo } from "react"
+import { useCallback, useEffect, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import { useLocation } from "react-router-dom"
@@ -175,7 +175,7 @@ const SendForm = ({ token, decimals, balance }: Props) => {
                     validate: validate.recipient(),
                   })}
                   placeholder={SAMPLE_ADDRESS}
-                  autoFocus
+                  autoFocus={is.mobileNative() ? false : true}
                 />
 
                 <input {...register("address")} readOnly hidden />

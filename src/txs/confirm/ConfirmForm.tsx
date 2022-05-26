@@ -1,19 +1,12 @@
 import { useEffect, useState } from "react"
-import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 
-import { AccAddress, CreateTxOptions } from "@terra-money/terra.js"
+import { AccAddress } from "@terra-money/terra.js"
 import { useTnsAddress } from "data/external/tns"
-import { Card, Flex, Grid } from "components/layout"
+import { Card } from "components/layout"
 import { Form } from "components/form"
 import Tx from "../Tx"
-import {
-  parseDefault,
-  parseTx,
-  RN_APIS,
-  TxRequest,
-  WebViewMessage,
-} from "utils/rnModule"
+import { parseDefault, parseTx, TxRequest } from "utils/rnModule"
 import { useNavigate } from "react-router-dom"
 import GridConfirm from "../../components/layout/GridConfirm"
 import styles from "./Confirm.module.scss"

@@ -22,8 +22,6 @@ import Refresh from "./sections/Refresh"
 import Preferences from "./sections/Preferences"
 import SelectTheme from "./sections/SelectTheme"
 import ConnectWallet from "./sections/ConnectWallet"
-import QRScan from "./sections/QRScan"
-import Bio from "./sections/Bio"
 
 /* extra */
 import LatestTx from "./sections/LatestTx"

@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
-// import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 
 import { AccAddress } from "@terra-money/terra.js"
-import { useTnsAddress } from "data/external/tns"
-import { Auto, Card, Flex, Grid } from "components/layout"
+import { Card, Flex, Grid } from "components/layout"
 import { Form } from "components/form"
 import Tx from "../Tx"
 import { RN_APIS, WebViewMessage } from "utils/rnModule"
@@ -32,16 +30,10 @@ const ConnectForm = ({ action, payload }: Props) => {
 
   const [peerData, setPeerData] = useState<any>(null)
   const [tx, setTx] = useState<any>(null)
-  const [msgs, setMsgs] = useState<any>(null)
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })
   const { handleSubmit } = form
-  // const { formState } = form
-  // const { errors } = formState
-
-  /* resolve recipient */
-  // const { ...tnsState } = useTnsAddress("")
 
   const readyConnect = async () => {
     const res = await WebViewMessage(RN_APIS.READY_CONNECT_WALLET, {

@@ -8,7 +8,6 @@ import styles from "./Layout.module.scss"
 import { useNav } from "../../app/routes"
 import is from "auth/scripts/is"
 import { ReactComponent as BackIcon } from "styles/images/icons/Back.svg"
-import SelectSend from "../../txs/send/SelectSend"
 
 const cx = classNames.bind(styles)
 

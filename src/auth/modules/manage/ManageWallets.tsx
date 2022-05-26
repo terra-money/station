@@ -6,7 +6,6 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
 import FactCheckOutlinedIcon from "@mui/icons-material/FactCheckOutlined"
 import LogoutIcon from "@mui/icons-material/Logout"
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
-import FingerprintIcon from "@mui/icons-material/Fingerprint"
 import { Col, Page } from "components/layout"
 import is from "../../scripts/is"
 import useAuth from "../../hooks/useAuth"
@@ -16,7 +15,7 @@ import ConnectedWallet from "./ConnectedWallet"
 export const useManageWallet = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const { wallet, disconnect, lock, isAbleBio } = useAuth()
+  const { wallet, disconnect, lock } = useAuth()
 
   const toExport = {
     to: "/auth/export",

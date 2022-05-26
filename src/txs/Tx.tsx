@@ -24,7 +24,7 @@ import { getErrorMessage } from "utils/error"
 import { getLocalSetting, SettingKey } from "utils/localStorage"
 import { useCurrency } from "data/settings/Currency"
 import { queryKey, RefetchOptions } from "data/query"
-import { useAddress, useChainID, useNetwork } from "data/wallet"
+import { useAddress, useNetwork } from "data/wallet"
 import { isBroadcastingState, latestTxState, useTxInfo } from "data/queries/tx"
 import { useBankBalance, useIsWalletEmpty } from "data/queries/bank"
 
@@ -117,7 +117,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const bankBalance = useBankBalance()
   const { gasPrices } = useTx()
   const { data } = useTxInfo(latestTx)
-  const chainID = useChainID()
 
   const status = !data
     ? Status.LOADING

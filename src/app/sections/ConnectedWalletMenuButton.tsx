@@ -1,4 +1,3 @@
-import { useTranslation } from "react-i18next"
 import { ModalButton, Mode } from "components/feedback"
 import { RenderButton } from "types/components"
 import { ManageConnected } from "auth/modules/manage/MobileManageWallets"

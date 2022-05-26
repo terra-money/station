@@ -5,7 +5,7 @@ import { getAmount } from "utils/coin"
 import { useTokenBalance } from "data/queries/wasm"
 import { useBankBalance } from "data/queries/bank"
 import { useTokenItem } from "data/token"
-import { Auto, Page } from "components/layout"
+import { Page } from "components/layout"
 import TxContext from "../TxContext"
 import SendForm from "./SendForm"
 

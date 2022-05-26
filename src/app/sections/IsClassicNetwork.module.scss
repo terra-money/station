@@ -1,7 +1,13 @@
+@import "mixins";
+
 .component {
   background-color: var(--bg-muted);
   border-radius: 8px;
   font-size: var(--font-size-small);
   font-weight: var(--bold);
   padding: 8px 16px;
+  @include mobile {
+    border-radius: 4px;
+    padding: 6px;
+  }
 }

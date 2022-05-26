@@ -1,6 +1,7 @@
 import { ReactNode, useState } from "react"
 import { Grid } from "components/layout"
 import { SearchInput } from "components/form"
+import { isWallet } from "auth"
 
 interface Props {
   gap?: number
@@ -15,7 +16,7 @@ const WithSearchInput = ({ gap, children }: Props) => {
       <SearchInput
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        autoFocus
+        autoFocus={isWallet.mobileNative() ? false : true}
       />
       {children(input)}
     </Grid>

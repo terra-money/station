@@ -37,6 +37,7 @@ import { SwapMode, validateParams } from "./useSwapUtils"
 import { SlippageParams } from "./SingleSwapContext"
 import { validateSlippageParams, useSingleSwap } from "./SingleSwapContext"
 import styles from "./SwapForm.module.scss"
+import { isWallet } from "auth"
 
 interface TxValues extends Partial<SlippageParams> {
   mode?: SwapMode
@@ -321,7 +322,7 @@ const SwapForm = () => {
                   inputMode="decimal"
                   placeholder={getPlaceholder(offerDecimals)}
                   onFocus={max.reset}
-                  autoFocus
+                  autoFocus={isWallet.mobileNative() ? false : true}
                 />
               }
             />

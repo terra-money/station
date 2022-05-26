@@ -10,7 +10,6 @@ import { SearchInput } from "components/form"
 import ContractActions from "./ContractActions"
 import ContractItem from "./ContractItem"
 import is from "auth/scripts/is"
-import { LinkButton } from "../../components/general"
 
 export const [useContract, ContractProvider] =
   createContext<ContractInfo>("useContract")
