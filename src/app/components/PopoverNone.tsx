@@ -1,4 +1,4 @@
-import { FC, ReactNode } from "react"
+import { PropsWithChildren, ReactNode } from "react"
 import { Link } from "react-router-dom"
 import classNames from "classnames"
 import styles from "./PopoverNone.module.scss"
@@ -8,7 +8,9 @@ interface Props {
   footer?: { children: ReactNode; onClick: () => void; to?: string }
 }
 
-const PopoverNone: FC<Props> = ({ className, children, footer }) => {
+const PopoverNone = (props: PropsWithChildren<Props>) => {
+  const { className, children, footer } = props
+
   const renderFooter = () => {
     if (!footer) return null
     const { to } = footer

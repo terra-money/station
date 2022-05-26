@@ -1,4 +1,4 @@
-import { HTMLAttributes, FC, ReactNode } from "react"
+import { HTMLAttributes, PropsWithChildren, ReactNode } from "react"
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward"
 import { Grid } from "../layout"
 import styles from "./Form.module.scss"
@@ -25,14 +25,20 @@ export const FormArrow = ({ onClick }: { onClick?: () => void }) => {
 }
 
 /* group */
-export const FormGroup: FC<{
+interface FormGroupProps {
   button?: { onClick: () => void; children: ReactNode }
-}> = ({ children, button }) => (
-  <div className={styles.group}>
-    {children}
-    {button && <button type="button" className={styles.button} {...button} />}
-  </div>
-)
+}
+
+export const FormGroup = (props: PropsWithChildren<FormGroupProps>) => {
+  const { children, button } = props
+
+  return (
+    <div className={styles.group}>
+      {children}
+      {button && <button type="button" className={styles.button} {...button} />}
+    </div>
+  )
+}
 
 interface FormItemProps {
   label?: string
@@ -41,7 +47,7 @@ interface FormItemProps {
 }
 
 /* item */
-export const FormItem: FC<FormItemProps> = (props) => {
+export const FormItem = (props: PropsWithChildren<FormItemProps>) => {
   const { label, extra, error, children } = props
 
   return (

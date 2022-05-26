@@ -1,4 +1,4 @@
-import { FC } from "react"
+import { PropsWithChildren } from "react"
 import classNames from "classnames/bind"
 import styles from "./Toggle.module.scss"
 
@@ -10,7 +10,9 @@ interface Props {
   large?: boolean
 }
 
-const Toggle: FC<Props> = ({ checked, onChange, children, large }) => {
+const Toggle = (props: PropsWithChildren<Props>) => {
+  const { checked, onChange, children, large } = props
+
   return (
     <button
       className={cx(styles.toggle, { checked, large })}

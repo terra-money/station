@@ -1,7 +1,6 @@
 import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useRoutes } from "react-router-dom"
-import { useIsClassic } from "data/query"
 
 import { ReactComponent as WalletIcon } from "styles/images/menu/Wallet.svg"
 import { ReactComponent as NFTIcon } from "styles/images/menu/NFT.svg"
@@ -12,6 +11,7 @@ import { ReactComponent as GovernanceIcon } from "styles/images/menu/Governance.
 import { ReactComponent as ContractIcon } from "styles/images/menu/Contract.svg"
 import { ReactComponent as SettingsIcon } from "styles/images/menu/Settings.svg"
 import { ReactComponent as DashboardIcon } from "styles/images/menu/Dashboard.svg"
+import { useIsClassic } from "data/query"
 
 /* menu */
 import Dashboard from "pages/dashboard/Dashboard"

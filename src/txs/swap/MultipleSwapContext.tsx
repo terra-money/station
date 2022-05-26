@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react"
+import { PropsWithChildren, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { isDenomTerraNative } from "@terra.kitchen/utils"
 import { getAmount, sortCoins } from "utils/coin"
@@ -16,7 +16,7 @@ interface MultipleSwap {
 export const [useMultipleSwap, MultipleSwapProvider] =
   createContext<MultipleSwap>("useMultipleSwap")
 
-const MultipleSwapContext: FC = ({ children }) => {
+const MultipleSwapContext = ({ children }: PropsWithChildren<{}>) => {
   const { t } = useTranslation()
   const currency = useCurrency()
   const bankBalance = useBankBalance()

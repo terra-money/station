@@ -13,9 +13,9 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline"
 import { isDenom, isDenomIBC, readDenom } from "@terra.kitchen/utils"
 import { Coin, Coins, LCDClient } from "@terra-money/terra.js"
 import { CreateTxOptions, Fee, isTxError } from "@terra-money/terra.js"
-import { ConnectType, UserDenied } from "@terra-money/wallet-provider"
-import { CreateTxFailed, TxFailed } from "@terra-money/wallet-provider"
-import { useWallet, useConnectedWallet } from "@terra-money/wallet-provider"
+import { ConnectType, UserDenied } from "@terra-money/wallet-types"
+import { CreateTxFailed, TxFailed } from "@terra-money/wallet-types"
+import { useWallet, useConnectedWallet } from "@terra-money/use-wallet"
 
 import { Contents } from "types/components"
 import { has } from "utils/num"
@@ -89,8 +89,6 @@ enum Status {
   SUCCESS = "SUCCESS",
   FAILURE = "FAILURE",
 }
-
-export default Tx
 
 function Tx<TxValues>(props: Props<TxValues>) {
   const { token, decimals, amount, balance, confirmData } = props
@@ -280,7 +278,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
       onPost?.()
     } catch (error) {
-      console.log(error)
       if (error instanceof PasswordError) setIncorrect(error.message)
       else setError(error as Error)
     }
@@ -649,6 +646,8 @@ function Tx<TxValues>(props: Props<TxValues>) {
     </>
   )
 }
+
+export default Tx
 
 /* utils */
 export const getInitialGasDenom = (bankBalance: Coins) => {

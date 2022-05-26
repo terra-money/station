@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react"
+import { PropsWithChildren, useMemo } from "react"
 import { flatten, uniq, zipObj } from "ramda"
 import BigNumber from "bignumber.js"
 import { isDenomIBC, toAmount } from "@terra.kitchen/utils"
@@ -44,7 +44,7 @@ interface SingleSwap {
 export const [useSingleSwap, SingleSwapProvider] =
   createContext<SingleSwap>("useSingleSwap")
 
-const SingleSwapContext: FC = ({ children }) => {
+const SingleSwapContext = ({ children }: PropsWithChildren<{}>) => {
   const currency = useCurrency()
   const bankBalance = useBankBalance()
   const { activeDenoms, pairs } = useSwap()

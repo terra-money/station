@@ -1,9 +1,9 @@
-import { FC } from "react"
+import { PropsWithChildren } from "react"
 import { Auto } from "components/layout"
 import SwitchWallet from "../select/SwitchWallet"
 import { isWallet } from "auth"
 
-const ConnectedWallet: FC = ({ children }) => {
+const ConnectedWallet = ({ children }: PropsWithChildren<{}>) => {
   return (
     <Auto columns={[children, isWallet.mobile() ? <></> : <SwitchWallet />]} />
   )

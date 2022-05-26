@@ -1,4 +1,4 @@
-import { FC } from "react"
+import { PropsWithChildren } from "react"
 import { atom, useRecoilValue } from "recoil"
 import { useState, useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
@@ -18,15 +18,15 @@ export const mobileIsMenuOpenState = atom({
 })
 
 /* components */
-export const Banner: FC = ({ children }) => {
+export const Banner = ({ children }: PropsWithChildren<{}>) => {
   return <div className={styles.banner}>{children}</div>
 }
 
-export const Sidebar: FC = ({ children }) => {
+export const Sidebar = ({ children }: PropsWithChildren<{}>) => {
   return <div className={styles.sidebar}>{children}</div>
 }
 
-export const Header: FC = ({ children }) => {
+export const Header = ({ children }: PropsWithChildren<{}>) => {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const { mobileMenu, subPage } = useNav()
@@ -98,11 +98,11 @@ export const Header: FC = ({ children }) => {
   )
 }
 
-export const Content: FC = ({ children }) => {
+export const Content = ({ children }: PropsWithChildren<{}>) => {
   return <main className={styles.main}>{children}</main>
 }
 
-const Layout: FC = ({ children }) => {
+const Layout = ({ children }: PropsWithChildren<{}>) => {
   const isMenuOpen = useRecoilValue(mobileIsMenuOpenState)
 
   return (

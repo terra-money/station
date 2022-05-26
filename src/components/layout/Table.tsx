@@ -23,6 +23,7 @@ interface Column<T> {
   key?: string
 
   align?: "left" | "center" | "right"
+  hidden?: boolean
 }
 
 interface Props<T> {
@@ -39,8 +40,9 @@ interface Props<T> {
   pagination?: number
 }
 
-function Table<T>({ columns, dataSource, filter, rowKey, ...props }: Props<T>) {
+function Table<T>({ dataSource, filter, rowKey, ...props }: Props<T>) {
   const { initialSorterKey, size = "default", style, pagination } = props
+  const columns = props.columns.filter(({ hidden }) => !hidden)
 
   /* helpers */
   const getClassName = ({ align }: Column<T>) => cx(align)

@@ -1,5 +1,5 @@
-import { FC, ForwardedRef, InputHTMLAttributes, ReactNode } from "react"
-import { forwardRef } from "react"
+import { InputHTMLAttributes, PropsWithChildren, ReactNode } from "react"
+import { ForwardedRef, forwardRef } from "react"
 import { Grid } from "components/layout"
 import styles from "./AssetFormItem.module.scss"
 
@@ -9,7 +9,9 @@ interface Props {
   error?: string
 }
 
-const AssetFormItem: FC<Props> = ({ label, extra, error, children }) => {
+const AssetFormItem = (props: PropsWithChildren<Props>) => {
+  const { label, extra, error, children } = props
+
   return (
     <Grid gap={3}>
       <Grid gap={5} className={styles.border}>
@@ -40,6 +42,6 @@ export const AssetInput = forwardRef(
 )
 
 /* read only */
-export const AssetReadOnly: FC = ({ children }) => {
+export const AssetReadOnly = ({ children }: PropsWithChildren<{}>) => {
   return <span className={styles.input}>{children}</span>
 }

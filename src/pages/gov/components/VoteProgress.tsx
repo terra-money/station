@@ -1,9 +1,9 @@
-import { FC } from "react"
+import { PropsWithChildren } from "react"
 import classNames from "classnames"
 import { Flex } from "components/layout"
 import styles from "./VoteProgress.module.scss"
 
-const Flag: FC<{ left: string }> = ({ left, children }) => {
+const Flag = ({ left, children }: PropsWithChildren<{ left: string }>) => {
   return (
     <div className={styles.flag} style={{ left }}>
       <span className={styles.label}>{children}</span>

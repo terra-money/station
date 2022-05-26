@@ -1,10 +1,11 @@
-import { FC } from "react"
+import { PropsWithChildren } from "react"
 import classNames from "classnames/bind"
 import InfoIcon from "@mui/icons-material/Info"
 import { Flex } from "../layout"
 import styles from "./FormHelp.module.scss"
 
-const Component: FC<{ className: string }> = ({ children, className }) => {
+const Component = (props: PropsWithChildren<{ className: string }>) => {
+  const { children, className } = props
   return (
     <div className={classNames(styles.component, className)}>
       <Flex>
@@ -15,14 +16,14 @@ const Component: FC<{ className: string }> = ({ children, className }) => {
   )
 }
 
-export const FormHelp: FC = (props) => {
+export const FormHelp = (props: PropsWithChildren<{}>) => {
   return <Component {...props} className={styles.info} />
 }
 
-export const FormWarning: FC = (props) => {
+export const FormWarning = (props: PropsWithChildren<{}>) => {
   return <Component {...props} className={styles.warning} />
 }
 
-export const FormError: FC = (props) => {
+export const FormError = (props: PropsWithChildren<{}>) => {
   return <Component {...props} className={styles.error} />
 }

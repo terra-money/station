@@ -1,4 +1,4 @@
-import { FC, ReactNode } from "react"
+import { PropsWithChildren, ReactNode } from "react"
 import classNames from "classnames/bind"
 import { Flex, Grid } from "../layout"
 import styles from "./Radio.module.scss"
@@ -14,9 +14,8 @@ interface Props {
   reversed?: boolean
 }
 
-const Radio: FC<Props> = ({ label, children, checked, disabled, ...props }) => {
-  const { onClick, reversed } = props
-
+const Radio = (props: PropsWithChildren<Props>) => {
+  const { label, children, checked, disabled, onClick, reversed } = props
   const className = cx(styles.component, { checked, disabled }, props.className)
 
   const input = (

@@ -1,4 +1,4 @@
-import { FC } from "react"
+import { PropsWithChildren } from "react"
 import { useTranslation } from "react-i18next"
 import createContext from "utils/createContext"
 import { GasPrices, useGasPrices } from "data/Terra/TerraAPI"
@@ -6,10 +6,11 @@ import { Card } from "components/layout"
 import { ErrorBoundary, Wrong } from "components/feedback"
 import { useTxKey } from "./Tx"
 
-export const [useTx, TxProvider] =
-  createContext<{ gasPrices: GasPrices }>("useTx")
+export const [useTx, TxProvider] = createContext<{ gasPrices: GasPrices }>(
+  "useTx"
+)
 
-const TxContext: FC = ({ children }) => {
+const TxContext = ({ children }: PropsWithChildren<{}>) => {
   const { t } = useTranslation()
   const txKey = useTxKey()
   const { data: gasPrices } = useGasPrices()
