@@ -1,4 +1,12 @@
-import { PropsWithChildren, ReactNode, useEffect, useState } from "react"
+import {
+  PropsWithChildren,
+  ReactNode,
+  useEffect,
+  useState,
+  forwardRef,
+  ForwardedRef,
+  useImperativeHandle,
+} from "react"
 import { useLocation } from "react-router-dom"
 import ReactModal from "react-modal"
 import classNames from "classnames/bind"
@@ -111,22 +119,37 @@ interface ModalButtonProps extends ModalProps {
   modalKey?: string
 }
 
-export const ModalButton = (props: PropsWithChildren<ModalButtonProps>) => {
-  const { pathname } = useLocation()
-  const { renderButton, modalKey = pathname, ...rest } = props
-
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const open = () => setIsModalOpen(true)
-  const close = () => setIsModalOpen(false)
-
-  useEffect(() => {
-    close()
-  }, [modalKey])
-
-  return (
-    <ModalProvider value={close}>
-      {renderButton(open)}
-      <Modal {...rest} isOpen={isModalOpen} onRequestClose={close} />
-    </ModalProvider>
-  )
+export type ModalRef = {
+  open: () => void
+  close: () => void
 }
+
+export const ModalButton = forwardRef(
+  (
+    props: PropsWithChildren<ModalButtonProps>,
+    ref?: ForwardedRef<ModalRef>
+  ) => {
+    const { pathname } = useLocation()
+    const { renderButton, modalKey = pathname, ...rest } = props
+
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const open = () => setIsModalOpen(true)
+    const close = () => setIsModalOpen(false)
+
+    useEffect(() => {
+      close()
+    }, [modalKey])
+
+    useImperativeHandle(ref, () => ({
+      open,
+      close,
+    }))
+
+    return (
+      <ModalProvider value={close}>
+        {renderButton(open)}
+        <Modal {...rest} isOpen={isModalOpen} onRequestClose={close} />
+      </ModalProvider>
+    )
+  }
+)

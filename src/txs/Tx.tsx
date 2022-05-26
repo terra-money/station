@@ -7,6 +7,7 @@ import { useRecoilValue, useRecoilState } from "recoil"
 import classNames from "classnames"
 import BigNumber from "bignumber.js"
 import { head, isNil } from "ramda"
+import { toast } from "react-toastify"
 
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline"
@@ -300,6 +301,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
     }
 
     storeSessions(sessions)
+    toast.success("Wallet connected", { toastId: "wallet-success" })
   }
 
   const connectSession = useCallback(async () => {

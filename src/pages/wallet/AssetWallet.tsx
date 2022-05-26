@@ -57,7 +57,7 @@ const AssetWallet = (props: Props) => {
               close()
             }}
           >
-            {t("Disconnect {{name}}", { name })}
+            {t("Disconnect session")}
           </Button>
         </ModalButton>
       }

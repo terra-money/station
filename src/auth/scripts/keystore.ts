@@ -24,6 +24,7 @@ type StoredKey =
   | StoredWalletLegacy
   | MultisigWallet
   | LedgerWallet
+
 export const getStoredWallets = () => {
   const keys = localStorage.getItem("keys") ?? "[]"
   return JSON.parse(keys) as StoredKey[]
@@ -42,21 +43,24 @@ export const getStoredWallet = (name: string) => {
 }
 
 /* stored bio keys */
+export type BioKeys = Record<string, string>
+export type BioStamps = Record<string, string>
+
 export const getBioKeys = () => {
   const keys = localStorage.getItem("bio_auth_key") ?? "{}"
-  return JSON.parse(keys) as any
+  return JSON.parse(keys) as BioKeys
 }
 
 export const getBioStamps = () => {
   const timestamp = localStorage.getItem("timestamp") ?? "{}"
-  return JSON.parse(timestamp) as any
+  return JSON.parse(timestamp) as BioStamps
 }
 
-export const setBioKeys = (keys: any) => {
+export const setBioKeys = (keys: BioKeys) => {
   localStorage.setItem("bio_auth_key", JSON.stringify(keys))
 }
 
-export const setBioStamps = (stamps: any) => {
+export const setBioStamps = (stamps: BioStamps) => {
   localStorage.setItem("timestamp", JSON.stringify(stamps))
 }
 

@@ -36,19 +36,25 @@ const ConnectForm = ({ action, payload }: Props) => {
   const { handleSubmit } = form
 
   const readyConnect = async () => {
-    const res = await WebViewMessage(RN_APIS.READY_CONNECT_WALLET, {
-      uri: decodeURIComponent(payload),
-    })
+    try {
+      // const fallback = setTimeout(() => {
+      //   navigate('/', {replace: true})
+      // }, 5000)
+      // clearTimeout(fallback)
+      const res = await WebViewMessage(RN_APIS.READY_CONNECT_WALLET, {
+        uri: decodeURIComponent(payload),
+      })
 
-    setPeerData(res)
+      setPeerData(res)
+    } catch (error) {
+      console.error("readyConnect", error)
+    }
   }
 
   useEffect(() => {
     peerData && setPeerData(null)
     if (payload) {
       setTx({
-        txData: payload,
-        initialGasDenom: "uluna",
         onPost() {
           navigate("/", { replace: true })
         },

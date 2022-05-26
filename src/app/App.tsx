@@ -45,6 +45,9 @@ import {
 import WalletConnect from "../pages/wallet/WalletConnect"
 import { disconnectSession } from "../auth/scripts/sessions"
 
+import { ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+
 const App = () => {
   const { element: routes } = useNav()
   const navigate = useNavigate()
@@ -185,8 +188,26 @@ const App = () => {
           <InitBankBalance>{routes}</InitBankBalance>
         </ErrorBoundary>
       </Content>
-      {is.mobile() && <LatestTx />}
-      <WalletConnect />
+
+      {is.mobile() && (
+        <>
+          <LatestTx />
+          <ToastContainer
+            limit={1}
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+          />
+          <WalletConnect />
+        </>
+      )}
     </Layout>
   )
 }

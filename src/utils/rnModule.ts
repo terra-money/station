@@ -1,3 +1,5 @@
+import { toast } from "react-toastify"
+
 import { CreateTxOptions, Fee, Msg } from "@terra-money/terra.js"
 import { getStoredSessions } from "../auth/scripts/sessions"
 import is from "../auth/scripts/is"
@@ -164,6 +166,14 @@ export const WebViewMessage = async <T extends RN_API>(
         const { data: listenerData, reqId: listenerReqId } = JSON.parse(
           event.data
         )
+
+        // @ts-ignore
+        if (
+          typeof listenerData === "string" &&
+          listenerData?.includes("Error")
+        ) {
+          toast.error(listenerData, { toastId: "rn-error" })
+        }
 
         if (listenerReqId === reqId) {
           // clearTimeout(timer)

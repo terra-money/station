@@ -1,8 +1,9 @@
+import { useEffect, useState, useRef } from "react"
 import { useTranslation } from "react-i18next"
 import { isEmpty } from "ramda"
 import { Grid } from "components/layout"
 import { Button } from "components/general"
-import { ModalButton, Mode } from "components/feedback"
+import { ModalButton, ModalRef, Mode } from "components/feedback"
 import { FormError } from "components/form"
 import { getStoredSessions, removeSessions } from "auth/scripts/sessions"
 import AssetWallet from "./AssetWallet"
@@ -12,7 +13,6 @@ import is from "auth/scripts/is"
 import GridConfirm from "../../components/layout/GridConfirm"
 import { useLocation } from "react-router-dom"
 import { useNav } from "../../app/routes"
-import { useEffect, useState } from "react"
 
 const Selector = () => {
   const connectors = getStoredSessions()
@@ -23,7 +23,7 @@ const Selector = () => {
       {connectors && !isEmpty(connectors) ? (
         Object.values(connectors).map((value: any) => {
           if (!value?.peerMeta) return
-          return <AssetWallet {...value} />
+          return <AssetWallet key={value.peerMeta.name} {...value} />
         })
       ) : (
         <FormError>{t("Don't have connected sessions")}</FormError>
@@ -36,8 +36,12 @@ const WalletConnect = () => {
   const { t } = useTranslation()
   const { pathname } = useLocation()
   const { subPage } = useNav()
-  const [buttonView, setButtonView] = useState(true)
+  const disconnectAllRef = useRef<ModalRef>({
+    open: () => {},
+    close: () => {},
+  })
 
+  const [buttonView, setButtonView] = useState(true)
   const connectors = getStoredSessions()
 
   useEffect(() => {
@@ -52,6 +56,8 @@ const WalletConnect = () => {
 
   return buttonView && connectors && !isEmpty(connectors) ? (
     <ModalButton
+      key="wallet-connect-floating"
+      ref={disconnectAllRef}
       title={t("Wallet connect")}
       modalType={is.mobile() ? Mode.FULL : Mode.DEFAULT}
       renderButton={(open) => (
@@ -61,30 +67,35 @@ const WalletConnect = () => {
       )}
     >
       <GridConfirm
+        key="wallet-list"
         button={
-          <ModalButton
-            modalType={is.mobile() ? Mode.BOTTOM_CONFIRM : Mode.DEFAULT}
-            renderButton={(open) => (
-              <Button block color="danger" onClick={open}>
-                {t("Disconnect all sessions")}
-              </Button>
-            )}
-            maxHeight={false}
-            cancelButton={{
-              name: t("Cancel"),
-              type: "default",
-            }}
-          >
-            <Button
-              block
-              color="danger"
-              onClick={async () => {
-                await removeSessions()
+          connectors &&
+          !isEmpty(connectors) && (
+            <ModalButton
+              modalType={is.mobile() ? Mode.BOTTOM_CONFIRM : Mode.DEFAULT}
+              renderButton={(open) => (
+                <Button block color="danger" onClick={open}>
+                  {t("Disconnect all sessions")}
+                </Button>
+              )}
+              maxHeight={false}
+              cancelButton={{
+                name: t("Cancel"),
+                type: "default",
               }}
             >
-              {t("Disconnect all sessions")}
-            </Button>
-          </ModalButton>
+              <Button
+                block
+                color="danger"
+                onClick={async () => {
+                  await removeSessions()
+                  disconnectAllRef.current.close()
+                }}
+              >
+                {t("Disconnect all sessions")}
+              </Button>
+            </ModalButton>
+          )
         }
       >
         <Selector />

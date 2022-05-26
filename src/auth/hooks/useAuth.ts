@@ -98,9 +98,9 @@ const useAuth = () => {
   )
 
   const connectLedger = useCallback(
-    (address: AccAddress, index = 0, bluetooth = false) => {
+    (address: AccAddress, index = 0, bluetooth = true, name = "Ledger") => {
       const wallet = {
-        name: "Ledger",
+        name,
         address,
         ledger: true as const,
         index,
@@ -128,6 +128,7 @@ const useAuth = () => {
   const disconnect = useCallback(() => {
     clearWallet()
     setWallet(undefined)
+    if (isUseBio) disableBioAuth()
   }, [setWallet])
 
   const lock = useCallback(() => {
