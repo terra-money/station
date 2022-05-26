@@ -163,7 +163,7 @@ const App = () => {
       </Sidebar>
 
       <Header>
-        <IsClassicNetwork />
+        {/*<IsClassicNetwork />*/}
 
         <Actions>
           <DevTools />
