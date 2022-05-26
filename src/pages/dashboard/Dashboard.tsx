@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next"
+import classNames from "classnames/bind"
 import { useIsClassic } from "data/query"
 import { Col, Page } from "components/layout"
 import LunaPrice from "./LunaPrice"
@@ -9,6 +10,8 @@ import Charts from "./Charts"
 import styles from "./Dashboard.module.scss"
 import is from "../../auth/scripts/is"
 
+const cx = classNames.bind(styles)
+
 const Dashboard = () => {
   const { t } = useTranslation()
   const isClassic = useIsClassic()
@@ -16,7 +19,7 @@ const Dashboard = () => {
   return (
     <Page title={is.mobile() ? "" : t("Dashboard")}>
       <Col>
-        <header className={styles.header}>
+        <header className={cx(styles.header, { trisect: !isClassic })}>
           {isClassic && <LunaPrice />}
           <Issuance />
           <CommunityPool />
