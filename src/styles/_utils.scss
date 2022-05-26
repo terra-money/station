@@ -66,22 +66,3 @@ $colors: (
     border-top-right-radius: 0;
   }
 }
-
-.Toastify {
-  .Toastify__toast-container {
-    --toastify-color-success: hsl(168 71% 39%);
-    --toastify-color-error: hsl(356 100% 67%);
-
-    width: calc(100vw - 40px);
-    margin: 10px 20px;
-
-    .Toastify__toast {
-      border-radius: 8px;
-      .Toastify__close-button {
-        padding: 8px;
-        opacity: 1;
-        align-self: center;
-      }
-    }
-  }
-}

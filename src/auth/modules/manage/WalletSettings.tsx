@@ -26,7 +26,6 @@ export const useManageWallet = () => {
 
 export const useSettings = () => {
   const { t } = useTranslation()
-  const { wallet } = useAuth()
 
   const Network = {
     children: t("Network"),
@@ -43,7 +42,7 @@ export const useSettings = () => {
     icon: <SelectTheme />,
   }
 
-  return wallet ? [Network, Language, Theme] : [Language, Theme]
+  return [Network, Language, Theme]
 }
 
 const WalletSettings = () => {
@@ -58,7 +57,7 @@ const WalletSettings = () => {
         {list && <AuthList list={list} />}
         {settingList && <AuthList list={settingList} />}
 
-        {!wallet && (
+        {!wallet && !isWallet.mobileNative() && (
           <div className={styles.menuContainer}>
             <button className={styles.menuButton} onClick={disconnect}>
               Disconnect

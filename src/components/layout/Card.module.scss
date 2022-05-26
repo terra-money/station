@@ -136,3 +136,7 @@
 .error .main {
   @include flex;
 }
+
+.screen {
+  height: calc(100vh - var(--header-height));
+}

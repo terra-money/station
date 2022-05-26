@@ -28,7 +28,7 @@ import encrypt from "../scripts/encrypt"
 import useAvailable from "./useAvailable"
 import decrypt from "../scripts/decrypt"
 import { RN_APIS, WebViewMessage } from "../../utils/rnModule"
-import { removeSessions } from "../scripts/sessions"
+import { getStoredSessions, removeSessions } from "../scripts/sessions"
 import { SyncTxBroadcastResult } from "@terra-money/terra.js/dist/client/lcd/api/TxAPI"
 
 const walletState = atom({
@@ -55,6 +55,7 @@ const useAuth = () => {
   const [isAbleBio] = useRecoilState(isAbleBioState)
   const [isUseBio, setIsUseBio] = useRecoilState(isUseBioState)
   const wallets = getStoredWallets()
+  const connectors = getStoredSessions()
 
   const initBio = async (address: string) => {
     const keys = getBioKeys()
@@ -84,7 +85,7 @@ const useAuth = () => {
       setWallet(wallet)
 
       initBio(address)
-      await removeSessions()
+      if (connectors) await removeSessions()
     },
     [setWallet]
   )
@@ -125,10 +126,11 @@ const useAuth = () => {
   }, [connectedWallet])
 
   /* disconnected */
-  const disconnect = useCallback(() => {
+  const disconnect = useCallback(async () => {
     clearWallet()
     setWallet(undefined)
     if (isUseBio) disableBioAuth()
+    if (connectors) await removeSessions()
   }, [setWallet])
 
   const lock = useCallback(() => {

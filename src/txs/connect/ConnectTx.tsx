@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { Page } from "components/layout"
 import TxContext from "../TxContext"
@@ -19,7 +19,8 @@ const ConnectTx = () => {
     return payload
   }, [state])
 
-  useLayoutEffect(() => {
+  useEffect(() => {
+    console.log(wallet)
     if (!wallet) {
       navigate("/", { replace: true })
       toast.error("No connected wallet", { toastId: "wallet-error" })

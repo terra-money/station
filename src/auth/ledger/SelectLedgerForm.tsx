@@ -1,10 +1,9 @@
-import { useEffect, useLayoutEffect, useState } from "react"
+import { useEffect, useLayoutEffect, useState, useRef } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useSetRecoilState } from "recoil"
 import { useTranslation } from "react-i18next"
 import { truncate } from "@terra.kitchen/utils"
-import { Card } from "components/layout"
-import styles from "components/layout/Card.module.scss"
+import { Card, FlexColumn } from "components/layout"
 import { Form, FormError } from "components/form"
 import { parseTx, RN_APIS, WebViewMessage } from "utils/rnModule"
 import useAuth from "auth/hooks/useAuth"
@@ -15,6 +14,7 @@ import { isWallet } from "auth"
 import { LoadingCircular, Modal, Mode } from "components/feedback"
 import { useThemeAnimation } from "data/settings/Theme"
 import { CreateTxOptions } from "@terra-money/terra.js/dist/client/lcd/api/TxAPI"
+import styles from "components/layout/Card.module.scss"
 
 interface DeviceInterface {
   name: string
@@ -36,24 +36,8 @@ const SelectLedgerForm = () => {
   const [isTxLoading, setIsTxLoading] = useState(false)
   const [error, setError] = useState<Error>()
 
-  const getLedgers = async () => {
-    setIsLoading(true)
-    setError(undefined)
-    try {
-      const ledgers: any = await WebViewMessage(RN_APIS.GET_LEDGER_LIST)
-      if (typeof ledgers === "string" && ledgers?.includes("Error")) {
-        // @ts-ignore
-        setError({ message: ledgers })
-      } else {
-        // @ts-ignore
-        setLedgers(ledgers)
-      }
-    } catch (error) {
-      setError(error as Error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  const ledgerCount = useRef(10)
+  const getLedgerTimeout = useRef()
 
   useEffect(() => {
     if (state) {
@@ -63,14 +47,57 @@ const SelectLedgerForm = () => {
   }, [state])
 
   useLayoutEffect(() => {
-    getLedgers()
+    setIsLoading(true)
+    // @ts-ignore
+    getLedgerTimeout.current = setTimeout(async function run() {
+      console.log(ledgerCount)
+      if (ledgerCount.current === 0) {
+        clearGetLedgers()
+        setIsLoading(false)
+      } else {
+        ledgerCount.current--
+        setError(undefined)
+        try {
+          const ledgers: any = await WebViewMessage(RN_APIS.GET_LEDGER_LIST)
+          if (typeof ledgers === "string" && ledgers?.includes("Error")) {
+            // @ts-ignore
+            setError({ message: ledgers })
+            clearGetLedgers()
+            setIsLoading(false)
+          } else {
+            // @ts-ignore
+            if (ledgers.length > 0) {
+              setLedgers(ledgers)
+              setIsLoading(false)
+              clearGetLedgers()
+            } else {
+              setTimeout(run, 2000)
+            }
+          }
+        } catch (error) {
+          setError(error as Error)
+          clearGetLedgers()
+          setIsLoading(false)
+        }
+      }
+    }, 2000)
+
+    const clearGetLedgers = () => {
+      clearTimeout(getLedgerTimeout.current)
+    }
+
     return () => {
       setLedgers([])
     }
   }, [])
 
   if (isLoading) {
-    return <LoadingCircular size={18} />
+    return (
+      <FlexColumn gap={20} className={styles.screen}>
+        <LoadingCircular size={36} />
+        <p>Getting ledgers ... </p>
+      </FlexColumn>
+    )
   }
 
   return isTxLoading ? (
