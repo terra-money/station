@@ -110,7 +110,13 @@ const SelectLedgerForm = () => {
                     // @ts-ignore
                     setError({ message: result })
                   } else {
-                    setLatestTx({ txhash: result.txhash })
+                    setLatestTx({
+                      txhash: result.txhash,
+                      redirectAfterTx: {
+                        label: "ledger",
+                        path: "/",
+                      },
+                    })
                   }
                 } catch (error) {
                   setError(error as Error)

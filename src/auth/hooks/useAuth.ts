@@ -309,7 +309,6 @@ const useAuth = () => {
         txOptions,
         lcdConfigs: lcd.config,
       })
-      console.log("GET_LEDGER_KEY", result)
 
       // @ts-ignore
       if (result?.includes("Error")) {

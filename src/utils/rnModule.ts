@@ -4,6 +4,7 @@ import is from "../auth/scripts/is"
 
 export const RN_APIS = {
   MIGRATE_KEYSTORE: "MIGRATE_KEYSTORE",
+  SET_NETWORK: "SET_NETWORK",
   AUTH_BIO: "AUTH_BIO",
   CHECK_BIO: "CHECK_BIO",
   DEEPLINK: "DEEPLINK",
@@ -28,6 +29,7 @@ export const schemeUrl = {
 // 요청 타입
 type RN_API_REQ_TYPES = {
   [RN_APIS.MIGRATE_KEYSTORE]: unknown
+  [RN_APIS.SET_NETWORK]: unknown
   [RN_APIS.AUTH_BIO]: unknown
   [RN_APIS.CHECK_BIO]: unknown
   [RN_APIS.DEEPLINK]: unknown
@@ -46,6 +48,7 @@ type RN_API_REQ_TYPES = {
 // 응답 타입
 type RN_API_RES_TYPES = {
   [RN_APIS.MIGRATE_KEYSTORE]: string
+  [RN_APIS.SET_NETWORK]: string
   [RN_APIS.AUTH_BIO]: string
   [RN_APIS.CHECK_BIO]: string
   [RN_APIS.DEEPLINK]: string

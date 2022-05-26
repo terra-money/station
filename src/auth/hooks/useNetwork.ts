@@ -3,6 +3,7 @@ import { useWallet } from "@terra-money/wallet-provider"
 import { useNetworks } from "app/InitNetworks"
 import { sandbox } from "../scripts/env"
 import { getStoredNetwork, storeNetwork } from "../scripts/network"
+import { RN_APIS, WebViewMessage } from "utils/rnModule"
 
 const networkState = atom({
   key: "network",
@@ -13,6 +14,8 @@ export const useNetworkState = () => {
   const [network, setNetwork] = useRecoilState(networkState)
 
   const changeNetwork = (network: NetworkName) => {
+    WebViewMessage(RN_APIS.SET_NETWORK, network)
+    console.log("useNetworkState", network)
     setNetwork(network)
     storeNetwork(network)
   }

@@ -304,7 +304,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   const connectSession = useCallback(async () => {
     const connector = await WebViewMessage(RN_APIS.CONNECT_WALLET, {
-      chainID,
       userAddress: address,
     })
 

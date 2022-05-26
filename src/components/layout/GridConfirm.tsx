@@ -1,4 +1,4 @@
-import { FC, ReactNode } from "react"
+import { PropsWithChildren, ReactNode } from "react"
 import classNames from "classnames/bind"
 import styles from "./Grid.module.scss"
 
@@ -7,7 +7,8 @@ interface Props {
   button?: ReactNode
 }
 
-const GridConfirm: FC<Props> = ({ className, children, button }) => {
+const GridConfirm = (props: PropsWithChildren<Props>) => {
+  const { className, children, button } = props
   return (
     <div className={classNames(styles.confirm, className)}>
       {children}

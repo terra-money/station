@@ -14,6 +14,7 @@ import { ReactComponent as StakeIcon } from "styles/images/menu/Stake.svg"
 
 import is from "auth/scripts/is"
 import QRScan from "./QRScan"
+import { useIsClassic } from "../../data/query"
 
 const cx = classNames.bind(styles)
 
@@ -25,6 +26,7 @@ const Nav = () => {
   const toggle = () => setIsOpen(!isOpen)
   const close = () => setIsOpen(false)
   const ICON_SIZE = { width: 28, height: 28 }
+  const isClassic = useIsClassic()
 
   return (
     <nav>
@@ -40,20 +42,26 @@ const Nav = () => {
             cx(styles.mobileItem, { active: isActive })
           }
         >
-          <WalletIcon {...ICON_SIZE} />
-          {t("WALLET")}
+          <>
+            <WalletIcon {...ICON_SIZE} />
+            {t("WALLET")}
+          </>
         </NavLink>
 
-        <NavLink
-          to="/swap"
-          onClick={close}
-          className={({ isActive }) =>
-            cx(styles.mobileItem, { active: isActive })
-          }
-        >
-          <SwapIcon {...ICON_SIZE} />
-          {t("SWAP")}
-        </NavLink>
+        {isClassic && (
+          <NavLink
+            to="/swap"
+            onClick={close}
+            className={({ isActive }) =>
+              cx(styles.mobileItem, { active: isActive })
+            }
+          >
+            <>
+              <SwapIcon {...ICON_SIZE} />
+              {t("SWAP")}
+            </>
+          </NavLink>
+        )}
 
         <NavLink
           to="/stake"
@@ -62,8 +70,10 @@ const Nav = () => {
             cx(styles.mobileItem, { active: isActive })
           }
         >
-          <StakeIcon {...ICON_SIZE} />
-          {t("STAKE")}
+          <>
+            <StakeIcon {...ICON_SIZE} />
+            {t("STAKE")}
+          </>
         </NavLink>
 
         <button
@@ -82,7 +92,6 @@ const Nav = () => {
           </NavLink>
           {is.mobileNative() && (
             <>
-              {/*<WalletConnect />*/}
               <QRScan />
             </>
           )}
