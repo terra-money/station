@@ -1,6 +1,6 @@
 import { getErrorMessage } from "utils/error"
-import Layout from "components/layout"
-import { Banner, Content, Header, Sidebar, Page } from "components/layout"
+import Layout, { Page } from "components/layout"
+import { Banner, Content, Header, Actions, Sidebar } from "components/layout"
 import { ErrorBoundary, Wrong } from "components/feedback"
 
 /* routes */
@@ -14,6 +14,7 @@ import Nav from "./sections/Nav"
 import Aside from "./sections/Aside"
 
 /* header */
+import IsClassicNetwork from "./sections/IsClassicNetwork"
 import Refresh from "./sections/Refresh"
 import Preferences from "./sections/Preferences"
 import SelectTheme from "./sections/SelectTheme"
@@ -42,14 +43,18 @@ const App = () => {
       </Sidebar>
 
       <Header>
-        <DevTools />
-        <section>
-          <Refresh />
-          <Preferences />
-          <SelectTheme />
-        </section>
-        <ValidatorButton />
-        <ConnectWallet />
+        <IsClassicNetwork />
+
+        <Actions>
+          <DevTools />
+          <section>
+            <Refresh />
+            <Preferences />
+            <SelectTheme />
+          </section>
+          <ValidatorButton />
+          <ConnectWallet />
+        </Actions>
         <LatestTx />
       </Header>
 

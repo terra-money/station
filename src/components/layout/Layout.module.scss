@@ -57,8 +57,7 @@
   white-space: nowrap;
 
   .wrapper {
-    @include flex(flex-end);
-    gap: 10px;
+    @include flex(space-between);
     width: 100%;
     height: var(--header-height);
   }
@@ -68,6 +67,11 @@
   button {
     -webkit-app-region: no-drag;
   }
+}
+
+.actions {
+  @include flex;
+  gap: 10px;
 }
 
 .main {

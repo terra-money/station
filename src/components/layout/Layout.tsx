@@ -30,6 +30,10 @@ export const Header = ({ children }: PropsWithChildren<{}>) => {
   )
 }
 
+export const Actions = ({ children }: PropsWithChildren<{}>) => {
+  return <div className={styles.actions}>{children}</div>
+}
+
 export const Content = ({ children }: PropsWithChildren<{}>) => {
   return <main className={styles.main}>{children}</main>
 }

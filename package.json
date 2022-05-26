@@ -20,7 +20,7 @@
     "@mui/material": "^5.8.1",
     "@terra-money/ledger-terra-js": "^1.2.2",
     "@terra-money/log-finder-ruleset": "^3.0.0",
-    "@terra-money/terra.js": "^3.1.0-beta.0",
+    "@terra-money/terra.js": "^3.1.0",
     "@terra-money/terra.proto": "^0.2.0-beta.4",
     "@terra-money/use-wallet": "^3.9.1",
     "@terra-money/wallet-controller": "^3.9.1",
