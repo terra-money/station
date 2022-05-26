@@ -24,7 +24,7 @@ export const getStoredWallets = () => {
   return JSON.parse(keys) as StoredKey[]
 }
 
-const storeWallets = (wallets: StoredKey[]) => {
+export const storeWallets = (wallets: StoredKey[]) => {
   localStorage.setItem("keys", JSON.stringify(wallets))
 }
 
@@ -34,6 +34,16 @@ export const getStoredWallet = (name: string) => {
   const wallet = wallets.find((wallet) => wallet.name === name)
   if (!wallet) throw new Error("Wallet does not exist")
   return wallet
+}
+
+/* stored dapps */
+export const getStoredDapps = () => {
+  const dapps = localStorage.getItem("dapps") ?? "[]"
+  return JSON.parse(dapps) as any[]
+}
+
+export const storeDapps = (dapps: any[]) => {
+  localStorage.setItem("dapps", JSON.stringify(dapps))
 }
 
 interface Params {

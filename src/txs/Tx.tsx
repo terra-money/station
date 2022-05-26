@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { QueryKey, useQuery } from "react-query"
 import { useNavigate } from "react-router-dom"
-import { useRecoilValue, useSetRecoilState } from "recoil"
+import { useRecoilValue, useRecoilState } from "recoil"
 import classNames from "classnames"
 import BigNumber from "bignumber.js"
 import { head, isNil } from "ramda"
@@ -12,10 +12,10 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline"
 import { isDenom, isDenomIBC, readDenom } from "@terra.kitchen/utils"
 import { Coin, Coins, LCDClient } from "@terra-money/terra.js"
-import { CreateTxOptions, Fee } from "@terra-money/terra.js"
-import { ConnectType, UserDenied } from "@terra-money/wallet-types"
-import { CreateTxFailed, TxFailed } from "@terra-money/wallet-types"
-import { useWallet, useConnectedWallet } from "@terra-money/use-wallet"
+import { CreateTxOptions, Fee, isTxError } from "@terra-money/terra.js"
+import { ConnectType, UserDenied } from "@terra-money/wallet-provider"
+import { CreateTxFailed, TxFailed } from "@terra-money/wallet-provider"
+import { useWallet, useConnectedWallet } from "@terra-money/wallet-provider"
 
 import { Contents } from "types/components"
 import { has } from "utils/num"
@@ -25,7 +25,7 @@ import { getLocalSetting, SettingKey } from "utils/localStorage"
 import { useCurrency } from "data/settings/Currency"
 import { queryKey, RefetchOptions } from "data/query"
 import { useAddress, useNetwork } from "data/wallet"
-import { isBroadcastingState, latestTxState } from "data/queries/tx"
+import { isBroadcastingState, latestTxState, useTxInfo } from "data/queries/tx"
 import { useBankBalance, useIsWalletEmpty } from "data/queries/bank"
 
 import { Pre } from "components/general"
@@ -42,6 +42,8 @@ import { PasswordError } from "auth/scripts/keystore"
 import { toInput } from "./utils"
 import { useTx } from "./TxContext"
 import styles from "./Tx.module.scss"
+import { parseTx, RN_APIS, WebViewMessage } from "../utils/rnModule"
+import { SyncTxBroadcastResult } from "@terra-money/terra.js/dist/client/lcd/api/TxAPI"
 
 interface Props<TxValues> {
   /* Only when the token is paid out of the balance held */
@@ -49,6 +51,7 @@ interface Props<TxValues> {
   decimals?: number
   amount?: Amount
   balance?: Amount
+  txData?: any
 
   /* tx simulation */
   initialGasDenom: CoinDenom
@@ -72,10 +75,19 @@ interface RenderProps<TxValues> {
   max: { amount: Amount; render: RenderMax; reset: () => void }
   fee: { render: (descriptions?: Contents) => ReactNode }
   submit: { fn: (values: TxValues) => Promise<void>; button: ReactNode }
+  confirm: { fn: (values: TxValues) => Promise<void>; button: ReactNode }
 }
 
+enum Status {
+  LOADING = "LOADING",
+  SUCCESS = "SUCCESS",
+  FAILURE = "FAILURE",
+}
+
+export default Tx
+
 function Tx<TxValues>(props: Props<TxValues>) {
-  const { token, decimals, amount, balance } = props
+  const { token, decimals, amount, balance, txData } = props
   const { initialGasDenom, estimationTxValues, createTx } = props
   const { excludeGasDenom } = props
   const { children, onChangeMax } = props
@@ -93,10 +105,17 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const { wallet, validatePassword, ...auth } = useAuth()
   const address = useAddress()
   const isWalletEmpty = useIsWalletEmpty()
-  const setLatestTx = useSetRecoilState(latestTxState)
+  const [latestTx, setLatestTx] = useRecoilState(latestTxState)
   const isBroadcasting = useRecoilValue(isBroadcastingState)
   const bankBalance = useBankBalance()
   const { gasPrices } = useTx()
+  const { data } = useTxInfo(latestTx)
+
+  const status = !data
+    ? Status.LOADING
+    : isTxError(data)
+    ? Status.FAILURE
+    : Status.SUCCESS
 
   /* simulation: estimate gas */
   const simulationTx = estimationTxValues && createTx(estimationTxValues)
@@ -245,6 +264,62 @@ function Tx<TxValues>(props: Props<TxValues>) {
   }
 
   const submittingLabel = isWallet.ledger(wallet) ? t("Confirm in ledger") : ""
+
+  const confirm = async () => {
+    setSubmitting(true)
+
+    try {
+      if (disabled) throw new Error(disabled)
+
+      const tx = parseTx(txData.params)
+      console.log(tx)
+
+      const result = await auth.post(tx, password)
+      console.log("postTx", result, redirectAfterTx)
+
+      setLatestTx({
+        ...result,
+        // redirectAfterTx: {
+        //   label: 'Confirm',
+        //   path: '/'
+        // }
+      })
+    } catch (error) {
+      console.log(error)
+      if (error instanceof PasswordError) setIncorrect(error.message)
+      else setError(error as Error)
+    }
+
+    setSubmitting(false)
+  }
+
+  useEffect(() => {
+    console.log("APPROVE_TX", status, latestTx)
+
+    if (latestTx.txhash && txData) {
+      // @ts-ignore
+      if (isTxError(latestTx)) {
+        WebViewMessage(RN_APIS.REJECT_TX, {
+          id: txData.id,
+          handshakeTopic: txData.handshakeTopic,
+          error: {
+            errorCode: 3,
+            message: latestTx.raw_log,
+            txHash: latestTx.txhash,
+            raw_message: latestTx,
+          },
+        })
+      } else {
+        if (status === Status.SUCCESS) {
+          WebViewMessage(RN_APIS.APPROVE_TX, {
+            id: txData.id,
+            handshakeTopic: txData.handshakeTopic,
+            result: latestTx,
+          })
+        }
+      }
+    }
+  }, [status, latestTx, txData])
 
   /* render */
   const balanceAfterTx =
@@ -401,6 +476,46 @@ function Tx<TxValues>(props: Props<TxValues>) {
     </>
   )
 
+  const confirmButton = (
+    <>
+      {walletError && <FormError>{walletError}</FormError>}
+
+      {!address ? (
+        <ConnectWallet
+          renderButton={(open) => (
+            <Submit type="button" onClick={open}>
+              {t("Connect wallet")}
+            </Submit>
+          )}
+        />
+      ) : (
+        <Grid gap={4}>
+          {passwordRequired && (
+            <FormItem label={t("Password")} error={incorrect}>
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => {
+                  setIncorrect(undefined)
+                  setPassword(e.target.value)
+                }}
+              />
+            </FormItem>
+          )}
+
+          {failed && <FormError>{failed}</FormError>}
+
+          <Submit
+            // disabled={!estimatedGas || !!disabled}
+            submitting={submitting}
+          >
+            {submitting ? submittingLabel : disabled}
+          </Submit>
+        </Grid>
+      )}
+    </>
+  )
+
   const modal = !error
     ? undefined
     : {
@@ -426,6 +541,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
         max: { amount: max ?? "0", render: renderMax, reset: resetMax },
         fee: { render: renderFee },
         submit: { fn: submit, button: submitButton },
+        confirm: { fn: confirm, button: confirmButton },
       })}
 
       {modal && (
@@ -439,8 +555,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
     </>
   )
 }
-
-export default Tx
 
 /* utils */
 export const getInitialGasDenom = (bankBalance: Coins) => {
