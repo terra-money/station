@@ -7,10 +7,11 @@ import { truncate } from "@terra.kitchen/utils"
 import { getIpfsGateway, useTokenInfoCW721 } from "data/queries/wasm"
 import { InternalButton, InternalLink } from "components/general"
 import { Grid } from "components/layout"
-import { WithFetching } from "components/feedback"
+import { Mode, WithFetching } from "components/feedback"
 import { ModalButton } from "components/feedback"
 import NFTDetails from "./NFTDetails"
 import styles from "./NFTAssetItem.module.scss"
+import is from "auth/scripts/is"
 
 const cx = classNames.bind(styles)
 
@@ -48,6 +49,7 @@ const NFTAssetItem = ({ contract, id, compact }: Props) => {
         {src && (
           <ModalButton
             title={name}
+            modalType={is.mobile() ? Mode.FULL : Mode.DEFAULT}
             renderButton={(open) => (
               <button type="button" onClick={open} className={styles.image}>
                 <img src={src} alt="" {...SIZE} />
@@ -64,6 +66,7 @@ const NFTAssetItem = ({ contract, id, compact }: Props) => {
           <>
             <ModalButton
               title={name}
+              modalType={is.mobile() ? Mode.FULL : Mode.DEFAULT}
               renderButton={(open) => (
                 <InternalButton onClick={open} disabled={!extension}>
                   <InfoOutlinedIcon style={{ fontSize: 18 }} />

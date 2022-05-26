@@ -7,11 +7,12 @@ import { useAddress } from "data/wallet"
 import { Button, ExternalLink } from "components/general"
 import { Grid } from "components/layout"
 import { List } from "components/display"
-import { ModalButton } from "components/feedback"
+import { ModalButton, Mode } from "components/feedback"
 import { FormHelp } from "components/form"
-import { useAuth } from "auth"
+import { useAuth, isWallet } from "auth"
 import SwitchWallet from "auth/modules/select/SwitchWallet"
 import Connected from "./Connected"
+import WalletMenuButton from "./WalletMenuButton"
 
 interface Props {
   renderButton?: RenderButton
@@ -40,7 +41,7 @@ const ConnectWallet = ({ renderButton }: Props) => {
     })),
     {
       icon: <UsbIcon />,
-      to: "/auth/ledger",
+      to: "/auth/ledger/device",
       children: t("Access with ledger"),
     },
     ...availableInstallations.map(({ name, icon, url }) => ({
@@ -54,16 +55,23 @@ const ConnectWallet = ({ renderButton }: Props) => {
     <ModalButton
       title={t("Connect wallet")}
       renderButton={renderButton ?? defaultRenderButton}
+      modalType={isWallet.mobile() ? Mode.BOTTOM : Mode.DEFAULT}
       maxHeight
     >
-      <Grid gap={20}>
+      <Grid gap={isWallet.mobile() ? 0 : 20}>
         <SwitchWallet />
-        <List list={available.length ? available : list} />
-        {!!available.length && (
-          <FormHelp>
-            Use <ExternalLink href={STATION}>Terra Station</ExternalLink> on the
-            browser to access with Ledger device
-          </FormHelp>
+        {isWallet.mobileNative() ? (
+          <WalletMenuButton />
+        ) : (
+          <>
+            <List list={available.length ? available : list} />
+            {!!available.length && (
+              <FormHelp>
+                Use <ExternalLink href={STATION}>Terra Station</ExternalLink> on
+                the browser to access with Ledger device
+              </FormHelp>
+            )}
+          </>
         )}
       </Grid>
     </ModalButton>

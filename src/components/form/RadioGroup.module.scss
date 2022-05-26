@@ -3,6 +3,17 @@
 .list {
   max-height: 360px;
   overflow-y: auto;
+  &.mobileModal {
+    button {
+      padding: 0 20px;
+      height: 64px;
+      border-bottom: var(--border-width) solid var(--card-border);
+      & > div > div {
+        justify-content: space-between;
+        flex-flow: row-reverse;
+      }
+    }
+  }
 }
 
 .item {

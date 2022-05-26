@@ -15,10 +15,11 @@ import { useTxInfo } from "data/queries/tx"
 import { useThemeAnimation } from "data/settings/Theme"
 import { useNetworkName } from "data/wallet"
 import { Button, FinderLink, LinkButton } from "components/general"
-import { Modal, LoadingCircular } from "components/feedback"
+import { Modal, LoadingCircular, Mode } from "components/feedback"
 import { Flex } from "components/layout"
 import TxMessage from "../containers/TxMessage"
 import styles from "./LatestTx.module.scss"
+import { isWallet } from "auth"
 
 const { createActionRuleSet, getTxCanonicalMsgs, createLogMatcherForActions } =
   ruleset
@@ -125,6 +126,7 @@ const TxIndicator = ({ txhash }: { txhash: string }) => {
     </div>
   ) : status === Status.LOADING ? (
     <Modal
+      modalType={isWallet.mobile() ? Mode.TX : Mode.DEFAULT}
       icon={<img src={animation} width={100} height={100} alt="" />}
       closeIcon={<CloseFullscreenIcon fontSize="inherit" />}
       title={t("Broadcasting transaction")}

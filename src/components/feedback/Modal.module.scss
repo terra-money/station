@@ -11,6 +11,14 @@
   right: 0;
 
   z-index: 1050;
+
+  &.select,
+  &.bottom,
+  &.loading,
+  &.bottomConfirm {
+    @include flex(center, flex-end);
+    background: hsl(0 0% 0% / 0.8);
+  }
 }
 
 .modal {
@@ -43,6 +51,16 @@
   padding: 16px;
 }
 
+.action {
+  @include flex;
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 20px;
+  width: 64px;
+  height: 64px;
+}
+
 .header {
   text-align: center;
 }
@@ -66,4 +84,129 @@
 
 .footer {
   margin-top: 8px;
+}
+
+.tx {
+  width: 100%;
+  height: 100vh;
+  border-radius: 0;
+  .header {
+    @include flex-column(flex-end);
+  }
+}
+
+.loading {
+  width: 100%;
+  height: 100vh;
+  border-radius: 0;
+  .header {
+    @include flex-column;
+  }
+}
+
+.full {
+  gap: 0;
+  grid-template-rows: var(--header-height) auto;
+  padding: 0;
+  width: 100%;
+  height: 100vh;
+  border-radius: 0;
+  background: var(--bg);
+  .header {
+    padding: 18px 25px;
+    background: var(--card-bg);
+    border-bottom: var(--border-width) solid var(--card-border);
+  }
+  .title {
+    font-size: 16px;
+    line-height: 28px;
+  }
+  .main {
+    padding: 20px;
+    background: var(--bg);
+  }
+
+  .close {
+    left: 0;
+    width: 64px;
+    height: 64px;
+  }
+}
+
+.bottom {
+  gap: 0;
+  padding: 0;
+  width: 100%;
+  .modal {
+    padding: 20px 0px 40px;
+    background: var(--card-bg);
+    border-radius: 12px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    .header {
+      display: none;
+    }
+    .title {
+      font-size: 16px;
+      line-height: 28px;
+    }
+    .main {
+      display: grid;
+      gap: 16px;
+      padding: 0;
+      background: var(--card-bg);
+    }
+    .close {
+      display: none;
+    }
+  }
+}
+
+.bottomConfirm {
+  gap: 0;
+  padding: 0;
+  width: 100%;
+  .modal {
+    padding: 20px 20px 40px;
+    background: var(--card-bg);
+    border-radius: 12px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    .header {
+      display: none;
+    }
+    .title {
+      font-size: 16px;
+      line-height: 28px;
+    }
+    .main {
+      display: grid;
+      gap: 16px;
+      padding: 0;
+      background: var(--card-bg);
+    }
+    .close {
+      display: none;
+    }
+  }
+}
+
+.select {
+  padding: 0;
+  .modal {
+    margin-bottom: 40px;
+    padding: 8px 0px;
+    border-radius: 12px;
+    .header {
+      display: none;
+    }
+    .main {
+      * {
+        font-size: 16px;
+      }
+    }
+    .close {
+      display: none;
+    }
+  }
 }

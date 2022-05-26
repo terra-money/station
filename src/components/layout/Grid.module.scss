@@ -23,3 +23,20 @@
   display: grid;
   gap: var(--grid-gap);
 }
+
+.confirm {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  height: calc(100vh - 64px);
+  .grid:first-of-type {
+    grid-auto-rows: min-content;
+    align-content: start;
+    align-items: start;
+    max-height: calc(100vh - 64px);
+    overflow: auto;
+  }
+}
+
+.buttons {
+  padding: 40px 0 60px;
+}

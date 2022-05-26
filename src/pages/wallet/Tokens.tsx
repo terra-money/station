@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next"
+import { useLocation } from "react-router-dom"
 import { useAddress } from "data/wallet"
 import { useCustomTokensIBC } from "data/settings/CustomTokens"
 import { useCustomTokensCW20 } from "data/settings/CustomTokens"
@@ -11,6 +12,7 @@ import Asset from "./Asset"
 
 const Tokens = () => {
   const { t } = useTranslation()
+  const { pathname } = useLocation()
   const address = useAddress()
   const { list: ibc } = useCustomTokensIBC()
   const { list: cw20 } = useCustomTokensCW20()
@@ -42,13 +44,15 @@ const Tokens = () => {
     <Card
       title={t("Tokens")}
       extra={
-        <AddTokens>
-          {(open) => (
-            <InternalButton disabled={!address} onClick={open} chevron>
-              {t("Add tokens")}
-            </InternalButton>
-          )}
-        </AddTokens>
+        pathname === "/wallet" && (
+          <AddTokens>
+            {(open) => (
+              <InternalButton disabled={!address} onClick={open} chevron>
+                {t("Add tokens")}
+              </InternalButton>
+            )}
+          </AddTokens>
+        )
       }
     >
       {render()}

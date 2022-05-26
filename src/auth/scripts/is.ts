@@ -23,12 +23,28 @@ const isLedger = (wallet?: Wallet): wallet is LedgerWallet => {
   return "ledger" in wallet
 }
 
+declare global {
+  interface Window {
+    ReactNativeWebView: any
+  }
+}
+
+const isMobileNative = (): boolean => {
+  return !!window.ReactNativeWebView
+}
+
+const isMobile = (): boolean => {
+  return navigator.userAgent.indexOf("Mobi") > -1
+}
+
 const is = {
   local: isLocal,
   preconfigured: isPreconfigured,
   multisig: isMultisig,
   single: isSingle,
   ledger: isLedger,
+  mobileNative: isMobileNative,
+  mobile: isMobile,
 }
 
 export default is

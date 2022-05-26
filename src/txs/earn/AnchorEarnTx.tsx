@@ -37,7 +37,7 @@ const AnchorEarnTx = () => {
           children: (
             <Auto
               columns={[
-                <Card>
+                <Card className="tab behind">
                   <TxContext>{renderTab(tab)}</TxContext>
                 </Card>,
                 <AnchorEarnPromote />,

@@ -3,6 +3,7 @@ import classNames from "classnames/bind"
 import PaletteOutlinedIcon from "@mui/icons-material/PaletteOutlined"
 import LockIcon from "@mui/icons-material/Lock"
 import InfoIcon from "@mui/icons-material/Info"
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
 import { capitalize } from "@mui/material"
 import { readAmount } from "@terra.kitchen/utils"
 import { themes } from "styles/themes/themes"
@@ -10,9 +11,10 @@ import { useAddress } from "data/wallet"
 import { useThemeState, useValidateTheme } from "data/settings/Theme"
 import { Flex, FlexColumn, Grid } from "components/layout"
 import { Radio } from "components/form"
-import { ModalButton } from "components/feedback"
+import { ModalButton, Mode } from "components/feedback"
 import HeaderIconButton from "../components/HeaderIconButton"
 import styles from "./SelectTheme.module.scss"
+import is from "auth/scripts/is"
 
 const cx = classNames.bind(styles)
 
@@ -62,15 +64,26 @@ const SelectTheme = () => {
   const { t } = useTranslation()
   const address = useAddress()
   const validate = useValidateTheme()
+  const [currentTheme] = useThemeState()
 
   return (
     <ModalButton
       title={t("Select theme")}
-      renderButton={(open) => (
-        <HeaderIconButton onClick={open}>
-          <PaletteOutlinedIcon style={{ fontSize: 18 }} />
-        </HeaderIconButton>
-      )}
+      modalType={is.mobile() ? Mode.FULL : Mode.DEFAULT}
+      renderButton={
+        is.mobile()
+          ? (open) => (
+              <HeaderIconButton onClick={open}>
+                {capitalize(currentTheme?.name)}
+                <ArrowForwardIosIcon />
+              </HeaderIconButton>
+            )
+          : (open) => (
+              <HeaderIconButton onClick={open}>
+                <PaletteOutlinedIcon style={{ fontSize: 18 }} />
+              </HeaderIconButton>
+            )
+      }
     >
       <Grid gap={20}>
         <Selector />

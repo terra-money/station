@@ -17,6 +17,15 @@ import SwitchWallet from "auth/modules/select/SwitchWallet"
 import PopoverNone from "../components/PopoverNone"
 import WalletQR from "./WalletQR"
 import styles from "./Connected.module.scss"
+import { ModalButton, Mode } from "components/feedback"
+import { RenderButton } from "types/components"
+import WalletMenuButton from "./WalletMenuButton"
+import MobileStyles from "./MobileItem.module.scss"
+import ConnectedWalletMenuButton from "./ConnectedWalletMenuButton"
+
+interface Props {
+  renderButton?: RenderButton
+}
 
 const Connected = () => {
   const { t } = useTranslation()
@@ -35,51 +44,90 @@ const Connected = () => {
     ? { to: "/auth", onClick: closePopover, children: t("Manage wallets") }
     : { onClick: disconnect, children: t("Disconnect") }
 
-  return (
+  const connectedList = () => (
+    <Grid gap={isWallet.mobile() ? 0 : 16}>
+      <Grid gap={4} className={styles.mobileItem}>
+        <section>
+          <Tooltip content={t("View on Terra Finder")}>
+            <FinderLink className={styles.link} short>
+              {address}
+            </FinderLink>
+          </Tooltip>
+        </section>
+
+        <Flex gap={4} start>
+          <Copy text={address} />
+          <WalletQR
+            renderButton={(open) => (
+              <Tooltip content={t("Show address as QR code")}>
+                <button className={CopyStyles.button} onClick={open}>
+                  <QrCodeIcon fontSize="inherit" />
+                </button>
+              </Tooltip>
+            )}
+          />
+
+          {isWallet.ledger(wallet) && (
+            <Tooltip content={t("Show address in Ledger device")}>
+              <button
+                className={CopyStyles.button}
+                onClick={async () => {
+                  const lk = await getLedgerKey()
+                  lk.showAddressAndPubKey()
+                }}
+              >
+                <UsbIcon fontSize="inherit" />
+              </button>
+            </Tooltip>
+          )}
+
+          {isWallet.mobileNative() && <ConnectedWalletMenuButton />}
+        </Flex>
+      </Grid>
+      <SwitchWallet />
+      {isWallet.mobile() &&
+        (wallet ? (
+          <WalletMenuButton />
+        ) : (
+          <div onClick={disconnect} className={MobileStyles.item}>
+            {t("Disconnect")}
+          </div>
+        ))}
+    </Grid>
+  )
+
+  const defaultRenderButton: Props["renderButton"] = (open) => (
+    <Button
+      icon={
+        isWallet.multisig(wallet) ? (
+          <GroupsIcon style={{ fontSize: 16 }} />
+        ) : (
+          <AccountBalanceWalletIcon style={{ fontSize: 16 }} />
+        )
+      }
+      size="small"
+      outline
+      onClick={open}
+    >
+      {isWallet.local(wallet) ? wallet.name : truncate(name ?? address)}
+    </Button>
+  )
+
+  return isWallet.mobile() ? (
+    <ModalButton
+      title={t("Connect wallet")}
+      renderButton={defaultRenderButton}
+      modalType={Mode.BOTTOM}
+      maxHeight
+    >
+      {connectedList()}
+    </ModalButton>
+  ) : (
     <Popover
       key={key}
       content={
         <PopoverNone className={styles.popover} footer={footer}>
-          <Grid gap={16}>
-            <Grid gap={4}>
-              <section>
-                <Tooltip content={t("View on Terra Finder")}>
-                  <FinderLink className={styles.link} short>
-                    {address}
-                  </FinderLink>
-                </Tooltip>
-              </section>
-
-              <Flex gap={4} start>
-                <Copy text={address} />
-                <WalletQR
-                  renderButton={(open) => (
-                    <Tooltip content={t("Show address as QR code")}>
-                      <button className={CopyStyles.button} onClick={open}>
-                        <QrCodeIcon fontSize="inherit" />
-                      </button>
-                    </Tooltip>
-                  )}
-                />
-
-                {isWallet.ledger(wallet) && (
-                  <Tooltip content={t("Show address in Ledger device")}>
-                    <button
-                      className={CopyStyles.button}
-                      onClick={async () => {
-                        const lk = await getLedgerKey()
-                        lk.showAddressAndPubKey()
-                      }}
-                    >
-                      <UsbIcon fontSize="inherit" />
-                    </button>
-                  </Tooltip>
-                )}
-              </Flex>
-            </Grid>
-
-            <SwitchWallet />
-          </Grid>
+          {connectedList()}
         </PopoverNone>
       }
       placement="bottom-end"

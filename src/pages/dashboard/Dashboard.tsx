@@ -7,13 +7,14 @@ import CommunityPool from "./CommunityPool"
 import StakingRatio from "./StakingRatio"
 import Charts from "./Charts"
 import styles from "./Dashboard.module.scss"
+import is from "../../auth/scripts/is"
 
 const Dashboard = () => {
   const { t } = useTranslation()
   const isClassic = useIsClassic()
 
   return (
-    <Page title={t("Dashboard")}>
+    <Page title={is.mobile() ? "" : t("Dashboard")}>
       <Col>
         <header className={styles.header}>
           {isClassic && <LunaPrice />}

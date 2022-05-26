@@ -1,46 +1,132 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { NavLink, useLocation } from "react-router-dom"
 import { useRecoilState, useSetRecoilState } from "recoil"
+import { useTranslation } from "react-i18next"
 import classNames from "classnames/bind"
-import MenuIcon from "@mui/icons-material/Menu"
-import CloseIcon from "@mui/icons-material/Close"
 import { mobileIsMenuOpenState } from "components/layout"
 import { useNav } from "../routes"
 import styles from "./Nav.module.scss"
+
+import { ReactComponent as MenuIcon } from "styles/images/menu/Menu.svg"
+import { ReactComponent as WalletIcon } from "styles/images/menu/Wallet.svg"
+import { ReactComponent as SwapIcon } from "styles/images/menu/Swap.svg"
+import { ReactComponent as StakeIcon } from "styles/images/menu/Stake.svg"
+
+import is from "auth/scripts/is"
+import QRScan from "./QRScan"
+import { useIsClassic } from "../../data/query"
 
 const cx = classNames.bind(styles)
 
 const Nav = () => {
   useCloseMenuOnNavigate()
-  const { menu } = useNav()
+  const { t } = useTranslation()
+  const { menu, mobileMenu, subPage } = useNav()
   const [isOpen, setIsOpen] = useRecoilState(mobileIsMenuOpenState)
   const toggle = () => setIsOpen(!isOpen)
+  const close = () => setIsOpen(false)
+  const ICON_SIZE = { width: 28, height: 28 }
+  const isClassic = useIsClassic()
+  const { pathname } = useLocation()
+  const [buttonView, setButtonView] = useState(true)
 
-  return (
+  useEffect(() => {
+    const subMenu = subPage.find((a) => a.path === pathname)
+
+    if (subMenu) {
+      setButtonView(false)
+    } else {
+      setButtonView(true)
+    }
+  }, [pathname])
+
+  return buttonView ? (
     <nav>
       <header className={styles.header}>
         <NavLink to="/" className={classNames(styles.item, styles.logo)}>
           <strong>Terra</strong> Station
         </NavLink>
 
-        <button className={styles.toggle} onClick={toggle}>
-          {isOpen ? <CloseIcon /> : <MenuIcon />}
+        <NavLink
+          to="/wallet"
+          onClick={close}
+          className={({ isActive }) =>
+            cx(styles.mobileItem, { active: isActive })
+          }
+        >
+          <>
+            <WalletIcon {...ICON_SIZE} />
+            {t("WALLET")}
+          </>
+        </NavLink>
+
+        {isClassic && (
+          <NavLink
+            to="/swap"
+            onClick={close}
+            className={({ isActive }) =>
+              cx(styles.mobileItem, { active: isActive })
+            }
+          >
+            <>
+              <SwapIcon {...ICON_SIZE} />
+              {t("SWAP")}
+            </>
+          </NavLink>
+        )}
+
+        <NavLink
+          to="/stake"
+          onClick={close}
+          className={({ isActive }) =>
+            cx(styles.mobileItem, { active: isActive })
+          }
+        >
+          <>
+            <StakeIcon {...ICON_SIZE} />
+            {t("STAKE")}
+          </>
+        </NavLink>
+
+        <button
+          className={classNames(styles.toggle, styles.mobileItem)}
+          onClick={toggle}
+        >
+          <MenuIcon {...ICON_SIZE} />
+          {t("MORE")}
         </button>
       </header>
 
-      {menu.map(({ path, title, icon }) => (
-        <NavLink
-          to={path}
-          className={({ isActive }) =>
-            cx(styles.item, styles.link, { active: isActive })
-          }
-          key={path}
-        >
-          {icon}
-          {title}
-        </NavLink>
-      ))}
+      <section className={styles.menu}>
+        <div className={classNames(styles.menuTitle)}>
+          <NavLink to="/" onClick={close}>
+            <strong>Terra</strong> Station
+          </NavLink>
+          {is.mobileNative() && (
+            <>
+              <QRScan />
+            </>
+          )}
+        </div>
+        <div className={classNames(styles.menuList)}>
+          {(is.mobile() ? mobileMenu : menu).map(({ path, title, icon }) => (
+            <NavLink
+              to={path}
+              className={({ isActive }) =>
+                cx(styles.item, styles.link, { active: isActive })
+              }
+              key={path}
+              onClick={close}
+            >
+              {icon}
+              {title}
+            </NavLink>
+          ))}
+        </div>
+      </section>
     </nav>
+  ) : (
+    <></>
   )
 }
 

@@ -5,7 +5,7 @@ import { getAmount } from "utils/coin"
 import { useTokenBalance } from "data/queries/wasm"
 import { useBankBalance } from "data/queries/bank"
 import { useTokenItem } from "data/token"
-import { Page } from "components/layout"
+import { Auto, Page } from "components/layout"
 import TxContext from "../TxContext"
 import SendForm from "./SendForm"
 
@@ -14,7 +14,7 @@ const SendTx = () => {
   const bankBalance = useBankBalance()
 
   const [searchParams] = useSearchParams()
-  const token = searchParams.get("token")
+  const token = searchParams.get("token") ?? ""
 
   if (!token) throw new Error("Token is not defined")
 

@@ -5,15 +5,22 @@
 
   border-bottom: var(--border-width) solid var(--menu-border);
   margin-bottom: (40px - 14px);
-}
 
-/* mobile */
-.toggle {
-  color: var(--menu-text);
-  padding: 20px;
+  @include mobile {
+    @include flex(space-around, flex-start);
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: var(--mobile-tab-height);
+    margin-bottom: 0;
 
-  @include desktop {
-    display: none;
+    background: var(--card-bg);
+    z-index: 10;
+    box-shadow: 0px -10px 20px rgb(0 0 0 / 3%);
+
+    * {
+      color: var(--text);
+    }
   }
 }
 
@@ -24,6 +31,73 @@
 
   &:hover {
     text-decoration: none;
+  }
+  @include mobile {
+    svg {
+      padding: 15px;
+      width: 56px;
+      height: 56px;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      background: var(--bg);
+    }
+  }
+}
+
+.menu {
+  @include mobile {
+    margin-top: 64px;
+    background: var(--bg);
+  }
+}
+
+.menuTitle {
+  @include flex(space-between);
+  font-size: 20px;
+  font-weight: 300;
+  padding: 0 20px;
+  line-height: var(--header-height);
+  fill: var(--text);
+  a {
+    color: var(--text);
+  }
+  strong {
+    font-weight: 700;
+  }
+  @include desktop {
+    display: none;
+  }
+}
+
+.menuList {
+  @include mobile {
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 40px 24px;
+    background: var(--card-bg);
+  }
+}
+
+.mobileItem {
+  @include flex-column(flex-start);
+
+  padding: 8px;
+  color: var(--text);
+  fill: var(--text);
+  opacity: 0.3;
+  font-size: 8px;
+
+  &.active {
+    opacity: 1;
+  }
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  @include desktop {
+    display: none;
   }
 }
 
@@ -37,6 +111,10 @@
 
   strong {
     font-weight: 700;
+  }
+
+  @include mobile {
+    display: none;
   }
 }
 
@@ -58,11 +136,21 @@
   }
 
   @include mobile {
-    font-size: 36px;
-    padding: 6px 20px;
+    @include flex-column(flex-start);
+    opacity: 1;
 
-    svg {
-      display: none;
-    }
+    font-size: var(--font-size-small);
+    font-weight: var(--normal);
+    color: var(--text);
+    fill: var(--text);
+  }
+}
+
+/* mobile */
+.toggle {
+  opacity: 1;
+
+  @include desktop {
+    display: none;
   }
 }

@@ -9,6 +9,7 @@ import { Button } from "components/general"
 import { Card, Col, Page } from "components/layout"
 import { Empty } from "components/feedback"
 import HistoryItem from "./HistoryItem"
+import is from "auth/scripts/is"
 
 const HistoryList = () => {
   const { t } = useTranslation()
@@ -45,6 +46,21 @@ const HistoryList = () => {
 
   const pages = getPages()
 
+  const moreButton = (
+    <Button
+      onClick={() => fetchNextPage()}
+      disabled={!hasNextPage || isFetchingNextPage}
+      loading={isFetchingNextPage}
+      block
+    >
+      {isFetchingNextPage
+        ? t("Loading more...")
+        : hasNextPage
+        ? t("Load more")
+        : t("Nothing more to load")}
+    </Button>
+  )
+
   const render = () => {
     if (address && !data) return null
 
@@ -62,24 +78,17 @@ const HistoryList = () => {
           </Fragment>
         ))}
 
-        <Button
-          onClick={() => fetchNextPage()}
-          disabled={!hasNextPage || isFetchingNextPage}
-          loading={isFetchingNextPage}
-          block
-        >
-          {isFetchingNextPage
-            ? t("Loading more...")
-            : hasNextPage
-            ? t("Load more")
-            : t("Nothing more to load")}
-        </Button>
+        {is.mobile() ? (
+          <div className="row bottom">{moreButton}</div>
+        ) : (
+          moreButton
+        )}
       </Col>
     )
   }
 
   return (
-    <Page {...state} title={t("History")}>
+    <Page {...state} title={is.mobile() ? "" : t("History")}>
       {render()}
     </Page>
   )

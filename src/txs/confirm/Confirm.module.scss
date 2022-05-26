@@ -1,0 +1,9 @@
+@import "mixins";
+
+.page {
+  background: var(--card-bg);
+}
+
+.container {
+  padding: 20px 20px 60px;
+}

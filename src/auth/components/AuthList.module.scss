@@ -5,6 +5,12 @@
   border: var(--border-width) solid var(--card-border);
   border-radius: var(--border-radius);
   overflow: hidden;
+  @include mobile {
+    border-radius: 0;
+    &.isModal {
+      border: none;
+    }
+  }
 }
 
 .link {
@@ -16,6 +22,12 @@
   transition: background var(--transition);
   width: 100%;
 
+  svg {
+    width: 24px;
+    height: 24px;
+    fill: currentcolor;
+  }
+
   &:not(:first-child) {
     border-top: var(--border-width) solid var(--card-border);
   }
@@ -23,5 +35,22 @@
   &:hover {
     background: var(--bg-muted);
     text-decoration: none;
+  }
+
+  @include mobile {
+    padding: 0 24px;
+    height: 64px;
+    font-size: 16px;
+  }
+}
+
+.action {
+  color: var(--button-primary-bg);
+  svg {
+    margin-left: 4px;
+    width: 12px;
+  }
+  button {
+    vertical-align: middle;
   }
 }

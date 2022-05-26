@@ -1,0 +1,51 @@
+@import "mixins";
+
+.component {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  font-size: var(--font-size-small);
+  padding: 15px;
+  overflow: hidden;
+}
+
+.header {
+  @include flex(space-between);
+  font-weight: var(--normal);
+  width: 100%;
+  p {
+    width: 90%;
+    white-space: normal;
+    text-align: left;
+  }
+  svg {
+    width: 12px;
+  }
+}
+
+/* details */
+.detail {
+  border-top: 1px solid var(--card-border);
+  margin-top: 15px;
+  padding-top: 15px;
+  h1 {
+    font-size: var(--font-size-small);
+    text-align: left;
+  }
+}
+
+.value {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+/* warn */
+.warn {
+  background: var(--danger-light);
+  border: 1px solid var(--danger);
+  color: var(--danger);
+
+  .detail {
+    border-top: 1px solid var(--danger);
+  }
+}

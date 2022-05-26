@@ -1,53 +1,67 @@
 import { CreateTxOptions, Fee, Msg } from "@terra-money/terra.js"
 import { getStoredSessions } from "../auth/scripts/sessions"
-
-declare global {
-  interface Window {
-    ReactNativeWebView: any
-  }
-}
+import is from "../auth/scripts/is"
 
 export const RN_APIS = {
   MIGRATE_KEYSTORE: "MIGRATE_KEYSTORE",
+  SET_NETWORK: "SET_NETWORK",
   AUTH_BIO: "AUTH_BIO",
+  CHECK_BIO: "CHECK_BIO",
   DEEPLINK: "DEEPLINK",
   QR_SCAN: "QR_SCAN",
   RECOVER_SESSIONS: "RECOVER_SESSIONS",
+  DISCONNECT_SESSIONS: "DISCONNECT_SESSIONS",
   READY_CONNECT_WALLET: "READY_CONNECT_WALLET",
   CONNECT_WALLET: "CONNECT_WALLET",
   CONFIRM_TX: "CONFIRM_TX",
   APPROVE_TX: "APPROVE_TX",
   REJECT_TX: "REJECT_TX",
+  GET_LEDGER_LIST: "GET_LEDGER_LIST",
+  GET_LEDGER_KEY: "GET_LEDGER_KEY",
 } as const
 
 export type RN_API = typeof RN_APIS[keyof typeof RN_APIS] // type
 
+export const schemeUrl = {
+  recoverWallet: /^terrastation:(|\/\/)wallet_recover\/\?payload=/,
+  send: /^terrastation:(|\/\/)send\/\?payload=/,
+}
 // 요청 타입
 type RN_API_REQ_TYPES = {
   [RN_APIS.MIGRATE_KEYSTORE]: unknown
+  [RN_APIS.SET_NETWORK]: unknown
   [RN_APIS.AUTH_BIO]: unknown
+  [RN_APIS.CHECK_BIO]: unknown
   [RN_APIS.DEEPLINK]: unknown
   [RN_APIS.QR_SCAN]: unknown
   [RN_APIS.RECOVER_SESSIONS]: unknown
+  [RN_APIS.DISCONNECT_SESSIONS]: unknown
   [RN_APIS.READY_CONNECT_WALLET]: unknown
   [RN_APIS.CONNECT_WALLET]: unknown
   [RN_APIS.CONFIRM_TX]: unknown
   [RN_APIS.APPROVE_TX]: unknown
   [RN_APIS.REJECT_TX]: unknown
+  [RN_APIS.GET_LEDGER_LIST]: unknown
+  [RN_APIS.GET_LEDGER_KEY]: unknown
 }
 
 // 응답 타입
 type RN_API_RES_TYPES = {
   [RN_APIS.MIGRATE_KEYSTORE]: string
+  [RN_APIS.SET_NETWORK]: string
   [RN_APIS.AUTH_BIO]: string
+  [RN_APIS.CHECK_BIO]: string
   [RN_APIS.DEEPLINK]: string
   [RN_APIS.QR_SCAN]: string
   [RN_APIS.RECOVER_SESSIONS]: string
+  [RN_APIS.DISCONNECT_SESSIONS]: string
   [RN_APIS.READY_CONNECT_WALLET]: string
   [RN_APIS.CONNECT_WALLET]: string
   [RN_APIS.CONFIRM_TX]: string
   [RN_APIS.APPROVE_TX]: string
   [RN_APIS.REJECT_TX]: string
+  [RN_APIS.GET_LEDGER_LIST]: string
+  [RN_APIS.GET_LEDGER_KEY]: string
 }
 
 /* primitive */
@@ -65,7 +79,7 @@ export interface PrimitiveTxRequest
 }
 
 export interface DefaultRequest extends PrimitiveDefaultRequest {
-  timestamp: Date
+  timestamp?: Date
 }
 
 export type RequestType = "sign" | "post" | "signBytes"
@@ -79,6 +93,20 @@ export interface TxResponse<T = any> {
   success: boolean
   result?: T
   error?: { code: number; message?: string }
+}
+
+/* helpers */
+export const getIsNativeMsgFromExternal = (origin: string) => {
+  return (msg: Msg) => {
+    if (origin.includes("https://station.terra.money")) return false
+    return msg.toData()["@type"] !== "/terra.wasm.v1beta1.MsgExecuteContract"
+  }
+}
+
+export const parseDefault = (
+  request: PrimitiveDefaultRequest
+): DefaultRequest => {
+  return { ...request, timestamp: new Date(request.id) }
 }
 
 export const parseTx = (request: PrimitiveTxRequest): TxRequest["tx"] => {
@@ -104,7 +132,6 @@ export const getWallets = async () => {
 
 export const recoverSessions = async () => {
   const sessions = getStoredSessions()
-  console.log("sessions", sessions)
   const result = await WebViewMessage(RN_APIS.RECOVER_SESSIONS, sessions)
   return result
 }
@@ -112,41 +139,41 @@ export const recoverSessions = async () => {
 export const WebViewMessage = async <T extends RN_API>(
   type: RN_API,
   data?: RN_API_REQ_TYPES[T]
-): Promise<RN_API_RES_TYPES[T] | null> =>
+): Promise<unknown> =>
   new Promise((resolve, reject) => {
-    if (!window.ReactNativeWebView) {
-      // alert('ReactNativeWebView 객체가 없습니다.');
-      reject("ReactNativeWebView 객체가 없습니다.")
+    if (!is.mobileNative()) {
+      reject("There is no ReactNativeWebView")
       return
     }
 
     const reqId = Date.now()
-    const TIMEOUT = 10000
-
-    const timer = setTimeout(() => {
-      /** android */
-      document.removeEventListener("message", listener)
-      /** ios */
-      window.removeEventListener("message", listener)
-      reject("TIMEOUT")
-    }, TIMEOUT)
+    // const TIMEOUT = 100000
+    //
+    // const timer = setTimeout(() => {
+    //   /** android */
+    //   document.removeEventListener("message", listener)
+    //   /** ios */
+    //   window.removeEventListener("message", listener)
+    //   reject("TIMEOUT")
+    // }, TIMEOUT)
 
     const listener = (event: any) => {
-      if (event.data.includes("setImmediate$0")) return
+      if (event?.data.includes("setImmediate$0")) return
 
-      const {
-        data: listenerData,
-        reqId: listenerReqId,
-      }: { data: RN_API_RES_TYPES[T]; reqId: typeof reqId } = JSON.parse(
-        event.data
-      )
-      if (listenerReqId === reqId) {
-        clearTimeout(timer)
-        /** android */
-        document.removeEventListener("message", listener)
-        /** ios */
-        window.removeEventListener("message", listener)
-        resolve(listenerData)
+      if (event?.data) {
+        const { data: listenerData, reqId: listenerReqId } = JSON.parse(
+          event.data
+        )
+
+        if (listenerReqId === reqId) {
+          // clearTimeout(timer)
+          /** android */
+          document.removeEventListener("message", listener)
+          /** ios */
+          window.removeEventListener("message", listener)
+
+          resolve(listenerData)
+        }
       }
     }
     window.ReactNativeWebView.postMessage(

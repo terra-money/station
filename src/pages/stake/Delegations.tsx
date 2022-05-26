@@ -7,10 +7,11 @@ import { calcDelegationsTotal } from "data/queries/staking"
 import { useDelegations } from "data/queries/staking"
 import { useValidators } from "data/queries/staking"
 import { ValidatorLink } from "components/general"
-import { ModalButton } from "components/feedback"
+import { ModalButton, Mode } from "components/feedback"
 import { Table } from "components/layout"
 import { Read } from "components/token"
 import StakedCard from "./components/StakedCard"
+import is from "auth/scripts/is"
 
 const Delegations = () => {
   const { t } = useTranslation()
@@ -32,6 +33,7 @@ const Delegations = () => {
     return (
       <ModalButton
         title={title}
+        modalType={is.mobile() ? Mode.FULL : Mode.DEFAULT}
         renderButton={(open) => (
           <StakedCard
             {...state}

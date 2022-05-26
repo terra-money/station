@@ -5,6 +5,7 @@ import TxContext from "../TxContext"
 import SwapContext from "./SwapContext"
 import SingleSwapContext from "./SingleSwapContext"
 import SwapForm from "./SwapForm"
+import is from "auth/scripts/is"
 
 // The sequence below is required before rendering the Swap form:
 // 1. `TxContext` - Fetch gas prices through, like other forms.
@@ -21,7 +22,11 @@ const SwapTx = () => {
   )
 
   return (
-    <Page title={t("Swap")} small extra={extra}>
+    <Page
+      title={is.mobile() ? "" : t("Swap")}
+      extra={is.mobile() ? null : extra}
+      small
+    >
       <TxContext>
         <SwapContext>
           <SingleSwapContext>
@@ -29,6 +34,13 @@ const SwapTx = () => {
           </SingleSwapContext>
         </SwapContext>
       </TxContext>
+      {is.mobile() && (
+        <div className="row bottom top">
+          <LinkButton to="/swap/multiple" block>
+            {t("Swap multiple coins")}
+          </LinkButton>
+        </div>
+      )}
     </Page>
   )
 }

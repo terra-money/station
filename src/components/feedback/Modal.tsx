@@ -7,6 +7,7 @@ import { RenderButton } from "types/components"
 import createContext from "utils/createContext"
 import { getMaxHeightStyle } from "utils/style"
 import styles from "./Modal.module.scss"
+import { Button } from "../general"
 
 const cx = classNames.bind(styles)
 
@@ -15,6 +16,8 @@ ReactModal.setAppElement("#station")
 interface ModalProps {
   closeIcon?: ReactNode
   icon?: ReactNode
+  modalType?: string | undefined
+  subAction?: () => ReactNode
 
   /* content */
   title?: ReactNode
@@ -23,25 +26,51 @@ interface ModalProps {
   /* style */
   confirm?: boolean
   maxHeight?: boolean | number
+  cancelButton?: {
+    name: string
+    type: string
+  }
 }
 
 export interface Props extends ModalProps, ReactModal.Props {}
 
+export enum Mode {
+  DEFAULT = "default",
+  TX = "tx",
+  FULL = "full",
+  BOTTOM = "bottom",
+  BOTTOM_CONFIRM = "bottomConfirm",
+  SELECT = "select",
+  LOADING = "loading",
+}
+
 const Modal = (props: PropsWithChildren<Props>) => {
   const { title, children, footer } = props
-  const { icon, closeIcon, onRequestClose, confirm, maxHeight } = props
+  const {
+    icon,
+    closeIcon,
+    onRequestClose,
+    confirm,
+    maxHeight,
+    modalType,
+    subAction,
+    cancelButton,
+    className,
+  } = props
 
   return (
     <ReactModal
       {...props}
-      className={styles.modal}
-      overlayClassName={styles.overlay}
+      className={cx(styles.modal, { className, [`${modalType}`]: !!modalType })}
+      overlayClassName={cx(styles.overlay, { [`${modalType}`]: !!modalType })}
     >
       {onRequestClose && (
         <button type="button" className={styles.close} onClick={onRequestClose}>
           {closeIcon ?? <CloseIcon fontSize="inherit" />}
         </button>
       )}
+
+      {subAction && <div className={styles.action}>{subAction()}</div>}
 
       {(title || icon) && (
         <header className={styles.header}>
@@ -56,6 +85,12 @@ const Modal = (props: PropsWithChildren<Props>) => {
           style={getMaxHeightStyle(maxHeight, 320)}
         >
           {children}
+          {(modalType === Mode.BOTTOM || modalType === Mode.BOTTOM_CONFIRM) &&
+            cancelButton && (
+              <Button block color="default" onClick={onRequestClose}>
+                {cancelButton.name}
+              </Button>
+            )}
         </section>
       )}
 

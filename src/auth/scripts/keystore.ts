@@ -1,6 +1,7 @@
 import is from "./is"
 import encrypt from "./encrypt"
 import decrypt from "./decrypt"
+import { RN_APIS, WebViewMessage } from "../../utils/rnModule"
 
 /* wallet */
 export const getWallet = () => {
@@ -18,7 +19,11 @@ export const clearWallet = () => {
 }
 
 /* stored wallets */
-type StoredKey = StoredWallet | StoredWalletLegacy | MultisigWallet
+type StoredKey =
+  | StoredWallet
+  | StoredWalletLegacy
+  | MultisigWallet
+  | LedgerWallet
 export const getStoredWallets = () => {
   const keys = localStorage.getItem("keys") ?? "[]"
   return JSON.parse(keys) as StoredKey[]
@@ -36,14 +41,41 @@ export const getStoredWallet = (name: string) => {
   return wallet
 }
 
-/* stored dapps */
-export const getStoredDapps = () => {
-  const dapps = localStorage.getItem("dapps") ?? "[]"
-  return JSON.parse(dapps) as any[]
+/* stored bio keys */
+export const getBioKeys = () => {
+  const keys = localStorage.getItem("bio_auth_key") ?? "{}"
+  return JSON.parse(keys) as any
 }
 
-export const storeDapps = (dapps: any[]) => {
-  localStorage.setItem("dapps", JSON.stringify(dapps))
+export const getBioStamps = () => {
+  const timestamp = localStorage.getItem("timestamp") ?? "{}"
+  return JSON.parse(timestamp) as any
+}
+
+export const setBioKeys = (keys: any) => {
+  localStorage.setItem("bio_auth_key", JSON.stringify(keys))
+}
+
+export const setBioStamps = (stamps: any) => {
+  localStorage.setItem("timestamp", JSON.stringify(stamps))
+}
+
+export const getBioState = () => {
+  const user = getWallet()
+  if (!user) return false
+  const keys = getBioKeys()
+  if (!keys) return false
+
+  return keys?.[user.address] ? true : false
+}
+
+export const getBioAble = async () => {
+  if (is.mobileNative()) {
+    const res = await WebViewMessage(RN_APIS.CHECK_BIO)
+    return res ? true : false
+  } else {
+    return false
+  }
 }
 
 interface Params {
@@ -78,6 +110,7 @@ export const testPassword = (params: Params) => {
 type AddWalletParams =
   | { name: string; address: string; password: string; key: Buffer }
   | MultisigWallet
+  | LedgerWallet
 
 export const addWallet = (params: AddWalletParams) => {
   const wallets = getStoredWallets()
@@ -87,7 +120,7 @@ export const addWallet = (params: AddWalletParams) => {
 
   const next = wallets.filter((wallet) => wallet.address !== params.address)
 
-  if (is.multisig(params)) {
+  if (is.multisig(params) || is.ledger(params)) {
     storeWallets([...next, params])
   } else {
     const { name, password, address, key } = params

@@ -4,6 +4,7 @@ import { useQuery } from "react-query"
 import { useForm } from "react-hook-form"
 import BigNumber from "bignumber.js"
 import { flatten, fromPairs } from "ramda"
+import is from "auth/scripts/is"
 
 /* helpers */
 import { has } from "utils/num"
@@ -206,7 +207,9 @@ const SwapMultipleForm = () => {
             dataIndex: "offerAsset",
             render: (offerAsset) => (
               <WithTokenItem token={offerAsset}>
-                {(item) => <Token {...item} name="" />}
+                {(item) =>
+                  is.mobile() ? item.symbol : <Token {...item} name="" />
+                }
               </WithTokenItem>
             ),
           },

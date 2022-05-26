@@ -11,11 +11,11 @@ import { head, isNil } from "ramda"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline"
 import { isDenom, isDenomIBC, readDenom } from "@terra.kitchen/utils"
-import { Coin, Coins, LCDClient } from "@terra-money/terra.js"
-import { CreateTxOptions, Fee, isTxError } from "@terra-money/terra.js"
-import { ConnectType, UserDenied } from "@terra-money/wallet-provider"
-import { CreateTxFailed, TxFailed } from "@terra-money/wallet-provider"
-import { useWallet, useConnectedWallet } from "@terra-money/wallet-provider"
+import { Coin, Coins, LCDClient, isTxError } from "@terra-money/terra.js"
+import { CreateTxOptions, Fee } from "@terra-money/terra.js"
+import { ConnectType, UserDenied } from "@terra-money/wallet-types"
+import { CreateTxFailed, TxFailed } from "@terra-money/wallet-types"
+import { useWallet, useConnectedWallet } from "@terra-money/use-wallet"
 
 import { Contents } from "types/components"
 import { has } from "utils/num"
@@ -24,11 +24,11 @@ import { getErrorMessage } from "utils/error"
 import { getLocalSetting, SettingKey } from "utils/localStorage"
 import { useCurrency } from "data/settings/Currency"
 import { queryKey, RefetchOptions } from "data/query"
-import { useAddress, useNetwork } from "data/wallet"
+import { useAddress, useChainID, useNetwork } from "data/wallet"
 import { isBroadcastingState, latestTxState, useTxInfo } from "data/queries/tx"
 import { useBankBalance, useIsWalletEmpty } from "data/queries/bank"
 
-import { Pre } from "components/general"
+import { Button, Pre } from "components/general"
 import { Flex, Grid } from "components/layout"
 import { FormError, Submit, Select, Input, FormItem } from "components/form"
 import { Modal } from "components/feedback"
@@ -38,8 +38,15 @@ import ConnectWallet from "app/sections/ConnectWallet"
 import useToPostMultisigTx from "pages/multisig/utils/useToPostMultisigTx"
 import { isWallet, useAuth } from "auth"
 import { PasswordError } from "auth/scripts/keystore"
+import {
+  Connector,
+  Sessions,
+  getStoredSessions,
+  storeSessions,
+} from "auth/scripts/sessions"
 
 import { toInput } from "./utils"
+import { RN_APIS, WebViewMessage } from "utils/rnModule"
 import { useTx } from "./TxContext"
 import styles from "./Tx.module.scss"
 import { parseTx, RN_APIS, WebViewMessage } from "../utils/rnModule"
@@ -51,7 +58,7 @@ interface Props<TxValues> {
   decimals?: number
   amount?: Amount
   balance?: Amount
-  txData?: any
+  confirmData?: any
 
   /* tx simulation */
   initialGasDenom: CoinDenom
@@ -76,6 +83,13 @@ interface RenderProps<TxValues> {
   fee: { render: (descriptions?: Contents) => ReactNode }
   submit: { fn: (values: TxValues) => Promise<void>; button: ReactNode }
   confirm: { fn: (values: TxValues) => Promise<void>; button: ReactNode }
+  connect: { fn: (values: TxValues) => Promise<void>; button: ReactNode }
+}
+
+enum Status {
+  LOADING = "LOADING",
+  SUCCESS = "SUCCESS",
+  FAILURE = "FAILURE",
 }
 
 enum Status {
@@ -87,7 +101,7 @@ enum Status {
 export default Tx
 
 function Tx<TxValues>(props: Props<TxValues>) {
-  const { token, decimals, amount, balance, txData } = props
+  const { token, decimals, amount, balance, confirmData } = props
   const { initialGasDenom, estimationTxValues, createTx } = props
   const { excludeGasDenom } = props
   const { children, onChangeMax } = props
@@ -102,7 +116,8 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const network = useNetwork()
   const { post } = useWallet()
   const connectedWallet = useConnectedWallet()
-  const { wallet, validatePassword, ...auth } = useAuth()
+  const { wallet, validatePassword, isUseBio, decodeBioAuthKey, ...auth } =
+    useAuth()
   const address = useAddress()
   const isWalletEmpty = useIsWalletEmpty()
   const [latestTx, setLatestTx] = useRecoilState(latestTxState)
@@ -110,6 +125,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const bankBalance = useBankBalance()
   const { gasPrices } = useTx()
   const { data } = useTxInfo(latestTx)
+  const chainID = useChainID()
 
   const status = !data
     ? Status.LOADING
@@ -208,7 +224,8 @@ function Tx<TxValues>(props: Props<TxValues>) {
   }, [failed, simulationTx])
 
   /* submit */
-  const passwordRequired = isWallet.single(wallet)
+  const passwordRequired =
+    !isUseBio && !isWallet.ledger(wallet) && isWallet.single(wallet)
   const [password, setPassword] = useState("")
   const [incorrect, setIncorrect] = useState<string>()
 
@@ -243,12 +260,26 @@ function Tx<TxValues>(props: Props<TxValues>) {
       const gasCoins = new Coins([Coin.fromData(gasFee)])
       const fee = new Fee(estimatedGas, gasCoins)
 
+      if (isWallet.ledger(wallet)) {
+        return navigate("/auth/ledger/device", {
+          state: JSON.stringify({ ...tx, fee }),
+        })
+      }
+
       if (isWallet.multisig(wallet)) {
         const unsignedTx = await auth.create({ ...tx, fee })
         navigate(toPostMultisigTx(unsignedTx))
       } else if (wallet) {
-        const result = await auth.post({ ...tx, fee }, password)
-        setLatestTx({ txhash: result.txhash, queryKeys, redirectAfterTx })
+        if (isUseBio) {
+          const bioKey = await decodeBioAuthKey()
+          const result = await auth.post({ ...tx, fee }, bioKey)
+          // @ts-ignore
+          setLatestTx({ txhash: result.txhash, queryKeys, redirectAfterTx })
+        } else {
+          const result = await auth.post({ ...tx, fee }, password)
+          // @ts-ignore
+          setLatestTx({ txhash: result.txhash, queryKeys, redirectAfterTx })
+        }
       } else {
         const { result } = await post({ ...tx, fee })
         setLatestTx({ txhash: result.txhash, queryKeys, redirectAfterTx })
@@ -265,27 +296,60 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   const submittingLabel = isWallet.ledger(wallet) ? t("Confirm in ledger") : ""
 
+  const saveSession = (connector: Connector) => {
+    const currentConnectors = getStoredSessions()
+
+    if (!connector?.peerMeta) {
+      return navigate("/", { replace: true })
+    }
+
+    const sessions: Sessions = {
+      ...currentConnectors,
+      [connector.handshakeTopic]: connector,
+    }
+
+    storeSessions(sessions)
+  }
+
+  const connectSession = useCallback(async () => {
+    const connector = await WebViewMessage(RN_APIS.CONNECT_WALLET, {
+      userAddress: address,
+    })
+
+    if (connector) {
+      saveSession(connector as Connector)
+      navigate("/", { replace: true })
+    }
+  }, [address])
+
   const confirm = async () => {
     setSubmitting(true)
 
     try {
       if (disabled) throw new Error(disabled)
 
-      const tx = parseTx(txData.params)
-      console.log(tx)
+      if (isWallet.ledger(wallet)) {
+        return navigate("/auth/ledger/device", {
+          state: JSON.stringify(confirmData.tx),
+          replace: true,
+        })
+      }
 
-      const result = await auth.post(tx, password)
-      console.log("postTx", result, redirectAfterTx)
-
-      setLatestTx({
-        ...result,
-        // redirectAfterTx: {
-        //   label: 'Confirm',
-        //   path: '/'
-        // }
-      })
+      if (isUseBio) {
+        const bioKey = await decodeBioAuthKey()
+        if (bioKey) {
+          const result = await auth.post(confirmData.tx, bioKey)
+          // @ts-ignore
+          setLatestTx(result)
+        } else {
+          throw new Error("failed bio")
+        }
+      } else {
+        const result = await auth.post(confirmData.tx, password)
+        // @ts-ignore
+        setLatestTx(result)
+      }
     } catch (error) {
-      console.log(error)
       if (error instanceof PasswordError) setIncorrect(error.message)
       else setError(error as Error)
     }
@@ -293,15 +357,24 @@ function Tx<TxValues>(props: Props<TxValues>) {
     setSubmitting(false)
   }
 
-  useEffect(() => {
-    console.log("APPROVE_TX", status, latestTx)
+  const approve = useCallback(async () => {
+    const res = await WebViewMessage(RN_APIS.APPROVE_TX, {
+      id: confirmData.id,
+      handshakeTopic: confirmData.handshakeTopic,
+      result: latestTx,
+    })
+    if (res) {
+      onPost?.()
+    }
+  }, [latestTx, confirmData])
 
-    if (latestTx.txhash && txData) {
+  useEffect(() => {
+    if (latestTx.txhash && confirmData) {
       // @ts-ignore
       if (isTxError(latestTx)) {
         WebViewMessage(RN_APIS.REJECT_TX, {
-          id: txData.id,
-          handshakeTopic: txData.handshakeTopic,
+          id: confirmData.id,
+          handshakeTopic: confirmData.handshakeTopic,
           error: {
             errorCode: 3,
             message: latestTx.raw_log,
@@ -311,15 +384,11 @@ function Tx<TxValues>(props: Props<TxValues>) {
         })
       } else {
         if (status === Status.SUCCESS) {
-          WebViewMessage(RN_APIS.APPROVE_TX, {
-            id: txData.id,
-            handshakeTopic: txData.handshakeTopic,
-            result: latestTx,
-          })
+          approve()
         }
       }
     }
-  }, [status, latestTx, txData])
+  }, [status, latestTx, confirmData])
 
   /* render */
   const balanceAfterTx =
@@ -489,7 +558,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
           )}
         />
       ) : (
-        <Grid gap={4}>
+        <Grid gap={20}>
           {passwordRequired && (
             <FormItem label={t("Password")} error={incorrect}>
               <Input
@@ -505,15 +574,41 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
           {failed && <FormError>{failed}</FormError>}
 
-          <Submit
-            // disabled={!estimatedGas || !!disabled}
-            submitting={submitting}
-          >
-            {submitting ? submittingLabel : disabled}
-          </Submit>
+          <Grid columns={2} gap={12}>
+            <Button
+              color="danger"
+              onClick={() => navigate("/", { replace: true })}
+            >
+              {t("Cancel")}
+            </Button>
+            <Button color="primary" type="submit">
+              {t("Sign")}
+            </Button>
+            {/*<Submit*/}
+            {/*  // disabled={!estimatedGas || !!disabled}*/}
+            {/*  submitting={submitting}*/}
+            {/*>*/}
+            {/*  {submitting*/}
+            {/*    ? submittingLabel*/}
+            {/*    : isUseBio*/}
+            {/*    ? submittingLabel*/}
+            {/*    : disabled}*/}
+            {/*</Submit>*/}
+          </Grid>
         </Grid>
       )}
     </>
+  )
+
+  const connectButton = (
+    <Grid columns={2} gap={12}>
+      <Button color="danger" onClick={() => navigate("/", { replace: true })}>
+        {t("Deny")}
+      </Button>
+      <Button color="primary" type="submit">
+        {t("Allow")}
+      </Button>
+    </Grid>
   )
 
   const modal = !error
@@ -542,6 +637,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
         fee: { render: renderFee },
         submit: { fn: submit, button: submitButton },
         confirm: { fn: confirm, button: confirmButton },
+        connect: { fn: connectSession, button: connectButton },
       })}
 
       {modal && (

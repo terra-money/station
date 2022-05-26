@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useMemo } from "react"
+import { Fragment, useCallback, useEffect, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
+import { useLocation } from "react-router-dom"
 import PersonIcon from "@mui/icons-material/Person"
 import { AccAddress } from "@terra-money/terra.js"
 import { MsgExecuteContract, MsgSend } from "@terra-money/terra.js"
@@ -17,6 +18,7 @@ import AddressBookList from "../AddressBook/AddressBookList"
 import { getPlaceholder, toInput } from "../utils"
 import validate from "../validate"
 import Tx, { getInitialGasDenom } from "../Tx"
+import is from "auth/scripts/is"
 
 interface TxValues {
   recipient?: string // AccAddress | TNS
@@ -34,6 +36,7 @@ const SendForm = ({ token, decimals, balance }: Props) => {
   const { t } = useTranslation()
   const connectedAddress = useAddress()
   const bankBalance = useBankBalance()
+  const { state: stateRecipient }: { state: any } = useLocation()
 
   /* tx context */
   const initialGasDenom = getInitialGasDenom(bankBalance)
@@ -66,6 +69,12 @@ const SendForm = ({ token, decimals, balance }: Props) => {
       setValue("address", recipient)
     }
   }, [form, recipient, resolvedAddress, setValue])
+
+  useEffect(() => {
+    if (stateRecipient) {
+      setValue("recipient", stateRecipient)
+    }
+  }, [stateRecipient])
 
   // validate(tns): not found
   const invalid =
@@ -141,80 +150,87 @@ const SendForm = ({ token, decimals, balance }: Props) => {
     )
   }
 
+  const renderForm = () => {
+    return (
+      <Card isFetching={tnsState.isLoading}>
+        <Tx {...tx}>
+          {({ max, fee, submit }) => (
+            <Form onSubmit={handleSubmit(submit.fn)}>
+              <Grid gap={4}>
+                <FormHelp>Use {bridge} for interchain transfers</FormHelp>
+                {!memo && (
+                  <FormWarning>
+                    {t("Check if this transaction requires a memo")}
+                  </FormWarning>
+                )}
+              </Grid>
+
+              <FormItem
+                label={t("Recipient")}
+                extra={renderResolvedAddress()}
+                error={errors.recipient?.message ?? errors.address?.message}
+              >
+                <Input
+                  {...register("recipient", {
+                    validate: validate.recipient(),
+                  })}
+                  placeholder={SAMPLE_ADDRESS}
+                  autoFocus
+                />
+
+                <input {...register("address")} readOnly hidden />
+              </FormItem>
+
+              <FormItem
+                label={t("Amount")}
+                extra={max.render()}
+                error={errors.input?.message}
+              >
+                <Input
+                  {...register("input", {
+                    valueAsNumber: true,
+                    validate: validate.input(
+                      toInput(max.amount, decimals),
+                      decimals
+                    ),
+                  })}
+                  token={token}
+                  inputMode="decimal"
+                  onFocus={max.reset}
+                  placeholder={getPlaceholder(decimals)}
+                />
+              </FormItem>
+
+              <FormItem
+                label={`${t("Memo")} (${t("optional")})`}
+                error={errors.memo?.message}
+              >
+                <Input
+                  {...register("memo", {
+                    validate: {
+                      size: validate.size(256, "Memo"),
+                      brackets: validate.memo(),
+                    },
+                  })}
+                />
+              </FormItem>
+
+              {fee.render()}
+              {submit.button}
+            </Form>
+          )}
+        </Tx>
+      </Card>
+    )
+  }
+
   return (
     <Auto
-      columns={[
-        <Card isFetching={tnsState.isLoading}>
-          <Tx {...tx}>
-            {({ max, fee, submit }) => (
-              <Form onSubmit={handleSubmit(submit.fn)}>
-                <Grid gap={4}>
-                  <FormHelp>Use {bridge} for interchain transfers</FormHelp>
-                  {!memo && (
-                    <FormWarning>
-                      {t("Check if this transaction requires a memo")}
-                    </FormWarning>
-                  )}
-                </Grid>
-
-                <FormItem
-                  label={t("Recipient")}
-                  extra={renderResolvedAddress()}
-                  error={errors.recipient?.message ?? errors.address?.message}
-                >
-                  <Input
-                    {...register("recipient", {
-                      validate: validate.recipient(),
-                    })}
-                    placeholder={SAMPLE_ADDRESS}
-                    autoFocus
-                  />
-
-                  <input {...register("address")} readOnly hidden />
-                </FormItem>
-
-                <FormItem
-                  label={t("Amount")}
-                  extra={max.render()}
-                  error={errors.input?.message}
-                >
-                  <Input
-                    {...register("input", {
-                      valueAsNumber: true,
-                      validate: validate.input(
-                        toInput(max.amount, decimals),
-                        decimals
-                      ),
-                    })}
-                    token={token}
-                    inputMode="decimal"
-                    onFocus={max.reset}
-                    placeholder={getPlaceholder(decimals)}
-                  />
-                </FormItem>
-
-                <FormItem
-                  label={`${t("Memo")} (${t("optional")})`}
-                  error={errors.memo?.message}
-                >
-                  <Input
-                    {...register("memo", {
-                      validate: {
-                        size: validate.size(256, "Memo"),
-                        brackets: validate.memo(),
-                      },
-                    })}
-                  />
-                </FormItem>
-
-                {fee.render()}
-                {submit.button}
-              </Form>
-            )}
-          </Tx>
-        </Card>,
-        <AddressBookList onClick={onClickAddressBookItem} />,
-      ]}
+      columns={
+        is.mobile()
+          ? [<AddressBookList onClick={onClickAddressBookItem} />, renderForm()]
+          : [renderForm(), <AddressBookList onClick={onClickAddressBookItem} />]
+      }
     />
   )
 }

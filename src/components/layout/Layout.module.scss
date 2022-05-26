@@ -13,12 +13,12 @@
   }
 
   @include mobile {
-    grid-template-rows: auto repeat(2, var(--header-height)) 1fr;
+    grid-template-rows: auto auto 1fr var(--mobile-tab-height);
     grid-template-areas:
       "banner"
-      "sidebar"
       "header"
-      "main";
+      "main"
+      "sidebar";
   }
 
   height: 100vh;
@@ -36,6 +36,10 @@
   display: grid;
   background: var(--menu-bg);
   overflow: hidden;
+
+  @include mobile {
+    background: var(--card-bg);
+  }
 }
 
 @mixin border-left {
@@ -55,11 +59,37 @@
   padding: 0 var(--main-padding-horizontal);
   position: relative;
   white-space: nowrap;
-
+  @include mobile {
+    background: var(--bg);
+  }
   .wrapper {
     @include flex(space-between);
     width: 100%;
     height: var(--header-height);
+    @include mobile {
+      @include flex(space-between);
+      h1 {
+        font-size: 24px;
+      }
+    }
+    @include desktop {
+      h1 {
+        display: none;
+      }
+    }
+  }
+
+  &.subPage {
+    @include flex(flex-start);
+    background: var(--card-bg);
+    border-bottom: var(--border-width) solid var(--card-border);
+    fill: var(--text);
+    h1 {
+      font-size: 16px;
+    }
+    button {
+      width: 24px;
+    }
   }
 
   -webkit-app-region: drag;
@@ -79,8 +109,10 @@
 
   grid-area: main;
   overflow: auto;
-  border-top: var(--border-width) solid var(--card-border);
   position: relative; // for progress bar from the page
+  @include desktop {
+    border-top: var(--border-width) solid var(--card-border);
+  }
 }
 
 /* menu open */
@@ -92,6 +124,12 @@
     .header,
     .main {
       display: none;
+    }
+    .sidebar {
+      background: var(--bg);
+      section {
+        margin-top: 0;
+      }
     }
   }
 }

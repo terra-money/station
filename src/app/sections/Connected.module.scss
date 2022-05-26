@@ -1,3 +1,5 @@
+@import "mixins";
+
 .popover {
   min-width: 260px;
 }
@@ -7,4 +9,11 @@
   font-size: 18px;
   font-weight: var(--bold);
   margin-bottom: 4px;
+}
+
+@include mobile {
+  .mobileItem {
+    padding: 20px;
+    border-bottom: var(--border-width) solid var(--card-border);
+  }
 }

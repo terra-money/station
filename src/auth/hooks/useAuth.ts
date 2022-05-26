@@ -11,17 +11,39 @@ import { useChainID } from "data/wallet"
 import { useIsClassic } from "data/query"
 import { useLCDClient } from "data/queries/lcdClient"
 import is from "../scripts/is"
-import { PasswordError } from "../scripts/keystore"
+import {
+  addWallet,
+  getBioAble,
+  getBioStamps,
+  PasswordError,
+  setBioKeys,
+  setBioStamps,
+} from "../scripts/keystore"
 import { getDecryptedKey, testPassword } from "../scripts/keystore"
 import { getWallet, storeWallet } from "../scripts/keystore"
 import { clearWallet, lockWallet } from "../scripts/keystore"
 import { getStoredWallet, getStoredWallets } from "../scripts/keystore"
+import { getBioState, getBioKeys } from "../scripts/keystore"
 import encrypt from "../scripts/encrypt"
 import useAvailable from "./useAvailable"
+import decrypt from "../scripts/decrypt"
+import { RN_APIS, WebViewMessage } from "../../utils/rnModule"
+import { removeSessions } from "../scripts/sessions"
+import { SyncTxBroadcastResult } from "@terra-money/terra.js/dist/client/lcd/api/TxAPI"
 
 const walletState = atom({
   key: "wallet",
   default: getWallet(),
+})
+
+const isAbleBioState = atom({
+  key: "ableBio",
+  default: getBioAble(),
+})
+
+const isUseBioState = atom({
+  key: "bio",
+  default: getBioState(),
 })
 
 const useAuth = () => {
@@ -30,11 +52,23 @@ const useAuth = () => {
   const available = useAvailable()
 
   const [wallet, setWallet] = useRecoilState(walletState)
+  const [isAbleBio] = useRecoilState(isAbleBioState)
+  const [isUseBio, setIsUseBio] = useRecoilState(isUseBioState)
   const wallets = getStoredWallets()
+
+  const initBio = async (address: string) => {
+    const keys = getBioKeys()
+    const bioKey = keys?.[address]
+    if (bioKey) {
+      setIsUseBio(true)
+    } else {
+      setIsUseBio(false)
+    }
+  }
 
   /* connect */
   const connect = useCallback(
-    (name: string) => {
+    async (name: string) => {
       const storedWallet = getStoredWallet(name)
       const { address, lock } = storedWallet
 
@@ -42,10 +76,15 @@ const useAuth = () => {
 
       const wallet = is.multisig(storedWallet)
         ? { name, address, multisig: true }
+        : is.ledger(storedWallet)
+        ? { name, address, ledger: true, index: storedWallet.index }
         : { name, address }
 
       storeWallet(wallet)
       setWallet(wallet)
+
+      initBio(address)
+      await removeSessions()
     },
     [setWallet]
   )
@@ -60,7 +99,14 @@ const useAuth = () => {
 
   const connectLedger = useCallback(
     (address: AccAddress, index = 0, bluetooth = false) => {
-      const wallet = { address, ledger: true as const, index, bluetooth }
+      const wallet = {
+        name: "Ledger",
+        address,
+        ledger: true as const,
+        index,
+        bluetooth,
+      }
+      addWallet(wallet)
       storeWallet(wallet)
       setWallet(wallet)
     },
@@ -99,10 +145,10 @@ const useAuth = () => {
   const getLedgerKey = async () => {
     if (!is.ledger(wallet)) throw new Error("Ledger device is not connected")
     const { index, bluetooth } = wallet
+
     const transport = bluetooth
       ? await BluetoothTransport.create(LEDGER_TRANSPORT_TIMEOUT)
       : undefined
-
     return LedgerKey.create(transport, index)
   }
 
@@ -112,6 +158,55 @@ const useAuth = () => {
     const key = getKey(password)
     const data = { name, address, encrypted_key: encrypt(key, password) }
     return encode(JSON.stringify(data))
+  }
+
+  /* manage: bio auth */
+  const disableBioAuth = () => {
+    const { address } = getConnectedWallet()
+    const storedBioKey = getBioKeys()
+    const storedTimestamp = getBioStamps()
+
+    delete storedBioKey?.[address]
+    delete storedTimestamp?.[address]
+
+    setBioKeys(storedTimestamp)
+    setBioStamps(storedBioKey)
+
+    setIsUseBio(false)
+    return true
+  }
+
+  const encodeBioAuthKey = (password: string) => {
+    const { address } = getConnectedWallet()
+    const timestamp = Date.now()
+
+    const storedBioKey = getBioKeys()
+    const storedTimestamp = getBioStamps()
+
+    setBioKeys({
+      ...storedBioKey,
+      [address]: encrypt(password, String(timestamp)),
+    })
+    setBioStamps({
+      ...storedTimestamp,
+      [address]: String(timestamp),
+    })
+    setIsUseBio(true)
+    return true
+  }
+
+  const decodeBioAuthKey = async () => {
+    const res = await WebViewMessage(RN_APIS.AUTH_BIO)
+    if (res) {
+      const { address } = getConnectedWallet()
+      const storedBioKey = getBioKeys()?.[address]
+
+      const storedTimestamp = getBioStamps()?.[address]
+      const decrypted = decrypt(storedBioKey, storedTimestamp)
+      return decrypted
+    } else {
+      throw new Error("failed bio")
+    }
   }
 
   /* form */
@@ -206,15 +301,35 @@ const useAuth = () => {
 
   const post = async (txOptions: CreateTxOptions, password = "") => {
     if (!wallet) throw new Error("Wallet is not defined")
-    const signedTx = await sign(txOptions, password)
-    const result = await lcd.tx.broadcastSync(signedTx)
-    if (isTxError(result)) throw new Error(result.raw_log)
-    return result
+    if (is.mobileNative() && is.ledger(wallet)) {
+      const result = await WebViewMessage(RN_APIS.GET_LEDGER_KEY, {
+        id: password,
+        path: wallet.index,
+        address: wallet.address,
+        txOptions,
+        lcdConfigs: lcd.config,
+      })
+
+      // @ts-ignore
+      if (result?.includes("Error")) {
+        return result
+      } else {
+        // @ts-ignore
+        return JSON.parse(result) as SyncTxBroadcastResult
+      }
+    } else {
+      const signedTx = await sign(txOptions, password)
+      const result = await lcd.tx.broadcastSync(signedTx)
+      if (isTxError(result)) throw new Error(result.raw_log)
+      return result
+    }
   }
 
   return {
     wallet,
     wallets,
+    isAbleBio,
+    isUseBio,
     getConnectedWallet,
     getLedgerKey,
     connectedWallet,
@@ -225,6 +340,9 @@ const useAuth = () => {
     lock,
     available,
     encodeEncryptedWallet,
+    encodeBioAuthKey,
+    decodeBioAuthKey,
+    disableBioAuth,
     validatePassword,
     createSignature,
     create,

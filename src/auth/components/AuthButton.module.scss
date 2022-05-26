@@ -1,3 +1,5 @@
+@import "mixins";
+
 .button {
   border: var(--border-width) solid var(--card-border);
   border-radius: var(--border-radius);
@@ -13,5 +15,14 @@
 
   &.active {
     border-color: var(--button-primary-bg);
+  }
+
+  @include mobile {
+    border: none;
+    border-radius: 0;
+    border-bottom: var(--border-width) solid var(--card-border);
+    &.active {
+      border-bottom: var(--border-width) solid var(--card-border);
+    }
   }
 }

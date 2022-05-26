@@ -1,3 +1,5 @@
+@import "mixins";
+
 .total {
   font-size: 28px;
   font-weight: var(--bold);
@@ -5,4 +7,16 @@
 
 .select {
   justify-content: flex-end;
+}
+
+.buy {
+  @include flex(space-around, center);
+  padding-top: 20px;
+  border-top: 1px solid var(--card-border);
+  & button {
+    flex: 1;
+    &:first-child {
+      border-right: 1px solid var(--card-border);
+    }
+  }
 }
