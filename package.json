@@ -59,6 +59,7 @@
     "secp256k1": "^4.0.3",
     "semver": "^7.3.7",
     "sentence-case": "^3.0.4",
+    "webpack": "4.44.2",
     "xss": "^1.0.11"
   },
   "devDependencies": {

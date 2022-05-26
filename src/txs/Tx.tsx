@@ -49,8 +49,6 @@ import { toInput } from "./utils"
 import { RN_APIS, WebViewMessage } from "utils/rnModule"
 import { useTx } from "./TxContext"
 import styles from "./Tx.module.scss"
-import { parseTx, RN_APIS, WebViewMessage } from "../utils/rnModule"
-import { SyncTxBroadcastResult } from "@terra-money/terra.js/dist/client/lcd/api/TxAPI"
 
 interface Props<TxValues> {
   /* Only when the token is paid out of the balance held */
@@ -84,12 +82,6 @@ interface RenderProps<TxValues> {
   submit: { fn: (values: TxValues) => Promise<void>; button: ReactNode }
   confirm: { fn: (values: TxValues) => Promise<void>; button: ReactNode }
   connect: { fn: (values: TxValues) => Promise<void>; button: ReactNode }
-}
-
-enum Status {
-  LOADING = "LOADING",
-  SUCCESS = "SUCCESS",
-  FAILURE = "FAILURE",
 }
 
 enum Status {
