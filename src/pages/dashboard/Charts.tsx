@@ -1,3 +1,4 @@
+import { useIsClassic } from "data/query"
 import { useIsTerraAPIAvailable } from "data/Terra/TerraAPI"
 import TxVolume from "../charts/TxVolume"
 import StakingReturn from "../charts/StakingReturn"
@@ -6,6 +7,7 @@ import Wallets from "../charts/Wallets"
 import styles from "./Charts.module.scss"
 
 const Charts = () => {
+  const isClassic = useIsClassic()
   const available = useIsTerraAPIAvailable()
   if (!available) return null
 
@@ -13,7 +15,7 @@ const Charts = () => {
     <div className={styles.charts}>
       <TxVolume />
       <StakingReturn />
-      <TaxRewards />
+      {isClassic && <TaxRewards />}
       <Wallets />
     </div>
   )
