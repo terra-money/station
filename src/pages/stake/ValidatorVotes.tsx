@@ -1,3 +1,10 @@
+/*
+ * @Author: lmk
+ * @Date: 2022-05-25 11:23:10
+ * @LastEditTime: 2022-05-27 17:47:53
+ * @LastEditors: lmk
+ * @Description:
+ */
 import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
@@ -5,7 +12,7 @@ import { reverse } from "ramda"
 import { readPercent } from "@terra.kitchen/utils"
 import { TerraValidator } from "types/validator"
 import { useGetVoteOptionItem } from "data/queries/gov"
-import { useVotingPowerRate } from "data/Terra/TerraAPI"
+// import { useVotingPowerRate } from "data/Terra/TerraAPI"
 import { Card, Grid, Table } from "components/layout"
 import ValidatorNumbers from "./components/ValidatorNumbers"
 
@@ -15,18 +22,18 @@ const ValidatorVotes = ({ validator }: { validator: TerraValidator }) => {
 
   const { operator_address, votes } = validator
 
-  const { data: votingPowerRate, ...votingPowerRateState } =
-    useVotingPowerRate(operator_address)
+  // const { data: votingPowerRate, ...votingPowerRateState } =
+  //   useVotingPowerRate(operator_address)
 
-  const contents = useMemo(() => {
-    if (!votingPowerRate) return []
-    return [{ title: t("Voting power"), content: readPercent(votingPowerRate) }]
-  }, [t, votingPowerRate])
+  // const contents = useMemo(() => {
+  //   if (!votingPowerRate) return []
+  //   return [{ title: t("Voting power"), content: readPercent(votingPowerRate) }]
+  // }, [t, votingPowerRate])
 
   return (
-    <Card {...votingPowerRateState}>
+    <Card>
       <Grid gap={20}>
-        {contents && <ValidatorNumbers contents={contents} />}
+        {/* {contents && <ValidatorNumbers contents={contents} />} */}
         {votes && (
           <Table
             columns={[

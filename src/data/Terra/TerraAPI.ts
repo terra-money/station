@@ -115,9 +115,11 @@ export const useTerraValidators = () => {
   return useTerraAPI<TerraValidator[]>("validators", undefined, [])
 }
 
-export const useTerraValidator = (address: ValAddress) => {
-  return useTerraAPI<TerraValidator>(`validators/${address}`)
-}
+// export const useTerraValidator = (address: ValAddress) => {
+//   // return useTerraAPI<TerraValidator>(`validators/${address}`)
+//   return Promise.resolve({
+//   })
+// }
 
 export const useTerraProposal = (id: number) => {
   return useTerraAPI<TerraProposalItem[]>(`proposals/${id}`)
