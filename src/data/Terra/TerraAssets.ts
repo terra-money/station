@@ -40,23 +40,37 @@ export const useTerraAssetsByNetwork = <T>(
 }
 
 export const useIBCWhitelist = () => {
-  return useTerraAssetsByNetwork<IBCWhitelist>("ibc/tokens.json")
+  return {
+    data: {} as IBCWhitelist,
+    isSuccess: true,
+  }
+  //return useTerraAssetsByNetwork<IBCWhitelist>("ibc/tokens.json")
 }
 
 export const useCW20Contracts = () => {
-  return useTerraAssetsByNetwork<CW20Contracts>("cw20/contracts.json")
+  return {
+    data: {} as CW20Contracts,
+  }
+  // return useTerraAssetsByNetwork<CW20Contracts>("cw20/contracts.json")
 }
 
 export const useCW20Whitelist = (disabled = false) => {
-  return useTerraAssetsByNetwork<CW20Whitelist>(
-    "cw20/tokens.json",
-    disabled,
-    (data) => sortWhitelistCW20(shuffleByProtocol(data))
-  )
+  return {
+    data: {} as CW20Whitelist,
+    isSuccess: true,
+  }
+  // return useTerraAssetsByNetwork<CW20Whitelist>(
+  //   "cw20/tokens.json",
+  //   disabled,
+  //   (data) => sortWhitelistCW20(shuffleByProtocol(data))
+  // )
 }
 
 export const useCW20Pairs = () => {
-  return useTerraAssetsByNetwork<CW20Pairs>("cw20/pairs.dex.json")
+  return {
+    data: {} as CW20Pairs,
+  }
+  //return useTerraAssetsByNetwork<CW20Pairs>("cw20/pairs.dex.json")
 }
 
 export type ContractNames =
@@ -67,15 +81,22 @@ export type ContractNames =
 
 export type TerraContracts = Record<ContractNames, AccAddress>
 export const useTerraContracts = () => {
-  return useTerraAssetsByNetwork<TerraContracts>("contracts.json")
+  return {
+    data: {} as TerraContracts,
+  }
+
+  //return useTerraAssetsByNetwork<TerraContracts>("contracts.json")
 }
 
 export const useCW721Whitelist = () => {
-  return useTerraAssetsByNetwork<CW721Whitelist>(
-    "cw721/contracts.json",
-    undefined,
-    shuffleByProtocol
-  )
+  return {
+    data: {} as CW721Whitelist,
+  }
+  // return useTerraAssetsByNetwork<CW721Whitelist>(
+  //   "cw721/contracts.json",
+  //   undefined,
+  //   shuffleByProtocol
+  // )
 }
 
 interface CW721MarketplaceItem {
@@ -84,7 +105,10 @@ interface CW721MarketplaceItem {
 }
 
 export const useCW721Marketplace = () => {
-  return useTerraAssets<CW721MarketplaceItem[]>("cw721/marketplace.json")
+  return {
+    data: [] as CW721MarketplaceItem[],
+  }
+  //return useTerraAssets<CW721MarketplaceItem[]>("cw721/marketplace.json")
 }
 
 /* helpers */

@@ -5,33 +5,49 @@ import { toPrice } from "utils/num"
 import { queryKey, RefetchOptions } from "../query"
 import { useCurrency } from "../settings/Currency"
 import { useLCDClient } from "./lcdClient"
+import { Dec, Coins } from "@terra-money/terra.js"
 
 export const useActiveDenoms = () => {
-  const lcd = useLCDClient()
-  return useQuery(
-    [queryKey.oracle.activeDenoms],
-    async () => {
-      const activeDenoms = await lcd.oracle.activeDenoms()
-      return sortDenoms(["uluna", ...activeDenoms])
-    },
-    { ...RefetchOptions.INFINITY }
-  )
+  return { data: ["umis"] }
+  // const lcd = useLCDClient()
+  // return useQuery(
+  //   [queryKey.oracle.activeDenoms],
+  //   async () => {
+  //     const activeDenoms = await lcd.oracle.activeDenoms()
+  //     return sortDenoms(["uluna", ...activeDenoms])
+  //   },
+  //   { ...RefetchOptions.INFINITY }
+  // )
 }
 
 export const useExchangeRates = () => {
-  const lcd = useLCDClient()
-  return useQuery(
-    [queryKey.oracle.exchangeRates],
-    () => lcd.oracle.exchangeRates(),
-    { ...RefetchOptions.DEFAULT }
-  )
+  return { data: new Coins() }
+  // const lcd = useLCDClient()
+  // return useQuery(
+  //   [queryKey.oracle.exchangeRates],
+  //   () => lcd.oracle.exchangeRates(),
+  //   { ...RefetchOptions.DEFAULT }
+  // )
 }
 
 export const useOracleParams = () => {
-  const lcd = useLCDClient()
-  return useQuery([queryKey.oracle.params], () => lcd.oracle.parameters(), {
-    ...RefetchOptions.INFINITY,
-  })
+  return {
+    data: {
+      vote_period: 1,
+      vote_threshold: new Dec(1.5),
+      reward_band: new Dec(1.5),
+      reward_distribution_window: 1,
+      whitelist: [],
+      slash_fraction: new Dec(1.5),
+      slash_window: 1,
+      min_valid_per_window: new Dec(1.5),
+    },
+  }
+
+  // const lcd = useLCDClient()
+  // return useQuery([queryKey.oracle.params], () => lcd.oracle.parameters(), {
+  //   ...RefetchOptions.INFINITY,
+  // })
 }
 
 /* helpers */

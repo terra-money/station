@@ -58,19 +58,22 @@ export const useTerraAPI = <T>(path: string, params?: object, fallback?: T) => {
 export type GasPrices = Record<Denom, Amount>
 
 export const useGasPrices = () => {
-  const current = useTerraAPIURL()
-  const mainnet = useTerraAPIURL("mainnet")
-  const baseURL = current ?? mainnet
-  const path = "/gas-prices"
+  return {
+    data: { umis: "0.0001" },
+  }
+  // const current = useTerraAPIURL()
+  // const mainnet = useTerraAPIURL("mainnet")
+  // const baseURL = current ?? mainnet
+  // const path = "/gas-prices"
 
-  return useQuery(
-    [queryKey.TerraAPI, baseURL, path],
-    async () => {
-      const { data } = await axios.get<GasPrices>(path, { baseURL })
-      return data
-    },
-    { ...RefetchOptions.INFINITY, enabled: !!baseURL }
-  )
+  // return useQuery(
+  //   [queryKey.TerraAPI, baseURL, path],
+  //   async () => {
+  //     const { data } = await axios.get<GasPrices>(path, { baseURL })
+  //     return data
+  //   },
+  //   { ...RefetchOptions.INFINITY, enabled: !!baseURL }
+  // )
 }
 
 /* charts */
