@@ -595,7 +595,13 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   const connectButton = (
     <Grid columns={2} gap={12}>
-      <Button color="danger" onClick={() => navigate("/", { replace: true })}>
+      <Button
+        color="danger"
+        onClick={() => {
+          WebViewMessage(RN_APIS.REJECT_SESSION)
+          navigate("/", { replace: true })
+        }}
+      >
         {t("Deny")}
       </Button>
       <Button color="primary" type="submit">

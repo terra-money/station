@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 
 import { AccAddress } from "@terra-money/terra.js"
-import { Card, Flex, Grid } from "components/layout"
+import { Card, Flex, FlexColumn, Grid } from "components/layout"
 import { Form } from "components/form"
 import Tx from "../Tx"
 import { RN_APIS, WebViewMessage } from "utils/rnModule"
@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom"
 import GridConfirm from "components/layout/GridConfirm"
 import styles from "./Connect.module.scss"
 import { ReactComponent as WalletConnectIcon } from "styles/images/menu/Walletconnect.svg"
+import { LoadingCircular } from "../../components/feedback"
 
 interface TxValues {
   recipient?: string // AccAddress | TNS
@@ -37,10 +38,6 @@ const ConnectForm = ({ action, payload }: Props) => {
 
   const readyConnect = async () => {
     try {
-      // const fallback = setTimeout(() => {
-      //   navigate('/', {replace: true})
-      // }, 5000)
-      // clearTimeout(fallback)
       const res = await WebViewMessage(RN_APIS.READY_CONNECT_WALLET, {
         uri: decodeURIComponent(payload),
       })
@@ -63,6 +60,15 @@ const ConnectForm = ({ action, payload }: Props) => {
       readyConnect()
     }
   }, [action, payload])
+
+  if (!peerData) {
+    return (
+      <FlexColumn gap={20} className={styles.screen}>
+        <LoadingCircular size={36} />
+        <p>Ready to Connect</p>
+      </FlexColumn>
+    )
+  }
 
   return (
     <Tx {...tx}>

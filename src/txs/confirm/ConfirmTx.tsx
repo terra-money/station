@@ -11,6 +11,7 @@ const ConfirmTx = () => {
 
   const parsedPayload = useMemo(() => {
     const { action, payload } = state
+
     setAction(action)
     if (payload) {
       const payloadObjects = fromBase64(payload)

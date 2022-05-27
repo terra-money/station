@@ -13,6 +13,7 @@ export const RN_APIS = {
   QR_SCAN: "QR_SCAN",
   RECOVER_SESSIONS: "RECOVER_SESSIONS",
   DISCONNECT_SESSIONS: "DISCONNECT_SESSIONS",
+  REJECT_SESSION: "REJECT_SESSION",
   READY_CONNECT_WALLET: "READY_CONNECT_WALLET",
   CONNECT_WALLET: "CONNECT_WALLET",
   CONFIRM_TX: "CONFIRM_TX",
@@ -38,6 +39,7 @@ type RN_API_REQ_TYPES = {
   [RN_APIS.QR_SCAN]: unknown
   [RN_APIS.RECOVER_SESSIONS]: unknown
   [RN_APIS.DISCONNECT_SESSIONS]: unknown
+  [RN_APIS.REJECT_SESSION]: unknown
   [RN_APIS.READY_CONNECT_WALLET]: unknown
   [RN_APIS.CONNECT_WALLET]: unknown
   [RN_APIS.CONFIRM_TX]: unknown
@@ -57,6 +59,7 @@ type RN_API_RES_TYPES = {
   [RN_APIS.QR_SCAN]: string
   [RN_APIS.RECOVER_SESSIONS]: string
   [RN_APIS.DISCONNECT_SESSIONS]: string
+  [RN_APIS.REJECT_SESSION]: string
   [RN_APIS.READY_CONNECT_WALLET]: string
   [RN_APIS.CONNECT_WALLET]: string
   [RN_APIS.CONFIRM_TX]: string
@@ -88,7 +91,7 @@ export type RequestType = "sign" | "post" | "signBytes"
 
 export interface TxRequest extends DefaultRequest {
   tx: CreateTxOptions
-  requestType: "sign" | "post"
+  // requestType: "sign" | "post"
 }
 
 export interface TxResponse<T = any> {
@@ -111,17 +114,20 @@ export const parseDefault = (
   return { ...request, timestamp: new Date(request.id) }
 }
 
-export const parseTx = (request: PrimitiveTxRequest): TxRequest["tx"] => {
+export const parseTx = (
+  request: PrimitiveTxRequest,
+  isClassic: boolean
+): TxRequest["tx"] => {
   const { msgs, fee, memo } = request
   const isProto = "@type" in JSON.parse(msgs[0])
   return isProto
     ? {
-        msgs: msgs.map((msg) => Msg.fromData(JSON.parse(msg))),
+        msgs: msgs.map((msg) => Msg.fromData(JSON.parse(msg), isClassic)),
         fee: fee ? Fee.fromData(JSON.parse(fee)) : undefined,
         memo,
       }
     : {
-        msgs: msgs.map((msg) => Msg.fromAmino(JSON.parse(msg))),
+        msgs: msgs.map((msg) => Msg.fromAmino(JSON.parse(msg), isClassic)),
         fee: fee ? Fee.fromAmino(JSON.parse(fee)) : undefined,
         memo,
       }

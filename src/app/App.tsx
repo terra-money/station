@@ -45,7 +45,7 @@ import {
 import WalletConnect from "../pages/wallet/WalletConnect"
 import { disconnectSession } from "../auth/scripts/sessions"
 
-import { ToastContainer } from "react-toastify"
+import { ToastContainer, Slide } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 
 const App = () => {
@@ -204,6 +204,7 @@ const App = () => {
             draggable
             pauseOnHover
             theme="colored"
+            transition={Slide}
           />
           <WalletConnect />
         </>

@@ -5,7 +5,7 @@
 }
 /* token */
 .connect {
-  padding: 20px 20px 60px;
+  padding: 20px 20px 40px;
   margin-bottom: 40px;
 
   svg {
@@ -28,4 +28,8 @@
     background: var(--bg-muted);
     border-color: var(--input-border);
   }
+}
+
+.screen {
+  height: calc(100vh - var(--header-height) - var(--mobile-tab-height));
 }

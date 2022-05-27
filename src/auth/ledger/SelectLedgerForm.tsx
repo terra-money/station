@@ -15,6 +15,7 @@ import { LoadingCircular, Modal, Mode } from "components/feedback"
 import { useThemeAnimation } from "data/settings/Theme"
 import { CreateTxOptions } from "@terra-money/terra.js/dist/client/lcd/api/TxAPI"
 import styles from "components/layout/Card.module.scss"
+import { useIsClassic } from "../../data/query"
 
 interface DeviceInterface {
   name: string
@@ -35,13 +36,14 @@ const SelectLedgerForm = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isTxLoading, setIsTxLoading] = useState(false)
   const [error, setError] = useState<Error>()
+  const isClassic = useIsClassic()
 
   const ledgerCount = useRef(10)
   const getLedgerTimeout = useRef()
 
   useEffect(() => {
     if (state) {
-      const tx = parseTx(JSON.parse(state))
+      const tx = parseTx(JSON.parse(state), isClassic)
       setTx(tx)
     }
   }, [state])
@@ -50,7 +52,6 @@ const SelectLedgerForm = () => {
     setIsLoading(true)
     // @ts-ignore
     getLedgerTimeout.current = setTimeout(async function run() {
-      console.log(ledgerCount)
       if (ledgerCount.current === 0) {
         clearGetLedgers()
         setIsLoading(false)
@@ -95,7 +96,7 @@ const SelectLedgerForm = () => {
     return (
       <FlexColumn gap={20} className={styles.screen}>
         <LoadingCircular size={36} />
-        <p>Getting ledgers ... </p>
+        <p>Ready to Connect</p>
       </FlexColumn>
     )
   }

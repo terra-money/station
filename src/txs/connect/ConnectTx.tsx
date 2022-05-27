@@ -20,7 +20,6 @@ const ConnectTx = () => {
   }, [state])
 
   useEffect(() => {
-    console.log(wallet)
     if (!wallet) {
       navigate("/", { replace: true })
       toast.error("No connected wallet", { toastId: "wallet-error" })

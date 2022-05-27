@@ -8,6 +8,7 @@ import styles from "./Layout.module.scss"
 import { useNav } from "../../app/routes"
 import is from "auth/scripts/is"
 import { ReactComponent as BackIcon } from "styles/images/icons/Back.svg"
+import { RN_APIS, WebViewMessage } from "utils/rnModule"
 
 const cx = classNames.bind(styles)
 
@@ -71,6 +72,9 @@ export const Header = ({ children }: PropsWithChildren<{}>) => {
               <>
                 <button
                   onClick={() => {
+                    if (pathname === "/confirm") {
+                      WebViewMessage(RN_APIS.REJECT_SESSION)
+                    }
                     if (window.history.length <= 1) {
                       navigate("/", { replace: true })
                     } else {
