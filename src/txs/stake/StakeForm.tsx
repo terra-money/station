@@ -72,7 +72,7 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
       if (!address) return
 
       const amount = toAmount(input)
-      const coin = new Coin("uluna", amount)
+      const coin = new Coin("umis", amount)
 
       if (tab === StakeAction.REDELEGATE) {
         if (!source) return
@@ -92,7 +92,7 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
 
   /* fee */
   const balance = {
-    [StakeAction.DELEGATE]: getAmount(bankBalance, "uluna"),
+    [StakeAction.DELEGATE]: getAmount(bankBalance, "umis"),
     [StakeAction.REDELEGATE]:
       (source && findDelegation(source)?.balance.amount.toString()) ?? "0",
     [StakeAction.UNBOND]:
@@ -115,7 +115,7 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
     [setValue, trigger]
   )
 
-  const token = tab === StakeAction.DELEGATE ? "uluna" : ""
+  const token = tab === StakeAction.DELEGATE ? "umis" : ""
   const tx = {
     token,
     amount,
@@ -205,7 +205,7 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
                 valueAsNumber: true,
                 validate: validate.input(toInput(max.amount)),
               })}
-              token="uluna"
+              token="umis"
               onFocus={max.reset}
               inputMode="decimal"
               placeholder={getPlaceholder()}

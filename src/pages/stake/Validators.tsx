@@ -235,7 +235,7 @@ const Validators = () => {
                 !!value && (
                   <Read
                     amount={Number(value) * 100}
-                    denom="uluna"
+                    denom="umis"
                     decimals={0}
                     fixed={6}
                   />

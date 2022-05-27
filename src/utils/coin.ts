@@ -22,7 +22,7 @@ export const sortByDenom = <T extends { denom: Denom }>(
 ) =>
   coins.sort(
     (a, b) =>
-      compareIs("uluna")(a.denom, b.denom) ||
+      compareIs("umis")(a.denom, b.denom) ||
       compareIs("uusd")(a.denom, b.denom) ||
       compareIs(currency)(a.denom, b.denom) ||
       compareIsDenomIBC(a.denom, b.denom) ||
@@ -32,7 +32,7 @@ export const sortByDenom = <T extends { denom: Denom }>(
 export const sortDenoms = (denoms: Denom[], currency = "") =>
   denoms.sort(
     (a, b) =>
-      compareIs("uluna")(a, b) ||
+      compareIs("umis")(a, b) ||
       compareIs("uusd")(a, b) ||
       compareIs(currency)(a, b) ||
       compareIsDenomIBC(a, b)

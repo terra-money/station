@@ -52,7 +52,7 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
   /* as another denom */
   const preferredDenom = getLocalSetting<Denom>(SettingKey.WithdrawAs)
   const [swap, setSwap] = useState(!!preferredDenom)
-  const [target, setTarget] = useState(preferredDenom || "uluna")
+  const [target, setTarget] = useState(preferredDenom || "umis")
   useEffect(() => {
     if (!swap) setLocalSetting(SettingKey.WithdrawAs, "")
   }, [swap])

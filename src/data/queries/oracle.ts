@@ -18,7 +18,7 @@ export const useActiveDenoms = () => {
   //   [queryKey.oracle.activeDenoms],
   //   async () => {
   //     const activeDenoms = await lcd.oracle.activeDenoms()
-  //     return sortDenoms(["uluna", ...activeDenoms])
+  //     return sortDenoms(["umis", ...activeDenoms])
   //   },
   //   { ...RefetchOptions.INFINITY }
   // )

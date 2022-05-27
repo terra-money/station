@@ -29,7 +29,7 @@ const Unbondings = () => {
     if (!unbondings) return null
 
     const total = calcUnbondingsTotal(unbondings)
-    const value = calcValue({ amount: total, denom: "uluna" })
+    const value = calcValue({ amount: total, denom: "umis" })
     const list = flattenUnbondings(unbondings)
 
     return (
@@ -68,7 +68,7 @@ const Unbondings = () => {
               title: t("Amount"),
               dataIndex: "initial_balance",
               render: (amount: Dec) => (
-                <Read amount={amount.toString()} denom="uluna" />
+                <Read amount={amount.toString()} denom="umis" />
               ),
               align: "right",
             },

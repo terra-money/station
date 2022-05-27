@@ -26,7 +26,7 @@ const Rewards = () => {
     if (!(rewards && exchangeRates)) return null
     const { total } = calcRewardsValues(rewards, currency, calcValue)
     const { sum, list } = total
-    const amount = list.find(({ denom }) => denom === "uluna")?.amount ?? "0"
+    const amount = list.find(({ denom }) => denom === "umis")?.amount ?? "0"
 
     return (
       <ModalButton
