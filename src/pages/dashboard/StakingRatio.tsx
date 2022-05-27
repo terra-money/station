@@ -20,12 +20,12 @@ const StakingRatio = () => {
     if (!(stakingPool && supply)) return null
 
     const bonded = stakingPool.bonded_tokens.amount.toString()
-    const issuance = supply.find(({ denom }) => denom === "uluna")?.amount
+    const issuance = supply.find(({ denom }) => denom === "umis")?.amount
 
     if (!issuance) return null
 
     const ratio = Number(bonded) / Number(issuance)
-    const tooltip = t("{{amount}} Luna staked", {
+    const tooltip = t("{{amount}} MIS staked", {
       amount: readAmount(bonded, { prefix: true, integer: true }),
     })
 
@@ -38,7 +38,7 @@ const StakingRatio = () => {
         }
         footer={
           <DashboardTag>
-            {[t("Staked Luna"), t("Total Luna")].join(" / ")}
+            {[t("Staked MIS"), t("Total MIS")].join(" / ")}
           </DashboardTag>
         }
       />

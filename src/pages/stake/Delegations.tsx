@@ -27,7 +27,7 @@ const Delegations = () => {
     if (!delegations) return null
 
     const total = calcDelegationsTotal(delegations)
-    const value = calcValue({ amount: total, denom: "uluna" })
+    const value = calcValue({ amount: total, denom: "umis" })
 
     return (
       <ModalButton
