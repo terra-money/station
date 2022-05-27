@@ -36,12 +36,14 @@ interface Props<T> {
   onSort?: () => void
 
   size?: "default" | "small"
+  bordered?: boolean
   style?: CSSProperties
   pagination?: number
 }
 
 function Table<T>({ dataSource, filter, rowKey, ...props }: Props<T>) {
-  const { initialSorterKey, size = "default", style, pagination } = props
+  const { initialSorterKey, size = "default", bordered, style } = props
+  const { pagination } = props
   const columns = props.columns.filter(({ hidden }) => !hidden)
 
   /* helpers */
@@ -117,7 +119,7 @@ function Table<T>({ dataSource, filter, rowKey, ...props }: Props<T>) {
   }
 
   return (
-    <div className={styles.container} style={style}>
+    <div className={cx(styles.container, { bordered })} style={style}>
       <table className={cx(styles.table, size)}>
         <thead>
           <tr>
@@ -167,7 +169,7 @@ function Table<T>({ dataSource, filter, rowKey, ...props }: Props<T>) {
             .slice(...range)
             .map((data, index) => (
               <tr key={rowKey?.(data) ?? index}>
-                {columns.map((column, index) => {
+                {columns.map((column, columnIndex) => {
                   const { dataIndex, render } = column
                   const value: any =
                     typeof dataIndex === "string"

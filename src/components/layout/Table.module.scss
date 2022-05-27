@@ -40,6 +40,20 @@
   }
 }
 
+.bordered {
+  border-radius: 5px;
+  border: solid 1px var(--card-border);
+
+  th,
+  td {
+    background: var(--bg);
+  }
+
+  th {
+    padding-top: 12px;
+  }
+}
+
 /* align */
 .center {
   text-align: center;

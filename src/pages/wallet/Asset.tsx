@@ -10,10 +10,11 @@ import styles from "./Asset.module.scss"
 export interface Props extends TokenItem, QueryState {
   balance?: Amount
   value?: Value
+  hideActions?: boolean
 }
 
 const Asset = (props: Props) => {
-  const { token, icon, symbol, balance, value, ...state } = props
+  const { token, icon, symbol, balance, value, hideActions, ...state } = props
   const { t } = useTranslation()
   const currency = useRecoilValue(currencyState)
 
@@ -49,7 +50,7 @@ const Asset = (props: Props) => {
         </div>
       </section>
 
-      <AssetActions {...props} />
+      {!hideActions && <AssetActions {...props} />}
     </article>
   )
 }
