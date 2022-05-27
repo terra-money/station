@@ -8,6 +8,7 @@ import { getLocalSetting, setLocalSetting } from "utils/localStorage"
 import { debug } from "utils/env"
 import { useAddress, useNetworkName } from "data/wallet"
 import { calcDelegationsTotal, useDelegations } from "../queries/staking"
+import { RN_APIS, WebViewMessage } from "../../utils/rnModule"
 
 export const themeNameState = atom({
   key: "themeName",
@@ -52,6 +53,8 @@ export const useThemeState = () => {
       setFavicon(nextTheme.favicon)
       setThemeName(nextTheme.name)
       setLocalSetting<Theme["name"]>(SettingKey.Theme, nextTheme.name)
+
+      WebViewMessage(RN_APIS.SET_THEME, nextTheme.name)
     },
     [prevTheme, setThemeName, validate]
   )
