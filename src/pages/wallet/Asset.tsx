@@ -1,7 +1,6 @@
-import { useRecoilValue } from "recoil"
 import { useTranslation } from "react-i18next"
 import { has } from "utils/num"
-import { currencyState } from "data/settings/Currency"
+import { useCurrency } from "data/settings/Currency"
 import { WithFetching } from "components/feedback"
 import { Read, TokenIcon } from "components/token"
 import AssetActions from "./AssetActions"
@@ -16,7 +15,7 @@ export interface Props extends TokenItem, QueryState {
 const Asset = (props: Props) => {
   const { token, icon, symbol, balance, value, hideActions, ...state } = props
   const { t } = useTranslation()
-  const currency = useRecoilValue(currencyState)
+  const currency = useCurrency()
 
   return (
     <article className={styles.asset} key={token}>
