@@ -1,3 +1,4 @@
+import { useIsClassic } from "data/query"
 import { atom, useRecoilState, useRecoilValue } from "recoil"
 import { SettingKey } from "utils/localStorage"
 import { getLocalSetting, setLocalSetting } from "utils/localStorage"
@@ -8,7 +9,9 @@ export const currencyState = atom({
 })
 
 export const useCurrency = () => {
+  const isClassic = useIsClassic()
   const currency = useRecoilValue(currencyState)
+  if (!isClassic) return "uluna"
   return currency
 }
 

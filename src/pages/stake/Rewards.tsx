@@ -23,7 +23,7 @@ const Rewards = () => {
   /* render */
   const title = t("Staking rewards")
   const render = () => {
-    if (!(rewards && exchangeRates)) return null
+    if (!rewards) return null
     const { total } = calcRewardsValues(rewards, currency, calcValue)
     const { sum, list } = total
     const amount = list.find(({ denom }) => denom === "uluna")?.amount ?? "0"

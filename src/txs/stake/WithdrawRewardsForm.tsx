@@ -13,7 +13,7 @@ import { has } from "utils/num"
 import { sortDenoms } from "utils/coin"
 import { SettingKey } from "utils/localStorage"
 import { getLocalSetting, setLocalSetting } from "utils/localStorage"
-import { queryKey } from "data/query"
+import { queryKey, useIsClassic } from "data/query"
 import { useCurrency } from "data/settings/Currency"
 import { useAddress } from "data/wallet"
 import { useLCDClient } from "data/queries/lcdClient"
@@ -39,6 +39,7 @@ interface Props {
 const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
   const { activeDenoms, IBCWhitelist } = props
   const { t } = useTranslation()
+  const isClassic = useIsClassic()
   const currency = useCurrency()
   const address = useAddress()
   const bankBalance = useBankBalance()
@@ -188,28 +189,30 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
       {({ fee, submit }) => (
         <Form onSubmit={handleSubmit(submit.fn)}>
           <Grid gap={12}>
-            <section className={styles.target}>
-              <Checkbox checked={swap} onChange={() => setSwap(!swap)}>
-                <InlineFlex gap={4}>
-                  Withdraw all rewards in{" "}
-                  <Select
-                    value={target}
-                    onChange={(e) => {
-                      if (!swap) setSwap(true)
-                      setLocalSetting(SettingKey.WithdrawAs, e.target.value)
-                      setTarget(e.target.value)
-                    }}
-                    small
-                  >
-                    {sortDenoms(activeDenoms, currency).map((denom) => (
-                      <option value={denom} key={denom}>
-                        {readDenom(denom)}
-                      </option>
-                    ))}
-                  </Select>
-                </InlineFlex>
-              </Checkbox>
-            </section>
+            {isClassic && (
+              <section className={styles.target}>
+                <Checkbox checked={swap} onChange={() => setSwap(!swap)}>
+                  <InlineFlex gap={4}>
+                    Withdraw all rewards in{" "}
+                    <Select
+                      value={target}
+                      onChange={(e) => {
+                        if (!swap) setSwap(true)
+                        setLocalSetting(SettingKey.WithdrawAs, e.target.value)
+                        setTarget(e.target.value)
+                      }}
+                      small
+                    >
+                      {sortDenoms(activeDenoms, currency).map((denom) => (
+                        <option value={denom} key={denom}>
+                          {readDenom(denom)}
+                        </option>
+                      ))}
+                    </Select>
+                  </InlineFlex>
+                </Checkbox>
+              </section>
+            )}
 
             <dl>
               <dt>{t("Validators")}</dt>

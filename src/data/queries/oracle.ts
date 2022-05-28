@@ -53,9 +53,12 @@ export const useOracleParams = () => {
 /* helpers */
 type Prices = Record<Denom, Price>
 export const useMemoizedPrices = (currency: Denom) => {
+  const isClassic = useIsClassic()
   const { data: exchangeRates, ...state } = useExchangeRates()
 
   const prices = useMemo((): Prices | undefined => {
+    if (!isClassic) return { uluna: 1 }
+
     if (!exchangeRates) return
     const base = toPrice(getAmount(exchangeRates, currency, "1"))
 
@@ -66,7 +69,7 @@ export const useMemoizedPrices = (currency: Denom) => {
         return { ...acc, [denom]: price }
       }, {}),
     }
-  }, [currency, exchangeRates])
+  }, [currency, exchangeRates, isClassic])
 
   return { data: prices, ...state }
 }
