@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next"
 import DownloadIcon from "@mui/icons-material/Download"
 import { has } from "utils/num"
 import { useCurrency } from "data/settings/Currency"
-import { combineState } from "data/query"
+import { combineState, useIsClassic } from "data/query"
 import { calcRewardsValues, useRewards } from "data/queries/distribution"
 import { useMemoizedCalcValue } from "data/queries/oracle"
 import { calcDelegationsTotal } from "data/queries/staking"
@@ -16,6 +16,7 @@ import styles from "./Rewards.module.scss"
 
 const Rewards = () => {
   const { t } = useTranslation()
+  const isClassic = useIsClassic()
 
   const currency = useCurrency()
   const calcValue = useMemoizedCalcValue()
@@ -37,13 +38,15 @@ const Rewards = () => {
     ) : (
       <Card {...state} title={t("Staking rewards")}>
         <Grid gap={28}>
-          <Read
-            className={styles.total}
-            amount={rewardsValues?.total.sum}
-            token={currency}
-            auto
-            approx
-          />
+          {isClassic && (
+            <Read
+              className={styles.total}
+              amount={rewardsValues?.total.sum}
+              token={currency}
+              auto
+              approx
+            />
+          )}
 
           {has(delegationTotal) && (
             <Grid gap={4}>
