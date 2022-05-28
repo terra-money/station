@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next"
 import { useQuery } from "react-query"
 import { useAddress } from "data/wallet"
+import { useIsClassic } from "data/query"
 import { useLCDClient } from "data/queries/lcdClient"
 import { VestingAccountTypes } from "data/queries/vesting"
 import { parseVestingSchedule, queryAccounts } from "data/queries/vesting"
@@ -13,6 +14,7 @@ import styles from "./Vesting.module.scss"
 
 const Vesting = () => {
   const { t } = useTranslation()
+  const isClassic = useIsClassic()
   const { data, ...state } = useQueryVesting()
 
   if (!data) return null
@@ -23,7 +25,7 @@ const Vesting = () => {
   return (
     <Card {...state} title={t("Vesting")}>
       <Asset
-        {...readNativeDenom("uluna")}
+        {...readNativeDenom("uluna", isClassic)}
         balance={schedule.amount.total}
         hideActions
       />

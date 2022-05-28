@@ -62,7 +62,11 @@ const Coins = () => {
 
           <section>
             {list.map(({ denom, ...item }) => (
-              <Asset {...readNativeDenom(denom)} {...item} key={denom} />
+              <Asset
+                {...readNativeDenom(denom, isClassic)}
+                {...item}
+                key={denom}
+              />
             ))}
           </section>
         </Grid>

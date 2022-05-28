@@ -61,9 +61,17 @@ export const WithTokenItem = ({ token, children }: Props) => {
 /* helpers */
 export const getIcon = (path: string) => `${ASSETS}/icon/svg/${path}`
 
-export const readNativeDenom = (denom: Denom): TokenItem => {
+export const readNativeDenom = (
+  denom: Denom,
+  isClassic?: boolean
+): TokenItem => {
   const symbol = readDenom(denom)
-  const path = isDenomTerra(denom) ? `Terra/${symbol}.svg` : `${symbol}.svg`
+  const path = isDenomTerra(denom)
+    ? `Terra/${symbol}.svg`
+    : isClassic
+    ? "LUNC.svg"
+    : "Luna.png"
+
   return {
     token: denom,
     symbol: symbol,

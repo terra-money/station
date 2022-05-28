@@ -7,7 +7,7 @@ import { getAmount, sortDenoms } from "utils/coin"
 import { toPrice } from "utils/num"
 import createContext from "utils/createContext"
 import { useCurrency } from "data/settings/Currency"
-import { combineState } from "data/query"
+import { combineState, useIsClassic } from "data/query"
 import { useBankBalance } from "data/queries/bank"
 import { useTokenBalances } from "data/queries/wasm"
 import { readIBCDenom, readNativeDenom } from "data/token"
@@ -46,6 +46,7 @@ export const [useSingleSwap, SingleSwapProvider] =
 
 const SingleSwapContext = ({ children }: PropsWithChildren<{}>) => {
   const currency = useCurrency()
+  const isClassic = useIsClassic()
   const bankBalance = useBankBalance()
   const { activeDenoms, pairs } = useSwap()
   const { list } = useCustomTokensCW20()
@@ -103,7 +104,7 @@ const SingleSwapContext = ({ children }: PropsWithChildren<{}>) => {
 
     const coins = sortDenoms(activeDenoms, currency).map((denom) => {
       const balance = getAmount(bankBalance, denom)
-      return { ...readNativeDenom(denom), balance }
+      return { ...readNativeDenom(denom, isClassic), balance }
     })
 
     const ibc = terraswapAvailableList.ibc.map((denom) => {
@@ -164,6 +165,7 @@ const SingleSwapContext = ({ children }: PropsWithChildren<{}>) => {
     cw20Whitelist,
     terraswapAvailableList,
     cw20TokensBalances,
+    isClassic,
   ])
 
   const state = combineState(
