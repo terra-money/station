@@ -242,6 +242,7 @@ const Validators = () => {
                   />
                 ),
               align: "right",
+              hidden: !isClassic,
             },
           ]}
         />
