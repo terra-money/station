@@ -102,7 +102,7 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
     async ({ queryKey: [, selectedTotal, target] }) => {
       const responses = await Promise.allSettled(
         Object.entries(selectedTotal)
-          .filter(([denom]) => isDenomTerraNative(denom))
+          //.filter(([denom]) => isDenomTerraNative(denom))
           .map(async ([denom, amount]) => {
             if (denom === target) return { denom, amount }
 
@@ -292,11 +292,11 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
               ) : (
                 <TokenCardGrid maxHeight>
                   {Object.entries(selectedTotal)
-                    .filter(([denom]) => {
-                      const isListedIBC =
-                        IBCWhitelist[denom.replace("ibc/", "")]
-                      return isDenomTerraNative(denom) || isListedIBC
-                    })
+                    // .filter(([denom]) => {
+                    //   const isListedIBC =
+                    //     IBCWhitelist[denom.replace("ibc/", "")]
+                    //   return isDenomTerraNative(denom) || isListedIBC
+                    // })
                     .map(([denom, amount]) => (
                       <WithTokenItem token={denom} key={denom}>
                         {(item) => (

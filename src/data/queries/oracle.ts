@@ -25,7 +25,9 @@ export const useActiveDenoms = () => {
 }
 
 export const useExchangeRates = () => {
-  return { data: new Coins() }
+  const coins = new Coins()
+  coins.set("umis", 1)
+  return { data: coins }
   // const lcd = useLCDClient()
   // return useQuery(
   //   [queryKey.oracle.exchangeRates],
@@ -64,7 +66,7 @@ export const useMemoizedPrices = (currency: Denom) => {
     const base = toPrice(getAmount(exchangeRates, currency, "1"))
 
     return {
-      uluna: base,
+      umis: base,
       ...sortCoins(exchangeRates, currency).reduce((acc, { amount, denom }) => {
         const price = toPrice(Number(base) / Number(amount))
         return { ...acc, [denom]: price }
