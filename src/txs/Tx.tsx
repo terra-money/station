@@ -113,25 +113,26 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const { data: estimatedGas, ...estimatedGasState } = useQuery(
     [queryKey.tx.create, key],
     async () => {
-      if (!address || isWalletEmpty) return 0
-      if (!(wallet || connectedWallet?.availablePost)) return 0
-      if (!simulationTx || !simulationTx.msgs.length) return 0
+      return 100000
+      // if (!address || isWalletEmpty) return 0
+      // if (!(wallet || connectedWallet?.availablePost)) return 0
+      // if (!simulationTx || !simulationTx.msgs.length) return 0
 
-      const config = {
-        ...network,
-        URL: network.lcd,
-        gasAdjustment,
-        gasPrices: { [initialGasDenom]: gasPrices[initialGasDenom] },
-      }
+      // const config = {
+      //   ...network,
+      //   URL: network.lcd,
+      //   gasAdjustment,
+      //   gasPrices: { [initialGasDenom]: gasPrices[initialGasDenom] },
+      // }
 
-      const lcd = new LCDClient(config)
+      // const lcd = new LCDClient(config)
 
-      const unsignedTx = await lcd.tx.create([{ address }], {
-        ...simulationTx,
-        feeDenoms: [initialGasDenom],
-      })
+      // const unsignedTx = await lcd.tx.create([{ address }], {
+      //   ...simulationTx,
+      //   feeDenoms: [initialGasDenom],
+      // })
 
-      return unsignedTx.auth_info.fee.gas_limit
+      // return unsignedTx.auth_info.fee.gas_limit
     },
     {
       ...RefetchOptions.INFINITY,

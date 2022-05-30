@@ -47,13 +47,15 @@ export const useInitialBankBalance = () => {
   )
 }
 
-export const useTerraNativeLength = () => {
-  const bankBalance = useBankBalance()
-  return bankBalance?.toArray().filter(({ denom }) => isDenomTerraNative(denom))
-    .length
-}
+// export const useTerraNativeLength = () => {
+//   const bankBalance = useBankBalance()
+//   return bankBalance?.toArray().filter(({ denom }) => isDenomTerraNative(denom))
+//     .length
+// }
 
 export const useIsWalletEmpty = () => {
-  const length = useTerraNativeLength()
-  return !length
+  const bankBalance = useBankBalance()
+  return !bankBalance?.toArray().length
+  //const length = useTerraNativeLength()
+  //return !length
 }
