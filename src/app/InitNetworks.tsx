@@ -1,7 +1,12 @@
+/*
+ * @Author: lmk
+ * @Date: 2022-05-27 11:31:35
+ * @LastEditTime: 2022-05-27 11:33:37
+ * @LastEditors: lmk
+ * @Description:
+ */
 import { PropsWithChildren, useEffect, useState } from "react"
 import { fromPairs } from "ramda"
-import axios from "axios"
-import { ASSETS } from "config/constants"
 import createContext from "utils/createContext"
 import { useCustomNetworks } from "data/settings/CustomNetworks"
 

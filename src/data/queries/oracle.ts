@@ -1,10 +1,14 @@
+/*
+ * @Author: lmk
+ * @Date: 2022-05-27 11:31:35
+ * @LastEditTime: 2022-05-27 11:34:02
+ * @LastEditors: lmk
+ * @Description:
+ */
 import { useCallback, useMemo } from "react"
-import { useQuery } from "react-query"
-import { getAmount, sortCoins, sortDenoms } from "utils/coin"
+import { getAmount, sortCoins } from "utils/coin"
 import { toPrice } from "utils/num"
-import { queryKey, RefetchOptions } from "../query"
 import { useCurrency } from "../settings/Currency"
-import { useLCDClient } from "./lcdClient"
 import { Dec, Coins } from "@terra-money/terra.js"
 
 export const useActiveDenoms = () => {

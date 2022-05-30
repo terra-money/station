@@ -112,21 +112,21 @@ export const useCW721Marketplace = () => {
 }
 
 /* helpers */
-const sortWhitelistCW20 = (data: CW20Whitelist) => {
-  const sorted = toPairs(data).sort(
-    ([, a], [, b]) =>
-      Number(b.symbol === "ANC") - Number(a.symbol === "ANC") ||
-      Number(b.protocol === "Anchor") - Number(a.protocol === "Anchor") ||
-      Number(b.symbol === "MIR") - Number(a.symbol === "MIR") ||
-      Number(b.protocol === "Mirror") - Number(a.protocol === "Mirror")
-  )
+// const sortWhitelistCW20 = (data: CW20Whitelist) => {
+//   const sorted = toPairs(data).sort(
+//     ([, a], [, b]) =>
+//       Number(b.symbol === "ANC") - Number(a.symbol === "ANC") ||
+//       Number(b.protocol === "Anchor") - Number(a.protocol === "Anchor") ||
+//       Number(b.symbol === "MIR") - Number(a.symbol === "MIR") ||
+//       Number(b.protocol === "Mirror") - Number(a.protocol === "Mirror")
+//   )
 
-  return fromPairs(
-    sorted.map(([t, { decimals, ...item }]) => {
-      return [t, { ...item, decimals: decimals ?? 6 }]
-    })
-  )
-}
+//   return fromPairs(
+//     sorted.map(([t, { decimals, ...item }]) => {
+//       return [t, { ...item, decimals: decimals ?? 6 }]
+//     })
+//   )
+// }
 
 export const shuffleByProtocol = <T extends CW20Whitelist | CW721Whitelist>(
   array: T
