@@ -130,7 +130,19 @@ export const useTerraValidators = () => {
 }
 
 export const useTerraValidator = (address: ValAddress) => {
-  return useTerraAPI<TerraValidator>(`validators/${address}`)
+  const { data: validators } = useValidators()
+  const val = validators?.find(
+    ({ operator_address }) => operator_address === address
+  )
+  return {
+    data: {
+      ...val?.toData(),
+      voting_power: val?.tokens.divToInt(1000000).toString(),
+      miss_counter: "0",
+      rewards_30d: "1",
+    } as TerraValidator,
+  }
+  //return useTerraAPI<TerraValidator>(`validators/${address}`)
 }
 
 export const useTerraProposal = (id: number) => {
