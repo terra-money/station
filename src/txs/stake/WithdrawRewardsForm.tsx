@@ -51,7 +51,10 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
   const initialGasDenom = getInitialGasDenom(bankBalance)
 
   /* as another denom */
-  const preferredDenom = getLocalSetting<Denom>(SettingKey.WithdrawAs)
+  const preferredDenom = isClassic
+    ? getLocalSetting<Denom>(SettingKey.WithdrawAs)
+    : undefined
+
   const [swap, setSwap] = useState(!!preferredDenom)
   const [target, setTarget] = useState(preferredDenom || "uluna")
   useEffect(() => {
