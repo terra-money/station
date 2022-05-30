@@ -8,6 +8,7 @@ import { TerraProposalItem } from "types/proposal"
 import { useNetworkName } from "data/wallet"
 import { useOracleParams } from "data/queries/oracle"
 import { queryKey, RefetchOptions } from "../query"
+import { useValidators } from "data/queries/staking"
 
 export enum Aggregate {
   PERIODIC = "periodic",
@@ -112,7 +113,20 @@ export const useSumActiveWallets = () => {
 
 /* validators */
 export const useTerraValidators = () => {
-  return useTerraAPI<TerraValidator[]>("validators", undefined, [])
+  const { data: validators } = useValidators()
+
+  return {
+    data: validators?.map<TerraValidator>(
+      (val) =>
+        ({
+          ...val.toData(),
+          voting_power: val.tokens.divToInt(1000000).toString(),
+          miss_counter: "0",
+          rewards_30d: "1",
+        } as TerraValidator)
+    ),
+  }
+  //return useTerraAPI<TerraValidator[]>("validators", undefined, [])
 }
 
 export const useTerraValidator = (address: ValAddress) => {
