@@ -3,10 +3,11 @@ import { useQuery } from "react-query"
 import axios, { AxiosError } from "axios"
 import BigNumber from "bignumber.js"
 import { OracleParams, ValAddress } from "@terra-money/terra.js"
+import { useWallet } from "@terra-money/use-wallet"
 import { TerraValidator } from "types/validator"
 import { TerraProposalItem } from "types/proposal"
-import { useNetworkName } from "data/wallet"
 import { useOracleParams } from "data/queries/oracle"
+import { useNetworks } from "app/InitNetworks"
 import { queryKey, RefetchOptions } from "../query"
 
 export enum Aggregate {
@@ -25,13 +26,10 @@ export enum AggregateWallets {
   ACTIVE = "active",
 }
 
-export const useTerraAPIURL = (network?: string) => {
-  const networkName = useNetworkName()
-  return {
-    mainnet: "https://phoenix-api.terra.dev",
-    classic: "https://api.terra.dev",
-    testnet: "https://pisco-api.terra.dev",
-  }[network ?? networkName]
+export const useTerraAPIURL = (mainnet?: true) => {
+  const { network } = useWallet()
+  const networks = useNetworks()
+  return mainnet ? networks["mainnet"].api : network.api
 }
 
 export const useIsTerraAPIAvailable = () => {
@@ -60,7 +58,7 @@ export type GasPrices = Record<Denom, Amount>
 
 export const useGasPrices = () => {
   const current = useTerraAPIURL()
-  const mainnet = useTerraAPIURL("mainnet")
+  const mainnet = useTerraAPIURL(true)
   const baseURL = current ?? mainnet
   const path = "/gas-prices"
 

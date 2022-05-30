@@ -5,6 +5,7 @@ interface TerraNetwork {
   name: NetworkName
   chainID: string
   lcd: string
+  api?: string
 }
 
 type CustomNetworks = Record<NetworkName, CustomNetwork>
