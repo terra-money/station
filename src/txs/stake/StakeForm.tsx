@@ -101,11 +101,11 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
 
   const estimationTxValues = useMemo(() => {
     return {
-      input: toInput(balance),
+      input: toInput(1),
       // to check redelegation stacks
       source: tab === StakeAction.REDELEGATE ? source : undefined,
     }
-  }, [balance, source, tab])
+  }, [source, tab])
 
   const onChangeMax = useCallback(
     async (input: number) => {
