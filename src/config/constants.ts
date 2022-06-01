@@ -2,25 +2,22 @@
 export const LAZY_LIMIT = 999
 
 /* connection */
-export const BRIDGE = "https://walletconnect.terra.dev"
+export const BRIDGE = "https://walletconnect.mises.site"
 
 /* api */
-export const ASSETS = "https://assets.terra.money"
+export const ASSETS = "https://assets.mises.site"
 export const OBSERVER = "wss://rpc.gw.mises.site/websocket"
 
 /* website */
-export const STATION = "https://station.terra.money"
-export const FINDER = "https://finder.terra.money"
-export const EXTENSION =
-  "https://chrome.google.com/webstore/detail/aiifbnbfobpmeekipheeijimdpnlpgpp"
-export const TUTORIAL =
-  "https://docs.terra.money/Tutorials/Get-started/Terra-Station-desktop.html"
+export const STATION = "https://station.mises.site"
+export const FINDER = "https://finder.mises.site"
+export const EXTENSION = ""
+export const TUTORIAL = "https://www.mises.site/introduction"
 
 /* website: stake */
-export const TERRA_VALIDATORS =
-  "https://github.com/terra-money/validator-profiles/tree/master/validators/"
+export const TERRA_VALIDATORS = "https://www.mises.site/validator"
 
-export const STAKE_ID = "https://stake.id/#/validator/"
+export const STAKE_ID = "https://stakeid.mises.site/#/validator/"
 
 /* ledger */
 export const LEDGER_TRANSPORT_TIMEOUT = 120000
@@ -32,5 +29,4 @@ export const DEFAULT_GAS_ADJUSTMENT = 2
 export const TERRASWAP_COMMISSION_RATE = 0.003
 
 /* placeholder */
-// https://github.com/terra-money/localterra
-export const SAMPLE_ADDRESS = "terra1x46rqay4d3cssq8gxxvqz8xt6nwlz4td20k38v"
+export const SAMPLE_ADDRESS = "mises1x46rqay4d3cssq8gxxvqz8xt6nwlz4td20k38v"

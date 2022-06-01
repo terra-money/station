@@ -1,9 +1,9 @@
 {
-  "name": "terra-station",
-  "description": "A web application to interact with Terra Core.",
-  "homepage": "https://station.terra.money",
-  "author": "Terra <engineering@terra.money> (https://terra.money)",
-  "repository": "github:terra-money/station",
+  "name": "mises-portal",
+  "description": "A web application to interact with Mises.",
+  "homepage": "https://portal.mises.site",
+  "author": "Terra <talent@mises.site> (https://www.mises.site)",
+  "repository": "github:mises-id/portal",
   "license": "MIT",
   "scripts": {
     "start": "PORT=3001 react-scripts start",
