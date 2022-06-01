@@ -1,6 +1,14 @@
 interface Window {
   ethereum: {
-    request: (item: { method: string; params: any[] }) => Promise<any>
+    request: (item: { method: string; params: any[] }) => Promise<
+      | {
+          auth: string
+          misesId: string
+          accounts: [string]
+        }
+      | any
+    >
+    on: (event) => Promise<string[]>
     _metamask: {
       isUnlocked: () => Promise<boolean>
     }

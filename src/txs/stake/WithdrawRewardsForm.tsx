@@ -37,7 +37,7 @@ interface Props {
 }
 
 const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
-  const { activeDenoms, IBCWhitelist } = props
+  const { activeDenoms } = props
   const { t } = useTranslation()
   const currency = useCurrency()
   const address = useAddress()

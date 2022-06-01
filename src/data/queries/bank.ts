@@ -1,6 +1,6 @@
 import { useQuery } from "react-query"
 import axios from "axios"
-import { isDenomTerraNative } from "@terra.kitchen/utils"
+// import { isDenomTerraNative } from "@terra.kitchen/utils"
 import { Coins } from "@terra-money/terra.js"
 import createContext from "utils/createContext"
 import { queryKey, RefetchOptions } from "../query"

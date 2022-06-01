@@ -133,6 +133,7 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
       queryKey.staking.unbondings,
       queryKey.distribution.rewards,
     ],
+    tabType: tab,
   }
 
   return (

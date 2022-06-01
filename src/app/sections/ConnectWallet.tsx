@@ -1,7 +1,7 @@
 /*
  * @Author: lmk
  * @Date: 2022-05-25 11:23:10
- * @LastEditTime: 2022-05-27 17:33:16
+ * @LastEditTime: 2022-06-01 16:37:26
  * @LastEditors: lmk
  * @Description:
  */
@@ -55,6 +55,11 @@ const ConnectWallet = ({ renderButton }: Props) => {
       window.ethereum._metamask.isUnlocked?.().then((res) => {
         metamask && res && getAddress()
       })
+      // window.ethereum.on('accountsChanged').then(res=>{
+      //   if(res.length){
+      //     getAddress()
+      //   }
+      // })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
