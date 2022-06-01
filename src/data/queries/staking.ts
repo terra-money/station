@@ -1,7 +1,12 @@
 import { useQuery } from "react-query"
 import { flatten, path, uniqBy } from "ramda"
 import BigNumber from "bignumber.js"
-import { AccAddress, ValAddress, Validator } from "@terra-money/terra.js"
+import {
+  AccAddress,
+  ValAddress,
+  ValConsAddress,
+  Validator,
+} from "@terra-money/terra.js"
 import { Delegation, UnbondingDelegation } from "@terra-money/terra.js"
 /* FIXME(terra.js): Import from terra.js */
 import { BondStatus } from "@terra-money/terra.proto/cosmos/staking/v1beta1/staking"
@@ -10,6 +15,7 @@ import { StakeAction } from "txs/stake/StakeForm"
 import { queryKey, Pagination, RefetchOptions } from "../query"
 import { useAddress } from "../wallet"
 import { useLCDClient } from "./lcdClient"
+import { useMintingApi } from "../Terra/MintingApi"
 
 export const useValidators = () => {
   const lcd = useLCDClient()
@@ -37,6 +43,45 @@ export const useValidators = () => {
 
       return uniqBy(path(["operator_address"]), [...v1, ...v2, ...v3])
     },
+    { ...RefetchOptions.INFINITY }
+  )
+}
+
+export const useSigningInfos = () => {
+  const lcd = useLCDClient()
+
+  return useQuery(
+    [queryKey.slashing.signingInfos],
+    async () => {
+      // TODO: Pagination
+      // Required when the number of results exceed LAZY_LIMIT
+
+      const infos = await lcd.slashing.signingInfos({
+        ...Pagination,
+      })
+
+      return uniqBy(path(["address"]), [...infos])
+    },
+    { ...RefetchOptions.INFINITY }
+  )
+}
+
+export const useSigningInfo = (consAddress: ValConsAddress) => {
+  const lcd = useLCDClient()
+
+  return useQuery(
+    [queryKey.slashing.signingInfo],
+    () => lcd.slashing.signingInfo(consAddress),
+    { ...RefetchOptions.INFINITY }
+  )
+}
+
+export const useAnnualProvisions = () => {
+  const lcd = useLCDClient()
+  const api = useMintingApi(lcd)
+  return useQuery(
+    [queryKey.minting.annualProvisions],
+    () => api.annualProvisions(),
     { ...RefetchOptions.INFINITY }
   )
 }

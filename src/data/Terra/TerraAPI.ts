@@ -1,14 +1,28 @@
+import { bech32 } from "bech32"
 import { useMemo } from "react"
 import { useQuery } from "react-query"
 import axios, { AxiosError } from "axios"
 import BigNumber from "bignumber.js"
-import { OracleParams, ValAddress } from "@terra-money/terra.js"
+import {
+  OracleParams,
+  ValAddress,
+  ValConsAddress,
+  Validator,
+  SigningInfo,
+} from "@terra-money/terra.js"
 import { TerraValidator } from "types/validator"
 import { TerraProposalItem } from "types/proposal"
 import { useNetworkName } from "data/wallet"
 import { useOracleParams } from "data/queries/oracle"
 import { queryKey, RefetchOptions } from "../query"
-import { useValidators } from "data/queries/staking"
+import {
+  useValidators,
+  useValidator,
+  useSigningInfos,
+  useSigningInfo,
+  useAnnualProvisions,
+  useStakingPool,
+} from "data/queries/staking"
 
 export enum Aggregate {
   PERIODIC = "periodic",
@@ -111,35 +125,80 @@ export const useSumActiveWallets = () => {
   return useTerraAPI<Record<string, string>>(`chart/wallets/active/sum`)
 }
 
+export function valConsAddress(val: Validator | undefined): ValConsAddress {
+  const valconAddress = val?.consensus_pubkey
+    ? bech32.encode(
+        "misesvalcons",
+        bech32.toWords(val?.consensus_pubkey?.rawAddress())
+      )
+    : ""
+  return valconAddress
+}
+
+function uptime_estimated(info: SigningInfo | undefined): number {
+  if (!info) {
+    return 0
+  }
+  const { missed_blocks_counter, start_height, index_offset } = info
+  if (
+    missed_blocks_counter &&
+    index_offset &&
+    start_height &&
+    index_offset > start_height
+  ) {
+    return 1 - Number(missed_blocks_counter) / (index_offset - start_height)
+  } else {
+    return 1
+  }
+}
+
 /* validators */
 export const useTerraValidators = () => {
   const { data: validators } = useValidators()
+  const { data: infos } = useSigningInfos()
 
+  const { data: ap } = useAnnualProvisions()
+  const { data: stakingPool } = useStakingPool()
+  const estimatedReward =
+    ap && stakingPool
+      ? ap.div(stakingPool?.bonded_tokens.amount.abs()).toNumber() / 12
+      : 0
+  console.log(estimatedReward, ap, stakingPool)
   return {
-    data: validators?.map<TerraValidator>(
-      (val) =>
-        ({
-          ...val.toData(),
-          voting_power: val.tokens.divToInt(1000000).toString(),
-          miss_counter: "0",
-          rewards_30d: "1",
-        } as TerraValidator)
-    ),
+    data: validators?.map<TerraValidator>((val) => {
+      const info = infos?.find(({ address }) => address === valConsAddress(val))
+      return {
+        ...val.toData(),
+        voting_power: val.tokens.divToInt(1000000).toString(),
+        miss_counter: info?.missed_blocks_counter ?? "0",
+        start_height: info?.start_height ?? 0,
+        index_offset: info?.index_offset ?? 0,
+        rewards_30d: (
+          estimatedReward *
+          (1 - val.commission.commission_rates.rate.toNumber())
+        ).toString(),
+        time_weighted_uptime: uptime_estimated(info),
+      } as TerraValidator
+    }),
   }
   //return useTerraAPI<TerraValidator[]>("validators", undefined, [])
 }
 
 export const useTerraValidator = (address: ValAddress) => {
-  const { data: validators } = useValidators()
-  const val = validators?.find(
-    ({ operator_address }) => operator_address === address
-  )
+  const { data: validator, ...state } = useValidator(address)
+  if (validator?.consensus_pubkey) {
+  }
+  const { data: info } = useSigningInfo(valConsAddress(validator))
+
   return {
     data: {
-      ...val?.toData(),
-      voting_power: val?.tokens.divToInt(1000000).toString(),
-      miss_counter: "0",
+      ...validator?.toData(),
+      voting_power: validator?.tokens.divToInt(1000000).toString(),
+      miss_counter: info?.missed_blocks_counter ?? "0",
+      start_height: info?.start_height ?? 0,
+      index_offset: info?.index_offset ?? 0,
       rewards_30d: "1",
+      time_weighted_uptime: uptime_estimated(info),
     } as TerraValidator,
   }
   //return useTerraAPI<TerraValidator>(`validators/${address}`)
@@ -175,7 +234,10 @@ export const calcSelfDelegation = (validator?: TerraValidator) => {
 export const getCalcUptime = ({ slash_window }: OracleParams) => {
   return (validator?: TerraValidator) => {
     if (!validator) return
-    const { miss_counter } = validator
+    const { miss_counter, start_height, index_offset } = validator
+    if (index_offset && start_height && index_offset > start_height) {
+      slash_window = index_offset - start_height
+    }
     return miss_counter ? 1 - Number(miss_counter) / slash_window : undefined
   }
 }
@@ -199,7 +261,7 @@ export const useUptime = (validator: TerraValidator) => {
   const { data: oracleParams, ...state } = useOracleParams()
 
   const calc = useMemo(() => {
-    if (!oracleParams) return
+    //if (!oracleParams) return
     return getCalcUptime(oracleParams)
   }, [oracleParams])
 

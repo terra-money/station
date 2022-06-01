@@ -1,9 +1,15 @@
 import { useTranslation } from "react-i18next"
-import { AccAddress, Validator } from "@terra-money/terra.js"
+import { bech32 } from "bech32"
+import { ValAddress, AccAddress, Validator } from "@terra-money/terra.js"
 import { FinderLink } from "components/general"
 import { Card, Grid } from "components/layout"
 import { ValidatorNumber } from "./components/ValidatorNumbers"
 import styles from "./ValidatorAddresses.module.scss"
+
+function fromValAddress(address: ValAddress): AccAddress {
+  const vals = bech32.decode(address)
+  return bech32.encode("mises", vals.words)
+}
 
 const ValidatorAddresses = ({ validator }: { validator: Validator }) => {
   const { t } = useTranslation()
@@ -17,9 +23,7 @@ const ValidatorAddresses = ({ validator }: { validator: Validator }) => {
     },
     {
       title: t("Wallet address"),
-      content: (
-        <FinderLink>{AccAddress.fromValAddress(operator_address)}</FinderLink>
-      ),
+      content: <FinderLink>{fromValAddress(operator_address)}</FinderLink>,
     },
   ]
 

@@ -225,7 +225,7 @@ const Validators = () => {
             },
             {
               title: t("Rewards"),
-              tooltip: t("Estimated monthly rewards with 100 Luna staked"),
+              tooltip: t("Estimated monthly rewards with 100 MIS staked"),
               dataIndex: "rewards_30d",
               defaultSortOrder: "desc",
               key: "rewards",
