@@ -191,6 +191,9 @@ export const getAvailableStakeActions = (
     [StakeAction.UNBOND]: !!delegations.filter(
       ({ validator_address }) => validator_address === destination
     ).length,
+    [StakeAction.REINVEST]: !!delegations.filter(
+      ({ validator_address }) => validator_address === destination
+    ).length,
   }
 }
 

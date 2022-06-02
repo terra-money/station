@@ -27,6 +27,7 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
     [StakeAction.DELEGATE]: t("Delegate"),
     [StakeAction.REDELEGATE]: t("Redelegate"),
     [StakeAction.UNBOND]: t("Undelegate"),
+    [StakeAction.REINVEST]: t("Reinvest"),
   }
 
   const renderDelegationsValue = () => {

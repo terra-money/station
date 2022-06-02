@@ -110,7 +110,25 @@ export const useTxVolume = (denom: Denom, type: Aggregate) => {
 }
 
 export const useStakingReturn = (type: AggregateStakingReturn) => {
-  return useTerraAPI<ChartDataItem[]>(`chart/staking-return/${type}`)
+  const { data: ap } = useAnnualProvisions()
+  const { data: stakingPool } = useStakingPool()
+  const estimatedReward =
+    ap && stakingPool
+      ? ap.div(stakingPool?.bonded_tokens.amount.abs()).toNumber()
+      : 0
+  return {
+    data: [
+      {
+        datetime: 0,
+        value: (type == "annualized"
+          ? estimatedReward
+          : estimatedReward / 365
+        ).toString(),
+      } as ChartDataItem,
+    ],
+  }
+
+  //return useTerraAPI<ChartDataItem[]>(`chart/staking-return/${type}`)
 }
 
 export const useTaxRewards = (type: Aggregate) => {
@@ -140,12 +158,7 @@ function uptime_estimated(info: SigningInfo | undefined): number {
     return 0
   }
   const { missed_blocks_counter, start_height, index_offset } = info
-  if (
-    missed_blocks_counter &&
-    index_offset &&
-    start_height &&
-    index_offset > start_height
-  ) {
+  if (missed_blocks_counter && index_offset && index_offset > start_height) {
     return 1 - Number(missed_blocks_counter) / (index_offset - start_height)
   } else {
     return 1
@@ -163,7 +176,6 @@ export const useTerraValidators = () => {
     ap && stakingPool
       ? ap.div(stakingPool?.bonded_tokens.amount.abs()).toNumber() / 12
       : 0
-  console.log(estimatedReward, ap, stakingPool)
   return {
     data: validators?.map<TerraValidator>((val) => {
       const info = infos?.find(({ address }) => address === valConsAddress(val))

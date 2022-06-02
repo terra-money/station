@@ -5,12 +5,16 @@ import { AccAddress, Coin, ValAddress } from "@terra-money/terra.js"
 import { Delegation, Validator } from "@terra-money/terra.js"
 import { MsgDelegate, MsgUndelegate } from "@terra-money/terra.js"
 import { MsgBeginRedelegate } from "@terra-money/terra.js"
-import { toAmount } from "@terra.kitchen/utils"
+import { MsgWithdrawDelegatorReward } from "@terra-money/terra.js"
+import { toAmount, formatNumber } from "@terra.kitchen/utils"
 import { getAmount } from "utils/coin"
 import { queryKey } from "data/query"
 import { useAddress } from "data/wallet"
 import { useBankBalance } from "data/queries/bank"
 import { getFindMoniker } from "data/queries/staking"
+import { calcRewardsValues, useRewards } from "data/queries/distribution"
+import { useCurrency } from "data/settings/Currency"
+import { useMemoizedCalcValue } from "data/queries/oracle"
 import { Grid } from "components/layout"
 import { Form, FormItem, FormWarning, Input, Select } from "components/form"
 import { getPlaceholder, toInput } from "../utils"
@@ -26,6 +30,7 @@ export enum StakeAction {
   DELEGATE = "delegate",
   REDELEGATE = "redelegate",
   UNBOND = "undelegate",
+  REINVEST = "reinvest",
 }
 
 interface Props {
@@ -39,6 +44,10 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
   const { t } = useTranslation()
   const address = useAddress()
   const bankBalance = useBankBalance()
+  const { data: rewards, ...rewardsState } = useRewards()
+  const calcValue = useMemoizedCalcValue()
+  const currency = useCurrency()
+
   const findMoniker = getFindMoniker(validators)
 
   const delegationsOptions = delegations.filter(
@@ -80,6 +89,23 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
         return { msgs: [msg] }
       }
 
+      if (tab === StakeAction.REINVEST) {
+        if (!source || !rewards) return
+        const msg0 = new MsgWithdrawDelegatorReward(address, destination)
+        const { byValidator } = calcRewardsValues(rewards, currency, calcValue)
+        const values = byValidator.find(
+          ({ address }) => address === destination
+        )
+        if (!values) return
+        const msg1 = new MsgDelegate(
+          address,
+          destination,
+          new Coin("umis", formatNumber(values.sum, { integer: true }))
+        )
+        console.log(values)
+        return { msgs: [msg0, msg1] }
+      }
+
       const msgs = {
         [StakeAction.DELEGATE]: [new MsgDelegate(address, destination, coin)],
         [StakeAction.UNBOND]: [new MsgUndelegate(address, destination, coin)],
@@ -87,7 +113,7 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
 
       return { msgs }
     },
-    [address, destination, tab]
+    [address, destination, tab, rewards]
   )
 
   /* fee */
@@ -97,6 +123,7 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
       (source && findDelegation(source)?.balance.amount.toString()) ?? "0",
     [StakeAction.UNBOND]:
       findDelegation(destination)?.balance.amount.toString() ?? "0",
+    [StakeAction.REINVEST]: getAmount(bankBalance, "umis"),
   }[tab]
 
   const estimationTxValues = useMemo(() => {
@@ -109,6 +136,9 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
 
   const onChangeMax = useCallback(
     async (input: number) => {
+      if (tab === StakeAction.REINVEST) {
+        return
+      }
       setValue("input", input)
       await trigger("input")
     },
@@ -170,6 +200,15 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
                   </FormWarning>
                 </Grid>
               ),
+              [StakeAction.REINVEST]: (
+                <Grid gap={4}>
+                  <FormWarning>
+                    {t(
+                      "all rewards on this validator will be withdraw, and delegate to it"
+                    )}
+                  </FormWarning>
+                </Grid>
+              ),
             }[tab]
           }
 
@@ -196,23 +235,25 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
             </FormItem>
           )}
 
-          <FormItem
-            label={t("Amount")}
-            extra={max.render()}
-            error={errors.input?.message}
-          >
-            <Input
-              {...register("input", {
-                valueAsNumber: true,
-                validate: validate.input(toInput(max.amount)),
-              })}
-              token="umis"
-              onFocus={max.reset}
-              inputMode="decimal"
-              placeholder={getPlaceholder()}
-              autoFocus
-            />
-          </FormItem>
+          {(tab === StakeAction.DELEGATE || tab === StakeAction.UNBOND) && (
+            <FormItem
+              label={t("Amount")}
+              extra={max.render()}
+              error={errors.input?.message}
+            >
+              <Input
+                {...register("input", {
+                  valueAsNumber: true,
+                  validate: validate.input(toInput(max.amount)),
+                })}
+                token="umis"
+                onFocus={max.reset}
+                inputMode="decimal"
+                placeholder={getPlaceholder()}
+                autoFocus
+              />
+            </FormItem>
+          )}
 
           {fee.render()}
           {submit.button}

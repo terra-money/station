@@ -22,24 +22,32 @@ const connectorOpts = { bridge: BRIDGE }
 
 const root = createRoot(document.getElementById("station") as HTMLElement)
 
-getChainOptions().then((chainOptions) =>
-  root.render(
-    <StrictMode>
-      <RecoilRoot>
-        <BrowserRouter>
-          <ScrollToTop />
-          <WalletProvider {...chainOptions} connectorOpts={connectorOpts}>
-            <InitNetworks>
-              <InitWallet>
-                <InitTheme />
-                <ElectronVersion />
-                <App />
-              </InitWallet>
-            </InitNetworks>
-          </WalletProvider>
-          {debug.query && <ReactQueryDevtools position="bottom-right" />}
-        </BrowserRouter>
-      </RecoilRoot>
-    </StrictMode>
-  )
+//getChainOptions().then((chainOptions) =>
+const chainOptions = {
+  defaultNetwork: {
+    name: "mainnet",
+    chainID: "mainnet",
+    lcd: "https://rest.gw.mises.site",
+  },
+  walletConnectChainIds: [],
+}
+root.render(
+  <StrictMode>
+    <RecoilRoot>
+      <BrowserRouter>
+        <ScrollToTop />
+        <WalletProvider {...chainOptions} connectorOpts={connectorOpts}>
+          <InitNetworks>
+            <InitWallet>
+              <InitTheme />
+              <ElectronVersion />
+              <App />
+            </InitWallet>
+          </InitNetworks>
+        </WalletProvider>
+        {debug.query && <ReactQueryDevtools position="bottom-right" />}
+      </BrowserRouter>
+    </RecoilRoot>
+  </StrictMode>
 )
+//)

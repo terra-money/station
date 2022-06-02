@@ -39,7 +39,7 @@ const ChartContainer = (props: Props) => {
 
     return (
       <h1 className={styles.title}>
-        {formatValue(total)} <small>{unit}</small>
+        {formatValue(total)} <small>{unit}*</small>
       </h1>
     )
   }
@@ -54,7 +54,7 @@ const ChartContainer = (props: Props) => {
   return (
     <article className={styles.grid}>
       {renderTotal()}
-      <Flex>{render()}</Flex>
+      {/* <Flex>{render()}</Flex> */}
     </article>
   )
 }

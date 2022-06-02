@@ -24,7 +24,8 @@ const Range = ({ initial, children, includeLastDay }: Props) => {
   return (
     <article className={styles.grid}>
       {children(selected)}
-      <ButtonGroup value={selected} onChange={setSelected} options={list} />
+      <span className={styles.tag}>*Estimated</span>
+      {/* <ButtonGroup value={selected} onChange={setSelected} options={list} /> */}
     </article>
   )
 }

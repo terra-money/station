@@ -73,7 +73,7 @@ const ConnectWallet = ({ renderButton }: Props) => {
         //   onClick: () => connect(type, identifier),
         // })),
         {
-          src: "https://assets.terra.money/icon/station-extension/icon.png",
+          src: "https://www.mises.site/static/images/index/favicon.ico",
           children: "MetaMask Wallet",
           onClick: () => {
             getAddress()

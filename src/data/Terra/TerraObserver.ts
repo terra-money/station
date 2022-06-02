@@ -13,11 +13,15 @@ export const useTerraObserver = () => {
   useEffect(() => {
     if (!ws.current) {
       ws.current = new WebSocket(OBSERVER)
-
       ws.current.onopen = () => {
         setConnected(true)
         ws.current?.send(
-          JSON.stringify({ subscribe: "new_block_height", chain_id: chainID })
+          JSON.stringify({
+            jsonrpc: "2.0",
+            method: "subscribe",
+            id: "1",
+            params: ["tm.event = 'NewBlock'"],
+          })
         )
       }
 
@@ -33,7 +37,7 @@ export const useTerraObserver = () => {
 
       ws.current.onmessage = (event) => {
         const message = JSON.parse(event.data)
-        setBlock(message.data.block)
+        setBlock(message.result.data.value.block)
       }
     }
 
