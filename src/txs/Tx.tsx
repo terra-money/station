@@ -240,6 +240,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
             const labelKey = key as string
             newMsg[`${toHump(labelKey)}`] = msg[key]
           }
+          delete newMsg["@type"]
           return {
             typeUrl: msg["@type"],
             value: newMsg,

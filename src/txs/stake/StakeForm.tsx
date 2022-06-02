@@ -44,7 +44,7 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
   const { t } = useTranslation()
   const address = useAddress()
   const bankBalance = useBankBalance()
-  const { data: rewards, ...rewardsState } = useRewards()
+  const { data: rewards } = useRewards()
   const calcValue = useMemoizedCalcValue()
   const currency = useCurrency()
 
@@ -113,6 +113,7 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
 
       return { msgs }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [address, destination, tab, rewards]
   )
 
@@ -142,6 +143,7 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
       setValue("input", input)
       await trigger("input")
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [setValue, trigger]
   )
 

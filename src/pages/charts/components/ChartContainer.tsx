@@ -1,10 +1,16 @@
+/*
+ * @Author: lmk
+ * @Date: 2022-06-02 16:12:07
+ * @LastEditTime: 2022-06-02 17:09:56
+ * @LastEditors: lmk
+ * @Description:
+ */
 import { ReactNode } from "react"
 import { useTranslation } from "react-i18next"
 import classNames from "classnames"
-import { useThemeAnimation } from "data/settings/Theme"
-import { Flex } from "components/layout"
-import { Wrong } from "components/feedback"
-import Chart, { ChartProps, CHART_HEIGHT } from "./Chart"
+// import { useThemeAnimation } from "data/settings/Theme"
+// import { Wrong } from "components/feedback"
+import { ChartProps, CHART_HEIGHT } from "./Chart"
 import styles from "./ChartContainer.module.scss"
 
 export const LOADING = {
@@ -27,9 +33,9 @@ interface Props extends ChartProps {
 }
 
 const ChartContainer = (props: Props) => {
-  const { result, range, total, unit, formatValue } = props
+  const { total, unit, formatValue } = props
   const { t } = useTranslation()
-  const animation = useThemeAnimation()
+  // const animation = useThemeAnimation()
 
   const renderTotal = () => {
     if (!total)
@@ -44,12 +50,12 @@ const ChartContainer = (props: Props) => {
     )
   }
 
-  const render = () => {
-    if (!result) return <img src={animation} alt="" {...LOADING} />
-    if (result.length < 3) return <Wrong>{t("Chart requires more data")}</Wrong>
-    const data = result.slice(-1 * range).map(convert(formatValue))
-    return <Chart {...props} data={data} />
-  }
+  // const render = () => {
+  //   if (!result) return <img src={animation} alt="" {...LOADING} />
+  //   if (result.length < 3) return <Wrong>{t("Chart requires more data")}</Wrong>
+  //   const data = result.slice(-1 * range).map(convert(formatValue))
+  //   return <Chart {...props} data={data} />
+  // }
 
   return (
     <article className={styles.grid}>

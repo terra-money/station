@@ -120,7 +120,7 @@ export const useStakingReturn = (type: AggregateStakingReturn) => {
     data: [
       {
         datetime: 0,
-        value: (type == "annualized"
+        value: (type === "annualized"
           ? estimatedReward
           : estimatedReward / 365
         ).toString(),
