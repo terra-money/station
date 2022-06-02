@@ -42,6 +42,7 @@ import { toInput } from "./utils"
 import { useTx } from "./TxContext"
 import styles from "./Tx.module.scss"
 import { StakeAction } from "./stake/StakeForm"
+import { toHump } from "utils/data"
 
 interface Props<TxValues> {
   /* Only when the token is paid out of the balance held */
@@ -234,13 +235,14 @@ function Tx<TxValues>(props: Props<TxValues>) {
       } else {
         const txString = tx.msgs.map((val: Msg) => {
           const msg = JSON.parse(val.toJSON())
+          const newMsg = {} as { [key: string]: any }
+          for (const key in msg) {
+            const labelKey = key as string
+            newMsg[`${toHump(labelKey)}`] = msg[key]
+          }
           return {
             typeUrl: msg["@type"],
-            value: {
-              delegatorAddress: msg.delegator_address,
-              validatorAddress: msg.validator_address,
-              amount: msg.amount,
-            },
+            value: newMsg,
           }
         })
         const result = await window.ethereum.request({
