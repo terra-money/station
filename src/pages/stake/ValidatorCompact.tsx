@@ -2,12 +2,11 @@ import { useTranslation } from "react-i18next"
 import classNames from "classnames/bind"
 import LaptopOutlinedIcon from "@mui/icons-material/LaptopOutlined"
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined"
-import { STAKE_ID, TERRA_VALIDATORS } from "config/constants"
+import { TERRA_VALIDATORS } from "config/constants"
 import { Contacts as ContactsParams } from "types/components"
 import { useValidator } from "data/queries/staking"
 import { useTerraValidator } from "data/Terra/TerraAPI"
 import { ReactComponent as TerraValidatorProfiles } from "styles/images/stake/TerraValidatorProfiles.svg"
-import { ReactComponent as StakeID } from "styles/images/stake/StakeID.svg"
 import { ExternalLink, validateLink } from "components/general"
 import { Card, Contacts, Flex, Grid } from "components/layout"
 import ProfileIcon from "./components/ProfileIcon"
@@ -65,7 +64,9 @@ const ValidatorCompact = ({ vertical }: { vertical?: boolean }) => {
         {details && <p>{details}</p>}
 
         <Grid gap={4} className={styles.footer}>
-          <h2>{t("View on")}</h2>
+          {(TerraValidator?.contact?.email || TerraValidator?.contact) && (
+            <h2>{t("View on")}</h2>
+          )}
 
           <Flex start gap={8} wrap className={styles.links}>
             {TerraValidator?.contact?.email && (
@@ -73,10 +74,6 @@ const ValidatorCompact = ({ vertical }: { vertical?: boolean }) => {
                 <TerraValidatorProfiles height={36} />
               </ExternalLink>
             )}
-
-            <ExternalLink href={STAKE_ID + operator_address}>
-              <StakeID height={36} />
-            </ExternalLink>
           </Flex>
 
           {TerraValidator?.contact && (
