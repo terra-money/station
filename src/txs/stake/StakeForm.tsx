@@ -237,7 +237,9 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
             </FormItem>
           )}
 
-          {(tab === StakeAction.DELEGATE || tab === StakeAction.UNBOND) && (
+          {(tab === StakeAction.DELEGATE ||
+            tab === StakeAction.UNBOND ||
+            tab === StakeAction.REDELEGATE) && (
             <FormItem
               label={t("Amount")}
               extra={max.render()}
