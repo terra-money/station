@@ -185,7 +185,7 @@ export const useTerraValidators = () => {
 }
 
 export const useTerraValidator = (address: ValAddress) => {
-  const { data: validator, ...state } = useValidator(address)
+  const { data: validator } = useValidator(address)
   if (validator?.consensus_pubkey) {
   }
   const { data: info } = useSigningInfo(valConsAddress(validator))

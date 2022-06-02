@@ -19,3 +19,6 @@ export const validateMsg = (msg: string): object | undefined => {
   if (!parsed) return
   return parsed
 }
+export const toHump = (name: string) => {
+  return name.replace(/\_(\w)/g, (all, letter) => letter.toUpperCase())
+}
