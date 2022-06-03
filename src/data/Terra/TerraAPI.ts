@@ -3,9 +3,9 @@ import { useQuery } from "react-query"
 import axios, { AxiosError } from "axios"
 import BigNumber from "bignumber.js"
 import { OracleParams, ValAddress } from "@terra-money/terra.js"
-import { useWallet } from "@terra-money/use-wallet"
 import { TerraValidator } from "types/validator"
 import { TerraProposalItem } from "types/proposal"
+import { useNetwork } from "data/wallet"
 import { useOracleParams } from "data/queries/oracle"
 import { useNetworks } from "app/InitNetworks"
 import { queryKey, RefetchOptions } from "../query"
@@ -27,7 +27,7 @@ export enum AggregateWallets {
 }
 
 export const useTerraAPIURL = (mainnet?: true) => {
-  const { network } = useWallet()
+  const network = useNetwork()
   const networks = useNetworks()
   return mainnet ? networks["mainnet"].api : network.api
 }
