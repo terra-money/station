@@ -108,9 +108,9 @@ const SingleSwapContext = ({ children }: PropsWithChildren<{}>) => {
     })
 
     const ibc = terraswapAvailableList.ibc.map((denom) => {
-      const { base_denom } = ibcWhitelist[denom.replace("ibc/", "")]
+      const item = ibcWhitelist[denom.replace("ibc/", "")]
       const balance = getAmount(bankBalance, denom)
-      return { ...readIBCDenom(denom, base_denom), balance }
+      return { ...readIBCDenom(item), balance }
     })
 
     const cw20 = terraswapAvailableList.cw20.map((token) => {

@@ -44,7 +44,13 @@ export const useTokenItem = (token: Token): TokenItem | undefined => {
   }
 
   if (isDenomIBC(token)) {
-    return readIBCDenom(token, listedIBCTokenItem?.base_denom ?? base_denom)
+    const item = {
+      ...listedIBCTokenItem,
+      denom: token,
+      base_denom: listedIBCTokenItem?.base_denom ?? base_denom,
+    }
+
+    return readIBCDenom(item)
   }
 
   return readNativeDenom(token, isClassic)
@@ -88,14 +94,16 @@ export const readNativeDenom = (
   }
 }
 
-export const readIBCDenom = (denom: Denom, base_denom?: Denom): TokenItem => {
-  const symbol = base_denom && readDenom(base_denom)
+export const readIBCDenom = (item: IBCTokenItem): TokenItem => {
+  const { denom, base_denom } = item
+  const symbol =
+    item.symbol ?? ((base_denom && readDenom(base_denom)) || base_denom)
   const path = symbol ? `ibc/${symbol}.svg` : "IBC.svg"
 
   return {
     token: denom,
     symbol: symbol ?? truncate(denom),
     icon: getIcon(path),
-    decimals: 6,
+    decimals: item.decimals ?? 6,
   }
 }
