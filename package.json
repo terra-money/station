@@ -55,7 +55,7 @@
     "secp256k1": "^4.0.3",
     "semver": "^7.3.7",
     "sentence-case": "^3.0.4",
-    "xss": "^1.0.11"
+    "xss": "1.0.11"
   },
   "devDependencies": {
     "@emotion/react": "^11.9.0",
