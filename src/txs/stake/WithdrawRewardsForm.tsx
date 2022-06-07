@@ -188,6 +188,7 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
     }
 
     return { msgs }
+    // eslint-disable-next-line
   }, [address, selected, selectedTotal, simulation, swap, target])
 
   /* fee */
