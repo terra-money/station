@@ -5,10 +5,14 @@ import { useForm } from "react-hook-form"
 import BigNumber from "bignumber.js"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import ExpandLessIcon from "@mui/icons-material/ExpandLess"
-import { isDenomTerraNative, readDenom } from "@terra.kitchen/utils"
+import {
+  isDenomTerraNative,
+  readDenom,
+  formatNumber,
+} from "@terra.kitchen/utils"
 import { Validator, ValAddress, Coin, MsgSwap } from "@terra-money/terra.js"
 import { Rewards } from "@terra-money/terra.js"
-import { MsgWithdrawDelegatorReward } from "@terra-money/terra.js"
+import { MsgWithdrawDelegatorReward, MsgDelegate } from "@terra-money/terra.js"
 import { has } from "utils/num"
 import { sortDenoms } from "utils/coin"
 import { SettingKey } from "utils/localStorage"
@@ -34,10 +38,11 @@ interface Props {
   rewards: Rewards
   validators: Validator[]
   IBCWhitelist: IBCWhitelist
+  reinvest: boolean
 }
 
 const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
-  const { activeDenoms } = props
+  const { activeDenoms, reinvest } = props
   const { t } = useTranslation()
   const currency = useCurrency()
   const address = useAddress()
@@ -150,6 +155,22 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
       return new MsgWithdrawDelegatorReward(address, operatorAddress)
     })
 
+    if (reinvest) {
+      const delegateMsgs = selected.map((operatorAddress) => {
+        const item = byValidator.find(
+          (item) => item.address === operatorAddress
+        )
+        if (!item) throw new Error()
+        return new MsgDelegate(
+          address,
+          operatorAddress,
+          new Coin("umis", formatNumber(item.sum, { integer: true }))
+        )
+      })
+
+      return { msgs: [...msgs, ...delegateMsgs] }
+    }
+
     if (swap) {
       if (!simulation) return
 
@@ -191,7 +212,9 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
             <section className={styles.target}>
               <Checkbox checked={swap} onChange={() => setSwap(!swap)}>
                 <InlineFlex gap={4}>
-                  Withdraw all rewards in{" "}
+                  {reinvest
+                    ? "reinvest all rewards in "
+                    : "withdraw all rewards in "}
                   <Select
                     value={target}
                     onChange={(e) => {

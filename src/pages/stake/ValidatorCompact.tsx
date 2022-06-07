@@ -64,7 +64,7 @@ const ValidatorCompact = ({ vertical }: { vertical?: boolean }) => {
 
         {details && <p>{details}</p>}
 
-        <Grid gap={4} className={styles.footer}>
+        {/* <Grid gap={4} className={styles.footer}>
           <h2>{t("View on")}</h2>
 
           <Flex start gap={8} wrap className={styles.links}>
@@ -82,7 +82,7 @@ const ValidatorCompact = ({ vertical }: { vertical?: boolean }) => {
           {TerraValidator?.contact && (
             <Contacts contacts={parseContacts(TerraValidator.contact)} />
           )}
-        </Grid>
+        </Grid> */}
       </Grid>
     </Card>
   )

@@ -5,7 +5,7 @@ type Value = string | number
 type Price = number
 
 /* coin | token */
-type CoinDenom = string // uluna | uusd
+type CoinDenom = string // umis
 type IBCDenom = string // ibc/...
 type TokenAddress = TerraAddress
 type Denom = CoinDenom | IBCDenom

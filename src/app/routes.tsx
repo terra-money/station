@@ -47,7 +47,8 @@ export const useNav = () => {
 
     /* txs */
     { path: "/stake/:address", element: <StakeTx /> },
-    { path: "/rewards", element: <WithdrawRewardsTx /> },
+    { path: "/rewards", element: <WithdrawRewardsTx reinvest={false} /> },
+    { path: "/reinvestall", element: <WithdrawRewardsTx reinvest={true} /> },
     { path: "/commission", element: <WithdrawCommissionTx /> },
 
     /* auth */
