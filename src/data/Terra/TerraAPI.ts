@@ -101,7 +101,7 @@ export enum ChartInterval {
   "1d" = "1d",
 }
 
-export const useLunaPriceChart = (denom: Denom, interval: ChartInterval) => {
+export const useMISPriceChart = (denom: Denom, interval: ChartInterval) => {
   return useTerraAPI<ChartDataItem[]>(`chart/price/${denom}`, { interval })
 }
 

@@ -26,7 +26,7 @@ const StakingRatio = () => {
         <div className={styles.flex}>
           <div className={styles.flexFull}>
             <div>
-              {readAmount(bonded, { prefix: true, integer: true })}{" "}
+              {readAmount(issuance, { prefix: true, integer: true })}{" "}
               <span className={styles.unit}>MIS</span>
             </div>
             <p>MIS Issuance</p>

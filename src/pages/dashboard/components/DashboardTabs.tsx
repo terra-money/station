@@ -148,6 +148,9 @@ const DashboardTabs = ({ children }: PropsWithChildren<{}>) => {
   const goRewards = () => {
     navigate("/rewards")
   }
+  const goReinvestAll = () => {
+    navigate("/reinvestall")
+  }
 
   const delegationstotal = calcDelegationsTotal(delegations)
 
@@ -258,7 +261,11 @@ const DashboardTabs = ({ children }: PropsWithChildren<{}>) => {
             </div>
           </Grid>
         </Grid>
-        <Button className={styles.reinvest} variant="contained">
+        <Button
+          className={styles.reinvest}
+          variant="contained"
+          onClick={() => goReinvestAll()}
+        >
           Reinvest all rewards
         </Button>
         <Button
