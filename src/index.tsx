@@ -25,7 +25,6 @@ import InitTheme from "app/InitTheme"
 import ElectronVersion from "app/ElectronVersion"
 import App from "app/App"
 import { ThemeProvider, createTheme } from "@mui/material/styles"
-import { red } from "@mui/material/colors"
 const connectorOpts = { bridge: BRIDGE }
 
 const root = createRoot(document.getElementById("station") as HTMLElement)
