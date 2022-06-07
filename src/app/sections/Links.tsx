@@ -7,8 +7,8 @@ import styles from "./Links.module.scss"
 
 const community = {
   medium: "https://medium.com/terra-money",
-  discord: "https://discord.gg/8uGSUQN7wV",
-  telegram: "https://t.me/TerraLunaChat",
+  discord: "https://terra.sc/discord",
+  telegram: "https://t.me/TerraNetworkLobby",
   twitter: "https://twitter.com/terra_money",
   github: "https://github.com/terra-money",
 }
