@@ -27,37 +27,62 @@ import ValidatorButton from "./sections/ValidatorButton"
 
 /* init */
 import InitBankBalance from "./InitBankBalance"
-import { NavLink } from "react-router-dom"
+import { NavLink, useLocation, useNavigate } from "react-router-dom"
 import classNames from "classnames"
+import { AppBar, Toolbar, Typography } from "@mui/material"
+import { ArrowBackIos } from "@mui/icons-material"
 
 const App = () => {
   const { element: routes } = useNav()
-
+  const { pathname } = useLocation()
+  const showHeaderWhitePath = ["/faq"]
+  const isShowHeader = showHeaderWhitePath.some((val) => val === pathname)
+  const navigator = useNavigate()
+  const goBack = () => {
+    navigator(-1)
+  }
   return (
     <Layout>
-      {/* <Banner>
-        <NetworkName />
-      </Banner> */}
-
-      {/* <Sidebar>
-        <Nav />
-        <Aside />
-      </Sidebar> */}
-
-      <Header>
-        <NavLink to="/" className={classNames(styles.item, styles.logo)}>
-          <strong>Mises</strong> Portal
-        </NavLink>
-        {/* <DevTools /> */}
-        <section>
-          <Refresh />
-          {/* <Preferences /> */}
-          {/* <SelectTheme /> */}
-        </section>
-        <ValidatorButton />
-        <ConnectWallet />
-        <LatestTx />
-      </Header>
+      {!isShowHeader ? (
+        <Header>
+          <NavLink to="/" className={classNames(styles.item, styles.logo)}>
+            <strong>Mises</strong> Portal
+          </NavLink>
+          {/* <DevTools /> */}
+          <section>
+            <Refresh />
+            {/* <Preferences /> */}
+            {/* <SelectTheme /> */}
+          </section>
+          <ValidatorButton />
+          <ConnectWallet />
+          <LatestTx />
+        </Header>
+      ) : (
+        <AppBar
+          sx={{
+            gridArea: "header",
+            backgroundColor: "#333333",
+            boxShadow: "none",
+          }}
+          position="static"
+        >
+          <Toolbar
+            sx={{
+              minHeight: 63,
+            }}
+          >
+            <ArrowBackIos fontSize="large" onClick={goBack} />
+            <Typography
+              variant="h5"
+              component="div"
+              sx={{ flexGrow: 1, textAlign: "center" }}
+            >
+              FAQ
+            </Typography>
+          </Toolbar>
+        </AppBar>
+      )}
 
       <Content>
         <ErrorBoundary fallback={fallback}>

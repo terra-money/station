@@ -8,7 +8,7 @@ interface Window {
         }
       | any
     >
-    on: (event) => Promise<string[]>
+    on: (event, cb: Function) => Promise<string[]>
     _metamask: {
       isUnlocked: () => Promise<boolean>
     }

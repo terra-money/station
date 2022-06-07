@@ -1,7 +1,7 @@
 /*
  * @Author: lmk
  * @Date: 2022-05-25 11:23:10
- * @LastEditTime: 2022-06-07 15:10:28
+ * @LastEditTime: 2022-06-07 16:59:16
  * @LastEditors: lmk
  * @Description:
  */
@@ -78,9 +78,11 @@ const ConnectBtn = () => {
         </Button>
       </div>
       <div className={styles.faqBox}>
-        <Button className={styles.faq} variant="outlined">
-          FAQ <ArrowForwardIosOutlinedIcon fontSize="small" />
-        </Button>
+        <Link to="/faq">
+          <Button className={styles.faq} variant="outlined">
+            FAQ <ArrowForwardIosOutlinedIcon fontSize="small" />
+          </Button>
+        </Link>
       </div>
     </Box>
   )
@@ -250,7 +252,7 @@ const DashboardTabs = ({ children }: PropsWithChildren<{}>) => {
                   )}
                   placement="bottom"
                 >
-                  <p>Undelegaiting</p>
+                  <p>Undelegating</p>
                 </TooltipIcon>
               </div>
             </div>
@@ -334,9 +336,11 @@ const DashboardTabs = ({ children }: PropsWithChildren<{}>) => {
         </div>
       </TabPanel>
       <div className={styles.faqBox}>
-        <Button className={styles.faq} variant="outlined">
-          FAQ <ArrowForwardIosOutlinedIcon fontSize="small" />
-        </Button>
+        <Link to="/faq">
+          <Button className={styles.faq} variant="outlined">
+            FAQ <ArrowForwardIosOutlinedIcon fontSize="small" />
+          </Button>
+        </Link>
       </div>
     </>
   )

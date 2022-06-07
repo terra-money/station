@@ -23,6 +23,7 @@ import Settings from "pages/Settings"
 
 /* 404 */
 import NotFound from "pages/NotFound"
+import FAQ from "pages/faq"
 
 const ICON_SIZE = { width: 20, height: 20 }
 
@@ -53,6 +54,7 @@ export const useNav = () => {
     /* auth */
     { path: "/auth/*", element: <Auth /> },
     { path: "/settings", element: <Settings /> },
+    { path: "/faq", element: <FAQ />, hideHeader: true },
 
     /* 404 */
     { path: "*", element: <NotFound /> },
