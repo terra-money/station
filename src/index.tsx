@@ -1,3 +1,10 @@
+/*
+ * @Author: lmk
+ * @Date: 2022-06-02 16:12:07
+ * @LastEditTime: 2022-06-07 15:53:28
+ * @LastEditors: lmk
+ * @Description:
+ */
 import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 import { BrowserRouter } from "react-router-dom"
@@ -17,7 +24,8 @@ import InitWallet from "app/InitWallet"
 import InitTheme from "app/InitTheme"
 import ElectronVersion from "app/ElectronVersion"
 import App from "app/App"
-
+import { ThemeProvider, createTheme } from "@mui/material/styles"
+import { red } from "@mui/material/colors"
 const connectorOpts = { bridge: BRIDGE }
 
 const root = createRoot(document.getElementById("station") as HTMLElement)
@@ -31,22 +39,34 @@ const chainOptions = {
   },
   walletConnectChainIds: [],
 }
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#5c5fff",
+    },
+  },
+  shape: {
+    borderRadius: 50,
+  },
+})
 root.render(
   <StrictMode>
     <RecoilRoot>
-      <BrowserRouter>
-        <ScrollToTop />
-        <WalletProvider {...chainOptions} connectorOpts={connectorOpts}>
-          <InitNetworks>
-            <InitWallet>
-              <InitTheme />
-              <ElectronVersion />
-              <App />
-            </InitWallet>
-          </InitNetworks>
-        </WalletProvider>
-        {debug.query && <ReactQueryDevtools position="bottom-right" />}
-      </BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+          <ScrollToTop />
+          <WalletProvider {...chainOptions} connectorOpts={connectorOpts}>
+            <InitNetworks>
+              <InitWallet>
+                <InitTheme />
+                <ElectronVersion />
+                <App />
+              </InitWallet>
+            </InitNetworks>
+          </WalletProvider>
+          {debug.query && <ReactQueryDevtools position="bottom-right" />}
+        </BrowserRouter>
+      </ThemeProvider>
     </RecoilRoot>
   </StrictMode>
 )

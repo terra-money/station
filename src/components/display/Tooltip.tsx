@@ -1,3 +1,10 @@
+/*
+ * @Author: lmk
+ * @Date: 2022-05-25 11:23:10
+ * @LastEditTime: 2022-06-07 10:36:53
+ * @LastEditors: lmk
+ * @Description:
+ */
 import { ReactNode } from "react"
 import { useLocation } from "react-router-dom"
 import Tippy, { TippyProps } from "@tippyjs/react"
@@ -37,7 +44,7 @@ export const TooltipIcon = (props: Props) => {
     <InlineFlex gap={4} start>
       {props.children}
       <Tooltip {...props}>
-        <HelpOutlineOutlinedIcon fontSize="inherit" className="muted" />
+        <HelpOutlineOutlinedIcon fontSize="small" className="muted" />
       </Tooltip>
     </InlineFlex>
   )

@@ -1,21 +1,16 @@
-import { useTranslation } from "react-i18next"
 import { readAmount } from "@terra.kitchen/utils"
-import { combineState } from "data/query"
 import { useSupply } from "data/queries/bank"
 import { useStakingPool } from "data/queries/staking"
-import { Card } from "components/layout"
 import { ReadPercent } from "components/token"
-import { Tooltip } from "components/display"
-import DashboardContent from "./components/DashboardContent"
-import DashboardTag from "./components/DashboardTag"
-
+import classNames from "classnames/bind"
+import styles from "./Dashboard.module.scss"
+import { AggregateStakingReturn, useStakingReturn } from "data/Terra/TerraAPI"
+import { last } from "ramda"
 const StakingRatio = () => {
-  const { t } = useTranslation()
-
-  const { data: stakingPool, ...stakingPoolState } = useStakingPool()
-  const { data: supply, ...supplyState } = useSupply()
-  const state = combineState(stakingPoolState, supplyState)
-
+  const { data: stakingPool } = useStakingPool()
+  const { data: supply } = useSupply()
+  const { data } = useStakingReturn(AggregateStakingReturn.ANNUALIZED)
+  // console.log(data)
   const render = () => {
     if (!(stakingPool && supply)) return null
 
@@ -25,31 +20,34 @@ const StakingRatio = () => {
     if (!issuance) return null
 
     const ratio = Number(bonded) / Number(issuance)
-    const tooltip = t("{{amount}} MIS staked", {
-      amount: readAmount(bonded, { prefix: true, integer: true }),
-    })
-
     return (
-      <DashboardContent
-        value={
-          <Tooltip content={tooltip}>
+      <>
+        <p className={styles.pageName}>Dashboard</p>
+        <div className={styles.flex}>
+          <div className={styles.flexFull}>
+            <div>
+              {readAmount(bonded, { prefix: true, integer: true })}{" "}
+              <span className={styles.unit}>MIS</span>
+            </div>
+            <p>MIS Issuance</p>
+          </div>
+          <div className={styles.flexFull}>
             <ReadPercent>{ratio}</ReadPercent>
-          </Tooltip>
-        }
-        footer={
-          <DashboardTag>
-            {[t("Staked MIS"), t("Total MIS")].join(" / ")}
-          </DashboardTag>
-        }
-      />
+            <p>Staking Ratio</p>
+          </div>
+          <div className={styles.flexFull}>
+            <div>
+              <ReadPercent>{data && last(data)?.value}</ReadPercent>
+              <small>/year*</small>
+            </div>
+            <p>Staking Return</p>
+          </div>
+        </div>
+      </>
     )
   }
 
-  return (
-    <Card {...state} title={t("Staking ratio")} size="small">
-      {render()}
-    </Card>
-  )
+  return <div className={classNames(styles.card)}>{render()}</div>
 }
 
 export default StakingRatio

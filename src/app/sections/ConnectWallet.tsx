@@ -1,7 +1,7 @@
 /*
  * @Author: lmk
  * @Date: 2022-05-25 11:23:10
- * @LastEditTime: 2022-06-01 16:37:26
+ * @LastEditTime: 2022-06-07 10:11:16
  * @LastEditors: lmk
  * @Description:
  */
@@ -18,7 +18,8 @@ import { useAuth } from "auth"
 import SwitchWallet from "auth/modules/select/SwitchWallet"
 import Connected from "./Connected"
 import { useEffect, useState } from "react"
-import { atom, useRecoilState } from "recoil"
+import { atom } from "recoil"
+import { useConnectWallet } from "auth/hooks/useAddress"
 // import { useWallet } from "@terra-money/wallet-provider"
 
 interface Props {
@@ -36,19 +37,8 @@ const ConnectWallet = ({ renderButton }: Props) => {
   // const { connect, availableConnections, availableInstallations } = useWallet()
   const { available } = useAuth()
   const address = useAddress()
-  const [list, setList] = useState<any>([])
-  const [misesState, setmisesState] = useRecoilState(misesStateDefault)
-  const getAddress = () => {
-    window.ethereum
-      .request({
-        method: "mises_requestAccounts",
-        params: [],
-      })
-      .then((res: { misesId: string }) => {
-        setmisesState({ ...misesState, misesId: res.misesId })
-        localStorage.setItem("metamask", JSON.stringify(true))
-      })
-  }
+  const [list] = useState<any>([])
+  const { getAddress } = useConnectWallet()
   useEffect(() => {
     if (window.ethereum) {
       const metamask = JSON.parse(localStorage.getItem("metamask") || "false")
@@ -63,30 +53,9 @@ const ConnectWallet = ({ renderButton }: Props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  useEffect(() => {
-    if (window.ethereum) {
-      setList([
-        // ...availableConnections.map(({ type, identifier, name, icon }) => ({
-        //   src: icon,
-        //   children: name,
-        //   onClick: () => connect(type, identifier),
-        // })),
-        {
-          src: "https://www.mises.site/static/images/index/favicon.ico",
-          children: "MetaMask Wallet",
-          onClick: () => {
-            getAddress()
-          },
-        },
-      ])
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   if (address) return <Connected />
   const defaultRenderButton: Props["renderButton"] = (open) => (
-    <Button onClick={open} size="small" outline>
+    <Button onClick={getAddress} size="small" outline>
       {t("Connect")}
     </Button>
   )

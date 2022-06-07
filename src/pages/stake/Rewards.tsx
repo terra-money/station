@@ -7,9 +7,7 @@ import { useMemoizedCalcValue } from "data/queries/oracle"
 import { WithTokenItem } from "data/token"
 import { ModalButton } from "components/feedback"
 import { TokenCard, TokenCardGrid } from "components/token"
-import { TooltipIcon } from "components/display"
 import StakedCard from "./components/StakedCard"
-import RewardsTooltip from "./RewardsTooltip"
 
 const Rewards = () => {
   const { t } = useTranslation()
@@ -32,17 +30,7 @@ const Rewards = () => {
       <ModalButton
         title={title}
         renderButton={(open) => (
-          <StakedCard
-            {...state}
-            title={
-              <TooltipIcon content={<RewardsTooltip />} placement="bottom">
-                {title}
-              </TooltipIcon>
-            }
-            amount={amount}
-            value={sum}
-            onClick={open}
-          >
+          <StakedCard {...state} amount={amount} value={sum} onClick={open}>
             {list.length > 1 &&
               `+${t("{{length}} coins", { length: list.length - 1 })}`}
           </StakedCard>

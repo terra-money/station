@@ -1,7 +1,7 @@
 /*
  * @Author: lmk
  * @Date: 2022-06-02 16:12:07
- * @LastEditTime: 2022-06-02 17:09:56
+ * @LastEditTime: 2022-06-06 16:37:49
  * @LastEditors: lmk
  * @Description:
  */
@@ -34,6 +34,7 @@ interface Props extends ChartProps {
 
 const ChartContainer = (props: Props) => {
   const { total, unit, formatValue } = props
+  console.log(props)
   const { t } = useTranslation()
   // const animation = useThemeAnimation()
 

@@ -55,7 +55,7 @@ const Read = forwardRef(
       if (!token) return null
 
       return (
-        <span className={styles.small}>
+        <span className={classNames(styles.small, styles.symbol)}>
           {" "}
           <WithTokenItem token={token}>
             {({ symbol }) => symbol ?? truncate(token)}

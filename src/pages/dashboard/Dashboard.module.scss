@@ -2,7 +2,7 @@
 
 .header {
   display: grid;
-  gap: var(--grid-gap);
+  // gap: var(--grid-gap);
 
   @include desktop {
     grid-template-columns: repeat(4, 1fr);
@@ -13,5 +13,53 @@
   .header {
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
+  }
+}
+.card {
+  margin: 15px;
+  background: var(--menu-bg);
+  border-radius: 10px;
+  padding: 27px 0;
+  box-shadow: 0px 8px 15px 0px rgba(93, 97, 255, 0.25);
+}
+.pageName {
+  font-size: 19px;
+  font-weight: bold;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 35px;
+}
+.flex {
+  display: flex;
+  text-align: center;
+  color: white;
+  .flexFull {
+    flex: auto;
+    p {
+      line-height: 1;
+      margin-top: 16px;
+    }
+    &:nth-child(2) {
+      p {
+        border-left: 1px solid transparentize($color: #eeeeee, $amount: 0.75);
+        border-right: 1px solid transparentize($color: #eeeeee, $amount: 0.75);
+      }
+    }
+  }
+  p {
+    font-size: 12px;
+    font-weight: 400;
+    color: #ffffff;
+    opacity: 0.75;
+  }
+  div {
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+  }
+  .unit {
+    font-size: 12px;
+    font-weight: 400;
+    color: #ffffff;
   }
 }
