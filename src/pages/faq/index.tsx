@@ -1,7 +1,7 @@
 /*
  * @Author: lmk
  * @Date: 2022-06-07 15:57:28
- * @LastEditTime: 2022-06-07 16:36:31
+ * @LastEditTime: 2022-06-07 17:30:29
  * @LastEditors: lmk
  * @Description:
  */
@@ -20,6 +20,7 @@ const FAQ = () => {
         variant="h4"
         sx={{
           color: "#16161D",
+          fontSize: 27,
         }}
       >
         MIS Staking FAQ
@@ -39,6 +40,7 @@ const FAQ = () => {
         sx={{
           py: 3,
           color: "#16161D",
+          fontSize: 17,
         }}
       >
         1.What is a Delegator?
@@ -54,6 +56,7 @@ const FAQ = () => {
         sx={{
           py: 3,
           color: "#16161D",
+          fontSize: 17,
         }}
       >
         2.What is a Validator?
@@ -70,6 +73,7 @@ const FAQ = () => {
         sx={{
           py: 3,
           color: "#16161D",
+          fontSize: 17,
         }}
       >
         3.Why should I delegate my MIS?
@@ -85,6 +89,7 @@ const FAQ = () => {
         sx={{
           py: 3,
           color: "#16161D",
+          fontSize: 17,
         }}
       >
         4.What are the rewards for delegating MIS?
@@ -97,6 +102,7 @@ const FAQ = () => {
         sx={{
           py: 3,
           color: "#16161D",
+          fontSize: 17,
         }}
       >
         5.When is the delegation taking effect? And how long does it take to
@@ -110,6 +116,7 @@ const FAQ = () => {
         sx={{
           py: 3,
           color: "#16161D",
+          fontSize: 17,
         }}
       >
         6.How do I check my rewards? And can rewards be unbound any time?
@@ -123,6 +130,7 @@ const FAQ = () => {
         sx={{
           py: 3,
           color: "#16161D",
+          fontSize: 17,
         }}
       >
         7.How to get details about Validators?
@@ -136,6 +144,7 @@ const FAQ = () => {
         sx={{
           py: 3,
           color: "#16161D",
+          fontSize: 17,
         }}
       >
         8.Can I change a Validator at any time?
@@ -149,6 +158,7 @@ const FAQ = () => {
         sx={{
           py: 3,
           color: "#16161D",
+          fontSize: 17,
         }}
       >
         9.Can I unbound my MIS after having delegated? And how long does it take
@@ -162,6 +172,7 @@ const FAQ = () => {
         sx={{
           py: 3,
           color: "#16161D",
+          fontSize: 17,
         }}
       >
         10.Will the Validator charge a commission?
@@ -176,6 +187,7 @@ const FAQ = () => {
         sx={{
           py: 3,
           color: "#16161D",
+          fontSize: 17,
         }}
       >
         11. What risks do I take for delegating my MIS to validators？

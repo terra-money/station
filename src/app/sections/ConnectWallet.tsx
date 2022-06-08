@@ -1,7 +1,7 @@
 /*
  * @Author: lmk
  * @Date: 2022-06-02 16:12:07
- * @LastEditTime: 2022-06-07 16:12:22
+ * @LastEditTime: 2022-06-08 10:57:42
  * @LastEditors: lmk
  * @Description:
  */
@@ -55,7 +55,7 @@ const ConnectWallet = ({ renderButton }: Props) => {
 
       window.ethereum.on("accountsChanged", async (res: string[]) => {
         if (res.length) {
-          console.log(res)
+          getAddress()
         }
         // if(res.length===0) {
         //   this.resetApp()

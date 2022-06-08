@@ -72,11 +72,11 @@ const App = () => {
               minHeight: 63,
             }}
           >
-            <ArrowBackIos fontSize="large" onClick={goBack} />
+            <ArrowBackIos fontSize="small" onClick={goBack} />
             <Typography
               variant="h5"
               component="div"
-              sx={{ flexGrow: 1, textAlign: "center" }}
+              sx={{ flexGrow: 1, textAlign: "center", fontSize: 19 }}
             >
               FAQ
             </Typography>

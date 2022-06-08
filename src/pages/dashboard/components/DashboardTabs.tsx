@@ -1,7 +1,7 @@
 /*
  * @Author: lmk
  * @Date: 2022-05-25 11:23:10
- * @LastEditTime: 2022-06-07 16:59:16
+ * @LastEditTime: 2022-06-08 12:03:41
  * @LastEditors: lmk
  * @Description:
  */
@@ -34,6 +34,7 @@ import { useTerraValidators } from "data/Terra/TerraAPI"
 import { useMemoizedCalcValue } from "data/queries/oracle"
 import { Col } from "components/layout"
 import BigNumber from "bignumber.js"
+// import { ValidatorLink } from "components/general"
 function a11yProps(index: number) {
   return {
     id: `simple-tab-${index}`,
@@ -286,59 +287,81 @@ const DashboardTabs = ({ children }: PropsWithChildren<{}>) => {
         </div>
         <div className={styles.colBox}>
           <Col>
-            {validators.map((item) => {
-              const {
-                delegation,
-                unbonding,
-                reward,
-                name,
-                address,
-                estimatedReward,
-              } = item
-              return (
-                <div key={address} className={styles.validator}>
-                  <p className={styles.validatorTitle}>{name}</p>
-                  <Grid container>
-                    <Grid item xs={6} className={styles.validatorItem}>
-                      <p className={styles.title}>Delegating</p>
-                      <Read
-                        amount={delegation.amount}
-                        denom={delegation.denom}
-                        className={styles.totalAmount}
-                        auto
-                      />
+            {validators.length ? (
+              validators.map((item) => {
+                const {
+                  delegation,
+                  unbonding,
+                  reward,
+                  name,
+                  address,
+                  estimatedReward,
+                } = item
+                return (
+                  <div key={address} className={styles.validator}>
+                    <Link to={`/validator/${address}`}>
+                      <p className={styles.validatorTitle}>{name}</p>
+                    </Link>
+
+                    <Grid container>
+                      <Grid item xs={6} className={styles.validatorItem}>
+                        <p className={styles.title}>Delegating</p>
+                        <Read
+                          amount={delegation.amount}
+                          denom={delegation.denom}
+                          className={styles.totalAmount}
+                          auto
+                        />
+                      </Grid>
+                      <Grid item xs={6} className={styles.validatorItem}>
+                        <p className={styles.title}>Undelegating</p>
+                        <Read
+                          amount={unbonding.amount}
+                          denom={unbonding.denom}
+                          className={styles.totalAmount}
+                          auto
+                        />
+                      </Grid>
+                      <Grid item xs={6} className={styles.validatorItem}>
+                        <p className={styles.title}>Rewards</p>
+                        <Read
+                          amount={reward.amount}
+                          denom={reward.denom}
+                          className={styles.totalAmount}
+                          auto
+                        />
+                      </Grid>
+                      <Grid item xs={6} className={styles.validatorItem}>
+                        <p className={styles.title}>Estimated Reward/D</p>
+                        <Read
+                          amount={estimatedReward.amount}
+                          denom={estimatedReward.denom}
+                          className={styles.totalAmount}
+                          auto
+                        />
+                      </Grid>
                     </Grid>
-                    <Grid item xs={6} className={styles.validatorItem}>
-                      <p className={styles.title}>Undelegating</p>
-                      <Read
-                        amount={unbonding.amount}
-                        denom={unbonding.denom}
-                        className={styles.totalAmount}
-                        auto
-                      />
-                    </Grid>
-                    <Grid item xs={6} className={styles.validatorItem}>
-                      <p className={styles.title}>Rewards</p>
-                      <Read
-                        amount={reward.amount}
-                        denom={reward.denom}
-                        className={styles.totalAmount}
-                        auto
-                      />
-                    </Grid>
-                    <Grid item xs={6} className={styles.validatorItem}>
-                      <p className={styles.title}>Estimated Reward/D</p>
-                      <Read
-                        amount={estimatedReward.amount}
-                        denom={estimatedReward.denom}
-                        className={styles.totalAmount}
-                        auto
-                      />
-                    </Grid>
-                  </Grid>
-                </div>
-              )
-            })}
+                  </div>
+                )
+              })
+            ) : (
+              <div className={styles.unConnect}>
+                <img
+                  src="./nothing@2x.png"
+                  alt=""
+                  width={56}
+                  height={61}
+                  style={{ marginBottom: 26 }}
+                />
+                <p className={styles.tips}>Stake MIS and earn rewards</p>
+                <Link to="/stake">
+                  <Button className={styles.connect} variant="contained">
+                    Delegate Now{" "}
+                    <ArrowForwardIosOutlinedIcon fontSize="small" />
+                  </Button>
+                </Link>
+              </div>
+            )}
           </Col>
         </div>
       </TabPanel>
