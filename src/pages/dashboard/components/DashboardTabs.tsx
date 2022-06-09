@@ -204,6 +204,13 @@ const DashboardTabs = ({ children }: PropsWithChildren<{}>) => {
           label="Stake"
           className={styles.tabItem}
           wrapped
+          sx={{
+            "&.Mui-selected": {
+              color: "#333",
+              fontWeight: "bold",
+              fontSize: "19px",
+            },
+          }}
           {...a11yProps(1)}
         />
       </Tabs>
