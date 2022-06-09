@@ -10,7 +10,7 @@ export const OBSERVER = "wss://rpc.gw.mises.site/websocket"
 
 /* website */
 export const STATION = "https://station.mises.site"
-export const FINDER = "https://finder.mises.site"
+export const FINDER = "https://gw.mises.site"
 export const EXTENSION = ""
 export const TUTORIAL = "https://www.mises.site/introduction"
 

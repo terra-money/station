@@ -1,7 +1,7 @@
 /*
  * @Author: lmk
  * @Date: 2022-05-25 11:23:10
- * @LastEditTime: 2022-06-09 10:49:38
+ * @LastEditTime: 2022-06-09 17:00:27
  * @LastEditors: lmk
  * @Description:
  */
@@ -153,20 +153,19 @@ const DashboardTabs = ({ children }: PropsWithChildren<{}>) => {
   const goReinvestAll = () => {
     navigate("/reinvestall")
   }
-
+  if (!address) return <ConnectBtn />
   const delegationstotal = calcDelegationsTotal(delegations)
-
   const unbondingsTotal = calcUnbondingsTotal(unbondings)
   const { total: rewardsTotal } = rewards
     ? calcRewardsValues(rewards, currency, calcValue)
     : { total: { sum: "0", list: [] } }
   const { sum: rewordTotal } = rewardsTotal
-  const totalAmount = new BigNumber(delegationstotal)
-    .plus(unbondingsTotal)
-    .plus(rewordTotal)
-    .plus(balance)
+  const toNumber = (value: string) => (value !== "NaN" ? value : 0)
+  const totalAmount = new BigNumber(toNumber(delegationstotal))
+    .plus(toNumber(unbondingsTotal))
+    .plus(toNumber(rewordTotal))
+    .plus(toNumber(balance))
     .toString()
-  if (!address) return <ConnectBtn />
   return (
     <>
       <Tabs
@@ -202,7 +201,7 @@ const DashboardTabs = ({ children }: PropsWithChildren<{}>) => {
           }}
         />
         <Tab
-          label="Delegations"
+          label="Stake"
           className={styles.tabItem}
           wrapped
           {...a11yProps(1)}
@@ -263,26 +262,36 @@ const DashboardTabs = ({ children }: PropsWithChildren<{}>) => {
             </div>
           </Grid>
         </Grid>
-        <Button
-          className={styles.reinvest}
-          variant="contained"
-          onClick={() => goReinvestAll()}
-        >
-          Reinvest all rewards
-        </Button>
-        <Button
-          className={styles.withdraw}
-          variant="outlined"
-          onClick={() => goRewards()}
-        >
-          {t("Withdraw all rewards")}
-        </Button>
+        {totalAmount !== "0" ? (
+          <>
+            <Button
+              className={styles.reinvest}
+              variant="contained"
+              onClick={() => goReinvestAll()}
+            >
+              Reinvest all rewards
+            </Button>
+            <Button
+              className={styles.withdraw}
+              variant="outlined"
+              onClick={() => goRewards()}
+            >
+              {t("Withdraw all rewards")}
+            </Button>
+          </>
+        ) : (
+          <Link to="/stake">
+            <Button className={styles.reinvest} variant="contained">
+              Delegate Now
+            </Button>
+          </Link>
+        )}
       </TabPanel>
       <TabPanel value={value} index={1}>
         <div className={styles.myDelegations}>
           <p className={styles.title}>My Delegations</p>
           <Link to="/stake" className={styles.linkTo}>
-            <span>View Validators to delegate</span>
+            <span>Choose a Validator to stake</span>
             <ArrowForwardIosOutlinedIcon fontSize="small" />
           </Link>
         </div>
@@ -357,7 +366,7 @@ const DashboardTabs = ({ children }: PropsWithChildren<{}>) => {
                 <p className={styles.tips}>Stake MIS and earn rewards</p>
                 <Link to="/stake">
                   <Button className={styles.connect} variant="contained">
-                    Delegate Now{" "}
+                    Delegate Now
                     <ArrowForwardIosOutlinedIcon fontSize="small" />
                   </Button>
                 </Link>

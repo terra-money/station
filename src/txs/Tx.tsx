@@ -261,9 +261,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
             },
           ],
         })
-        console.log(result)
-        // const { result } = await post({ ...tx, fee })
-        setLatestTx({ txhash: result.txhash, queryKeys, redirectAfterTx })
+        setLatestTx({ txhash: result.txHash, queryKeys, redirectAfterTx })
       }
       onPost?.()
     } catch (error) {
