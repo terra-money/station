@@ -12,6 +12,7 @@ interface Window {
     _metamask: {
       isUnlocked: () => Promise<boolean>
     }
+    _handleConnect: () => Promise<any>
   }
 }
 interface globalThis {

@@ -1,7 +1,7 @@
 /*
  * @Author: lmk
  * @Date: 2022-05-25 15:17:49
- * @LastEditTime: 2022-06-08 11:29:30
+ * @LastEditTime: 2022-06-09 10:47:50
  * @LastEditors: lmk
  * @Description:
  */
@@ -29,13 +29,12 @@ export function useConnectWallet() {
         params: [],
       })
       .then((res: { misesId: string }) => {
-        console.log(res.misesId)
         setmisesState({ ...misesState, misesId: res.misesId })
         localStorage.setItem("metamask", JSON.stringify(true))
       })
-    // if(!window.ethereum){
-
-    // }
+    if (!window.ethereum) {
+      window.location.reload()
+    }
   }
   return {
     getAddress,

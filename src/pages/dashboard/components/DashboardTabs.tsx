@@ -1,7 +1,7 @@
 /*
  * @Author: lmk
  * @Date: 2022-05-25 11:23:10
- * @LastEditTime: 2022-06-08 12:03:41
+ * @LastEditTime: 2022-06-09 10:49:38
  * @LastEditors: lmk
  * @Description:
  */
@@ -75,13 +75,14 @@ const ConnectBtn = () => {
           onClick={getAddress}
           variant="contained"
         >
-          Connect Now <ArrowForwardIosOutlinedIcon fontSize="small" />
+          {window.ethereum ? "Connect Now" : "Refresh"}
+          <ArrowForwardIosOutlinedIcon fontSize="small" />
         </Button>
       </div>
       <div className={styles.faqBox}>
         <Link to="/faq">
           <Button className={styles.faq} variant="outlined">
-            FAQ <ArrowForwardIosOutlinedIcon fontSize="small" />
+            FAQ <ArrowForwardIosOutlinedIcon fontSize="inherit" />
           </Button>
         </Link>
       </div>

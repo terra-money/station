@@ -1,7 +1,7 @@
 /*
  * @Author: lmk
  * @Date: 2022-06-02 16:12:07
- * @LastEditTime: 2022-06-08 10:57:42
+ * @LastEditTime: 2022-06-09 11:38:29
  * @LastEditors: lmk
  * @Description:
  */
@@ -57,9 +57,6 @@ const ConnectWallet = ({ renderButton }: Props) => {
         if (res.length) {
           getAddress()
         }
-        // if(res.length===0) {
-        //   this.resetApp()
-        // }
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -67,7 +64,8 @@ const ConnectWallet = ({ renderButton }: Props) => {
   if (address) return <Connected />
   const defaultRenderButton: Props["renderButton"] = (open) => (
     <Button onClick={getAddress} size="small" outline>
-      {t("Connect")}
+      {/* 刷新 */}
+      {window.ethereum ? t("Connect") : "Refresh"}
     </Button>
   )
 

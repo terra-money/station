@@ -1,3 +1,10 @@
+/*
+ * @Author: lmk
+ * @Date: 2022-05-25 11:23:10
+ * @LastEditTime: 2022-06-08 16:52:52
+ * @LastEditors: lmk
+ * @Description:
+ */
 import { ReactNode, useState } from "react"
 import { Grid } from "components/layout"
 import { SearchInput } from "components/form"
@@ -12,11 +19,7 @@ const WithSearchInput = ({ gap, children }: Props) => {
 
   return (
     <Grid gap={gap ?? 20}>
-      <SearchInput
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        autoFocus
-      />
+      <SearchInput value={input} onChange={(e) => setInput(e.target.value)} />
       {children(input)}
     </Grid>
   )

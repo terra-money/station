@@ -43,6 +43,7 @@ import { useTx } from "./TxContext"
 import styles from "./Tx.module.scss"
 import { StakeAction } from "./stake/StakeForm"
 import { toHump } from "utils/data"
+import { useConnectWallet } from "auth/hooks/useAddress"
 
 interface Props<TxValues> {
   /* Only when the token is paid out of the balance held */
@@ -83,6 +84,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const { children, onChangeMax } = props
   const { onPost, redirectAfterTx, queryKeys } = props
 
+  const { getAddress } = useConnectWallet()
   const [isMax, setIsMax] = useState(false)
   const [gasDenom, setGasDenom] = useState(initialGasDenom)
 
@@ -396,7 +398,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
       {!address ? (
         <ConnectWallet
           renderButton={(open) => (
-            <Submit type="button" onClick={open}>
+            <Submit type="button" onClick={getAddress}>
               {t("Connect wallet")}
             </Submit>
           )}
