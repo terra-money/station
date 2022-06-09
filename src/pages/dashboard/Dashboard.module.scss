@@ -15,11 +15,13 @@
     grid-template-rows: repeat(2, 1fr);
   }
 }
+.cardBox {
+  padding: 27px 0;
+}
 .card {
   margin: 15px;
   background: var(--menu-bg);
   border-radius: 10px;
-  padding: 27px 0;
   box-shadow: 0px 8px 15px 0px rgba(93, 97, 255, 0.25);
 }
 .pageName {

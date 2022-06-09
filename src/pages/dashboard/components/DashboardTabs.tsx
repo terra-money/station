@@ -1,7 +1,7 @@
 /*
  * @Author: lmk
  * @Date: 2022-05-25 11:23:10
- * @LastEditTime: 2022-06-09 17:00:27
+ * @LastEditTime: 2022-06-09 18:12:14
  * @LastEditors: lmk
  * @Description:
  */
@@ -118,19 +118,20 @@ const DashboardTabs = ({ children }: PropsWithChildren<{}>) => {
     const reward = byValidator.find(
       ({ address }) => address === operator_address
     )
+    const delegationData = delegation?.balance.toData() || {
+      amount: "0",
+      denom: "umis",
+    }
     const estimatedReward = rewards_30d
       ? new BigNumber(rewards_30d)
           .multipliedBy(100)
           .dividedBy(30)
-          .multipliedBy(100000)
+          .multipliedBy(delegationData.amount)
           .toFixed(6)
           .toString()
       : 0
     return {
-      delegation: delegation?.balance.toData() || {
-        amount: "0",
-        denom: "umis",
-      },
+      delegation: delegationData,
       unbonding: { amount: unbondingAmount, denom: "umis" },
       reward: { amount: reward?.sum || "0", denom: "umis" },
       name: item.description.moniker,
@@ -349,7 +350,7 @@ const DashboardTabs = ({ children }: PropsWithChildren<{}>) => {
                         />
                       </Grid>
                       <Grid item xs={6} className={styles.validatorItem}>
-                        <p className={styles.title}>Estimated Reward/D</p>
+                        <p className={styles.title}>Est. Reward/Day</p>
                         <Read
                           amount={estimatedReward.amount}
                           denom={estimatedReward.denom}

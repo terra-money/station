@@ -21,7 +21,7 @@ const StakingRatio = () => {
 
     const ratio = Number(bonded) / Number(issuance)
     return (
-      <>
+      <div className={styles.cardBox}>
         <p className={styles.pageName}>Dashboard</p>
         <div className={styles.flex}>
           <div className={styles.flexFull}>
@@ -43,7 +43,7 @@ const StakingRatio = () => {
             <p>Staking Return</p>
           </div>
         </div>
-      </>
+      </div>
     )
   }
 
