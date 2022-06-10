@@ -85,7 +85,7 @@ const StakingReturn = () => {
       title={
         <TooltipIcon
           content={t(
-            "Annualized staking yield for Luna based on tax rewards, oracle rewards, gas, MIR and ANC airdrop rewards and latest prices of Luna (annualize return = 10 days moving average return * 365)"
+            "The annualized staking yield for Luna is based on gas rewards, minting rewards, and the price of Luna (annualized return = 10 day moving average return * 365)."
           )}
         >
           {t("Staking return")}
