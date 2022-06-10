@@ -1,7 +1,7 @@
 /*
  * @Author: lmk
  * @Date: 2022-05-25 11:23:10
- * @LastEditTime: 2022-06-09 18:12:14
+ * @LastEditTime: 2022-06-10 10:41:40
  * @LastEditors: lmk
  * @Description:
  */
@@ -34,6 +34,7 @@ import { useTerraValidators } from "data/Terra/TerraAPI"
 import { useMemoizedCalcValue } from "data/queries/oracle"
 import { Col } from "components/layout"
 import BigNumber from "bignumber.js"
+import ConnectWallet from "app/sections/ConnectWallet"
 // import { ValidatorLink } from "components/general"
 function a11yProps(index: number) {
   return {
@@ -70,14 +71,18 @@ const ConnectBtn = () => {
       <div className={styles.unConnect}>
         <p className={styles.tips}>Connect to stake MIS and earn your reward</p>
 
-        <Button
-          className={styles.connect}
-          onClick={getAddress}
-          variant="contained"
-        >
-          {window.ethereum ? "Connect Now" : "Refresh"}
-          <ArrowForwardIosOutlinedIcon fontSize="small" />
-        </Button>
+        <ConnectWallet
+          renderButton={(open) => (
+            <Button
+              className={styles.connect}
+              onClick={() => getAddress(open)}
+              variant="contained"
+            >
+              Connect Now
+              <ArrowForwardIosOutlinedIcon fontSize="small" />
+            </Button>
+          )}
+        />
       </div>
       <div className={styles.faqBox}>
         <Link to="/faq">
@@ -124,9 +129,8 @@ const DashboardTabs = ({ children }: PropsWithChildren<{}>) => {
     }
     const estimatedReward = rewards_30d
       ? new BigNumber(rewards_30d)
-          .multipliedBy(100)
-          .dividedBy(30)
           .multipliedBy(delegationData.amount)
+          .dividedBy(30)
           .toFixed(6)
           .toString()
       : 0
@@ -166,6 +170,9 @@ const DashboardTabs = ({ children }: PropsWithChildren<{}>) => {
     .plus(toNumber(unbondingsTotal))
     .plus(toNumber(rewordTotal))
     .plus(toNumber(balance))
+    .toString()
+  const showButton = new BigNumber(totalAmount)
+    .minus(toNumber(balance))
     .toString()
   return (
     <>
@@ -270,7 +277,7 @@ const DashboardTabs = ({ children }: PropsWithChildren<{}>) => {
             </div>
           </Grid>
         </Grid>
-        {totalAmount !== "0" ? (
+        {showButton !== "0" ? (
           <>
             <Button
               className={styles.reinvest}

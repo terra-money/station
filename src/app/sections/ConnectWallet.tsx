@@ -1,7 +1,7 @@
 /*
  * @Author: lmk
  * @Date: 2022-06-02 16:12:07
- * @LastEditTime: 2022-06-09 11:38:29
+ * @LastEditTime: 2022-06-09 19:05:08
  * @LastEditors: lmk
  * @Description:
  */
@@ -13,20 +13,21 @@
  * @Description:
  */
 import { useTranslation } from "react-i18next"
-import { STATION } from "config/constants"
+// import { STATION } from "config/constants"
 import { RenderButton } from "types/components"
 import { useAddress } from "data/wallet"
-import { Button, ExternalLink } from "components/general"
-import { Grid } from "components/layout"
-import { List } from "components/display"
+import { Button } from "components/general"
+// import { Grid } from "components/layout"
+// import { List } from "components/display"
 import { ModalButton } from "components/feedback"
-import { FormHelp } from "components/form"
-import { useAuth } from "auth"
-import SwitchWallet from "auth/modules/select/SwitchWallet"
+// import { FormHelp } from "components/form"
+// import { useAuth } from "auth"
+// import SwitchWallet from "auth/modules/select/SwitchWallet"
 import Connected from "./Connected"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { atom } from "recoil"
 import { useConnectWallet } from "auth/hooks/useAddress"
+import { Button as MuiButton } from "@mui/material"
 // import { useWallet } from "@terra-money/wallet-provider"
 
 interface Props {
@@ -42,9 +43,9 @@ const ConnectWallet = ({ renderButton }: Props) => {
   const { t } = useTranslation()
 
   // const { connect, availableConnections, availableInstallations } = useWallet()
-  const { available } = useAuth()
+  // const { available } = useAuth()
   const address = useAddress()
-  const [list] = useState<any>([])
+  // const [list] = useState<any>([])
   const { getAddress } = useConnectWallet()
   useEffect(() => {
     if (window.ethereum) {
@@ -63,9 +64,9 @@ const ConnectWallet = ({ renderButton }: Props) => {
   }, [])
   if (address) return <Connected />
   const defaultRenderButton: Props["renderButton"] = (open) => (
-    <Button onClick={getAddress} size="small" outline>
+    <Button onClick={() => getAddress(open)} size="small" outline>
       {/* 刷新 */}
-      {window.ethereum ? t("Connect") : "Refresh"}
+      {t("Connect")}
     </Button>
   )
 
@@ -75,7 +76,7 @@ const ConnectWallet = ({ renderButton }: Props) => {
       renderButton={renderButton ?? defaultRenderButton}
       maxHeight
     >
-      <Grid gap={20}>
+      {/* <Grid gap={20}>
         <SwitchWallet />
         <List list={available.length ? available : list} />
         {!!available.length && (
@@ -84,7 +85,19 @@ const ConnectWallet = ({ renderButton }: Props) => {
             browser to access with Ledger device
           </FormHelp>
         )}
-      </Grid>
+      </Grid> */}
+      <div style={{ textAlign: "center" }}>
+        <p style={{ marginBottom: 20 }}>
+          Loading timed out Please try again later
+        </p>
+        <MuiButton
+          onClick={() => window.location.reload()}
+          variant="contained"
+          size="large"
+        >
+          Refresh
+        </MuiButton>
+      </div>
     </ModalButton>
   )
 }

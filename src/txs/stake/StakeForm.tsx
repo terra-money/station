@@ -96,7 +96,7 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
         const values = byValidator.find(
           ({ address }) => address === destination
         )
-        if (!values) return
+        if (!values) return { code: -1, message: "No Reword", msgs: [] }
         const msg1 = new MsgDelegate(
           address,
           destination,

@@ -45,6 +45,10 @@ import { StakeAction } from "./stake/StakeForm"
 import { toHump } from "utils/data"
 import { useConnectWallet } from "auth/hooks/useAddress"
 
+export interface CreateTxErrorOptions {
+  code: -1
+  message: string
+}
 interface Props<TxValues> {
   /* Only when the token is paid out of the balance held */
   token?: Token
@@ -221,11 +225,10 @@ function Tx<TxValues>(props: Props<TxValues>) {
       if (disabled) throw new Error(disabled)
       if (!estimatedGas || !has(gasAmount))
         throw new Error("Fee is not estimated")
-
       const tx = createTx(values)
-
       if (!tx) throw new Error("Tx is not defined")
-
+      const txmessage = tx as unknown as CreateTxErrorOptions
+      if (txmessage?.code === -1) throw new Error(txmessage.message)
       const gasCoins = new Coins([Coin.fromData(gasFee)])
       const fee = new Fee(estimatedGas, gasCoins)
       if (isWallet.multisig(wallet)) {
@@ -265,6 +268,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
       }
       onPost?.()
     } catch (error) {
+      console.log(error)
       if (error instanceof PasswordError) setIncorrect(error.message)
       else setError(error as Error)
     }
@@ -396,7 +400,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
       {!address ? (
         <ConnectWallet
           renderButton={(open) => (
-            <Submit type="button" onClick={getAddress}>
+            <Submit type="button" onClick={() => getAddress(open)}>
               {t("Connect wallet")}
             </Submit>
           )}

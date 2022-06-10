@@ -29,7 +29,7 @@ const StakingRatio = () => {
               {readAmount(issuance, { prefix: true, integer: true })}{" "}
               <span className={styles.unit}>MIS</span>
             </div>
-            <p>MIS Issuance</p>
+            <p>Total Supply</p>
           </div>
           <div className={styles.flexFull}>
             <ReadPercent>{ratio}</ReadPercent>
@@ -40,7 +40,7 @@ const StakingRatio = () => {
               <ReadPercent>{data && last(data)?.value}</ReadPercent>
               <small>/year*</small>
             </div>
-            <p>Staking Return</p>
+            <p>APR</p>
           </div>
         </div>
       </div>

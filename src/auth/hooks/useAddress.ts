@@ -22,7 +22,7 @@ export default useAddress
 
 export function useConnectWallet() {
   const [misesState, setmisesState] = useRecoilState(misesStateDefault)
-  const getAddress = () => {
+  const getAddress = (open?: () => void) => {
     window.ethereum
       ?.request({
         method: "mises_requestAccounts",
@@ -33,7 +33,8 @@ export function useConnectWallet() {
         localStorage.setItem("metamask", JSON.stringify(true))
       })
     if (!window.ethereum) {
-      window.location.reload()
+      open?.()
+      // window.location.reload()
     }
   }
   return {
