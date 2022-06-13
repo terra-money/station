@@ -3,12 +3,15 @@ import { isDenomIBC, isDenomTerra } from "@terra.kitchen/utils"
 import { readDenom, truncate } from "@terra.kitchen/utils"
 import { AccAddress } from "@terra-money/terra.js"
 import { ASSETS } from "config/constants"
+import { useIsClassic } from "./query"
 import { useIBCBaseDenom } from "./queries/ibc"
 import { useTokenInfoCW20 } from "./queries/wasm"
 import { useCustomTokensCW20 } from "./settings/CustomTokens"
 import { useCW20Whitelist, useIBCWhitelist } from "./Terra/TerraAssets"
 
 export const useTokenItem = (token: Token): TokenItem | undefined => {
+  const isClassic = useIsClassic()
+
   /* CW20 */
   const matchToken = (item: TokenItem) => item.token === token
 
@@ -41,10 +44,16 @@ export const useTokenItem = (token: Token): TokenItem | undefined => {
   }
 
   if (isDenomIBC(token)) {
-    return readIBCDenom(token, listedIBCTokenItem?.base_denom ?? base_denom)
+    const item = {
+      ...listedIBCTokenItem,
+      denom: token,
+      base_denom: listedIBCTokenItem?.base_denom ?? base_denom,
+    }
+
+    return readIBCDenom(item)
   }
 
-  return readNativeDenom(token)
+  return readNativeDenom(token, isClassic)
 }
 
 interface Props {
@@ -61,12 +70,22 @@ export const WithTokenItem = ({ token, children }: Props) => {
 /* helpers */
 export const getIcon = (path: string) => `${ASSETS}/icon/svg/${path}`
 
-export const readNativeDenom = (denom: Denom): TokenItem => {
+export const readNativeDenom = (
+  denom: Denom,
+  isClassic?: boolean
+): TokenItem => {
   const symbol = readDenom(denom)
-  const path = isDenomTerra(denom) ? `Terra/${symbol}.svg` : `${symbol}.svg`
+  const symbolClassic = denom === "uluna" ? "LUNC" : symbol + "C"
+
+  const path = isDenomTerra(denom)
+    ? `Terra/${symbol}.svg`
+    : isClassic
+    ? "LUNC.svg"
+    : "LUNA.png"
+
   return {
     token: denom,
-    symbol: symbol,
+    symbol: isClassic ? symbolClassic : symbol,
     name: isDenomTerra(denom)
       ? `Terra ${denom.slice(1).toUpperCase()}`
       : undefined,
@@ -75,14 +94,16 @@ export const readNativeDenom = (denom: Denom): TokenItem => {
   }
 }
 
-export const readIBCDenom = (denom: Denom, base_denom?: Denom): TokenItem => {
-  const symbol = base_denom && readDenom(base_denom)
+export const readIBCDenom = (item: IBCTokenItem): TokenItem => {
+  const { denom, base_denom } = item
+  const symbol =
+    item.symbol ?? ((base_denom && readDenom(base_denom)) || base_denom)
   const path = symbol ? `ibc/${symbol}.svg` : "IBC.svg"
 
   return {
     token: denom,
     symbol: symbol ?? truncate(denom),
     icon: getIcon(path),
-    decimals: 6,
+    decimals: item.decimals ?? 6,
   }
 }

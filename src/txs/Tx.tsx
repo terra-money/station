@@ -24,7 +24,7 @@ import { getAmount, sortCoins } from "utils/coin"
 import { getErrorMessage } from "utils/error"
 import { getLocalSetting, SettingKey } from "utils/localStorage"
 import { useCurrency } from "data/settings/Currency"
-import { queryKey, RefetchOptions } from "data/query"
+import { queryKey, RefetchOptions, useIsClassic } from "data/query"
 import { useAddress, useNetwork } from "data/wallet"
 import { isBroadcastingState, latestTxState, useTxInfo } from "data/queries/tx"
 import { useBankBalance, useIsWalletEmpty } from "data/queries/bank"
@@ -105,6 +105,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   /* context */
   const { t } = useTranslation()
+  const isClassic = useIsClassic()
   const currency = useCurrency()
   const network = useNetwork()
   const { post } = useWallet()
@@ -209,11 +210,11 @@ function Tx<TxValues>(props: Props<TxValues>) {
   useEffect(() => {
     if (process.env.NODE_ENV === "development" && failed) {
       console.groupCollapsed("Fee estimation failed")
-      console.info(simulationTx?.msgs.map((msg) => msg.toData()))
+      console.info(simulationTx?.msgs.map((msg) => msg.toData(isClassic)))
       console.info(failed)
       console.groupEnd()
     }
-  }, [failed, simulationTx])
+  }, [failed, isClassic, simulationTx])
 
   /* submit */
   const passwordRequired =

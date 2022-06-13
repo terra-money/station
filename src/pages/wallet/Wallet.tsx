@@ -3,6 +3,7 @@ import { useIsAnchorAvailable } from "data/external/anchor"
 import { Auto, Page } from "components/layout"
 import Coins from "./Coins"
 import Tokens from "./Tokens"
+import Vesting from "./Vesting"
 import Rewards from "./Rewards"
 import AnchorEarn from "./AnchorEarn"
 import is from "auth/scripts/is"
@@ -18,6 +19,7 @@ const Wallet = () => {
           <>
             <Coins />
             <Tokens />
+            <Vesting />
           </>,
           <>
             {!is.mobile() && <Rewards />}

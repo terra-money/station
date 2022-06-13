@@ -1,5 +1,6 @@
 import { PropsWithChildren } from "react"
 import { useTranslation } from "react-i18next"
+import { useIsClassic } from "data/query"
 import { useLCDClient } from "data/queries/lcdClient"
 import { Pre } from "components/general"
 import { Auto, Card, Grid } from "components/layout"
@@ -9,6 +10,7 @@ import { ReadMultiple } from "components/token"
 const ReadTx = (props: PropsWithChildren<{ tx: string }>) => {
   const { tx: encoded, children } = props
   const { t } = useTranslation()
+  const isClassic = useIsClassic()
   const lcd = useLCDClient()
 
   const decodeTx = (encoded: string) => {
@@ -33,7 +35,7 @@ const ReadTx = (props: PropsWithChildren<{ tx: string }>) => {
       {
         title: t("Messages"),
         content: messages.map((message, index) => (
-          <Pre key={index}>{message.toData()}</Pre>
+          <Pre key={index}>{message.toData(isClassic)}</Pre>
         )),
       },
 

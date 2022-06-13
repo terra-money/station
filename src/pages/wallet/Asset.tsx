@@ -1,7 +1,6 @@
-import { useRecoilValue } from "recoil"
 import { useTranslation } from "react-i18next"
 import { has } from "utils/num"
-import { currencyState } from "data/settings/Currency"
+import { useCurrency } from "data/settings/Currency"
 import { WithFetching } from "components/feedback"
 import { Read, TokenIcon } from "components/token"
 import AssetActions from "./AssetActions"
@@ -12,13 +11,14 @@ import is from "auth/scripts/is"
 export interface Props extends TokenItem, QueryState {
   balance?: Amount
   value?: Value
+  hideActions?: boolean
 }
 
 const Asset = (props: Props) => {
-  const { token, icon, symbol, balance, value, ...state } = props
+  const { token, icon, symbol, balance, value, hideActions, ...state } = props
   const { t } = useTranslation()
+  const currency = useCurrency()
   const navigate = useNavigate()
-  const currency = useRecoilValue(currencyState)
 
   const toSend = (tokenName: string) => navigate(`/send?token=${tokenName}`)
 
@@ -63,7 +63,7 @@ const Asset = (props: Props) => {
         </div>
       </section>
 
-      <AssetActions {...props} />
+      {!hideActions && <AssetActions {...props} />}
     </article>
   )
 }

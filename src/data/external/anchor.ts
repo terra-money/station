@@ -27,7 +27,7 @@ const market = MARKET_DENOMS.UUSD
 const useAddresses = () => {
   const name = useNetworkName()
   return useMemo(
-    () => ({ mainnet: columbus5, testnet: bombay12 }[name]),
+    () => ({ classic: columbus5, testnet: bombay12 }[name]),
     [name]
   )
 }

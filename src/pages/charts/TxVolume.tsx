@@ -7,6 +7,7 @@ import { isDenomTerraNative, readAmount, readDenom } from "@terra.kitchen/utils"
 import { sortDenoms } from "utils/coin"
 import { useCurrency } from "data/settings/Currency"
 import { Aggregate, useTxVolume } from "data/Terra/TerraAPI"
+import { useIsClassic } from "data/query"
 import { useActiveDenoms } from "data/queries/oracle"
 import { Select } from "components/form"
 import { Card } from "components/layout"
@@ -18,9 +19,10 @@ import Range from "./components/Range"
 const TxVolume = () => {
   const { t } = useTranslation()
   const currency = useCurrency()
+  const isClassic = useIsClassic()
 
   /* data */
-  const [denom, setDenom] = useState("uusd")
+  const [denom, setDenom] = useState(isClassic ? "uusd" : "uluna")
   const [type, setType] = useState<Aggregate>(Aggregate.PERIODIC)
   const { data: activeDenoms } = useActiveDenoms()
   const { data, ...state } = useTxVolume(denom, type)

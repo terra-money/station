@@ -4,6 +4,7 @@ import { isDenomTerraNative } from "@terra.kitchen/utils"
 import { getAmount, sortCoins } from "utils/coin"
 import createContext from "utils/createContext"
 import { useCurrency } from "data/settings/Currency"
+import { useIsClassic } from "data/query"
 import { useBankBalance, useTerraNativeLength } from "data/queries/bank"
 import { readNativeDenom } from "data/token"
 import { Card } from "components/layout"
@@ -18,6 +19,7 @@ export const [useMultipleSwap, MultipleSwapProvider] =
 
 const MultipleSwapContext = ({ children }: PropsWithChildren<{}>) => {
   const { t } = useTranslation()
+  const isClassic = useIsClassic()
   const currency = useCurrency()
   const bankBalance = useBankBalance()
   const length = useTerraNativeLength()
@@ -29,9 +31,9 @@ const MultipleSwapContext = ({ children }: PropsWithChildren<{}>) => {
   const available = useMemo(() => {
     return denoms.map((denom) => {
       const balance = getAmount(bankBalance, denom)
-      return { ...readNativeDenom(denom), balance }
+      return { ...readNativeDenom(denom, isClassic), balance }
     })
-  }, [bankBalance, denoms])
+  }, [bankBalance, denoms, isClassic])
 
   const render = () => {
     if (length < 2)

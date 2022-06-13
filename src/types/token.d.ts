@@ -59,6 +59,7 @@ interface IBCTokenItem extends IBCTokenInfoResponse {
   symbol: string
   name: string
   icon: string
+  decimals?: number
 }
 
 /* cw20 */

@@ -11,6 +11,7 @@ import { has } from "utils/num"
 import { sortDenoms } from "utils/coin"
 import { useCurrency } from "data/settings/Currency"
 import { readNativeDenom, WithTokenItem } from "data/token"
+import { useIsClassic } from "data/query"
 import { useMemoizedCalcValue, useMemoizedPrices } from "data/queries/oracle"
 
 /* components */
@@ -42,6 +43,7 @@ interface TxValues {
 const SwapMultipleForm = () => {
   const { t } = useTranslation()
   const currency = useCurrency()
+  const isClassic = useIsClassic()
 
   /* swap context */
   const utils = useSwapUtils()
@@ -55,7 +57,7 @@ const SwapMultipleForm = () => {
     {
       title: t("Coins"),
       children: sortDenoms(activeDenoms, currency).map((denom) => {
-        return { ...readNativeDenom(denom), value: denom }
+        return { ...readNativeDenom(denom, isClassic), value: denom }
       }),
     },
   ]

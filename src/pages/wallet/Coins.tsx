@@ -35,6 +35,7 @@ const Coins = () => {
     if (!coins) return
 
     const [all, filtered] = coins
+    const list = isClassic ? filtered : all
 
     const values = all.map(({ value }) => value).filter(Boolean)
     const valueTotal = values.length ? BigNumber.sum(...values).toNumber() : 0
@@ -63,8 +64,12 @@ const Coins = () => {
           )}
 
           <section>
-            {filtered.map(({ denom, ...item }) => (
-              <Asset {...readNativeDenom(denom)} {...item} key={denom} />
+            {list.map(({ denom, ...item }) => (
+              <Asset
+                {...readNativeDenom(denom, isClassic)}
+                {...item}
+                key={denom}
+              />
             ))}
           </section>
         </Grid>
