@@ -34,6 +34,12 @@
     border: none;
     background: transparent;
   }
+  &.blankWithSlimPad {
+    margin: 0;
+    padding: 0 20px 16px;
+    border: none;
+    background: transparent;
+  }
   &.underTab {
     border-top: none;
     border-top-left-radius: 0;

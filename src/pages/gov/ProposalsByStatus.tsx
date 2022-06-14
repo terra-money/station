@@ -11,6 +11,7 @@ import { Toggle } from "components/form"
 import ProposalItem from "./ProposalItem"
 import GovernanceParams from "./GovernanceParams"
 import styles from "./ProposalsByStatus.module.scss"
+import { isWallet } from "auth"
 
 const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   const { t } = useTranslation()
@@ -70,11 +71,11 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
     <Fetching {...state}>
       <Col>
         {isClassic && status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && (
-          <section>
+          <Card className={isWallet.mobile() ? "blankSidePad" : ""}>
             <Toggle checked={showAll} onChange={toggle}>
               {t("Show all")}
             </Toggle>
-          </section>
+          </Card>
         )}
 
         {render()}

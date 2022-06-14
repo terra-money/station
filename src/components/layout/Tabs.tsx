@@ -46,7 +46,7 @@ const Tabs = ({ tabs, defaultActiveKey, type, reversed, state }: Props) => {
           ref={selectorRef}
           modalType={Mode.SELECT}
           renderButton={(open) => (
-            <Card className="blankWithPad">
+            <Card className="blankWithSlimPad">
               <Button
                 onClick={open}
                 size="small"
