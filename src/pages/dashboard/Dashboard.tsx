@@ -8,7 +8,7 @@ import CommunityPool from "./CommunityPool"
 import StakingRatio from "./StakingRatio"
 import Charts from "./Charts"
 import styles from "./Dashboard.module.scss"
-import is from "../../auth/scripts/is"
+import { isWallet } from "auth"
 
 const cx = classNames.bind(styles)
 
@@ -17,7 +17,7 @@ const Dashboard = () => {
   const isClassic = useIsClassic()
 
   return (
-    <Page title={is.mobile() ? "" : t("Dashboard")}>
+    <Page title={isWallet.mobile() ? "" : t("Dashboard")}>
       <Col>
         <header className={cx(styles.header, { trisect: !isClassic })}>
           {isClassic && <LunaPrice />}
