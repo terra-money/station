@@ -45,7 +45,7 @@ const StakeTx = () => {
             children: (
               <Auto
                 columns={[
-                  <Card>
+                  <Card className="underTab">
                     <TxContext>{renderTab(tab)}</TxContext>
                   </Card>,
                   <ValidatorCompact vertical />,

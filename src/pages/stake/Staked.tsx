@@ -1,12 +1,14 @@
 import { combineState } from "data/query"
 import { useDelegations, useUnbondings } from "data/queries/staking"
 import { useRewards } from "data/queries/distribution"
-import { Col, Row } from "components/layout"
+import { Card, Col, Row } from "components/layout"
 import { Fetching } from "components/feedback"
+import { LinkButton } from "components/general"
 import DelegationsPromote from "app/containers/DelegationsPromote"
 import Delegations from "./Delegations"
 import Unbondings from "./Unbondings"
 import Rewards from "./Rewards"
+import { isWallet } from "auth"
 
 const Staked = () => {
   const { data: delegations, ...delegationsState } = useDelegations()
@@ -24,6 +26,15 @@ const Staked = () => {
 
     return (
       <Row>
+        {isWallet.mobile() && (
+          <Col>
+            <Card className="blankSidePad">
+              <LinkButton to="/rewards" color="primary" size="small" block>
+                {"Withdraw all rewards"}
+              </LinkButton>
+            </Card>
+          </Col>
+        )}
         <Col>
           <Delegations />
         </Col>

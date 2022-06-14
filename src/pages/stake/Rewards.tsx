@@ -32,7 +32,7 @@ const Rewards = () => {
     return (
       <ModalButton
         title={title}
-        modalType={is.mobile() ? Mode.FULL : Mode.DEFAULT}
+        modalType={is.mobile() ? Mode.FULL_CARD : Mode.DEFAULT}
         renderButton={(open) => (
           <StakedCard
             {...state}

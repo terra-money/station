@@ -12,9 +12,13 @@ const Stake = () => {
     <Page
       title={is.mobile() ? "" : t("Stake")}
       extra={
-        <LinkButton to="/rewards" color="primary" size="small">
-          {t("Withdraw all rewards")}
-        </LinkButton>
+        is.mobile() ? (
+          ""
+        ) : (
+          <LinkButton to="/rewards" color="primary" size="small">
+            {t("Withdraw all rewards")}
+          </LinkButton>
+        )
       }
     >
       <Col>

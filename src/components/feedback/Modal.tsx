@@ -46,6 +46,7 @@ export enum Mode {
   DEFAULT = "default",
   TX = "tx",
   FULL = "full",
+  FULL_CARD = "fullCard",
   BOTTOM = "bottom",
   BOTTOM_CONFIRM = "bottomConfirm",
   SELECT = "select",

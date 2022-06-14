@@ -10,9 +10,9 @@
   background: var(--card-bg);
   overflow: hidden; // truncate title, linear progress
   position: relative; // for progress bar
-  margin: 0 20px;
 
   @include mobile {
+    margin: 0 20px;
     & & {
       @include border;
     }
@@ -27,6 +27,17 @@
     margin: 0;
     border: none;
     background: transparent;
+  }
+  &.blankSidePad {
+    margin: 0;
+    padding: 0 20px;
+    border: none;
+    background: transparent;
+  }
+  &.underTab {
+    border-top: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
   }
 }
 
