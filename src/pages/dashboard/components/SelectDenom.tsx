@@ -4,6 +4,7 @@ import { WithTokenItem } from "data/token"
 import { ModalButton, Mode } from "components/feedback"
 import { TokenCard, TokenCardGrid } from "components/token"
 import is from "auth/scripts/is"
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
 
 interface Item extends CoinData {
   value?: Value
@@ -23,7 +24,15 @@ const SelectDenom = ({ title, list }: Props) => {
     <ModalButton
       title={title}
       modalType={is.mobile() ? Mode.FULL : Mode.DEFAULT}
-      renderButton={(open) => <button onClick={open}>{t("Show all")}</button>}
+      renderButton={(open) => (
+        <button onClick={open}>
+          {is.mobile() ? (
+            <ArrowForwardIosIcon style={{ fontSize: 12 }} />
+          ) : (
+            t("Show all")
+          )}
+        </button>
+      )}
     >
       <TokenCardGrid maxHeight>
         {list

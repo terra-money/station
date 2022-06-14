@@ -13,6 +13,7 @@ import { TooltipIcon } from "components/display"
 import ChartContainer from "./components/ChartContainer"
 import Range from "./components/Range"
 import Filter from "./components/Filter"
+import { isWallet } from "auth"
 
 const Wallets = () => {
   const { t } = useTranslation()
@@ -70,6 +71,7 @@ const Wallets = () => {
               formatY={(value) =>
                 formatNumber(value, { prefix: true, fixed: 1 })
               }
+              renderFilter={isWallet.mobile() ? renderFilter : () => <></>}
             />
           )
         }}
@@ -89,7 +91,7 @@ const Wallets = () => {
           {t("Wallets")}
         </TooltipIcon>
       }
-      extra={renderFilter()}
+      extra={!isWallet.mobile() && renderFilter()}
       size="small"
     >
       {render()}

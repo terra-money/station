@@ -11,7 +11,9 @@
 }
 
 .trisect {
-  > :first-child {
-    grid-column: 1 / span 2;
+  @include desktop {
+    > :first-child {
+      grid-column: 1 / span 2;
+    }
   }
 }

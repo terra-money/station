@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next"
+
 import { combineState } from "data/query"
 import { useDelegations, useUnbondings } from "data/queries/staking"
 import { useRewards } from "data/queries/distribution"
@@ -11,6 +13,7 @@ import Rewards from "./Rewards"
 import { isWallet } from "auth"
 
 const Staked = () => {
+  const { t } = useTranslation()
   const { data: delegations, ...delegationsState } = useDelegations()
   const { data: unbondings, ...unbondingsState } = useUnbondings()
   const { data: rewards, ...rewardsState } = useRewards()
@@ -30,7 +33,7 @@ const Staked = () => {
           <Col>
             <Card className="blankSidePad">
               <LinkButton to="/rewards" color="primary" size="small" block>
-                {"Withdraw all rewards"}
+                {t("Withdraw all rewards")}
               </LinkButton>
             </Card>
           </Col>

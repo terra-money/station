@@ -15,6 +15,7 @@ import { TooltipIcon } from "components/display"
 import ChartContainer from "./components/ChartContainer"
 import Filter from "./components/Filter"
 import Range from "./components/Range"
+import { isWallet } from "auth"
 
 const TxVolume = () => {
   const { t } = useTranslation()
@@ -99,6 +100,7 @@ const TxVolume = () => {
               formatY={(value) =>
                 readAmount(value, { prefix: true, integer: true })
               }
+              renderFilter={isWallet.mobile() ? renderFilter : () => <></>}
             />
           )
         }}
@@ -118,7 +120,7 @@ const TxVolume = () => {
           {t("Transaction volume")}
         </TooltipIcon>
       }
-      extra={renderFilter()}
+      extra={!isWallet.mobile() && renderFilter()}
       size="small"
     >
       {render()}

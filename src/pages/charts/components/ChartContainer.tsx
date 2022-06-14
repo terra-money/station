@@ -24,10 +24,11 @@ interface Props extends ChartProps {
   total?: Amount
   unit?: string
   formatValue: (value: string) => ReactNode
+  renderFilter?: () => ReactNode
 }
 
 const ChartContainer = (props: Props) => {
-  const { result, range, total, unit, formatValue } = props
+  const { result, range, total, unit, formatValue, renderFilter } = props
   const { t } = useTranslation()
   const animation = useThemeAnimation()
 
@@ -38,9 +39,14 @@ const ChartContainer = (props: Props) => {
       )
 
     return (
-      <h1 className={styles.title}>
-        {formatValue(total)} <small>{unit}</small>
-      </h1>
+      <div>
+        <h1 className={styles.title}>
+          {formatValue(total)} <small>{unit}</small>
+        </h1>
+        {renderFilter && (
+          <div className={styles.mobileFilter}>{renderFilter()}</div>
+        )}
+      </div>
     )
   }
 

@@ -8,6 +8,7 @@ import { ReadPercent } from "components/token"
 import { Tooltip } from "components/display"
 import DashboardContent from "./components/DashboardContent"
 import DashboardTag from "./components/DashboardTag"
+import { isWallet } from "auth"
 
 const StakingRatio = () => {
   const { t } = useTranslation()
@@ -37,16 +38,29 @@ const StakingRatio = () => {
           </Tooltip>
         }
         footer={
-          <DashboardTag>
-            {[t("Staked Luna"), t("Total Luna")].join(" / ")}
-          </DashboardTag>
+          !isWallet.mobile() && (
+            <DashboardTag>
+              {[t("Staked Luna"), t("Total Luna")].join(" / ")}
+            </DashboardTag>
+          )
         }
       />
     )
   }
 
   return (
-    <Card {...state} title={t("Staking ratio")} size="small">
+    <Card
+      {...state}
+      title={t("Staking ratio")}
+      size="small"
+      extra={
+        isWallet.mobile() && (
+          <DashboardTag>
+            {[t("Staked Luna"), t("Total Luna")].join(" / ")}
+          </DashboardTag>
+        )
+      }
+    >
       {render()}
     </Card>
   )

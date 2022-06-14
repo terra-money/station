@@ -12,6 +12,7 @@ import { ReadPercent } from "components/token"
 import ChartContainer from "./components/ChartContainer"
 import Range from "./components/Range"
 import Filter from "./components/Filter"
+import { isWallet } from "auth"
 
 const StakingReturn = () => {
   const { t } = useTranslation()
@@ -72,6 +73,7 @@ const StakingReturn = () => {
                   ? [0, 1, 2, 3]
                   : undefined
               }
+              renderFilter={isWallet.mobile() ? renderFilter : () => <></>}
             />
           )
         }}
@@ -92,7 +94,7 @@ const StakingReturn = () => {
         </TooltipIcon>
       }
       size="small"
-      extra={renderFilter()}
+      extra={!isWallet.mobile() && renderFilter()}
     >
       {render()}
     </Card>
