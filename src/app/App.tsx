@@ -70,7 +70,6 @@ const App = () => {
               state: data,
             })
           }
-          // }
           break
         }
         case RN_APIS.DISCONNECT_SESSIONS: {

@@ -68,6 +68,7 @@
     height: var(--header-height);
     @include mobile {
       @include flex(space-between);
+      margin-top: 10px;
       h1 {
         font-size: 24px;
       }
@@ -79,16 +80,21 @@
     }
   }
 
-  &.subPage {
-    @include flex(flex-start);
-    background: var(--card-bg);
-    border-bottom: var(--border-width) solid var(--card-border);
-    fill: var(--text);
-    h1 {
-      font-size: 16px;
-    }
-    button {
-      width: 24px;
+  @include mobile {
+    &.subPage {
+      @include flex(flex-start);
+      background: var(--card-bg);
+      border-bottom: var(--border-width) solid var(--card-border);
+      fill: var(--text);
+      .wrapper {
+        margin-top: 0;
+        h1 {
+          font-size: 16px;
+        }
+        button {
+          width: 24px;
+        }
+      }
     }
   }
 

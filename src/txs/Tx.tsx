@@ -47,9 +47,10 @@ import {
 } from "auth/scripts/sessions"
 
 import { toInput } from "./utils"
-import { RN_APIS, WebViewMessage } from "utils/rnModule"
+import { ConfirmErrorCode, RN_APIS, WebViewMessage } from "utils/rnModule"
 import { useTx } from "./TxContext"
 import styles from "./Tx.module.scss"
+import ConfirmModal from "../auth/modules/manage/ConfirmModal"
 
 interface Props<TxValues> {
   /* Only when the token is paid out of the balance held */
@@ -102,6 +103,8 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   const [isMax, setIsMax] = useState(false)
   const [gasDenom, setGasDenom] = useState(initialGasDenom)
+  const [isFailBio, setIsFailBio] = useState(false)
+  const [bioWithPassword, setBioWithPassword] = useState(false)
 
   /* context */
   const { t } = useTranslation()
@@ -218,7 +221,9 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   /* submit */
   const passwordRequired =
-    !isUseBio && !isWallet.ledger(wallet) && isWallet.single(wallet)
+    !(isUseBio && !bioWithPassword) &&
+    !isWallet.ledger(wallet) &&
+    isWallet.single(wallet)
   const [password, setPassword] = useState("")
   const [incorrect, setIncorrect] = useState<string>()
 
@@ -329,14 +334,15 @@ function Tx<TxValues>(props: Props<TxValues>) {
         })
       }
 
-      if (isUseBio) {
+      if (isUseBio && !bioWithPassword) {
         const bioKey = await decodeBioAuthKey()
         if (bioKey) {
           const result = await auth.post(confirmData.tx, bioKey)
           // @ts-ignore
           setLatestTx(result)
         } else {
-          throw new Error("failed bio")
+          // suggest to input password
+          setIsFailBio(true)
         }
       } else {
         const result = await auth.post(confirmData.tx, password)
@@ -345,7 +351,21 @@ function Tx<TxValues>(props: Props<TxValues>) {
       }
     } catch (error) {
       if (error instanceof PasswordError) setIncorrect(error.message)
-      else setError(error as Error)
+      else {
+        if (error instanceof Error && error?.message === "Failed bio auth") {
+          setIsFailBio(true)
+        } else {
+          setError(error as Error)
+          WebViewMessage(RN_APIS.REJECT_TX, {
+            id: confirmData.id,
+            handshakeTopic: confirmData.handshakeTopic,
+            errorMsg: {
+              errorCode: ConfirmErrorCode.createTxFailed,
+              message: error,
+            },
+          })
+        }
+      }
     }
 
     setSubmitting(false)
@@ -369,8 +389,8 @@ function Tx<TxValues>(props: Props<TxValues>) {
         WebViewMessage(RN_APIS.REJECT_TX, {
           id: confirmData.id,
           handshakeTopic: confirmData.handshakeTopic,
-          error: {
-            errorCode: 3,
+          errorMsg: {
+            errorCode: ConfirmErrorCode.txFailed,
             message: latestTx.raw_log,
             txHash: latestTx.txhash,
             raw_message: latestTx,
@@ -556,6 +576,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
           {passwordRequired && (
             <FormItem label={t("Password")} error={incorrect}>
               <Input
+                autoFocus={bioWithPassword}
                 type="password"
                 value={password}
                 onChange={(e) => {
@@ -571,7 +592,17 @@ function Tx<TxValues>(props: Props<TxValues>) {
           <Grid columns={2} gap={12}>
             <Button
               color="danger"
-              onClick={() => navigate("/", { replace: true })}
+              onClick={() => {
+                WebViewMessage(RN_APIS.REJECT_TX, {
+                  id: confirmData?.id,
+                  handshakeTopic: confirmData?.handshakeTopic,
+                  errorMsg: {
+                    errorCode: ConfirmErrorCode.userDenied,
+                    message: "Denied by user",
+                  },
+                })
+                navigate("/", { replace: true })
+              }}
             >
               {t("Cancel")}
             </Button>
@@ -647,6 +678,17 @@ function Tx<TxValues>(props: Props<TxValues>) {
           onRequestClose={() => setError(undefined)}
           isOpen
         />
+      )}
+
+      {isFailBio && (
+        <ConfirmModal
+          onRequestClose={() => {
+            setBioWithPassword(true)
+            setIsFailBio(false)
+          }}
+        >
+          {t("Would you like to confirm with your password?")}
+        </ConfirmModal>
       )}
     </>
   )

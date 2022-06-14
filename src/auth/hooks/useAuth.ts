@@ -208,7 +208,7 @@ const useAuth = () => {
       const decrypted = decrypt(storedBioKey, storedTimestamp)
       return decrypted
     } else {
-      throw new Error("failed bio")
+      throw new Error("Failed bio auth")
     }
   }
 

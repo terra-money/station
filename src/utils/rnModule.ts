@@ -24,6 +24,14 @@ export const RN_APIS = {
   GET_LEDGER_KEY: "GET_LEDGER_KEY",
 } as const
 
+export enum ConfirmErrorCode {
+  userDenied = 1, // User Denied
+  createTxFailed = 2, // CreateTxFailed (no Txhash)
+  txFailed = 3, // TxFailed (Broadcast with Txhash with fail)
+  timeOut = 4, // Timeout
+  etc = 99,
+}
+
 export type RN_API = typeof RN_APIS[keyof typeof RN_APIS] // type
 
 export const schemeUrl = {
