@@ -8,14 +8,15 @@ interface Props {
   gap?: number
   className?: string
   start?: boolean
+  end?: boolean
   wrap?: boolean
 }
 
 export const InlineFlex = (props: PropsWithChildren<Props>) => {
-  const { gap, start, wrap, className, children } = props
+  const { gap, start, end, wrap, className, children } = props
   return (
     <span
-      className={cx(styles.inline, { start, wrap }, className)}
+      className={cx(styles.inline, { start, end, wrap }, className)}
       style={{ gap }}
     >
       {children}
@@ -24,10 +25,10 @@ export const InlineFlex = (props: PropsWithChildren<Props>) => {
 }
 
 export const FlexColumn = (props: PropsWithChildren<Props>) => {
-  const { gap, start, wrap, className, children } = props
+  const { gap, start, end, wrap, className, children } = props
   return (
     <div
-      className={cx(styles.column, { start, wrap }, className)}
+      className={cx(styles.column, { start, end, wrap }, className)}
       style={{ gap }}
     >
       {children}
@@ -36,10 +37,10 @@ export const FlexColumn = (props: PropsWithChildren<Props>) => {
 }
 
 const Flex = (props: PropsWithChildren<Props>) => {
-  const { gap, start, wrap, className, children } = props
+  const { gap, start, end, wrap, className, children } = props
   return (
     <div
-      className={cx(styles.flex, { start, wrap }, className)}
+      className={cx(styles.flex, { start, end, wrap }, className)}
       style={{ gap }}
     >
       {children}

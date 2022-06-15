@@ -58,9 +58,7 @@ const Coins = () => {
           )}
 
           {isClassic && !isWallet.mobile() && (
-            <Flex className={styles.select}>
-              {!isWalletEmpty && <SelectMinimumValue />}
-            </Flex>
+            <Flex end>{!isWalletEmpty && <SelectMinimumValue />}</Flex>
           )}
 
           <section>

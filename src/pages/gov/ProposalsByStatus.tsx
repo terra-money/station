@@ -71,7 +71,7 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
     <Fetching {...state}>
       <Col>
         {isClassic && status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && (
-          <Card className={isWallet.mobile() ? "blankSidePad" : ""}>
+          <Card className={isWallet.mobile() ? "blankSidePad" : "blank"}>
             <Toggle checked={showAll} onChange={toggle}>
               {t("Show all")}
             </Toggle>
