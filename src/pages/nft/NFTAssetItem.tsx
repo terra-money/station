@@ -11,20 +11,21 @@ import { Mode, WithFetching } from "components/feedback"
 import { ModalButton } from "components/feedback"
 import NFTDetails from "./NFTDetails"
 import styles from "./NFTAssetItem.module.scss"
-import is from "auth/scripts/is"
+import { isWallet } from "auth"
 
 const cx = classNames.bind(styles)
 
 interface Props {
   contract: TerraAddress
   id: string
+  groupName?: string
   compact?: boolean
 }
 
 // Where to use
 // 1. NFT asset list
 // 2. Transfer tx form
-const NFTAssetItem = ({ contract, id, compact }: Props) => {
+const NFTAssetItem = ({ contract, id, compact, groupName }: Props) => {
   const { t } = useTranslation()
   const { data, ...state } = useTokenInfoCW721(contract, id)
   const SIZE = compact ? { width: 50, height: 50 } : { width: 100, height: 100 }
@@ -49,7 +50,7 @@ const NFTAssetItem = ({ contract, id, compact }: Props) => {
         {src && (
           <ModalButton
             title={name}
-            modalType={is.mobile() ? Mode.FULL : Mode.DEFAULT}
+            modalType={isWallet.mobile() ? Mode.FULL : Mode.DEFAULT}
             renderButton={(open) => (
               <button type="button" onClick={open} className={styles.image}>
                 <img src={src} alt="" {...SIZE} />
@@ -60,13 +61,16 @@ const NFTAssetItem = ({ contract, id, compact }: Props) => {
           </ModalButton>
         )}
 
-        <h1 className={styles.name}>{name}</h1>
+        <h1 className={styles.name}>
+          {isWallet.mobile() && <div>{groupName}</div>}
+          {name}
+        </h1>
 
-        {compact && (
+        {(compact || isWallet.mobile()) && (
           <>
             <ModalButton
               title={name}
-              modalType={is.mobile() ? Mode.FULL : Mode.DEFAULT}
+              modalType={isWallet.mobile() ? Mode.FULL : Mode.DEFAULT}
               renderButton={(open) => (
                 <InternalButton onClick={open} disabled={!extension}>
                   <InfoOutlinedIcon style={{ fontSize: 18 }} />

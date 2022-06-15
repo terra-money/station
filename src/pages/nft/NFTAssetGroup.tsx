@@ -5,6 +5,7 @@ import { Card } from "components/layout"
 import { TokenIcon } from "components/token"
 import NFTAssetItem from "./NFTAssetItem"
 import styles from "./NFTAssetGroup.module.scss"
+import { isWallet } from "auth"
 
 const NFTAssetGroup = (props: CW721ContractItem) => {
   const { contract, name, icon, marketplace } = props
@@ -38,20 +39,26 @@ const NFTAssetGroup = (props: CW721ContractItem) => {
     const { tokens } = data
     if (!tokens.length) return null
     return tokens.map((id) => (
-      <NFTAssetItem contract={contract} id={id} compact key={id} />
+      <NFTAssetItem
+        contract={contract}
+        id={id}
+        compact={!isWallet.mobile()}
+        key={id}
+        groupName={name}
+      />
     ))
   }
 
   return (
     <Card
       {...state}
-      title={title}
+      title={!isWallet.mobile() && title}
       extra={renderExtra()}
-      className={styles.card}
+      className={isWallet.mobile() ? "blankSidePad" : styles.card}
       mainClassName={styles.main}
-      size="small"
-      bordered
-      bg
+      size={!isWallet.mobile() ? "small" : undefined}
+      bordered={!isWallet.mobile()}
+      bg={!isWallet.mobile()}
     >
       {render()}
     </Card>

@@ -9,7 +9,7 @@ import ManageCustomTokensCW721 from "../custom/ManageCustomTokensCW721"
 import NFTPlaceholder from "./NFTPlaceholder"
 import NFTAssetGroup from "./NFTAssetGroup"
 import styles from "./NFTAssets.module.scss"
-import is from "auth/scripts/is"
+import { isWallet } from "auth"
 
 const cx = classNames.bind(styles)
 
@@ -22,7 +22,7 @@ const NFTAssets = () => {
   const renderExtra = (render: boolean) => (
     <ModalButton
       title={t("NFT")}
-      modalType={is.mobile() ? Mode.FULL : Mode.DEFAULT}
+      modalType={isWallet.mobile() ? Mode.FULL : Mode.DEFAULT}
       renderButton={(open) => {
         if (!render) return null
 
@@ -38,22 +38,30 @@ const NFTAssets = () => {
   )
 
   return (
-    <Card extra={renderExtra(!empty)}>
-      <Grid gap={16} className={cx({ placeholder: empty })}>
-        {empty ? (
-          <NFTPlaceholder />
-        ) : (
-          <Col>
-            {list.map((item) => (
-              <NFTAssetGroup {...item} key={item.contract} />
-            ))}
-          </Col>
-        )}
+    <>
+      {isWallet.mobile() && !empty && (
+        <Card title={"Manage list"} extra={renderExtra(!empty)} />
+      )}
+      <Card
+        extra={!isWallet.mobile() && renderExtra(!empty)}
+        className={isWallet.mobile() && !empty ? "blank" : ""}
+      >
+        <Grid gap={16} className={cx({ placeholder: empty })}>
+          {empty ? (
+            <NFTPlaceholder />
+          ) : (
+            <Col>
+              {list.map((item) => (
+                <NFTAssetGroup {...item} key={item.contract} />
+              ))}
+            </Col>
+          )}
 
-        {/* To maintain the modal even if empty is false when add an NFT */}
-        {renderExtra(empty)}
-      </Grid>
-    </Card>
+          {/* To maintain the modal even if empty is false when add an NFT */}
+          {renderExtra(empty)}
+        </Grid>
+      </Card>
+    </>
   )
 }
 
