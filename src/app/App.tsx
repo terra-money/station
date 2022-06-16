@@ -4,7 +4,7 @@ import Layout, { Page } from "components/layout"
 import { Banner, Content, Header, Actions, Sidebar } from "components/layout"
 import { ErrorBoundary, Wrong } from "components/feedback"
 import { useNavigate } from "react-router-dom"
-import is from "../auth/scripts/is"
+import { isWallet } from "auth"
 
 /* routes */
 import { useNav } from "./routes"
@@ -32,6 +32,7 @@ import {
   getWallets,
   recoverSessions,
   schemeUrl,
+  getVersion,
 } from "../utils/rnModule"
 
 /* init */
@@ -58,6 +59,10 @@ const App = () => {
 
       const { data, type } = JSON.parse(event.data)
       switch (type) {
+        case RN_APIS.APP_VERSION: {
+          console.log("APP_VERSION === ", data)
+          break
+        }
         case RN_APIS.DEEPLINK: {
           if (data?.action === "wallet_connect") {
             navigate("/connect", {
@@ -110,9 +115,9 @@ const App = () => {
   }
 
   useLayoutEffect(() => {
-    if (is.mobileNative()) {
+    if (isWallet.mobileNative()) {
       RNListener()
-
+      getVersion()
       getWallets().then((res: any) => {
         const wallets = getStoredWallets()
         const walletAddresses = wallets.map((item) => item.address)
@@ -153,9 +158,7 @@ const App = () => {
 
   return (
     <Layout>
-      <Banner>
-        <NetworkName />
-      </Banner>
+      <Banner>{!isWallet.mobileNative() && <NetworkName />}</Banner>
 
       <Sidebar>
         <Nav />
@@ -163,12 +166,12 @@ const App = () => {
       </Sidebar>
 
       <Header>
-        <IsClassicNetwork />
+        {!isWallet.mobile() && <IsClassicNetwork />}
 
         <Actions>
           <DevTools />
           <section>
-            {!is.mobile() && (
+            {!isWallet.mobile() && (
               <>
                 <Refresh />
                 <Preferences />
@@ -179,7 +182,7 @@ const App = () => {
           <ValidatorButton />
           <ConnectWallet />
         </Actions>
-        {!is.mobile() && <LatestTx />}
+        {!isWallet.mobile() && <LatestTx />}
       </Header>
 
       <Content>
@@ -188,7 +191,7 @@ const App = () => {
         </ErrorBoundary>
       </Content>
 
-      {is.mobile() && (
+      {isWallet.mobile() && (
         <>
           <LatestTx />
           <ToastContainer

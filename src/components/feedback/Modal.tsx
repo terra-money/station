@@ -45,6 +45,7 @@ export interface Props extends ModalProps, ReactModal.Props {}
 export enum Mode {
   DEFAULT = "default",
   TX = "tx",
+  TX_RESULT = "txResult",
   FULL = "full",
   FULL_CARD = "fullCard",
   BOTTOM = "bottom",

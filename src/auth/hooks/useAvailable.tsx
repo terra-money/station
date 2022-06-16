@@ -4,6 +4,7 @@ import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore
 import KeyIcon from "@mui/icons-material/Key"
 import GroupsIcon from "@mui/icons-material/Groups"
 import { ReactComponent as LedgerIcon } from "styles/images/menu/Ledger.svg"
+import { isWallet } from "auth"
 
 import { sandbox } from "../scripts/env"
 
@@ -19,7 +20,7 @@ const useAvailable = () => {
       icon: <AddCircleOutlineIcon />,
     },
     {
-      to: "/auth/recover",
+      to: isWallet.mobile() ? "/auth/recover-bridge" : "/auth/recover",
       children: t("Recover wallet"),
       icon: <SettingsBackupRestoreIcon />,
     },

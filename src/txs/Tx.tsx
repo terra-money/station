@@ -32,7 +32,7 @@ import { useBankBalance, useIsWalletEmpty } from "data/queries/bank"
 import { Button, Pre } from "components/general"
 import { Flex, Grid } from "components/layout"
 import { FormError, Submit, Select, Input, FormItem } from "components/form"
-import { Modal } from "components/feedback"
+import { Modal, Mode } from "components/feedback"
 import { Details } from "components/display"
 import { Read } from "components/token"
 import ConnectWallet from "app/sections/ConnectWallet"
@@ -674,6 +674,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
       {modal && (
         <Modal
           {...modal}
+          modalType={isWallet.mobile() ? Mode.TX_RESULT : Mode.DEFAULT}
           icon={<ErrorOutlineIcon fontSize="inherit" className="danger" />}
           onRequestClose={() => setError(undefined)}
           isOpen

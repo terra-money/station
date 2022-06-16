@@ -5,9 +5,10 @@ import { Pre } from "components/general"
 import { Grid } from "components/layout"
 import { Form, FormItem, FormWarning } from "components/form"
 import { Input, RadioButton, Submit } from "components/form"
-import { Modal } from "components/feedback"
-import useAuth from "../../hooks/useAuth"
+import { Modal, Mode as ModalMode } from "components/feedback"
 import QRCode from "../../components/QRCode"
+import { isWallet, useAuth } from "auth"
+import ConfirmModal from "./ConfirmModal"
 
 enum Mode {
   QR = "QR code",
@@ -21,7 +22,12 @@ interface Values {
 
 const ExportWalletForm = () => {
   const { t } = useTranslation()
-  const { validatePassword, encodeEncryptedWallet } = useAuth()
+  const {
+    validatePassword,
+    encodeEncryptedWallet,
+    decodeBioAuthKey,
+    isUseBio,
+  } = useAuth()
 
   /* form */
   const form = useForm<Values>({
@@ -32,12 +38,31 @@ const ExportWalletForm = () => {
   const { register, watch, handleSubmit, formState } = form
   const { errors } = formState
   const { mode } = watch()
+  const [isFailBio, setIsFailBio] = useState(false)
+  const [bioWithPassword, setBioWithPassword] = useState(false)
 
   /* submit */
   const [encoded, setEncoded] = useState<string>()
-  const submit = ({ password }: Values) => {
-    const encoded = encodeEncryptedWallet(password)
-    setEncoded(encoded)
+  const submit = async ({ password }: Values) => {
+    try {
+      if (isUseBio && !bioWithPassword) {
+        const bioKey = await decodeBioAuthKey()
+        if (bioKey) {
+          const encoded = encodeEncryptedWallet(bioKey)
+          setEncoded(encoded)
+        } else {
+          // suggest to input password
+          setIsFailBio(true)
+        }
+      } else {
+        const encoded = encodeEncryptedWallet(password)
+        setEncoded(encoded)
+      }
+    } catch (error) {
+      if (error instanceof Error && error?.message === "Failed bio auth") {
+        setIsFailBio(true)
+      }
+    }
   }
 
   /* reset */
@@ -61,7 +86,12 @@ const ExportWalletForm = () => {
   return (
     <>
       {encoded && (
-        <Modal title={mode} isOpen onRequestClose={reset}>
+        <Modal
+          title={mode}
+          isOpen
+          onRequestClose={reset}
+          modalType={isWallet.mobile() ? ModalMode.FULL : ModalMode.DEFAULT}
+        >
           <Grid gap={20}>
             <FormWarning>{t("Keep this private")}</FormWarning>
             {render[mode]()}
@@ -87,16 +117,29 @@ const ExportWalletForm = () => {
           })}
         </section>
 
-        <FormItem label={t("Password")} error={errors.password?.message}>
-          <Input
-            {...register("password", { validate: validatePassword })}
-            type="password"
-            autoFocus
-          />
-        </FormItem>
+        {!(isUseBio && !bioWithPassword) && (
+          <FormItem label={t("Password")} error={errors.password?.message}>
+            <Input
+              {...register("password", { validate: validatePassword })}
+              type="password"
+              autoFocus
+            />
+          </FormItem>
+        )}
 
         <Submit />
       </Form>
+
+      {isFailBio && (
+        <ConfirmModal
+          onRequestClose={() => {
+            setBioWithPassword(true)
+            setIsFailBio(false)
+          }}
+        >
+          {t("Would you like to confirm with your password?")}
+        </ConfirmModal>
+      )}
     </>
   )
 }

@@ -5,6 +5,7 @@ import { getStoredSessions } from "../auth/scripts/sessions"
 import is from "../auth/scripts/is"
 
 export const RN_APIS = {
+  APP_VERSION: "APP_VERSION",
   MIGRATE_KEYSTORE: "MIGRATE_KEYSTORE",
   SET_THEME: "SET_THEME",
   SET_NETWORK: "SET_NETWORK",
@@ -40,6 +41,7 @@ export const schemeUrl = {
 }
 // 요청 타입
 type RN_API_REQ_TYPES = {
+  [RN_APIS.APP_VERSION]: unknown
   [RN_APIS.MIGRATE_KEYSTORE]: unknown
   [RN_APIS.SET_THEME]: unknown
   [RN_APIS.SET_NETWORK]: unknown
@@ -61,6 +63,7 @@ type RN_API_REQ_TYPES = {
 
 // 응답 타입
 type RN_API_RES_TYPES = {
+  [RN_APIS.APP_VERSION]: string
   [RN_APIS.MIGRATE_KEYSTORE]: string
   [RN_APIS.SET_THEME]: string
   [RN_APIS.SET_NETWORK]: string
@@ -142,6 +145,10 @@ export const parseTx = (
         fee: fee ? Fee.fromAmino(JSON.parse(fee)) : undefined,
         memo,
       }
+}
+export const getVersion = async () => {
+  const version = await WebViewMessage(RN_APIS.APP_VERSION)
+  return version
 }
 
 export const getWallets = async () => {
