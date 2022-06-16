@@ -157,12 +157,11 @@ function uptime_estimated(info: SigningInfo | undefined): number {
   if (!info) {
     return 0
   }
-  const { missed_blocks_counter, start_height, index_offset } = info
-  if (missed_blocks_counter && index_offset && index_offset > start_height) {
-    return 1 - Number(missed_blocks_counter) / (index_offset - start_height)
-  } else {
-    return 1
+  const { missed_blocks_counter } = info
+  if (missed_blocks_counter) {
+    return 1 - Number(missed_blocks_counter) / 10000
   }
+  return 1
 }
 
 /* validators */
@@ -246,10 +245,8 @@ export const calcSelfDelegation = (validator?: TerraValidator) => {
 export const getCalcUptime = ({ slash_window }: OracleParams) => {
   return (validator?: TerraValidator) => {
     if (!validator) return
-    const { miss_counter, start_height, index_offset } = validator
-    if (index_offset && start_height && index_offset > start_height) {
-      slash_window = index_offset - start_height
-    }
+    const { miss_counter } = validator
+    const slash_window = 10000
     return miss_counter ? 1 - Number(miss_counter) / slash_window : undefined
   }
 }
