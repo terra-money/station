@@ -1,4 +1,104 @@
+@import "mixins";
+
 .amount {
   border-top: 1px solid var(--card-border);
   padding: 20px 0;
+}
+
+.vestedWrapper {
+  padding: 16px 0;
+  border-top: 1px dashed var(--card-border);
+  .vested {
+    & :first-child {
+      font-size: var(--font-size-small);
+      span {
+        font-size: var(--font-size-small);
+      }
+    }
+    & :not(:first-child) {
+      font-weight: var(--bold);
+    }
+    & :last-child {
+      font-size: var(--font-size-small);
+    }
+  }
+  .onerelease {
+    margin-top: 4px;
+    font-size: var(--font-size-small);
+    & :last-child {
+      font-weight: var(--bold);
+    }
+    .onereleasing {
+      font-weight: var(--normal);
+    }
+    svg {
+      fill: currentColor;
+    }
+  }
+}
+
+.scheduleWrapper {
+  padding-top: 16px;
+  border-top: 1px dashed var(--card-border);
+}
+
+.schedule {
+  position: relative;
+  padding-left: 30px;
+
+  &:not(:first-child) {
+    margin-top: 24px;
+    &:before {
+      content: "";
+      display: block;
+      position: absolute;
+      top: -50px;
+      left: 9px;
+      width: 1px;
+      height: 70px;
+      background-color: var(--card-border);
+      z-index: 1;
+    }
+  }
+
+  .index {
+    position: absolute;
+    top: 2px;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: var(--card-border);
+    font-size: var(--font-size-small);
+    z-index: 2;
+  }
+
+  .ratio {
+    align-items: flex-end;
+    & :first-child {
+      font-size: var(--font-size-small);
+      span {
+        font-size: var(--font-size-small);
+      }
+    }
+    & :last-child {
+      font-weight: var(--bold);
+    }
+  }
+
+  .release {
+    margin-top: 4px;
+    align-items: flex-end;
+    font-size: var(--font-size-small);
+    & :last-child {
+      font-weight: var(--bold);
+    }
+    svg {
+      fill: currentColor;
+    }
+  }
+}
+
+.releasing {
+  color: var(--info);
 }

@@ -10,7 +10,9 @@ import { Card } from "components/layout"
 import { Read } from "components/token"
 import Asset from "./Asset"
 import VestingScheduleTable from "./VestingScheduleTable"
+import VestingSchedules from "./VestingSchedules"
 import styles from "./Vesting.module.scss"
+import { isWallet } from "auth"
 
 const Vesting = () => {
   const { t } = useTranslation()
@@ -30,16 +32,21 @@ const Vesting = () => {
         hideActions
       />
 
-      <section className={styles.amount}>
-        <dl>
-          <dt>{t("Vested")}</dt>
-          <dd>
-            <Read amount={schedule.amount.vested} />
-          </dd>
-        </dl>
-      </section>
-
-      <VestingScheduleTable {...schedule} />
+      {isWallet.mobile() ? (
+        <VestingSchedules {...schedule} />
+      ) : (
+        <>
+          <section className={styles.amount}>
+            <dl>
+              <dt>{t("Vested")}</dt>
+              <dd>
+                <Read amount={schedule.amount.vested} />
+              </dd>
+            </dl>
+          </section>
+          <VestingScheduleTable {...schedule} />
+        </>
+      )}
     </Card>
   )
 }
