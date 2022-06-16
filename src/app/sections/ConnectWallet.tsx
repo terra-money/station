@@ -1,7 +1,7 @@
 /*
  * @Author: lmk
  * @Date: 2022-06-02 16:12:07
- * @LastEditTime: 2022-06-09 19:05:08
+ * @LastEditTime: 2022-06-16 16:38:19
  * @LastEditors: lmk
  * @Description:
  */
@@ -48,7 +48,7 @@ const ConnectWallet = ({ renderButton }: Props) => {
   // const [list] = useState<any>([])
   const { getAddress } = useConnectWallet()
   useEffect(() => {
-    if (window.ethereum) {
+    if (window.ethereum?.chainId) {
       const metamask = JSON.parse(localStorage.getItem("metamask") || "false")
       window.ethereum._metamask.isUnlocked?.().then((res) => {
         metamask && res && getAddress()

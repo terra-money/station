@@ -1,7 +1,7 @@
 /*
  * @Author: lmk
  * @Date: 2022-05-25 11:23:10
- * @LastEditTime: 2022-06-10 10:41:40
+ * @LastEditTime: 2022-06-16 16:30:41
  * @LastEditors: lmk
  * @Description:
  */
@@ -28,6 +28,7 @@ import {
   calcUnbondingsTotal,
   useDelegations,
   useUnbondings,
+  useValidator,
 } from "data/queries/staking"
 import { calcRewardsValues, useRewards } from "data/queries/distribution"
 import { useTerraValidators } from "data/Terra/TerraAPI"
@@ -35,6 +36,11 @@ import { useMemoizedCalcValue } from "data/queries/oracle"
 import { Col } from "components/layout"
 import BigNumber from "bignumber.js"
 import ConnectWallet from "app/sections/ConnectWallet"
+import {
+  ValidatorJailed,
+  ValidatorStatus,
+} from "pages/stake/components/ValidatorTag"
+import { Validator } from "@terra-money/terra.js"
 // import { ValidatorLink } from "components/general"
 function a11yProps(index: number) {
   return {
@@ -174,6 +180,64 @@ const DashboardTabs = ({ children }: PropsWithChildren<{}>) => {
   const showButton = new BigNumber(totalAmount)
     .minus(toNumber(balance))
     .toString()
+  const ValidatorItem = ({ item }: { item: any }) => {
+    const { delegation, unbonding, reward, name, address, estimatedReward } =
+      item
+
+    const { data: validator } = useValidator(address)
+    const { status, jailed } =
+      validator ?? ({ status: "", jailed: false } as unknown as Validator)
+    return (
+      <div key={address} className={styles.validator}>
+        <Link to={`/validator/${address}`}>
+          <div className={styles.validatorTitle}>
+            <span>{name}</span>
+            <ValidatorStatus status={status} />
+            {jailed && <ValidatorJailed />}
+          </div>
+        </Link>
+
+        <Grid container>
+          <Grid item xs={6} className={styles.validatorItem}>
+            <p className={styles.title}>Delegating</p>
+            <Read
+              amount={delegation.amount}
+              denom={delegation.denom}
+              className={styles.totalAmount}
+              auto
+            />
+          </Grid>
+          <Grid item xs={6} className={styles.validatorItem}>
+            <p className={styles.title}>Undelegating</p>
+            <Read
+              amount={unbonding.amount}
+              denom={unbonding.denom}
+              className={styles.totalAmount}
+              auto
+            />
+          </Grid>
+          <Grid item xs={6} className={styles.validatorItem}>
+            <p className={styles.title}>Rewards</p>
+            <Read
+              amount={reward.amount}
+              denom={reward.denom}
+              className={styles.totalAmount}
+              auto
+            />
+          </Grid>
+          <Grid item xs={6} className={styles.validatorItem}>
+            <p className={styles.title}>Est. Reward/Day</p>
+            <Read
+              amount={estimatedReward.amount}
+              denom={estimatedReward.denom}
+              className={styles.totalAmount}
+              auto
+            />
+          </Grid>
+        </Grid>
+      </div>
+    )
+  }
   return (
     <>
       <Tabs
@@ -313,62 +377,7 @@ const DashboardTabs = ({ children }: PropsWithChildren<{}>) => {
         <div className={styles.colBox}>
           <Col>
             {validators.length ? (
-              validators.map((item) => {
-                const {
-                  delegation,
-                  unbonding,
-                  reward,
-                  name,
-                  address,
-                  estimatedReward,
-                } = item
-                return (
-                  <div key={address} className={styles.validator}>
-                    <Link to={`/validator/${address}`}>
-                      <p className={styles.validatorTitle}>{name}</p>
-                    </Link>
-
-                    <Grid container>
-                      <Grid item xs={6} className={styles.validatorItem}>
-                        <p className={styles.title}>Delegating</p>
-                        <Read
-                          amount={delegation.amount}
-                          denom={delegation.denom}
-                          className={styles.totalAmount}
-                          auto
-                        />
-                      </Grid>
-                      <Grid item xs={6} className={styles.validatorItem}>
-                        <p className={styles.title}>Undelegating</p>
-                        <Read
-                          amount={unbonding.amount}
-                          denom={unbonding.denom}
-                          className={styles.totalAmount}
-                          auto
-                        />
-                      </Grid>
-                      <Grid item xs={6} className={styles.validatorItem}>
-                        <p className={styles.title}>Rewards</p>
-                        <Read
-                          amount={reward.amount}
-                          denom={reward.denom}
-                          className={styles.totalAmount}
-                          auto
-                        />
-                      </Grid>
-                      <Grid item xs={6} className={styles.validatorItem}>
-                        <p className={styles.title}>Est. Reward/Day</p>
-                        <Read
-                          amount={estimatedReward.amount}
-                          denom={estimatedReward.denom}
-                          className={styles.totalAmount}
-                          auto
-                        />
-                      </Grid>
-                    </Grid>
-                  </div>
-                )
-              })
+              validators.map((item) => <ValidatorItem item={item} />)
             ) : (
               <div className={styles.unConnect}>
                 <img

@@ -13,6 +13,7 @@ interface Window {
       isUnlocked: () => Promise<boolean>
     }
     _handleConnect: () => Promise<any>
+    chainId: number | string
   }
 }
 interface globalThis {

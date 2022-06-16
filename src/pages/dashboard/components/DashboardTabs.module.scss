@@ -124,6 +124,11 @@
     color: #333333;
     padding-left: 20px;
     border-bottom: $border;
+    display: flex;
+    align-items: center;
+    span {
+      margin-right: 5px;
+    }
   }
   .validatorItem {
     padding: 14px 0 14px 20px;

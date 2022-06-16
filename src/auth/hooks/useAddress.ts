@@ -1,7 +1,7 @@
 /*
  * @Author: lmk
  * @Date: 2022-05-25 15:17:49
- * @LastEditTime: 2022-06-09 10:47:50
+ * @LastEditTime: 2022-06-16 16:38:39
  * @LastEditors: lmk
  * @Description:
  */
@@ -32,7 +32,7 @@ export function useConnectWallet() {
         setmisesState({ ...misesState, misesId: res.misesId })
         localStorage.setItem("metamask", JSON.stringify(true))
       })
-    if (!window.ethereum) {
+    if (!window.ethereum || !window.ethereum.chainId) {
       open?.()
       // window.location.reload()
     }
