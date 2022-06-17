@@ -225,21 +225,13 @@ const Validators = () => {
             },
             {
               title: t("Rewards"),
-              tooltip: t("Estimated monthly rewards with 100 MIS staked"),
+              tooltip: t("Estimated yearly rewards in APR"),
               dataIndex: "rewards_30d",
               defaultSortOrder: "desc",
               key: "rewards",
               sorter: ({ rewards_30d: a = "0" }, { rewards_30d: b = "0" }) =>
                 Number(a) - Number(b),
-              render: (value) =>
-                !!value && (
-                  <Read
-                    amount={Number(value) * 100}
-                    denom="umis"
-                    decimals={0}
-                    fixed={6}
-                  />
-                ),
+              render: (value) => readPercent(Number(value * 12), { fixed: 2 }),
               align: "right",
             },
           ]}
