@@ -1,5 +1,9 @@
+import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
+import { useNavigate } from "react-router-dom"
 import { useWallet } from "@terra-money/wallet-provider"
+import classNames from "classnames/bind"
+
 import { Col, Page } from "components/layout"
 import useAuth from "auth/hooks/useAuth"
 import AuthList from "auth/components/AuthList"
@@ -9,6 +13,7 @@ import SelectNetwork from "app/sections/SelectNetwork"
 import SelectLanguage from "app/sections/SelectLanguage"
 import { isWallet } from "auth"
 import styles from "app/sections/MobileItem.module.scss"
+import { getVersion } from "utils/rnModule"
 
 export const useManageWallet = () => {
   const { t } = useTranslation()
@@ -42,14 +47,37 @@ export const useSettings = () => {
     icon: <SelectTheme />,
   }
 
-  return [Network, Language, Theme]
+  const Version = {
+    children: t("Version"),
+    icon: <AppVersion />,
+  }
+
+  return isWallet.mobileNative()
+    ? [Network, Language, Theme, Version]
+    : [Language, Theme]
 }
 
+const AppVersion = () => {
+  const [version, setVersion] = useState("")
+
+  useEffect(() => {
+    getVersion().then((res: any) => {
+      setVersion(res)
+    })
+  }, [])
+
+  return <p>{version}</p>
+}
+
+const cx = classNames.bind(styles)
+
 const WalletSettings = () => {
+  const { t } = useTranslation()
   const list = useManageWallet()
   const settingList = useSettings()
   const { disconnect } = useWallet()
   const { wallet } = useAuth()
+  const navigate = useNavigate()
 
   return (
     <Page>
@@ -57,13 +85,24 @@ const WalletSettings = () => {
         {list && <AuthList list={list} />}
         {settingList && <AuthList list={settingList} />}
 
-        {!wallet && !isWallet.mobileNative() && (
-          <div className={styles.menuContainer}>
+        <div className={styles.menuContainer}>
+          {!wallet && !isWallet.mobileNative() && (
             <button className={styles.menuButton} onClick={disconnect}>
-              Disconnect
+              {t("Disconnect")}
             </button>
-          </div>
-        )}
+          )}
+
+          {wallet && isWallet.mobileNative() && (
+            <button
+              className={cx(styles.menuButton, { red: true })}
+              onClick={() => {
+                navigate("/auth/delete")
+              }}
+            >
+              {t("Delete wallet")}
+            </button>
+          )}
+        </div>
       </Col>
     </Page>
   )

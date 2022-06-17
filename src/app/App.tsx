@@ -32,7 +32,6 @@ import {
   getWallets,
   recoverSessions,
   schemeUrl,
-  getVersion,
 } from "../utils/rnModule"
 
 /* init */
@@ -117,7 +116,6 @@ const App = () => {
   useLayoutEffect(() => {
     if (isWallet.mobileNative()) {
       RNListener()
-      getVersion()
       getWallets().then((res: any) => {
         const wallets = getStoredWallets()
         const walletAddresses = wallets.map((item) => item.address)

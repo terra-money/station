@@ -25,6 +25,9 @@
     font-weight: var(--bold);
     transition: background var(--transition);
     border-bottom: var(--border-width) solid var(--card-border);
+    &.red {
+      color: var(--danger);
+    }
   }
 }
 
