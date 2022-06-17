@@ -180,20 +180,26 @@ export const getFindMoniker = (validators: Validator[]) => {
 
 export const getAvailableStakeActions = (
   destination: ValAddress,
-  delegations: Delegation[]
+  delegations: Delegation[],
+  validators: Validator[]
 ) => {
+  const validator = getFindValidator(validators)(destination)
+
   return {
-    [StakeAction.DELEGATE]: true,
-    [StakeAction.REDELEGATE]:
-      delegations.filter(
-        ({ validator_address }) => validator_address !== destination
-      ).length > 0,
+    [StakeAction.DELEGATE]: !validator.jailed,
+    [StakeAction.REDELEGATE]: validator.jailed
+      ? false
+      : delegations.filter(
+          ({ validator_address }) => validator_address !== destination
+        ).length > 0,
     [StakeAction.UNBOND]: !!delegations.filter(
       ({ validator_address }) => validator_address === destination
     ).length,
-    [StakeAction.REINVEST]: !!delegations.filter(
-      ({ validator_address }) => validator_address === destination
-    ).length,
+    [StakeAction.REINVEST]: validator.jailed
+      ? false
+      : !!delegations.filter(
+          ({ validator_address }) => validator_address === destination
+        ).length,
   }
 }
 

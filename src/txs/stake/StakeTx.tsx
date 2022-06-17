@@ -22,9 +22,13 @@ const StakeTx = () => {
   const state = combineState(validatorsState, delegationsState)
 
   const getDisabled = (tab: StakeAction) => {
-    if (!delegations) return true
+    if (!delegations || !validators) return true
 
-    const availableActions = getAvailableStakeActions(destination, delegations)
+    const availableActions = getAvailableStakeActions(
+      destination,
+      delegations,
+      validators
+    )
 
     return !availableActions[tab]
   }

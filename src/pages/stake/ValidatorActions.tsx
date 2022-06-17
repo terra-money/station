@@ -5,7 +5,11 @@ import { has } from "utils/num"
 import { combineState } from "data/query"
 import { useCurrency } from "data/settings/Currency"
 import { useMemoizedCalcValue } from "data/queries/oracle"
-import { useDelegations, useDelegation } from "data/queries/staking"
+import {
+  useDelegations,
+  useDelegation,
+  useValidators,
+} from "data/queries/staking"
 import { getAvailableStakeActions } from "data/queries/staking"
 import { calcRewardsValues, useRewards } from "data/queries/distribution"
 import { LinkButton } from "components/general"
@@ -20,6 +24,7 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
   const { data: delegation, ...delegationState } = useDelegation(destination)
   const { data: delegations, ...delegationsState } = useDelegations()
   const { data: rewards, ...rewardsState } = useRewards()
+  const { data: validators } = useValidators()
   const state = combineState(delegationState, delegationsState)
   const calcValue = useMemoizedCalcValue()
 
@@ -56,9 +61,13 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
   }
 
   const renderDelegationsActions = () => {
-    if (!delegations) return
+    if (!delegations || !validators) return
 
-    const availableActions = getAvailableStakeActions(destination, delegations)
+    const availableActions = getAvailableStakeActions(
+      destination,
+      delegations,
+      validators
+    )
 
     return (
       <ExtraActions align="stretch">
