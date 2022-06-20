@@ -26,10 +26,11 @@ interface Props {
   activeValidators: any[] | undefined
   delegations: Delegation[] | undefined
   undelegations: UnbondingDelegation[] | undefined
+  keyword?: string | undefined
 }
 
 const ValidatorsMobileList = (props: PropsWithChildren<Props>) => {
-  const { activeValidators, delegations, undelegations } = props
+  const { activeValidators, delegations, undelegations, keyword } = props
   const { t } = useTranslation()
   const isClassic = useIsClassic()
 
@@ -51,33 +52,42 @@ const ValidatorsMobileList = (props: PropsWithChildren<Props>) => {
         { value: "commission", label: "Commission : high to low" },
       ]
 
-  const filteredList = useMemo(() => {
+  const sortedList = useMemo(() => {
+    const filteredList = activeValidators?.filter(
+      ({ description: { moniker }, operator_address }) => {
+        if (!keyword) return true
+        if (moniker.toLowerCase().includes(keyword.toLowerCase())) return true
+        if (operator_address === keyword) return true
+        return false
+      }
+    )
+
     switch (currentFilter) {
       case "voting_power_rate":
-        return activeValidators?.sort(
+        return filteredList?.sort(
           ({ voting_power_rate: a = 0 }, { voting_power_rate: b = 0 }) => b - a
         )
       case "time_weighted_uptime":
-        return activeValidators?.sort(
+        return filteredList?.sort(
           ({ time_weighted_uptime: a = 0 }, { time_weighted_uptime: b = 0 }) =>
             b - a
         )
       case "commission":
-        return activeValidators?.sort(
+        return filteredList?.sort(
           (
             { commission: { commission_rates: a } },
             { commission: { commission_rates: b } }
           ) => b.rate.toNumber() - a.rate.toNumber()
         )
       case "rewards_30d":
-        return activeValidators?.sort(
+        return filteredList?.sort(
           ({ rewards_30d: a = "0" }, { rewards_30d: b = "0" }) =>
             Number(b) - Number(a)
         )
       default:
-        return activeValidators
+        return filteredList
     }
-  }, [activeValidators, currentFilter])
+  }, [activeValidators, currentFilter, keyword])
 
   return (
     <>
@@ -107,7 +117,8 @@ const ValidatorsMobileList = (props: PropsWithChildren<Props>) => {
           />
         </Grid>
       </ModalButton>
-      {filteredList?.map((validator, idx) => {
+
+      {sortedList?.map((validator, idx) => {
         const { voting_power_rate, commission } = validator
         const { time_weighted_uptime, rewards_30d } = validator
         const { operator_address, jailed } = validator

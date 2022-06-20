@@ -121,6 +121,7 @@ const Validators = () => {
             activeValidators={activeValidators}
             delegations={delegations}
             undelegations={undelegations}
+            keyword={keyword}
           />
         ) : (
           <Table
