@@ -21,6 +21,8 @@ import ProfileIcon from "./components/ProfileIcon"
 import Uptime from "./components/Uptime"
 import { ValidatorJailed } from "./components/ValidatorTag"
 import styles from "./Validators.module.scss"
+import { isWallet } from "auth"
+import ValidatorsMobileList from "./ValidatorsMobileList"
 
 const Validators = () => {
   const { t } = useTranslation()
@@ -114,145 +116,156 @@ const Validators = () => {
           </section>
         )}
 
-        <Table
-          key={Number(byRank)}
-          onSort={() => setByRank(false)}
-          initialSorterKey={byRank ? undefined : "rewards"}
-          dataSource={activeValidators}
-          filter={({ description: { moniker }, operator_address }) => {
-            if (!keyword) return true
-            if (moniker.toLowerCase().includes(keyword.toLowerCase()))
-              return true
-            if (operator_address === keyword) return true
-            return false
-          }}
-          sorter={(a, b) => Number(a.jailed) - Number(b.jailed)}
-          rowKey={({ operator_address }) => operator_address}
-          columns={[
-            {
-              title: t("Moniker"),
-              dataIndex: ["description", "moniker"],
-              defaultSortOrder: "asc",
-              sorter: ({ description: a }, { description: b }) =>
-                a.moniker.localeCompare(b.moniker),
-              render: (moniker, validator) => {
-                const { operator_address, jailed } = validator
-                const { contact } = validator
+        {isWallet.mobile() ? (
+          <ValidatorsMobileList
+            activeValidators={activeValidators}
+            delegations={delegations}
+            undelegations={undelegations}
+          />
+        ) : (
+          <Table
+            key={Number(byRank)}
+            onSort={() => setByRank(false)}
+            initialSorterKey={byRank ? undefined : "rewards"}
+            dataSource={activeValidators}
+            filter={({ description: { moniker }, operator_address }) => {
+              if (!keyword) return true
+              if (moniker.toLowerCase().includes(keyword.toLowerCase()))
+                return true
+              if (operator_address === keyword) return true
+              return false
+            }}
+            sorter={(a, b) => Number(a.jailed) - Number(b.jailed)}
+            rowKey={({ operator_address }) => operator_address}
+            columns={[
+              {
+                title: t("Moniker"),
+                dataIndex: ["description", "moniker"],
+                defaultSortOrder: "asc",
+                sorter: ({ description: a }, { description: b }) =>
+                  a.moniker.localeCompare(b.moniker),
+                render: (moniker, validator) => {
+                  const { operator_address, jailed } = validator
+                  const { contact } = validator
 
-                const delegated = delegations?.find(
-                  ({ validator_address }) =>
-                    validator_address === operator_address
-                )
+                  const delegated = delegations?.find(
+                    ({ validator_address }) =>
+                      validator_address === operator_address
+                  )
 
-                const undelegated = undelegations?.find(
-                  ({ validator_address }) =>
-                    validator_address === operator_address
-                )
+                  const undelegated = undelegations?.find(
+                    ({ validator_address }) =>
+                      validator_address === operator_address
+                  )
 
-                return (
-                  <Flex start gap={8}>
-                    <ProfileIcon src={validator.picture} size={22} />
+                  return (
+                    <Flex start gap={8}>
+                      <ProfileIcon src={validator.picture} size={22} />
 
-                    <Grid gap={2}>
-                      <Flex gap={4} start>
-                        <Link
-                          to={`/validator/${operator_address}`}
-                          className={styles.moniker}
-                        >
-                          {moniker}
-                        </Link>
+                      <Grid gap={2}>
+                        <Flex gap={4} start>
+                          <Link
+                            to={`/validator/${operator_address}`}
+                            className={styles.moniker}
+                          >
+                            {moniker}
+                          </Link>
 
-                        {contact?.email && (
-                          <VerifiedIcon
-                            className="info"
-                            style={{ fontSize: 12 }}
-                          />
+                          {contact?.email && (
+                            <VerifiedIcon
+                              className="info"
+                              style={{ fontSize: 12 }}
+                            />
+                          )}
+
+                          {jailed && <ValidatorJailed />}
+                        </Flex>
+
+                        {(delegated || undelegated) && (
+                          <p className={styles.muted}>
+                            {[
+                              delegated && t("Delegated"),
+                              undelegated && t("Undelegated"),
+                            ]
+                              .filter(Boolean)
+                              .join(" | ")}
+                          </p>
                         )}
-
-                        {jailed && <ValidatorJailed />}
-                      </Flex>
-
-                      {(delegated || undelegated) && (
-                        <p className={styles.muted}>
-                          {[
-                            delegated && t("Delegated"),
-                            undelegated && t("Undelegated"),
-                          ]
-                            .filter(Boolean)
-                            .join(" | ")}
-                        </p>
-                      )}
-                    </Grid>
-                  </Flex>
-                )
+                      </Grid>
+                    </Flex>
+                  )
+                },
               },
-            },
-            {
-              title: t("Voting power"),
-              dataIndex: "voting_power_rate",
-              defaultSortOrder: "desc",
-              sorter: (
-                { voting_power_rate: a = 0 },
-                { voting_power_rate: b = 0 }
-              ) => a - b,
-              render: (value = 0) => readPercent(value),
-              align: "right",
-            },
-            {
-              title: t("Commission"),
-              dataIndex: ["commission", "commission_rates"],
-              defaultSortOrder: "asc",
-              sorter: (
-                { commission: { commission_rates: a } },
-                { commission: { commission_rates: b } }
-              ) => a.rate.toNumber() - b.rate.toNumber(),
-              render: ({ rate }: Validator.CommissionRates) =>
-                readPercent(rate.toString(), { fixed: 2 }),
-              align: "right",
-            },
-            {
-              title: t("Uptime"),
-              tooltip: t("90 days uptime EMA"),
-              dataIndex: "time_weighted_uptime",
-              defaultSortOrder: "desc",
-              key: "uptime",
-              sorter: (
-                { time_weighted_uptime: a = 0 },
-                { time_weighted_uptime: b = 0 }
-              ) => a - b,
-              render: (value) => !!value && <Uptime>{value}</Uptime>,
-              align: "right",
-              hidden: !isClassic,
-            },
-            {
-              title: t("Rewards"),
-              tooltip: t("Estimated monthly rewards with 100 Luna staked"),
-              dataIndex: "rewards_30d",
-              defaultSortOrder: "desc",
-              key: "rewards",
-              sorter: ({ rewards_30d: a = "0" }, { rewards_30d: b = "0" }) =>
-                Number(a) - Number(b),
-              render: (value) =>
-                !!value && (
-                  <Read
-                    amount={Number(value) * 100}
-                    denom="uluna"
-                    decimals={0}
-                    fixed={6}
-                  />
-                ),
-              align: "right",
-              hidden: !isClassic,
-            },
-          ]}
-        />
+              {
+                title: t("Voting power"),
+                dataIndex: "voting_power_rate",
+                defaultSortOrder: "desc",
+                sorter: (
+                  { voting_power_rate: a = 0 },
+                  { voting_power_rate: b = 0 }
+                ) => a - b,
+                render: (value = 0) => readPercent(value),
+                align: "right",
+              },
+              {
+                title: t("Commission"),
+                dataIndex: ["commission", "commission_rates"],
+                defaultSortOrder: "asc",
+                sorter: (
+                  { commission: { commission_rates: a } },
+                  { commission: { commission_rates: b } }
+                ) => a.rate.toNumber() - b.rate.toNumber(),
+                render: ({ rate }: Validator.CommissionRates) =>
+                  readPercent(rate.toString(), { fixed: 2 }),
+                align: "right",
+              },
+              {
+                title: t("Uptime"),
+                tooltip: t("90 days uptime EMA"),
+                dataIndex: "time_weighted_uptime",
+                defaultSortOrder: "desc",
+                key: "uptime",
+                sorter: (
+                  { time_weighted_uptime: a = 0 },
+                  { time_weighted_uptime: b = 0 }
+                ) => a - b,
+                render: (value) => !!value && <Uptime>{value}</Uptime>,
+                align: "right",
+                hidden: !isClassic,
+              },
+              {
+                title: t("Rewards"),
+                tooltip: t("Estimated monthly rewards with 100 Luna staked"),
+                dataIndex: "rewards_30d",
+                defaultSortOrder: "desc",
+                key: "rewards",
+                sorter: ({ rewards_30d: a = "0" }, { rewards_30d: b = "0" }) =>
+                  Number(a) - Number(b),
+                render: (value) =>
+                  !!value && (
+                    <Read
+                      amount={Number(value) * 100}
+                      denom="uluna"
+                      decimals={0}
+                      fixed={6}
+                    />
+                  ),
+                align: "right",
+                hidden: !isClassic,
+              },
+            ]}
+          />
+        )}
       </>
     )
   }
 
   return (
     <Page title={t("Validators")} extra={renderCount()} sub>
-      <Card {...state}>
+      <Card
+        {...state}
+        className={isWallet.mobile() ? "blankSidePad" : styles.card}
+      >
         <WithSearchInput gap={16}>{render}</WithSearchInput>
       </Card>
     </Page>

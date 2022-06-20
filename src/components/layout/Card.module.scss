@@ -23,6 +23,9 @@
     border: none;
     background: transparent;
   }
+  &.inBlank {
+    margin: 0;
+  }
   &.blankWithPad {
     margin: 0;
     border: none;
