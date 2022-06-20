@@ -11,6 +11,7 @@ const NFTAssetGroup = (props: CW721ContractItem) => {
   const { contract, name, icon, marketplace } = props
   const { t } = useTranslation()
   const { data, ...state } = useCW721Tokens(contract)
+  const empty = !data?.tokens.length
 
   const title = (
     <>
@@ -52,9 +53,9 @@ const NFTAssetGroup = (props: CW721ContractItem) => {
   return (
     <Card
       {...state}
-      title={!isWallet.mobile() && title}
+      title={(!isWallet.mobile() || empty) && title}
       extra={renderExtra()}
-      className={isWallet.mobile() ? "blankSidePad" : styles.card}
+      className={isWallet.mobile() && !empty ? "blankSidePad" : styles.card}
       mainClassName={styles.main}
       size={!isWallet.mobile() ? "small" : undefined}
       bordered={!isWallet.mobile()}
