@@ -73,10 +73,12 @@ const SelectTheme = () => {
       renderButton={
         is.mobile()
           ? (open) => (
-              <HeaderIconButton onClick={open}>
-                {capitalize(currentTheme?.name)}
-                <ArrowForwardIosIcon />
-              </HeaderIconButton>
+              <div onClick={open}>
+                <Flex>
+                  {capitalize(currentTheme?.name)}
+                  <ArrowForwardIosIcon />
+                </Flex>
+              </div>
             )
           : (open) => (
               <HeaderIconButton onClick={open}>

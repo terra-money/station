@@ -2,10 +2,9 @@ import { useTranslation } from "react-i18next"
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
 import { capitalize } from "@mui/material"
 import { useNetworkOptions, useNetworkState } from "data/wallet"
-import { Grid } from "components/layout"
+import { Flex, Grid } from "components/layout"
 import { RadioGroup } from "components/form"
 import { ModalButton, Mode } from "components/feedback"
-import HeaderIconButton from "../components/HeaderIconButton"
 import { useCustomNetworks } from "data/settings/CustomNetworks"
 import { InternalLink } from "components/general"
 import styles from "./MobileItem.module.scss"
@@ -23,10 +22,12 @@ const SelectNetwork = () => {
     <ModalButton
       modalType={Mode.SELECT}
       renderButton={(open) => (
-        <HeaderIconButton onClick={open}>
-          {capitalize(network)}
-          <ArrowForwardIosIcon />
-        </HeaderIconButton>
+        <div onClick={open}>
+          <Flex>
+            {capitalize(network)}
+            <ArrowForwardIosIcon />
+          </Flex>
+        </div>
       )}
     >
       <Grid gap={0}>

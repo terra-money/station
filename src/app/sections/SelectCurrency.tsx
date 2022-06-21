@@ -1,26 +1,28 @@
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
-import { Grid } from "components/layout"
+import { Grid, Flex } from "components/layout"
 import { RadioGroup } from "components/form"
 import { ModalButton, Mode } from "components/feedback"
-import HeaderIconButton from "app/components/HeaderIconButton"
 import { useActiveDenoms } from "data/queries/oracle"
-import { useCurrencyState } from "data/settings/Currency"
+import { useCurrency, useCurrencyState } from "data/settings/Currency"
 import { readNativeDenom } from "data/token"
 import { useIsClassic } from "data/query"
 
 const SelectCurrency = () => {
   const { data: activeDenoms = [] } = useActiveDenoms()
-  const [currency, setCurrency] = useCurrencyState()
+  const [, setCurrency] = useCurrencyState()
+  const currency = useCurrency()
   const isClassic = useIsClassic()
 
   return (
     <ModalButton
       modalType={Mode.SELECT}
       renderButton={(open) => (
-        <HeaderIconButton onClick={open}>
-          {readNativeDenom(currency, isClassic)?.symbol}
-          <ArrowForwardIosIcon />
-        </HeaderIconButton>
+        <div onClick={open}>
+          <Flex>
+            {readNativeDenom(currency, isClassic)?.symbol}
+            <ArrowForwardIosIcon />
+          </Flex>
+        </div>
       )}
     >
       <Grid gap={20}>

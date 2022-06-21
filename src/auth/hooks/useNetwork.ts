@@ -4,6 +4,7 @@ import { useNetworks } from "app/InitNetworks"
 import { sandbox } from "../scripts/env"
 import { getStoredNetwork, storeNetwork } from "../scripts/network"
 import { RN_APIS, WebViewMessage } from "utils/rnModule"
+import { isWallet } from "auth"
 
 const networkState = atom({
   key: "network",
@@ -14,7 +15,9 @@ export const useNetworkState = () => {
   const [network, setNetwork] = useRecoilState(networkState)
 
   const changeNetwork = (network: NetworkName) => {
-    WebViewMessage(RN_APIS.SET_NETWORK, network)
+    if (isWallet.mobileNative()) {
+      WebViewMessage(RN_APIS.SET_NETWORK, network)
+    }
     setNetwork(network)
     storeNetwork(network)
   }

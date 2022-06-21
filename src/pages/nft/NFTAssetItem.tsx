@@ -5,7 +5,7 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined"
 import ShortcutOutlinedIcon from "@mui/icons-material/ShortcutOutlined"
 import { truncate } from "@terra.kitchen/utils"
 import { getIpfsGateway, useTokenInfoCW721 } from "data/queries/wasm"
-import { InternalButton, InternalLink } from "components/general"
+import { ExternalLink, InternalButton, InternalLink } from "components/general"
 import { Grid } from "components/layout"
 import { Mode, WithFetching } from "components/feedback"
 import { ModalButton } from "components/feedback"
@@ -18,14 +18,21 @@ const cx = classNames.bind(styles)
 interface Props {
   contract: TerraAddress
   id: string
-  groupName?: string
   compact?: boolean
+  groupName?: string
+  marketplaceLink?: string
 }
 
 // Where to use
 // 1. NFT asset list
 // 2. Transfer tx form
-const NFTAssetItem = ({ contract, id, compact, groupName }: Props) => {
+const NFTAssetItem = ({
+  contract,
+  id,
+  compact,
+  groupName,
+  marketplaceLink,
+}: Props) => {
   const { t } = useTranslation()
   const { data, ...state } = useTokenInfoCW721(contract, id)
   const SIZE = compact ? { width: 50, height: 50 } : { width: 100, height: 100 }
@@ -46,7 +53,7 @@ const NFTAssetItem = ({ contract, id, compact, groupName }: Props) => {
     const src = getIpfsGateway(image)
 
     return (
-      <article className={className}>
+      <article className={cx(className, { isGroup: groupName })}>
         {src && (
           <ModalButton
             title={name}
@@ -62,11 +69,20 @@ const NFTAssetItem = ({ contract, id, compact, groupName }: Props) => {
         )}
 
         <h1 className={styles.name}>
-          {isWallet.mobile() && <div>{groupName}</div>}
+          {isWallet.mobile() &&
+            groupName &&
+            (marketplaceLink ? (
+              <>
+                <ExternalLink href={marketplaceLink}>{groupName}</ExternalLink>
+                <br />
+              </>
+            ) : (
+              <div>{groupName}</div>
+            ))}
           {name}
         </h1>
 
-        {(compact || isWallet.mobile()) && (
+        {(compact || (isWallet.mobile() && groupName)) && (
           <>
             <ModalButton
               title={name}

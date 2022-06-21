@@ -148,8 +148,10 @@
 
 /* mobile */
 .toggle {
-  opacity: 1;
-
+  opacity: 0.3;
+  &.active {
+    opacity: 1;
+  }
   @include desktop {
     display: none;
   }

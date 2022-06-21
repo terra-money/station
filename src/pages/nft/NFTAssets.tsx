@@ -19,7 +19,7 @@ const NFTAssets = () => {
   const { list } = useCustomTokensCW721()
   const empty = !address || !list.length
 
-  const renderExtra = (render: boolean) => (
+  const renderExtra = (render: boolean, empty: boolean = true) => (
     <ModalButton
       title={t("NFT")}
       modalType={isWallet.mobile() ? Mode.FULL : Mode.DEFAULT}
@@ -28,7 +28,8 @@ const NFTAssets = () => {
 
         return (
           <InternalButton onClick={open} chevron>
-            {t("Add tokens")}
+            {(!isWallet.mobile() || (isWallet.mobile() && empty)) &&
+              t("Add tokens")}
           </InternalButton>
         )
       }}
@@ -40,7 +41,7 @@ const NFTAssets = () => {
   return (
     <>
       {isWallet.mobile() && !empty && (
-        <Card title={"Manage list"} extra={renderExtra(!empty)} />
+        <Card title={"Manage list"} extra={renderExtra(true, empty)} />
       )}
       <Card
         extra={!isWallet.mobile() && renderExtra(!empty)}

@@ -1,10 +1,9 @@
 import { useTranslation } from "react-i18next"
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
 import { capitalize } from "@mui/material"
-import { Grid } from "components/layout"
+import { Grid, Flex } from "components/layout"
 import { RadioGroup } from "components/form"
 import { ModalButton, Mode } from "components/feedback"
-import HeaderIconButton from "app/components/HeaderIconButton"
 import { Languages } from "config/lang"
 
 const SelectLanguage = () => {
@@ -14,10 +13,12 @@ const SelectLanguage = () => {
     <ModalButton
       modalType={Mode.SELECT}
       renderButton={(open) => (
-        <HeaderIconButton onClick={open}>
-          {capitalize(i18n.language)}
-          <ArrowForwardIosIcon />
-        </HeaderIconButton>
+        <div onClick={open}>
+          <Flex>
+            {capitalize(i18n.language)}
+            <ArrowForwardIosIcon />
+          </Flex>
+        </div>
       )}
     >
       <Grid gap={20}>

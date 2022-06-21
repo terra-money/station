@@ -29,9 +29,18 @@ const Nav = () => {
   const isClassic = useIsClassic()
   const { pathname } = useLocation()
   const [buttonView, setButtonView] = useState(true)
+  const [isNeedMoreBtn, setIsNeedMoreBtn] = useState(false)
+
+  const mainButtons = ["/wallet", "/swap", "/stake"]
 
   useEffect(() => {
     const subMenu = subPage.find((a) => a.path === pathname)
+    const isMain = mainButtons.find((a) => a === pathname)
+    if (isMain) {
+      setIsNeedMoreBtn(false)
+    } else {
+      setIsNeedMoreBtn(true)
+    }
 
     if (subMenu) {
       setButtonView(false)
@@ -51,7 +60,7 @@ const Nav = () => {
           to="/wallet"
           onClick={close}
           className={({ isActive }) =>
-            cx(styles.mobileItem, { active: isActive })
+            cx(styles.mobileItem, { active: isActive && !isOpen })
           }
         >
           <>
@@ -65,7 +74,7 @@ const Nav = () => {
             to="/swap"
             onClick={close}
             className={({ isActive }) =>
-              cx(styles.mobileItem, { active: isActive })
+              cx(styles.mobileItem, { active: isActive && !isOpen })
             }
           >
             <>
@@ -79,7 +88,7 @@ const Nav = () => {
           to="/stake"
           onClick={close}
           className={({ isActive }) =>
-            cx(styles.mobileItem, { active: isActive })
+            cx(styles.mobileItem, { active: isActive && !isOpen })
           }
         >
           <>
@@ -89,7 +98,9 @@ const Nav = () => {
         </NavLink>
 
         <button
-          className={classNames(styles.toggle, styles.mobileItem)}
+          className={cx(styles.toggle, styles.mobileItem, {
+            active: isOpen || isNeedMoreBtn,
+          })}
           onClick={toggle}
         >
           <MenuIcon {...ICON_SIZE} />

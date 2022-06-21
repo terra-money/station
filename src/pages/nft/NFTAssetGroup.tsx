@@ -26,6 +26,10 @@ const NFTAssetGroup = (props: CW721ContractItem) => {
   )
 
   const renderExtra = () => {
+    if (!data) return null
+    const { tokens } = data
+    if (tokens.length && isWallet.mobile()) return null
+
     if (!marketplace?.length) return null
     const [link] = marketplace
     return (
@@ -46,6 +50,7 @@ const NFTAssetGroup = (props: CW721ContractItem) => {
         compact={!isWallet.mobile()}
         key={id}
         groupName={name}
+        marketplaceLink={marketplace?.length ? marketplace?.[0] : undefined}
       />
     ))
   }
