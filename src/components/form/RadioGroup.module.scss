@@ -7,7 +7,9 @@
     button {
       padding: 0 20px;
       height: 64px;
-      border-bottom: var(--border-width) solid var(--card-border);
+      &:not(:last-child) {
+        border-bottom: var(--border-width) solid var(--card-border);
+      }
       & > div > div {
         justify-content: space-between;
         flex-flow: row-reverse;

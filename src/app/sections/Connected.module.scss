@@ -13,6 +13,7 @@
 
 @include mobile {
   .mobileItem {
+    position: relative;
     padding: 20px;
     border-bottom: var(--border-width) solid var(--card-border);
   }

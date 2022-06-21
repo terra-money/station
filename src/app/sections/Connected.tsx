@@ -48,23 +48,35 @@ const Connected = () => {
     <Grid gap={isWallet.mobile() ? 0 : 16}>
       <Grid gap={4} className={styles.mobileItem}>
         <section>
-          <Tooltip content={t("View on Terra Finder")}>
+          {isWallet.mobile() ? (
             <FinderLink className={styles.link} short>
               {address}
             </FinderLink>
-          </Tooltip>
+          ) : (
+            <Tooltip content={t("View on Terra Finder")}>
+              <FinderLink className={styles.link} short>
+                {address}
+              </FinderLink>
+            </Tooltip>
+          )}
         </section>
 
         <Flex gap={4} start>
           <Copy text={address} />
           <WalletQR
-            renderButton={(open) => (
-              <Tooltip content={t("Show address as QR code")}>
+            renderButton={(open) =>
+              isWallet.mobile() ? (
                 <button className={CopyStyles.button} onClick={open}>
                   <QrCodeIcon fontSize="inherit" />
                 </button>
-              </Tooltip>
-            )}
+              ) : (
+                <Tooltip content={t("Show address as QR code")}>
+                  <button className={CopyStyles.button} onClick={open}>
+                    <QrCodeIcon fontSize="inherit" />
+                  </button>
+                </Tooltip>
+              )
+            }
           />
 
           {isWallet.ledger(wallet) && (
@@ -81,7 +93,8 @@ const Connected = () => {
             </Tooltip>
           )}
 
-          {isWallet.mobileNative() && <ConnectedWalletMenuButton />}
+          <ConnectedWalletMenuButton />
+          {/*{isWallet.mobileNative() && <ConnectedWalletMenuButton />}*/}
         </Flex>
       </Grid>
       <SwitchWallet />
