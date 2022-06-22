@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import VerifiedIcon from "@mui/icons-material/Verified"
 import { readPercent } from "@terra.kitchen/utils"
 import { Validator } from "@terra-money/terra.js"
