@@ -235,7 +235,18 @@ export const getCalcVotingPowerRate = (TerraValidators: TerraValidator[]) => {
     return voting_power ? Number(validator.voting_power) / total : undefined
   }
 }
+export const getBondedMISCount = (
+  TerraValidators: TerraValidator[],
+  address: string
+) => {
+  const validator = TerraValidators.find(
+    ({ operator_address }) => operator_address === address
+  )
 
+  if (!validator) return
+  const { voting_power } = validator
+  return voting_power ? Number(validator.voting_power) : undefined
+}
 export const calcSelfDelegation = (validator?: TerraValidator) => {
   if (!validator) return
   const { self, tokens } = validator

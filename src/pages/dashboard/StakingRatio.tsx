@@ -38,7 +38,6 @@ const StakingRatio = () => {
           <div className={styles.flexFull}>
             <div>
               <ReadPercent>{data && last(data)?.value}</ReadPercent>
-              <small>/year*</small>
             </div>
             <p>APR</p>
           </div>

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import VerifiedIcon from "@mui/icons-material/Verified"
 import { readPercent } from "@terra.kitchen/utils"
 import { Validator } from "@terra-money/terra.js"
@@ -11,12 +11,11 @@ import { combineState } from "data/query"
 import { useOracleParams } from "data/queries/oracle"
 import { useValidators } from "data/queries/staking"
 import { useDelegations, useUnbondings } from "data/queries/staking"
-import { getCalcVotingPowerRate } from "data/Terra/TerraAPI"
+import { getBondedMISCount, getCalcVotingPowerRate } from "data/Terra/TerraAPI"
 import { useTerraValidators } from "data/Terra/TerraAPI"
 import { Page, Card, Table, Flex, Grid } from "components/layout"
 import { TooltipIcon } from "components/display"
 import { Toggle } from "components/form"
-import { Read } from "components/token"
 import WithSearchInput from "pages/custom/WithSearchInput"
 import ProfileIcon from "./components/ProfileIcon"
 import Uptime from "./components/Uptime"
@@ -59,12 +58,13 @@ const Validators = () => {
 
         const rank = indexOfTerraValidator + 1
         const voting_power_rate = calcRate(operator_address)
-
+        const bondedMIS = getBondedMISCount(TerraValidators, operator_address)
         return {
           ...TerraValidator,
           ...validator,
           rank,
           voting_power_rate,
+          bondedMIS,
         }
       })
       .sort(({ rank: a }, { rank: b }) => a - b)
@@ -77,9 +77,9 @@ const Validators = () => {
   }
 
   const [byRank, setByRank] = useState(true)
+  const history = useNavigate()
   const render = (keyword: string) => {
     if (!activeValidators) return null
-
     return (
       <>
         <section>
@@ -128,6 +128,9 @@ const Validators = () => {
           }}
           sorter={(a, b) => Number(a.jailed) - Number(b.jailed)}
           rowKey={({ operator_address }) => operator_address}
+          rowClick={({ operator_address }: { operator_address: string }) =>
+            history(`/validator/${operator_address}`)
+          }
           columns={[
             {
               title: t("Moniker"),
@@ -155,12 +158,7 @@ const Validators = () => {
 
                     <Grid gap={2}>
                       <Flex gap={4} start>
-                        <Link
-                          to={`/validator/${operator_address}`}
-                          className={styles.moniker}
-                        >
-                          {moniker}
-                        </Link>
+                        <span className={styles.moniker}>{moniker}</span>
 
                         {contact?.email && (
                           <VerifiedIcon
@@ -188,14 +186,22 @@ const Validators = () => {
               },
             },
             {
-              title: t("Voting power"),
-              dataIndex: "voting_power_rate",
+              title: "APR",
+              tooltip: t("Estimated yearly rewards in APR"),
+              dataIndex: "rewards_30d",
               defaultSortOrder: "desc",
-              sorter: (
-                { voting_power_rate: a = 0 },
-                { voting_power_rate: b = 0 }
-              ) => a - b,
-              render: (value = 0) => readPercent(value),
+              key: "rewards",
+              sorter: ({ rewards_30d: a = "0" }, { rewards_30d: b = "0" }) =>
+                Number(a) - Number(b),
+              render: (value) => readPercent(Number(value * 12), { fixed: 2 }),
+              align: "right",
+            },
+            {
+              title: "Bonded MIS",
+              dataIndex: "bondedMIS",
+              defaultSortOrder: "desc",
+              sorter: ({ bondedMIS: a = 0 }, { bondedMIS: b = 0 }) => a - b,
+              render: (value = 0) => `${value}MIS`,
               align: "right",
             },
             {
@@ -211,6 +217,17 @@ const Validators = () => {
               align: "right",
             },
             {
+              title: t("Voting power"),
+              dataIndex: "voting_power_rate",
+              defaultSortOrder: "desc",
+              sorter: (
+                { voting_power_rate: a = 0 },
+                { voting_power_rate: b = 0 }
+              ) => a - b,
+              render: (value = 0) => readPercent(value),
+              align: "right",
+            },
+            {
               title: t("Uptime"),
               tooltip: t("90 days uptime EMA"),
               dataIndex: "time_weighted_uptime",
@@ -221,17 +238,6 @@ const Validators = () => {
                 { time_weighted_uptime: b = 0 }
               ) => a - b,
               render: (value) => !!value && <Uptime>{value}</Uptime>,
-              align: "right",
-            },
-            {
-              title: t("Rewards"),
-              tooltip: t("Estimated yearly rewards in APR"),
-              dataIndex: "rewards_30d",
-              defaultSortOrder: "desc",
-              key: "rewards",
-              sorter: ({ rewards_30d: a = "0" }, { rewards_30d: b = "0" }) =>
-                Number(a) - Number(b),
-              render: (value) => readPercent(Number(value * 12), { fixed: 2 }),
               align: "right",
             },
           ]}
