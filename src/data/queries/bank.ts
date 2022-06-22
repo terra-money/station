@@ -40,7 +40,7 @@ export const useInitialBankBalance = () => {
       if (!address) return new Coins()
       // TODO: Pagination
       // Required when the number of results exceed 100
-      const [coins] = await lcd.bank.balance(address)
+      const [coins] = await lcd.bank.spendableBalances(address)
       return coins
     },
     { ...RefetchOptions.DEFAULT }
