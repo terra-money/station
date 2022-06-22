@@ -22,6 +22,12 @@
   }
 
   height: 100vh;
+
+  @include mobile {
+    &.hiddenMenu {
+      grid-template-rows: auto auto 1fr 0 0;
+    }
+  }
 }
 
 .banner {

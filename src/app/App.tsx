@@ -58,10 +58,6 @@ const App = () => {
 
       const { data, type } = JSON.parse(event.data)
       switch (type) {
-        case RN_APIS.APP_VERSION: {
-          console.log("APP_VERSION === ", data)
-          break
-        }
         case RN_APIS.DEEPLINK: {
           if (data?.action === "wallet_connect") {
             navigate("/connect", {

@@ -111,9 +111,23 @@ export const Content = ({ children }: PropsWithChildren<{}>) => {
 
 const Layout = ({ children }: PropsWithChildren<{}>) => {
   const isMenuOpen = useRecoilValue(mobileIsMenuOpenState)
+  const { pathname } = useLocation()
+  const { subPage } = useNav()
+  const [hiddenMenu, setHiddenMenu] = useState(false)
+
+  useEffect(() => {
+    const subMenu = subPage.find((a) => a.path === pathname)
+    if (subMenu && is.mobile()) {
+      setHiddenMenu(true)
+    } else {
+      setHiddenMenu(false)
+    }
+  }, [pathname])
 
   return (
-    <div className={cx(styles.layout, { menu: isMenuOpen })}>{children}</div>
+    <div className={cx(styles.layout, { menu: isMenuOpen, hiddenMenu })}>
+      {children}
+    </div>
   )
 }
 

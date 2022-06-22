@@ -123,9 +123,7 @@ const Nav = () => {
           {(is.mobile() ? mobileMenu : menu).map(({ path, title, icon }) => (
             <NavLink
               to={path}
-              className={({ isActive }) =>
-                cx(styles.item, styles.link, { active: isActive })
-              }
+              className={cx(styles.item, styles.link)}
               key={path}
               onClick={close}
             >

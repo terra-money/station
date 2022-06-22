@@ -27,7 +27,7 @@
 .confirm {
   display: grid;
   grid-template-rows: 1fr auto;
-  height: calc(100vh - 64px);
+  height: calc(100vh - var(--header-height) - var(--grid-gap));
   .grid:first-of-type {
     grid-auto-rows: min-content;
     align-content: start;
@@ -38,5 +38,5 @@
 }
 
 .buttons {
-  padding: 40px 0 60px;
+  padding: 20px 0;
 }

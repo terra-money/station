@@ -20,7 +20,7 @@ const ConfirmTx = () => {
   }, [state])
 
   return (
-    <Page>
+    <Page className="hideMenu">
       <TxContext>
         {parsedPayload && (
           <ConfirmForm action={action} payload={parsedPayload} />
