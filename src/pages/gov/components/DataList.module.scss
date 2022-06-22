@@ -14,6 +14,15 @@
   gap: 20px;
 }
 
+.rowList {
+  display: grid;
+  gap: 16px;
+  & > div {
+    grid-template-columns: auto auto;
+    justify-content: space-between;
+  }
+}
+
 .title {
   font-size: var(--font-size-small);
 }

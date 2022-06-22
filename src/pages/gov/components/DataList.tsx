@@ -7,7 +7,7 @@ const cx = classNames.bind(styles)
 
 interface Props {
   list: Contents
-  type: "horizontal" | "vertical"
+  type: "horizontal" | "vertical" | "rowList"
 }
 
 const DataList = ({ list, type }: Props) => {

@@ -5,6 +5,7 @@ import { useVotingParams } from "data/queries/gov"
 import { Card } from "components/layout"
 import { Read } from "components/token"
 import DataList from "./components/DataList"
+import { isWallet } from "auth"
 
 const GovernanceParams = () => {
   const { t } = useTranslation()
@@ -39,7 +40,10 @@ const GovernanceParams = () => {
 
   return (
     <Card>
-      <DataList list={contents} type="horizontal" />
+      <DataList
+        list={contents}
+        type={isWallet.mobile() ? "rowList" : "horizontal"}
+      />
     </Card>
   )
 }

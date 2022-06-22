@@ -3,6 +3,7 @@ import { readPercent } from "@terra.kitchen/utils"
 import { useTallyParams } from "data/queries/gov"
 import { Card } from "components/layout"
 import DataList from "./components/DataList"
+import { isWallet } from "auth"
 
 const ProposalParams = () => {
   const { t } = useTranslation()
@@ -26,7 +27,12 @@ const ProposalParams = () => {
       },
     ]
 
-    return <DataList list={contents} type="horizontal" />
+    return (
+      <DataList
+        list={contents}
+        type={isWallet.mobile() ? "rowList" : "horizontal"}
+      />
+    )
   }
 
   return (

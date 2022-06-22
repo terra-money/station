@@ -1,7 +1,12 @@
+@import "mixins";
+
 .hint {
   display: grid;
   grid-template: repeat(2, 1fr) / repeat(3, 1fr);
   gap: 12px;
+  @include mobile {
+    grid-template: repeat(3, 1fr) / repeat(2, 1fr);
+  }
 }
 
 .item {

@@ -10,7 +10,9 @@
   background: var(--card-bg);
   overflow: hidden; // truncate title, linear progress
   position: relative; // for progress bar
-  word-break: break-word;
+  &.articles {
+    word-break: break-word;
+  }
 
   @include mobile {
     margin: 0 20px;

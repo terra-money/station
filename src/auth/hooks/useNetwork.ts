@@ -5,6 +5,7 @@ import { sandbox } from "../scripts/env"
 import { getStoredNetwork, storeNetwork } from "../scripts/network"
 import { RN_APIS, WebViewMessage } from "utils/rnModule"
 import { isWallet } from "auth"
+import { capitalize } from "@mui/material"
 
 const networkState = atom({
   key: "network",
@@ -32,7 +33,7 @@ export const useNetworkOptions = () => {
   if (!sandbox) return
 
   return Object.values(networks).map(({ name }) => {
-    return { value: name, label: name }
+    return { value: name, label: capitalize(name) }
   })
 }
 

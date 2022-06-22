@@ -22,7 +22,7 @@ const NFTAssets = () => {
   const renderExtra = (render: boolean, empty: boolean = true) => (
     <ModalButton
       title={t("NFT")}
-      modalType={isWallet.mobile() ? Mode.FULL : Mode.DEFAULT}
+      modalType={isWallet.mobile() ? Mode.FULL_CARD : Mode.DEFAULT}
       renderButton={(open) => {
         if (!render) return null
 

@@ -14,11 +14,11 @@ const Range = ({ initial, children, includeLastDay }: Props) => {
   const [selected, setSelected] = useState(initial ?? 0)
 
   const list = [
-    { label: t("From genesis"), value: 0 },
-    { label: t("Last day"), value: 3 },
-    { label: t("{{d}} days", { d: 7 }), value: 7 },
-    { label: t("{{d}} days", { d: 14 }), value: 14 },
-    { label: t("{{d}} days", { d: 30 }), value: 30 },
+    { label: t("All"), value: 0 },
+    { label: t("3D"), value: 3 },
+    { label: t("{{d}}W", { d: 1 }), value: 7 },
+    { label: t("{{d}}W", { d: 2 }), value: 14 },
+    { label: t("{{d}}M", { d: 1 }), value: 30 },
   ].filter(({ value }) => !(value === 3 && !includeLastDay))
 
   return (

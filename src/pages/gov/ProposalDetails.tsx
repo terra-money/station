@@ -31,7 +31,7 @@ const ProposalDetails = () => {
       <Col>
         <Row>
           <Col span={2}>
-            <Card>
+            <Card className="articles">
               <Grid gap={28}>
                 <ProposalHeader proposal={proposal} />
                 <ProposalDescription proposal={proposal} />

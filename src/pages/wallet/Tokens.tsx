@@ -9,6 +9,7 @@ import IBCAsset from "./IBCAsset"
 import CW20Asset from "./CW20Asset"
 import AddTokens from "./AddTokens"
 import Asset from "./Asset"
+import { isWallet } from "auth"
 
 const Tokens = () => {
   const { t } = useTranslation()
@@ -48,7 +49,7 @@ const Tokens = () => {
           <AddTokens>
             {(open) => (
               <InternalButton disabled={!address} onClick={open} chevron>
-                {t("Add tokens")}
+                {isWallet.mobile() ? t("Manage list") : t("Add tokens")}
               </InternalButton>
             )}
           </AddTokens>

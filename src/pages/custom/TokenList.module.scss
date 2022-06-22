@@ -1,4 +1,12 @@
+@import "mixins";
+
 .results {
   height: 360px;
   overflow-y: auto;
+  @include mobile {
+    height: calc(
+      100vh - var(--header-height) - var(--input-height) - var(--card-padding) -
+        var(--grid-gap)
+    );
+  }
 }
