@@ -1,0 +1,11 @@
+.button {
+  margin: 0 var(--card-padding-small);
+  padding: var(--card-padding-small);
+  background: var(--card-bg);
+  border: var(--border-width) solid var(--card-border);
+  border-radius: var(--border-radius);
+  .between {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

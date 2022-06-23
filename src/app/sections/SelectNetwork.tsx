@@ -8,6 +8,9 @@ import { ModalButton, Mode } from "components/feedback"
 import { useCustomNetworks } from "data/settings/CustomNetworks"
 import { InternalLink } from "components/general"
 import styles from "./MobileItem.module.scss"
+import classNames from "classnames/bind"
+
+const cx = classNames.bind(styles)
 
 const SelectNetwork = () => {
   const { t } = useTranslation()
@@ -37,7 +40,7 @@ const SelectNetwork = () => {
           onChange={setNetwork}
           mobileModal={true}
         />
-        <div className={styles.item}>
+        <div className={cx(styles.item, { topBorder: true })}>
           {list.length ? (
             <InternalLink to="/networks" chevron>
               {t("Manage networks")}

@@ -6,6 +6,9 @@ html {
 *::before,
 *::after {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-focus-ring-color: transparent;
+  user-select: none;
 }
 
 body {

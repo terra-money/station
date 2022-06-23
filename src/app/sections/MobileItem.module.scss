@@ -36,7 +36,9 @@
     @include flex(flex-start, center);
     padding: 20px;
     font-weight: var(--bold);
-    border-top: var(--border-width) solid var(--card-border);
+    &.topBorder {
+      border-top: var(--border-width) solid var(--card-border);
+    }
 
     svg {
       margin-right: 4px;

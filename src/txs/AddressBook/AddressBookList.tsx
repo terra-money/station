@@ -6,12 +6,13 @@ import { truncate } from "@terra.kitchen/utils"
 import { RenderButton } from "types/components"
 import { useAddressBook } from "data/settings/AddressBook"
 import { InternalButton } from "components/general"
-import { Card, Grid } from "components/layout"
+import { Card, Flex, Grid } from "components/layout"
 import { Empty, ModalButton, Mode } from "components/feedback"
 import AddAddressBookItem from "./AddAddressBookItem"
 import ListAddressBookItem from "./ListAddressBookItem"
 import CustomItem from "./CustomItem"
 import is from "auth/scripts/is"
+import styles from "./AddressBookList.module.scss"
 
 interface Props {
   onClick: (item: AddressBook) => void
@@ -77,24 +78,25 @@ const AddressBookList = ({ onClick }: Props) => {
       </Grid>
     )
 
-  return (
+  return is.mobile() ? (
+    renderListModalButton((open) => (
+      <button type="button" onClick={open} className={styles.button}>
+        <Flex className={styles.between}>
+          <span>{t("Address book")}</span>
+          <ArrowForwardIosIcon style={{ fontSize: 12 }} />
+        </Flex>
+      </button>
+    ))
+  ) : (
     <Card
       title={t("Address book")}
-      extra={
-        is.mobile()
-          ? renderListModalButton((open) => (
-              <button type="button" onClick={open}>
-                <ArrowForwardIosIcon style={{ fontSize: 12 }} />
-              </button>
-            ))
-          : renderAddModalButton((open) => (
-              <button type="button" onClick={open}>
-                <AddIcon />
-              </button>
-            ))
-      }
+      extra={renderAddModalButton((open) => (
+        <button type="button" onClick={open}>
+          <AddIcon />
+        </button>
+      ))}
     >
-      {!is.mobile() && renderList()}
+      {renderList()}
     </Card>
   )
 }
