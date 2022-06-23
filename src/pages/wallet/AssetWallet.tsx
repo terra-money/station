@@ -1,11 +1,12 @@
 import { useTranslation } from "react-i18next"
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
 import is from "auth/scripts/is"
-import { disconnectSession, PeerMeta } from "auth/scripts/sessions"
-import { ModalButton, Mode, useModal } from "components/feedback"
+import { PeerMeta } from "auth/scripts/sessions"
+import { ModalButton, Mode } from "components/feedback"
 import { Button, InternalButton } from "components/general"
 import { Card } from "components/layout"
 import styles from "./AssetWallet.module.scss"
+import { useSessionsState } from "../../auth/hooks/useSessions"
 
 export interface Props {
   handshakeTopic: string
@@ -14,7 +15,7 @@ export interface Props {
 
 const AssetWallet = (props: Props) => {
   const { t } = useTranslation()
-  const close = useModal()
+  const [, disconnectSession] = useSessionsState()
 
   const {
     handshakeTopic,
@@ -54,7 +55,7 @@ const AssetWallet = (props: Props) => {
             color="danger"
             onClick={async () => {
               await disconnectSession(handshakeTopic)
-              close()
+              // close()
             }}
           >
             {t("Disconnect session")}

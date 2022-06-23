@@ -34,24 +34,26 @@ export const getStoredSessions = (): Sessions => {
 
 export const storeSessions = (connectors: any) => {
   localStorage.setItem("sessions", JSON.stringify(connectors))
+  return getStoredSessions()
 }
 
-export const removeSessions = async () => {
+export const removeSessions = async (): Promise<Sessions> => {
   const res = await WebViewMessage(RN_APIS.DISCONNECT_SESSIONS)
   if (res) {
     localStorage.removeItem("sessions")
+    return getStoredSessions()
   } else {
     throw new Error("Failed remove sessions")
   }
 }
 
-export const disconnectSession = async (key: string) => {
+export const disconnectSession = async (key: string): Promise<Sessions> => {
   const res = await WebViewMessage(RN_APIS.DISCONNECT_SESSIONS, key)
   if (res) {
     let storedSessions = getStoredSessions()
     delete storedSessions?.[key]
     localStorage.setItem("sessions", JSON.stringify(storedSessions))
-    return res
+    return getStoredSessions()
   } else {
     throw new Error("Failed disconnect session")
   }

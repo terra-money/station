@@ -5,7 +5,6 @@ import { Grid } from "components/layout"
 import { Button } from "components/general"
 import { ModalButton, ModalRef, Mode } from "components/feedback"
 import { FormError } from "components/form"
-import { getStoredSessions, removeSessions } from "auth/scripts/sessions"
 import AssetWallet from "./AssetWallet"
 import { ReactComponent as WalletConnectIcon } from "styles/images/menu/Walletconnect.svg"
 import styles from "./WalletConnect.module.scss"
@@ -13,15 +12,16 @@ import is from "auth/scripts/is"
 import GridConfirm from "../../components/layout/GridConfirm"
 import { useLocation } from "react-router-dom"
 import { useNav } from "../../app/routes"
+import { useSessionsState } from "../../auth/hooks/useSessions"
 
 const Selector = () => {
-  const connectors = getStoredSessions()
+  const [sessions] = useSessionsState()
   const { t } = useTranslation()
 
   return (
     <Grid gap={20}>
-      {connectors && !isEmpty(connectors) ? (
-        Object.values(connectors).map((value: any) => {
+      {sessions && !isEmpty(sessions) ? (
+        Object.values(sessions).map((value: any) => {
           if (!value?.peerMeta) return
           return <AssetWallet key={value.peerMeta.name} {...value} />
         })
@@ -36,13 +36,13 @@ const WalletConnect = () => {
   const { t } = useTranslation()
   const { pathname } = useLocation()
   const { subPage } = useNav()
+
   const disconnectAllRef = useRef<ModalRef>({
     open: () => {},
     close: () => {},
   })
-
+  const [sessions, , disconnectAll] = useSessionsState()
   const [buttonView, setButtonView] = useState(true)
-  const connectors = getStoredSessions()
 
   useEffect(() => {
     const subMenu = subPage.find((a) => a.path === pathname)
@@ -54,7 +54,7 @@ const WalletConnect = () => {
     }
   }, [pathname])
 
-  return buttonView && connectors && !isEmpty(connectors) ? (
+  return buttonView && sessions && !isEmpty(sessions) ? (
     <ModalButton
       key="wallet-connect-floating"
       ref={disconnectAllRef}
@@ -69,8 +69,8 @@ const WalletConnect = () => {
       <GridConfirm
         key="wallet-list"
         button={
-          connectors &&
-          !isEmpty(connectors) && (
+          sessions &&
+          !isEmpty(sessions) && (
             <ModalButton
               modalType={is.mobile() ? Mode.BOTTOM_CONFIRM : Mode.DEFAULT}
               renderButton={(open) => (
@@ -88,8 +88,8 @@ const WalletConnect = () => {
                 block
                 color="danger"
                 onClick={async () => {
-                  await removeSessions()
                   disconnectAllRef.current.close()
+                  await disconnectAll()
                 }}
               >
                 {t("Disconnect all sessions")}

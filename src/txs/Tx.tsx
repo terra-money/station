@@ -7,7 +7,6 @@ import { useRecoilValue, useRecoilState } from "recoil"
 import classNames from "classnames"
 import BigNumber from "bignumber.js"
 import { head, isNil } from "ramda"
-import { toast } from "react-toastify"
 
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline"
@@ -39,18 +38,14 @@ import ConnectWallet from "app/sections/ConnectWallet"
 import useToPostMultisigTx from "pages/multisig/utils/useToPostMultisigTx"
 import { isWallet, useAuth } from "auth"
 import { PasswordError } from "auth/scripts/keystore"
-import {
-  Connector,
-  Sessions,
-  getStoredSessions,
-  storeSessions,
-} from "auth/scripts/sessions"
+import { Connector } from "auth/scripts/sessions"
 
 import { toInput } from "./utils"
 import { ConfirmErrorCode, RN_APIS, WebViewMessage } from "utils/rnModule"
 import { useTx } from "./TxContext"
 import styles from "./Tx.module.scss"
 import ConfirmModal from "../auth/modules/manage/ConfirmModal"
+import { useSessionsState } from "../auth/hooks/useSessions"
 
 interface Props<TxValues> {
   /* Only when the token is paid out of the balance held */
@@ -122,6 +117,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const bankBalance = useBankBalance()
   const { gasPrices } = useTx()
   const { data } = useTxInfo(latestTx)
+  const [, , , saveSession] = useSessionsState()
 
   const status = !data
     ? Status.LOADING
@@ -293,22 +289,22 @@ function Tx<TxValues>(props: Props<TxValues>) {
   }
 
   const submittingLabel = isWallet.ledger(wallet) ? t("Confirm in ledger") : ""
-
-  const saveSession = (connector: Connector) => {
-    const currentConnectors = getStoredSessions()
-
-    if (!connector?.peerMeta) {
-      return navigate("/", { replace: true })
-    }
-
-    const sessions: Sessions = {
-      ...currentConnectors,
-      [connector.handshakeTopic]: connector,
-    }
-
-    storeSessions(sessions)
-    toast.success("Wallet connected", { toastId: "wallet-success" })
-  }
+  //
+  // const saveSession = (connector: Connector) => {
+  //   const currentConnectors = getStoredSessions()
+  //
+  //   if (!connector?.peerMeta) {
+  //     return navigate("/", { replace: true })
+  //   }
+  //
+  //   const sessions: Sessions = {
+  //     ...currentConnectors,
+  //     [connector.handshakeTopic]: connector,
+  //   }
+  //
+  //   storeSessions(sessions)
+  //   toast.success("Wallet connected", { toastId: "wallet-success" })
+  // }
 
   const connectSession = useCallback(async () => {
     const connector = await WebViewMessage(RN_APIS.CONNECT_WALLET, {
@@ -317,7 +313,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
     if (connector) {
       saveSession(connector as Connector)
-      navigate("/", { replace: true })
     }
   }, [address])
 
