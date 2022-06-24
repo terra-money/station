@@ -36,7 +36,13 @@ const SendForm = ({ token, decimals, balance }: Props) => {
   const { t } = useTranslation()
   const connectedAddress = useAddress()
   const bankBalance = useBankBalance()
-  const { state: stateRecipient }: { state: any } = useLocation()
+  const { state } = useLocation()
+
+  useEffect(() => {
+    if (state) {
+      setValue("recipient", state as string)
+    }
+  }, [state])
 
   /* tx context */
   const initialGasDenom = getInitialGasDenom(bankBalance)
@@ -69,12 +75,6 @@ const SendForm = ({ token, decimals, balance }: Props) => {
       setValue("address", recipient)
     }
   }, [form, recipient, resolvedAddress, setValue])
-
-  useEffect(() => {
-    if (stateRecipient) {
-      setValue("recipient", stateRecipient)
-    }
-  }, [stateRecipient])
 
   // validate(tns): not found
   const invalid =

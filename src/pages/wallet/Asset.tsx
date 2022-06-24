@@ -1,11 +1,11 @@
 import { useTranslation } from "react-i18next"
+import { useLocation, useNavigate } from "react-router-dom"
 import { has } from "utils/num"
 import { useCurrency } from "data/settings/Currency"
 import { WithFetching } from "components/feedback"
 import { Read, TokenIcon } from "components/token"
 import AssetActions from "./AssetActions"
 import styles from "./Asset.module.scss"
-import { useNavigate } from "react-router-dom"
 import is from "auth/scripts/is"
 
 export interface Props extends TokenItem, QueryState {
@@ -15,12 +15,15 @@ export interface Props extends TokenItem, QueryState {
 }
 
 const Asset = (props: Props) => {
-  const { token, icon, symbol, balance, value, hideActions, ...state } = props
+  const { token, icon, symbol, balance, value, hideActions, ...restProps } =
+    props
   const { t } = useTranslation()
   const currency = useCurrency()
   const navigate = useNavigate()
+  const { state } = useLocation()
 
-  const toSend = (tokenName: string) => navigate(`/send?token=${tokenName}`)
+  const toSend = (tokenName: string) =>
+    navigate(`/send?token=${tokenName}`, { state })
 
   return (
     <article className={styles.asset} key={token}>
@@ -38,7 +41,7 @@ const Asset = (props: Props) => {
             }}
           >
             <h2 className={styles.amount}>
-              <WithFetching {...state} height={1}>
+              <WithFetching {...restProps} height={1}>
                 {(progress, wrong) => (
                   <>
                     {progress}

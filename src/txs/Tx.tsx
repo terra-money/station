@@ -264,7 +264,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
         const unsignedTx = await auth.create({ ...tx, fee })
         navigate(toPostMultisigTx(unsignedTx))
       } else if (wallet) {
-        if (isUseBio) {
+        if (isUseBio && !bioWithPassword) {
           const bioKey = await decodeBioAuthKey()
           const result = await auth.post({ ...tx, fee }, bioKey)
           // @ts-ignore
@@ -281,30 +281,21 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
       onPost?.()
     } catch (error) {
-      if (error instanceof PasswordError) setIncorrect(error.message)
-      else setError(error as Error)
+      if (error instanceof PasswordError) {
+        setIncorrect(error.message)
+      } else {
+        if (error instanceof Error && error?.message === "Failed bio auth") {
+          setIsFailBio(true)
+        } else {
+          setError(error as Error)
+        }
+      }
     }
 
     setSubmitting(false)
   }
 
   const submittingLabel = isWallet.ledger(wallet) ? t("Confirm in ledger") : ""
-  //
-  // const saveSession = (connector: Connector) => {
-  //   const currentConnectors = getStoredSessions()
-  //
-  //   if (!connector?.peerMeta) {
-  //     return navigate("/", { replace: true })
-  //   }
-  //
-  //   const sessions: Sessions = {
-  //     ...currentConnectors,
-  //     [connector.handshakeTopic]: connector,
-  //   }
-  //
-  //   storeSessions(sessions)
-  //   toast.success("Wallet connected", { toastId: "wallet-success" })
-  // }
 
   const connectSession = useCallback(async () => {
     const connector = await WebViewMessage(RN_APIS.CONNECT_WALLET, {

@@ -16,7 +16,7 @@ import is from "auth/scripts/is"
 
 const AssetActions = ({ token, symbol, balance }: Props) => {
   const { t } = useTranslation()
-  const { state }: { state: any } = useLocation()
+  const { state } = useLocation()
 
   const isWalletEmpty = useIsWalletEmpty()
   const isClassic = useIsClassic()
