@@ -44,12 +44,12 @@ const ValidatorsMobileList = (props: PropsWithChildren<Props>) => {
     ? [
         { value: "voting_power_rate", label: "Voting power : high to low" },
         { value: "time_weighted_uptime", label: "Uptime : high to low" },
-        { value: "commission", label: "Commission : high to low" },
+        { value: "commission", label: "Commission : low to high" },
         { value: "rewards_30d", label: "Rewards : high to low" },
       ]
     : [
         { value: "voting_power_rate", label: "Voting power : high to low" },
-        { value: "commission", label: "Commission : high to low" },
+        { value: "commission", label: "Commission : low to high" },
       ]
 
   const sortedList = useMemo(() => {
@@ -77,7 +77,7 @@ const ValidatorsMobileList = (props: PropsWithChildren<Props>) => {
           (
             { commission: { commission_rates: a } },
             { commission: { commission_rates: b } }
-          ) => b.rate.toNumber() - a.rate.toNumber()
+          ) => a.rate.toNumber() - b.rate.toNumber()
         )
       case "rewards_30d":
         return filteredList?.sort(
@@ -95,7 +95,7 @@ const ValidatorsMobileList = (props: PropsWithChildren<Props>) => {
         ref={selectorRef}
         modalType={Mode.SELECT}
         renderButton={(open) => (
-          <Card className="blankWithSlimPad" onClick={open}>
+          <Card className="blank" onClick={open}>
             <Flex end gap={8}>
               <SortingIcon
                 {...{ width: 16, height: 16, fill: "currentColor" }}
@@ -136,17 +136,13 @@ const ValidatorsMobileList = (props: PropsWithChildren<Props>) => {
           <Card
             key={`mobile-card-${idx}`}
             className="inBlank"
+            to={`/validator/${operator_address}`}
             title={
-              <Flex start gap={8}>
+              <Flex start gap={8} className={styles.mobileTitle}>
                 <ProfileIcon src={picture} size={20} />
                 <Grid gap={2}>
                   <Flex gap={4} start>
-                    <Link
-                      to={`/validator/${operator_address}`}
-                      className={styles.moniker}
-                    >
-                      {description?.moniker}
-                    </Link>
+                    <div className={styles.moniker}>{description?.moniker}</div>
 
                     {contact?.email && (
                       <VerifiedIcon className="info" style={{ fontSize: 12 }} />

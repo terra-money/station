@@ -8,6 +8,9 @@
 
 .submit {
   margin-top: 20px;
+  @include mobile {
+    margin-top: 8px;
+  }
 }
 
 /* form group */

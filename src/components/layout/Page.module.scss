@@ -39,9 +39,6 @@
 
   @include mobile {
     @include flex-column(start, start);
-    h1 {
-      margin-bottom: 16px;
-    }
     --font-size-page-title: 24px;
     margin: 0;
     padding: 0 var(--main-padding-horizontal);
