@@ -16,14 +16,14 @@
 }
 
 .ReactModal__Content {
-  max-height: 0;
-  transition: max-height 200ms ease-in-out;
+  bottom: -100vh;
+  transition: bottom 200ms ease-in-out;
 }
 .ReactModal__Content--after-open {
-  max-height: 100vh;
+  bottom: 0;
 }
 .ReactModal__Content--before-close {
-  max-height: 0;
+  bottom: -100vh;
 }
 
 /* tooltip:default */
