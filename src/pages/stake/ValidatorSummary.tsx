@@ -12,14 +12,15 @@ const ValidatorSummary = ({ validator }: { validator: TerraValidator }) => {
   const { t } = useTranslation()
 
   const { time_weighted_uptime } = validator
+  const selfDelegation = calcSelfDelegation(validator)
 
   const contents = useMemo(() => {
-    if (!time_weighted_uptime) return []
+    if (!(selfDelegation || time_weighted_uptime)) return undefined
 
     return [
       {
         title: t("Self delegation"),
-        content: readPercent(calcSelfDelegation(validator)),
+        content: selfDelegation && readPercent(selfDelegation),
       },
       {
         title: (
@@ -29,10 +30,12 @@ const ValidatorSummary = ({ validator }: { validator: TerraValidator }) => {
             {t("Uptime")}
           </TooltipIcon>
         ),
-        content: <Uptime>{time_weighted_uptime}</Uptime>,
+        content: time_weighted_uptime && (
+          <Uptime>{time_weighted_uptime}</Uptime>
+        ),
       },
-    ]
-  }, [t, time_weighted_uptime, validator])
+    ].filter(({ content }) => content)
+  }, [t, time_weighted_uptime, selfDelegation])
 
   return <Card>{contents && <ValidatorNumbers contents={contents} />}</Card>
 }
