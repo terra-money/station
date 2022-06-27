@@ -37,7 +37,11 @@ export const TooltipIcon = (props: Props) => {
     <InlineFlex gap={4} start>
       {props.children}
       <Tooltip {...props}>
-        <HelpOutlineOutlinedIcon fontSize="inherit" className="muted" />
+        <HelpOutlineOutlinedIcon
+          fontSize="inherit"
+          className="muted"
+          onClick={(e) => e.stopPropagation()}
+        />
       </Tooltip>
     </InlineFlex>
   )

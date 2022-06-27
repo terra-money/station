@@ -19,9 +19,11 @@
   bottom: -100vh;
   transition: bottom 200ms ease-in-out;
 }
+
 .ReactModal__Content--after-open {
   bottom: 0;
 }
+
 .ReactModal__Content--before-close {
   bottom: -100vh;
 }

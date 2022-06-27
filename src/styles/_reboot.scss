@@ -8,7 +8,7 @@ html {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
   -webkit-focus-ring-color: transparent;
-  &:not(input) {
+  &:not(input):not(textarea) {
     user-select: none;
   }
 }
