@@ -14,7 +14,13 @@ const ValidatorSummary = ({ validator }: { validator: TerraValidator }) => {
   const { time_weighted_uptime } = validator
 
   const contents = useMemo(() => {
-    if (!time_weighted_uptime) return []
+    if (!time_weighted_uptime)
+      return [
+        {
+          title: t("Self delegation"),
+          content: readPercent(calcSelfDelegation(validator)),
+        },
+      ]
 
     return [
       {

@@ -17,8 +17,14 @@
     padding-top: 0;
     position: sticky;
     top: 0;
+    @include mobile {
+      padding-left: 0;
+      padding-right: 12px;
+      &:last-child {
+        padding-right: 0;
+      }
+    }
   }
-
   td {
     padding-left: 12px;
     padding-right: 12px;
@@ -41,8 +47,8 @@
   @include mobile {
     td {
       padding-left: 0;
-      padding-right: 20px;
-      &:first-child {
+      padding-right: 12px;
+      &:last-child {
         padding-right: 0;
       }
     }

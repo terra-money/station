@@ -20,10 +20,10 @@ export const ValidatorStatus = ({ status }: { status: BondStatus }) => {
   return <Tag color={color}>{t(label)}</Tag>
 }
 
-export const ValidatorJailed = () => {
+export const ValidatorJailed = ({ small = true }: { small?: boolean }) => {
   const { t } = useTranslation()
   return (
-    <Tag color="danger" small>
+    <Tag color="danger" small={small}>
       {t("Jailed")}
     </Tag>
   )

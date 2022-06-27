@@ -139,6 +139,9 @@
 
   .header {
     padding: 16px var(--card-padding);
+    @include mobile {
+      padding: 16px var(--card-padding-small);
+    }
   }
 
   .main {
@@ -146,6 +149,9 @@
     // when the content of the card is empty for a while
     border-top: 1px solid var(--card-border);
     padding: var(--card-padding);
+    @include mobile {
+      padding: var(--card-padding-small);
+    }
   }
 
   &.small .header {

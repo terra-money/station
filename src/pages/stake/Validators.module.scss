@@ -5,9 +5,6 @@
   color: var(--text);
   font-weight: var(--bold);
   max-width: 12rem;
-  @include mobile {
-    max-width: 16rem;
-  }
 }
 
 .muted {

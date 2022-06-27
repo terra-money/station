@@ -13,6 +13,7 @@ import ProfileIcon from "./components/ProfileIcon"
 import { ValidatorJailed, ValidatorStatus } from "./components/ValidatorTag"
 import useAddressParams from "./useAddressParams"
 import styles from "./ValidatorCompact.module.scss"
+import { isWallet } from "auth"
 
 const cx = classNames.bind(styles)
 
@@ -39,9 +40,19 @@ const ValidatorCompact = ({ vertical }: { vertical?: boolean }) => {
           <Grid gap={4}>
             <Flex gap={10} start>
               <h1 className={styles.moniker}>{moniker}</h1>
-              <ValidatorStatus status={status} />
-              {jailed && <ValidatorJailed />}
+              {!isWallet.mobile() && (
+                <>
+                  <ValidatorStatus status={status} />
+                  {jailed && <ValidatorJailed />}
+                </>
+              )}
             </Flex>
+            {isWallet.mobile() && (
+              <Flex gap={10} start>
+                <ValidatorStatus status={status} />
+                {jailed && <ValidatorJailed small={false} />}
+              </Flex>
+            )}
 
             {validateLink(website) && (
               <Flex gap={4} className={styles.link} start>

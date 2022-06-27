@@ -34,7 +34,11 @@ const SwitchWallet = () => {
           </>
         )
 
-        const attrs = { className: cx(styles.wallet), active, children }
+        const attrs = {
+          className: cx(styles.wallet, { active }),
+          active,
+          children,
+        }
 
         return (
           <li key={name}>
