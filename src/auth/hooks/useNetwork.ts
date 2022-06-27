@@ -6,6 +6,7 @@ import { getStoredNetwork, storeNetwork } from "../scripts/network"
 import { RN_APIS, WebViewMessage } from "utils/rnModule"
 import { isWallet } from "auth"
 import { capitalize } from "@mui/material"
+import { useSessionsState } from "./useSessions"
 
 const networkState = atom({
   key: "network",
@@ -14,10 +15,14 @@ const networkState = atom({
 
 export const useNetworkState = () => {
   const [network, setNetwork] = useRecoilState(networkState)
+  const [sessions, , disconnectAll] = useSessionsState()
 
   const changeNetwork = (network: NetworkName) => {
     if (isWallet.mobileNative()) {
       WebViewMessage(RN_APIS.SET_NETWORK, network)
+    }
+    if (sessions) {
+      disconnectAll()
     }
     setNetwork(network)
     storeNetwork(network)

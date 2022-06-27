@@ -71,6 +71,7 @@ const Modal = (props: PropsWithChildren<Props>) => {
   return (
     <ReactModal
       {...props}
+      closeTimeoutMS={200}
       className={cx(styles.modal, { className, [`${modalType}`]: !!modalType })}
       overlayClassName={cx(styles.overlay, { [`${modalType}`]: !!modalType })}
     >

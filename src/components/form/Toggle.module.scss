@@ -44,12 +44,13 @@
     width: 50px;
     height: 30px;
     border-radius: 15px;
+    background: var(--input-border);
   }
-  //&.checked {
-  //  .track {
-  //    background: var(--button-primary-bg);
-  //  }
-  //}
+  &.checked {
+    .track {
+      background: var(--button-primary-bg);
+    }
+  }
   .indicator {
     width: 28px;
     height: 28px;
