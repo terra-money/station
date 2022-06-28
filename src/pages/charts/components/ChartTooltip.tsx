@@ -14,7 +14,7 @@ const ChartTooltip = (props: any) => {
 
   if (!active) return null
 
-  const { y } = payload[0].payload
+  const { y } = payload?.[0]?.payload
 
   return (
     <article className={styles.tooltip}>

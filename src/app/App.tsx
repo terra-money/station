@@ -36,14 +36,14 @@ import {
 
 /* init */
 import InitBankBalance from "./InitBankBalance"
-import { useLayoutEffect } from "react"
+import { useCallback, useLayoutEffect } from "react"
 import {
   getStoredWallets,
   getWallet,
   storeWallets,
 } from "../auth/scripts/keystore"
+import { useSessionsState } from "../auth/hooks/useSessions"
 import WalletConnect from "../pages/wallet/WalletConnect"
-import { disconnectSession } from "../auth/scripts/sessions"
 
 import { ToastContainer, Flip } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
@@ -51,8 +51,9 @@ import "react-toastify/dist/ReactToastify.css"
 const App = () => {
   const { element: routes } = useNav()
   const navigate = useNavigate()
+  const [, disconnectSession] = useSessionsState()
 
-  const RNListener = () => {
+  const RNListener = useCallback(() => {
     const listener = async (event: any) => {
       if (event.data.includes("setImmediate$0")) return
 
@@ -107,7 +108,7 @@ const App = () => {
     document.addEventListener("message", listener)
     /** ios */
     window.addEventListener("message", listener)
-  }
+  }, [disconnectSession])
 
   useLayoutEffect(() => {
     if (isWallet.mobileNative()) {

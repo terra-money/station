@@ -13,6 +13,7 @@ import styles from "./Confirm.module.scss"
 import TxDetails from "./components/TxDetails"
 import { getStoredSessions } from "../../auth/scripts/sessions"
 import { useIsClassic } from "data/query"
+import { useSessionsState } from "../../auth/hooks/useSessions"
 
 interface TxValues {
   recipient?: string // AccAddress | TNS
@@ -28,8 +29,8 @@ interface Props {
 
 const ConfirmForm = ({ action, payload }: Props) => {
   const navigate = useNavigate()
-  const connectors = getStoredSessions()
   const isClassic = useIsClassic()
+  const [sessions] = useSessionsState()
 
   const [txProps, setTxProps] = useState<any>(null)
   const [tx, setTx] = useState<TxRequest>()
@@ -46,7 +47,7 @@ const ConfirmForm = ({ action, payload }: Props) => {
       const parsedTx = parseTx(payload.params, isClassic)
 
       const origin =
-        (connectors?.[payload.handshakeTopic].peerMeta.url as string) || ""
+        (sessions?.[payload.handshakeTopic].peerMeta.url as string) || ""
 
       const txData: TxRequest = {
         ...parseDefault(payload),
@@ -64,7 +65,7 @@ const ConfirmForm = ({ action, payload }: Props) => {
         },
       })
     }
-  }, [action, payload])
+  }, [action, payload, sessions])
 
   return (
     <Card isFetching={tnsState.isLoading} className="blank">
