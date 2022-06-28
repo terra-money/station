@@ -55,9 +55,11 @@ const App = () => {
 
   const RNListener = useCallback(() => {
     const listener = async (event: any) => {
-      if (event.data.includes("setImmediate$0")) return
+      console.log("event : ", event?.data)
+      if (event?.data.includes("setImmediate$0")) return
 
-      const { data, type } = JSON.parse(event.data)
+      const { data, type } = JSON.parse(event?.data)
+      console.log("data : ", data, type)
       switch (type) {
         case RN_APIS.DEEPLINK: {
           if (data?.action === "wallet_connect") {
