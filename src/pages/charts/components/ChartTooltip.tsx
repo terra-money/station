@@ -12,9 +12,9 @@ const ChartTooltip = (props: any) => {
   const { label, payload, active } = props as Props
   const { formatDate = (date) => date.toLocaleDateString() } = props as Props
 
-  if (!active) return null
+  if (!active || !payload?.length) return null
 
-  const { y } = payload?.[0]?.payload
+  const { y } = payload[0].payload
 
   return (
     <article className={styles.tooltip}>
