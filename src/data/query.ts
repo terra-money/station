@@ -44,7 +44,7 @@ export const queryKey = mirror({
 
   /* lcd */
   auth: { accountInfo: "" },
-  bank: { balance: "", supply: "" },
+  bank: { balance: "", balances: "", supply: "" },
   distribution: {
     rewards: "",
     communityPool: "",
