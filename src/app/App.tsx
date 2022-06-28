@@ -36,7 +36,7 @@ import {
 
 /* init */
 import InitBankBalance from "./InitBankBalance"
-import { useCallback, useLayoutEffect } from "react"
+import { useCallback, useEffect } from "react"
 import {
   getStoredWallets,
   getWallet,
@@ -55,11 +55,9 @@ const App = () => {
 
   const RNListener = useCallback(() => {
     const listener = async (event: any) => {
-      console.log("event : ", event?.data)
       if (event?.data.includes("setImmediate$0")) return
 
       const { data, type } = JSON.parse(event?.data)
-      console.log("data : ", data, type)
       switch (type) {
         case RN_APIS.DEEPLINK: {
           if (data?.action === "wallet_connect") {
@@ -112,7 +110,7 @@ const App = () => {
     window.addEventListener("message", listener)
   }, [disconnectSession])
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (isWallet.mobileNative()) {
       RNListener()
       getWallets().then((res: any) => {
@@ -194,7 +192,7 @@ const App = () => {
           <ToastContainer
             limit={1}
             position="top-right"
-            autoClose={5000}
+            autoClose={2000}
             hideProgressBar
             newestOnTop={false}
             closeOnClick

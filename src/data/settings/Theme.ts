@@ -54,7 +54,9 @@ export const useThemeState = () => {
       setThemeName(nextTheme.name)
       setLocalSetting<Theme["name"]>(SettingKey.Theme, nextTheme.name)
 
-      WebViewMessage(RN_APIS.SET_THEME, nextTheme.name)
+      if (prevTheme.name !== nextTheme.name) {
+        WebViewMessage(RN_APIS.SET_THEME, nextTheme.name)
+      }
     },
     [prevTheme, setThemeName, validate]
   )
