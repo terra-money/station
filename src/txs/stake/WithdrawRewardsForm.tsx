@@ -28,6 +28,7 @@ import { Card, Flex, Grid, InlineFlex } from "components/layout"
 import { Read, TokenCard, TokenCardGrid } from "components/token"
 import Tx, { getInitialGasDenom } from "../Tx"
 import styles from "./WithdrawRewardsForm.module.scss"
+import { isWallet } from "auth"
 
 interface Props {
   activeDenoms: Denom[]
@@ -217,7 +218,7 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
               </section>
             )}
 
-            <dl>
+            <dl className={styles.header}>
               <dt>{t("Validators")}</dt>
               <dd>
                 {selectable ? (
@@ -236,7 +237,10 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
             </dl>
 
             {selectable && isOpen && (
-              <Card size="small" className={styles.card}>
+              <Card
+                size="small"
+                className={isWallet.mobile() ? "inBlank" : styles.card}
+              >
                 <Flex className={styles.actions} start>
                   {Object.values(state).some((state) => !state) ? (
                     <button

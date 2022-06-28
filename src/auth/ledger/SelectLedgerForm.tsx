@@ -138,7 +138,7 @@ const SelectLedgerForm = () => {
                     setLatestTx({
                       txhash: result.txhash,
                       redirectAfterTx: {
-                        label: "ledger",
+                        label: "Confirm",
                         path: "/",
                       },
                     })

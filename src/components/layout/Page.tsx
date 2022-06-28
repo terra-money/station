@@ -4,7 +4,7 @@ import { ErrorBoundary, WithFetching } from "../feedback"
 import Container from "./Container"
 import Card from "./Card"
 import styles from "./Page.module.scss"
-import is from "auth/scripts/is"
+import { isWallet } from "auth"
 
 const cx = classNames.bind(styles)
 
@@ -36,7 +36,7 @@ const Page = (props: PropsWithChildren<Props>) => {
                 </header>
               )}
 
-              {is.mobile() && !title && extra && (
+              {isWallet.mobile() && !title && extra && (
                 <div className={styles.extraMobile}>{extra}</div>
               )}
 

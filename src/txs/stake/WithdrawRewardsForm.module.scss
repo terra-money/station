@@ -32,3 +32,18 @@
   @include flex(space-between);
   flex: 1;
 }
+
+.header {
+  @include mobile {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    dd {
+      font-size: var(--font-size-small);
+      grid-column-start: unset;
+
+      button {
+        font-weight: var(--normal);
+      }
+    }
+  }
+}
