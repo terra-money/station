@@ -1,3 +1,4 @@
+import { useRef } from "react"
 import { useTranslation } from "react-i18next"
 import { useSupply } from "data/queries/bank"
 import { useMemoizedCalcValue } from "data/queries/oracle"
@@ -6,6 +7,7 @@ import { Read } from "components/token"
 import DashboardContent from "./components/DashboardContent"
 import SelectDenom from "./components/SelectDenom"
 import { isWallet } from "auth"
+import { ModalRef } from "../../components/feedback"
 
 const Issuance = () => {
   const { t } = useTranslation()
@@ -13,6 +15,11 @@ const Issuance = () => {
 
   const { data, ...state } = useSupply()
   const calcValue = useMemoizedCalcValue()
+
+  const modalRef = useRef<ModalRef>({
+    open: () => {},
+    close: () => {},
+  })
 
   if (!data) return null
 
@@ -37,7 +44,12 @@ const Issuance = () => {
       {...state}
       title={title}
       size="small"
-      extra={isWallet.mobile() && <SelectDenom title={title} list={list} />}
+      extra={
+        isWallet.mobile() && (
+          <SelectDenom ref={modalRef} title={title} list={list} />
+        )
+      }
+      onClick={modalRef.current.open}
     >
       {render()}
     </Card>

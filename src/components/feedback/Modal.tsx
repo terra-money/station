@@ -4,7 +4,6 @@ import {
   useEffect,
   useState,
   forwardRef,
-  ForwardedRef,
   useImperativeHandle,
 } from "react"
 import { useLocation } from "react-router-dom"
@@ -76,7 +75,14 @@ const Modal = (props: PropsWithChildren<Props>) => {
       overlayClassName={cx(styles.overlay, { [`${modalType}`]: !!modalType })}
     >
       {onRequestClose && (
-        <button type="button" className={styles.close} onClick={onRequestClose}>
+        <button
+          type="button"
+          className={styles.close}
+          onClick={(e) => {
+            e.stopPropagation()
+            onRequestClose(e)
+          }}
+        >
           {closeIcon ?? <CloseIcon fontSize="inherit" />}
         </button>
       )}
@@ -127,32 +133,30 @@ export type ModalRef = {
   close: () => void
 }
 
-export const ModalButton = forwardRef(
-  (
-    props: PropsWithChildren<ModalButtonProps>,
-    ref?: ForwardedRef<ModalRef>
-  ) => {
-    const { pathname } = useLocation()
-    const { renderButton, modalKey = pathname, ...rest } = props
+export const ModalButton = forwardRef<
+  ModalRef,
+  PropsWithChildren<ModalButtonProps>
+>((props, ref) => {
+  const { pathname } = useLocation()
+  const { renderButton, modalKey = pathname, ...rest } = props
 
-    const [isModalOpen, setIsModalOpen] = useState(false)
-    const open = () => setIsModalOpen(true)
-    const close = () => setIsModalOpen(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const open = () => setIsModalOpen(true)
+  const close = () => setIsModalOpen(false)
 
-    useEffect(() => {
-      close()
-    }, [modalKey])
+  useEffect(() => {
+    close()
+  }, [modalKey])
 
-    useImperativeHandle(ref, () => ({
-      open,
-      close,
-    }))
+  useImperativeHandle(ref, () => ({
+    open,
+    close,
+  }))
 
-    return (
-      <ModalProvider value={close}>
-        {renderButton(open)}
-        <Modal {...rest} isOpen={isModalOpen} onRequestClose={close} />
-      </ModalProvider>
-    )
-  }
-)
+  return (
+    <ModalProvider value={close}>
+      {renderButton(open)}
+      <Modal {...rest} isOpen={isModalOpen} onRequestClose={close} />
+    </ModalProvider>
+  )
+})
