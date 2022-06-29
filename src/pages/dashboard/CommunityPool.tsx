@@ -1,3 +1,4 @@
+import { useRef } from "react"
 import { useTranslation } from "react-i18next"
 import { getAmount, sortCoins } from "utils/coin"
 import { useCommunityPool } from "data/queries/distribution"
@@ -7,6 +8,7 @@ import { Read } from "components/token"
 import SelectDenom from "./components/SelectDenom"
 import DashboardContent from "./components/DashboardContent"
 import { isWallet } from "auth"
+import { ModalRef } from "../../components/feedback"
 
 const CommunityPool = () => {
   const { t } = useTranslation()
@@ -14,6 +16,11 @@ const CommunityPool = () => {
 
   const { data, ...state } = useCommunityPool()
   const calcValue = useMemoizedCalcValue()
+
+  const modalRef = useRef<ModalRef>({
+    open: () => {},
+    close: () => {},
+  })
 
   if (!data) return null
 
@@ -38,7 +45,12 @@ const CommunityPool = () => {
       {...state}
       title={title}
       size="small"
-      extra={isWallet.mobile() && <SelectDenom title={title} list={list} />}
+      extra={
+        isWallet.mobile() && (
+          <SelectDenom ref={modalRef} title={title} list={list} />
+        )
+      }
+      onClick={isWallet.mobile() ? modalRef.current.open : undefined}
     >
       {render()}
     </Card>

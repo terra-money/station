@@ -49,7 +49,7 @@ const Issuance = () => {
           <SelectDenom ref={modalRef} title={title} list={list} />
         )
       }
-      onClick={modalRef.current.open}
+      onClick={isWallet.mobile() ? modalRef.current.open : undefined}
     >
       {render()}
     </Card>

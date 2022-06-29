@@ -31,7 +31,7 @@ export const useSessionsState = () => {
 
       storeSessions(newSessions)
       setSessions(newSessions)
-      toast.success("Wallet connected", { toastId: "wallet-success" })
+      toast.success("Wallet connected", { toastId: "wallet-connect" })
       return navigate("/", { replace: true })
     },
     [sessions]
@@ -47,7 +47,7 @@ export const useSessionsState = () => {
     const sessions = await removeSessions()
     setSessions(sessions)
     toast.success("All Wallet disconnected", {
-      toastId: "wallet-all-rdisconnect",
+      toastId: "wallet-disconnect",
     })
   }
 
