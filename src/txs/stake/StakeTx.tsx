@@ -3,6 +3,7 @@ import { useLocation, useParams } from "react-router-dom"
 import { getAvailableStakeActions } from "data/queries/staking"
 import { useDelegations, useValidators } from "data/queries/staking"
 import { combineState } from "data/query"
+import { useBalances } from "data/queries/bank"
 import { Auto, Page, Tabs, Card } from "components/layout"
 import ValidatorCompact from "pages/stake/ValidatorCompact"
 import TxContext from "../TxContext"
@@ -17,21 +18,20 @@ const StakeTx = () => {
   const location = useLocation()
   const initialTab = location.state as string
 
+  const { data: balances, ...balancesState } = useBalances()
   const { data: validators, ...validatorsState } = useValidators()
   const { data: delegations, ...delegationsState } = useDelegations()
-  const state = combineState(validatorsState, delegationsState)
+  const state = combineState(balancesState, validatorsState, delegationsState)
 
   const getDisabled = (tab: StakeAction) => {
     if (!delegations) return true
-
     const availableActions = getAvailableStakeActions(destination, delegations)
-
     return !availableActions[tab]
   }
 
   const renderTab = (tab: StakeAction) => {
-    if (!(validators && delegations)) return null
-    const props = { tab, destination, validators, delegations }
+    if (!(balances && validators && delegations)) return null
+    const props = { tab, destination, balances, validators, delegations }
     return <StakeForm {...props} />
   }
 

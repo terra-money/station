@@ -53,6 +53,21 @@ export const useInitialBankBalance = () => {
   )
 }
 
+export const useBalances = () => {
+  const address = useAddress()
+  const lcd = useLCDClient()
+
+  return useQuery(
+    [queryKey.bank.balances, address],
+    async () => {
+      if (!address) return new Coins()
+      const [coins] = await lcd.bank.balance(address)
+      return coins
+    },
+    { ...RefetchOptions.DEFAULT }
+  )
+}
+
 export const useTerraNativeLength = () => {
   const bankBalance = useBankBalance()
   return bankBalance?.toArray().filter(({ denom }) => isDenomTerraNative(denom))

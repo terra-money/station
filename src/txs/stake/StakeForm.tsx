@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
-import { AccAddress, Coin, ValAddress } from "@terra-money/terra.js"
+import { AccAddress, Coin, Coins, ValAddress } from "@terra-money/terra.js"
 import { Delegation, Validator } from "@terra-money/terra.js"
 import { MsgDelegate, MsgUndelegate } from "@terra-money/terra.js"
 import { MsgBeginRedelegate } from "@terra-money/terra.js"
@@ -31,11 +31,14 @@ export enum StakeAction {
 interface Props {
   tab: StakeAction
   destination: ValAddress
+  balances: Coins
   validators: Validator[]
   delegations: Delegation[]
 }
 
-const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
+const StakeForm = (props: Props) => {
+  const { tab, destination, balances, validators, delegations } = props
+
   const { t } = useTranslation()
   const address = useAddress()
   const bankBalance = useBankBalance()
@@ -92,7 +95,7 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
 
   /* fee */
   const balance = {
-    [StakeAction.DELEGATE]: getAmount(bankBalance, "uluna"),
+    [StakeAction.DELEGATE]: getAmount(balances, "uluna"),
     [StakeAction.REDELEGATE]:
       (source && findDelegation(source)?.balance.amount.toString()) ?? "0",
     [StakeAction.UNBOND]:
