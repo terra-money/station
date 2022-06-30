@@ -19,13 +19,13 @@ const ChartButton = forwardRef<ModalRef, any>((_, ref) => {
       title={t("Luna price")}
       modalType={isWallet.mobile() ? Mode.FULL : Mode.DEFAULT}
       renderButton={(open) => (
-        <button onClick={open}>
+        <div onClick={open}>
           {isWallet.mobile() ? (
             <ArrowForwardIosIcon style={{ fontSize: 12 }} />
           ) : (
             t("Show chart")
           )}
-        </button>
+        </div>
       )}
     >
       <LunaPriceChart />
@@ -62,7 +62,7 @@ const LunaPrice = () => {
       className={styles.price}
       size="small"
       extra={isWallet.mobile() && <ChartButton ref={modalRef} />}
-      onClick={isWallet.mobile() ? modalRef.current.open : undefined}
+      onClick={isWallet.mobile() ? () => modalRef.current.open() : undefined}
     >
       {render()}
     </Card>

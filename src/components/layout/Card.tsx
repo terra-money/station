@@ -70,7 +70,10 @@ const Card = (props: PropsWithChildren<Props>) => {
         ) : onClick ? (
           <button
             className={cardClassName}
-            onClick={onClick}
+            onClick={(e) => {
+              e.stopPropagation()
+              onClick()
+            }}
             disabled={disabled}
           >
             {content}

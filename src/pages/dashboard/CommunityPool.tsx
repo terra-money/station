@@ -50,7 +50,11 @@ const CommunityPool = () => {
           <SelectDenom ref={modalRef} title={title} list={list} />
         )
       }
-      onClick={isWallet.mobile() ? modalRef.current.open : undefined}
+      onClick={
+        isWallet.mobile() && list.length > 1
+          ? () => modalRef.current.open()
+          : undefined
+      }
     >
       {render()}
     </Card>
