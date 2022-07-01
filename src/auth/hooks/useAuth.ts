@@ -28,7 +28,6 @@ import encrypt from "../scripts/encrypt"
 import useAvailable from "./useAvailable"
 import decrypt from "../scripts/decrypt"
 import { RN_APIS, WebViewMessage } from "../../utils/rnModule"
-import { getStoredSessions, removeSessions } from "../scripts/sessions"
 import { SyncTxBroadcastResult } from "@terra-money/terra.js/dist/client/lcd/api/TxAPI"
 import { useSessionsState } from "./useSessions"
 

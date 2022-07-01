@@ -578,6 +578,8 @@ function Tx<TxValues>(props: Props<TxValues>) {
           <Grid columns={2} gap={12}>
             <Button
               color="danger"
+              loading={isBroadcasting}
+              disabled={isBroadcasting}
               onClick={() => {
                 WebViewMessage(RN_APIS.REJECT_TX, {
                   id: confirmData?.id,
@@ -592,19 +594,14 @@ function Tx<TxValues>(props: Props<TxValues>) {
             >
               {t("Cancel")}
             </Button>
-            <Button color="primary" type="submit">
+            <Button
+              color="primary"
+              type="submit"
+              loading={isBroadcasting}
+              disabled={isBroadcasting}
+            >
               {t("Sign")}
             </Button>
-            {/*<Submit*/}
-            {/*  // disabled={!estimatedGas || !!disabled}*/}
-            {/*  submitting={submitting}*/}
-            {/*>*/}
-            {/*  {submitting*/}
-            {/*    ? submittingLabel*/}
-            {/*    : isUseBio*/}
-            {/*    ? submittingLabel*/}
-            {/*    : disabled}*/}
-            {/*</Submit>*/}
           </Grid>
         </Grid>
       )}

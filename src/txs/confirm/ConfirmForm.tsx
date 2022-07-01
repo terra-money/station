@@ -11,13 +11,12 @@ import { useNavigate } from "react-router-dom"
 import GridConfirm from "../../components/layout/GridConfirm"
 import styles from "./Confirm.module.scss"
 import TxDetails from "./components/TxDetails"
-import { getStoredSessions } from "../../auth/scripts/sessions"
 import { useIsClassic } from "data/query"
 import { useSessionsState } from "../../auth/hooks/useSessions"
 
 interface TxValues {
-  recipient?: string // AccAddress | TNS
-  address?: AccAddress // hidden input
+  recipient?: string
+  address?: AccAddress
   input?: number
   memo?: string
 }
@@ -53,7 +52,6 @@ const ConfirmForm = ({ action, payload }: Props) => {
         ...parseDefault(payload),
         origin,
         tx: parsedTx,
-        // requestType: "post",
       }
 
       setTx(txData)

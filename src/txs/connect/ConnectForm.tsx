@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 
@@ -12,10 +12,11 @@ import GridConfirm from "components/layout/GridConfirm"
 import styles from "./Connect.module.scss"
 import { ReactComponent as WalletConnectIcon } from "styles/images/menu/Walletconnect.svg"
 import { LoadingCircular } from "../../components/feedback"
+import { toast } from "react-toastify"
 
 interface TxValues {
-  recipient?: string // AccAddress | TNS
-  address?: AccAddress // hidden input
+  recipient?: string
+  address?: AccAddress
   input?: number
   memo?: string
 }
@@ -31,6 +32,7 @@ const ConnectForm = ({ action, payload }: Props) => {
 
   const [peerData, setPeerData] = useState<any>(null)
   const [tx, setTx] = useState<any>(null)
+  const connectionTimeout = useRef<ReturnType<typeof setTimeout>>()
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })
@@ -38,9 +40,16 @@ const ConnectForm = ({ action, payload }: Props) => {
 
   const readyConnect = async () => {
     try {
+      connectionTimeout.current = setTimeout(() => {
+        navigate("/")
+        toast.error("Session timeout", { toastId: "session-timeout" })
+      }, 15_000)
+
       const res = await WebViewMessage(RN_APIS.READY_CONNECT_WALLET, {
         uri: decodeURIComponent(payload),
       })
+
+      clearTimeout(connectionTimeout.current)
 
       setPeerData(res)
     } catch (error) {
