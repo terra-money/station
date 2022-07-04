@@ -99,7 +99,12 @@ const useAuth = () => {
   )
 
   const connectLedger = useCallback(
-    (address: AccAddress, index = 0, bluetooth = true, name = "Ledger") => {
+    async (
+      address: AccAddress,
+      index = 0,
+      bluetooth = true,
+      name = "Ledger"
+    ) => {
       const wallet = {
         name,
         address,
@@ -110,8 +115,9 @@ const useAuth = () => {
       addWallet(wallet)
       storeWallet(wallet)
       setWallet(wallet)
+      if (sessions) await disconnectAll()
     },
-    [setWallet]
+    [setWallet, sessions]
   )
 
   /* connected */

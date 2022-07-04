@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next"
 import { truncate } from "@terra.kitchen/utils"
 import { Card, FlexColumn } from "components/layout"
 import { Form, FormError } from "components/form"
-import { parseTx, RN_APIS, WebViewMessage } from "utils/rnModule"
+import { parseTx, RN_APIS, TxRequest, WebViewMessage } from "utils/rnModule"
 import useAuth from "auth/hooks/useAuth"
 import { latestTxState } from "data/queries/tx"
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
@@ -31,7 +31,7 @@ const SelectLedgerForm = () => {
   const { wallet, validatePassword, isUseBio, decodeBioAuthKey, ...auth } =
     useAuth()
 
-  const [tx, setTx] = useState<CreateTxOptions>()
+  const [tx, setTx] = useState<TxRequest>()
   const [ledgers, setLedgers] = useState<DeviceInterface[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isTxLoading, setIsTxLoading] = useState(false)
@@ -43,8 +43,12 @@ const SelectLedgerForm = () => {
 
   useEffect(() => {
     if (state) {
-      const tx = parseTx(JSON.parse(state), isClassic)
-      setTx(tx)
+      const data = JSON.parse(state)
+      const tx = parseTx(data?.tx, isClassic)
+      setTx({
+        ...data,
+        tx,
+      })
     }
   }, [state])
 
@@ -129,7 +133,7 @@ const SelectLedgerForm = () => {
                 setIsTxLoading(true)
                 setError(undefined)
                 try {
-                  const result: any = await auth.post(tx, item.id)
+                  const result: any = await auth.post(tx.tx, item.id)
                   // @ts-ignore
                   if (typeof result === "string" && result?.includes("Error")) {
                     // @ts-ignore
@@ -141,6 +145,12 @@ const SelectLedgerForm = () => {
                         label: "Confirm",
                         path: "/",
                       },
+                    })
+
+                    await WebViewMessage(RN_APIS.APPROVE_TX, {
+                      id: tx.id,
+                      handshakeTopic: tx.handshakeTopic,
+                      result: result.txhash,
                     })
                   }
                 } catch (error) {

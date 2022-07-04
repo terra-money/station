@@ -41,7 +41,12 @@ import { PasswordError } from "auth/scripts/keystore"
 import { Connector } from "auth/scripts/sessions"
 
 import { toInput } from "./utils"
-import { ConfirmErrorCode, RN_APIS, WebViewMessage } from "utils/rnModule"
+import {
+  ConfirmErrorCode,
+  RN_APIS,
+  TxRequest,
+  WebViewMessage,
+} from "utils/rnModule"
 import { useTx } from "./TxContext"
 import styles from "./Tx.module.scss"
 import ConfirmModal from "../auth/modules/manage/ConfirmModal"
@@ -53,7 +58,6 @@ interface Props<TxValues> {
   decimals?: number
   amount?: Amount
   balance?: Amount
-  confirmData?: any
 
   /* tx simulation */
   initialGasDenom: CoinDenom
@@ -70,6 +74,9 @@ interface Props<TxValues> {
   onPost?: () => void
   redirectAfterTx?: { label: string; path: string }
   queryKeys?: QueryKey[]
+
+  /* request confirm  */
+  confirmData?: TxRequest | undefined
 }
 
 type RenderMax = (onClick?: (max: Amount) => void) => ReactNode
@@ -311,11 +318,12 @@ function Tx<TxValues>(props: Props<TxValues>) {
     setSubmitting(true)
 
     try {
+      if (!confirmData) return
       if (disabled) throw new Error(disabled)
 
       if (isWallet.ledger(wallet)) {
         return navigate("/auth/ledger/device", {
-          state: JSON.stringify(confirmData.tx),
+          state: JSON.stringify(confirmData),
           replace: true,
         })
       }
@@ -323,7 +331,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
       if (isUseBio && !bioWithPassword) {
         const bioKey = await decodeBioAuthKey()
         if (bioKey) {
-          const result = await auth.post(confirmData.tx, bioKey)
+          const result = await auth.post(confirmData?.tx, bioKey)
           // @ts-ignore
           setLatestTx(result)
         } else {
@@ -331,7 +339,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
           setIsFailBio(true)
         }
       } else {
-        const result = await auth.post(confirmData.tx, password)
+        const result = await auth.post(confirmData?.tx, password)
         // @ts-ignore
         setLatestTx(result)
       }
@@ -343,8 +351,8 @@ function Tx<TxValues>(props: Props<TxValues>) {
         } else {
           setError(error as Error)
           WebViewMessage(RN_APIS.REJECT_TX, {
-            id: confirmData.id,
-            handshakeTopic: confirmData.handshakeTopic,
+            id: confirmData?.id,
+            handshakeTopic: confirmData?.handshakeTopic,
             errorMsg: {
               errorCode: ConfirmErrorCode.createTxFailed,
               message: error,
@@ -359,8 +367,8 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   const approve = useCallback(async () => {
     const res = await WebViewMessage(RN_APIS.APPROVE_TX, {
-      id: confirmData.id,
-      handshakeTopic: confirmData.handshakeTopic,
+      id: confirmData?.id,
+      handshakeTopic: confirmData?.handshakeTopic,
       result: latestTx,
     })
     if (res) {
@@ -373,8 +381,8 @@ function Tx<TxValues>(props: Props<TxValues>) {
       // @ts-ignore
       if (isTxError(latestTx)) {
         WebViewMessage(RN_APIS.REJECT_TX, {
-          id: confirmData.id,
-          handshakeTopic: confirmData.handshakeTopic,
+          id: confirmData?.id,
+          handshakeTopic: confirmData?.handshakeTopic,
           errorMsg: {
             errorCode: ConfirmErrorCode.txFailed,
             message: latestTx.raw_log,
