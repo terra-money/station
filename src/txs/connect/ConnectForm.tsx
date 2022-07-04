@@ -43,7 +43,7 @@ const ConnectForm = ({ action, payload }: Props) => {
       connectionTimeout.current = setTimeout(() => {
         navigate("/")
         toast.error("Session timeout", { toastId: "session-timeout" })
-      }, 15_000)
+      }, 15000)
 
       const res = await WebViewMessage(RN_APIS.READY_CONNECT_WALLET, {
         uri: decodeURIComponent(payload),

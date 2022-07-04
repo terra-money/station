@@ -13,7 +13,6 @@ import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen"
 import { isWallet } from "auth"
 import { LoadingCircular, Modal, Mode } from "components/feedback"
 import { useThemeAnimation } from "data/settings/Theme"
-import { CreateTxOptions } from "@terra-money/terra.js/dist/client/lcd/api/TxAPI"
 import styles from "components/layout/Card.module.scss"
 import { useIsClassic } from "../../data/query"
 

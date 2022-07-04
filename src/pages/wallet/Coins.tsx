@@ -12,7 +12,7 @@ import { useBankBalance } from "data/queries/bank"
 import { useIsWalletEmpty, useTerraNativeLength } from "data/queries/bank"
 import { useActiveDenoms } from "data/queries/oracle"
 import { useMemoizedCalcValue } from "data/queries/oracle"
-import { InternalLink } from "components/general"
+import { InternalButton, InternalLink } from "components/general"
 import { Card, Flex, Grid } from "components/layout"
 import { FormError } from "components/form"
 import { Read } from "components/token"
@@ -20,6 +20,8 @@ import { isWallet } from "auth"
 import Asset from "./Asset"
 import SelectMinimumValue from "./SelectMinimumValue"
 import styles from "./Coins.module.scss"
+import { ModalButton, Mode } from "../../components/feedback"
+import Buy from "./Buy"
 
 const Coins = () => {
   const { t } = useTranslation()
@@ -85,8 +87,27 @@ const Coins = () => {
     </InternalLink>
   )
 
+  const extraMobile = !isClassic && pathname === "/wallet" && (
+    <ModalButton
+      title={t("Buy {{symbol}}", { symbol: "Luna" })}
+      modalType={Mode.FULL_CARD}
+      renderButton={(open) => (
+        <InternalButton onClick={open} chevron>
+          {t("Buy Luna")}
+        </InternalButton>
+      )}
+      maxHeight={false}
+    >
+      <Buy token={"uluna"} />
+    </ModalButton>
+  )
+
   return (
-    <Card {...state} title={t("Coins")} extra={!isWallet.mobile() && extra}>
+    <Card
+      {...state}
+      title={t("Coins")}
+      extra={isWallet.mobile() ? extraMobile : extra}
+    >
       <Grid gap={32}>{render()}</Grid>
     </Card>
   )

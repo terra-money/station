@@ -18,7 +18,10 @@ export const themeNameState = atom({
 export const useFindTheme = () => {
   return (name: string) => {
     const item = themes.find((theme) => theme.name === name)
-    if (!item) return DefaultTheme
+    if (!item) {
+      WebViewMessage(RN_APIS.SET_THEME, DefaultTheme.name)
+      return DefaultTheme
+    }
     return item
   }
 }

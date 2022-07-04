@@ -86,7 +86,6 @@ const Tabs = ({ tabs, defaultActiveKey, type, reversed, state }: Props) => {
                   disabled,
                 })}
                 onClick={() => {
-                  console.log(key)
                   !disabled && setActiveKey(key)
                 }}
                 disabled={disabled}
