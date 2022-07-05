@@ -8,6 +8,7 @@ import { Flex } from "../layout"
 import TokenIcon from "./TokenIcon"
 import Read from "./Read"
 import styles from "./TokenCard.module.scss"
+import { isWallet } from "auth"
 
 interface Props extends Partial<TokenItem>, Partial<FormatConfig> {
   // customizable
@@ -77,7 +78,10 @@ export const TokenCardGrid = (props: PropsWithChildren<GridProps>) => {
   const { children, maxHeight } = props
 
   return (
-    <section className={styles.grid} style={getMaxHeightStyle(maxHeight, 320)}>
+    <section
+      className={styles.grid}
+      style={!isWallet.mobile() ? getMaxHeightStyle(maxHeight, 320) : undefined}
+    >
       {children}
     </section>
   )

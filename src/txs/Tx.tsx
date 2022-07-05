@@ -263,7 +263,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
       if (isWallet.ledger(wallet)) {
         return navigate("/auth/ledger/device", {
-          state: JSON.stringify({ ...tx, fee }),
+          state: JSON.stringify({ tx: { ...tx, fee } }),
         })
       }
 

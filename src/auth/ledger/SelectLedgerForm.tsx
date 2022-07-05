@@ -1,13 +1,13 @@
 import { useEffect, useLayoutEffect, useState, useRef } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import { useSetRecoilState } from "recoil"
+import { useRecoilValue, useSetRecoilState } from "recoil"
 import { useTranslation } from "react-i18next"
 import { truncate } from "@terra.kitchen/utils"
 import { Card, FlexColumn } from "components/layout"
 import { Form, FormError } from "components/form"
 import { parseTx, RN_APIS, TxRequest, WebViewMessage } from "utils/rnModule"
 import useAuth from "auth/hooks/useAuth"
-import { latestTxState } from "data/queries/tx"
+import { isBroadcastingState, latestTxState } from "data/queries/tx"
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
 import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen"
 import { isWallet } from "auth"
@@ -27,6 +27,7 @@ const SelectLedgerForm = () => {
   const { state }: { state: any } = useLocation()
   const animation = useThemeAnimation()
   const setLatestTx = useSetRecoilState(latestTxState)
+  const isBroadcasting = useRecoilValue(isBroadcastingState)
   const { wallet, validatePassword, isUseBio, decodeBioAuthKey, ...auth } =
     useAuth()
 
@@ -127,37 +128,47 @@ const SelectLedgerForm = () => {
             <Card
               key={item.id}
               title={item.name}
+              disabled={isBroadcasting}
               extra={<ArrowForwardIosIcon className={styles.mobileExtra} />}
-              onClick={async () => {
-                setIsTxLoading(true)
-                setError(undefined)
-                try {
-                  const result: any = await auth.post(tx.tx, item.id)
-                  // @ts-ignore
-                  if (typeof result === "string" && result?.includes("Error")) {
-                    // @ts-ignore
-                    setError({ message: result })
-                  } else {
-                    setLatestTx({
-                      txhash: result.txhash,
-                      redirectAfterTx: {
-                        label: "Confirm",
-                        path: "/",
-                      },
-                    })
+              onClick={
+                isBroadcasting
+                  ? undefined
+                  : async () => {
+                      setIsTxLoading(true)
+                      setError(undefined)
+                      try {
+                        const result: any = await auth.post(tx.tx, item.id)
+                        // @ts-ignore
+                        if (
+                          typeof result === "string" &&
+                          result?.includes("Error")
+                        ) {
+                          // @ts-ignore
+                          setError({ message: result })
+                        } else {
+                          setLatestTx({
+                            txhash: result.txhash,
+                            redirectAfterTx: {
+                              label: "Confirm",
+                              path: "/",
+                            },
+                          })
 
-                    await WebViewMessage(RN_APIS.APPROVE_TX, {
-                      id: tx.id,
-                      handshakeTopic: tx.handshakeTopic,
-                      result: result.txhash,
-                    })
-                  }
-                } catch (error) {
-                  setError(error as Error)
-                } finally {
-                  setIsTxLoading(false)
-                }
-              }}
+                          if (tx?.handshakeTopic) {
+                            await WebViewMessage(RN_APIS.APPROVE_TX, {
+                              id: tx.id,
+                              handshakeTopic: tx.handshakeTopic,
+                              result: result.txhash,
+                            })
+                          }
+                        }
+                      } catch (error) {
+                        setError(error as Error)
+                      } finally {
+                        setIsTxLoading(false)
+                      }
+                    }
+              }
             >
               {truncate(item.id)}
             </Card>

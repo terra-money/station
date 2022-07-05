@@ -65,5 +65,7 @@
 
   @include mobile {
     grid-template-columns: repeat(1, 1fr);
+    max-height: calc(100vh - var(--header-height) - var(--card-padding));
+    overflow: auto;
   }
 }
