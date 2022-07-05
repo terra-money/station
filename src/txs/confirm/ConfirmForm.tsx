@@ -63,7 +63,7 @@ const ConfirmForm = ({ action, payload }: Props) => {
         },
       })
     }
-  }, [action, payload, sessions])
+  }, [action, payload, sessions, isClassic, navigate])
 
   return (
     <Card isFetching={tnsState.isLoading} className="blank">

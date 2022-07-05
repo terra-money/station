@@ -31,9 +31,8 @@ const Nav = () => {
   const [buttonView, setButtonView] = useState(true)
   const [isNeedMoreBtn, setIsNeedMoreBtn] = useState(false)
 
-  const mainButtons = ["/wallet", "/swap", "/stake"]
-
   useEffect(() => {
+    const mainButtons = ["/wallet", "/swap", "/stake"]
     const subMenu = subPage.find((a) => a.path === pathname)
     const isMain = mainButtons.find((a) => a === pathname)
     if (isMain) {
@@ -47,7 +46,7 @@ const Nav = () => {
     } else {
       setButtonView(true)
     }
-  }, [pathname])
+  }, [pathname, subPage])
 
   return buttonView ? (
     <nav>

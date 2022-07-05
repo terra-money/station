@@ -24,7 +24,7 @@ const ConnectTx = () => {
       navigate("/", { replace: true })
       toast.error("No connected wallet", { toastId: "wallet-error" })
     }
-  }, [wallet])
+  }, [wallet, navigate])
 
   return (
     <Page className={styles.page}>

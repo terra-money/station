@@ -312,7 +312,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
     if (connector) {
       saveSession(connector as Connector)
     }
-  }, [address])
+  }, [address, saveSession])
 
   const confirm = async () => {
     setSubmitting(true)
@@ -374,7 +374,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
     if (res) {
       onPost?.()
     }
-  }, [latestTx, confirmData])
+  }, [latestTx, confirmData, onPost])
 
   useEffect(() => {
     if (latestTx.txhash && confirmData) {
@@ -396,7 +396,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
         }
       }
     }
-  }, [status, latestTx, confirmData])
+  }, [status, latestTx, confirmData, approve])
 
   /* render */
   const balanceAfterTx =

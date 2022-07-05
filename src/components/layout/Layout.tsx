@@ -56,7 +56,7 @@ export const Header = ({ children }: PropsWithChildren<{}>) => {
     } else {
       setSubTitle("")
     }
-  }, [pathname])
+  }, [pathname, subPage, mobileMenu])
 
   return (
     <header className={cx(styles.header, { subPage: !title })}>
@@ -122,7 +122,7 @@ const Layout = ({ children }: PropsWithChildren<{}>) => {
     } else {
       setHiddenMenu(false)
     }
-  }, [pathname])
+  }, [pathname, subPage])
 
   return (
     <div className={cx(styles.layout, { menu: isMenuOpen, hiddenMenu })}>

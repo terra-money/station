@@ -54,7 +54,7 @@ const ImportWalletForm = () => {
     if (state) {
       setValue("key", state)
     }
-  }, [state])
+  }, [state, setValue])
 
   /* render */
   return (

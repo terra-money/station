@@ -50,7 +50,7 @@ const SelectLedgerForm = () => {
         tx,
       })
     }
-  }, [state])
+  }, [state, isClassic])
 
   useLayoutEffect(() => {
     setIsLoading(true)

@@ -62,26 +62,26 @@ type RN_API_REQ_TYPES = {
 }
 
 // 응답 타입
-type RN_API_RES_TYPES = {
-  [RN_APIS.APP_VERSION]: string
-  [RN_APIS.MIGRATE_KEYSTORE]: string
-  [RN_APIS.SET_THEME]: string
-  [RN_APIS.SET_NETWORK]: string
-  [RN_APIS.AUTH_BIO]: string
-  [RN_APIS.CHECK_BIO]: string
-  [RN_APIS.DEEPLINK]: string
-  [RN_APIS.QR_SCAN]: string
-  [RN_APIS.RECOVER_SESSIONS]: string
-  [RN_APIS.DISCONNECT_SESSIONS]: string
-  [RN_APIS.REJECT_SESSION]: string
-  [RN_APIS.READY_CONNECT_WALLET]: string
-  [RN_APIS.CONNECT_WALLET]: string
-  [RN_APIS.CONFIRM_TX]: string
-  [RN_APIS.APPROVE_TX]: string
-  [RN_APIS.REJECT_TX]: string
-  [RN_APIS.GET_LEDGER_LIST]: string
-  [RN_APIS.GET_LEDGER_KEY]: string
-}
+// type RN_API_RES_TYPES = {
+//   [RN_APIS.APP_VERSION]: string
+//   [RN_APIS.MIGRATE_KEYSTORE]: string
+//   [RN_APIS.SET_THEME]: string
+//   [RN_APIS.SET_NETWORK]: string
+//   [RN_APIS.AUTH_BIO]: string
+//   [RN_APIS.CHECK_BIO]: string
+//   [RN_APIS.DEEPLINK]: string
+//   [RN_APIS.QR_SCAN]: string
+//   [RN_APIS.RECOVER_SESSIONS]: string
+//   [RN_APIS.DISCONNECT_SESSIONS]: string
+//   [RN_APIS.REJECT_SESSION]: string
+//   [RN_APIS.READY_CONNECT_WALLET]: string
+//   [RN_APIS.CONNECT_WALLET]: string
+//   [RN_APIS.CONFIRM_TX]: string
+//   [RN_APIS.APPROVE_TX]: string
+//   [RN_APIS.REJECT_TX]: string
+//   [RN_APIS.GET_LEDGER_LIST]: string
+//   [RN_APIS.GET_LEDGER_KEY]: string
+// }
 
 /* primitive */
 export interface PrimitiveDefaultRequest {

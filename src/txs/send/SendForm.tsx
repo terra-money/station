@@ -38,12 +38,6 @@ const SendForm = ({ token, decimals, balance }: Props) => {
   const bankBalance = useBankBalance()
   const { state } = useLocation()
 
-  useEffect(() => {
-    if (state) {
-      setValue("recipient", state as string)
-    }
-  }, [state])
-
   /* tx context */
   const initialGasDenom = getInitialGasDenom(bankBalance)
 
@@ -60,6 +54,12 @@ const SendForm = ({ token, decimals, balance }: Props) => {
     setValue("memo", memo)
     await trigger("recipient")
   }
+
+  useEffect(() => {
+    if (state) {
+      setValue("recipient", state as string)
+    }
+  }, [state, setValue])
 
   /* resolve recipient */
   const { data: resolvedAddress, ...tnsState } = useTnsAddress(recipient ?? "")

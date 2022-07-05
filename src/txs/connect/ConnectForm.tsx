@@ -68,6 +68,10 @@ const ConnectForm = ({ action, payload }: Props) => {
 
       readyConnect()
     }
+
+    return () => {
+      clearTimeout(connectionTimeout.current)
+    }
   }, [action, payload])
 
   if (!peerData) {

@@ -1,6 +1,5 @@
 import { PropsWithChildren, useMemo, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Link } from "react-router-dom"
 import VerifiedIcon from "@mui/icons-material/Verified"
 import { readPercent } from "@terra.kitchen/utils"
 
@@ -100,7 +99,10 @@ const ValidatorsMobileList = (props: PropsWithChildren<Props>) => {
               <SortingIcon
                 {...{ width: 16, height: 16, fill: "currentColor" }}
               />
-              {filterOptions.find((item) => item.value == currentFilter)?.label}
+              {
+                filterOptions.find((item) => item.value === currentFilter)
+                  ?.label
+              }
             </Flex>
           </Card>
         )}

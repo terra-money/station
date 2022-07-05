@@ -34,7 +34,7 @@ export const useSessionsState = () => {
       toast.success("Wallet connected", { toastId: "wallet-connect" })
       return navigate("/", { replace: true })
     },
-    [sessions]
+    [sessions, setSessions, navigate]
   )
 
   const disconnect = async (key: string) => {

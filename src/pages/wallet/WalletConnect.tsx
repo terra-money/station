@@ -22,7 +22,7 @@ const Selector = () => {
     <Grid gap={20}>
       {sessions && !isEmpty(sessions) ? (
         Object.values(sessions).map((value: any) => {
-          if (!value?.peerMeta) return
+          if (!value?.peerMeta) return <></>
           return <AssetWallet key={value.peerMeta.name} {...value} />
         })
       ) : (
@@ -52,7 +52,7 @@ const WalletConnect = () => {
     } else {
       setButtonView(true)
     }
-  }, [pathname])
+  }, [pathname, subPage])
 
   return buttonView && sessions && !isEmpty(sessions) ? (
     <ModalButton

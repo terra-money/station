@@ -57,6 +57,7 @@ const useAuth = () => {
   const wallets = getStoredWallets()
   const [sessions, , disconnectAll] = useSessionsState()
 
+  /* manage: bio auth */
   const initBio = async (address: string) => {
     const keys = getBioKeys()
     const bioKey = keys?.[address]
@@ -67,109 +68,6 @@ const useAuth = () => {
     }
   }
 
-  /* connect */
-  const connect = useCallback(
-    async (name: string) => {
-      const storedWallet = getStoredWallet(name)
-      const { address, lock } = storedWallet
-
-      if (lock) throw new Error("Wallet is locked")
-
-      const wallet = is.multisig(storedWallet)
-        ? { name, address, multisig: true }
-        : is.ledger(storedWallet)
-        ? { name, address, ledger: true, index: storedWallet.index }
-        : { name, address }
-
-      storeWallet(wallet)
-      setWallet(wallet)
-
-      initBio(address)
-      if (sessions) await disconnectAll()
-    },
-    [setWallet, sessions]
-  )
-
-  const connectPreconfigured = useCallback(
-    (wallet: PreconfiguredWallet) => {
-      storeWallet(wallet)
-      setWallet(wallet)
-    },
-    [setWallet]
-  )
-
-  const connectLedger = useCallback(
-    async (
-      address: AccAddress,
-      index = 0,
-      bluetooth = true,
-      name = "Ledger"
-    ) => {
-      const wallet = {
-        name,
-        address,
-        ledger: true as const,
-        index,
-        bluetooth,
-      }
-      addWallet(wallet)
-      storeWallet(wallet)
-      setWallet(wallet)
-      if (sessions) await disconnectAll()
-    },
-    [setWallet, sessions]
-  )
-
-  /* connected */
-  const connectedWallet = useMemo(() => {
-    if (!is.local(wallet)) return
-    return wallet
-  }, [wallet])
-
-  const getConnectedWallet = useCallback(() => {
-    if (!connectedWallet) throw new Error("Wallet is not defined")
-    return connectedWallet
-  }, [connectedWallet])
-
-  /* disconnected */
-  const disconnect = useCallback(async () => {
-    clearWallet()
-    setWallet(undefined)
-    if (isUseBio) disableBioAuth()
-    if (sessions) await disconnectAll()
-  }, [setWallet, sessions])
-
-  const lock = useCallback(() => {
-    const { name } = getConnectedWallet()
-    lockWallet(name)
-    disconnect()
-  }, [disconnect, getConnectedWallet])
-
-  /* helpers */
-  const getKey = (password: string) => {
-    const { name } = getConnectedWallet()
-    return getDecryptedKey({ name, password })
-  }
-
-  const getLedgerKey = async () => {
-    if (!is.ledger(wallet)) throw new Error("Ledger device is not connected")
-    const { index, bluetooth } = wallet
-
-    const transport = bluetooth
-      ? await BluetoothTransport.create(LEDGER_TRANSPORT_TIMEOUT)
-      : undefined
-    return LedgerKey.create(transport, index)
-  }
-
-  /* manage: export */
-  const encodeEncryptedWallet = (password: string) => {
-    const { name, address } = getConnectedWallet()
-    const key = getKey(password)
-    const data = { name, address, encrypted_key: encrypt(key, password) }
-    return encode(JSON.stringify(data))
-  }
-
-  /* manage: bio auth */
   const disableBioAuth = () => {
     const { address } = getConnectedWallet()
     const storedBioKey = getBioKeys()
@@ -216,6 +114,108 @@ const useAuth = () => {
     } else {
       throw new Error("Failed bio auth")
     }
+  }
+
+  /* connect */
+  const connect = useCallback(
+    async (name: string) => {
+      const storedWallet = getStoredWallet(name)
+      const { address, lock } = storedWallet
+
+      if (lock) throw new Error("Wallet is locked")
+
+      const wallet = is.multisig(storedWallet)
+        ? { name, address, multisig: true }
+        : is.ledger(storedWallet)
+        ? { name, address, ledger: true, index: storedWallet.index }
+        : { name, address }
+
+      storeWallet(wallet)
+      setWallet(wallet)
+
+      initBio(address)
+      if (sessions) await disconnectAll()
+    },
+    [setWallet, sessions, initBio, disconnectAll]
+  )
+
+  const connectPreconfigured = useCallback(
+    (wallet: PreconfiguredWallet) => {
+      storeWallet(wallet)
+      setWallet(wallet)
+    },
+    [setWallet]
+  )
+
+  const connectLedger = useCallback(
+    async (
+      address: AccAddress,
+      index = 0,
+      bluetooth = true,
+      name = "Ledger"
+    ) => {
+      const wallet = {
+        name,
+        address,
+        ledger: true as const,
+        index,
+        bluetooth,
+      }
+      addWallet(wallet)
+      storeWallet(wallet)
+      setWallet(wallet)
+      if (sessions) await disconnectAll()
+    },
+    [setWallet, sessions, disconnectAll]
+  )
+
+  /* connected */
+  const connectedWallet = useMemo(() => {
+    if (!is.local(wallet)) return
+    return wallet
+  }, [wallet])
+
+  const getConnectedWallet = useCallback(() => {
+    if (!connectedWallet) throw new Error("Wallet is not defined")
+    return connectedWallet
+  }, [connectedWallet])
+
+  /* disconnected */
+  const disconnect = useCallback(async () => {
+    clearWallet()
+    setWallet(undefined)
+    if (isUseBio) disableBioAuth()
+    if (sessions) await disconnectAll()
+  }, [setWallet, sessions, isUseBio, disableBioAuth, disconnectAll])
+
+  const lock = useCallback(() => {
+    const { name } = getConnectedWallet()
+    lockWallet(name)
+    disconnect()
+  }, [disconnect, getConnectedWallet])
+
+  /* helpers */
+  const getKey = (password: string) => {
+    const { name } = getConnectedWallet()
+    return getDecryptedKey({ name, password })
+  }
+
+  const getLedgerKey = async () => {
+    if (!is.ledger(wallet)) throw new Error("Ledger device is not connected")
+    const { index, bluetooth } = wallet
+
+    const transport = bluetooth
+      ? await BluetoothTransport.create(LEDGER_TRANSPORT_TIMEOUT)
+      : undefined
+    return LedgerKey.create(transport, index)
+  }
+
+  /* manage: export */
+  const encodeEncryptedWallet = (password: string) => {
+    const { name, address } = getConnectedWallet()
+    const key = getKey(password)
+    const data = { name, address, encrypted_key: encrypt(key, password) }
+    return encode(JSON.stringify(data))
   }
 
   /* form */
