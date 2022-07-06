@@ -6,6 +6,7 @@ import { Form, FormItem, FormWarning, Submit, Value } from "components/form"
 import { Checkbox, Input } from "components/form"
 import validate from "../../scripts/validate"
 import { useCreateWallet, Values as DefaultValues } from "./CreateWalletWizard"
+import { Copy } from "../../../components/general"
 
 interface Values extends DefaultValues {
   confirm: string
@@ -57,7 +58,11 @@ const CreateWalletForm = () => {
         />
       </FormItem>
 
-      <FormItem label={t("Mnemonic")} error={errors.mnemonic?.message}>
+      <FormItem
+        label={t("Mnemonic")}
+        error={errors.mnemonic?.message}
+        extra={generated ? <Copy text={mnemonic} /> : undefined}
+      >
         {generated ? (
           <Value>{mnemonic}</Value>
         ) : (
