@@ -23,14 +23,8 @@ const isLedger = (wallet?: Wallet): wallet is LedgerWallet => {
   return "ledger" in wallet
 }
 
-declare global {
-  interface Window {
-    ReactNativeWebView: any
-  }
-}
-
 const isMobileNative = (): boolean => {
-  return !!window.ReactNativeWebView
+  return !!window.ReactNativeWebView.hasOwnProperty("postMessage")
 }
 
 const isMobile = (): boolean => {
