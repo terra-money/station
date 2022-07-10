@@ -44,10 +44,9 @@ const SelectLedgerForm = () => {
   useEffect(() => {
     if (state) {
       const data = JSON.parse(state)
-      const tx = parseTx(data?.tx, isClassic)
       setTx({
         ...data,
-        tx,
+        tx: data.params ? data.params : data.tx,
       })
     }
   }, [state, isClassic])
@@ -166,6 +165,7 @@ const SelectLedgerForm = () => {
                         setError(error as Error)
                       } finally {
                         setIsTxLoading(false)
+                        navigate("/")
                       }
                     }
               }

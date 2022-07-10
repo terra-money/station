@@ -24,7 +24,7 @@ const isLedger = (wallet?: Wallet): wallet is LedgerWallet => {
 }
 
 const isMobileNative = (): boolean => {
-  return !!window.ReactNativeWebView.hasOwnProperty("postMessage")
+  return !!window.ReactNativeWebView?.hasOwnProperty("postMessage")
 }
 
 const isMobile = (): boolean => {
