@@ -117,7 +117,7 @@ const SelectLedgerForm = () => {
   ) : (
     <Form>
       {error && (
-        <Card className="blankWithPad">
+        <Card className="blankSidePad">
           <FormError>{error.message}</FormError>
         </Card>
       )}
@@ -144,6 +144,8 @@ const SelectLedgerForm = () => {
                         ) {
                           // @ts-ignore
                           setError({ message: result })
+                          setIsTxLoading(false)
+                          return
                         } else {
                           setLatestTx({
                             txhash: result.txhash,
@@ -160,12 +162,14 @@ const SelectLedgerForm = () => {
                               result: result.txhash,
                             })
                           }
+                          navigate("/")
                         }
                       } catch (error) {
+                        setIsTxLoading(false)
                         setError(error as Error)
+                        navigate("/")
                       } finally {
                         setIsTxLoading(false)
-                        navigate("/")
                       }
                     }
               }

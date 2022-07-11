@@ -75,6 +75,7 @@
     @include mobile {
       @include flex(space-between);
       margin-top: 10px;
+      margin-bottom: -8px;
       h1 {
         font-size: 24px;
       }

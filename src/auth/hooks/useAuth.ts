@@ -104,7 +104,7 @@ const useAuth = () => {
 
   const decodeBioAuthKey = async () => {
     const res = await WebViewMessage(RN_APIS.AUTH_BIO)
-    if (res) {
+    if (res && !(typeof res === "string" && res?.includes("Error"))) {
       const { address } = getConnectedWallet()
       const storedBioKey = getBioKeys()?.[address]
 
@@ -112,7 +112,7 @@ const useAuth = () => {
       const decrypted = decrypt(storedBioKey, storedTimestamp)
       return decrypted
     } else {
-      throw new Error("Failed bio auth")
+      throw new Error("Failed bio authentication.")
     }
   }
 

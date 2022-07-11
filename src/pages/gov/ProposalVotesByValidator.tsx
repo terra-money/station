@@ -18,6 +18,7 @@ import { Tooltip } from "components/display"
 import { getIsUnbonded } from "../stake/Validators"
 import { options } from "./ProposalVotes"
 import styles from "./ProposalVotesByValidator.module.scss"
+import { isWallet } from "auth"
 
 const cx = classNames.bind(styles)
 
@@ -117,7 +118,11 @@ const ProposalVotesByValidator = ({ id }: { id: number }) => {
               {options.map((key) => {
                 const { label } = getVoteOptionItem(key)
                 return (
-                  <Tooltip content={tooltipContents[key]} key={key}>
+                  <Tooltip
+                    content={tooltipContents[key]}
+                    key={key}
+                    disabled={isWallet.mobile()}
+                  >
                     <button
                       className={cx(styles.tab, { active: tab === key })}
                       onClick={() => setTab(key)}

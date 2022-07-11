@@ -198,7 +198,6 @@ export const WebViewMessage = async <T extends RN_API>(
           listenerData?.includes("Error")
         ) {
           toast.error(listenerData, { toastId: "rn-error" })
-          return new Error(listenerData)
         }
 
         if (listenerReqId === reqId) {

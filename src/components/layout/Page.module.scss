@@ -9,7 +9,7 @@
   }
 
   @include mobile {
-    padding: 8px 0;
+    padding: 16px 0;
   }
 }
 
@@ -42,6 +42,9 @@
     --font-size-page-title: 24px;
     margin: 0;
     padding: 0 var(--main-padding-horizontal);
+    h1 + a {
+      margin-top: 16px;
+    }
   }
 }
 

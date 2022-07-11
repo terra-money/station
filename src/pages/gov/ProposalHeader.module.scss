@@ -2,6 +2,9 @@
 
 .header {
   overflow: hidden;
+  @include mobile {
+    width: 100%;
+  }
 }
 
 .meta {

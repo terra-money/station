@@ -25,10 +25,13 @@ const UseBioAuthForm = () => {
   const submitAble = async ({ password }: Values) => {
     if (!password) return
     const res = await WebViewMessage(RN_APIS.AUTH_BIO)
-    if (res) {
+    if (res && !(typeof res === "string" && res?.includes("Error"))) {
       encodeBioAuthKey(password)
     } else {
-      setError("password", { type: "invalid", message: "failed bio" })
+      setError("password", {
+        type: "invalid",
+        message: "Failed bio authentication.",
+      })
     }
   }
 
