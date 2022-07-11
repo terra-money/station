@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useMemo } from "react"
+import { useCallback, useEffect, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useFieldArray, useForm } from "react-hook-form"
 import AddIcon from "@mui/icons-material/Add"
@@ -6,10 +6,13 @@ import RemoveIcon from "@mui/icons-material/Remove"
 import { AccAddress, Coins, MsgSubmitProposal } from "@terra-money/terra.js"
 import { TextProposal, CommunityPoolSpendProposal } from "@terra-money/terra.js"
 import { ParameterChangeProposal, ParamChange } from "@terra-money/terra.js"
+import { ExecuteContractProposal } from "@terra-money/terra.js/dist/core/wasm/proposals"
+import { isDenomTerraNative } from "@terra.kitchen/utils"
 import { readAmount, readDenom, toAmount } from "@terra.kitchen/utils"
 import { SAMPLE_ADDRESS } from "config/constants"
-import { getAmount } from "utils/coin"
+import { getAmount, sortCoins } from "utils/coin"
 import { has } from "utils/num"
+import { parseJSON } from "utils/data"
 import { queryKey } from "data/query"
 import { useAddress } from "data/wallet"
 import { useBankBalance } from "data/queries/bank"
@@ -17,7 +20,7 @@ import { Grid } from "components/layout"
 import { Form, FormGroup, FormItem } from "components/form"
 import { FormHelp, FormWarning } from "components/form"
 import { Input, TextArea, Select } from "components/form"
-import { getPlaceholder, toInput } from "../utils"
+import { getCoins, getPlaceholder, toInput } from "../utils"
 import validate from "../validate"
 import Tx, { getInitialGasDenom } from "../Tx"
 
@@ -25,6 +28,7 @@ enum ProposalType {
   TEXT = "Text proposal",
   SPEND = "Community pool spend",
   PARAMS = "Parameter change",
+  EXECUTE = "Execute contract",
 }
 
 interface DefaultValues {
@@ -47,10 +51,19 @@ interface ParameterChangeProposalValues extends DefaultValues {
   changes: ParamChange[]
 }
 
+interface ExecuteContractProposalValues extends DefaultValues {
+  type: ProposalType.EXECUTE
+  runAs: AccAddress
+  contractAddress: AccAddress
+  msg: string
+  coins: { input?: number; denom: CoinDenom }[]
+}
+
 type TxValues =
   | TextProposalValues
   | CommunityPoolSpendProposalValues
   | ParameterChangeProposalValues
+  | ExecuteContractProposalValues
 
 const DEFAULT_PAREMETER_CHANGE = { subspace: "", key: "", value: "" }
 
@@ -68,11 +81,12 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
 
   /* tx context */
   const initialGasDenom = getInitialGasDenom(bankBalance)
+  const defaultCoinItem = { denom: initialGasDenom }
 
   /* form */
   const form = useForm<TxValues>({
     mode: "onChange",
-    defaultValues: { input: toInput(minDeposit) },
+    defaultValues: { input: toInput(minDeposit), coins: [defaultCoinItem] },
   })
 
   const { register, trigger, control, watch, setValue, handleSubmit } = form
@@ -80,6 +94,7 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
   const { input, ...values } = watch()
   const amount = toAmount(input)
   const { fields, append, remove } = useFieldArray({ control, name: "changes" })
+  const coinsFieldArray = useFieldArray({ control, name: "coins" })
 
   /* effect: ParameterChangeProposal */
   const shouldAppendChange =
@@ -111,6 +126,20 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
         if (values.type === ProposalType.PARAMS) {
           const { changes } = values
           return new ParameterChangeProposal(title, description, changes)
+        }
+
+        if (values.type === ProposalType.EXECUTE) {
+          const { runAs, contractAddress, msg } = values
+          const execute_msg = parseJSON(msg)
+          const coins = getCoins(values.coins)
+          return new ExecuteContractProposal(
+            title,
+            description,
+            runAs,
+            contractAddress,
+            execute_msg,
+            coins
+          )
         }
 
         return new TextProposal(title, description)
@@ -250,6 +279,88 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
             </FormGroup>
           ))}
         </FormItem>
+      )
+    }
+
+    if (values.type === ProposalType.EXECUTE) {
+      const { fields, append, remove } = coinsFieldArray
+      const length = fields.length
+
+      return (
+        <>
+          <FormItem
+            label={t("Run as")}
+            error={"runAs" in errors ? errors.runAs?.message : undefined}
+          >
+            <Input
+              {...register("runAs", { validate: validate.address() })}
+              placeholder={SAMPLE_ADDRESS}
+            />
+          </FormItem>
+
+          <FormItem
+            label={t("Contract address")}
+            error={
+              "contractAddress" in errors
+                ? errors.contractAddress?.message
+                : undefined
+            }
+          >
+            <Input
+              {...register("contractAddress", { validate: validate.address() })}
+              placeholder={SAMPLE_ADDRESS}
+            />
+          </FormItem>
+
+          <FormItem
+            /* do not translate */
+            label="Msg"
+            error={"msg" in errors ? errors.msg?.message : undefined}
+          >
+            <TextArea
+              {...register("msg", { validate: validate.msg() })}
+              placeholder="{}"
+            />
+          </FormItem>
+
+          <FormItem label={t("Amount")}>
+            {fields.map(({ id }, index) => (
+              <FormGroup
+                button={
+                  length - 1 === index
+                    ? {
+                        onClick: () => append(defaultCoinItem),
+                        children: <AddIcon style={{ fontSize: 18 }} />,
+                      }
+                    : {
+                        onClick: () => remove(index),
+                        children: <RemoveIcon style={{ fontSize: 18 }} />,
+                      }
+                }
+                key={id}
+              >
+                <Input
+                  {...register(`coins.${index}.input`, {
+                    valueAsNumber: true,
+                  })}
+                  inputMode="decimal"
+                  placeholder={getPlaceholder()}
+                  selectBefore={
+                    <Select {...register(`coins.${index}.denom`)} before>
+                      {sortCoins(bankBalance)
+                        .filter(({ denom }) => isDenomTerraNative(denom))
+                        .map(({ denom }) => (
+                          <option value={denom} key={denom}>
+                            {readDenom(denom)}
+                          </option>
+                        ))}
+                    </Select>
+                  }
+                />
+              </FormGroup>
+            ))}
+          </FormItem>
+        </>
       )
     }
   }
