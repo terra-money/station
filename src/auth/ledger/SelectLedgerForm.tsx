@@ -4,8 +4,8 @@ import { useRecoilValue, useSetRecoilState } from "recoil"
 import { useTranslation } from "react-i18next"
 import { truncate } from "@terra.kitchen/utils"
 import { Card, FlexColumn } from "components/layout"
-import { Form, FormError } from "components/form"
-import { parseTx, RN_APIS, TxRequest, WebViewMessage } from "utils/rnModule"
+import { Form, FormError, FormHelp } from "components/form"
+import { RN_APIS, TxRequest, WebViewMessage } from "utils/rnModule"
 import useAuth from "auth/hooks/useAuth"
 import { isBroadcastingState, latestTxState } from "data/queries/tx"
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
@@ -192,6 +192,10 @@ const SelectLedgerForm = () => {
       ) : (
         <Card className="blankWithPad">
           <FormError>No ledgers</FormError>
+          <br />
+          <FormHelp>
+            {t("If you still can't find list, check your app permissions.")}
+          </FormHelp>
         </Card>
       )}
     </Form>

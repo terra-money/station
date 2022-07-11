@@ -4,7 +4,7 @@ import { WebViewMessage, RN_APIS } from "utils/rnModule"
 
 const Bio = () => {
   const getBio = async () => {
-    const res = await WebViewMessage(RN_APIS.AUTH_BIO, "test")
+    const res = await WebViewMessage(RN_APIS.AUTH_BIO)
     return res
   }
 
