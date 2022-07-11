@@ -3,6 +3,7 @@ import { FinderLink } from "components/general"
 import { Card } from "components/layout"
 import ContractItemActions from "./ContractItemActions"
 import ContractDetails from "./ContractDetails"
+import { isWallet } from "auth"
 import styles from "./ContractItem.module.scss"
 
 const ContractItem = (props: ContractInfo) => {
@@ -10,8 +11,13 @@ const ContractItem = (props: ContractInfo) => {
 
   return (
     <Card
-      title={<FinderLink className={styles.link}>{address}</FinderLink>}
+      title={
+        <FinderLink className={styles.link} short={isWallet.mobile()}>
+          {address}
+        </FinderLink>
+      }
       extra={<ContractItemActions />}
+      className={styles.contract}
       mainClassName={styles.main}
       bordered
     >

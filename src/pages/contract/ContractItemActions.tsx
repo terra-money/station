@@ -5,6 +5,7 @@ import { ModalButton } from "components/feedback"
 import { ExtraActions } from "components/layout"
 import ContractQuery from "./ContractQuery"
 import { useContract } from "./Contract"
+import { isWallet } from "auth"
 
 const ContractItemActions = () => {
   const { t } = useTranslation()
@@ -12,7 +13,7 @@ const ContractItemActions = () => {
   const { address, admin } = useContract()
 
   return (
-    <ExtraActions>
+    <ExtraActions align={isWallet.mobile() ? "stretch" : undefined}>
       <ModalButton
         title={t("Query")}
         renderButton={(open) => (
