@@ -17,7 +17,7 @@ const ContractItem = (props: ContractInfo) => {
         </FinderLink>
       }
       extra={<ContractItemActions />}
-      className={styles.contract}
+      className={isWallet.mobile() ? styles.contract : undefined}
       mainClassName={styles.main}
       bordered
     >

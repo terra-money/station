@@ -38,7 +38,12 @@ export const Languages = {
   zh: { value: "zh", label: "中文", translation: flatten(zh) },
 }
 
+const whitelist = ["cs", "de", "en", "es", "fr", "it", "pl", "pt", "ru", "zh"]
+
 i18n.use(LanguageDetector).use(initReactI18next).init({
   resources: Languages,
+  fallbackLng: "en",
+  supportedLngs: whitelist,
+  nonExplicitSupportedLngs: true,
   debug: !!debug.translation,
 })
