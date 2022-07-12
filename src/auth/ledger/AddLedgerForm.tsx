@@ -52,7 +52,7 @@ const AddLedgerForm = () => {
       } else {
         // @ts-ignore
         const key = JSON.parse(ledger)
-        const ledgerName = state.name.replaceAll(" ", "")
+        const ledgerName = state.name.replace(/ /g, "")
         connectLedger(key._accAddress, index, bluetooth, ledgerName)
         navigate("/wallet", { replace: true })
       }
