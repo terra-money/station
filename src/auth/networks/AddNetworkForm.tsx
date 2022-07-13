@@ -22,7 +22,7 @@ const AddNetwork = () => {
   const submit = (values: CustomNetwork) => {
     add(values)
     setNetwork(values.name)
-    navigate("/")
+    navigate("/wallet")
   }
 
   return (

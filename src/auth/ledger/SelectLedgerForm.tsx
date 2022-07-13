@@ -151,7 +151,7 @@ const SelectLedgerForm = () => {
                             txhash: result.txhash,
                             redirectAfterTx: {
                               label: "Confirm",
-                              path: "/",
+                              path: "/wallet",
                             },
                           })
 
@@ -162,12 +162,12 @@ const SelectLedgerForm = () => {
                               result: result.txhash,
                             })
                           }
-                          navigate("/")
+                          navigate("/wallet")
                         }
                       } catch (error) {
                         setIsTxLoading(false)
                         setError(error as Error)
-                        navigate("/")
+                        navigate("/wallet")
                       } finally {
                         setIsTxLoading(false)
                       }

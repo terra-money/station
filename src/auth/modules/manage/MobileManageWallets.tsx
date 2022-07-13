@@ -48,7 +48,7 @@ export const useManageWallet = () => {
   const disconnectWallet = {
     onClick: () => {
       disconnect()
-      navigate("/", { replace: true })
+      navigate("/wallet", { replace: true })
     },
     children: t("Disconnect"),
     icon: <LogoutIcon />,
@@ -57,7 +57,7 @@ export const useManageWallet = () => {
   const lockWallet = {
     onClick: () => {
       lock()
-      navigate("/", { replace: true })
+      navigate("/wallet", { replace: true })
     },
     children: t("Lock"),
     icon: <LockOutlinedIcon />,

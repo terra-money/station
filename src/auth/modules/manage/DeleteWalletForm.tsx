@@ -39,7 +39,7 @@ const DeleteWalletForm = () => {
       {done && (
         <ConfirmModal
           icon={<DoneAllIcon className="success" fontSize="inherit" />}
-          onRequestClose={() => navigate("/", { replace: true })}
+          onRequestClose={() => navigate("/wallet", { replace: true })}
         >
           {t("Wallet deleted successfully")}
         </ConfirmModal>

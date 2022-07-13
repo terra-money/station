@@ -109,7 +109,7 @@ const Nav = () => {
 
       <section className={styles.menu}>
         <div className={classNames(styles.menuTitle)}>
-          <NavLink to="/" onClick={close}>
+          <NavLink to="/wallet" onClick={close}>
             <strong>Terra</strong> Station
           </NavLink>
           {is.mobileNative() && (

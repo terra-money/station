@@ -21,7 +21,7 @@ export const useSessionsState = () => {
   const saveSession = useCallback(
     (connector: Connector) => {
       if (!connector?.peerMeta) {
-        return navigate("/", { replace: true })
+        return navigate("/wallet", { replace: true })
       }
 
       const newSessions: Sessions = {
@@ -32,7 +32,7 @@ export const useSessionsState = () => {
       storeSessions(newSessions)
       setSessions(newSessions)
       toast.success("Wallet connected", { toastId: "wallet-connect" })
-      return navigate("/", { replace: true })
+      return navigate("/wallet", { replace: true })
     },
     [sessions, setSessions, navigate]
   )

@@ -59,7 +59,7 @@ const ConfirmForm = ({ action, payload }: Props) => {
       setTxProps({
         confirmData: txData,
         onPost() {
-          navigate("/", { replace: true })
+          navigate("/wallet", { replace: true })
         },
       })
     }

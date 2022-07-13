@@ -35,7 +35,7 @@ const ChangePasswordForm = () => {
   return (
     <>
       {done && (
-        <ConfirmModal onRequestClose={() => navigate("/")}>
+        <ConfirmModal onRequestClose={() => navigate("/wallet")}>
           {t("Password changed successfully")}
         </ConfirmModal>
       )}

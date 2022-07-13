@@ -41,7 +41,7 @@ const ConnectForm = ({ action, payload }: Props) => {
   const readyConnect = async () => {
     try {
       connectionTimeout.current = setTimeout(() => {
-        navigate("/")
+        navigate("/wallet", { replace: true })
         toast.error("Session timeout", { toastId: "session-timeout" })
       }, 15000)
 
@@ -62,7 +62,7 @@ const ConnectForm = ({ action, payload }: Props) => {
     if (payload) {
       setTx({
         onPost() {
-          navigate("/", { replace: true })
+          navigate("/wallet", { replace: true })
         },
       })
 

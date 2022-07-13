@@ -76,7 +76,7 @@ export const Header = ({ children }: PropsWithChildren<{}>) => {
                       WebViewMessage(RN_APIS.REJECT_SESSION)
                     }
                     if (window.history.length <= 1) {
-                      navigate("/", { replace: true })
+                      navigate("/wallet", { replace: true })
                     } else {
                       navigate(-1)
                     }

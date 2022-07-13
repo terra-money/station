@@ -597,7 +597,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
                     message: "Denied by user",
                   },
                 })
-                navigate("/", { replace: true })
+                navigate("/wallet", { replace: true })
               }}
             >
               {t("Cancel")}
@@ -622,7 +622,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
         color="danger"
         onClick={() => {
           WebViewMessage(RN_APIS.REJECT_SESSION)
-          navigate("/", { replace: true })
+          navigate("/wallet", { replace: true })
         }}
       >
         {t("Deny")}
