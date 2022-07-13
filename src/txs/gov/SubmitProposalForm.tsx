@@ -299,7 +299,7 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
                 required: "Description is required",
               })}
               placeholder={t(
-                "We’re proposing to initiate the burn of 100,000,000 LUNA from the Community Pool to mint UST"
+                "We're proposing to spend 100,000 LUNA from the Community Pool to fund the creation of public goods for the Terra ecosystem"
               )}
             />
           </FormItem>
