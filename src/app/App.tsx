@@ -148,6 +148,9 @@ const App = () => {
       if (wallet) {
         recoverSessions()
       }
+
+      // for initial landing
+      navigate("/wallet")
     }
   }, [])
 
