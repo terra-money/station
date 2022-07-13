@@ -1,5 +1,9 @@
+@import "mixins";
+
 .screen {
   height: 100vh;
+  background-color: var(--bg);
+  color: var(--text);
 }
 .page {
   height: 100%;
