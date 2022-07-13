@@ -74,7 +74,6 @@ export const useNav = () => {
 
   const menu = [
     {
-      index: true,
       path: "/wallet",
       element: <Wallet />,
       title: t("Wallet"),
