@@ -16,16 +16,26 @@ interface Props extends QueryState {
   mainClassName?: string
   small?: boolean
   sub?: boolean // used as a page in a page
+  hideProgress?: boolean
 }
 
 const Page = (props: PropsWithChildren<Props>) => {
-  const { title, extra, children, small, sub, mainClassName, className } = props
+  const {
+    title,
+    extra,
+    children,
+    small,
+    sub,
+    mainClassName,
+    className,
+    hideProgress,
+  } = props
 
   return (
     <WithFetching {...props}>
       {(progress, wrong) => (
         <>
-          {progress}
+          {hideProgress ? null : progress}
 
           <article className={cx(styles.page, className, { sub, small })}>
             <Container className={styles.grid}>

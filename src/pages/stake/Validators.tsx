@@ -262,7 +262,7 @@ const Validators = () => {
   }
 
   return (
-    <Page title={t("Validators")} extra={renderCount()} sub>
+    <Page title={t("Validators")} extra={renderCount()} sub hideProgress={true}>
       <Card
         {...state}
         className={isWallet.mobile() ? "blankSidePad" : styles.card}
