@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form"
 import BigNumber from "bignumber.js"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import ExpandLessIcon from "@mui/icons-material/ExpandLess"
-import { isDenomTerraNative, readDenom } from "@terra.kitchen/utils"
+import { isDenomTerraNative, readDenom, truncate } from "@terra.kitchen/utils"
 import { Validator, ValAddress, Coin, MsgSwap } from "@terra-money/terra.js"
 import { Rewards } from "@terra-money/terra.js"
 import { MsgWithdrawDelegatorReward } from "@terra-money/terra.js"
@@ -139,8 +139,8 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
     ? t("Not selected")
     : selected.length === 1
     ? findMoniker(selected[0])
-    : t("{{moniker}} and {{length}} others", {
-        moniker: findMoniker(selected[0]),
+    : findMoniker(selected[0]) +
+      t(" and {{length}} others", {
         length: selected.length - 1,
       })
 
@@ -223,7 +223,7 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
               <dd>
                 {selectable ? (
                   <button type="button" onClick={toggle}>
-                    {selectedValidatorsText}
+                    {truncate(selectedValidatorsText, [17, 17])}
                     {isOpen ? (
                       <ExpandLessIcon style={{ fontSize: 16 }} />
                     ) : (

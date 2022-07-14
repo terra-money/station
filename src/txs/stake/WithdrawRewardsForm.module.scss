@@ -37,11 +37,17 @@
   @include mobile {
     grid-template-columns: 1fr;
     grid-template-rows: auto;
+    min-width: 0;
+
     dd {
+      display: grid;
+      grid-template-columns: 1fr;
       font-size: var(--font-size-small);
       grid-column-start: unset;
-
+      min-width: 0;
       button {
+        justify-content: end;
+        min-width: 0;
         font-weight: var(--normal);
       }
     }
