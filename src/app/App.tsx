@@ -150,7 +150,7 @@ const App = () => {
       }
 
       // for initial landing
-      navigate("/wallet")
+      navigate("/wallet", { replace: true })
     }
   }, [])
 

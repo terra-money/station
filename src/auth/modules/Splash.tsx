@@ -4,6 +4,7 @@ import { useTheme, useThemeAnimation } from "data/settings/Theme"
 import { FlexColumn } from "components/layout"
 import { sandbox } from "../scripts/env"
 import styles from "./Splash.module.scss"
+import { isWallet } from "auth"
 
 const Splash = () => {
   const { t } = useTranslation()
@@ -17,7 +18,9 @@ const Splash = () => {
   return !sandbox ? null : (
     <FlexColumn gap={20} className={styles.screen}>
       <img src={animation} alt="" width={80} height={80} />
-      <h1>{t("Initializing app...")}</h1>
+      <h1>
+        {isWallet.mobileNative() ? t("Loading...") : t("Initializing app...")}
+      </h1>
     </FlexColumn>
   )
 }
