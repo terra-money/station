@@ -45,8 +45,12 @@ import {
 import { useSessionsState } from "../auth/hooks/useSessions"
 import WalletConnect from "../pages/wallet/WalletConnect"
 
-import { ToastContainer, Flip } from "react-toastify"
+import { ToastContainer, Flip, toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
+import {
+  validWalletConnectPayload,
+  validWalletConnectConfirmPayload,
+} from "../utils/data"
 
 const App = () => {
   const { element: routes } = useNav()
@@ -60,16 +64,36 @@ const App = () => {
       const { data, type } = JSON.parse(event?.data)
       switch (type) {
         case RN_APIS.DEEPLINK: {
-          if (data?.action === "wallet_connect") {
-            navigate("/connect", {
-              replace: true,
-              state: data,
-            })
-          } else if (data?.action !== "wallet_connect") {
-            navigate("/confirm", {
-              replace: true,
-              state: data,
-            })
+          switch (data?.action) {
+            case "wallet_connect":
+              navigate("/connect", {
+                replace: true,
+                state: data,
+              })
+              break
+            case "walletconnect_connect": {
+              const valid = await validWalletConnectPayload(data?.payload)
+              if (valid.success) {
+                navigate("/connect", {
+                  replace: true,
+                  state: {
+                    action: "wallet_connect",
+                    payload: valid.params?.uri,
+                  },
+                })
+              } else {
+                toast.error(valid.errorMessage, {
+                  toastId: "link-connect-error",
+                })
+              }
+              break
+            }
+            default:
+              navigate("/confirm", {
+                replace: true,
+                state: data,
+              })
+              break
           }
           break
         }
