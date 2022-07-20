@@ -354,7 +354,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
             id: confirmData?.id,
             handshakeTopic: confirmData?.handshakeTopic,
             errorMsg: {
-              errorCode: ConfirmErrorCode.createTxFailed,
+              code: ConfirmErrorCode.createTxFailed,
               message: error,
             },
           })
@@ -384,7 +384,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
           id: confirmData?.id,
           handshakeTopic: confirmData?.handshakeTopic,
           errorMsg: {
-            errorCode: ConfirmErrorCode.txFailed,
+            code: ConfirmErrorCode.txFailed,
             message: latestTx.raw_log,
             txHash: latestTx.txhash,
             raw_message: latestTx,
@@ -593,7 +593,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
                   id: confirmData?.id,
                   handshakeTopic: confirmData?.handshakeTopic,
                   errorMsg: {
-                    errorCode: ConfirmErrorCode.userDenied,
+                    code: ConfirmErrorCode.userDenied,
                     message: "Denied by user",
                   },
                 })

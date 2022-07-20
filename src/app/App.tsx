@@ -64,7 +64,6 @@ const App = () => {
           switch (data?.action) {
             case "wallet_connect":
               navigate("/connect", {
-                replace: true,
                 state: data,
               })
               break
@@ -72,7 +71,6 @@ const App = () => {
               const valid = await validWalletConnectPayload(data?.payload)
               if (valid.success) {
                 navigate("/connect", {
-                  replace: true,
                   state: {
                     action: "wallet_connect",
                     payload: valid.params?.uri,
@@ -87,7 +85,6 @@ const App = () => {
             }
             default:
               navigate("/confirm", {
-                replace: true,
                 state: data,
               })
               break
@@ -104,7 +101,6 @@ const App = () => {
           if (AccAddress.validate(data)) {
             // send
             return navigate("/send/select", {
-              replace: true,
               state: data,
             })
           }
@@ -114,7 +110,6 @@ const App = () => {
             const payload = url.searchParams.get("payload")
 
             return navigate("/auth/import", {
-              replace: true,
               state: payload,
             })
           }
@@ -126,7 +121,6 @@ const App = () => {
               const action = linkUrl?.searchParams.get("action")
               const payload = linkUrl?.searchParams.get("payload")
               return navigate("/connect", {
-                replace: true,
                 state: {
                   action,
                   payload,

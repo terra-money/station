@@ -33,6 +33,18 @@ export const Header = ({ children }: PropsWithChildren<{}>) => {
   const [title, setTitle] = useState("")
   const [subTitle, setSubTitle] = useState("")
 
+  const goBack = async () => {
+    const isConnect = pathname === "/connect"
+    if (window.history.state && window.history.state.idx > 0) {
+      navigate(-1)
+    } else {
+      navigate("/wallet", { replace: true })
+    }
+    if (isConnect) {
+      await WebViewMessage(RN_APIS.REJECT_SESSION)
+    }
+  }
+
   useEffect(() => {
     const subPages = [
       ...subPage,
@@ -70,18 +82,7 @@ export const Header = ({ children }: PropsWithChildren<{}>) => {
               </>
             ) : (
               <>
-                <button
-                  onClick={() => {
-                    if (pathname === "/confirm") {
-                      WebViewMessage(RN_APIS.REJECT_SESSION)
-                    }
-                    if (window.history.length <= 1) {
-                      navigate("/wallet", { replace: true })
-                    } else {
-                      navigate(-1)
-                    }
-                  }}
-                >
+                <button onClick={goBack}>
                   <BackIcon {...{ width: 24, height: 24 }} />
                 </button>
                 {subTitle && (
