@@ -47,10 +47,7 @@ import WalletConnect from "../pages/wallet/WalletConnect"
 
 import { ToastContainer, Flip, toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
-import {
-  validWalletConnectPayload,
-  validWalletConnectConfirmPayload,
-} from "../utils/data"
+import { validWalletConnectPayload, parseDynamicLinkURL } from "../utils/data"
 
 const App = () => {
   const { element: routes } = useNav()
@@ -106,7 +103,7 @@ const App = () => {
         case RN_APIS.QR_SCAN: {
           if (AccAddress.validate(data)) {
             // send
-            navigate("/send/select", {
+            return navigate("/send/select", {
               replace: true,
               state: data,
             })
@@ -116,11 +113,31 @@ const App = () => {
             const url = new URL(data)
             const payload = url.searchParams.get("payload")
 
-            navigate("/auth/import", {
+            return navigate("/auth/import", {
               replace: true,
               state: payload,
             })
           }
+          if (schemeUrl.connectWallet.test(data)) {
+            // wallet connect
+            const linkUrl = parseDynamicLinkURL(data)
+
+            if (linkUrl) {
+              const action = linkUrl?.searchParams.get("action")
+              const payload = linkUrl?.searchParams.get("payload")
+              return navigate("/connect", {
+                replace: true,
+                state: {
+                  action,
+                  payload,
+                },
+              })
+            }
+          }
+
+          toast.error("Not a valid QR code.", {
+            toastId: "qr-code-error",
+          })
           break
         }
         default:

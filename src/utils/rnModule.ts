@@ -36,6 +36,7 @@ export enum ConfirmErrorCode {
 export type RN_API = typeof RN_APIS[keyof typeof RN_APIS] // type
 
 export const schemeUrl = {
+  connectWallet: /^.*wallet_connect.*payload/,
   recoverWallet: /^terrastation:(|\/\/)wallet_recover\/\?payload=/,
   send: /^terrastation:(|\/\/)send\/\?payload=/,
 }

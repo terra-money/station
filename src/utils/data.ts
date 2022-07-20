@@ -22,6 +22,19 @@ export const parseJSON = (query: string) => {
   }
 }
 
+const tryNewURL = (str: string): URL | undefined => {
+  try {
+    return new URL(str)
+  } catch {}
+}
+
+export const parseDynamicLinkURL = (value: string): URL | undefined => {
+  const url = tryNewURL(value)
+  const link = url?.searchParams.get("link")
+  if (link) {
+    return tryNewURL(link)
+  }
+}
 export const validateMsg = (msg: string): object | undefined => {
   const parsed = parseJSON(msg)
   if (!parsed) return
