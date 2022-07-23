@@ -120,12 +120,29 @@ const App = () => {
             if (linkUrl) {
               const action = linkUrl?.searchParams.get("action")
               const payload = linkUrl?.searchParams.get("payload")
-              return navigate("/connect", {
-                state: {
-                  action,
-                  payload,
-                },
-              })
+
+              if (action === "walletconnect_connect") {
+                const valid = await validWalletConnectPayload(payload as string)
+                if (valid.success) {
+                  return navigate("/connect", {
+                    state: {
+                      action: "wallet_connect",
+                      payload: valid.params?.uri,
+                    },
+                  })
+                } else {
+                  return toast.error(valid.errorMessage, {
+                    toastId: "link-connect-error",
+                  })
+                }
+              } else {
+                return navigate("/connect", {
+                  state: {
+                    action,
+                    payload,
+                  },
+                })
+              }
             }
           }
 
