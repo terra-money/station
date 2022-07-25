@@ -14,10 +14,3 @@ export interface Contacts {
   telegram?: string
   twitter?: string
 }
-
-export interface SendPayload {
-  address?: string
-  token: string
-  amount?: string
-  memo?: string
-}

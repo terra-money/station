@@ -1,5 +1,3 @@
-import { SendPayload } from "../types/components"
-
 export const toBase64 = (object: object) => {
   try {
     return Buffer.from(JSON.stringify(object)).toString("base64")
@@ -56,7 +54,6 @@ export type WalletConnectConfirmPayloadType = {
 export type PayloadType =
   | WalletConnectPayloadType
   | WalletConnectConfirmPayloadType
-  | SendPayload
 
 export type TxParam = {
   msgs: string[]
