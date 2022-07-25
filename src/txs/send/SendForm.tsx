@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom"
 import PersonIcon from "@mui/icons-material/Person"
 import { AccAddress } from "@terra-money/terra.js"
 import { MsgExecuteContract, MsgSend } from "@terra-money/terra.js"
-import { isDenom, toAmount, truncate } from "@terra.kitchen/utils"
+import { isDenom, toAmount, truncate, readAmount } from "@terra.kitchen/utils"
 import { SAMPLE_ADDRESS } from "config/constants"
 import { queryKey } from "data/query"
 import { useAddress } from "data/wallet"
@@ -19,6 +19,7 @@ import { getPlaceholder, toInput } from "../utils"
 import validate from "../validate"
 import Tx, { getInitialGasDenom } from "../Tx"
 import is from "auth/scripts/is"
+import { SendPayload } from "types/components"
 
 interface TxValues {
   recipient?: string // AccAddress | TNS
@@ -36,7 +37,7 @@ const SendForm = ({ token, decimals, balance }: Props) => {
   const { t } = useTranslation()
   const connectedAddress = useAddress()
   const bankBalance = useBankBalance()
-  const { state } = useLocation()
+  const { state }: { state: unknown | string | SendPayload } = useLocation()
 
   /* tx context */
   const initialGasDenom = getInitialGasDenom(bankBalance)
@@ -55,9 +56,20 @@ const SendForm = ({ token, decimals, balance }: Props) => {
     await trigger("recipient")
   }
 
+  const instanceOfSend = (data: any): data is SendPayload => {
+    return "amount" in data
+  }
+
   useEffect(() => {
-    if (state) {
+    if (typeof state === "string") {
       setValue("recipient", state as string)
+    } else {
+      if (instanceOfSend(state)) {
+        // @ts-ignore
+        setValue("input", readAmount(state?.amount || 0, { decimals }))
+        setValue("recipient", state?.address)
+        setValue("memo", state?.memo)
+      }
     }
   }, [state, setValue])
 
