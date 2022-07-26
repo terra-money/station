@@ -47,7 +47,12 @@ import WalletConnect from "../pages/wallet/WalletConnect"
 
 import { ToastContainer, Flip, toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
-import { validWalletConnectPayload, parseDynamicLinkURL } from "../utils/data"
+import {
+  validWalletConnectPayload,
+  parseDynamicLinkURL,
+  parsePayload,
+} from "../utils/data"
+import { SendPayload } from "../types/components"
 
 const App = () => {
   const { element: routes } = useNav()
@@ -83,6 +88,13 @@ const App = () => {
               }
               break
             }
+            case "send": {
+              const sendState = parsePayload<SendPayload>(data?.payload)
+              navigate(`/send?token=${sendState?.token}`, {
+                state: sendState,
+              })
+              break
+            }
             default:
               navigate("/confirm", {
                 state: data,
@@ -102,6 +114,14 @@ const App = () => {
             // send
             return navigate("/send/select", {
               state: data,
+            })
+          }
+          if (schemeUrl.send.test(data)) {
+            const payload = data.replace(schemeUrl.send, "")
+            const sendState = parsePayload<SendPayload>(payload)
+
+            return navigate(`/send?token=${sendState?.token}`, {
+              state: sendState,
             })
           }
           if (schemeUrl.recoverWallet.test(data)) {
