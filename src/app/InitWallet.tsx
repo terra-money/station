@@ -20,7 +20,7 @@ const InitWallet = ({ children }: PropsWithChildren<{}>) => {
     if (name) document.body.classList.add(name)
   }, [])
 
-  return status === WalletStatus.INITIALIZING ? (
+  return status === WalletStatus.INITIALIZING && !isWallet.mobileNative() ? (
     <Splash />
   ) : (
     <QueryClientProvider client={queryClient} key={networkName}>

@@ -30,7 +30,7 @@ export const Header = ({ children }: PropsWithChildren<{}>) => {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const { mobileMenu, subPage } = useNav()
-  const [title, setTitle] = useState("")
+  const [title, setTitle] = useState("Wallet")
   const [subTitle, setSubTitle] = useState("")
 
   const goBack = async () => {
