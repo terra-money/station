@@ -68,14 +68,13 @@ const App = () => {
         case RN_APIS.DEEPLINK: {
           switch (data?.action) {
             case "wallet_connect":
-              navigate("/connect", {
+              return navigate("/connect", {
                 state: data,
               })
-              break
             case "walletconnect_connect": {
               const valid = await validWalletConnectPayload(data?.payload)
               if (valid.success) {
-                navigate("/connect", {
+                return navigate("/connect", {
                   state: {
                     action: "wallet_connect",
                     payload: valid.params?.uri,
@@ -90,16 +89,14 @@ const App = () => {
             }
             case "send": {
               const sendState = parsePayload<SendPayload>(data?.payload)
-              navigate(`/send?token=${sendState?.token}`, {
+              return navigate(`/send?token=${sendState?.token}`, {
                 state: sendState,
               })
-              break
             }
             default:
-              navigate("/confirm", {
+              return navigate("/confirm", {
                 state: data,
               })
-              break
           }
           break
         }

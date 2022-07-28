@@ -18,7 +18,7 @@ interface WithFetchingProps extends Props {
 }
 
 export const WithFetching = (props: WithFetchingProps) => {
-  const { isFetching, error, height = 4, children } = props
+  const { isFetching, error, height = 1, children } = props
   /* Do not indicate for responses within 100 ms */
   const [showFetching, setShowFetching] = useState(false)
   useTimeout(() => setShowFetching(!!isFetching), isFetching ? 100 : 0)
@@ -33,7 +33,7 @@ export const WithFetching = (props: WithFetchingProps) => {
           <LinearProgress
             color="inherit"
             className={styles.progress}
-            style={{ height }}
+            style={{ height, opacity: 0.3 }}
             sx={{ position: "absolute" /* to overwrite */ }}
           />
         ) : undefined,

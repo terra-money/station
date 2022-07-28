@@ -1,4 +1,4 @@
-import { PropsWithChildren, useEffect, useMemo } from "react"
+import { PropsWithChildren, useEffect, useLayoutEffect, useMemo } from "react"
 import { QueryClient, QueryClientProvider } from "react-query"
 import { WalletStatus } from "@terra-money/wallet-types"
 import { useWallet } from "@terra-money/use-wallet"
@@ -7,12 +7,18 @@ import { isWallet, useAuth } from "auth"
 import Splash from "auth/modules/Splash"
 import Online from "./containers/Online"
 import WithNodeInfo from "./WithNodeInfo"
+import { useTheme } from "../data/settings/Theme"
 
 const InitWallet = ({ children }: PropsWithChildren<{}>) => {
   useOnNetworkChange()
+  const { name } = useTheme()
   const { status } = useWallet()
   const queryClient = useQueryClient()
   const networkName = useNetworkName()
+
+  useLayoutEffect(() => {
+    if (name) document.body.classList.add(name)
+  }, [])
 
   return status === WalletStatus.INITIALIZING ? (
     <Splash />
