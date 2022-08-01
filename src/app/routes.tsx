@@ -57,6 +57,7 @@ import Labs from "pages/labs/Labs"
 
 /* 404 */
 import NotFound from "pages/NotFound"
+import DonateAllVestingTokensTx from "txs/stake/DonateAllVestingTokensTx"
 
 const ICON_SIZE = { width: 20, height: 20 }
 
@@ -144,6 +145,7 @@ export const useNav = () => {
       element: <UpdateAdminContractTx />,
     },
     { path: "/earn", element: <AnchorEarnTx /> },
+    { path: "/donate", element: <DonateAllVestingTokensTx /> },
 
     /* auth */
     { path: "/auth/*", element: <Auth /> },
