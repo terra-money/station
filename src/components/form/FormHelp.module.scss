@@ -8,6 +8,9 @@
   line-height: 18px;
   gap: 8px;
   padding: 8px;
+  @include mobile {
+    word-break: break-all;
+  }
 }
 
 .info {

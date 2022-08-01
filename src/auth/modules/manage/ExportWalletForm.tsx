@@ -59,7 +59,10 @@ const ExportWalletForm = () => {
         setEncoded(encoded)
       }
     } catch (error) {
-      if (error instanceof Error && error?.message === "Failed bio auth") {
+      if (
+        error instanceof Error &&
+        error?.message === "Failed bio authentication."
+      ) {
         setIsFailBio(true)
       }
     }

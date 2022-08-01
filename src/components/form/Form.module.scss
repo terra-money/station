@@ -25,6 +25,9 @@
 
   .label {
     font-weight: var(--normal);
+    @include mobile {
+      word-break: break-all;
+    }
   }
 
   .button {

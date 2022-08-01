@@ -237,6 +237,24 @@ const useAuth = () => {
     return await lcd.tx.create([{ address }], txOptions)
   }
 
+  const createSignatureWithLedger = async (
+    id: string,
+    signTx: string,
+    address: string
+  ) => {
+    if (!wallet) throw new Error("Wallet is not defined")
+    if (is.ledger(wallet)) {
+      const result = await WebViewMessage(RN_APIS.GET_LEDGER_DOC, {
+        id,
+        path: wallet.index,
+        lcdConfigs: lcd.config,
+        signTx,
+        address,
+      })
+      return result
+    }
+  }
+
   const createSignature = async (
     tx: Tx,
     address: AccAddress,
@@ -253,7 +271,6 @@ const useAuth = () => {
       tx.auth_info,
       tx.body
     )
-
     if (is.ledger(wallet)) {
       const key = await getLedgerKey()
       return await key.createSignatureAmino(doc, isClassic)
@@ -358,6 +375,7 @@ const useAuth = () => {
     signBytes,
     sign,
     post,
+    createSignatureWithLedger,
   }
 }
 

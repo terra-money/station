@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import { useTranslation } from "react-i18next"
 import { truncate } from "@terra.kitchen/utils"
+import { Pre } from "components/general"
 import { Card, FlexColumn, Grid } from "components/layout"
 import { Form, FormError, FormHelp } from "components/form"
 import { RN_APIS, TxRequest, WebViewMessage } from "utils/rnModule"
@@ -15,6 +16,7 @@ import { LoadingCircular, Modal, Mode } from "components/feedback"
 import { useThemeAnimation } from "data/settings/Theme"
 import styles from "components/layout/Card.module.scss"
 import { useIsClassic } from "../../data/query"
+import { AccAddress, Tx } from "@terra-money/terra.js"
 
 interface DeviceInterface {
   name: string
@@ -28,13 +30,21 @@ const SelectLedgerForm = () => {
   const animation = useThemeAnimation()
   const setLatestTx = useSetRecoilState(latestTxState)
   const isBroadcasting = useRecoilValue(isBroadcastingState)
-  const { wallet, validatePassword, isUseBio, decodeBioAuthKey, ...auth } =
-    useAuth()
+  const {
+    wallet,
+    validatePassword,
+    isUseBio,
+    decodeBioAuthKey,
+    createSignatureWithLedger,
+    ...auth
+  } = useAuth()
 
   const [tx, setTx] = useState<TxRequest>()
+  const [sign, setSign] = useState<{ signTx: string; address: AccAddress }>()
   const [ledgers, setLedgers] = useState<DeviceInterface[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isTxLoading, setIsTxLoading] = useState(false)
+  const [signature, setSignature] = useState<string>()
   const [error, setError] = useState<Error>()
   const isClassic = useIsClassic()
 
@@ -44,10 +54,13 @@ const SelectLedgerForm = () => {
   useEffect(() => {
     if (state) {
       const data = JSON.parse(state)
-      setTx({
-        ...data,
-        tx: data.params ? data.params : data.tx,
-      })
+      if (data.hasOwnProperty("signTx")) {
+        setSign(data)
+      } else
+        setTx({
+          ...data,
+          tx: data.params ? data.params : data.tx,
+        })
     }
   }, [state, isClassic])
 
@@ -104,6 +117,24 @@ const SelectLedgerForm = () => {
     )
   }
 
+  if (signature) {
+    return (
+      <Modal
+        modalType={Mode.FULL}
+        title={t("Signature")}
+        isOpen
+        onRequestClose={() => {
+          setSignature(undefined)
+          navigate("/wallet")
+        }}
+      >
+        <Pre normal break copy>
+          {signature}
+        </Pre>
+      </Modal>
+    )
+  }
+
   return isTxLoading ? (
     <Modal
       modalType={isWallet.mobile() ? Mode.LOADING : Mode.DEFAULT}
@@ -122,7 +153,7 @@ const SelectLedgerForm = () => {
         </Card>
       )}
       {!!ledgers.length ? (
-        tx ? (
+        tx || sign ? (
           ledgers?.map((item, idx) => (
             <Card
               key={item.id}
@@ -136,7 +167,19 @@ const SelectLedgerForm = () => {
                       setIsTxLoading(true)
                       setError(undefined)
                       try {
-                        const result: any = await auth.post(tx.tx, item.id)
+                        let result: any = null
+                        if (tx) {
+                          result = await auth.post(tx.tx, item.id)
+                        }
+
+                        if (sign) {
+                          result = await createSignatureWithLedger(
+                            item.id,
+                            sign.signTx,
+                            sign.address
+                          )
+                        }
+
                         // @ts-ignore
                         if (
                           typeof result === "string" &&
@@ -147,27 +190,33 @@ const SelectLedgerForm = () => {
                           setIsTxLoading(false)
                           return
                         } else {
-                          setLatestTx({
-                            txhash: result.txhash,
-                            redirectAfterTx: {
-                              label: "Confirm",
-                              path: "/wallet",
-                            },
-                          })
-
-                          if (tx?.handshakeTopic) {
-                            await WebViewMessage(RN_APIS.APPROVE_TX, {
-                              id: tx.id,
-                              handshakeTopic: tx.handshakeTopic,
-                              result: result.txhash,
+                          if (tx) {
+                            setLatestTx({
+                              txhash: result.txhash,
+                              redirectAfterTx: {
+                                label: "Confirm",
+                                path: "/wallet",
+                              },
                             })
+
+                            if (tx?.handshakeTopic) {
+                              await WebViewMessage(RN_APIS.APPROVE_TX, {
+                                id: tx.id,
+                                handshakeTopic: tx.handshakeTopic,
+                                result: result.txhash,
+                              })
+                            }
+                            navigate("/wallet")
                           }
-                          navigate("/wallet")
+
+                          if (sign) {
+                            setSignature(result)
+                          }
                         }
                       } catch (error) {
                         setIsTxLoading(false)
                         setError(error as Error)
-                        navigate("/wallet")
+                        // navigate("/wallet")
                       } finally {
                         setIsTxLoading(false)
                       }

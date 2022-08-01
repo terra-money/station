@@ -12,6 +12,8 @@ import { isWallet, useAuth } from "auth"
 import { PasswordError } from "auth/scripts/keystore"
 import { SAMPLE_ENCODED_TX } from "./utils/placeholder"
 import ReadTx from "./ReadTx"
+import ConfirmModal from "../../auth/modules/manage/ConfirmModal"
+import { useNavigate } from "react-router-dom"
 
 interface TxValues {
   address: AccAddress
@@ -24,8 +26,12 @@ interface Props {
 
 const SignMultisigTxForm = ({ defaultValues }: Props) => {
   const { t } = useTranslation()
-  const { wallet, createSignature } = useAuth()
+  const { wallet, createSignature, decodeBioAuthKey, isUseBio } = useAuth()
   const lcd = useLCDClient()
+  const navigate = useNavigate()
+
+  const [isFailBio, setIsFailBio] = useState(false)
+  const [bioWithPassword, setBioWithPassword] = useState(false)
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange", defaultValues })
@@ -34,7 +40,10 @@ const SignMultisigTxForm = ({ defaultValues }: Props) => {
   const { tx } = watch()
 
   /* submit */
-  const passwordRequired = isWallet.single(wallet)
+  const passwordRequired =
+    !(isUseBio && !bioWithPassword) &&
+    !isWallet.ledger(wallet) &&
+    isWallet.single(wallet)
   const [password, setPassword] = useState("")
   const [incorrect, setIncorrect] = useState<string>()
 
@@ -50,11 +59,34 @@ const SignMultisigTxForm = ({ defaultValues }: Props) => {
     try {
       const decoded = lcd.tx.decode(tx.trim())
       if (!decoded) throw new Error("Invalid tx")
-      const signature = await createSignature(decoded, address, password)
-      setSignature(signature)
+
+      if (isWallet.mobileNative() && isWallet.ledger(wallet)) {
+        return navigate("/auth/ledger/device", {
+          state: JSON.stringify({ signTx: tx.trim(), address }),
+        })
+      }
+
+      if (isUseBio && !bioWithPassword) {
+        const bioKey = await decodeBioAuthKey()
+        const signature = await createSignature(decoded, address, bioKey)
+        setSignature(signature)
+      } else {
+        const signature = await createSignature(decoded, address, password)
+        setSignature(signature)
+      }
     } catch (error) {
-      if (error instanceof PasswordError) setIncorrect(error.message)
-      else setError(error as Error)
+      if (error instanceof PasswordError) {
+        setIncorrect(error.message)
+      } else {
+        if (
+          error instanceof Error &&
+          error?.message === "Failed bio authentication."
+        ) {
+          setIsFailBio(true)
+        } else {
+          setError(error as Error)
+        }
+      }
     }
 
     setSubmitting(false)
@@ -111,6 +143,17 @@ const SignMultisigTxForm = ({ defaultValues }: Props) => {
             {toBytes(signature)}
           </Pre>
         </Modal>
+      )}
+
+      {isFailBio && (
+        <ConfirmModal
+          onRequestClose={() => {
+            setBioWithPassword(true)
+            setIsFailBio(false)
+          }}
+        >
+          {t("Would you like to confirm with your password?")}
+        </ConfirmModal>
       )}
     </ReadTx>
   )

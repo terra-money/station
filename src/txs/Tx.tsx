@@ -291,7 +291,10 @@ function Tx<TxValues>(props: Props<TxValues>) {
       if (error instanceof PasswordError) {
         setIncorrect(error.message)
       } else {
-        if (error instanceof Error && error?.message === "Failed bio auth") {
+        if (
+          error instanceof Error &&
+          error?.message === "Failed bio authentication."
+        ) {
           setIsFailBio(true)
         } else {
           setError(error as Error)
@@ -346,7 +349,10 @@ function Tx<TxValues>(props: Props<TxValues>) {
     } catch (error) {
       if (error instanceof PasswordError) setIncorrect(error.message)
       else {
-        if (error instanceof Error && error?.message === "Failed bio auth") {
+        if (
+          error instanceof Error &&
+          error?.message === "Failed bio authentication."
+        ) {
           setIsFailBio(true)
         } else {
           setError(error as Error)

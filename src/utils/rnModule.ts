@@ -23,6 +23,7 @@ export const RN_APIS = {
   REJECT_TX: "REJECT_TX",
   GET_LEDGER_LIST: "GET_LEDGER_LIST",
   GET_LEDGER_KEY: "GET_LEDGER_KEY",
+  GET_LEDGER_DOC: "GET_LEDGER_DOC",
 } as const
 
 export enum ConfirmErrorCode {
@@ -60,6 +61,7 @@ type RN_API_REQ_TYPES = {
   [RN_APIS.REJECT_TX]: unknown
   [RN_APIS.GET_LEDGER_LIST]: unknown
   [RN_APIS.GET_LEDGER_KEY]: unknown
+  [RN_APIS.GET_LEDGER_DOC]: unknown
 }
 
 // 응답 타입
