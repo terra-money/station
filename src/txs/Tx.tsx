@@ -141,7 +141,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
     initialGasDenom,
     gasPrices,
     gasAdjustment,
-    tx: simulationTx,
+    msgs: simulationTx?.msgs.map((msg) => msg.toData()),
   }
 
   const { data: estimatedGas, ...estimatedGasState } = useQuery(

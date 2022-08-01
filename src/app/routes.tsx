@@ -61,6 +61,7 @@ import Labs from "pages/labs/Labs"
 
 /* 404 */
 import NotFound from "pages/NotFound"
+import DonateAllVestingTokensTx from "txs/stake/DonateAllVestingTokensTx"
 
 /* Deep Link */
 import SelectSend from "txs/send/SelectSend"
@@ -171,6 +172,7 @@ export const useNav = () => {
       element: <UpdateAdminContractTx />,
     },
     { path: "/earn", element: <AnchorEarnTx /> },
+    { path: "/donate", element: <DonateAllVestingTokensTx /> },
 
     /* auth */
     { path: "/auth/*", element: <Auth /> },

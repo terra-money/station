@@ -1,7 +1,10 @@
+import { useQuery } from "react-query"
 import axios from "axios"
 import BigNumber from "bignumber.js"
 import { isFuture, isPast } from "date-fns"
 import { last } from "ramda"
+import { useAddress } from "../wallet"
+import { useLCDClient } from "./lcdClient"
 
 /* types */
 interface Coin {
@@ -38,6 +41,8 @@ interface PeriodicResponse extends BaseResponse {
   start_time: string
   vesting_periods: { length: string; amount: Coin[] }[]
 }
+
+export type Account = ContinuousResponse | DelayedResponse | PeriodicResponse
 
 export interface ParsedVestingSchedule {
   type: "Continuous" | "Delayed" | "Periodic"
@@ -78,7 +83,7 @@ const getVested = (schedule: VestingScheduleItem[]) =>
 
 /* parse */
 export const parseVestingSchedule = (
-  response: ContinuousResponse | DelayedResponse | PeriodicResponse
+  response: Account
 ): ParsedVestingSchedule => {
   if (response["@type"] === VestingAccountTypes.Continuous) {
     const { base_vesting_account, start_time } = response
@@ -140,6 +145,24 @@ export const parseVestingSchedule = (
 /* query */
 export const queryAccounts = async (address: string, lcd: string) => {
   const path = "cosmos/auth/v1beta1/accounts"
-  const { data } = await axios.get([path, address].join("/"), { baseURL: lcd })
+  const { data } = await axios.get<{ account: Account }>(
+    [path, address].join("/"),
+    { baseURL: lcd }
+  )
+
   return data.account
+}
+
+export const useAccount = () => {
+  const address = useAddress()
+  const lcd = useLCDClient()
+
+  return useQuery(["accounts", address], async () => {
+    if (!address) return null
+    return await queryAccounts(address, lcd.config.URL)
+  })
+}
+
+export const isVestingAccount = (data: any) => {
+  return Object.values(VestingAccountTypes).includes(data["@type"])
 }
