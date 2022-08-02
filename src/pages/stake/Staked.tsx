@@ -11,6 +11,7 @@ import Delegations from "./Delegations"
 import Unbondings from "./Unbondings"
 import Rewards from "./Rewards"
 import { isWallet } from "auth"
+import PageLoading from "auth/modules/PageLoading"
 
 const Staked = () => {
   const { t } = useTranslation()
@@ -20,7 +21,8 @@ const Staked = () => {
   const state = combineState(delegationsState, unbondingsState, rewardsState)
 
   const render = () => {
-    if (!(delegations && unbondings && rewards)) return null
+    if (!(delegations && unbondings && rewards))
+      return isWallet.mobileNative() ? <PageLoading /> : null
 
     const staked =
       delegations.length || unbondings.length || rewards.total.toArray().length

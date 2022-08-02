@@ -12,6 +12,7 @@ import ProposalItem from "./ProposalItem"
 import GovernanceParams from "./GovernanceParams"
 import styles from "./ProposalsByStatus.module.scss"
 import { isWallet } from "auth"
+import PageLoading from "auth/modules/PageLoading"
 
 const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   const { t } = useTranslation()
@@ -30,7 +31,8 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   const state = combineState(whitelistState, proposalState)
 
   const render = () => {
-    if (!(data && whitelist)) return null
+    if (!(data && whitelist))
+      return isWallet.mobileNative() ? <PageLoading inCard /> : null
 
     const proposals =
       status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && !showAll

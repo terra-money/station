@@ -7,5 +7,8 @@
 }
 .page {
   margin-top: -3px;
-  height: 100%;
+  height: calc(100vh - var(--header-height) - var(--mobile-tab-height));
+  &.inCard {
+    height: 100%;
+  }
 }

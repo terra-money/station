@@ -9,7 +9,8 @@ import { Button } from "components/general"
 import { Card, Col, Page } from "components/layout"
 import { Empty } from "components/feedback"
 import HistoryItem from "./HistoryItem"
-import is from "auth/scripts/is"
+import { isWallet } from "auth"
+import PageLoading from "auth/modules/PageLoading"
 
 const HistoryList = () => {
   const { t } = useTranslation()
@@ -62,7 +63,8 @@ const HistoryList = () => {
   )
 
   const render = () => {
-    if (address && !data) return null
+    if (address && !data)
+      return isWallet.mobileNative() ? <PageLoading /> : null
 
     return !pages.length ? (
       <Card>
@@ -78,7 +80,7 @@ const HistoryList = () => {
           </Fragment>
         ))}
 
-        {is.mobile() ? (
+        {isWallet.mobile() ? (
           <div className="row bottom">{moreButton}</div>
         ) : (
           moreButton
@@ -88,7 +90,7 @@ const HistoryList = () => {
   }
 
   return (
-    <Page {...state} title={is.mobile() ? "" : t("History")}>
+    <Page {...state} title={isWallet.mobile() ? "" : t("History")}>
       {render()}
     </Page>
   )
