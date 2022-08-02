@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next"
 import { useFieldArray, useForm } from "react-hook-form"
 import AddIcon from "@mui/icons-material/Add"
 import RemoveIcon from "@mui/icons-material/Remove"
-import { isDenomTerraNative, readDenom } from "@terra.kitchen/utils"
 import { AccAddress } from "@terra-money/terra.js"
 import { MsgInstantiateContract } from "@terra-money/terra.js"
 import { SAMPLE_ADDRESS } from "config/constants"
@@ -12,11 +11,13 @@ import { parseJSON, validateMsg } from "utils/data"
 import { useAddress } from "data/wallet"
 import { useIsClassic } from "data/query"
 import { useBankBalance } from "data/queries/bank"
+import { WithTokenItem } from "data/token"
 import { Form, FormGroup, FormItem } from "components/form"
 import { Input, EditorInput, Select } from "components/form"
 import { getCoins, getPlaceholder } from "../utils"
 import validate from "../validate"
 import Tx, { getInitialGasDenom } from "../Tx"
+import { useIBCHelper } from "../IBCHelperContext"
 
 interface TxValues {
   admin?: AccAddress
@@ -35,6 +36,7 @@ const InstantiateContractForm = () => {
   /* tx context */
   const initialGasDenom = getInitialGasDenom(bankBalance)
   const defaultItem = { denom: initialGasDenom }
+  const { findDecimals } = useIBCHelper()
 
   /* form */
   const form = useForm<TxValues>({
@@ -56,7 +58,7 @@ const InstantiateContractForm = () => {
       const admin = values.admin || undefined
       const code_id = Number(id)
       const init_msg = parseJSON(msg)
-      const coins = getCoins(values.coins)
+      const coins = getCoins(values.coins, findDecimals)
       const msgs = [
         new MsgInstantiateContract(
           address,
@@ -70,7 +72,7 @@ const InstantiateContractForm = () => {
 
       return { msgs }
     },
-    [address]
+    [address, findDecimals]
   )
 
   /* fee */
@@ -128,41 +130,46 @@ const InstantiateContractForm = () => {
           </FormItem>
 
           <FormItem label={t("Amount")}>
-            {fields.map(({ id }, index) => (
-              <FormGroup
-                button={
-                  length - 1 === index
-                    ? {
-                        onClick: () => append(defaultItem),
-                        children: <AddIcon style={{ fontSize: 18 }} />,
-                      }
-                    : {
-                        onClick: () => remove(index),
-                        children: <RemoveIcon style={{ fontSize: 18 }} />,
-                      }
-                }
-                key={id}
-              >
-                <Input
-                  {...register(`coins.${index}.input`, {
-                    valueAsNumber: true,
-                  })}
-                  inputMode="decimal"
-                  placeholder={getPlaceholder()}
-                  selectBefore={
-                    <Select {...register(`coins.${index}.denom`)} before>
-                      {sortCoins(bankBalance)
-                        .filter(({ denom }) => isDenomTerraNative(denom))
-                        .map(({ denom }) => (
-                          <option value={denom} key={denom}>
-                            {readDenom(denom)}
-                          </option>
-                        ))}
-                    </Select>
+            {fields.map(({ id }, index) => {
+              const { denom } = fields[index]
+              const decimals = findDecimals(denom)
+
+              return (
+                <FormGroup
+                  button={
+                    length - 1 === index
+                      ? {
+                          onClick: () => append(defaultItem),
+                          children: <AddIcon style={{ fontSize: 18 }} />,
+                        }
+                      : {
+                          onClick: () => remove(index),
+                          children: <RemoveIcon style={{ fontSize: 18 }} />,
+                        }
                   }
-                />
-              </FormGroup>
-            ))}
+                  key={id}
+                >
+                  <Input
+                    {...register(`coins.${index}.input`, {
+                      valueAsNumber: true,
+                    })}
+                    inputMode="decimal"
+                    placeholder={getPlaceholder(decimals)}
+                    selectBefore={
+                      <Select {...register(`coins.${index}.denom`)} before>
+                        {sortCoins(bankBalance).map(({ denom }) => (
+                          <WithTokenItem token={denom} key={denom}>
+                            {({ symbol }) => (
+                              <option value={denom}>{symbol}</option>
+                            )}
+                          </WithTokenItem>
+                        ))}
+                      </Select>
+                    }
+                  />
+                </FormGroup>
+              )
+            })}
           </FormItem>
 
           {!isClassic && (

@@ -2,6 +2,7 @@ import BigNumber from "bignumber.js"
 import { readAmount, toAmount } from "@terra.kitchen/utils"
 import { Coin, Coins } from "@terra-money/terra.js"
 import { has } from "utils/num"
+import { FindDecimals } from "./IBCHelperContext"
 
 export const getPlaceholder = (decimals = 6) => "0.".padEnd(decimals + 2, "0")
 
@@ -14,10 +15,13 @@ export interface CoinInput {
   denom: CoinDenom
 }
 
-export const getCoins = (coins: CoinInput[]) => {
+export const getCoins = (coins: CoinInput[], findDecimals?: FindDecimals) => {
   return new Coins(
     coins
-      .map(({ input, denom }) => ({ amount: toAmount(input), denom }))
+      .map(({ input, denom }) => {
+        const decimals = findDecimals?.(denom)
+        return { amount: toAmount(input, { decimals }), denom }
+      })
       .filter(({ amount }) => has(amount))
       .map(({ amount, denom }) => new Coin(denom, amount))
   )

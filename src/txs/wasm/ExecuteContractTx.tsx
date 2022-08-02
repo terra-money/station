@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next"
 import { Page, Card } from "components/layout"
 import TxContext from "../TxContext"
+import IBCHelperContext from "../IBCHelperContext"
 import ExecuteContractForm from "./ExecuteContractForm"
 
 const ExecuteContractTx = () => {
@@ -10,7 +11,9 @@ const ExecuteContractTx = () => {
     <Page title={t("Execute")} small>
       <Card>
         <TxContext>
-          <ExecuteContractForm />
+          <IBCHelperContext>
+            <ExecuteContractForm />
+          </IBCHelperContext>
         </TxContext>
       </Card>
     </Page>
