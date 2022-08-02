@@ -1,7 +1,7 @@
 /*
  * @Author: lmk
  * @Date: 2022-06-02 16:12:07
- * @LastEditTime: 2022-06-07 15:53:28
+ * @LastEditTime: 2022-08-02 17:14:56
  * @LastEditors: lmk
  * @Description:
  */
@@ -21,7 +21,7 @@ import "index.scss"
 import ScrollToTop from "app/ScrollToTop"
 import InitNetworks from "app/InitNetworks"
 import InitWallet from "app/InitWallet"
-import InitTheme from "app/InitTheme"
+// import InitTheme from "app/InitTheme"
 import ElectronVersion from "app/ElectronVersion"
 import App from "app/App"
 import { ThemeProvider, createTheme } from "@mui/material/styles"
@@ -40,6 +40,7 @@ const chainOptions = {
 }
 const theme = createTheme({
   palette: {
+    mode: "dark",
     primary: {
       main: "#5c5fff",
     },
@@ -57,7 +58,7 @@ root.render(
           <WalletProvider {...chainOptions} connectorOpts={connectorOpts}>
             <InitNetworks>
               <InitWallet>
-                <InitTheme />
+                {/* <InitTheme /> */}
                 <ElectronVersion />
                 <App />
               </InitWallet>
