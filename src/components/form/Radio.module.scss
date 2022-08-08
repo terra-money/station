@@ -55,3 +55,12 @@
     background: var(--card-bg);
   }
 }
+.flex {
+  min-width: 0;
+}
+.truncate {
+  @include mobile {
+    @include truncate;
+    text-align: left;
+  }
+}

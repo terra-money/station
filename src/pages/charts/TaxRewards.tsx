@@ -14,6 +14,7 @@ import { TooltipIcon } from "components/display"
 import ChartContainer from "./components/ChartContainer"
 import Range from "./components/Range"
 import Filter from "./components/Filter"
+import { isWallet } from "auth"
 
 const TaxRewards = () => {
   const { t } = useTranslation()
@@ -32,6 +33,7 @@ const TaxRewards = () => {
         <Select
           value={type}
           onChange={(e) => setType(e.target.value as Aggregate)}
+          handleChange={setType}
           small
         >
           {Object.values(Aggregate).map((type) => (
@@ -83,6 +85,7 @@ const TaxRewards = () => {
               formatY={(value) =>
                 readAmount(value, { prefix: true, integer: true })
               }
+              renderFilter={isWallet.mobile() ? renderFilter : () => <></>}
             />
           )
         }}
@@ -100,7 +103,7 @@ const TaxRewards = () => {
           {t("Tax rewards")}
         </TooltipIcon>
       }
-      extra={renderFilter()}
+      extra={!isWallet.mobile() && renderFilter()}
       size="small"
     >
       {render()}

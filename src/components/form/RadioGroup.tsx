@@ -6,7 +6,12 @@ import classNames from "classnames/bind"
 const cx = classNames.bind(styles)
 
 interface Props<T> {
-  options: { value: T; label: string; disabled?: boolean }[]
+  options: {
+    value: T
+    label: string
+    tokenValue?: string
+    disabled?: boolean
+  }[]
   value: T
   onChange: (value: T) => void
   reversed?: boolean
@@ -21,7 +26,7 @@ function RadioGroup<T extends Key>(props: Props<T>) {
 
   return (
     <section className={className}>
-      {options.map(({ label, disabled, ...option }) => {
+      {options.map(({ label, disabled, tokenValue, ...option }) => {
         const checked = option.value === value
         return (
           <Radio
@@ -32,6 +37,7 @@ function RadioGroup<T extends Key>(props: Props<T>) {
             disabled={disabled}
             key={option.value}
             reversed={reversed}
+            tokenValue={tokenValue}
           />
         )
       })}

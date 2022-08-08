@@ -7,6 +7,9 @@
 
 .select {
   background: transparent;
+  @include mobile {
+    max-width: 80px;
+  }
 }
 
 .icon {

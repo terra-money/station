@@ -474,6 +474,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
               <Select
                 value={gasDenom}
                 onChange={(e) => setGasDenom(e.target.value)}
+                handleChange={(value) => setGasDenom(value)}
                 className={styles.select}
                 small
               >

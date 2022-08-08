@@ -33,7 +33,12 @@ const TxVolume = () => {
     if (!activeDenoms) return null
     return (
       <Filter>
-        <Select value={denom} onChange={(e) => setDenom(e.target.value)} small>
+        <Select
+          value={denom}
+          onChange={(e) => setDenom(e.target.value)}
+          handleChange={setDenom}
+          small
+        >
           {sortDenoms(activeDenoms, currency)
             .filter(isDenomTerraNative)
             .map((denom) => (
@@ -46,6 +51,7 @@ const TxVolume = () => {
         <Select
           value={type}
           onChange={(e) => setType(e.target.value as Aggregate)}
+          handleChange={setType}
           small
         >
           {Object.values(Aggregate).map((type) => (

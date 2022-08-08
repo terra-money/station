@@ -5,7 +5,12 @@ const SelectMinimumValue = () => {
   const [value, set, list] = useMinimumValue()
 
   return (
-    <Select value={value} onChange={(e) => set(Number(e.target.value))} small>
+    <Select
+      value={value}
+      onChange={(e) => set(Number(e.target.value))}
+      handleChange={(value) => set(Number(value))}
+      small
+    >
       {list.map(({ value, label }) => (
         <option value={value} key={value}>
           {label}

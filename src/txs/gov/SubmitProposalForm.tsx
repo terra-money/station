@@ -86,10 +86,23 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
   /* form */
   const form = useForm<TxValues>({
     mode: "onChange",
-    defaultValues: { input: toInput(minDeposit), coins: [defaultCoinItem] },
+    defaultValues: {
+      input: toInput(minDeposit),
+      coins: [defaultCoinItem],
+      type: ProposalType.TEXT as any,
+      spend: { denom: "uluna" },
+    },
   })
 
-  const { register, trigger, control, watch, setValue, handleSubmit } = form
+  const {
+    register,
+    trigger,
+    control,
+    watch,
+    setValue,
+    handleSubmit,
+    getValues,
+  } = form
   const { errors } = form.formState
   const { input, ...values } = watch()
   const amount = toAmount(input)
@@ -216,7 +229,13 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
               inputMode="decimal"
               placeholder={placeholder}
               selectBefore={
-                <Select {...register("spend.denom")} before>
+                <Select
+                  {...register("spend.denom")}
+                  handleChange={(value) => setValue("spend.denom", value)}
+                  currentValue={getValues("spend.denom")}
+                  isToken
+                  before
+                >
                   {["uluna", "uusd"].map((denom) => (
                     <option value={denom} key={denom}>
                       {readDenom(denom)}
@@ -346,7 +365,15 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
                   inputMode="decimal"
                   placeholder={getPlaceholder()}
                   selectBefore={
-                    <Select {...register(`coins.${index}.denom`)} before>
+                    <Select
+                      {...register(`coins.${index}.denom`)}
+                      handleChange={(value) =>
+                        setValue(`coins.${index}.denom`, value)
+                      }
+                      currentValue={getValues(`coins.${index}.denom`)}
+                      isToken
+                      before
+                    >
                       {sortCoins(bankBalance)
                         .filter(({ denom }) => isDenomTerraNative(denom))
                         .map(({ denom }) => (
@@ -384,7 +411,11 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
           </Grid>
 
           <FormItem label={t("Proposal type")} error={errors.type?.message}>
-            <Select {...register("type")}>
+            <Select
+              {...register("type")}
+              handleChange={(value) => setValue("type", value)}
+              currentValue={getValues("type")}
+            >
               {Object.values(ProposalType).map((type) => (
                 <option value={type} key={type}>
                   {t(type)}

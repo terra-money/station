@@ -59,7 +59,7 @@ const Coins = () => {
             <FormError>{t("Coins required to post transactions")}</FormError>
           )}
 
-          {isClassic && !isWallet.mobile() && (
+          {isClassic && (
             <Flex end>{!isWalletEmpty && <SelectMinimumValue />}</Flex>
           )}
 

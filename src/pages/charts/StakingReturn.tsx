@@ -31,6 +31,7 @@ const StakingReturn = () => {
         <Select
           value={type}
           onChange={(e) => setType(e.target.value as AggregateStakingReturn)}
+          handleChange={setType}
           small
         >
           {Object.values(AggregateStakingReturn).map((type) => (

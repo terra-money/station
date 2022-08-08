@@ -33,6 +33,7 @@ const Wallets = () => {
         <Select
           value={walletsType}
           onChange={(e) => setWalletsType(e.target.value as AggregateWallets)}
+          handleChange={setWalletsType}
           small
         >
           {Object.values(AggregateWallets).map((type) => (

@@ -23,6 +23,10 @@ const SelectPreconfigured = () => {
         const wallet = preconfigured.find(({ name }) => name === e.target.value)
         if (wallet) connectPreconfigured(wallet)
       }}
+      handleChange={(value) => {
+        const wallet = preconfigured.find(({ name }) => name === value)
+        if (wallet) connectPreconfigured(wallet)
+      }}
     >
       <option value="" disabled>
         {t("Preconfigured wallets...")}

@@ -64,7 +64,15 @@ const StakeForm = (props: Props) => {
     defaultValues: { source: defaultSource },
   })
 
-  const { register, trigger, watch, setValue, handleSubmit, formState } = form
+  const {
+    register,
+    trigger,
+    watch,
+    setValue,
+    handleSubmit,
+    formState,
+    getValues,
+  } = form
   const { errors } = formState
   const { source, input } = watch()
   const amount = toAmount(input)
@@ -184,6 +192,8 @@ const StakeForm = (props: Props) => {
                       ? "Source validator is required"
                       : false,
                 })}
+                handleChange={(value) => setValue("source", value)}
+                currentValue={getValues("source")}
               >
                 {delegationsOptions
                   ?.filter(

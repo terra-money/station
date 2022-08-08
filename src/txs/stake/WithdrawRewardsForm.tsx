@@ -205,6 +205,11 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
                         setLocalSetting(SettingKey.WithdrawAs, e.target.value)
                         setTarget(e.target.value)
                       }}
+                      handleChange={(value) => {
+                        if (!swap) setSwap(true)
+                        setLocalSetting(SettingKey.WithdrawAs, value)
+                        setTarget(value)
+                      }}
                       small
                     >
                       {sortDenoms(activeDenoms, currency).map((denom) => (
