@@ -73,8 +73,7 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
   const { register, trigger, watch, setValue, handleSubmit, formState } = form
   const { errors } = formState
   const { source, input } = watch()
-  const amount = toAmount(input)
-
+  const amount = input && !isNaN(input) ? toAmount(input) : undefined
   /* tx */
   const createTx = useCallback(
     ({ input, source }: TxValues) => {
@@ -102,7 +101,7 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
           destination,
           new Coin("umis", formatNumber(values.sum, { integer: true }))
         )
-        console.log(values)
+
         return { msgs: [msg0, msg1] }
       }
 
@@ -236,7 +235,6 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
               </Select>
             </FormItem>
           )}
-
           {(tab === StakeAction.DELEGATE ||
             tab === StakeAction.UNBOND ||
             tab === StakeAction.REDELEGATE) && (
@@ -247,7 +245,7 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
             >
               <Input
                 {...register("input", {
-                  valueAsNumber: true,
+                  // valueAsNumber: true,
                   validate: validate.input(toInput(max.amount)),
                 })}
                 token="umis"
