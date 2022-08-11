@@ -6,7 +6,7 @@ const IsClassicNetwork = () => {
 
   return (
     <div className={styles.component}>
-      {isClassic ? "Classic" : "Terra 2.0"}
+      {isClassic ? "Terra Classic" : "Terra"}
     </div>
   )
 }
