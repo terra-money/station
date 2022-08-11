@@ -17,7 +17,7 @@
     "@anchor-protocol/anchor.js": "^5.1.1",
     "@ledgerhq/hw-transport-web-ble": "^6.27.1",
     "@mui/icons-material": "^5.8.0",
-    "@mui/material": "^5.8.1",
+    "@mui/material": "^5.9.1",
     "@terra-money/ledger-terra-js": "^1.2.2",
     "@terra-money/log-finder-ruleset": "^3.0.0",
     "@terra-money/terra.js": "^3.1.5",
