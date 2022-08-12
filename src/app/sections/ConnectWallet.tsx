@@ -1,7 +1,7 @@
 /*
  * @Author: lmk
  * @Date: 2022-06-02 16:12:07
- * @LastEditTime: 2022-06-16 16:38:19
+ * @LastEditTime: 2022-08-12 16:57:23
  * @LastEditors: lmk
  * @Description:
  */
@@ -49,13 +49,14 @@ const ConnectWallet = ({ renderButton }: Props) => {
   const { getAddress } = useConnectWallet()
   useEffect(() => {
     if (window.ethereum?.chainId) {
-      const metamask = JSON.parse(localStorage.getItem("metamask") || "false")
       window.ethereum._metamask.isUnlocked?.().then((res) => {
+        const metamask = JSON.parse(localStorage.getItem("metamask") || "false")
         metamask && res && getAddress()
       })
 
       window.ethereum.on("accountsChanged", async (res: string[]) => {
-        if (res.length) {
+        const metamask = JSON.parse(localStorage.getItem("metamask") || "false")
+        if (res.length && metamask) {
           getAddress()
         }
       })
