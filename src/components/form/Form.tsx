@@ -41,7 +41,7 @@ export const FormGroup = (props: PropsWithChildren<FormGroupProps>) => {
 }
 
 interface FormItemProps {
-  label?: string
+  label?: ReactNode
   extra?: ReactNode
   error?: string
 }

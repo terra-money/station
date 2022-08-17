@@ -16,10 +16,12 @@ import { parseJSON } from "utils/data"
 import { queryKey } from "data/query"
 import { useAddress } from "data/wallet"
 import { useBankBalance } from "data/queries/bank"
+import { ExternalLink } from "components/general"
 import { Grid } from "components/layout"
 import { Form, FormGroup, FormItem } from "components/form"
 import { FormHelp, FormWarning } from "components/form"
 import { Input, TextArea, Select } from "components/form"
+import { TooltipIcon } from "components/display"
 import { getCoins, getPlaceholder, toInput } from "../utils"
 import validate from "../validate"
 import Tx, { getInitialGasDenom } from "../Tx"
@@ -370,7 +372,12 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
       {({ max, fee, submit }) => (
         <Form onSubmit={handleSubmit(submit.fn)}>
           <Grid gap={4}>
-            <FormHelp>{t("Upload proposal after forum discussion")}</FormHelp>
+            <FormHelp>
+              Upload proposal only after forum discussion on{" "}
+              <ExternalLink href="https://agora.terra.money">
+                agora.terra.money
+              </ExternalLink>
+            </FormHelp>
             <FormWarning>
               {t(
                 "Proposal deposits will not be refunded if the proposal fails to reach the quorum or the result is NO_WITH_VETO"
@@ -416,7 +423,11 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
           </FormItem>
 
           <FormItem
-            label={`${t("Initial deposit")} (${t("optional")})`}
+            label={
+              <TooltipIcon content="To help push the proposal to the voting period, consider depositing more LUNA to reach the minimum 512 LUNA (optional).">
+                {t("Initial deposit")} ({t("optional")})
+              </TooltipIcon>
+            }
             extra={max.render()}
             error={errors.input?.message}
           >
