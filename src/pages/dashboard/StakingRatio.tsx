@@ -11,13 +11,14 @@ const StakingRatio = () => {
   const { data: supply } = useSupply()
   const { data } = useStakingReturn(AggregateStakingReturn.ANNUALIZED)
   // console.log(data)
-  const render = () => {
-    if (!(stakingPool && supply)) return null
+  const StakingRatioView = () => {
+    // if (!(stakingPool && supply)) return null
 
-    const bonded = stakingPool.bonded_tokens.amount.toString()
-    const issuance = supply.find(({ denom }) => denom === "umis")?.amount
-
-    if (!issuance) return null
+    const bonded = stakingPool ? stakingPool.bonded_tokens.amount.toString() : 0
+    const issuance = supply
+      ? supply.find(({ denom }) => denom === "umis")?.amount
+      : 0
+    // if (!issuance) return null
 
     const ratio = Number(bonded) / Number(issuance)
     return (
@@ -46,7 +47,11 @@ const StakingRatio = () => {
     )
   }
 
-  return <div className={classNames(styles.card)}>{render()}</div>
+  return (
+    <div className={classNames(styles.card)}>
+      <StakingRatioView />
+    </div>
+  )
 }
 
 export default StakingRatio
