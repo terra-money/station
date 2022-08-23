@@ -11,7 +11,6 @@ import { ReactComponent as GovernanceIcon } from "styles/images/menu/Governance.
 import { ReactComponent as ContractIcon } from "styles/images/menu/Contract.svg"
 import { ReactComponent as SettingsIcon } from "styles/images/menu/Settings.svg"
 import { ReactComponent as DashboardIcon } from "styles/images/menu/Dashboard.svg"
-import { useIsClassic } from "data/query"
 
 /* menu */
 import Dashboard from "pages/dashboard/Dashboard"
@@ -71,7 +70,6 @@ const ICON_SIZE = { width: 20, height: 20 }
 
 export const useNav = () => {
   const { t } = useTranslation()
-  const isClassic = useIsClassic()
 
   const menu = [
     {
@@ -91,7 +89,6 @@ export const useNav = () => {
       element: <SwapTx />,
       title: t("Swap"),
       icon: <SwapIcon {...ICON_SIZE} />,
-      classic: true,
     },
     {
       path: "/stake",
@@ -117,10 +114,7 @@ export const useNav = () => {
       title: t("Contract"),
       icon: <ContractIcon {...ICON_SIZE} />,
     },
-  ].filter(({ classic }) => {
-    if (isClassic) return true
-    return !classic
-  })
+  ]
 
   const subPage = [
     {

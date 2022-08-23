@@ -10,6 +10,8 @@ import Read from "./Read"
 import styles from "./TokenCard.module.scss"
 import { isWallet } from "auth"
 
+const cx = classNames.bind(styles)
+
 interface Props extends Partial<TokenItem>, Partial<FormatConfig> {
   // customizable
   token: Token
@@ -72,14 +74,15 @@ export default TokenCard
 /* layout */
 interface GridProps {
   maxHeight?: number | true
+  singleColumn?: boolean
 }
 
 export const TokenCardGrid = (props: PropsWithChildren<GridProps>) => {
-  const { children, maxHeight } = props
+  const { children, maxHeight, singleColumn } = props
 
   return (
     <section
-      className={styles.grid}
+      className={cx(styles.grid, { single: singleColumn })}
       style={!isWallet.mobile() ? getMaxHeightStyle(maxHeight, 320) : undefined}
     >
       {children}
