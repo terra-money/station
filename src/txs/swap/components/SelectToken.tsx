@@ -15,15 +15,16 @@ const cx = classNames.bind(styles)
 interface GroupProps {
   title: string
   children: ItemProps[]
+  showName?: boolean
 }
 
-const SelectTokenGroup = ({ title, children }: GroupProps) => {
+const SelectTokenGroup = ({ title, children, showName }: GroupProps) => {
   return !children.filter(({ hidden }) => !hidden).length ? null : (
     <article>
       <h1 className={styles.title}>{title}</h1>
-      <TokenCardGrid>
+      <TokenCardGrid singleColumn={showName}>
         {children.map((item) => (
-          <SelectTokenItem {...item} key={item.value} />
+          <SelectTokenItem {...item} showName={showName} key={item.value} />
         ))}
       </TokenCardGrid>
     </article>
@@ -35,10 +36,11 @@ interface ItemProps extends TokenItem {
   value: string
   muted?: boolean
   hidden?: boolean
+  showName?: boolean
 }
 
 const SelectTokenItem = (props: ItemProps) => {
-  const { value, balance, muted, hidden } = props
+  const { value, balance, muted, hidden, showName } = props
   const { hideBalance, selectToken } = useSelectToken()
 
   return hidden ? null : (
@@ -51,7 +53,7 @@ const SelectTokenItem = (props: ItemProps) => {
         {...props}
         className={styles.item}
         balance={hideBalance ? undefined : balance}
-        name={undefined /* Hide name */}
+        name={showName ? props.name : undefined /* Hide name */}
         value={undefined /* To avoid put the `option` value */}
       />
     </button>
@@ -64,6 +66,7 @@ interface Props {
   options: GroupProps[]
   addonAfter: ReactNode // input
   checkbox?: ReactNode
+  showName?: boolean
 }
 
 interface Value {
@@ -75,7 +78,7 @@ const [useSelectToken, SelectTokenProvider] =
   createContext<Value>("useSelectToken")
 
 const SelectToken = ({ value: selected, onChange, ...props }: Props) => {
-  const { options, addonAfter, checkbox } = props
+  const { options, addonAfter, checkbox, showName } = props
   const { t } = useTranslation()
 
   const [isOpen, setIsOpen] = useState(false)
@@ -135,9 +138,13 @@ const SelectToken = ({ value: selected, onChange, ...props }: Props) => {
                 empty ? (
                   <Empty />
                 ) : (
-                  <TokenCardGrid>
+                  <TokenCardGrid singleColumn={showName}>
                     {byKeyword.map((item) => (
-                      <SelectTokenItem {...item} key={item.value} />
+                      <SelectTokenItem
+                        {...item}
+                        showName={showName}
+                        key={item.value}
+                      />
                     ))}
                   </TokenCardGrid>
                 )
@@ -150,7 +157,11 @@ const SelectToken = ({ value: selected, onChange, ...props }: Props) => {
                   )}
 
                   {options.map((option) => (
-                    <SelectTokenGroup {...option} key={option.title} />
+                    <SelectTokenGroup
+                      {...option}
+                      showName={showName}
+                      key={option.title}
+                    />
                   ))}
                 </>
               )}
