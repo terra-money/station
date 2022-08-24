@@ -1,7 +1,7 @@
 /*
  * @Author: lmk
  * @Date: 2022-06-02 16:12:07
- * @LastEditTime: 2022-08-02 17:14:56
+ * @LastEditTime: 2022-08-22 16:35:30
  * @LastEditors: lmk
  * @Description:
  */
@@ -22,7 +22,7 @@ import ScrollToTop from "app/ScrollToTop"
 import InitNetworks from "app/InitNetworks"
 import InitWallet from "app/InitWallet"
 // import InitTheme from "app/InitTheme"
-import ElectronVersion from "app/ElectronVersion"
+// import ElectronVersion from "app/ElectronVersion"
 import App from "app/App"
 import { ThemeProvider, createTheme } from "@mui/material/styles"
 const connectorOpts = { bridge: BRIDGE }
@@ -59,7 +59,7 @@ root.render(
             <InitNetworks>
               <InitWallet>
                 {/* <InitTheme /> */}
-                <ElectronVersion />
+                {/* <ElectronVersion /> */}
                 <App />
               </InitWallet>
             </InitNetworks>

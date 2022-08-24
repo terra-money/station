@@ -27,6 +27,7 @@
     "axios": "^0.26.1",
     "bignumber.js": "^9.0.2",
     "buffer": "^6.0.3",
+    "caniuse-lite": "^1.0.30001375",
     "classnames": "^2.3.1",
     "crypto-js": "^4.1.1",
     "date-fns": "^2.28.0",

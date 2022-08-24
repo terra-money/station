@@ -149,7 +149,14 @@ const TxIndicator = ({ txhash }: { txhash: string }) => {
             {redirectAfterTx.label}
           </LinkButton>
         ) : (
-          <Button onClick={initLatestTx} color="primary" block>
+          <Button
+            onClick={() => {
+              initLatestTx()
+              navigate(-1)
+            }}
+            color="primary"
+            block
+          >
             {t("Confirm")}
           </Button>
         )
