@@ -164,7 +164,11 @@ const TxIndicator = ({ txhash }: { txhash: string }) => {
       isOpen={!minimized}
       onRequestClose={() => {
         initLatestTx()
-        if (redirectAfterTx) navigate(redirectAfterTx.path)
+        if (redirectAfterTx) {
+          navigate(redirectAfterTx.path)
+        } else {
+          navigate(-1)
+        }
       }}
       maxHeight
     >

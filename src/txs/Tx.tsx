@@ -44,6 +44,7 @@ import styles from "./Tx.module.scss"
 import { StakeAction } from "./stake/StakeForm"
 import { toHump } from "utils/data"
 import { useConnectWallet } from "auth/hooks/useAddress"
+import { useMetamaskProvider } from "utils/hooks/useMetamaskProvider"
 
 export interface CreateTxErrorOptions {
   code: -1
@@ -218,9 +219,9 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const navigate = useNavigate()
   const toPostMultisigTx = useToPostMultisigTx()
   const misesState = useRecoilValue(misesStateDefault)
+  const provider = useMetamaskProvider()
   const submit = async (values: TxValues) => {
     setSubmitting(true)
-
     try {
       if (disabled) throw new Error(disabled)
       if (!estimatedGas || !has(gasAmount))
@@ -251,7 +252,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
             value: newMsg,
           }
         })
-        const result = await window.ethereum.request({
+        const result = await provider.request({
           method: "mises_stakingPostTx",
           params: [
             {

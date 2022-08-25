@@ -1,7 +1,7 @@
 /*
  * @Author: lmk
  * @Date: 2022-05-25 15:17:49
- * @LastEditTime: 2022-06-16 16:38:39
+ * @LastEditTime: 2022-08-25 13:34:17
  * @LastEditors: lmk
  * @Description:
  */
@@ -10,6 +10,7 @@
 
 import { misesStateDefault } from "app/sections/ConnectWallet"
 import { useRecoilState, useRecoilValue } from "recoil"
+import { useMetamaskProvider } from "utils/hooks/useMetamaskProvider"
 
 /* auth | wallet-provider */
 const useAddress = () => {
@@ -22,8 +23,9 @@ export default useAddress
 
 export function useConnectWallet() {
   const [misesState, setmisesState] = useRecoilState(misesStateDefault)
+  const provider = useMetamaskProvider()
   const getAddress = (open?: () => void) => {
-    window.ethereum
+    provider
       ?.request({
         method: "mises_requestAccounts",
         params: [],

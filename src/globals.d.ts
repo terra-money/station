@@ -1,3 +1,10 @@
+/*
+ * @Author: lmk
+ * @Date: 2022-08-02 17:03:00
+ * @LastEditTime: 2022-08-25 13:30:54
+ * @LastEditors: lmk
+ * @Description:
+ */
 interface Window {
   ethereum: {
     request: (item: { method: string; params: any[] }) => Promise<
@@ -14,6 +21,8 @@ interface Window {
     }
     _handleConnect: () => Promise<any>
     chainId: number | string
+    providers: any[]
+    providerMap: Map
   }
 }
 interface globalThis {
