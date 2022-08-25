@@ -7,6 +7,7 @@ interface InternalLinkItem {
   icon: ReactNode
   children: string
   to: To
+  disabled?: boolean
 }
 
 interface ExternalLinkItem {
@@ -14,12 +15,14 @@ interface ExternalLinkItem {
   icon?: ReactNode
   children: string
   href: string
+  disabled?: boolean
 }
 
 interface ButtonItem {
   src?: string
   children: string
   onClick: () => void
+  disabled?: boolean
 }
 
 type ListProps = (InternalLinkItem | ExternalLinkItem | ButtonItem)[]
@@ -27,7 +30,9 @@ type ListProps = (InternalLinkItem | ExternalLinkItem | ButtonItem)[]
 const List = ({ list }: { list: ListProps }) => {
   return (
     <section>
-      {list.map(({ children, ...item }) => {
+      {list.map(({ children, disabled, ...item }) => {
+        if (disabled) return null
+
         return "to" in item ? (
           <Link to={item.to} className={styles.item} key={children}>
             {children}
@@ -65,12 +70,16 @@ interface Group {
 export const ListGroup = ({ groups }: { groups: Group[] }) => {
   return (
     <>
-      {groups.map(({ title, list }) => (
-        <article className={styles.group} key={title}>
-          <h1 className={styles.title}>{title}</h1>
-          <List list={list} />
-        </article>
-      ))}
+      {groups.map(({ title, list }) => {
+        if (list.every(({ disabled }) => disabled)) return null
+
+        return (
+          <article className={styles.group} key={title}>
+            <h1 className={styles.title}>{title}</h1>
+            <List list={list} />
+          </article>
+        )
+      })}
     </>
   )
 }
