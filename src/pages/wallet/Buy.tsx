@@ -81,6 +81,7 @@ const Buy = ({ token }: { token: "uluna" | "uusd" }) => {
     children: "Transak",
     href: getTransakLink(token),
     icon: <img src={Transak} alt="" width={24} height={24} />,
+    disabled: true,
   }
 
   const KADO = {
