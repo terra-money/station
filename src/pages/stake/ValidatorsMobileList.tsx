@@ -187,7 +187,7 @@ const ValidatorsMobileList = (props: PropsWithChildren<Props>) => {
                 })}
               </dd>
             </dl>
-            {isClassic && rewards_30d && (
+            {isClassic && !!rewards_30d && (
               <dl className={styles.dlGap}>
                 <dt>{t("Rewards")}</dt>
                 <dd>
