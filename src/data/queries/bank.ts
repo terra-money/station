@@ -13,11 +13,15 @@ export const useSupply = () => {
   return useQuery(
     [queryKey.bank.supply],
     async () => {
-      // TODO: Pagination
-      // Required when the number of results exceed 100
+      // FIXME: Import from terra.js
       const { data } = await axios.get<{ supply: CoinData[] }>(
-        "cosmos/bank/v1beta1/supply", // FIXME: Import from terra.js
-        { baseURL: lcd }
+        "cosmos/bank/v1beta1/supply",
+        {
+          baseURL: lcd,
+          params: {
+            "pagination.reverse": "true",
+          },
+        }
       )
 
       return data.supply
