@@ -31,7 +31,7 @@
     "classnames": "^2.3.1",
     "crypto-js": "^4.1.1",
     "date-fns": "^2.28.0",
-    "i18next": "^21.8.4",
+    "i18next": "^21.8.14",
     "i18next-browser-languagedetector": "^6.1.4",
     "immutability-helper": "^3.1.1",
     "js-base64": "^3.7.2",
