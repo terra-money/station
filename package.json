@@ -39,7 +39,7 @@
     "numeral": "^2.0.6",
     "prettier": "^2.6.2",
     "qrcode.react": "^3.0.2",
-    "qs": "^6.10.3",
+    "qs": "^6.11.0",
     "ramda": "^0.28.0",
     "react": "^17.0.2",
     "react-copy-to-clipboard": "^5.1.0",
