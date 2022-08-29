@@ -1,9 +1,16 @@
+/*
+ * @Author: lmk
+ * @Date: 2022-05-25 11:23:10
+ * @LastEditTime: 2022-06-09 17:13:08
+ * @LastEditors: lmk
+ * @Description:
+ */
 import { ForwardedRef, HTMLAttributes, PropsWithChildren } from "react"
 import { forwardRef } from "react"
 import classNames from "classnames"
 import { truncate } from "@terra.kitchen/utils"
 import { FINDER } from "config/constants"
-import { useNetworkName } from "data/wallet"
+// import { useNetworkName } from "data/wallet"
 import ExternalLink from "./ExternalLink"
 import styles from "./FinderLink.module.scss"
 
@@ -25,7 +32,7 @@ const FinderLink = forwardRef(
     ref: ForwardedRef<HTMLAnchorElement>
   ) => {
     const { block, tx, validator, ...attrs } = rest
-    const networkName = useNetworkName()
+    // const networkName = useNetworkName()
     const path = tx
       ? "tx"
       : block
@@ -35,7 +42,7 @@ const FinderLink = forwardRef(
       : "address"
 
     const value = rest.value ?? children
-    const link = [FINDER, networkName, path, value].join("/")
+    const link = [FINDER, path, value].join("/")
     const className = classNames(attrs.className, styles.link)
 
     return (

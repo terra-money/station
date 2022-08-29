@@ -44,7 +44,7 @@ const Selector = () => {
                 <FlexColumn gap={4} className={styles.unlock}>
                   <LockIcon fontSize="small" />
                   <small>
-                    {t("Stake {{amount}} Luna to unlock", {
+                    {t("Stake {{amount}} MIS to unlock", {
                       amount: readAmount(unlock, { comma: true }),
                     })}
                   </small>

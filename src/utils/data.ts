@@ -19,3 +19,7 @@ export const validateMsg = (msg: string): object | undefined => {
   if (!parsed) return
   return parsed
 }
+export const toHump = (name: string) => {
+  // eslint-disable-next-line no-useless-escape
+  return name.replace(/\_(\w)/g, (all, letter) => letter.toUpperCase())
+}

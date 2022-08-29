@@ -149,7 +149,14 @@ const TxIndicator = ({ txhash }: { txhash: string }) => {
             {redirectAfterTx.label}
           </LinkButton>
         ) : (
-          <Button onClick={initLatestTx} color="primary" block>
+          <Button
+            onClick={() => {
+              initLatestTx()
+              navigate(-1)
+            }}
+            color="primary"
+            block
+          >
             {t("Confirm")}
           </Button>
         )
@@ -157,7 +164,11 @@ const TxIndicator = ({ txhash }: { txhash: string }) => {
       isOpen={!minimized}
       onRequestClose={() => {
         initLatestTx()
-        if (redirectAfterTx) navigate(redirectAfterTx.path)
+        if (redirectAfterTx) {
+          navigate(redirectAfterTx.path)
+        } else {
+          navigate(-1)
+        }
       }}
       maxHeight
     >
@@ -169,7 +180,9 @@ const TxIndicator = ({ txhash }: { txhash: string }) => {
             return (
               <li key={index}>
                 {canonicalMsg.map((msg, index) => (
-                  <TxMessage key={index}>{msg}</TxMessage>
+                  <TxMessage key={index}>
+                    {msg.replace("umisuluna", "umis")}
+                  </TxMessage>
                 ))}
               </li>
             )

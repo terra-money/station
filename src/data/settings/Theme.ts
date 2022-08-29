@@ -1,3 +1,10 @@
+/*
+ * @Author: lmk
+ * @Date: 2022-05-25 11:23:10
+ * @LastEditTime: 2022-06-10 11:09:57
+ * @LastEditors: lmk
+ * @Description:
+ */
 import { useCallback } from "react"
 import { atom, useRecoilState, useRecoilValue } from "recoil"
 import BigNumber from "bignumber.js"
@@ -49,7 +56,7 @@ export const useThemeState = () => {
       if (!validate(nextTheme)) set(DefaultTheme)
       if (prevTheme.name) document.body.classList.remove(prevTheme.name)
       if (nextTheme.name) document.body.classList.add(nextTheme.name)
-      setFavicon(nextTheme.favicon)
+      // setFavicon(nextTheme.favicon)
       setThemeName(nextTheme.name)
       setLocalSetting<Theme["name"]>(SettingKey.Theme, nextTheme.name)
     },
@@ -77,7 +84,7 @@ export const useValidateTheme = () => {
 }
 
 /* favicon */
-const setFavicon = (href: string) => {
-  const favicon = document.getElementById("favicon") as HTMLLinkElement
-  favicon.href = href
-}
+// const setFavicon = (href: string) => {
+//   const favicon = document.getElementById("favicon") as HTMLLinkElement
+//   favicon.href = href
+// }

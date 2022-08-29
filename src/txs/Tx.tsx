@@ -11,12 +11,11 @@ import { head, isNil } from "ramda"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline"
 import { isDenom, isDenomIBC, readDenom } from "@terra.kitchen/utils"
-import { Coin, Coins, LCDClient } from "@terra-money/terra.js"
+import { Coin, Coins, Msg } from "@terra-money/terra.js"
 import { CreateTxOptions, Fee } from "@terra-money/terra.js"
 import { ConnectType, UserDenied } from "@terra-money/wallet-provider"
 import { CreateTxFailed, TxFailed } from "@terra-money/wallet-provider"
-import { useWallet, useConnectedWallet } from "@terra-money/wallet-provider"
-
+import { useConnectedWallet } from "@terra-money/wallet-provider"
 import { Contents } from "types/components"
 import { has } from "utils/num"
 import { getAmount, sortCoins } from "utils/coin"
@@ -34,7 +33,7 @@ import { FormError, Submit, Select, Input, FormItem } from "components/form"
 import { Modal } from "components/feedback"
 import { Details } from "components/display"
 import { Read } from "components/token"
-import ConnectWallet from "app/sections/ConnectWallet"
+import ConnectWallet, { misesStateDefault } from "app/sections/ConnectWallet"
 import useToPostMultisigTx from "pages/multisig/utils/useToPostMultisigTx"
 import { isWallet, useAuth } from "auth"
 import { PasswordError } from "auth/scripts/keystore"
@@ -42,7 +41,15 @@ import { PasswordError } from "auth/scripts/keystore"
 import { toInput } from "./utils"
 import { useTx } from "./TxContext"
 import styles from "./Tx.module.scss"
+import { StakeAction } from "./stake/StakeForm"
+import { toHump } from "utils/data"
+import { useConnectWallet } from "auth/hooks/useAddress"
+import { useMetamaskProvider } from "utils/hooks/useMetamaskProvider"
 
+export interface CreateTxErrorOptions {
+  code: -1
+  message: string
+}
 interface Props<TxValues> {
   /* Only when the token is paid out of the balance held */
   token?: Token
@@ -65,6 +72,7 @@ interface Props<TxValues> {
   onPost?: () => void
   redirectAfterTx?: { label: string; path: string }
   queryKeys?: QueryKey[]
+  tabType?: StakeAction
 }
 
 type RenderMax = (onClick?: (max: Amount) => void) => ReactNode
@@ -81,6 +89,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const { children, onChangeMax } = props
   const { onPost, redirectAfterTx, queryKeys } = props
 
+  const { getAddress } = useConnectWallet()
   const [isMax, setIsMax] = useState(false)
   const [gasDenom, setGasDenom] = useState(initialGasDenom)
 
@@ -88,7 +97,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const { t } = useTranslation()
   const currency = useCurrency()
   const network = useNetwork()
-  const { post } = useWallet()
   const connectedWallet = useConnectedWallet()
   const { wallet, validatePassword, ...auth } = useAuth()
   const address = useAddress()
@@ -113,25 +121,26 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const { data: estimatedGas, ...estimatedGasState } = useQuery(
     [queryKey.tx.create, key],
     async () => {
-      if (!address || isWalletEmpty) return 0
-      if (!(wallet || connectedWallet?.availablePost)) return 0
-      if (!simulationTx || !simulationTx.msgs.length) return 0
+      return 2000000
+      // if (!address || isWalletEmpty) return 0
+      // if (!(wallet || connectedWallet?.availablePost)) return 0
+      // if (!simulationTx || !simulationTx.msgs.length) return 0
 
-      const config = {
-        ...network,
-        URL: network.lcd,
-        gasAdjustment,
-        gasPrices: { [initialGasDenom]: gasPrices[initialGasDenom] },
-      }
+      // const config = {
+      //   ...network,
+      //   URL: network.lcd,
+      //   gasAdjustment,
+      //   gasPrices: { [initialGasDenom]: gasPrices[initialGasDenom] },
+      // }
 
-      const lcd = new LCDClient(config)
+      // const lcd = new LCDClient(config)
 
-      const unsignedTx = await lcd.tx.create([{ address }], {
-        ...simulationTx,
-        feeDenoms: [initialGasDenom],
-      })
+      // const unsignedTx = await lcd.tx.create([{ address }], {
+      //   ...simulationTx,
+      //   feeDenoms: [initialGasDenom],
+      // })
 
-      return unsignedTx.auth_info.fee.gas_limit
+      // return unsignedTx.auth_info.fee.gas_limit
     },
     {
       ...RefetchOptions.INFINITY,
@@ -209,21 +218,20 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   const navigate = useNavigate()
   const toPostMultisigTx = useToPostMultisigTx()
+  const misesState = useRecoilValue(misesStateDefault)
+  const provider = useMetamaskProvider()
   const submit = async (values: TxValues) => {
     setSubmitting(true)
-
     try {
       if (disabled) throw new Error(disabled)
       if (!estimatedGas || !has(gasAmount))
         throw new Error("Fee is not estimated")
-
       const tx = createTx(values)
-
       if (!tx) throw new Error("Tx is not defined")
-
+      const txmessage = tx as unknown as CreateTxErrorOptions
+      if (txmessage?.code === -1) throw new Error(txmessage.message)
       const gasCoins = new Coins([Coin.fromData(gasFee)])
       const fee = new Fee(estimatedGas, gasCoins)
-
       if (isWallet.multisig(wallet)) {
         const unsignedTx = await auth.create({ ...tx, fee })
         navigate(toPostMultisigTx(unsignedTx))
@@ -231,12 +239,37 @@ function Tx<TxValues>(props: Props<TxValues>) {
         const result = await auth.post({ ...tx, fee }, password)
         setLatestTx({ txhash: result.txhash, queryKeys, redirectAfterTx })
       } else {
-        const { result } = await post({ ...tx, fee })
-        setLatestTx({ txhash: result.txhash, queryKeys, redirectAfterTx })
+        const txString = tx.msgs.map((val: Msg) => {
+          const msg = JSON.parse(val.toJSON())
+          const newMsg = {} as { [key: string]: any }
+          for (const key in msg) {
+            const labelKey = key as string
+            newMsg[`${toHump(labelKey)}`] = msg[key]
+          }
+          delete newMsg["@type"]
+          return {
+            typeUrl: msg["@type"],
+            value: newMsg,
+          }
+        })
+        const result = await provider.request({
+          method: "mises_stakingPostTx",
+          params: [
+            {
+              tx: txString,
+              misesId: misesState.misesId,
+              gasFee: [gasFee],
+              gasLimit: fee.gas_limit,
+              feeAmount: toInput(gasFee.amount, 6),
+              title: props.tabType,
+            },
+          ],
+        })
+        setLatestTx({ txhash: result.txHash, queryKeys, redirectAfterTx })
       }
-
       onPost?.()
     } catch (error) {
+      console.log(error)
       if (error instanceof PasswordError) setIncorrect(error.message)
       else setError(error as Error)
     }
@@ -368,7 +401,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
       {!address ? (
         <ConnectWallet
           renderButton={(open) => (
-            <Submit type="button" onClick={open}>
+            <Submit type="button" onClick={() => getAddress(open)}>
               {t("Connect wallet")}
             </Submit>
           )}

@@ -1,54 +1,56 @@
-import { useTranslation } from "react-i18next"
 import { readAmount } from "@terra.kitchen/utils"
-import { combineState } from "data/query"
 import { useSupply } from "data/queries/bank"
 import { useStakingPool } from "data/queries/staking"
-import { Card } from "components/layout"
 import { ReadPercent } from "components/token"
-import { Tooltip } from "components/display"
-import DashboardContent from "./components/DashboardContent"
-import DashboardTag from "./components/DashboardTag"
-
+import classNames from "classnames/bind"
+import styles from "./Dashboard.module.scss"
+import { AggregateStakingReturn, useStakingReturn } from "data/Terra/TerraAPI"
+import { last } from "ramda"
 const StakingRatio = () => {
-  const { t } = useTranslation()
+  const { data: stakingPool } = useStakingPool()
+  const { data: supply } = useSupply()
+  const { data } = useStakingReturn(AggregateStakingReturn.ANNUALIZED)
+  // console.log(data)
+  const StakingRatioView = () => {
+    // if (!(stakingPool && supply)) return null
 
-  const { data: stakingPool, ...stakingPoolState } = useStakingPool()
-  const { data: supply, ...supplyState } = useSupply()
-  const state = combineState(stakingPoolState, supplyState)
-
-  const render = () => {
-    if (!(stakingPool && supply)) return null
-
-    const bonded = stakingPool.bonded_tokens.amount.toString()
-    const issuance = supply.find(({ denom }) => denom === "uluna")?.amount
-
-    if (!issuance) return null
+    const bonded = stakingPool ? stakingPool.bonded_tokens.amount.toString() : 0
+    const issuance = supply
+      ? supply.find(({ denom }) => denom === "umis")?.amount
+      : 0
+    // if (!issuance) return null
 
     const ratio = Number(bonded) / Number(issuance)
-    const tooltip = t("{{amount}} Luna staked", {
-      amount: readAmount(bonded, { prefix: true, integer: true }),
-    })
-
     return (
-      <DashboardContent
-        value={
-          <Tooltip content={tooltip}>
+      <div className={styles.cardBox}>
+        <p className={styles.pageName}>Dashboard</p>
+        <div className={styles.flex}>
+          <div className={styles.flexFull}>
+            <div>
+              {readAmount(issuance, { prefix: true, integer: true })}{" "}
+              <span className={styles.unit}>MIS</span>
+            </div>
+            <p>Total Supply</p>
+          </div>
+          <div className={styles.flexFull}>
             <ReadPercent>{ratio}</ReadPercent>
-          </Tooltip>
-        }
-        footer={
-          <DashboardTag>
-            {[t("Staked Luna"), t("Total Luna")].join(" / ")}
-          </DashboardTag>
-        }
-      />
+            <p>Staking Ratio</p>
+          </div>
+          <div className={styles.flexFull}>
+            <div>
+              <ReadPercent>{data && last(data)?.value}</ReadPercent>
+            </div>
+            <p>APR</p>
+          </div>
+        </div>
+      </div>
     )
   }
 
   return (
-    <Card {...state} title={t("Staking ratio")} size="small">
-      {render()}
-    </Card>
+    <div className={classNames(styles.card)}>
+      <StakingRatioView />
+    </div>
   )
 }
 

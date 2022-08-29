@@ -1,3 +1,10 @@
+/*
+ * @Author: lmk
+ * @Date: 2022-05-25 11:23:10
+ * @LastEditTime: 2022-06-07 15:50:28
+ * @LastEditors: lmk
+ * @Description:
+ */
 import { ReactNode } from "react"
 import { isDenomIBC, isDenomTerra } from "@terra.kitchen/utils"
 import { readDenom, truncate } from "@terra.kitchen/utils"
@@ -63,14 +70,14 @@ export const getIcon = (path: string) => `${ASSETS}/icon/svg/${path}`
 
 export const readNativeDenom = (denom: Denom): TokenItem => {
   const symbol = readDenom(denom)
-  const path = isDenomTerra(denom) ? `Terra/${symbol}.svg` : `${symbol}.svg`
+  // const path = isDenomTerra(denom) ? `Terra/${symbol}.svg` : `${symbol}.svg`
   return {
     token: denom,
     symbol: symbol,
     name: isDenomTerra(denom)
       ? `Terra ${denom.slice(1).toUpperCase()}`
       : undefined,
-    icon: getIcon(path),
+    icon: "./apple-touch-icon.png",
     decimals: 6,
   }
 }

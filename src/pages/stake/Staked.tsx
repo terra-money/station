@@ -1,3 +1,10 @@
+/*
+ * @Author: lmk
+ * @Date: 2022-05-25 11:23:10
+ * @LastEditTime: 2022-06-07 15:54:34
+ * @LastEditors: lmk
+ * @Description:
+ */
 import { combineState } from "data/query"
 import { useDelegations, useUnbondings } from "data/queries/staking"
 import { useRewards } from "data/queries/distribution"
@@ -13,7 +20,6 @@ const Staked = () => {
   const { data: unbondings, ...unbondingsState } = useUnbondings()
   const { data: rewards, ...rewardsState } = useRewards()
   const state = combineState(delegationsState, unbondingsState, rewardsState)
-
   const render = () => {
     if (!(delegations && unbondings && rewards)) return null
 

@@ -10,7 +10,7 @@ import { ValidatorLink } from "components/general"
 import { ModalButton } from "components/feedback"
 import { Table } from "components/layout"
 import { Read } from "components/token"
-import { ToNow, TooltipIcon } from "components/display"
+import { ToNow } from "components/display"
 import StakedCard from "./components/StakedCard"
 
 const Unbondings = () => {
@@ -29,29 +29,14 @@ const Unbondings = () => {
     if (!unbondings) return null
 
     const total = calcUnbondingsTotal(unbondings)
-    const value = calcValue({ amount: total, denom: "uluna" })
+    const value = calcValue({ amount: total, denom: "umis" })
     const list = flattenUnbondings(unbondings)
 
     return (
       <ModalButton
         title={title}
         renderButton={(open) => (
-          <StakedCard
-            {...state}
-            title={
-              <TooltipIcon
-                content={t(
-                  "Maximum 7 undelegations can be in progress at the same time"
-                )}
-                placement="bottom"
-              >
-                {title}
-              </TooltipIcon>
-            }
-            amount={total}
-            value={value}
-            onClick={open}
-          />
+          <StakedCard {...state} amount={total} value={value} onClick={open} />
         )}
       >
         <Table
@@ -68,7 +53,7 @@ const Unbondings = () => {
               title: t("Amount"),
               dataIndex: "initial_balance",
               render: (amount: Dec) => (
-                <Read amount={amount.toString()} denom="uluna" />
+                <Read amount={amount.toString()} denom="umis" />
               ),
               align: "right",
             },

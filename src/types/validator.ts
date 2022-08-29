@@ -4,6 +4,8 @@ import { Contacts } from "./components"
 export interface TerraValidator extends Validator.Data {
   picture?: string
   contact?: Contacts
+  start_height?: number
+  index_offset?: number
   miss_counter?: string
   voting_power?: string
   self?: string

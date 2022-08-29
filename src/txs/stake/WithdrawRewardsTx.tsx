@@ -11,7 +11,11 @@ import DelegationsPromote from "app/containers/DelegationsPromote"
 import TxContext from "../TxContext"
 import WithdrawRewardsForm from "./WithdrawRewardsForm"
 
-const WithdrawRewardsTx = () => {
+interface Props {
+  reinvest: boolean
+}
+
+const WithdrawRewardsTx = ({ reinvest, ...props }: Props) => {
   const { t } = useTranslation()
   const currency = useCurrency()
   const calcValue = useMemoizedCalcValue()
@@ -53,6 +57,7 @@ const WithdrawRewardsTx = () => {
             rewards={rewards}
             validators={validators}
             IBCWhitelist={IBCWhitelist}
+            reinvest={reinvest}
           />
         </TxContext>
       </Card>
@@ -60,7 +65,11 @@ const WithdrawRewardsTx = () => {
   }
 
   return (
-    <Page {...state} title={t("Withdraw rewards")} small>
+    <Page
+      {...state}
+      title={reinvest ? t("Reinvest all rewards") : t("Withdraw rewards")}
+      small
+    >
       {render()}
     </Page>
   )

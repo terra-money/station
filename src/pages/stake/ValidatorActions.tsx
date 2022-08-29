@@ -5,7 +5,11 @@ import { has } from "utils/num"
 import { combineState } from "data/query"
 import { useCurrency } from "data/settings/Currency"
 import { useMemoizedCalcValue } from "data/queries/oracle"
-import { useDelegations, useDelegation } from "data/queries/staking"
+import {
+  useDelegations,
+  useDelegation,
+  useValidators,
+} from "data/queries/staking"
 import { getAvailableStakeActions } from "data/queries/staking"
 import { calcRewardsValues, useRewards } from "data/queries/distribution"
 import { LinkButton } from "components/general"
@@ -20,6 +24,7 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
   const { data: delegation, ...delegationState } = useDelegation(destination)
   const { data: delegations, ...delegationsState } = useDelegations()
   const { data: rewards, ...rewardsState } = useRewards()
+  const { data: validators } = useValidators()
   const state = combineState(delegationState, delegationsState)
   const calcValue = useMemoizedCalcValue()
 
@@ -27,6 +32,7 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
     [StakeAction.DELEGATE]: t("Delegate"),
     [StakeAction.REDELEGATE]: t("Redelegate"),
     [StakeAction.UNBOND]: t("Undelegate"),
+    [StakeAction.REINVEST]: t("Reinvest"),
   }
 
   const renderDelegationsValue = () => {
@@ -35,12 +41,12 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
         ? delegation.balance.amount.toString()
         : "0"
 
-    const value = calcValue({ amount, denom: "uluna" })
+    const value = calcValue({ amount, denom: "umis" })
 
     return (
       <section>
-        <Read amount={amount} denom="uluna" className={styles.total} block />
-        {currency !== "uluna" && (
+        <Read amount={amount} denom="umis" className={styles.total} block />
+        {currency !== "umis" && (
           <Read
             amount={value}
             denom={currency}
@@ -55,9 +61,13 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
   }
 
   const renderDelegationsActions = () => {
-    if (!delegations) return
+    if (!delegations || !validators) return
 
-    const availableActions = getAvailableStakeActions(destination, delegations)
+    const availableActions = getAvailableStakeActions(
+      destination,
+      delegations,
+      validators
+    )
 
     return (
       <ExtraActions align="stretch">
@@ -86,11 +96,11 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
 
   const renderRewardsValue = () => {
     const { sum, list } = rewardsValues
-    const amount = list.find(({ denom }) => denom === "uluna")?.amount ?? "0"
+    const amount = list.find(({ denom }) => denom === "umis")?.amount ?? "0"
 
     return (
       <section>
-        <Read amount={amount} denom="uluna" className={styles.total} />{" "}
+        <Read amount={amount} denom="umis" className={styles.total} />{" "}
         <span className={styles.small}>
           {list.length > 1 &&
             `+${t("{{length}} coins", { length: list.length - 1 })}`}
