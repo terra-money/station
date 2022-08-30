@@ -38,5 +38,5 @@ jobs:
         run: |
           aws cloudfront create-invalidation \
            --region us-east-1 \
-           --distribution-id EX19D7FR1YIYQ \
+           --distribution-id E145PPT28G10C3 \
            --paths "/index.html"
