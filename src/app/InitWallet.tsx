@@ -5,7 +5,7 @@ import { useNetwork, useNetworkName } from "data/wallet"
 import { isWallet, useAuth } from "auth"
 import Splash from "auth/modules/Splash"
 import Online from "./containers/Online"
-import WithNodeInfo from "./WithNodeInfo"
+// import WithNodeInfo from "./WithNodeInfo"
 
 const InitWallet = ({ children }: PropsWithChildren<{}>) => {
   useOnNetworkChange()
@@ -17,7 +17,7 @@ const InitWallet = ({ children }: PropsWithChildren<{}>) => {
     <Splash />
   ) : (
     <QueryClientProvider client={queryClient} key={networkName}>
-      <WithNodeInfo>{children}</WithNodeInfo>
+      {children}
       <Online />
     </QueryClientProvider>
   )

@@ -1,13 +1,28 @@
+import { bech32 } from "bech32"
 import { useMemo } from "react"
 import { useQuery } from "react-query"
 import axios, { AxiosError } from "axios"
 import BigNumber from "bignumber.js"
-import { OracleParams, ValAddress } from "@terra-money/terra.js"
+import {
+  OracleParams,
+  ValAddress,
+  ValConsAddress,
+  Validator,
+  SigningInfo,
+} from "@terra-money/terra.js"
 import { TerraValidator } from "types/validator"
 import { TerraProposalItem } from "types/proposal"
 import { useNetworkName } from "data/wallet"
 import { useOracleParams } from "data/queries/oracle"
 import { queryKey, RefetchOptions } from "../query"
+import {
+  useValidators,
+  useValidator,
+  useSigningInfos,
+  useSigningInfo,
+  useAnnualProvisions,
+  useStakingPool,
+} from "data/queries/staking"
 
 export enum Aggregate {
   PERIODIC = "periodic",
@@ -58,19 +73,22 @@ export const useTerraAPI = <T>(path: string, params?: object, fallback?: T) => {
 export type GasPrices = Record<Denom, Amount>
 
 export const useGasPrices = () => {
-  const current = useTerraAPIURL()
-  const mainnet = useTerraAPIURL("mainnet")
-  const baseURL = current ?? mainnet
-  const path = "/gas-prices"
+  return {
+    data: { umis: "0.0001" },
+  }
+  // const current = useTerraAPIURL()
+  // const mainnet = useTerraAPIURL("mainnet")
+  // const baseURL = current ?? mainnet
+  // const path = "/gas-prices"
 
-  return useQuery(
-    [queryKey.TerraAPI, baseURL, path],
-    async () => {
-      const { data } = await axios.get<GasPrices>(path, { baseURL })
-      return data
-    },
-    { ...RefetchOptions.INFINITY, enabled: !!baseURL }
-  )
+  // return useQuery(
+  //   [queryKey.TerraAPI, baseURL, path],
+  //   async () => {
+  //     const { data } = await axios.get<GasPrices>(path, { baseURL })
+  //     return data
+  //   },
+  //   { ...RefetchOptions.INFINITY, enabled: !!baseURL }
+  // )
 }
 
 /* charts */
@@ -83,7 +101,7 @@ export enum ChartInterval {
   "1d" = "1d",
 }
 
-export const useLunaPriceChart = (denom: Denom, interval: ChartInterval) => {
+export const useMISPriceChart = (denom: Denom, interval: ChartInterval) => {
   return useTerraAPI<ChartDataItem[]>(`chart/price/${denom}`, { interval })
 }
 
@@ -92,7 +110,25 @@ export const useTxVolume = (denom: Denom, type: Aggregate) => {
 }
 
 export const useStakingReturn = (type: AggregateStakingReturn) => {
-  return useTerraAPI<ChartDataItem[]>(`chart/staking-return/${type}`)
+  const { data: ap } = useAnnualProvisions()
+  const { data: stakingPool } = useStakingPool()
+  const estimatedReward =
+    ap && stakingPool
+      ? ap.div(stakingPool?.bonded_tokens.amount.abs()).toNumber()
+      : 0
+  return {
+    data: [
+      {
+        datetime: 0,
+        value: (type === "annualized"
+          ? estimatedReward
+          : estimatedReward / 365
+        ).toString(),
+      } as ChartDataItem,
+    ],
+  }
+
+  //return useTerraAPI<ChartDataItem[]>(`chart/staking-return/${type}`)
 }
 
 export const useTaxRewards = (type: Aggregate) => {
@@ -107,13 +143,76 @@ export const useSumActiveWallets = () => {
   return useTerraAPI<Record<string, string>>(`chart/wallets/active/sum`)
 }
 
+export function valConsAddress(val: Validator | undefined): ValConsAddress {
+  const valconAddress = val?.consensus_pubkey
+    ? bech32.encode(
+        "misesvalcons",
+        bech32.toWords(val?.consensus_pubkey?.rawAddress())
+      )
+    : ""
+  return valconAddress
+}
+
+function uptime_estimated(info: SigningInfo | undefined): number {
+  if (!info) {
+    return 0
+  }
+  const { missed_blocks_counter } = info
+  if (missed_blocks_counter) {
+    return 1 - Number(missed_blocks_counter) / 10000
+  }
+  return 1
+}
+
 /* validators */
 export const useTerraValidators = () => {
-  return useTerraAPI<TerraValidator[]>("validators", undefined, [])
+  const { data: validators } = useValidators()
+  const { data: infos } = useSigningInfos()
+
+  const { data: ap } = useAnnualProvisions()
+  const { data: stakingPool } = useStakingPool()
+  const estimatedReward =
+    ap && stakingPool
+      ? ap.div(stakingPool?.bonded_tokens.amount.abs()).toNumber() / 12
+      : 0
+  return {
+    data: validators?.map<TerraValidator>((val) => {
+      const info = infos?.find(({ address }) => address === valConsAddress(val))
+      return {
+        ...val.toData(),
+        voting_power: val.tokens.divToInt(1000000).toString(),
+        miss_counter: info?.missed_blocks_counter ?? "0",
+        start_height: info?.start_height ?? 0,
+        index_offset: info?.index_offset ?? 0,
+        rewards_30d: (
+          estimatedReward *
+          (1 - val.commission.commission_rates.rate.toNumber())
+        ).toString(),
+        time_weighted_uptime: uptime_estimated(info),
+      } as TerraValidator
+    }),
+  }
+  //return useTerraAPI<TerraValidator[]>("validators", undefined, [])
 }
 
 export const useTerraValidator = (address: ValAddress) => {
-  return useTerraAPI<TerraValidator>(`validators/${address}`)
+  const { data: validator } = useValidator(address)
+  if (validator?.consensus_pubkey) {
+  }
+  const { data: info } = useSigningInfo(valConsAddress(validator))
+
+  return {
+    data: {
+      ...validator?.toData(),
+      voting_power: validator?.tokens.divToInt(1000000).toString(),
+      miss_counter: info?.missed_blocks_counter ?? "0",
+      start_height: info?.start_height ?? 0,
+      index_offset: info?.index_offset ?? 0,
+      rewards_30d: "1",
+      time_weighted_uptime: uptime_estimated(info),
+    } as TerraValidator,
+  }
+  //return useTerraAPI<TerraValidator>(`validators/${address}`)
 }
 
 export const useTerraProposal = (id: number) => {
@@ -136,7 +235,18 @@ export const getCalcVotingPowerRate = (TerraValidators: TerraValidator[]) => {
     return voting_power ? Number(validator.voting_power) / total : undefined
   }
 }
+export const getBondedMISCount = (
+  TerraValidators: TerraValidator[],
+  address: string
+) => {
+  const validator = TerraValidators.find(
+    ({ operator_address }) => operator_address === address
+  )
 
+  if (!validator) return
+  const { voting_power } = validator
+  return voting_power ? Number(validator.voting_power) : undefined
+}
 export const calcSelfDelegation = (validator?: TerraValidator) => {
   if (!validator) return
   const { self, tokens } = validator
@@ -147,6 +257,7 @@ export const getCalcUptime = ({ slash_window }: OracleParams) => {
   return (validator?: TerraValidator) => {
     if (!validator) return
     const { miss_counter } = validator
+    const slash_window = 10000
     return miss_counter ? 1 - Number(miss_counter) / slash_window : undefined
   }
 }
@@ -170,7 +281,7 @@ export const useUptime = (validator: TerraValidator) => {
   const { data: oracleParams, ...state } = useOracleParams()
 
   const calc = useMemo(() => {
-    if (!oracleParams) return
+    //if (!oracleParams) return
     return getCalcUptime(oracleParams)
   }, [oracleParams])
 

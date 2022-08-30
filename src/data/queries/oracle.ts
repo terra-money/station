@@ -1,37 +1,59 @@
+/*
+ * @Author: lmk
+ * @Date: 2022-05-27 11:31:35
+ * @LastEditTime: 2022-05-27 11:34:02
+ * @LastEditors: lmk
+ * @Description:
+ */
 import { useCallback, useMemo } from "react"
-import { useQuery } from "react-query"
-import { getAmount, sortCoins, sortDenoms } from "utils/coin"
+import { getAmount, sortCoins } from "utils/coin"
 import { toPrice } from "utils/num"
-import { queryKey, RefetchOptions } from "../query"
 import { useCurrency } from "../settings/Currency"
-import { useLCDClient } from "./lcdClient"
+import { Dec, Coins } from "@terra-money/terra.js"
 
 export const useActiveDenoms = () => {
-  const lcd = useLCDClient()
-  return useQuery(
-    [queryKey.oracle.activeDenoms],
-    async () => {
-      const activeDenoms = await lcd.oracle.activeDenoms()
-      return sortDenoms(["uluna", ...activeDenoms])
-    },
-    { ...RefetchOptions.INFINITY }
-  )
+  return { data: ["umis"] }
+  // const lcd = useLCDClient()
+  // return useQuery(
+  //   [queryKey.oracle.activeDenoms],
+  //   async () => {
+  //     const activeDenoms = await lcd.oracle.activeDenoms()
+  //     return sortDenoms(["umis", ...activeDenoms])
+  //   },
+  //   { ...RefetchOptions.INFINITY }
+  // )
 }
 
 export const useExchangeRates = () => {
-  const lcd = useLCDClient()
-  return useQuery(
-    [queryKey.oracle.exchangeRates],
-    () => lcd.oracle.exchangeRates(),
-    { ...RefetchOptions.DEFAULT }
-  )
+  const coins = new Coins()
+  coins.set("umis", 1)
+  return { data: coins }
+  // const lcd = useLCDClient()
+  // return useQuery(
+  //   [queryKey.oracle.exchangeRates],
+  //   () => lcd.oracle.exchangeRates(),
+  //   { ...RefetchOptions.DEFAULT }
+  // )
 }
 
 export const useOracleParams = () => {
-  const lcd = useLCDClient()
-  return useQuery([queryKey.oracle.params], () => lcd.oracle.parameters(), {
-    ...RefetchOptions.INFINITY,
-  })
+  return {
+    data: {
+      vote_period: 1,
+      vote_threshold: new Dec(1.5),
+      reward_band: new Dec(1.5),
+      reward_distribution_window: 1,
+      whitelist: [],
+      slash_fraction: new Dec(1.5),
+      slash_window: 1,
+      min_valid_per_window: new Dec(1.5),
+    },
+  }
+
+  // const lcd = useLCDClient()
+  // return useQuery([queryKey.oracle.params], () => lcd.oracle.parameters(), {
+  //   ...RefetchOptions.INFINITY,
+  // })
 }
 
 /* helpers */
@@ -44,7 +66,7 @@ export const useMemoizedPrices = (currency: Denom) => {
     const base = toPrice(getAmount(exchangeRates, currency, "1"))
 
     return {
-      uluna: base,
+      umis: base,
       ...sortCoins(exchangeRates, currency).reduce((acc, { amount, denom }) => {
         const price = toPrice(Number(base) / Number(amount))
         return { ...acc, [denom]: price }

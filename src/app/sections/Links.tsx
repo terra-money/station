@@ -6,11 +6,11 @@ import { Contacts } from "components/layout"
 import styles from "./Links.module.scss"
 
 const community = {
-  medium: "https://medium.com/terra-money",
-  discord: "https://discord.gg/8uGSUQN7wV",
-  telegram: "https://t.me/TerraLunaChat",
-  twitter: "https://twitter.com/terra_money",
-  github: "https://github.com/terra-money",
+  medium: "https://medium.com/@Mises001",
+  discord: "https://discord.gg/bwg7hTTYKz",
+  telegram: "https://t.me/Misesofficial",
+  twitter: "https://twitter.com/Mises001",
+  github: "https://github.com/mises-id",
 }
 
 const Links = () => {

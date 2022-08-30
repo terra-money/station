@@ -5,12 +5,11 @@ import { useForm } from "react-hook-form"
 import BigNumber from "bignumber.js"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import ExpandLessIcon from "@mui/icons-material/ExpandLess"
-import { isDenomTerraNative, readDenom } from "@terra.kitchen/utils"
+import { isDenomTerraNative, formatNumber } from "@terra.kitchen/utils"
 import { Validator, ValAddress, Coin, MsgSwap } from "@terra-money/terra.js"
 import { Rewards } from "@terra-money/terra.js"
-import { MsgWithdrawDelegatorReward } from "@terra-money/terra.js"
+import { MsgWithdrawDelegatorReward, MsgDelegate } from "@terra-money/terra.js"
 import { has } from "utils/num"
-import { sortDenoms } from "utils/coin"
 import { SettingKey } from "utils/localStorage"
 import { getLocalSetting, setLocalSetting } from "utils/localStorage"
 import { queryKey } from "data/query"
@@ -23,7 +22,7 @@ import { getFindMoniker } from "data/queries/staking"
 import { calcRewardsValues } from "data/queries/distribution"
 import { WithTokenItem } from "data/token"
 import { ValidatorLink } from "components/general"
-import { Form, FormArrow, FormItem, Checkbox, Select } from "components/form"
+import { Form, FormArrow, FormItem, Checkbox } from "components/form"
 import { Card, Flex, Grid, InlineFlex } from "components/layout"
 import { Read, TokenCard, TokenCardGrid } from "components/token"
 import Tx, { getInitialGasDenom } from "../Tx"
@@ -34,10 +33,11 @@ interface Props {
   rewards: Rewards
   validators: Validator[]
   IBCWhitelist: IBCWhitelist
+  reinvest: boolean
 }
 
 const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
-  const { activeDenoms, IBCWhitelist } = props
+  const { reinvest } = props
   const { t } = useTranslation()
   const currency = useCurrency()
   const address = useAddress()
@@ -51,8 +51,8 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
 
   /* as another denom */
   const preferredDenom = getLocalSetting<Denom>(SettingKey.WithdrawAs)
-  const [swap, setSwap] = useState(!!preferredDenom)
-  const [target, setTarget] = useState(preferredDenom || "uluna")
+  const [swap] = useState(!!preferredDenom)
+  const [target] = useState(preferredDenom || "umis")
   useEffect(() => {
     if (!swap) setLocalSetting(SettingKey.WithdrawAs, "")
   }, [swap])
@@ -102,7 +102,7 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
     async ({ queryKey: [, selectedTotal, target] }) => {
       const responses = await Promise.allSettled(
         Object.entries(selectedTotal)
-          .filter(([denom]) => isDenomTerraNative(denom))
+          //.filter(([denom]) => isDenomTerraNative(denom))
           .map(async ([denom, amount]) => {
             if (denom === target) return { denom, amount }
 
@@ -150,6 +150,22 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
       return new MsgWithdrawDelegatorReward(address, operatorAddress)
     })
 
+    if (reinvest) {
+      const delegateMsgs = selected.map((operatorAddress) => {
+        const item = byValidator.find(
+          (item) => item.address === operatorAddress
+        )
+        if (!item) throw new Error()
+        return new MsgDelegate(
+          address,
+          operatorAddress,
+          new Coin("umis", formatNumber(item.sum, { integer: true }))
+        )
+      })
+
+      return { msgs: [...msgs, ...delegateMsgs] }
+    }
+
     if (swap) {
       if (!simulation) return
 
@@ -167,6 +183,7 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
     }
 
     return { msgs }
+    // eslint-disable-next-line
   }, [address, selected, selectedTotal, simulation, swap, target])
 
   /* fee */
@@ -189,26 +206,9 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
         <Form onSubmit={handleSubmit(submit.fn)}>
           <Grid gap={12}>
             <section className={styles.target}>
-              <Checkbox checked={swap} onChange={() => setSwap(!swap)}>
-                <InlineFlex gap={4}>
-                  Withdraw all rewards in{" "}
-                  <Select
-                    value={target}
-                    onChange={(e) => {
-                      if (!swap) setSwap(true)
-                      setLocalSetting(SettingKey.WithdrawAs, e.target.value)
-                      setTarget(e.target.value)
-                    }}
-                    small
-                  >
-                    {sortDenoms(activeDenoms, currency).map((denom) => (
-                      <option value={denom} key={denom}>
-                        {readDenom(denom)}
-                      </option>
-                    ))}
-                  </Select>
-                </InlineFlex>
-              </Checkbox>
+              <InlineFlex gap={4}>
+                {reinvest ? "reinvest all rewards" : "withdraw all rewards"}
+              </InlineFlex>
             </section>
 
             <dl>
@@ -265,7 +265,11 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
                         key={address}
                       >
                         <div className={styles.item}>
-                          <ValidatorLink address={address} />
+                          <ValidatorLink
+                            address={address}
+                            internal
+                            isLink={false}
+                          />
                           <Read amount={sum} token={currency} approx />
                         </div>
                       </Checkbox>
@@ -292,11 +296,11 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
               ) : (
                 <TokenCardGrid maxHeight>
                   {Object.entries(selectedTotal)
-                    .filter(([denom]) => {
-                      const isListedIBC =
-                        IBCWhitelist[denom.replace("ibc/", "")]
-                      return isDenomTerraNative(denom) || isListedIBC
-                    })
+                    // .filter(([denom]) => {
+                    //   const isListedIBC =
+                    //     IBCWhitelist[denom.replace("ibc/", "")]
+                    //   return isDenomTerraNative(denom) || isListedIBC
+                    // })
                     .map(([denom, amount]) => (
                       <WithTokenItem token={denom} key={denom}>
                         {(item) => (

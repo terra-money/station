@@ -2,7 +2,8 @@
 
 .actions {
   flex-wrap: wrap;
-  gap: 12px;
+  margin: 0 -6px;
+  // gap: 12px;
 }
 
 .end {
@@ -15,8 +16,8 @@
 
 .stretch {
   @include flex(stretch);
-
   > * {
     flex: 1;
+    margin: 6px;
   }
 }

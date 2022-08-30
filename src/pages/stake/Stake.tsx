@@ -1,23 +1,18 @@
-import { useTranslation } from "react-i18next"
-import { LinkButton } from "components/general"
+/*
+ * @Author: lmk
+ * @Date: 2022-05-25 11:23:10
+ * @LastEditTime: 2022-06-07 11:37:00
+ * @LastEditors: lmk
+ * @Description:
+ */
 import { Col, Page } from "components/layout"
-import Staked from "./Staked"
 import Validators from "./Validators"
 
 const Stake = () => {
-  const { t } = useTranslation()
-
   return (
-    <Page
-      title={t("Stake")}
-      extra={
-        <LinkButton to="/rewards" color="primary" size="small">
-          {t("Withdraw all rewards")}
-        </LinkButton>
-      }
-    >
+    <Page>
       <Col>
-        <Staked />
+        {/* <Staked /> */}
         <Validators />
       </Col>
     </Page>

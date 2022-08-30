@@ -33,13 +33,21 @@ interface Props<T> {
   rowKey?: (record: T) => string
   initialSorterKey?: string
   onSort?: () => void
+  rowClick?: (record: T) => void
 
   size?: "default" | "small"
   style?: CSSProperties
   pagination?: number
 }
 
-function Table<T>({ columns, dataSource, filter, rowKey, ...props }: Props<T>) {
+function Table<T>({
+  columns,
+  dataSource,
+  filter,
+  rowKey,
+  rowClick,
+  ...props
+}: Props<T>) {
   const { initialSorterKey, size = "default", style, pagination } = props
 
   /* helpers */
@@ -164,7 +172,10 @@ function Table<T>({ columns, dataSource, filter, rowKey, ...props }: Props<T>) {
             .sort((a, b) => props.sorter?.(a, b) || sorter?.(a, b) || 0)
             .slice(...range)
             .map((data, index) => (
-              <tr key={rowKey?.(data) ?? index}>
+              <tr
+                key={rowKey?.(data) ?? index}
+                onClick={() => rowClick?.(data)}
+              >
                 {columns.map((column, index) => {
                   const { dataIndex, render } = column
                   const value: any =

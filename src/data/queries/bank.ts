@@ -1,6 +1,6 @@
 import { useQuery } from "react-query"
 import axios from "axios"
-import { isDenomTerraNative } from "@terra.kitchen/utils"
+// import { isDenomTerraNative } from "@terra.kitchen/utils"
 import { Coins } from "@terra-money/terra.js"
 import createContext from "utils/createContext"
 import { queryKey, RefetchOptions } from "../query"
@@ -47,13 +47,15 @@ export const useInitialBankBalance = () => {
   )
 }
 
-export const useTerraNativeLength = () => {
-  const bankBalance = useBankBalance()
-  return bankBalance?.toArray().filter(({ denom }) => isDenomTerraNative(denom))
-    .length
-}
+// export const useTerraNativeLength = () => {
+//   const bankBalance = useBankBalance()
+//   return bankBalance?.toArray().filter(({ denom }) => isDenomTerraNative(denom))
+//     .length
+// }
 
 export const useIsWalletEmpty = () => {
-  const length = useTerraNativeLength()
-  return !length
+  const bankBalance = useBankBalance()
+  return !bankBalance?.toArray().length
+  //const length = useTerraNativeLength()
+  //return !length
 }

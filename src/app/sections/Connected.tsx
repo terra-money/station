@@ -5,7 +5,6 @@ import GroupsIcon from "@mui/icons-material/Groups"
 import QrCodeIcon from "@mui/icons-material/QrCode"
 import UsbIcon from "@mui/icons-material/Usb"
 import { truncate } from "@terra.kitchen/utils"
-import { useWallet } from "@terra-money/wallet-provider"
 import { useAddress } from "data/wallet"
 import { useTnsName } from "data/external/tns"
 import { Button, Copy, FinderLink } from "components/general"
@@ -17,10 +16,11 @@ import SwitchWallet from "auth/modules/select/SwitchWallet"
 import PopoverNone from "../components/PopoverNone"
 import WalletQR from "./WalletQR"
 import styles from "./Connected.module.scss"
-
+import { useResetRecoilState } from "recoil"
+import { misesStateDefault } from "app/sections/ConnectWallet"
 const Connected = () => {
   const { t } = useTranslation()
-  const { disconnect } = useWallet()
+  // const { disconnect } = useWallet()
   const address = useAddress()
   const { wallet, getLedgerKey } = useAuth()
   const { data: name } = useTnsName(address ?? "")
@@ -28,12 +28,17 @@ const Connected = () => {
   /* hack to close popover */
   const [key, setKey] = useState(0)
   const closePopover = () => setKey((key) => key + 1)
-
+  const resetMisesState = useResetRecoilState(misesStateDefault)
   if (!address) return null
-
   const footer = wallet
     ? { to: "/auth", onClick: closePopover, children: t("Manage wallets") }
-    : { onClick: disconnect, children: t("Disconnect") }
+    : {
+        onClick: () => {
+          resetMisesState()
+          localStorage.removeItem("metamask")
+        },
+        children: t("Disconnect"),
+      }
 
   return (
     <Popover

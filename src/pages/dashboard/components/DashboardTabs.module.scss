@@ -1,0 +1,172 @@
+.coinAmount {
+  font-size: 14px;
+  font-weight: 400;
+  color: #333333;
+  margin-top: 15px;
+}
+.gridItem {
+  $borderColor: transparentize(
+    $color: #5d61ff,
+    $amount: 0.9,
+  );
+  border: 1px solid transparent;
+  color: #333333;
+  padding: 24px 0 30px 30px !important;
+  font-size: 12px;
+  &:nth-child(1) {
+    border-right-color: $borderColor;
+    border-bottom-color: $borderColor;
+  }
+  &:nth-child(2) {
+    border-bottom-color: $borderColor;
+  }
+  &:nth-child(3) {
+    border-right-color: $borderColor;
+  }
+  span {
+    // font-size: 22px;
+    font-weight: bold;
+    color: #333333;
+  }
+  p {
+    font-size: 14px;
+    font-weight: 400;
+    color: #666666;
+  }
+}
+.gridContainer {
+  border-radius: 10px;
+  background-color: transparentize($color: #5d61ff, $amount: 0.95);
+  margin-top: 20px;
+}
+.tabPanel {
+  .reinvest {
+    display: block;
+    width: 100%;
+    margin: 30px auto 20px;
+    padding: 13px;
+    font-size: 14px;
+  }
+  .withdraw {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    font-size: 14px;
+  }
+}
+.itemTitle {
+  margin-top: 8px;
+}
+
+.value {
+  font-size: 22px;
+}
+.totalAmount {
+  .symbol {
+    font-size: 14px;
+  }
+}
+.faqBox {
+  .faq {
+    font-size: 14px;
+    color: #666;
+    padding: 7px;
+    border-radius: 50px;
+    border-color: #ddd;
+    width: 110px;
+    margin: 40px auto;
+    display: flex;
+    align-items: center;
+  }
+}
+.unConnect {
+  padding: 30px;
+  background: #f5f5f5;
+  border-radius: 10px;
+  text-align: center;
+  .tips {
+    font-size: 21px;
+    font-weight: 500;
+    color: #333333;
+    line-height: 27px;
+    margin-bottom: 30px;
+  }
+}
+.myDelegations {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .title {
+    font-size: 14px;
+    color: #333;
+  }
+  .linkTo {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    span {
+      display: inline-flex;
+      margin-right: 5px;
+    }
+  }
+}
+.colBox {
+  margin-top: 18px;
+}
+.validator {
+  border-radius: 10px;
+  background: #f5f5f5;
+  $border: 1px solid #ffffff;
+  .validatorTitle {
+    line-height: 50px;
+    font-size: 19px;
+    font-weight: bold;
+    color: #333333;
+    padding-left: 20px;
+    border-bottom: $border;
+    display: flex;
+    align-items: center;
+    span {
+      margin-right: 5px;
+    }
+  }
+  .validatorItem {
+    padding: 14px 0 14px 20px;
+    border: 1px solid transparent;
+    &:nth-child(1) {
+      border-right-color: #ffffff;
+      border-bottom-color: #ffffff;
+    }
+    &:nth-child(2) {
+      border-bottom-color: #ffffff;
+    }
+    &:nth-child(3) {
+      border-right-color: #ffffff;
+    }
+    .title {
+      font-size: 12px;
+      font-weight: 400;
+      color: #666666;
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+    .totalAmount {
+      font-size: 14px;
+      font-weight: bold;
+      color: #333333;
+    }
+  }
+}
+.tabBox {
+  border-bottom: 1px solid #eeeeee;
+  .Mui-selected {
+    color: #5d61ff;
+  }
+  .tabItem {
+    font-size: 15px;
+    font-weight: 400;
+    color: #666666;
+    flex: 1;
+    text-transform: none;
+  }
+}

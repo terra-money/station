@@ -1,3 +1,10 @@
+/*
+ * @Author: lmk
+ * @Date: 2022-05-30 10:44:28
+ * @LastEditTime: 2022-06-09 15:49:22
+ * @LastEditors: lmk
+ * @Description:
+ */
 import { useTranslation } from "react-i18next"
 import { useValidator } from "data/queries/staking"
 import { useTerraValidator } from "data/Terra/TerraAPI"
@@ -27,7 +34,9 @@ const ValidatorDetails = () => {
         columns={[
           <Col>
             <ValidatorCompact />
-
+            <ValidatorActions destination={validator.operator_address} />
+          </Col>,
+          <Col>
             {TerraValidator && (
               <>
                 <ValidatorSummary validator={TerraValidator} />
@@ -38,7 +47,6 @@ const ValidatorDetails = () => {
 
             <ValidatorAddresses validator={validator} />
           </Col>,
-          <ValidatorActions destination={validator.operator_address} />,
         ]}
       />
     )

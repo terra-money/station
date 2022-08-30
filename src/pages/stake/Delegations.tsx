@@ -27,19 +27,13 @@ const Delegations = () => {
     if (!delegations) return null
 
     const total = calcDelegationsTotal(delegations)
-    const value = calcValue({ amount: total, denom: "uluna" })
+    const value = calcValue({ amount: total, denom: "umis" })
 
     return (
       <ModalButton
         title={title}
         renderButton={(open) => (
-          <StakedCard
-            {...state}
-            title={title}
-            amount={total}
-            value={value}
-            onClick={open}
-          />
+          <StakedCard {...state} amount={total} value={value} onClick={open} />
         )}
       >
         <Table

@@ -24,7 +24,7 @@ const Read = forwardRef(
     { amount, denom, approx, block, auto, ...props }: Props,
     ref: ForwardedRef<HTMLSpanElement>
   ) => {
-    if (!(amount || Number.isFinite(amount))) return null
+    // if (!(amount || Number.isFinite(amount))) return null
 
     const comma = !(typeof props.comma === "boolean" && props.comma === false)
 
@@ -37,7 +37,7 @@ const Read = forwardRef(
       : 2
 
     const config = { ...props, comma, fixed }
-    const [integer, decimal] = readAmount(amount, config).split(".")
+    const [integer, decimal] = readAmount(amount, config).split(".") || ["0"]
 
     const renderDecimal = () => {
       if (!decimal) return null
@@ -50,12 +50,12 @@ const Read = forwardRef(
     }
 
     const renderSymbol = () => {
-      const token = props.token ?? denom
+      const token = props.token ?? denom ?? "MIS"
 
-      if (!token) return null
+      // if (!token) return null
 
       return (
-        <span className={styles.small}>
+        <span className={classNames(styles.small, styles.symbol)}>
           {" "}
           <WithTokenItem token={token}>
             {({ symbol }) => symbol ?? truncate(token)}
@@ -69,7 +69,7 @@ const Read = forwardRef(
     return (
       <span className={className} ref={ref}>
         {approx && "≈ "}
-        {integer}
+        {integer || "0"}
         {renderDecimal()}
         {renderSymbol()}
       </span>
@@ -89,10 +89,14 @@ export const ReadPercent = forwardRef(
     { children: value, ...config }: PercentProps,
     ref: ForwardedRef<HTMLSpanElement>
   ) => {
-    const [integer, decimal] = value
-      ? formatPercent(value, config).split(".")
-      : []
-
+    const filterValue =
+      value && !isNaN(value as number)
+        ? formatPercent(value, config)
+            .split(".")
+            .filter((val) => val !== "Infinity")
+        : ["0", "00"]
+    const [integer, decimal] =
+      filterValue.length > 1 ? filterValue : ["0", "00"]
     return (
       <span className={styles.component} ref={ref}>
         {integer}

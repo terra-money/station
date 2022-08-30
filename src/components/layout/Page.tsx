@@ -1,3 +1,10 @@
+/*
+ * @Author: lmk
+ * @Date: 2022-05-25 11:23:10
+ * @LastEditTime: 2022-06-06 16:47:25
+ * @LastEditors: lmk
+ * @Description:
+ */
 import { PropsWithChildren, ReactNode } from "react"
 import classNames from "classnames/bind"
 import { ErrorBoundary, WithFetching } from "../feedback"
@@ -16,7 +23,7 @@ interface Props extends QueryState {
 }
 
 const Page = (props: PropsWithChildren<Props>) => {
-  const { title, extra, children, small, sub, mainClassName } = props
+  const { children, small, sub, mainClassName } = props
 
   return (
     <WithFetching {...props}>
@@ -26,13 +33,6 @@ const Page = (props: PropsWithChildren<Props>) => {
 
           <article className={cx(styles.page, { sub, small })}>
             <Container className={styles.grid}>
-              {title && (
-                <header className={styles.header}>
-                  <h1 className={styles.title}>{title}</h1>
-                  {extra}
-                </header>
-              )}
-
               <section className={classNames(styles.main, mainClassName)}>
                 {wrong ? (
                   <Card>{wrong}</Card>

@@ -1,3 +1,10 @@
+/*
+ * @Author: lmk
+ * @Date: 2022-05-27 17:37:27
+ * @LastEditTime: 2022-06-07 10:57:24
+ * @LastEditors: lmk
+ * @Description:
+ */
 import { PropsWithChildren } from "react"
 import { has } from "utils/num"
 import { useCurrency } from "data/settings/Currency"
@@ -14,16 +21,19 @@ interface Props extends CardProps {
 const StakedCard = (props: PropsWithChildren<Props>) => {
   const { amount, value, children } = props
   const currency = useCurrency()
-
   return (
-    <Card {...props} onClick={has(amount) ? props.onClick : undefined}>
+    <Card
+      {...props}
+      onClick={has(amount) ? props.onClick : undefined}
+      className={styles.card}
+    >
       <Grid gap={2}>
         <span className={styles.amount}>
-          <Read amount={amount} denom="uluna" />{" "}
+          <Read amount={amount} denom="umis" />{" "}
           <span className={styles.small}>{children}</span>
         </span>
 
-        {currency !== "uluna" && (
+        {currency !== "umis" && (
           <Read
             amount={value}
             denom={currency}

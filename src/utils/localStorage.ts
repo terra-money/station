@@ -22,7 +22,7 @@ const DefaultCustomTokens = { mainnet: DefaultCustomTokensItem }
 
 export const DefaultSettings = {
   [SettingKey.Theme]: DefaultTheme,
-  [SettingKey.Currency]: "uusd",
+  [SettingKey.Currency]: "umis",
   [SettingKey.CustomNetworks]: [] as CustomNetwork[],
   [SettingKey.GasAdjustment]: DEFAULT_GAS_ADJUSTMENT,
   [SettingKey.AddressBook]: [] as AddressBook[],

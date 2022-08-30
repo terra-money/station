@@ -1,17 +1,19 @@
 {
-  "name": "terra-station",
-  "description": "A web application to interact with Terra Core.",
-  "homepage": "https://station.terra.money",
-  "author": "Terra <engineering@terra.money> (https://terra.money)",
-  "repository": "github:terra-money/station",
+  "name": "mises-portal",
+  "description": "A web application to interact with Mises.",
+  "homepage": "https://portal.mises.site",
+  "author": "Terra <talent@mises.site> (https://www.mises.site)",
+  "repository": "github:mises-id/portal",
   "license": "MIT",
   "scripts": {
     "start": "PORT=3001 react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
     "prepare": "husky install",
     "pre-commit": "lint-staged",
-    "analyze": "source-map-explorer 'build/static/js/*.js'"
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "lint": "eslint . --ext .js,.tsx,.ts --cache",
+    "lint:fix": "eslint . --ext .js,.tsx,.ts --cache --fix",
+    "test": "yarn lint"
   },
   "dependencies": {
     "@anchor-protocol/anchor.js": "^5.1.1",
@@ -27,6 +29,7 @@
     "axios": "^0.26.1",
     "bignumber.js": "^9.0.2",
     "buffer": "^6.0.3",
+    "caniuse-lite": "^1.0.30001375",
     "classnames": "^2.3.1",
     "crypto-js": "^4.1.1",
     "date-fns": "^2.28.0",
@@ -79,7 +82,8 @@
     "react-error-overlay": "6.0.9",
     "react-scripts": "4.0.3",
     "source-map-explorer": "^2.5.2",
-    "typescript": "^4.6.3"
+    "typescript": "^4.6.3",
+    "eslint-config-standard-react-ts": "^1.0.5"
   },
   "resolutions": {
     "react-error-overlay": "6.0.9"
