@@ -34,3 +34,9 @@ jobs:
           aws s3 cp --recursive \
            --region us-east-1 \
            build/ s3://portal.mises/main
+      - name: Invalidate cloudfront
+        run: |
+          aws cloudfront create-invalidation \
+           --region us-east-1 \
+           --distribution-id EX19D7FR1YIYQ \
+           --paths "/index.html"
