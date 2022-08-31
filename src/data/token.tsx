@@ -81,7 +81,7 @@ export const readNativeDenom = (
     ? `Terra/${symbol}.svg`
     : isClassic
     ? "LUNC.svg"
-    : "LUNA.png"
+    : "Luna.svg"
 
   return {
     token: denom,
