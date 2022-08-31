@@ -10,7 +10,7 @@
 
   @media (min-width: $breakpoint) and (max-width: (1400px - 0.02)) {
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(2, 1fr);
+    grid-template-rows: auto repeat(2, 1fr);
   }
 }
 

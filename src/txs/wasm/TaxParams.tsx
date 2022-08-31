@@ -2,7 +2,7 @@ import { FC } from "react"
 import { zipObj } from "ramda"
 import { Coin } from "@terra-money/terra.js"
 import createContext from "utils/createContext"
-import { combineState } from "data/query"
+import { useIsClassic } from "data/query"
 import { useBankBalance } from "data/queries/bank"
 import { useTaxCaps, useTaxRate } from "data/queries/treasury"
 import { TaxParams } from "../utils"
@@ -17,16 +17,14 @@ export const [useTaxParams, TaxParamsProvider] =
 const TaxParamsContext: FC<Props> = ({ children }) => {
   const bankBalance = useBankBalance()
   const denoms = bankBalance.toArray().map(({ denom }: Coin) => denom) ?? []
-  const { data: taxRate, ...taxRateState } = useTaxRate()
+  const { data: taxRate } = useTaxRate(!useIsClassic()) || "0"
   const taxCapsState = useTaxCaps(denoms)
-  const state = combineState(taxRateState, ...taxCapsState)
 
-  if (!state.isSuccess || !taxRate) return null
-
-  // TODO: Review before PR
   const taxCaps = zipObj(
     denoms,
-    taxCapsState.map(({ data }) => data)
+    taxCapsState.map(({ data }) => {
+      return data
+    })
   )
 
   return (

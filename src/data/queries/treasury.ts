@@ -1,5 +1,5 @@
 import { useQueries, useQuery } from "react-query"
-import { isDenom, isDenomLuna } from "@terra.kitchen/utils"
+import { isDenom, isDenomLuna, isDenomTerra } from "@terra.kitchen/utils"
 import { queryKey, RefetchOptions } from "../query"
 import { useLCDClient } from "./lcdClient"
 
@@ -16,12 +16,12 @@ export const useTaxRate = (disabled = false) => {
 }
 
 const useGetQueryTaxCap = (disabled = false) => {
-  const lcd = useLCDClient()
-
+  const lcd = useLCDClient(),
+    { config: { isClassic } } = useLCDClient();
   return (denom?: Denom) => ({
     queryKey: [queryKey.treasury.taxCap, denom],
     queryFn: async () => {
-      if (!denom || !getShouldTax(denom)) return "0"
+      if (!denom || !getShouldTax(denom) || !!isClassic) return "0"
 
       try {
         const taxCap = await lcd.treasury.taxCap(denom)
@@ -47,4 +47,4 @@ export const useTaxCaps = (denoms: Denom[], disabled = false) => {
 
 /* utils */
 export const getShouldTax = (token?: Token) =>
-  isDenom(token) && !isDenomLuna(token)
+  isDenomLuna(token) || isDenomTerra(token)

@@ -342,16 +342,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
             </Fragment>
           ))}
 
-          {has(taxAmount) && (
-            <>
-              <dt>{t("Tax")}</dt>
-              <dd>
-                <Read amount={taxAmount} token={token} />
-              </dd>
-            </>
-          )}
-
-          {!!taxes.length && (
+          {!!isClassic && (
             <>
               <dt>{t("Tax")}</dt>
               <dd>
@@ -360,6 +351,9 @@ function Tx<TxValues>(props: Props<TxValues>) {
                     <Read {...coin} />
                   </p>
                 ))}
+                {!taxes.length && (
+                  <Read amount="0" token={token} decimals={decimals} />
+                )}
               </dd>
             </>
           )}
@@ -525,17 +519,14 @@ export const calcMax = ({ balance, rate, cap, gasAmount }: Params) => {
 
     return { max, tax }
   }
-  
+
   export const calcMinimumTaxAmount = (
     amount: BigNumber.Value,
     { rate, cap }: { rate: BigNumber.Value; cap: BigNumber.Value }
   ) => {
-    const tax = BigNumber.min(
-      new BigNumber(amount).times(rate),
-      cap
-    ).integerValue(BigNumber.ROUND_FLOOR)
-  
-    return tax.gt(0) ? tax.toString() : undefined
+    return BigNumber.min(new BigNumber(amount).times(rate), cap)
+      .integerValue(BigNumber.ROUND_FLOOR)
+      .toString()
   }
 
 /* hooks */

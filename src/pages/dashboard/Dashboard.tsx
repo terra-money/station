@@ -21,7 +21,7 @@ const Dashboard = () => {
       <Col>
         <header className={cx(styles.header, { trisect: !isClassic })}>
           {isClassic && <LunaPrice />}
-          <TaxRate />
+          {isClassic && <TaxRate />}
           <Issuance />
           <CommunityPool />
           <StakingRatio />
