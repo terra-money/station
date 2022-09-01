@@ -104,7 +104,7 @@ const StakeForm = (props: Props) => {
 
   const estimationTxValues = useMemo(() => {
     return {
-      input: toInput(1),
+      input: toInput(2),
       // to check redelegation stacks
       source: tab === StakeAction.REDELEGATE ? source : undefined,
     }
