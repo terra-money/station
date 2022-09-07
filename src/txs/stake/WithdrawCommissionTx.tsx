@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next"
 import { useConnectedMoniker } from "data/queries/distribution"
 import { Page, Card } from "components/layout"
+import { Wrong } from "components/feedback"
 import TxContext from "../TxContext"
 import WithdrawCommissionForm from "./WithdrawCommissionForm"
 
@@ -10,13 +11,15 @@ const WithdrawCommissionTx = () => {
 
   return (
     <Page title={t("Withdraw commission")} small>
-      {moniker && (
-        <Card title={moniker}>
+      <Card title={moniker}>
+        {moniker ? (
           <TxContext>
             <WithdrawCommissionForm />
           </TxContext>
-        </Card>
-      )}
+        ) : (
+          <Wrong>{t("Validator account not connected")}</Wrong>
+        )}
+      </Card>
     </Page>
   )
 }
