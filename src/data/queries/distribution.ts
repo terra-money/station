@@ -1,12 +1,11 @@
 import { useQuery } from "react-query"
 import BigNumber from "bignumber.js"
-import { Coins, Rewards, ValAddress } from "@terra-money/terra.js"
+import { Coins, Rewards, ValAddress, Validator } from "@terra-money/terra.js"
 import { has } from "utils/num"
 import { sortCoins } from "utils/coin"
 import { queryKey, RefetchOptions } from "../query"
 import { useAddress } from "../wallet"
 import { useLCDClient } from "./lcdClient"
-import { useValidators } from "./staking"
 import { CalcValue } from "./oracle"
 
 export const useRewards = () => {
@@ -64,10 +63,10 @@ export const useWithdrawAddress = () => {
 }
 
 /* hooks */
-export const useConnectedMoniker = () => {
-  const address = useAddress()
-  const { data: validators } = useValidators()
-
+export const getConnectedMoniker = (
+  address?: string,
+  validators?: Validator[]
+) => {
   if (!(address && validators)) return
 
   const validatorAddress = ValAddress.fromAccAddress(address)
