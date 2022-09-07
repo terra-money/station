@@ -1,8 +1,12 @@
-import { useConnectedMoniker } from "data/queries/distribution"
+import { useAddress } from "data/wallet"
+import { useValidators } from "data/queries/staking"
+import { getConnectedMoniker } from "data/queries/distribution"
 import { LinkButton } from "components/general"
 
 const ValidatorButton = () => {
-  const moniker = useConnectedMoniker()
+  const address = useAddress()
+  const { data: validators } = useValidators()
+  const moniker = getConnectedMoniker(address, validators)
   if (!moniker) return null
 
   return (
