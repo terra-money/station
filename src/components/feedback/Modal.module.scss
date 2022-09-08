@@ -81,6 +81,9 @@
 
 .main {
   overflow: hidden; // Sub components declare their own max-height and overflow-y
+  @include mobile {
+    overflow: auto;
+  }
 }
 
 .footer {
