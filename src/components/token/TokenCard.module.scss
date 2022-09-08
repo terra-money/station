@@ -13,50 +13,23 @@
     display: grid;
     grid-template-rows: 48px auto;
   }
-
-  @include mobile {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-    //@include flex;
-    //
-    //.main,
-    //.footer {
-    //  flex: 1;
-    //}
-  }
 }
 
 .main {
   padding: var(--padding);
-  @include mobile {
-    header {
-      @include truncate;
-    }
-  }
 }
 
 .name {
   color: var(--text-muted);
   font-size: 11px;
   font-weight: var(--normal);
-  @include truncate;
 }
 
 .footer {
+  border-top: 1px solid var(--card-border);
   font-size: var(--font-size-small);
   font-weight: var(--normal);
   padding: var(--padding);
-
-  @include desktop {
-    border-top: 1px solid var(--card-border);
-  }
-
-  @include mobile {
-    @include flex-column(center, start);
-    border-left: 1px solid var(--card-border);
-    width: 100%;
-    overflow: auto;
-  }
 }
 
 .balance {
@@ -80,7 +53,5 @@
 
   @include mobile {
     grid-template-columns: repeat(1, 1fr);
-    max-height: calc(100vh - var(--header-height) - var(--card-padding));
-    overflow: auto;
   }
 }
