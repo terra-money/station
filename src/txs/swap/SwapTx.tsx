@@ -31,7 +31,7 @@ const SwapTx = () => {
 
   if (networkName === "testnet") {
     return (
-      <Page title={t("Swap")} small>
+      <Page title={is.mobile() ? "" : t("Swap")} small>
         <Card>
           <Wrong>{t("Not supported")}</Wrong>
         </Card>
@@ -41,7 +41,7 @@ const SwapTx = () => {
 
   if (!isClassic)
     return (
-      <Page title={t("Swap")} small extra={<TFMPoweredBy />}>
+      <Page title={is.mobile() ? "" : t("Swap")} extra={<TFMPoweredBy />} small>
         <TxContext>
           <TFMSwapContext>
             <TFMSwapForm />
