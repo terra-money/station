@@ -21,7 +21,7 @@ const useGetQueryTaxCap = (disabled = false) => {
   return (denom?: Denom) => ({
     queryKey: [queryKey.treasury.taxCap, denom],
     queryFn: async () => {
-      if (!denom || !getShouldTax(denom) || !!isClassic) return "0"
+      if (!denom || !getShouldTax(denom) || !isClassic) return "0"
 
       try {
         const taxCap = await lcd.treasury.taxCap(denom)
