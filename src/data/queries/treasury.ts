@@ -17,7 +17,7 @@ export const useTaxRate = (disabled = false) => {
 
 const useGetQueryTaxCap = (disabled = false) => {
   const lcd = useLCDClient(),
-    { config: { isClassic } } = useLCDClient();
+    { config: { isClassic } } = useLCDClient()
   return (denom?: Denom) => ({
     queryKey: [queryKey.treasury.taxCap, denom],
     queryFn: async () => {

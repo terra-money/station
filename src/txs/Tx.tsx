@@ -121,7 +121,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
     initialGasDenom,
     gasPrices,
     gasAdjustment,
-    tx: simulationTx,
+    msgs: simulationTx?.msgs.map((msg) => msg.toData()),
   }
 
   const { data: estimatedGas, ...estimatedGasState } = useQuery(
@@ -176,7 +176,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
   /* max */
   const getNativeMax = () => {
     if (!balance) return
-    const gasAmount = gasFee.denom === initialGasDenom ? gasFee.amount : "0"
+    const gasAmount = gasFee.denom === token ? gasFee.amount : "0"
     return calcMax({ balance, rate, cap, gasAmount }).max
   }
 
@@ -517,8 +517,8 @@ export const calcMax = ({ balance, rate, cap, gasAmount }: Params) => {
     .integerValue(BigNumber.ROUND_FLOOR)
     .toString()
 
-    return { max, tax }
-  }
+  return { max, tax }
+}
 
   export const calcMinimumTaxAmount = (
     amount: BigNumber.Value,

@@ -1,4 +1,4 @@
-import { FC } from "react"
+import { PropsWithChildren } from "react"
 import { zipObj } from "ramda"
 import { Coin } from "@terra-money/terra.js"
 import createContext from "utils/createContext"
@@ -10,11 +10,7 @@ import { TaxParams } from "../utils"
 export const [useTaxParams, TaxParamsProvider] =
   createContext<TaxParams>("useTaxParams")
 
-  interface Props {
-    children: React.ReactNode
-  }
-
-const TaxParamsContext: FC<Props> = ({ children }) => {
+const TaxParamsContext = ({ children }: PropsWithChildren<{}>) => {
   const bankBalance = useBankBalance()
   const denoms = bankBalance.toArray().map(({ denom }: Coin) => denom) ?? []
   const { data: taxRate } = useTaxRate(!useIsClassic()) || "0"
