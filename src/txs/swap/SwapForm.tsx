@@ -230,6 +230,7 @@ const SwapForm = () => {
     initialGasDenom,
     estimationTxValues,
     createTx,
+    preventTax: mode === SwapMode.ONCHAIN,
     onPost: () => {
       // add custom token on ask cw20
       if (!(askAsset && AccAddress.validate(askAsset) && askTokenItem)) return

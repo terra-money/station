@@ -11,8 +11,7 @@ import { head, isNil } from "ramda"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline"
 import { isDenom, isDenomIBC, readDenom } from "@terra.kitchen/utils"
-import { Coin, Coins, LCDClient } from "@terra-money/terra.js"
-import { CreateTxOptions, Fee } from "@terra-money/terra.js"
+import { Coin, Coins, LCDClient, CreateTxOptions, Fee } from "@terra-money/terra.js"
 import { ConnectType, UserDenied } from "@terra-money/wallet-types"
 import { CreateTxFailed, TxFailed } from "@terra-money/wallet-types"
 import { useWallet, useConnectedWallet } from "@terra-money/use-wallet"
@@ -23,10 +22,16 @@ import { getAmount, sortCoins } from "utils/coin"
 import { getErrorMessage } from "utils/error"
 import { getLocalSetting, SettingKey } from "utils/localStorage"
 import { useCurrency } from "data/settings/Currency"
-import { queryKey, RefetchOptions, useIsClassic } from "data/query"
+import {
+  queryKey,
+  combineState,
+  RefetchOptions,
+  useIsClassic,
+} from "data/query"
 import { useAddress, useNetwork } from "data/wallet"
 import { isBroadcastingState, latestTxState } from "data/queries/tx"
 import { useBankBalance, useIsWalletEmpty } from "data/queries/bank"
+import { getShouldTax, useTaxCap, useTaxRate } from "data/queries/treasury"
 
 import { Pre } from "components/general"
 import { Flex, Grid } from "components/layout"
@@ -54,6 +59,8 @@ interface Props<TxValues> {
   initialGasDenom: CoinDenom
   estimationTxValues?: TxValues
   createTx: (values: TxValues) => CreateTxOptions | undefined
+  preventTax?: boolean
+  taxes?: Coins
   excludeGasDenom?: (denom: string) => boolean
 
   /* render */
@@ -77,7 +84,7 @@ interface RenderProps<TxValues> {
 function Tx<TxValues>(props: Props<TxValues>) {
   const { token, decimals, amount, balance } = props
   const { initialGasDenom, estimationTxValues, createTx } = props
-  const { excludeGasDenom } = props
+  const { preventTax, excludeGasDenom } = props
   const { children, onChangeMax } = props
   const { onPost, redirectAfterTx, queryKeys } = props
 
@@ -98,6 +105,12 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const isBroadcasting = useRecoilValue(isBroadcastingState)
   const bankBalance = useBankBalance()
   const { gasPrices } = useTx()
+
+  /* queries: conditional */
+  const shouldTax = !preventTax && getShouldTax(token) && isClassic
+  const { data: rate = "0", ...taxRateState } = useTaxRate(!shouldTax)
+  const { data: cap = "0", ...taxCapState } = useTaxCap(token)
+  const taxState = combineState(taxRateState, taxCapState)
 
   /* simulation: estimate gas */
   const simulationTx = estimationTxValues && createTx(estimationTxValues)
@@ -164,7 +177,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const getNativeMax = () => {
     if (!balance) return
     const gasAmount = gasFee.denom === token ? gasFee.amount : "0"
-    return calcMax({ balance, gasAmount })
+    return calcMax({ balance, rate, cap, gasAmount }).max
   }
 
   const max = !gasFee.amount
@@ -178,8 +191,14 @@ function Tx<TxValues>(props: Props<TxValues>) {
     if (max && isMax && onChangeMax) onChangeMax(toInput(max, decimals))
   }, [decimals, isMax, max, onChangeMax])
 
+  /* tax */
+  const taxAmount =
+    token && amount && shouldTax
+      ? calcMinimumTaxAmount(amount, { rate, cap })
+      : undefined
+
   /* (effect): Log error on console */
-  const failed = getErrorMessage(estimatedGasState.error)
+  const failed = getErrorMessage(taxState.error ?? estimatedGasState.error)
   useEffect(() => {
     if (process.env.NODE_ENV === "development" && failed) {
       console.groupCollapsed("Fee estimation failed")
@@ -197,6 +216,10 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const disabled =
     passwordRequired && !password
       ? t("Enter password")
+      : taxState.isLoading
+      ? t("Loading tax data...")
+      : taxState.error
+      ? t("Failed to load tax data")
       : estimatedGasState.isLoading
       ? t("Estimating fee...")
       : estimatedGasState.error
@@ -223,7 +246,10 @@ function Tx<TxValues>(props: Props<TxValues>) {
       if (!tx) throw new Error("Tx is not defined")
 
       const gasCoins = new Coins([Coin.fromData(gasFee)])
-      const fee = new Fee(estimatedGas, gasCoins)
+      const taxCoin = token && taxAmount && new Coin(token, taxAmount)
+      const taxCoins = props.taxes ?? taxCoin
+      const feeCoins = taxCoins ? gasCoins.add(taxCoins) : gasCoins
+      const fee = new Fee(estimatedGas, feeCoins)
 
       if (isWallet.multisig(wallet)) {
         const unsignedTx = await auth.create({ ...tx, fee })
@@ -253,6 +279,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
     amount &&
     new BigNumber(balance)
       .minus(amount)
+      .minus(taxAmount ?? 0)
       .minus((gasFee.denom === token && gasFee.amount) || 0)
       .toString()
 
@@ -301,6 +328,10 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const renderFee = (descriptions?: Contents) => {
     if (!estimatedGas) return null
 
+    const taxes = sortCoins(props.taxes ?? new Coins(), currency).filter(
+      ({ amount }) => has(amount)
+    )
+
     return (
       <Details>
         <dl>
@@ -310,6 +341,22 @@ function Tx<TxValues>(props: Props<TxValues>) {
               <dd>{content}</dd>
             </Fragment>
           ))}
+
+          {!!isClassic && (
+            <>
+              <dt>{t("Tax")}</dt>
+              <dd>
+                {taxes.map((coin) => (
+                  <p key={coin.denom}>
+                    <Read {...coin} />
+                  </p>
+                ))}
+                {!taxes.length && (
+                  <Read amount="0" token={token} decimals={decimals} />
+                )}
+              </dd>
+            </>
+          )}
 
           <dt className={styles.gas}>
             {t("Fee")}
@@ -452,19 +499,35 @@ export const getInitialGasDenom = (bankBalance: Coins) => {
 
 interface Params {
   balance: Amount
+  rate: string
+  cap: Amount
   gasAmount: Amount
 }
 
-// Receive gas and return the maximum payment amount
-export const calcMax = ({ balance, gasAmount }: Params) => {
+// Receive tax and gas information and return the maximum payment amount
+export const calcMax = ({ balance, rate, cap, gasAmount }: Params) => {
   const available = new BigNumber(balance).minus(gasAmount)
 
-  const max = BigNumber.max(new BigNumber(available), 0)
+  const tax = calcMinimumTaxAmount(available, {
+    rate: new BigNumber(rate).div(new BigNumber(1).plus(rate)),
+    cap,
+  })
+
+  const max = BigNumber.max(new BigNumber(available).minus(tax ?? 0), 0)
     .integerValue(BigNumber.ROUND_FLOOR)
     .toString()
 
-  return max
+  return { max, tax }
 }
+
+  export const calcMinimumTaxAmount = (
+    amount: BigNumber.Value,
+    { rate, cap }: { rate: BigNumber.Value; cap: BigNumber.Value }
+  ) => {
+    return BigNumber.min(new BigNumber(amount).times(rate), cap)
+      .integerValue(BigNumber.ROUND_FLOOR)
+      .toString()
+  }
 
 /* hooks */
 export const useTxKey = () => {

@@ -13,9 +13,10 @@ import { useBankBalance } from "data/queries/bank"
 import { WithTokenItem } from "data/token"
 import { Form, FormGroup, FormItem } from "components/form"
 import { Input, Select, EditorInput } from "components/form"
-import { getCoins, getPlaceholder } from "../utils"
+import { calcTaxes, getCoins, getPlaceholder } from "../utils"
 import validate from "../validate"
 import Tx, { getInitialGasDenom } from "../Tx"
+import { useTaxParams } from "./TaxParams"
 import { useIBCHelper } from "../IBCHelperContext"
 
 interface TxValues {
@@ -33,6 +34,7 @@ const ExecuteContractForm = () => {
   const bankBalance = useBankBalance()
 
   /* tx context */
+  const taxParams = useTaxParams()
   const initialGasDenom = getInitialGasDenom(bankBalance)
   const defaultItem = { denom: initialGasDenom }
   const { findDecimals } = useIBCHelper()
@@ -46,6 +48,7 @@ const ExecuteContractForm = () => {
   const { register, control, watch, handleSubmit, formState } = form
   const { errors } = formState
   const values = watch()
+  const { coins } = values
   const { fields, append, remove } = useFieldArray({ control, name: "coins" })
 
   /* tx */
@@ -66,9 +69,11 @@ const ExecuteContractForm = () => {
 
   /* fee */
   const estimationTxValues = useMemo(() => values, [values])
+  const taxes = calcTaxes(coins, taxParams)
   const tx = {
     initialGasDenom,
     estimationTxValues,
+    taxes,
     createTx,
     onSuccess: { label: t("Contract"), path: "/contract" },
     queryKeys: [
