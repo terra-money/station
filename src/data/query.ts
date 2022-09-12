@@ -73,6 +73,7 @@ export const queryKey = mirror({
     unbondings: "",
     pool: "",
   },
+  treasury: { taxRate: "", taxCap: "" },
   tx: { txInfo: "", create: "" },
   wasm: { contractInfo: "", contractQuery: "" },
 
