@@ -23,12 +23,8 @@ import { getAmount, sortCoins } from "utils/coin"
 import { getErrorMessage } from "utils/error"
 import { getLocalSetting, SettingKey } from "utils/localStorage"
 import { useCurrency } from "data/settings/Currency"
-import {
-  queryKey,
-  combineState,
-  RefetchOptions,
-  useIsClassic,
-} from "data/query"
+import { RefetchOptions } from "data/query"
+import { queryKey, combineState, useIsClassic } from "data/query"
 import { useAddress, useNetwork } from "data/wallet"
 import { isBroadcastingState, latestTxState, useTxInfo } from "data/queries/tx"
 import { useBankBalance, useIsWalletEmpty } from "data/queries/bank"
@@ -102,8 +98,6 @@ enum Status {
   FAILURE = "FAILURE",
 }
 
-export default Tx
-
 function Tx<TxValues>(props: Props<TxValues>) {
   const { token, decimals, amount, balance, confirmData } = props
   const { initialGasDenom, estimationTxValues, createTx } = props
@@ -155,7 +149,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
     initialGasDenom,
     gasPrices,
     gasAdjustment,
-    msgs: simulationTx?.msgs.map((msg) => msg.toData()),
+    msgs: simulationTx?.msgs.map((msg) => msg.toData(isClassic)),
   }
 
   const { data: estimatedGas, ...estimatedGasState } = useQuery(
@@ -740,6 +734,8 @@ function Tx<TxValues>(props: Props<TxValues>) {
     </>
   )
 }
+
+export default Tx
 
 /* utils */
 export const getInitialGasDenom = (bankBalance: Coins) => {
