@@ -243,8 +243,9 @@ function Tx<TxValues>(props: Props<TxValues>) {
       if (!tx) throw new Error("Tx is not defined")
 
       const gasCoins = new Coins([Coin.fromData(gasFee)])
-      const taxCoin = token && taxAmount && new Coin(token, taxAmount)
-      const taxCoins = props.taxes ?? taxCoin
+      const taxCoin =
+        token && taxAmount && has(taxAmount) && new Coin(token, taxAmount)
+      const taxCoins = sanitizeTaxes(props.taxes) ?? taxCoin
       const feeCoins = taxCoins ? gasCoins.add(taxCoins) : gasCoins
       const fee = new Fee(estimatedGas, feeCoins)
 
@@ -524,6 +525,12 @@ export const calcMinimumTaxAmount = (
   return BigNumber.min(new BigNumber(amount).times(rate), cap)
     .integerValue(BigNumber.ROUND_FLOOR)
     .toString()
+}
+
+const sanitizeTaxes = (taxes?: Coins) => {
+  return taxes?.toArray().filter((tax) => has(tax.amount.toString())).length
+    ? taxes
+    : undefined
 }
 
 /* hooks */
