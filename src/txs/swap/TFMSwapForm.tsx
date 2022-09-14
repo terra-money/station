@@ -224,10 +224,11 @@ const TFMSwapForm = () => {
     if (!(simulatedValue && simulationResults)) return null
     if (!validateTFMSlippageParams(slippageParams)) return null
 
-    const [{ return_amount, input_amount }] = simulationResults
+    const [{ return_amount, input_amount, price_impact }] = simulationResults
     const expected = {
       minimum_receive: calcMinimumReceive(simulatedValue, slippage),
       price: new BigNumber(input_amount).div(return_amount).toNumber(),
+      price_impact,
     }
 
     const props = { ...slippageParams, ...expected }
