@@ -14,7 +14,6 @@ import SelectLanguage from "app/sections/SelectLanguage"
 import { isWallet } from "auth"
 import styles from "app/sections/MobileItem.module.scss"
 import { getVersion } from "utils/rnModule"
-import SelectCurrency from "../../../app/sections/SelectCurrency"
 
 export const useManageWallet = () => {
   const { t } = useTranslation()
@@ -38,11 +37,6 @@ export const useSettings = () => {
     icon: <SelectNetwork />,
   }
 
-  const Currency = {
-    children: t("Currency"),
-    icon: <SelectCurrency />,
-  }
-
   const Language = {
     children: t("Language"),
     icon: <SelectLanguage />,
@@ -59,8 +53,8 @@ export const useSettings = () => {
   }
 
   return isWallet.mobileNative()
-    ? [Network, Currency, Language, Theme, Version]
-    : [Currency, Language, Theme]
+    ? [Network, Language, Theme, Version]
+    : [Language, Theme]
 }
 
 const AppVersion = () => {
