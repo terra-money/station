@@ -8,7 +8,6 @@ import PopoverNone from "../components/PopoverNone"
 import HeaderIconButton from "../components/HeaderIconButton"
 import NetworkSetting from "./NetworkSetting"
 import LanguageSetting from "./LanguageSetting"
-import CurrencySetting from "./CurrencySetting"
 
 const Preferences = () => {
   const { t } = useTranslation()
@@ -28,14 +27,7 @@ const Preferences = () => {
     condition: undefined,
   }
 
-  const currency = {
-    key: "currency",
-    tab: t("Currency"),
-    children: <CurrencySetting />,
-    condition: ["classic"],
-  }
-
-  const tabs = [network, lang, currency].filter(({ condition }) => {
+  const tabs = [network, lang].filter(({ condition }) => {
     if (!condition) return true
     if (condition.includes("sandbox")) return sandbox
     if (condition.includes("classic")) return isClassic
