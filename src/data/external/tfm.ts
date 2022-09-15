@@ -12,11 +12,12 @@ interface TFMTokenItem {
   id: number
   name: string
   symbol: string
+  is_token_liquid: boolean
 }
 
 export const queryTFMTokens = async () => {
   const { data } = await axios.get<TFMTokenItem[]>("/tokens", { baseURL })
-  return data
+  return data.filter(({ is_token_liquid }) => is_token_liquid)
 }
 
 interface TFMRouteParams {
