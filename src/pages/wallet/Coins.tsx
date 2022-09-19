@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next"
-import BigNumber from "bignumber.js"
 import BoltIcon from "@mui/icons-material/Bolt"
 import { has } from "utils/num"
 import { getAmount, sortByDenom } from "utils/coin"
@@ -14,7 +13,6 @@ import { useMemoizedCalcValue } from "data/queries/oracle"
 import { InternalLink } from "components/general"
 import { Card, Flex, Grid } from "components/layout"
 import { FormError } from "components/form"
-import { Read } from "components/token"
 import Asset from "./Asset"
 import SelectMinimumValue from "./SelectMinimumValue"
 import styles from "./Coins.module.scss"
@@ -22,7 +20,6 @@ import styles from "./Coins.module.scss"
 const Coins = () => {
   const { t } = useTranslation()
   const isClassic = useIsClassic()
-  const currency = useCurrency()
   const length = useTerraNativeLength()
   const isWalletEmpty = useIsWalletEmpty()
   const { data: denoms, ...state } = useActiveDenoms()
@@ -34,21 +31,8 @@ const Coins = () => {
     const [all, filtered] = coins
     const list = isClassic ? filtered : all
 
-    const values = all.map(({ value }) => value).filter(Boolean)
-    const valueTotal = values.length ? BigNumber.sum(...values).toNumber() : 0
-
     return (
       <>
-        {isClassic && (
-          <Read
-            className={styles.total}
-            amount={valueTotal}
-            token={currency}
-            auto
-            approx
-          />
-        )}
-
         <Grid gap={12}>
           {isWalletEmpty && (
             <FormError>{t("Coins required to post transactions")}</FormError>

@@ -1,6 +1,4 @@
 import { useTranslation } from "react-i18next"
-import { has } from "utils/num"
-import { useCurrency } from "data/settings/Currency"
 import { WithFetching } from "components/feedback"
 import { Read, TokenIcon } from "components/token"
 import AssetActions from "./AssetActions"
@@ -15,7 +13,6 @@ export interface Props extends TokenItem, QueryState {
 const Asset = (props: Props) => {
   const { token, icon, symbol, balance, value, hideActions, ...state } = props
   const { t } = useTranslation()
-  const currency = useCurrency()
 
   return (
     <article className={styles.asset} key={token}>
@@ -40,12 +37,6 @@ const Asset = (props: Props) => {
               )}
             </WithFetching>
           </h2>
-
-          {token !== currency && has(balance) && has(value) && (
-            <p className={styles.value}>
-              <Read amount={value} token={currency} auto approx />
-            </p>
-          )}
         </div>
       </section>
 

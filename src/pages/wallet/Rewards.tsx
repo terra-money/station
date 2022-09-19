@@ -32,18 +32,22 @@ const Rewards = () => {
     const delegationTotal = calcDelegationsTotal(delegations)
     const unbondingsTotal = calcUnbondingsTotal(unbondings)
 
+    const { total } = rewardsValues
+    const { list } = total
+    const amount = list.find(({ denom }) => denom === "uluna")?.amount ?? "0"
+
     return !delegations.length ? (
       <DelegationsPromote />
     ) : (
       <Card {...state} title={t("Staking rewards")}>
         <Grid gap={28}>
-          <Read
-            className={styles.total}
-            amount={rewardsValues?.total.sum}
-            token={currency}
-            auto
-            approx
-          />
+          <div>
+            <Read className={styles.total} amount={amount} denom="uluna" />{" "}
+            <span className={styles.small}>
+              {list.length > 1 &&
+                `+${t("{{length}} coins", { length: list.length - 1 })}`}
+            </span>
+          </div>
 
           {has(delegationTotal) && (
             <Grid gap={4}>

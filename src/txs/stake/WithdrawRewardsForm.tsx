@@ -19,7 +19,7 @@ import { WithTokenItem } from "data/token"
 import { ValidatorLink } from "components/general"
 import { Form, FormArrow, FormItem, Checkbox } from "components/form"
 import { Card, Flex, Grid } from "components/layout"
-import { Read, TokenCard, TokenCardGrid } from "components/token"
+import { TokenCard, TokenCardGrid } from "components/token"
 import Tx, { getInitialGasDenom } from "../Tx"
 import styles from "./WithdrawRewardsForm.module.scss"
 
@@ -175,7 +175,6 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
                       >
                         <div className={styles.item}>
                           <ValidatorLink address={address} />
-                          <Read amount={sum} token={currency} approx />
                         </div>
                       </Checkbox>
                     )
