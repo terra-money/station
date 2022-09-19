@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next"
 import { useLocation, useNavigate } from "react-router-dom"
 import { has } from "utils/num"
-import { useCurrency } from "data/settings/Currency"
 import { WithFetching } from "components/feedback"
 import { Read, TokenIcon } from "components/token"
 import AssetActions from "./AssetActions"
@@ -18,7 +17,6 @@ const Asset = (props: Props) => {
   const { token, icon, symbol, balance, value, hideActions, ...restProps } =
     props
   const { t } = useTranslation()
-  const currency = useCurrency()
   const navigate = useNavigate()
   const { state } = useLocation()
 
@@ -56,12 +54,6 @@ const Asset = (props: Props) => {
                 )}
               </WithFetching>
             </h2>
-
-            {token !== currency && has(balance) && has(value) && (
-              <p className={styles.value}>
-                <Read amount={value} token={currency} auto approx />
-              </p>
-            )}
           </div>
         </div>
       </section>

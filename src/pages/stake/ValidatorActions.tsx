@@ -35,21 +35,9 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
         ? delegation.balance.amount.toString()
         : "0"
 
-    const value = calcValue({ amount, denom: "uluna" })
-
     return (
       <section>
         <Read amount={amount} denom="uluna" className={styles.total} block />
-        {currency !== "uluna" && (
-          <Read
-            amount={value}
-            denom={currency}
-            className="muted"
-            auto
-            approx
-            block
-          />
-        )}
       </section>
     )
   }
@@ -85,7 +73,7 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
   }, [calcValue, currency, destination, rewards])
 
   const renderRewardsValue = () => {
-    const { sum, list } = rewardsValues
+    const { list } = rewardsValues
     const amount = list.find(({ denom }) => denom === "uluna")?.amount ?? "0"
 
     return (
@@ -95,14 +83,6 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
           {list.length > 1 &&
             `+${t("{{length}} coins", { length: list.length - 1 })}`}
         </span>
-        <Read
-          amount={sum}
-          denom={currency}
-          className="muted"
-          integer
-          approx
-          block
-        />
       </section>
     )
   }

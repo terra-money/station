@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next"
-import BigNumber from "bignumber.js"
 import BoltIcon from "@mui/icons-material/Bolt"
 import { useLocation } from "react-router-dom"
 import { has } from "utils/num"
@@ -15,18 +14,16 @@ import { useMemoizedCalcValue } from "data/queries/oracle"
 import { InternalButton, InternalLink } from "components/general"
 import { Card, Flex, Grid } from "components/layout"
 import { FormError } from "components/form"
-import { Read } from "components/token"
 import { isWallet } from "auth"
 import Asset from "./Asset"
-import SelectMinimumValue from "./SelectMinimumValue"
-import styles from "./Coins.module.scss"
-import { ModalButton, Mode } from "../../components/feedback"
 import Buy from "./Buy"
+import SelectMinimumValue from "./SelectMinimumValue"
+import { ModalButton, Mode } from "../../components/feedback"
+import styles from "./Coins.module.scss"
 
 const Coins = () => {
   const { t } = useTranslation()
   const isClassic = useIsClassic()
-  const currency = useCurrency()
   const length = useTerraNativeLength()
   const isWalletEmpty = useIsWalletEmpty()
   const { data: denoms, ...state } = useActiveDenoms()
@@ -39,28 +36,17 @@ const Coins = () => {
     const [all, filtered] = coins
     const list = isClassic ? filtered : all
 
-    const values = all.map(({ value }) => value).filter(Boolean)
-    const valueTotal = values.length ? BigNumber.sum(...values).toNumber() : 0
-
     return (
       <>
-        {isClassic && pathname === "/wallet" && (
-          <Read
-            className={styles.total}
-            amount={valueTotal}
-            token={currency}
-            auto
-            approx
-          />
-        )}
-
         <Grid gap={12}>
           {isWalletEmpty && (
             <FormError>{t("Coins required to post transactions")}</FormError>
           )}
 
           {isClassic && (
-            <Flex end>{!isWalletEmpty && <SelectMinimumValue />}</Flex>
+            <Flex className={styles.select}>
+              {!isWalletEmpty && <SelectMinimumValue />}
+            </Flex>
           )}
 
           <section>
