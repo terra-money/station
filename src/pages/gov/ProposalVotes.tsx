@@ -41,7 +41,8 @@ const ProposalVotes = ({ id, card }: { id: number; card?: boolean }) => {
   const render = () => {
     if (!(proposal && tally && tallyParams && pool)) return null
 
-    const { total, list, flag } = calcTallies(tally, tallyParams, pool)
+    const tallies = calcTallies(tally, tallyParams, pool)
+    const { total, list, flag, isPassing } = tallies
     const { voting_end_time } = proposal
 
     const flagLabel = { quorum: t("Quorum"), threshold: t("Pass threshold") }
@@ -55,10 +56,17 @@ const ProposalVotes = ({ id, card }: { id: number; card?: boolean }) => {
             <Col span={1}>
               <article className={styles.total}>
                 <h1 className={styles.title}>{t("Total voted")}</h1>
-                <p>
+                <section>
                   <Read amount={total.voted} integer /> (
                   {readPercent(total.ratio)})
-                </p>
+                  <p>
+                    {isPassing ? (
+                      <strong className="info">{t("Passing...")}</strong>
+                    ) : (
+                      <strong className="danger">{t("Not passing...")}</strong>
+                    )}
+                  </p>
+                </section>
               </article>
             </Col>
 
@@ -169,9 +177,13 @@ const calcTallies = (
     .times(ratio)
     .toNumber()
 
-  const flag = quorum.gt(ratio)
+  const isBelowQuorum = quorum.gt(ratio)
+  const flag = isBelowQuorum
     ? { x: quorum.toNumber(), type: "quorum" as const }
     : { x: thresholdX, type: "threshold" as const }
 
-  return { list, total: { ...total, ratio }, flag }
+  const consentRatio = list.slice(0, 2).map(({ ratio }) => ratio.byVoted)
+  const isPassing = !isBelowQuorum && BigNumber.sum(...consentRatio).gte(0.5)
+
+  return { list, total: { ...total, ratio }, flag, isPassing }
 }
