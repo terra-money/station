@@ -44,9 +44,7 @@ const Coins = () => {
           )}
 
           {isClassic && (
-            <Flex className={styles.select}>
-              {!isWalletEmpty && <SelectMinimumValue />}
-            </Flex>
+            <Flex end>{!isWalletEmpty && <SelectMinimumValue />}</Flex>
           )}
 
           <section>
