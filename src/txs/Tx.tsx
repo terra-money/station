@@ -41,8 +41,9 @@ import useToPostMultisigTx from "pages/multisig/utils/useToPostMultisigTx"
 import { isWallet, useAuth } from "auth"
 import { PasswordError } from "auth/scripts/keystore"
 
-import { toInput } from "./utils"
+import { toInput, calcTaxes, CoinInput } from "./utils"
 import { useTx } from "./TxContext"
+import { useTaxParams } from "./wasm/TaxParams"
 import styles from "./Tx.module.scss"
 
 interface Props<TxValues> {
@@ -50,6 +51,7 @@ interface Props<TxValues> {
   token?: Token
   decimals?: number
   amount?: Amount
+  coins?: CoinInput[]
   balance?: Amount
 
   /* tx simulation */
@@ -57,7 +59,6 @@ interface Props<TxValues> {
   estimationTxValues?: TxValues
   createTx: (values: TxValues) => CreateTxOptions | undefined
   preventTax?: boolean
-  taxes?: Coins
   excludeGasDenom?: (denom: string) => boolean
 
   /* render */
@@ -79,7 +80,7 @@ interface RenderProps<TxValues> {
 }
 
 function Tx<TxValues>(props: Props<TxValues>) {
-  const { token, decimals, amount, balance } = props
+  const { token, decimals, amount, coins, balance } = props
   const { initialGasDenom, estimationTxValues, createTx } = props
   const { preventTax, excludeGasDenom } = props
   const { children, onChangeMax } = props
@@ -103,8 +104,16 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const bankBalance = useBankBalance()
   const { gasPrices } = useTx()
 
-  /* queries: conditional */
-  const shouldTax = !preventTax && getShouldTax(token) && isClassic
+  /* taxes */
+  const preventTaxProp = (preventTax === undefined || !isClassic || preventTax)
+  const taxParams = useTaxParams()
+  const taxes = !preventTaxProp
+    ? calcTaxes(
+        coins ?? ([{ input: 0, denom: initialGasDenom }] as CoinInput[]),
+        taxParams
+      )
+    : undefined
+  const shouldTax = !preventTaxProp && getShouldTax(token)
   const { data: rate = "0", ...taxRateState } = useTaxRate(!shouldTax)
   const { data: cap = "0", ...taxCapState } = useTaxCap(token)
   const taxState = combineState(taxRateState, taxCapState)
@@ -174,7 +183,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const getNativeMax = () => {
     if (!balance) return
     const gasAmount = gasFee.denom === token ? gasFee.amount : "0"
-    return calcMax({ balance, rate, cap, gasAmount }).max
+    return calcMax({ balance, rate: shouldTax ? rate : "0", cap, gasAmount }).max
   }
 
   const max = !gasFee.amount
@@ -245,7 +254,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
       const gasCoins = new Coins([Coin.fromData(gasFee)])
       const taxCoin =
         token && taxAmount && has(taxAmount) && new Coin(token, taxAmount)
-      const taxCoins = sanitizeTaxes(props.taxes) ?? taxCoin
+      const taxCoins = sanitizeTaxes(taxes) ?? taxCoin
       const feeCoins = taxCoins ? gasCoins.add(taxCoins) : gasCoins
       const fee = new Fee(estimatedGas, feeCoins)
 
@@ -326,7 +335,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const renderFee = (descriptions?: Contents) => {
     if (!estimatedGas) return null
 
-    const taxes = sortCoins(props.taxes ?? new Coins(), currency).filter(
+    const renderTaxes = sortCoins(taxes ?? new Coins(), currency).filter(
       ({ amount }) => has(amount)
     )
 
@@ -344,12 +353,12 @@ function Tx<TxValues>(props: Props<TxValues>) {
             <>
               <dt>{t("Tax")}</dt>
               <dd>
-                {taxes.map((coin) => (
+                {renderTaxes.map((coin) => (
                   <p key={coin.denom}>
                     <Read {...coin} />
                   </p>
                 ))}
-                {!taxes.length && (
+                {!renderTaxes.length && (
                   <Read amount="0" token={token} decimals={decimals} />
                 )}
               </dd>

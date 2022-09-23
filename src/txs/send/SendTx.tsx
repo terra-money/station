@@ -8,7 +8,6 @@ import { useTokenItem } from "data/token"
 import { Page } from "components/layout"
 import TxContext from "../TxContext"
 import SendForm from "./SendForm"
-import TaxParamsContext from "../wasm/TaxParams"
 
 const SendTx = () => {
   const { t } = useTranslation()
@@ -30,9 +29,7 @@ const SendTx = () => {
   return (
     <Page {...state} title={t("Send {{symbol}}", { symbol })}>
       <TxContext>
-        <TaxParamsContext>
-          {tokenItem && balance && <SendForm {...tokenItem} balance={balance} />}
-        </TaxParamsContext>
+        {tokenItem && balance && <SendForm {...tokenItem} balance={balance} />}
       </TxContext>
     </Page>
   )

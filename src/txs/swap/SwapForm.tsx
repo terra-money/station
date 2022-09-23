@@ -22,7 +22,7 @@ import { Checkbox, RadioButton } from "components/form"
 import { Read } from "components/token"
 
 /* tx modules */
-import { getPlaceholder, toInput } from "../utils"
+import { getPlaceholder, toInput, CoinInput } from "../utils"
 import validate from "../validate"
 import Tx, { getInitialGasDenom } from "../Tx"
 
@@ -221,11 +221,13 @@ const SwapForm = () => {
   )
 
   const token = offerAsset
+  const coins = [{ input, denom: token }] as CoinInput[]
   const decimals = offerDecimals
   const tx = {
     token,
     decimals,
     amount,
+    coins,
     balance,
     initialGasDenom,
     estimationTxValues,

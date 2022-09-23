@@ -15,6 +15,7 @@ export const toInput = (amount: BigNumber.Value, decimals = 6) =>
 export interface CoinInput {
   input?: number
   denom: CoinDenom
+  preventTax?: boolean
 }
 
 export const getCoins = (coins: CoinInput[], findDecimals?: FindDecimals) => {
@@ -40,14 +41,14 @@ export const calcTaxes = (
 ) => {
   return new Coins(
     coins
-      .filter(({ input, denom }) => {
+      .filter(({ input, denom, preventTax }) => {
         const amount = toAmount(input)
-        return has(amount) && getShouldTax(denom)
+        return has(amount) && !preventTax && getShouldTax(denom)
       })
-      .map(({ input, denom }) => {
+      .map(({ input, denom, preventTax }) => {
         const amount = toAmount(input)
         const tax = calcMinimumTaxAmount(amount, {
-          rate: taxRate || "0",
+          rate: preventTax ? "0" : taxRate || "0",
           cap: taxCaps[denom],
         })
 
