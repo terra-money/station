@@ -13,7 +13,8 @@ import { useTFMTokens } from "data/external/tfm"
 import { InternalButton, InternalLink } from "components/general"
 import { ExtraActions } from "components/layout"
 import { ModalButton } from "components/feedback"
-import Buy from "./Buy"
+import { ListGroup } from "components/display"
+import { useBuyList } from "./Buy"
 import { Props } from "./Asset"
 
 const AssetActions = ({ token, symbol, balance }: Props) => {
@@ -22,10 +23,11 @@ const AssetActions = ({ token, symbol, balance }: Props) => {
   const isClassic = useIsClassic()
   const networkName = useNetworkName()
   const getIsSwappableToken = useGetIsSwappableToken()
+  const buyList = useBuyList(symbol)
 
   return (
     <ExtraActions>
-      {!isClassic && token === "uluna" && (
+      {!isClassic && buyList && (
         <ModalButton
           title={t("Buy {{symbol}}", { symbol })}
           renderButton={(open) => (
@@ -38,7 +40,7 @@ const AssetActions = ({ token, symbol, balance }: Props) => {
           )}
           maxHeight={false}
         >
-          <Buy token={token} />
+          <ListGroup groups={buyList} />
         </ModalButton>
       )}
 

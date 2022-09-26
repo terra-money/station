@@ -62,7 +62,7 @@ const List = ({ list }: { list: ListProps }) => {
 
 export default List
 
-interface Group {
+export interface Group {
   title: string
   list: ListProps
 }
