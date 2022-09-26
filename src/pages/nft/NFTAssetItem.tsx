@@ -41,7 +41,7 @@ const NFTAssetItem = ({ contract, id, compact }: Props) => {
     const { extension } = data
     const name = extension?.name ?? truncate(id)
     const image = extension?.image
-    const src = getIpfsGateway(image)
+    const src = getIpfsGateway(image) || extension?.image_data
 
     return (
       <article className={className}>
