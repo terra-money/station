@@ -155,7 +155,7 @@ const SwapMultipleForm = () => {
     return {
       input: toInput(amount),
       denom: offerAsset,
-      preventTax: (isClassic && !tax) ?? true,
+      taxRequired: isClassic && !!parseFloat(tax),
     } as CoinInput
   })
   const excludeGasDenom = useCallback(
@@ -168,9 +168,9 @@ const SwapMultipleForm = () => {
     estimationTxValues,
     createTx,
     coins,
+    taxRequired: true,
     excludeGasDenom,
     onSuccess: { label: t("Wallet"), path: "/wallet" },
-    preventTax: false,
   }
 
   const disabled = isSimulating ? t("Simulating...") : false

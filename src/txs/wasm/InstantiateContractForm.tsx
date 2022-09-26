@@ -85,7 +85,7 @@ const InstantiateContractForm = () => {
     coins,
     createTx,
     onSuccess: { label: t("Contract"), path: "/contract" },
-    preventTax: false,
+    taxRequired: true,
   }
 
   const length = fields.length

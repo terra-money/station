@@ -73,7 +73,7 @@ const ExecuteContractForm = () => {
     coins,
     createTx,
     onSuccess: { label: t("Contract"), path: "/contract" },
-    preventTax: false,
+    taxRequired: true,
     queryKeys: [
       [queryKey.wasm.contractQuery, contract, { tokens: { owner: address } }],
     ],

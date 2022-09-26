@@ -2,7 +2,7 @@ import BigNumber from "bignumber.js"
 import { readAmount, toAmount } from "@terra.kitchen/utils"
 import { Coin, Coins } from "@terra-money/terra.js"
 import { has } from "utils/num"
-import { getShouldTax } from "data/queries/treasury"
+import { useShouldTax } from "data/queries/treasury"
 import { calcMinimumTaxAmount } from "./Tx"
 import { FindDecimals } from "./IBCHelperContext"
 
@@ -15,7 +15,7 @@ export const toInput = (amount: BigNumber.Value, decimals = 6) =>
 export interface CoinInput {
   input?: number
   denom: CoinDenom
-  preventTax?: boolean
+  taxRequired?: boolean
 }
 
 export const getCoins = (coins: CoinInput[], findDecimals?: FindDecimals) => {
@@ -37,18 +37,19 @@ export interface TaxParams {
 
 export const calcTaxes = (
   coins: CoinInput[],
-  { taxRate, taxCaps }: TaxParams
+  { taxRate, taxCaps }: TaxParams,
+  isClassic: boolean
 ) => {
   return new Coins(
     coins
-      .filter(({ input, denom, preventTax }) => {
+      .filter(({ input, denom, taxRequired }) => {
         const amount = toAmount(input)
-        return has(amount) && !preventTax && getShouldTax(denom)
+        return useShouldTax(denom, isClassic) && has(amount) && taxRequired
       })
-      .map(({ input, denom, preventTax }) => {
+      .map(({ input, denom, taxRequired }) => {
         const amount = toAmount(input)
         const tax = calcMinimumTaxAmount(amount, {
-          rate: preventTax ? "0" : taxRate || "0",
+          rate: (taxRequired && taxRate) || "0",
           cap: taxCaps[denom],
         })
 
