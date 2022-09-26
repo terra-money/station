@@ -1,109 +1,62 @@
 import { useTranslation } from "react-i18next"
 import qs from "qs"
-import { readDenom } from "@terra.kitchen/utils"
 import { ReactComponent as Binance } from "styles/images/exchanges/Binance.svg"
 import { ReactComponent as KuCoin } from "styles/images/exchanges/KuCoin.svg"
 import { ReactComponent as Huobi } from "styles/images/exchanges/Huobi.svg"
-import { ReactComponent as Bitfinex } from "styles/images/exchanges/Bitfinex.svg"
-import { ReactComponent as Kraken } from "styles/images/exchanges/Kraken.svg"
-import Transak from "styles/images/exchanges/Transak.png"
 import Kado from "styles/images/exchanges/Kado.svg"
-import { ListGroup } from "components/display"
+import { useAddress } from "data/wallet"
 
-export const exchanges = {
-  uluna: [
-    {
-      children: "Binance",
-      href: "https://www.binance.com/en/trade/LUNA_USDT",
-      icon: <Binance width={24} height={24} />,
-    },
-    {
-      children: "Huobi",
-      href: "https://www.huobi.com/en-us/exchange/luna_usdt/",
-      icon: <Huobi width={24} height={24} />,
-    },
-    {
-      children: "KuCoin",
-      href: "https://trade.kucoin.com/LUNA-USDT",
-      icon: <KuCoin width={24} height={24} />,
-    },
-  ],
-  uusd: [
-    {
-      children: "Binance",
-      href: "https://www.binance.com/en/trade/UST_USDT",
-      icon: <Binance width={24} height={24} />,
-    },
-    {
-      children: "Huobi",
-      href: "https://www.huobi.com/en-us/exchange/ust_usdt/",
-      icon: <Huobi width={24} height={24} />,
-    },
-    {
-      children: "KuCoin",
-      href: "https://trade.kucoin.com/USDT-UST",
-      icon: <KuCoin width={24} height={24} />,
-    },
-    {
-      children: "Bitfinex",
-      href: "https://trading.bitfinex.com/t/TERRAUST:USD",
-      icon: <Bitfinex width={24} height={24} />,
-    },
-    {
-      children: "Kraken",
-      href: "https://trade.kraken.com/charts/KRAKEN:UST-USD",
-      icon: <Kraken width={24} height={24} />,
-    },
-  ],
-}
+const exchanges = [
+  {
+    children: "Binance",
+    href: "https://www.binance.com/en/trade/LUNA_USDT",
+    icon: <Binance width={24} height={24} />,
+  },
+  {
+    children: "Huobi",
+    href: "https://www.huobi.com/en-us/exchange/luna_usdt/",
+    icon: <Huobi width={24} height={24} />,
+  },
+  {
+    children: "KuCoin",
+    href: "https://trade.kucoin.com/LUNA-USDT",
+    icon: <KuCoin width={24} height={24} />,
+  },
+]
 
-const TRANSAK_URL = "https://global.transak.com"
-const TRANSAK_API_KEY = "f619d86d-48e0-4f2f-99a1-f827b719ac0b"
-const KADO_URL = "https://ramp.kado.money"
-
-const getTransakLink = (denom: "uluna" | "uusd") => {
+const KADO_API_KEY = "c22391a1-594f-4354-a742-187adb1b91bf"
+const getKadoLink = (address?: string) => {
+  const KADO_URL = "https://app.kado.money"
   const queryString = qs.stringify(
     {
-      apiKey: TRANSAK_API_KEY,
-      cryptoCurrencyList: "UST,LUNA",
-      defaultCryptoCurrency: readDenom(denom).toUpperCase(),
-      networks: "terra",
+      apiKey: KADO_API_KEY,
+      onPayCurrency: "USD",
+      onPayAmount: 200,
+      onRevCurrency: "USDC",
+      network: "TERRA",
+      onToAddress: address,
+      product: "BUY",
+      offPayCurrency: "USDC",
+      offRevCurrency: "USD",
     },
-    { skipNulls: true, encode: false }
+    { skipNulls: true }
   )
 
-  return `${TRANSAK_URL}/?${queryString}`
-}
-
-const Buy = ({ token }: { token: "uluna" | "uusd" }) => {
-  const { t } = useTranslation()
-  const TRANSAK = {
-    children: "Transak",
-    href: getTransakLink(token),
-    icon: <img src={Transak} alt="" width={24} height={24} />,
-    disabled: true,
-  }
-
-  const KADO = {
-    children: "Kado Ramp",
-    href: KADO_URL,
+  return {
+    children: "Kado",
+    href: `${KADO_URL}/?${queryString}`,
     icon: <img src={Kado} alt="Kado Ramp" width={24} height={24} />,
   }
-
-  return (
-    <ListGroup
-      groups={[
-        {
-          title: t("Exchanges"),
-          list: exchanges[token],
-        },
-        {
-          title: t("Fiat"),
-          list: token === "uusd" ? [TRANSAK, KADO] : [TRANSAK],
-        },
-      ]}
-    />
-  )
 }
 
-export default Buy
+export const useBuyList = (symbol: string) => {
+  const { t } = useTranslation()
+  const address = useAddress()
+
+  if (symbol === "Luna") return [{ title: t("Exchanges"), list: exchanges }]
+
+  if (symbol === "axlUSDC")
+    return [{ title: t("Fiat"), list: [getKadoLink(address)] }]
+
+  return
+}
