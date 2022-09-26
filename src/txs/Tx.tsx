@@ -120,7 +120,8 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   /* simulation: estimate gas */
   const simulationTx = estimationTxValues && createTx(estimationTxValues)
-  const gasAdjustment = getLocalSetting<number>(SettingKey.GasAdjustment)
+  const gasAdjustmentSetting = isClassic ? SettingKey.ClassicGasAdjustment : SettingKey.GasAdjustment
+  const gasAdjustment = getLocalSetting<number>(gasAdjustmentSetting)
   const key = {
     address,
     network,
