@@ -31,13 +31,13 @@ export const getCoins = (coins: CoinInput[], findDecimals?: FindDecimals) => {
 }
 
 export interface TaxParams {
-  taxRate: string | any
-  taxCaps?: Record<Denom, Amount> | any
+  taxRate?: string
+  taxCaps?: Record<Denom, Amount>
 }
 
 export const calcTaxes = (
   coins: CoinInput[],
-  { taxRate, taxCaps }: TaxParams,
+  { taxRate = "0", taxCaps = {} }: TaxParams,
   isClassic: boolean
 ) => {
   return new Coins(
