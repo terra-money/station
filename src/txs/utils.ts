@@ -15,6 +15,7 @@ export const toInput = (amount: BigNumber.Value, decimals = 6) =>
 export interface CoinInput {
   input?: number
   denom: CoinDenom
+  taxRequired?: boolean
 }
 
 export const getCoins = (coins: CoinInput[], findDecimals?: FindDecimals) => {
@@ -30,24 +31,25 @@ export const getCoins = (coins: CoinInput[], findDecimals?: FindDecimals) => {
 }
 
 export interface TaxParams {
-  taxRate: string | undefined
-  taxCaps?: Record<Denom, Amount> | any
+  taxRate?: string
+  taxCaps?: Record<Denom, Amount>
 }
 
 export const calcTaxes = (
   coins: CoinInput[],
-  { taxRate, taxCaps }: TaxParams
+  { taxRate = "0", taxCaps = {} }: TaxParams,
+  isClassic: boolean
 ) => {
   return new Coins(
     coins
-      .filter(({ input, denom }) => {
+      .filter(({ input, denom, taxRequired }) => {
         const amount = toAmount(input)
-        return has(amount) && getShouldTax(denom)
+        return getShouldTax(denom, isClassic) && has(amount) && taxRequired
       })
-      .map(({ input, denom }) => {
+      .map(({ input, denom, taxRequired }) => {
         const amount = toAmount(input)
         const tax = calcMinimumTaxAmount(amount, {
-          rate: taxRate || "0",
+          rate: taxRequired ? taxRate : "0",
           cap: taxCaps[denom],
         })
 

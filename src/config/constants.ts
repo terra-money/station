@@ -27,6 +27,7 @@ export const LEDGER_TRANSPORT_TIMEOUT = 120000
 
 /* tx */
 export const DEFAULT_GAS_ADJUSTMENT = 2
+export const CLASSIC_DEFAULT_GAS_ADJUSTMENT = 3
 
 /* swap */
 export const TERRASWAP_COMMISSION_RATE = 0.003

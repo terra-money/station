@@ -24,7 +24,7 @@ const TaxParamsContext = ({ children }: PropsWithChildren<{}>) => {
   )
 
   return (
-    <TaxParamsProvider value={{ taxRate, taxCaps }}>
+    <TaxParamsProvider value={{ taxRate, taxCaps } as TaxParams}>
       {children}
     </TaxParamsProvider>
   )
