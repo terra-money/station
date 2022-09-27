@@ -15,10 +15,9 @@ const Charts = () => {
   if (!available) return null
 
   return (
-    <div className={cx(styles.charts, { trisect: !isClassic })}>
+    <div className={cx(styles.charts, { trisect: true })}>
       <TxVolume />
-      <StakingReturn />
-      {isClassic && <TaxRewards />}
+      {isClassic ? <TaxRewards /> : <StakingReturn />}
       <Wallets />
     </div>
   )
