@@ -1,4 +1,4 @@
-import { DEFAULT_GAS_ADJUSTMENT } from "config/constants"
+import { DEFAULT_GAS_ADJUSTMENT, CLASSIC_DEFAULT_GAS_ADJUSTMENT } from "config/constants"
 import themes from "styles/themes/themes"
 
 export enum SettingKey {
@@ -6,6 +6,7 @@ export enum SettingKey {
   Currency = "Currency",
   CustomNetworks = "CustomNetworks",
   GasAdjustment = "GasAdjustment", // Tx
+  ClassicGasAdjustment = "ClassicGasAdjustment",
   AddressBook = "AddressBook", // Send
   CustomTokens = "CustomTokens", // Wallet
   MinimumValue = "MinimumValue", // Wallet (UST value to show on the list)
@@ -25,6 +26,7 @@ export const DefaultSettings = {
   [SettingKey.Currency]: "uusd",
   [SettingKey.CustomNetworks]: [] as CustomNetwork[],
   [SettingKey.GasAdjustment]: DEFAULT_GAS_ADJUSTMENT,
+  [SettingKey.ClassicGasAdjustment]: CLASSIC_DEFAULT_GAS_ADJUSTMENT,
   [SettingKey.AddressBook]: [] as AddressBook[],
   [SettingKey.CustomTokens]: DefaultCustomTokens as CustomTokens,
   [SettingKey.MinimumValue]: 0,

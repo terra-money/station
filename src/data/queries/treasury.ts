@@ -9,7 +9,7 @@ export const useTaxRate = (disabled = false) => {
     [queryKey.treasury.taxRate],
     async () => {
       const taxRate = await lcd.treasury.taxRate()
-      return taxRate.toString()
+      return taxRate.toString() || "0"
     },
     { ...RefetchOptions.INFINITY, enabled: !disabled }
   )
@@ -21,7 +21,7 @@ const useGetQueryTaxCap = (disabled = false) => {
   return (denom?: Denom) => ({
     queryKey: [queryKey.treasury.taxCap, denom],
     queryFn: async () => {
-      if (!denom || !getShouldTax(denom) || !isClassic) return "0"
+      if (!denom || !isClassic || !isNativeToken(denom)) return "0"
 
       try {
         const taxCap = await lcd.treasury.taxCap(denom)
@@ -45,6 +45,9 @@ export const useTaxCaps = (denoms: Denom[], disabled = false) => {
   return useQueries(denoms.map(getQueryTaxCap))
 }
 
-/* utils */
-export const getShouldTax = (token?: Token) =>
+export const isNativeToken = (token?: Token) =>
   isDenomLuna(token) || isDenomTerra(token)
+
+/* utils */
+export const getShouldTax = (token?: Token, isClassic?: boolean) =>
+  isClassic && isNativeToken(token)
