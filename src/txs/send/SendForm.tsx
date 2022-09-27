@@ -98,8 +98,7 @@ const SendForm = ({ token, decimals, balance }: Props) => {
   )
 
   /* fee */
-  const taxRequired = true
-  const coins = [{ input, denom: token, taxRequired }] as CoinInput[]
+  const coins = [{ input, denom: token, taxRequired: true }] as CoinInput[]
   const estimationTxValues = useMemo(
     () => ({ address: connectedAddress, input: toInput(1, decimals) }),
     [connectedAddress, decimals]
@@ -125,7 +124,7 @@ const SendForm = ({ token, decimals, balance }: Props) => {
     disabled,
     onChangeMax,
     onSuccess: { label: t("Wallet"), path: "/wallet" },
-    taxRequired,
+    taxRequired: true,
     queryKeys: AccAddress.validate(token)
       ? [[queryKey.wasm.contractQuery, token, { balance: connectedAddress }]]
       : undefined,

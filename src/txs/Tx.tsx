@@ -28,7 +28,7 @@ import { queryKey, combineState, useIsClassic } from "data/query"
 import { useAddress, useNetwork } from "data/wallet"
 import { isBroadcastingState, latestTxState } from "data/queries/tx"
 import { useBankBalance, useIsWalletEmpty } from "data/queries/bank"
-import { useShouldTax, useTaxCap, useTaxRate } from "data/queries/treasury"
+import { getShouldTax, useTaxCap, useTaxRate } from "data/queries/treasury"
 
 import { Pre } from "components/general"
 import { Flex, Grid } from "components/layout"
@@ -113,7 +113,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
         isClassic
       )
     : undefined
-  const shouldTax = useShouldTax(token, isClassic) && taxRequired
+  const shouldTax = getShouldTax(token, isClassic) && taxRequired
   const { data: rate = "0", ...taxRateState } = useTaxRate(!shouldTax)
   const { data: cap = "0", ...taxCapState } = useTaxCap(token)
   const taxState = combineState(taxRateState, taxCapState)
