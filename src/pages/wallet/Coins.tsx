@@ -14,12 +14,12 @@ import { useMemoizedCalcValue } from "data/queries/oracle"
 import { InternalButton, InternalLink } from "components/general"
 import { Card, Flex, Grid } from "components/layout"
 import { FormError } from "components/form"
+import { ListGroup } from "components/display"
 import { isWallet } from "auth"
 import Asset from "./Asset"
-import Buy from "./Buy"
+import { useBuyList } from "./Buy"
 import SelectMinimumValue from "./SelectMinimumValue"
 import { ModalButton, Mode } from "../../components/feedback"
-import styles from "./Coins.module.scss"
 
 const Coins = () => {
   const { t } = useTranslation()
@@ -29,6 +29,7 @@ const Coins = () => {
   const { data: denoms, ...state } = useActiveDenoms()
   const coins = useCoins(denoms)
   const { pathname } = useLocation()
+  const buyLunaList = useBuyList("Luna")
 
   const render = () => {
     if (!coins) return
@@ -71,7 +72,7 @@ const Coins = () => {
     </InternalLink>
   )
 
-  const extraMobile = !isClassic && pathname === "/wallet" && (
+  const extraMobile = !isClassic && buyLunaList && pathname === "/wallet" && (
     <ModalButton
       title={t("Buy {{symbol}}", { symbol: "Luna" })}
       modalType={Mode.FULL_CARD}
@@ -82,7 +83,7 @@ const Coins = () => {
       )}
       maxHeight={false}
     >
-      <Buy token={"uluna"} />
+      <ListGroup groups={buyLunaList} />
     </ModalButton>
   )
 
