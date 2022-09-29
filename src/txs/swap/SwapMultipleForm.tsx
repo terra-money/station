@@ -85,7 +85,7 @@ const SwapMultipleForm = () => {
             rate: taxRate,
             cap,
             gasAmount: "0",
-            taxRequired: tx.taxRequired,
+            taxRequired: true,
           })
           return { ...item, ...max }
         })
