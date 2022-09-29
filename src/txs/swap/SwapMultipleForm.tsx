@@ -85,12 +85,12 @@ const SwapMultipleForm = () => {
             rate: taxRate,
             cap,
             gasAmount: "0",
-            taxRequired: true,
+            taxRequired: isClassic,
           })
           return { ...item, ...max }
         })
         .filter(({ token, max }) => token !== askAsset && has(max)),
-    [askAsset, available, getSwapMode, taxCaps, taxRate]
+    [askAsset, available, getSwapMode, taxCaps, taxRate, isClassic]
   )
 
   /* simulate */
@@ -174,7 +174,7 @@ const SwapMultipleForm = () => {
     estimationTxValues,
     createTx,
     coins,
-    taxRequired: true,
+    taxRequired: isClassic,
     excludeGasDenom,
     onSuccess: { label: t("Wallet"), path: "/wallet" },
   }
