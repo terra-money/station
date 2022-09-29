@@ -80,7 +80,13 @@ const SwapMultipleForm = () => {
           if (mode === SwapMode.ONCHAIN)
             return { ...item, max: balance, tax: "0" }
           const cap = taxCaps[offerAsset]
-          const max = calcMax({ balance, rate: taxRate, cap, gasAmount: "0" })
+          const max = calcMax({
+            balance,
+            rate: taxRate,
+            cap,
+            gasAmount: "0",
+            taxRequired: tx.taxRequired,
+          })
           return { ...item, ...max }
         })
         .filter(({ token, max }) => token !== askAsset && has(max)),

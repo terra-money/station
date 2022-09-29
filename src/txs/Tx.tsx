@@ -186,7 +186,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const getNativeMax = () => {
     if (!balance) return
     const gasAmount = gasFee.denom === token ? gasFee.amount : "0"
-    return calcMax({ balance, rate, cap, gasAmount }).max
+    return calcMax({ balance, rate, cap, gasAmount, taxRequired }).max
   }
 
   const max = !gasFee.amount
@@ -512,10 +512,17 @@ interface Params {
   rate: string
   cap: Amount
   gasAmount: Amount
+  taxRequired: boolean
 }
 
 // Receive tax and gas information and return the maximum payment amount
-export const calcMax = ({ balance, rate, cap, gasAmount }: Params) => {
+export const calcMax = ({
+  balance,
+  rate,
+  cap,
+  gasAmount,
+  taxRequired,
+}: Params) => {
   const available = new BigNumber(balance).minus(gasAmount)
 
   const tax = calcMinimumTaxAmount(available, {
@@ -523,7 +530,10 @@ export const calcMax = ({ balance, rate, cap, gasAmount }: Params) => {
     cap,
   })
 
-  const max = BigNumber.max(new BigNumber(available).minus(tax ?? 0), 0)
+  const max = BigNumber.max(
+    new BigNumber(available).minus(taxRequired ? tax : 0),
+    0
+  )
     .integerValue(BigNumber.ROUND_FLOOR)
     .toString()
 
