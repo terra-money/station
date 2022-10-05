@@ -1,6 +1,6 @@
-import { ForwardedRef, forwardRef, HTMLProps, ReactNode } from 'react'
-import CallMadeIcon from '@mui/icons-material/CallMade'
-import styles from './Internal.module.scss'
+import { ForwardedRef, forwardRef, HTMLProps, ReactNode } from "react"
+import CallMadeIcon from "@mui/icons-material/CallMade"
+import styles from "./Internal.module.scss"
 
 interface ExternalLinkProps extends HTMLProps<HTMLAnchorElement> {
   icon?: boolean
@@ -59,7 +59,7 @@ export const validateLink = (href?: string) => {
 
   try {
     const url = new URL(href)
-    return ['https:', 'mailto:'].includes(url.protocol)
+    return ["https:", "mailto:"].includes(url.protocol)
   } catch {
     return false
   }
