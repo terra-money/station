@@ -4,7 +4,7 @@ import classNames from "classnames"
 import { truncate } from "@terra.kitchen/utils"
 import { FINDER } from "config/constants"
 import { useNetworkName } from "data/wallet"
-import ExternalLink from "./ExternalLink"
+import { ExternalLink } from "./External"
 import styles from "./FinderLink.module.scss"
 
 interface Props extends HTMLAttributes<HTMLAnchorElement> {
@@ -22,7 +22,7 @@ interface Props extends HTMLAttributes<HTMLAnchorElement> {
 const FinderLink = forwardRef(
   (
     { children, short, ...rest }: PropsWithChildren<Props>,
-    ref: ForwardedRef<HTMLAnchorElement>
+    ref: ForwardedRef<HTMLAnchorElement>,
   ) => {
     const { block, tx, validator, ...attrs } = rest
     const networkName = useNetworkName()
@@ -43,7 +43,7 @@ const FinderLink = forwardRef(
         {short && typeof children === "string" ? truncate(children) : children}
       </ExternalLink>
     )
-  }
+  },
 )
 
 export default FinderLink
