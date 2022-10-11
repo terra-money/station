@@ -130,7 +130,7 @@ export const useGetVoteOptionItem = () => {
     ({
       [Vote.Option.VOTE_OPTION_YES]: {
         label: t("Yes"),
-        color: "info" as Color,
+        color: "success" as Color,
       },
       [Vote.Option.VOTE_OPTION_NO]: {
         label: t("No"),
@@ -142,7 +142,7 @@ export const useGetVoteOptionItem = () => {
       },
       [Vote.Option.VOTE_OPTION_ABSTAIN]: {
         label: t("Abstain"),
-        color: "success" as Color,
+        color: "info" as Color,
       },
       [Vote.Option.VOTE_OPTION_UNSPECIFIED]: {
         label: "",
