@@ -5,6 +5,7 @@ import Tokens from "./Tokens"
 import Vesting from "./Vesting"
 import Rewards from "./Rewards"
 import is from "auth/scripts/is"
+import LinkEcosystem from "./LinkEcosystem"
 
 const Wallet = () => {
   const { t } = useTranslation()
@@ -18,7 +19,10 @@ const Wallet = () => {
             <Tokens />
             <Vesting />
           </>,
-          <>{!is.mobile() && <Rewards />}</>,
+          <>
+            {!is.mobile() && <Rewards />}
+            <LinkEcosystem />
+          </>,
         ]}
       />
     </Page>

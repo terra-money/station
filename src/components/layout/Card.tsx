@@ -1,6 +1,7 @@
 import { PropsWithChildren, ReactNode } from "react"
 import { Link, To } from "react-router-dom"
 import classNames from "classnames/bind"
+import { ExternalLink } from "components/general"
 import { Flex } from "../layout"
 import { ErrorBoundary, WithFetching } from "../feedback"
 import styles from "./Card.module.scss"
@@ -26,10 +27,11 @@ export interface Props extends QueryState {
 
   /* link */
   to?: To
+  href?: string
 }
 
 const Card = (props: PropsWithChildren<Props>) => {
-  const { title, extra, children, onClick, to } = props
+  const { title, extra, children, onClick, to, href } = props
   const {
     size,
     bordered,
@@ -48,7 +50,7 @@ const Card = (props: PropsWithChildren<Props>) => {
           bg,
           default: !bordered,
           grid: (title || extra) && (children || wrong),
-          link: to,
+          link: to || href,
           button: onClick,
           error: wrong,
         }
@@ -72,7 +74,11 @@ const Card = (props: PropsWithChildren<Props>) => {
           </>
         )
 
-        return to ? (
+        return href ? (
+          <ExternalLink href={href} className={cardClassName}>
+            {content}
+          </ExternalLink>
+        ) : to ? (
           <Link to={to} className={cardClassName}>
             {content}
           </Link>
