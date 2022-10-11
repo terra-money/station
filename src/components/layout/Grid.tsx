@@ -1,4 +1,4 @@
-import { PropsWithChildren, ReactNode } from "react"
+import { CSSProperties, PropsWithChildren, ReactNode } from "react"
 import classNames from "classnames/bind"
 import styles from "./Grid.module.scss"
 
@@ -26,12 +26,14 @@ interface Props {
   className?: string
   columns?: number
   rows?: number
+  style?: CSSProperties
 }
 
 const Grid = (props: PropsWithChildren<Props>) => {
   const { gap, className, columns, rows, children } = props
 
   const style = {
+    ...props.style,
     gap,
     gridTemplateColumns: columns && `repeat(${columns}, 1fr)`,
     gridTemplateRows: rows && `repeat(${rows}, 1fr)`,

@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react"
+import { CSSProperties, PropsWithChildren } from "react"
 import classNames from "classnames/bind"
 import styles from "./Flex.module.scss"
 
@@ -9,6 +9,7 @@ interface Props {
   className?: string
   start?: boolean
   wrap?: boolean
+  style?: CSSProperties
 }
 
 export const InlineFlex = (props: PropsWithChildren<Props>) => {
@@ -36,11 +37,11 @@ export const FlexColumn = (props: PropsWithChildren<Props>) => {
 }
 
 const Flex = (props: PropsWithChildren<Props>) => {
-  const { gap, start, wrap, className, children } = props
+  const { gap, start, wrap, className, children, style } = props
   return (
     <div
       className={cx(styles.flex, { start, wrap }, className)}
-      style={{ gap }}
+      style={{ ...style, gap }}
     >
       {children}
     </div>
