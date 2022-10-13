@@ -606,7 +606,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
           {failed && <FormError>{failed}</FormError>}
 
           <Submit
-            disabled={!estimatedGas || !!disabled}
+            disabled={!estimatedGas || !!disabled || !!walletError}
             submitting={submitting}
           >
             {submitting ? submittingLabel : disabled}
