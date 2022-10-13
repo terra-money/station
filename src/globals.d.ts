@@ -6,7 +6,7 @@
  * @Description:
  */
 interface Window {
-  ethereum: {
+  misesEthereum: {
     request: (item: { method: string; params: any[] }) => Promise<
       | {
           auth: string

@@ -1,7 +1,7 @@
 /*
  * @Author: lmk
  * @Date: 2022-06-02 16:12:07
- * @LastEditTime: 2022-08-25 13:33:37
+ * @LastEditTime: 2022-10-13 12:50:34
  * @LastEditors: lmk
  * @Description:
  */
@@ -28,7 +28,7 @@ import { useEffect } from "react"
 import { atom } from "recoil"
 import { useConnectWallet } from "auth/hooks/useAddress"
 import { Button as MuiButton } from "@mui/material"
-import { useMetamaskProvider } from "utils/hooks/useMetamaskProvider"
+// import { useMetamaskProvider } from "utils/hooks/useMetamaskProvider"
 // import { useWallet } from "@terra-money/wallet-provider"
 
 interface Props {
@@ -48,15 +48,15 @@ const ConnectWallet = ({ renderButton }: Props) => {
   const address = useAddress()
   // const [list] = useState<any>([])
   const { getAddress } = useConnectWallet()
-  const provider = useMetamaskProvider()
+  const provider = window.misesEthereum
   useEffect(() => {
-    if (window.ethereum?.chainId) {
-      provider._metamask.isUnlocked?.().then((res: any) => {
+    if (provider?.chainId) {
+      provider._metamask&&provider._metamask.isUnlocked?.().then((res: any) => {
         const metamask = JSON.parse(localStorage.getItem("metamask") || "false")
         metamask && res && getAddress()
       })
 
-      window.ethereum.on("accountsChanged", async (res: string[]) => {
+      provider.on("accountsChanged", async (res: string[]) => {
         const metamask = JSON.parse(localStorage.getItem("metamask") || "false")
         if (res.length && metamask) {
           getAddress()

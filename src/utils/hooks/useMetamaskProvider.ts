@@ -1,12 +1,10 @@
-import { useCallback } from "react"
-
+/*
+ * @Author: lmk
+ * @Date: 2022-08-25 13:28:39
+ * @LastEditTime: 2022-10-13 12:19:04
+ * @LastEditors: lmk
+ * @Description: 
+ */
 export function useMetamaskProvider() {
-  const getMetamaskProvider = useCallback(() => {
-    const providerMap = window.ethereum.providerMap
-    return providerMap.get("MetaMask")
-  }, [])
-  const matamaskProvider = !window.ethereum.providers
-    ? window.ethereum
-    : getMetamaskProvider()
-  return matamaskProvider
+  return window.misesEthereum
 }
