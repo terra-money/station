@@ -127,7 +127,7 @@ export const getIpfsGateway = (src: any = "") => {
   if (typeof src === "string") {
     return src.startsWith("ipfs://")
       ? src.replace("ipfs://", "https://cloudflare-ipfs.com/ipfs/")
-      : src.startsWith("https://")
+      : src.startsWith("https://") || src.startsWith("data:")
       ? src
       : undefined
   } else {
