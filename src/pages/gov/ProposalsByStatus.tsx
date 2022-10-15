@@ -20,7 +20,7 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   const toggle = () => setShowAll((state) => !state)
 
   const { data: whitelist, ...whitelistState } = useTerraAssets<number[]>(
-    "/station/proposals.json"
+    isClassic() ? "/station/proposal-classic" :"/station/proposal-classic" 
   )
 
   const { data, ...proposalState } = useProposals(status)
@@ -69,7 +69,7 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   return (
     <Fetching {...state}>
       <Col>
-        {isClassic && status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && (
+        {whitelistState && status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && (
           <section>
             <Toggle checked={showAll} onChange={toggle}>
               {t("Show all")}
