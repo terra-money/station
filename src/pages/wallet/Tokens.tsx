@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next"
 import { useLocation } from "react-router-dom"
-import { useAddress } from "data/wallet"
 import { useCustomTokensIBC } from "data/settings/CustomTokens"
 import { useCustomTokensCW20 } from "data/settings/CustomTokens"
 import { InternalButton } from "components/general"
@@ -14,7 +13,6 @@ import { isWallet } from "auth"
 const Tokens = () => {
   const { t } = useTranslation()
   const { pathname } = useLocation()
-  const address = useAddress()
   const { list: ibc } = useCustomTokensIBC()
   const { list: cw20 } = useCustomTokensCW20()
 
@@ -48,7 +46,7 @@ const Tokens = () => {
         pathname === "/wallet" && (
           <AddTokens>
             {(open) => (
-              <InternalButton disabled={!address} onClick={open} chevron>
+              <InternalButton onClick={open} chevron>
                 {isWallet.mobile() ? t("Manage list") : t("Add tokens")}
               </InternalButton>
             )}
