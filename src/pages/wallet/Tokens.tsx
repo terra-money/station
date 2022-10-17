@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next"
-import { useAddress } from "data/wallet"
 import { useCustomTokensIBC } from "data/settings/CustomTokens"
 import { useCustomTokensCW20 } from "data/settings/CustomTokens"
 import { InternalButton } from "components/general"
@@ -11,7 +10,6 @@ import Asset from "./Asset"
 
 const Tokens = () => {
   const { t } = useTranslation()
-  const address = useAddress()
   const { list: ibc } = useCustomTokensIBC()
   const { list: cw20 } = useCustomTokensCW20()
 
@@ -44,7 +42,7 @@ const Tokens = () => {
       extra={
         <AddTokens>
           {(open) => (
-            <InternalButton disabled={!address} onClick={open} chevron>
+            <InternalButton onClick={open} chevron>
               {t("Add tokens")}
             </InternalButton>
           )}
