@@ -17,10 +17,10 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   const { t } = useTranslation()
   const networkName = useNetworkName()
 
-  const { data: whitelist, ...whitelistState } = useTerraAssets<{ [key: string]: number[] }> ("/station/proposals.json")
+  const { data: whitelistData, ...whitelistState } = useTerraAssets<{ [key: string]: number[] }> ("/station/proposals.json")
+  const whitelist = whitelistData?.[networkName]
 
-  const whitelistExists = whitelist && whitelist[networkName]
-  const [showAll, setShowAll] = useState(!whitelistExists)
+  const [showAll, setShowAll] = useState(!!whitelist)
   const toggle = () => setShowAll((state) => !state)
 
 
@@ -30,11 +30,11 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   const state = combineState(whitelistState, proposalState)
 
   const render = () => {
-    if (!(data && whitelist)) return null
+    if (!(data && whitelistData)) return null
 
     const proposals =
       status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && !showAll
-        ? data.filter(({ id }) => (whitelist[networkName] || []).includes(id))
+        ? data.filter(({ id }) => whitelist?.includes(id))
         : data
 
     return !proposals.length ? (
@@ -66,7 +66,7 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   return (
     <Fetching {...state}>
       <Col>
-        {whitelistExists && status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && (
+        {!!whitelist && status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && (
           <section>
             <Toggle checked={showAll} onChange={toggle}>
               {t("Show all")}

@@ -29,7 +29,9 @@ export const combineState = (...results: QueryState[]) => ({
 /* queryKey */
 const mirror = <T>(obj: T, parentKey?: string): T =>
   Object.entries(obj).reduce((acc, [key, value]) => {
-    const next = value ? mirror(value, key) : [parentKey, key].filter(Boolean).join(".")
+    const next = value 
+      ? mirror(value, key) 
+      : [parentKey, key].filter(Boolean).join(".")
 
     return { ...acc, [key]: next }
   }, {} as T)
