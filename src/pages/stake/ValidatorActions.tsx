@@ -30,7 +30,7 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
 
   const label = {
     [StakeAction.DELEGATE]: t("Delegate"),
-    [StakeAction.REDELEGATE]: t("Redelegate Out"),
+    [StakeAction.REDELEGATE]: t("Redelegate"),
     [StakeAction.UNBOND]: t("Undelegate"),
     [StakeAction.REINVEST]: t("Reinvest"),
   }

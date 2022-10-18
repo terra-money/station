@@ -64,7 +64,10 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
     delegationsOptions.find(
       ({ validator_address }) => validator_address === address
     )
-
+  const findCurrentNode = (address: AccAddress) =>
+  delegations.find(
+    ({ validator_address }) => validator_address === address
+  )
   /* tx context */
   const initialGasDenom = getInitialGasDenom(bankBalance)
 
@@ -88,7 +91,7 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
 
       if (tab === StakeAction.REDELEGATE) {
         if (!source) return
-        const msg = new MsgBeginRedelegate(address, source, destination, coin)
+        const msg = new MsgBeginRedelegate(address, destination, source, coin)
         return { msgs: [msg] }
       }
       if(tab === StakeAction.DELEGATE && node){
@@ -126,13 +129,12 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
   /* fee */
   const balance = {
     [StakeAction.DELEGATE]: checkState ? (node && findDelegation(node)?.balance.amount.toString()) ?? "0" : getAmount(bankBalance, "umis"),
-    [StakeAction.REDELEGATE]:
-      (source && findDelegation(source)?.balance.amount.toString()) ?? "0",
+    [StakeAction.REDELEGATE]: 
+      findCurrentNode(destination)?.balance.amount.toString() ?? "0",
     [StakeAction.UNBOND]:
       findDelegation(destination)?.balance.amount.toString() ?? "0",
     [StakeAction.REINVEST]: getAmount(bankBalance, "umis"),
   }[tab]
-
   const estimationTxValues = useMemo(() => {
     return {
       input: toInput(balance),
@@ -220,7 +222,7 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
           }
 
           {tab === StakeAction.REDELEGATE && (
-            <FormItem label={t("From")}>
+            <FormItem label={t("To")}>
               <Select
                 {...register("source", {
                   required:
