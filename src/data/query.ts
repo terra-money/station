@@ -1,14 +1,14 @@
-import { useChainID } from 'auth/hooks/useNetwork'
-import { LAZY_LIMIT } from 'config/constants'
+import { useChainID } from "auth/hooks/useNetwork"
+import { LAZY_LIMIT } from "config/constants"
 
 export const useIsClassic = () => {
   const networkName = useChainID()
-  return networkName === 'columbus-5' // TODO
+  return networkName === "columbus-5" // TODO
 }
 
 export const useIsMainnet = () => {
   const networkName = useChainID()
-  return networkName === 'phoenix-1' // TODO
+  return networkName === "phoenix-1" // TODO
 }
 
 /* refetch */
@@ -19,7 +19,7 @@ export const RefetchOptions = {
 
 /* params */
 export const Pagination = {
-  'pagination.limit': String(LAZY_LIMIT),
+  "pagination.limit": String(LAZY_LIMIT),
 }
 
 /* helpers */
@@ -34,53 +34,53 @@ export const combineState = (...results: QueryState[]) => ({
 /* queryKey */
 const mirror = <T>(obj: T, parentKey?: string): T =>
   Object.entries(obj).reduce((acc, [key, value]) => {
-    const next = value ? mirror(value, key) : [parentKey, key].filter(Boolean).join('.')
+    const next = value ? mirror(value, key) : [parentKey, key].filter(Boolean).join(".")
 
     return { ...acc, [key]: next }
   }, {} as T)
 
 export const queryKey = mirror({
   /* assets */
-  TerraAssets: '',
-  TerraAPI: '',
-  History: '',
+  TerraAssets: "",
+  TerraAPI: "",
+  History: "",
 
   /* lcd */
-  auth: { accountInfo: '' },
-  bank: { balance: '', balances: '', supply: '' },
+  auth: { accountInfo: "" },
+  bank: { balance: "", balances: "", supply: "" },
   distribution: {
-    rewards: '',
-    communityPool: '',
-    validatorCommission: '',
-    withdrawAddress: '',
+    rewards: "",
+    communityPool: "",
+    validatorCommission: "",
+    withdrawAddress: "",
   },
   gov: {
-    votingParams: '',
-    depositParams: '',
-    tallyParams: '',
-    proposals: '',
-    proposal: '',
-    deposits: '',
-    votes: '',
-    tally: '',
+    votingParams: "",
+    depositParams: "",
+    tallyParams: "",
+    proposals: "",
+    proposal: "",
+    deposits: "",
+    votes: "",
+    tally: "",
   },
-  ibc: { denomTrace: '' },
-  market: { params: '' },
-  oracle: { activeDenoms: '', exchangeRates: '', params: '' },
-  tendermint: { nodeInfo: '' },
+  ibc: { denomTrace: "" },
+  market: { params: "" },
+  oracle: { activeDenoms: "", exchangeRates: "", params: "" },
+  tendermint: { nodeInfo: "" },
   staking: {
-    validators: '',
-    validator: '',
-    delegations: '',
-    delegation: '',
-    unbondings: '',
-    pool: '',
+    validators: "",
+    validator: "",
+    delegations: "",
+    delegation: "",
+    unbondings: "",
+    pool: "",
   },
-  treasury: { taxRate: '', taxCap: '' },
-  tx: { txInfo: '', create: '' },
-  wasm: { contractInfo: '', contractQuery: '' },
+  treasury: { taxRate: "", taxCap: "" },
+  tx: { txInfo: "", create: "" },
+  wasm: { contractInfo: "", contractQuery: "" },
 
   /* external */
-  Anchor: { TotalDeposit: '', APY: '', MarketEpochState: '' },
-  TNS: '',
+  Anchor: { TotalDeposit: "", APY: "", MarketEpochState: "" },
+  TNS: "",
 })
