@@ -51,3 +51,12 @@ $colors: (
 .break-all {
   word-break: break-all;
 }
+.delegate-switch{
+  .css-dnkzfa-MuiSwitch-track{
+    background-color: black;
+  }
+  .switch-wallet,.switch-node{
+    font-size: 10px;
+    color: var(--text-muted)
+  }
+}

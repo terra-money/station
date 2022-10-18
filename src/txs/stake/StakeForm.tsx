@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react"
+import { ChangeEvent, useCallback, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import { AccAddress, Coin, ValAddress } from "@terra-money/terra.js"
@@ -20,10 +20,12 @@ import { Form, FormItem, FormWarning, Input, Select } from "components/form"
 import { getPlaceholder, toInput } from "../utils"
 import validate from "../validate"
 import Tx, { getInitialGasDenom } from "../Tx"
+import { Switch } from "@mui/material"
 
 interface TxValues {
   source?: ValAddress
   input?: number
+  node?: ValAddress
 }
 
 export enum StakeAction {
@@ -47,6 +49,8 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
   const { data: rewards } = useRewards()
   const calcValue = useMemoizedCalcValue()
   const currency = useCurrency()
+
+  const [checkState, setCheckState] = useState<boolean>(false)
 
   const findMoniker = getFindMoniker(validators)
 
@@ -72,11 +76,11 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
 
   const { register, trigger, watch, setValue, handleSubmit, formState } = form
   const { errors } = formState
-  const { source, input } = watch()
+  const { source, input, node } = watch()
   const amount = input && !isNaN(input) ? toAmount(input) : undefined
   /* tx */
   const createTx = useCallback(
-    ({ input, source }: TxValues) => {
+    ({ input, source, node }: TxValues) => {
       if (!address) return
 
       const amount = toAmount(input)
@@ -87,7 +91,10 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
         const msg = new MsgBeginRedelegate(address, source, destination, coin)
         return { msgs: [msg] }
       }
-
+      if(tab === StakeAction.DELEGATE && node){
+        const msg = new MsgBeginRedelegate(address, node, destination, coin)
+        return { msgs: [msg] }
+      }
       if (tab === StakeAction.REINVEST) {
         if (!source || !rewards) return
         const msg0 = new MsgWithdrawDelegatorReward(address, destination)
@@ -118,7 +125,7 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
 
   /* fee */
   const balance = {
-    [StakeAction.DELEGATE]: getAmount(bankBalance, "umis"),
+    [StakeAction.DELEGATE]: checkState ? (node && findDelegation(node)?.balance.amount.toString()) ?? "0" : getAmount(bankBalance, "umis"),
     [StakeAction.REDELEGATE]:
       (source && findDelegation(source)?.balance.amount.toString()) ?? "0",
     [StakeAction.UNBOND]:
@@ -145,7 +152,6 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [setValue, trigger]
   )
-
   const token = tab === StakeAction.DELEGATE ? "umis" : ""
   const tx = {
     token,
@@ -235,27 +241,58 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
               </Select>
             </FormItem>
           )}
-          {(tab === StakeAction.DELEGATE ||
+          {tab === StakeAction.DELEGATE && (<FormItem
+            label='From'
+            extra={
+              <div className="delegate-switch">
+                <span className="switch-wallet">Wallet</span>
+                <Switch
+                  checked={checkState}
+                  onChange={(_: ChangeEvent<HTMLInputElement>, checked: boolean) => setCheckState(checked)} />
+                <span className="switch-node">Node</span>
+              </div>
+            }>
+            {checkState && <Select
+              {...register("node", {
+                required:
+                  tab === StakeAction.DELEGATE
+                    ? "Source node is required"
+                    : false,
+              })}
+            >
+              {delegationsOptions
+                ?.filter(
+                  ({ validator_address }) => validator_address !== destination
+                )
+                .map(({ validator_address }) => (
+                  <option value={validator_address} key={validator_address}>
+                    {findMoniker(validator_address)}
+                  </option>
+                ))}
+            </Select>}
+          </FormItem>
+          )}
+          {((tab === StakeAction.DELEGATE) ||
             tab === StakeAction.UNBOND ||
             tab === StakeAction.REDELEGATE) && (
-            <FormItem
-              label={t("Amount")}
-              extra={max.render()}
-              error={errors.input?.message}
-            >
-              <Input
-                {...register("input", {
-                  // valueAsNumber: true,
-                  validate: validate.input(toInput(max.amount)),
-                })}
-                token="umis"
-                onFocus={max.reset}
-                inputMode="decimal"
-                placeholder={getPlaceholder()}
-                autoFocus
-              />
-            </FormItem>
-          )}
+              <FormItem
+                label={t("Amount")}
+                extra={max.render()}
+                error={errors.input?.message}
+              >
+                <Input
+                  {...register("input", {
+                    // valueAsNumber: true,
+                    validate: validate.input(toInput(max.amount)),
+                  })}
+                  token="umis"
+                  onFocus={max.reset}
+                  inputMode="decimal"
+                  placeholder={getPlaceholder()}
+                  autoFocus
+                />
+              </FormItem>
+            )}
 
           {fee.render()}
           {submit.button}
