@@ -1,27 +1,29 @@
-import { useState } from "react"
-import { useTranslation } from "react-i18next"
-import { reverse } from "ramda"
-import { Proposal } from "@terra-money/terra.js"
-import { combineState, useIsClassic } from "data/query"
-import { useProposals, useProposalStatusItem } from "data/queries/gov"
-import { useTerraAssets } from "data/Terra/TerraAssets"
-import { Col, Card } from "components/layout"
-import { Fetching, Empty } from "components/feedback"
-import { Toggle } from "components/form"
-import ProposalItem from "./ProposalItem"
-import GovernanceParams from "./GovernanceParams"
-import styles from "./ProposalsByStatus.module.scss"
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { reverse } from 'ramda'
+import { Proposal } from '@terra-money/terra.js'
+import { combineState, useIsClassic, useIsMainnet } from 'data/query'
+import { useProposals, useProposalStatusItem } from 'data/queries/gov'
+import { useTerraAssets } from 'data/Terra/TerraAssets'
+import { Col, Card } from 'components/layout'
+import { Fetching, Empty } from 'components/feedback'
+import { Toggle } from 'components/form'
+import ProposalItem from './ProposalItem'
+import GovernanceParams from './GovernanceParams'
+import styles from './ProposalsByStatus.module.scss'
 
 const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   const { t } = useTranslation()
   const isClassic = useIsClassic()
+  const isMainnet = useIsMainnet()
 
-  const [showAll, setShowAll] = useState(!isClassic)
+  const [showAll, setShowAll] = useState(!isClassic && !isMainnet)
   const toggle = () => setShowAll((state) => !state)
 
-  const { data: whitelist, ...whitelistState } = useTerraAssets<number[]>(
-    isClassic() ? "/station/proposal-classic" :"/station/proposal-classic" 
-  )
+  const { data: whitelist, ...whitelistState } = useTerraAssets<{
+    classic: number[]
+    mainnet: number[]
+  }>('/station/proposals.json')
 
   const { data, ...proposalState } = useProposals(status)
   const { label } = useProposalStatusItem(status)
@@ -33,14 +35,14 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
 
     const proposals =
       status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && !showAll
-        ? data.filter(({ id }) => whitelist.includes(id))
+        ? data.filter(({ id }) => (whitelist[isClassic ? 'classic' : 'mainnet'] || []).includes(id))
         : data
 
     return !proposals.length ? (
       <>
         <Card>
           <Empty>
-            {t("No proposals in {{label}} period", {
+            {t('No proposals in {{label}} period', {
               label: label.toLowerCase(),
             })}
           </Empty>
@@ -51,11 +53,7 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
       <>
         <section className={styles.list}>
           {reverse(proposals).map((item) => (
-            <Card
-              to={`/proposal/${item.id}`}
-              className={styles.link}
-              key={item.id}
-            >
+            <Card to={`/proposal/${item.id}`} className={styles.link} key={item.id}>
               <ProposalItem proposal={item} showVotes={!showAll} />
             </Card>
           ))}
@@ -69,10 +67,10 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   return (
     <Fetching {...state}>
       <Col>
-        {whitelistState && status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && (
+        {(isClassic || isMainnet) && status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && (
           <section>
             <Toggle checked={showAll} onChange={toggle}>
-              {t("Show all")}
+              {t('Show all')}
             </Toggle>
           </section>
         )}
