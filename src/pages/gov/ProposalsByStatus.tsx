@@ -2,7 +2,7 @@ import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { reverse } from "ramda"
 import { Proposal } from "@terra-money/terra.js"
-import { combineState, useIsClassic } from "data/query"
+import { combineState } from "data/query"
 import { useProposals, useProposalStatusItem } from "data/queries/gov"
 import { useTerraAssets } from "data/Terra/TerraAssets"
 import { Col, Card } from "components/layout"
@@ -11,19 +11,21 @@ import { Toggle } from "components/form"
 import ProposalItem from "./ProposalItem"
 import GovernanceParams from "./GovernanceParams"
 import styles from "./ProposalsByStatus.module.scss"
+import { useNetworkName } from "data/wallet"
 import { isWallet } from "auth"
 import PageLoading from "auth/modules/PageLoading"
 
 const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   const { t } = useTranslation()
-  const isClassic = useIsClassic()
+  const networkName = useNetworkName()
 
-  const [showAll, setShowAll] = useState(!isClassic)
+  const { data: whitelistData, ...whitelistState } = useTerraAssets<{
+    [key: string]: number[]
+  }>("/station/proposals.json")
+  const whitelist = whitelistData?.[networkName]
+
+  const [showAll, setShowAll] = useState(!!whitelist)
   const toggle = () => setShowAll((state) => !state)
-
-  const { data: whitelist, ...whitelistState } = useTerraAssets<number[]>(
-    "/station/proposals.json"
-  )
 
   const { data, ...proposalState } = useProposals(status)
   const { label } = useProposalStatusItem(status)
@@ -31,12 +33,12 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   const state = combineState(whitelistState, proposalState)
 
   const render = () => {
-    if (!(data && whitelist))
+    if (!(data && whitelistData))
       return isWallet.mobileNative() ? <PageLoading inCard /> : null
 
     const proposals =
       status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && !showAll
-        ? data.filter(({ id }) => whitelist.includes(id))
+        ? data.filter(({ id }) => whitelist?.includes(id))
         : data
 
     return !proposals.length ? (
@@ -72,13 +74,14 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   return (
     <Fetching {...state}>
       <Col>
-        {isClassic && status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && (
-          <Card className={isWallet.mobile() ? "blankSidePad" : "blank"}>
-            <Toggle checked={showAll} onChange={toggle}>
-              {t("Show all")}
-            </Toggle>
-          </Card>
-        )}
+        {!!whitelist &&
+          status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && (
+            <Card className={isWallet.mobile() ? "blankSidePad" : "blank"}>
+              <Toggle checked={showAll} onChange={toggle}>
+                {t("Show all")}
+              </Toggle>
+            </Card>
+          )}
 
         {render()}
       </Col>
