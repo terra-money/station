@@ -6,11 +6,6 @@ export const useIsClassic = () => {
   return networkName === "columbus-5" // TODO
 }
 
-export const useIsMainnet = () => {
-  const networkName = useChainID()
-  return networkName === "phoenix-1" // TODO
-}
-
 /* refetch */
 export const RefetchOptions = {
   DEFAULT: /* onMount, onFocus */ {},

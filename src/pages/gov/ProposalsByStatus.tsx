@@ -2,7 +2,7 @@ import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { reverse } from "ramda"
 import { Proposal } from "@terra-money/terra.js"
-import { combineState, useIsClassic, useIsMainnet } from "data/query"
+import { combineState } from "data/query"
 import { useProposals, useProposalStatusItem } from "data/queries/gov"
 import { useTerraAssets } from "data/Terra/TerraAssets"
 import { Col, Card } from "components/layout"
@@ -11,19 +11,18 @@ import { Toggle } from "components/form"
 import ProposalItem from "./ProposalItem"
 import GovernanceParams from "./GovernanceParams"
 import styles from "./ProposalsByStatus.module.scss"
+import { useNetworkName } from "data/wallet"
 
 const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   const { t } = useTranslation()
-  const isClassic = useIsClassic()
-  const isMainnet = useIsMainnet()
+  const networkName = useNetworkName()
 
-  const [showAll, setShowAll] = useState(!isClassic && !isMainnet)
+  const { data: whitelist, ...whitelistState } = useTerraAssets<{ [key: string]: number[] }> ("/station/proposals.json")
+
+  const whitelistExists = whitelist && whitelist[networkName]
+  const [showAll, setShowAll] = useState(!whitelistExists)
   const toggle = () => setShowAll((state) => !state)
 
-  const { data: whitelist, ...whitelistState } = useTerraAssets<{
-    classic: number[]
-    mainnet: number[]
-  }>("/station/proposals.json")
 
   const { data, ...proposalState } = useProposals(status)
   const { label } = useProposalStatusItem(status)
@@ -35,7 +34,7 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
 
     const proposals =
       status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && !showAll
-        ? data.filter(({ id }) => (whitelist[isClassic ? "classic" : "mainnet"] || []).includes(id))
+        ? data.filter(({ id }) => (whitelist[networkName] || []).includes(id))
         : data
 
     return !proposals.length ? (
@@ -67,7 +66,7 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   return (
     <Fetching {...state}>
       <Col>
-        {(isClassic || isMainnet) && status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && (
+        {whitelistExists && status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && (
           <section>
             <Toggle checked={showAll} onChange={toggle}>
               {t("Show all")}
