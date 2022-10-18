@@ -28,7 +28,7 @@ import { useEffect } from "react"
 import { atom } from "recoil"
 import { useConnectWallet } from "auth/hooks/useAddress"
 import { Button as MuiButton } from "@mui/material"
-// import { useMetamaskProvider } from "utils/hooks/useMetamaskProvider"
+import { useMetamaskProvider } from "utils/hooks/useMetamaskProvider"
 // import { useWallet } from "@terra-money/wallet-provider"
 
 interface Props {
@@ -48,7 +48,7 @@ const ConnectWallet = ({ renderButton }: Props) => {
   const address = useAddress()
   // const [list] = useState<any>([])
   const { getAddress } = useConnectWallet()
-  const provider = window.misesEthereum
+  const provider = useMetamaskProvider()
   useEffect(() => {
     if (provider?.chainId) {
       provider._metamask&&provider._metamask.isUnlocked?.().then((res: any) => {
