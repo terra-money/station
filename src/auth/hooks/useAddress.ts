@@ -34,7 +34,7 @@ export function useConnectWallet() {
         setmisesState({ ...misesState, misesId: res.misesId })
         localStorage.setItem("metamask", JSON.stringify(true))
       })
-    if (!window.ethereum || !window.ethereum.chainId) {
+    if (!window.misesEthereum || !window.misesEthereum.chainId) {
       open?.()
       // window.location.reload()
     }
