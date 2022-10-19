@@ -187,11 +187,9 @@ export const getAvailableStakeActions = (
 
   return {
     [StakeAction.DELEGATE]: !validator.jailed,
-    [StakeAction.REDELEGATE]: validator.jailed
-      ? false
-      : delegations.filter(
+    [StakeAction.REDELEGATE]: !!delegations.filter(
           ({ validator_address }) => validator_address !== destination
-        ).length > 0,
+        ).length,
     [StakeAction.UNBOND]: !!delegations.filter(
       ({ validator_address }) => validator_address === destination
     ).length,

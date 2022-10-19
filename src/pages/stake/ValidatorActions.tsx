@@ -30,7 +30,7 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
 
   const label = {
     [StakeAction.DELEGATE]: t("Delegate"),
-    [StakeAction.REDELEGATE]: t("Redelegate"),
+    [StakeAction.REDELEGATE]: t("Redelegate Out"),
     [StakeAction.UNBOND]: t("Undelegate"),
     [StakeAction.REINVEST]: t("Reinvest"),
   }
@@ -68,7 +68,7 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
       delegations,
       validators
     )
-
+    console.log(availableActions)
     return (
       <ExtraActions align="stretch">
         {Object.values(StakeAction).map((action) => (

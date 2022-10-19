@@ -11,7 +11,7 @@ import { getAmount } from "utils/coin"
 import { queryKey } from "data/query"
 import { useAddress } from "data/wallet"
 import { useBankBalance } from "data/queries/bank"
-import { getFindMoniker } from "data/queries/staking"
+import { getFindMoniker, useValidators } from "data/queries/staking"
 import { calcRewardsValues, useRewards } from "data/queries/distribution"
 import { useCurrency } from "data/settings/Currency"
 import { useMemoizedCalcValue } from "data/queries/oracle"
@@ -49,7 +49,12 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
   const { data: rewards } = useRewards()
   const calcValue = useMemoizedCalcValue()
   const currency = useCurrency()
-
+  const { data } = useValidators()
+  const filterValidators = data?.filter(validator => !validator.jailed).map(val => {
+    return {
+      validator_address: val.operator_address,
+    }
+  }) as unknown as Delegation[];
   const [checkState, setCheckState] = useState<boolean>(false)
 
   const findMoniker = getFindMoniker(validators)
@@ -231,7 +236,7 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
                       : false,
                 })}
               >
-                {delegationsOptions
+                {filterValidators
                   ?.filter(
                     ({ validator_address }) => validator_address !== destination
                   )
@@ -251,14 +256,14 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
                 <Switch
                   checked={checkState}
                   onChange={(_: ChangeEvent<HTMLInputElement>, checked: boolean) => setCheckState(checked)} />
-                <span className="switch-node">Node</span>
+                <span className="switch-node">Validator</span>
               </div>
             }>
             {checkState && <Select
               {...register("node", {
                 required:
                   tab === StakeAction.DELEGATE
-                    ? "Source node is required"
+                    ? "Source validator is required"
                     : false,
               })}
             >
