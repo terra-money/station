@@ -1,4 +1,3 @@
-
 export function useMetamaskProvider() {
-  return window.misesEthereum
+  return window.misesEthereum || window.ethereum
 }
