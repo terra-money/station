@@ -79,7 +79,7 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
   /* form */
   const form = useForm<TxValues>({
     mode: "onChange",
-    defaultValues: { source: defaultSource },
+    defaultValues: { source: defaultSource, node: '' },
   })
 
   const { register, trigger, watch, setValue, handleSubmit, formState } = form
@@ -145,8 +145,9 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
       input: toInput(balance),
       // to check redelegation stacks
       source: tab === StakeAction.REDELEGATE ? source : undefined,
+      node: tab === StakeAction.DELEGATE ? node : undefined,
     }
-  }, [balance, source, tab])
+  }, [balance, source, tab, node])
 
   const onChangeMax = useCallback(
     async (input: number) => {

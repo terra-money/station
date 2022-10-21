@@ -68,7 +68,6 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
       delegations,
       validators
     )
-    console.log(availableActions)
     return (
       <ExtraActions align="stretch">
         {Object.values(StakeAction).map((action) => (
