@@ -15,7 +15,7 @@ const WalletQR = ({ renderButton }: { renderButton: RenderButton }) => {
     <ModalButton title={t("Wallet address")} renderButton={renderButton}>
       <Grid gap={20}>
         <QRCode value={address} />
-        <p className="small center">{address}</p>
+        <p className="small center break-all">{address}</p>
       </Grid>
     </ModalButton>
   )

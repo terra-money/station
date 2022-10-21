@@ -1,7 +1,7 @@
 /*
  * @Author: lmk
  * @Date: 2022-05-25 11:23:10
- * @LastEditTime: 2022-06-16 16:30:41
+ * @LastEditTime: 2022-10-21 13:43:23
  * @LastEditors: lmk
  * @Description:
  */
@@ -377,7 +377,7 @@ const DashboardTabs = ({ children }: PropsWithChildren<{}>) => {
         <div className={styles.colBox}>
           <Col>
             {validators.length ? (
-              validators.map((item) => <ValidatorItem item={item} />)
+              validators.map((item,index) => <ValidatorItem item={item} key={index}/>)
             ) : (
               <div className={styles.unConnect}>
                 <img

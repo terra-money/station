@@ -1,29 +1,31 @@
 /*
  * @Author: lmk
  * @Date: 2022-08-02 17:03:00
- * @LastEditTime: 2022-08-25 13:30:54
+ * @LastEditTime: 2022-10-13 13:18:05
  * @LastEditors: lmk
  * @Description:
  */
-interface Window {
-  misesEthereum: {
-    request: (item: { method: string; params: any[] }) => Promise<
-      | {
-          auth: string
-          misesId: string
-          accounts: [string]
-        }
-      | any
-    >
-    on: (event, cb: Function) => Promise<string[]>
-    _metamask: {
-      isUnlocked: () => Promise<boolean>
-    }
-    _handleConnect: () => Promise<any>
-    chainId: number | string
-    providers: any[]
-    providerMap: Map
+interface ethereum {
+  request: (item: { method: string; params: any[] }) => Promise<
+    | {
+        auth: string
+        misesId: string
+        accounts: [string]
+      }
+    | any
+  >
+  on: (event, cb: Function) => Promise<string[]>
+  _metamask: {
+    isUnlocked: () => Promise<boolean>
   }
+  _handleConnect: () => Promise<any>
+  chainId: number | string
+  providers: any[]
+  providerMap: Map
+}
+interface Window {
+  misesEthereum: ethereum,
+  ethereum: ethereum,
 }
 interface globalThis {
   IS_REACT_ACT_ENVIRONMENT: boolean

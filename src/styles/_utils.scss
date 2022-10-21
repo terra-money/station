@@ -48,3 +48,19 @@ $colors: (
 .small {
   font-size: var(--font-size-small);
 }
+.break-all {
+  word-break: break-all;
+}
+.delegate-switch{
+  .MuiSwitch-track{
+    background-color: #5c5fff;
+    opacity: 0.5;
+  }
+  .MuiSwitch-thumb{
+    color: #5c5fff;
+  }
+  .switch-wallet,.switch-node{
+    font-size: 10px;
+    color: var(--text-muted)
+  }
+}
