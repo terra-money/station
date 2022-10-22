@@ -24,6 +24,7 @@ const ProposalDescription = ({ proposal }: { proposal: Proposal }) => {
           <ExternalModalLink
             key={index}
             href={part}
+            icon={true}
             modalTitle={t("External Link")}
             modalBody={
               <>
