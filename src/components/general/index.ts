@@ -1,6 +1,6 @@
 export { default as Button } from "./Button"
 export { default as Copy } from "./Copy"
-export { ExternalLink, ExternalIconLink } from "./External"
+export { ExternalLink, ExternalIconLink, ExternalModalLink } from "./External"
 export * from "./External"
 export { default as FinderLink } from "./FinderLink"
 export * from "./FinderLink"
