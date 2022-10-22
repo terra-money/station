@@ -61,7 +61,7 @@ const ProposalDescription = ({ proposal }: { proposal: Proposal }) => {
 export default ProposalDescription
 
 /* helpers */
-const whitelist = [/https?:\/\/[^\.]+\.terra\.money\/[^\s]+/g]
+const whitelist = [/https?:\/\/[^.]+\.terra\.money\/[^\s]+/g]
 
 const isWhitelisted = (url: string) => {
   for (let j = 0; j < whitelist.length; j++) {
