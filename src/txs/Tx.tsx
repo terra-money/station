@@ -10,6 +10,7 @@ import { head, isNil } from "ramda"
 
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline"
+import DoneAllIcon from "@mui/icons-material/DoneAll"
 import { isDenom, isDenomIBC, readDenom } from "@terra.kitchen/utils"
 import { Coin, Coins, CreateTxOptions } from "@terra-money/terra.js"
 import { LCDClient, Fee } from "@terra-money/terra.js"
@@ -33,7 +34,14 @@ import { getShouldTax, useTaxCap, useTaxRate } from "data/queries/treasury"
 
 import { Button, Pre } from "components/general"
 import { Flex, Grid } from "components/layout"
-import { FormError, Submit, Select, Input, FormItem } from "components/form"
+import {
+  FormError,
+  FormWarning,
+  Submit,
+  Select,
+  Input,
+  FormItem,
+} from "components/form"
 import { Modal, Mode } from "components/feedback"
 import { Details } from "components/display"
 import { Read } from "components/token"
@@ -274,6 +282,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<Error>()
+  const [doneSignBytes, setDoneSignBytes] = useState(false)
 
   const navigate = useNavigate()
   const toPostMultisigTx = useToPostMultisigTx()
@@ -369,17 +378,67 @@ function Tx<TxValues>(props: Props<TxValues>) {
       if (isUseBio && !bioWithPassword) {
         const bioKey = await decodeBioAuthKey()
         if (bioKey) {
-          const result = await auth.post(confirmData?.tx, bioKey)
-          // @ts-ignore
-          setLatestTx(result)
+          switch (confirmData?.requestType) {
+            case "post": {
+              const result = await auth.post(confirmData?.tx, bioKey)
+              // @ts-ignore
+              setLatestTx(result)
+              break
+            }
+            case "signBytes": {
+              const buffer =
+                confirmData?.bytes && Buffer.from(confirmData?.bytes, "base64")
+              const result = await auth.signBytes(buffer as Buffer, bioKey)
+              const res = await WebViewMessage(RN_APIS.APPROVE_TX, {
+                id: confirmData?.id,
+                handshakeTopic: confirmData?.handshakeTopic,
+                result,
+              })
+              if (res) {
+                setDoneSignBytes(true)
+              }
+              break
+            }
+            default: {
+              const result = await auth.post(confirmData?.tx, bioKey)
+              // @ts-ignore
+              setLatestTx(result)
+              break
+            }
+          }
         } else {
           // suggest to input password
           setIsFailBio(true)
         }
       } else {
-        const result = await auth.post(confirmData?.tx, password)
-        // @ts-ignore
-        setLatestTx(result)
+        switch (confirmData?.requestType) {
+          case "post": {
+            const result = await auth.post(confirmData?.tx, password)
+            // @ts-ignore
+            setLatestTx(result)
+            break
+          }
+          case "signBytes": {
+            const buffer =
+              confirmData?.bytes && Buffer.from(confirmData?.bytes, "base64")
+            const result = await auth.signBytes(buffer as Buffer, password)
+            const res = await WebViewMessage(RN_APIS.APPROVE_TX, {
+              id: confirmData?.id,
+              handshakeTopic: confirmData?.handshakeTopic,
+              result,
+            })
+            if (res) {
+              setDoneSignBytes(true)
+            }
+            break
+          }
+          default: {
+            const result = await auth.post(confirmData?.tx, password)
+            // @ts-ignore
+            setLatestTx(result)
+            break
+          }
+        }
       }
     } catch (error) {
       if (error instanceof PasswordError) setIncorrect(error.message)
@@ -630,6 +689,10 @@ function Tx<TxValues>(props: Props<TxValues>) {
         />
       ) : (
         <Grid gap={20}>
+          {confirmData?.requestType === "signBytes" && (
+            <FormWarning>Signing of an arbitrary data is requested</FormWarning>
+          )}
+
           {passwordRequired && (
             <FormItem label={t("Password")} error={incorrect}>
               <Input
@@ -696,7 +759,16 @@ function Tx<TxValues>(props: Props<TxValues>) {
     </Grid>
   )
 
-  const modal = !error
+  const modal = doneSignBytes
+    ? {
+        title: t("SignBytes Complete"),
+        children: (
+          <Pre height={120} normal break>
+            Byte data signing is completed.
+          </Pre>
+        ),
+      }
+    : !error
     ? undefined
     : {
         title:
@@ -729,8 +801,21 @@ function Tx<TxValues>(props: Props<TxValues>) {
         <Modal
           {...modal}
           modalType={isWallet.mobile() ? Mode.TX_RESULT : Mode.DEFAULT}
-          icon={<ErrorOutlineIcon fontSize="inherit" className="danger" />}
-          onRequestClose={() => setError(undefined)}
+          icon={
+            doneSignBytes ? (
+              <DoneAllIcon fontSize="inherit" className="success" />
+            ) : (
+              <ErrorOutlineIcon fontSize="inherit" className="danger" />
+            )
+          }
+          onRequestClose={
+            doneSignBytes
+              ? () => {
+                  setDoneSignBytes(false)
+                  onPost?.()
+                }
+              : () => setError(undefined)
+          }
           isOpen
         />
       )}

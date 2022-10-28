@@ -43,25 +43,39 @@ const ConfirmForm = ({ action, payload }: Props) => {
 
   useEffect(() => {
     if (payload) {
-      const parsedTx = parseTx(payload.params, isClassic)
+      if (payload?.method === "signBytes") {
+        setTxProps({
+          confirmData: {
+            ...parseDefault(payload),
+            requestType: payload?.method,
+            bytes: payload.params,
+          },
+          onPost() {
+            navigate("/wallet", { replace: true })
+          },
+        })
+      } else {
+        const parsedTx = parseTx(payload.params, isClassic)
 
-      const origin =
-        (sessions?.[payload.handshakeTopic].peerMeta.url as string) || ""
+        const origin =
+          (sessions?.[payload.handshakeTopic].peerMeta.url as string) || ""
 
-      const txData: TxRequest = {
-        ...parseDefault(payload),
-        origin,
-        tx: parsedTx,
+        const txData: TxRequest = {
+          ...parseDefault(payload),
+          requestType: payload?.method,
+          origin,
+          tx: parsedTx,
+        }
+
+        setTx(txData)
+
+        setTxProps({
+          confirmData: txData,
+          onPost() {
+            navigate("/wallet", { replace: true })
+          },
+        })
       }
-
-      setTx(txData)
-
-      setTxProps({
-        confirmData: txData,
-        onPost() {
-          navigate("/wallet", { replace: true })
-        },
-      })
     }
   }, [action, payload, sessions, isClassic, navigate])
 

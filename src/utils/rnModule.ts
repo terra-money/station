@@ -109,7 +109,8 @@ export type RequestType = "sign" | "post" | "signBytes"
 export interface TxRequest extends DefaultRequest {
   tx: CreateTxOptions
   handshakeTopic?: string
-  // requestType: "sign" | "post"
+  bytes?: any
+  requestType?: RequestType
 }
 
 export interface TxResponse<T = any> {
