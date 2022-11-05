@@ -24,7 +24,13 @@ const TokenIcon = ({ token, icon, size, ...rest }: Props) => {
 
   const src = !icon || isError ? defaultIcon : icon
   const sizes =
-    size === "inherit" ? undefined : { width: size ?? 24, height: size ?? 24 }
+    size === "inherit"
+      ? undefined
+      : {
+          width: size ?? 24,
+          height: size ?? 24,
+          style: { padding: (size ?? 24) / 3.5 },
+        }
 
   const attrs = { ...rest, ...sizes, src, className: cx(styles.icon, size) }
   return <img {...attrs} onError={() => setIsError(true)} alt="" />

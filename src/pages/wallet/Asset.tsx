@@ -40,7 +40,9 @@ const Asset = (props: Props) => {
         </div>
       </section>
 
-      {!hideActions && <AssetActions {...props} />}
+      {
+        //!hideActions && <AssetActions {...props} />
+      }
     </article>
   )
 }

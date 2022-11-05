@@ -2,7 +2,7 @@
 
 .asset {
   @include flex(space-between, flex-start);
-  padding: 20px 0;
+  padding: 10px 0;
   position: relative; // to loading indicator
 }
 

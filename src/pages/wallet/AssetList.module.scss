@@ -1,5 +1,23 @@
+@import "mixins";
+
 .assetlist {
   background-color: hsl(240, 6%, 15%);
-  height: 100%;
   padding: 1.6rem;
+  padding-bottom: 0;
+  grid-area: assets;
+  display: grid;
+  grid-template-areas: "title" "list";
+  grid-template-rows: min-content inherit;
+  overflow-y: hidden;
+}
+
+.assetlist__title {
+  @include flex(space-between);
+  margin-bottom: 10px;
+  grid-area: title;
+}
+
+.assetlist__list {
+  overflow-y: auto;
+  grid-area: list;
 }

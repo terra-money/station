@@ -1,7 +1,7 @@
 @import "mixins";
 
 @mixin border {
-  border: var(--border-width) solid var(--card-border);
+  //border: var(--border-width) solid var(--card-border);
   border-radius: var(--border-radius);
 }
 

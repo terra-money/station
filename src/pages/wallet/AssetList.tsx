@@ -1,4 +1,5 @@
 import { FormError } from "components/form"
+import { InternalButton } from "components/general"
 import { Grid } from "components/layout"
 import { useIsWalletEmpty, useTerraNativeLength } from "data/queries/bank"
 import { useActiveDenoms } from "data/queries/oracle"
@@ -8,6 +9,7 @@ import {
 } from "data/settings/CustomTokens"
 import { readNativeDenom } from "data/token"
 import { useTranslation } from "react-i18next"
+import AddTokens from "./AddTokens"
 import Asset from "./Asset"
 import styles from "./AssetList.module.scss"
 import { useCoins } from "./Coins"
@@ -33,7 +35,6 @@ const AssetList = () => {
           {isWalletEmpty && (
             <FormError>{t("Coins required to post transactions")}</FormError>
           )}
-
           <section>
             {list.map(({ denom, ...item }) => (
               <Asset {...readNativeDenom(denom)} {...item} key={denom} />
@@ -60,8 +61,17 @@ const AssetList = () => {
 
   return (
     <article className={styles.assetlist}>
-      <h3>Assets</h3>
-      <Grid gap={32}>{render()}</Grid>
+      <div className={styles.assetlist__title}>
+        <h3>Assets</h3>
+        <AddTokens>
+          {(open) => (
+            <InternalButton onClick={open}>{t("Add tokens")}</InternalButton>
+          )}
+        </AddTokens>
+      </div>
+      <Grid gap={32} className={styles.assetlist__list}>
+        {render()}
+      </Grid>
     </article>
   )
 }

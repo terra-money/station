@@ -21,9 +21,14 @@ const Nav = () => {
   return (
     <nav>
       <header className={styles.header}>
-        <NavLink to="/" className={classNames(styles.item, styles.logo)}>
+        <a
+          href="https://setup-station.terra.money/"
+          target="_blank"
+          rel="noreferrer"
+          className={classNames(styles.item, styles.logo)}
+        >
           <img src={icon} alt="Station" /> <strong>Station</strong>
-        </NavLink>
+        </a>
 
         <button className={styles.toggle} onClick={toggle}>
           {isOpen ? <CloseIcon /> : <MenuIcon />}

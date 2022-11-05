@@ -1,4 +1,7 @@
 .wallet {
   border-left: 1px solid var(--menu-border);
-  height: (100vh - var(--header-height));
+  height: calc(100vh - var(--header-height));
+  display: grid;
+  grid-template-areas: "networth" "assets";
+  grid-template-rows: min-content auto;
 }
