@@ -28,10 +28,6 @@ export const Page = ({ children }: PropsWithChildren<{}>) => {
   return <div className={styles.page}>{children}</div>
 }
 
-export const Walletbar = ({ children }: PropsWithChildren<{}>) => {
-  return <div className={styles.walletbar}>{children}</div>
-}
-
 export const Header = ({ children }: PropsWithChildren<{}>) => {
   return (
     <header className={styles.header}>

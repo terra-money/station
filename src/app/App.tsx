@@ -1,5 +1,5 @@
 import { getErrorMessage } from "utils/error"
-import Layout, { MainContainer, Page, Walletbar } from "components/layout"
+import Layout, { MainContainer, Page } from "components/layout"
 import { Banner, Content, Header, Actions, Sidebar } from "components/layout"
 import { ErrorBoundary, Wrong } from "components/feedback"
 
@@ -64,9 +64,7 @@ const App = () => {
           <InitBankBalance>
             <MainContainer>
               <Page>{routes}</Page>
-              <Walletbar>
-                <Wallet />
-              </Walletbar>
+              <Wallet />
             </MainContainer>
           </InitBankBalance>
         </ErrorBoundary>

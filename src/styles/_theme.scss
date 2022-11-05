@@ -27,7 +27,7 @@
   --transition: 100ms;
 
   @include desktop {
-    --main-padding-horizontal: 64px;
+    --main-padding-horizontal: 20px;
   }
 
   @include mobile {

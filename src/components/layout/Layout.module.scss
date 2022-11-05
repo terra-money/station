@@ -64,14 +64,6 @@
   background: var(--menu-bg); // TODO: change
 }
 
-.walletbar {
-  grid-area: walletbar;
-  overflow-y: visible;
-  display: grid;
-  background: var(--menu-bg); // TODO: change
-  height: calc(100vh - var(--header-height));
-}
-
 @mixin border-left {
   @include desktop {
     border-left: var(--border-width) solid var(--card-border);

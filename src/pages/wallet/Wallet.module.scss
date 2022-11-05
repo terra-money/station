@@ -1,7 +1,34 @@
+@import "mixins";
+
 .wallet {
+  grid-area: walletbar;
+  position: relative;
   border-left: 1px solid var(--menu-border);
   height: calc(100vh - var(--header-height));
   display: grid;
   grid-template-areas: "networth" "assets";
   grid-template-rows: min-content auto;
+  transition: 400ms;
+}
+
+.close {
+  position: absolute;
+  top: 30px;
+  left: -24px;
+  padding: 8px;
+  background-color: var(--bg);
+  border-radius: 50%;
+  border: 1px solid var(--menu-border);
+  transition: 300ms;
+
+  @include mobile {
+    display: none;
+  }
+}
+
+.wallet__closed {
+  transform: translate(100%, 0);
+  .close {
+    transform: rotate(180deg);
+  }
 }
