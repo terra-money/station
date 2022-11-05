@@ -7,17 +7,34 @@
 }
 
 .details {
-  @include flex(space-between, flex-start);
-  gap: 10px;
+  @include flex(flex-start);
+  gap: 12px;
+  width: 100%;
+}
+
+.details__container {
+  @include flex(space-between);
+  width: 100%;
 }
 
 .symbol,
 .amount {
-  font-size: 16px;
+  font-size: 15px;
 }
 
+.change,
 .amount {
   font-weight: var(--normal);
+  color: var(--text-muted);
+}
+
+.price,
+.amount {
+  text-align: right;
+}
+
+.change {
+  color: hsl(224, 82%, 60%);
 }
 
 .value {

@@ -7,7 +7,7 @@
   grid-area: assets;
   display: grid;
   grid-template-areas: "title" "list";
-  grid-template-rows: min-content inherit;
+  grid-template-rows: min-content auto;
   overflow-y: hidden;
 }
 

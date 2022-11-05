@@ -19,24 +19,31 @@ const Asset = (props: Props) => {
       <section className={styles.details}>
         <TokenIcon token={token} icon={icon} size={50} />
 
-        <div>
-          <h1 className={styles.symbol}>{symbol}</h1>
-          <h2 className={styles.amount}>
-            <WithFetching {...state} height={1}>
-              {(progress, wrong) => (
-                <>
-                  {progress}
-                  {wrong ? (
-                    <span className="danger">
-                      {t("Failed to query balance")}
-                    </span>
-                  ) : (
-                    <Read {...props} amount={balance} token="" />
-                  )}
-                </>
-              )}
-            </WithFetching>
-          </h2>
+        <div className={styles.details__container}>
+          <div>
+            <h1 className={styles.symbol}>{symbol}</h1>
+            <h2 className={styles.change}>+3.02%</h2>
+          </div>
+          <div className={styles.amount__container}>
+            <h1 className={styles.price}>$1,234.56</h1>
+            <h2 className={styles.amount}>
+              <WithFetching {...state} height={1}>
+                {(progress, wrong) => (
+                  <>
+                    {progress}
+                    {wrong ? (
+                      <span className="danger">
+                        {t("Failed to query balance")}
+                      </span>
+                    ) : (
+                      <Read {...props} amount={balance} token="" />
+                    )}
+                  </>
+                )}
+              </WithFetching>{" "}
+              {symbol}
+            </h2>
+          </div>
         </div>
       </section>
 
