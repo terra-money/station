@@ -20,6 +20,18 @@ export const Sidebar = ({ children }: PropsWithChildren<{}>) => {
   return <div className={styles.sidebar}>{children}</div>
 }
 
+export const MainContainer = ({ children }: PropsWithChildren<{}>) => {
+  return <div className={styles.maincontainer}>{children}</div>
+}
+
+export const Page = ({ children }: PropsWithChildren<{}>) => {
+  return <div className={styles.page}>{children}</div>
+}
+
+export const Walletbar = ({ children }: PropsWithChildren<{}>) => {
+  return <div className={styles.walletbar}>{children}</div>
+}
+
 export const Header = ({ children }: PropsWithChildren<{}>) => {
   return (
     <header className={styles.header}>

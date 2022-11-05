@@ -27,7 +27,7 @@ const UnlockForm = () => {
   const submit = ({ password }: Values) => {
     unlockWallet(name, password)
     connect(name)
-    navigate("/wallet", { replace: true })
+    navigate("/", { replace: true })
   }
 
   return (

@@ -2,7 +2,6 @@
 
 .asset {
   @include flex(space-between, flex-start);
-  border-top: 1px solid var(--card-border);
   padding: 20px 0;
   position: relative; // to loading indicator
 }

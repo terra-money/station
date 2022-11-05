@@ -7,7 +7,7 @@
   --grid-gap: 20px;
   --card-padding: 28px;
   --card-padding-small: 20px;
-  --header-height: 64px;
+  --header-height: 72px;
   --max-width: 1080px;
   --max-width-small: 640px;
   --modal-width: 520px;
@@ -93,18 +93,18 @@
 }
 
 .dark {
-  --button-primary-bg-h: 210;
-  --button-primary-bg-s: 89%;
-  --button-primary-bg-l: 61%;
+  --button-primary-bg-h: 224;
+  --button-primary-bg-s: 82%;
+  --button-primary-bg-l: 60%;
   --button-primary-bg: hsl(
     var(--button-primary-bg-h),
     var(--button-primary-bg-s),
     var(--button-primary-bg-l)
   );
   --button-primary-text: hsl(0 0% 95%);
-  --button-default-bg-h: 210;
-  --button-default-bg-s: 1%;
-  --button-default-bg-l: 30%;
+  --button-default-bg-h: 240;
+  --button-default-bg-s: 5%;
+  --button-default-bg-l: 22%;
   --button-default-bg: hsl(
     var(--button-default-bg-h),
     var(--button-default-bg-s),
@@ -112,18 +112,18 @@
   );
   --button-default-text: hsl(0 0% 87%);
 
-  --menu-bg: hsl(0 0% 13%);
-  --menu-border: hsl(0 0% 100% / 0.1);
-  --menu-text: hsl(0 0% 91%);
+  --menu-bg: hsl(239, 6%, 17%);
+  --menu-border: hsl(239, 5%, 22%);
+  --menu-text: hsl(239, 2%, 76%);
 
   --link: hsl(210 89% 61%);
-  --text: hsl(0 0% 86%);
+  --text: hsl(0, 0%, 95%);
   --text-muted: hsl(0 0% 55%);
   --chart: hsl(215 90% 57%);
 
-  --bg: hsl(0 0% 11%);
+  --bg: hsl(0, 0%, 10%);
   --bg-muted: hsl(0 0% 13%);
-  --card-bg: hsl(240 1% 15%);
+  --card-bg: hsl(239, 6%, 17%);
   --card-border: hsl(210 2% 21%);
   --input-bg: var(--card-bg);
   --input-border: hsl(0 0% 30%);

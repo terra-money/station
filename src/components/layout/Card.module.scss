@@ -103,7 +103,7 @@
   .main {
     // Avoid rendering border-bottom under the title
     // when the content of the card is empty for a while
-    border-top: 1px solid var(--card-border);
+    //border-top: 1px solid var(--card-border);
     padding: var(--card-padding);
   }
 

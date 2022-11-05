@@ -2,7 +2,7 @@
 @import "mixins";
 
 @mixin size($min-width, $height) {
-  border-radius: math.div($height, 2);
+  //border-radius: math.div($height, 2);
   min-width: $min-width;
   height: $height;
 }
@@ -11,6 +11,7 @@
   @include inline-flex;
   @include size(150px, 48px);
 
+  border-radius: 15px;
   font-weight: var(--bold);
   gap: 5px;
   line-height: 1;

@@ -2,9 +2,6 @@
 
 .header {
   @include flex(space-between);
-
-  border-bottom: var(--border-width) solid var(--menu-border);
-  margin-bottom: (40px - 14px);
 }
 
 /* mobile */
@@ -34,9 +31,15 @@
   font-weight: 300;
   padding: 0 20px;
   line-height: var(--header-height);
+  color: var(--text);
 
   strong {
-    font-weight: 700;
+    font-weight: 500;
+  }
+
+  img {
+    height: 24px;
+    margin-right: 4px;
   }
 }
 

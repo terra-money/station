@@ -1,7 +1,7 @@
 @import "mixins";
 
 .page {
-  overflow: hidden;
+  overflow-y: auto;
   // padding here to position progress bar
 
   @include desktop {

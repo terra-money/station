@@ -17,7 +17,7 @@ const Asset = (props: Props) => {
   return (
     <article className={styles.asset} key={token}>
       <section className={styles.details}>
-        <TokenIcon token={token} icon={icon} size={22} />
+        <TokenIcon token={token} icon={icon} size={50} />
 
         <div>
           <h1 className={styles.symbol}>{symbol}</h1>

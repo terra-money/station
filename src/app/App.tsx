@@ -1,5 +1,5 @@
 import { getErrorMessage } from "utils/error"
-import Layout, { Page } from "components/layout"
+import Layout, { MainContainer, Page, Walletbar } from "components/layout"
 import { Banner, Content, Header, Actions, Sidebar } from "components/layout"
 import { ErrorBoundary, Wrong } from "components/feedback"
 
@@ -14,7 +14,7 @@ import Nav from "./sections/Nav"
 import Aside from "./sections/Aside"
 
 /* header */
-import IsClassicNetwork from "./sections/IsClassicNetwork"
+import NetworkHeader from "./sections/NetworkHeader"
 import Refresh from "./sections/Refresh"
 import Preferences from "./sections/Preferences"
 import SelectTheme from "./sections/SelectTheme"
@@ -27,6 +27,7 @@ import DevTools from "./sections/DevTools"
 
 /* init */
 import InitBankBalance from "./InitBankBalance"
+import Wallet from "pages/wallet/Wallet"
 
 const App = () => {
   const { element: routes } = useNav()
@@ -43,7 +44,7 @@ const App = () => {
       </Sidebar>
 
       <Header>
-        <IsClassicNetwork />
+        <NetworkHeader />
 
         <Actions>
           <DevTools />
@@ -60,7 +61,14 @@ const App = () => {
 
       <Content>
         <ErrorBoundary fallback={fallback}>
-          <InitBankBalance>{routes}</InitBankBalance>
+          <InitBankBalance>
+            <MainContainer>
+              <Page>{routes}</Page>
+              <Walletbar>
+                <Wallet />
+              </Walletbar>
+            </MainContainer>
+          </InitBankBalance>
         </ErrorBoundary>
       </Content>
     </Layout>

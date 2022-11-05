@@ -13,7 +13,7 @@ const CreatedWallet = ({ name, address }: SingleWallet) => {
 
   const submit = () => {
     connect(name)
-    navigate("/wallet", { replace: true })
+    navigate("/", { replace: true })
   }
 
   return (

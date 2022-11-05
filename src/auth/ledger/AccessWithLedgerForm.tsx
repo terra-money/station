@@ -44,7 +44,7 @@ const AccessWithLedgerForm = () => {
 
       const { accAddress } = await LedgerKey.create(transport, index)
       connectLedger(accAddress, index, bluetooth)
-      navigate("/wallet", { replace: true })
+      navigate("/", { replace: true })
     } catch (error) {
       setError(error as Error)
     } finally {

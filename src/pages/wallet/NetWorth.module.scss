@@ -1,0 +1,27 @@
+.networth {
+  padding: 1.6rem;
+
+  p {
+    color: var(--text-muted);
+  }
+
+  h1 {
+    font-weight: 600;
+    font-size: 22pt;
+  }
+}
+
+.networth__buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+
+  button {
+    min-width: 0;
+    width: 100%;
+    padding-block: 20px;
+    height: fit-content;
+  }
+}

@@ -7,12 +7,14 @@ import CloseIcon from "@mui/icons-material/Close"
 import { mobileIsMenuOpenState } from "components/layout"
 import { useNav } from "../routes"
 import styles from "./Nav.module.scss"
+import { useThemeFavicon } from "data/settings/Theme"
 
 const cx = classNames.bind(styles)
 
 const Nav = () => {
   useCloseMenuOnNavigate()
   const { menu } = useNav()
+  const icon = useThemeFavicon()
   const [isOpen, setIsOpen] = useRecoilState(mobileIsMenuOpenState)
   const toggle = () => setIsOpen(!isOpen)
 
@@ -20,7 +22,7 @@ const Nav = () => {
     <nav>
       <header className={styles.header}>
         <NavLink to="/" className={classNames(styles.item, styles.logo)}>
-          <strong>Terra</strong> Station
+          <img src={icon} alt="Station" /> <strong>Station</strong>
         </NavLink>
 
         <button className={styles.toggle} onClick={toggle}>

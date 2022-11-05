@@ -12,7 +12,6 @@ import { ReactComponent as ContractIcon } from "styles/images/menu/Contract.svg"
 
 /* menu */
 import Dashboard from "pages/dashboard/Dashboard"
-import Wallet from "pages/wallet/Wallet"
 import NFT from "pages/nft/NFT"
 import History from "pages/history/History"
 import Stake from "pages/stake/Stake"
@@ -65,22 +64,22 @@ export const useNav = () => {
 
   const menu = [
     {
-      path: "/wallet",
-      element: <Wallet />,
-      title: t("Wallet"),
+      path: "/",
+      element: <Dashboard />,
+      title: t("Dashboard"),
       icon: <WalletIcon {...ICON_SIZE} />,
-    },
-    {
-      path: "/history",
-      element: <History />,
-      title: t("History"),
-      icon: <HistoryIcon {...ICON_SIZE} />,
     },
     {
       path: "/swap",
       element: <SwapTx />,
       title: t("Swap"),
       icon: <SwapIcon {...ICON_SIZE} />,
+    },
+    {
+      path: "/history",
+      element: <History />,
+      title: t("History"),
+      icon: <HistoryIcon {...ICON_SIZE} />,
     },
     {
       path: "/stake",
@@ -109,8 +108,6 @@ export const useNav = () => {
   ]
 
   const routes = [
-    { path: "/", element: <Dashboard /> },
-
     /* pages */
     ...menu,
     { path: "/validator/:address", element: <ValidatorDetails /> },
