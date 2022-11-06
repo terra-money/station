@@ -42,8 +42,7 @@
   display: grid;
 
   @include desktop {
-    grid-template-columns: 1fr 380px;
-    grid-template-rows: auto 0 1fr;
+    grid-template-columns: auto min-content;
     grid-template-areas: "main walletbar";
   }
 

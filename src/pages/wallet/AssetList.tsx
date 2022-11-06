@@ -30,32 +30,30 @@ const AssetList = () => {
     const list = all
 
     return (
-      <>
-        <Grid gap={12}>
-          {isWalletEmpty && (
-            <FormError>{t("Coins required to post transactions")}</FormError>
-          )}
-          <section>
-            {list.map(({ denom, ...item }) => (
-              <Asset {...readNativeDenom(denom)} {...item} key={denom} />
-            ))}
-            {!ibc.length
-              ? null
-              : ibc.map(({ denom }) => (
-                  <IBCAsset denom={denom} key={denom}>
-                    {(item) => <Asset {...item} />}
-                  </IBCAsset>
-                ))}
-            {!cw20.length
-              ? null
-              : cw20.map((item) => (
-                  <CW20Asset {...item} key={item.token}>
-                    {(item) => <Asset {...item} />}
-                  </CW20Asset>
-                ))}
-          </section>
-        </Grid>
-      </>
+      <div>
+        {isWalletEmpty && (
+          <FormError>{t("Coins required to post transactions")}</FormError>
+        )}
+        <section>
+          {list.map(({ denom, ...item }) => (
+            <Asset {...readNativeDenom(denom)} {...item} key={denom} />
+          ))}
+          {!ibc.length
+            ? null
+            : ibc.map(({ denom }) => (
+                <IBCAsset denom={denom} key={denom}>
+                  {(item) => <Asset {...item} />}
+                </IBCAsset>
+              ))}
+          {!cw20.length
+            ? null
+            : cw20.map((item) => (
+                <CW20Asset {...item} key={item.token}>
+                  {(item) => <Asset {...item} />}
+                </CW20Asset>
+              ))}
+        </section>
+      </div>
     )
   }
 

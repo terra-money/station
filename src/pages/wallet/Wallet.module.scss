@@ -1,6 +1,7 @@
 @import "mixins";
 
 .wallet {
+  width: 380px;
   grid-area: walletbar;
   position: relative;
   border-left: 1px solid var(--menu-border);
@@ -27,8 +28,13 @@
 }
 
 .wallet__closed {
+  width: 0;
   transform: translate(100%, 0);
   .close {
     transform: rotate(180deg);
+
+    &:hover {
+      transform: rotate(180deg) translate(13px, 0);
+    }
   }
 }
