@@ -13,7 +13,7 @@ import { SAMPLE_ADDRESS } from "config/constants"
 import { getAmount, sortCoins } from "utils/coin"
 import { has } from "utils/num"
 import { parseJSON } from "utils/data"
-import { queryKey } from "data/query"
+import { queryKey, useIsClassic } from "data/query"
 import { useAddress } from "data/wallet"
 import { useBankBalance } from "data/queries/bank"
 import { ExternalLink } from "components/general"
@@ -77,6 +77,7 @@ interface Props {
 const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
   const { t } = useTranslation()
   const address = useAddress()
+  const isClassic = useIsClassic()
 
   const bankBalance = useBankBalance()
   const balance = getAmount(bankBalance, "uluna")
@@ -367,6 +368,8 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
     }
   }
 
+  const agoraURL = isClassic ? "classic-agora.terra.money" : "agora.terra.money"
+
   return (
     <Tx {...tx}>
       {({ max, fee, submit }) => (
@@ -374,8 +377,8 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
           <Grid gap={4}>
             <FormHelp>
               Upload proposal only after forum discussion on{" "}
-              <ExternalLink href="https://agora.terra.money">
-                agora.terra.money
+              <ExternalLink href={`https://${agoraURL}`}>
+                {agoraURL}
               </ExternalLink>
             </FormHelp>
             <FormWarning>
@@ -388,6 +391,11 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
                 {t("Parameters cannot be changed by text proposals")}
               </FormWarning>
             )}
+            <FormWarning>
+              {t(
+                "Links to websites outside the Terra ecosystem will not be displayed"
+              )}
+            </FormWarning>
           </Grid>
 
           <FormItem label={t("Proposal type")} error={errors.type?.message}>
