@@ -368,6 +368,8 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
     }
   }
 
+  const agoraURL = isClassic ? "classic-agora.terra.money" : "agora.terra.money"
+
   return (
     <Tx {...tx}>
       {({ max, fee, submit }) => (
@@ -375,14 +377,8 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
           <Grid gap={4}>
             <FormHelp>
               Upload proposal only after forum discussion on{" "}
-              <ExternalLink
-                href={
-                  isClassic
-                    ? "https://classic-agora.terra.money"
-                    : "https://agora.terra.money"
-                }
-              >
-                {isClassic ? "classic-" : ""}agora.terra.money
+              <ExternalLink href={`https://${agoraURL}`}>
+                {agoraURL}
               </ExternalLink>
             </FormHelp>
             <FormWarning>
