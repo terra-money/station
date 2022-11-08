@@ -1,10 +1,10 @@
-# Terra Station
+# Rebel Station
 
 ![Banner](Banner.png)
 
-**Terra Station** is a web application to interact with [Terra Core](https://github.com/terra-money/core).
+**Rebel Station** is a web application to interact with [Terra Core](https://github.com/terra-money/core).
 
-Terra Station allows users to:
+Rebel Station allows users to:
 
 - View key macroeconomic metrics for Terra.
 - View the balances and values of coins and tokens held in the connected wallet.
@@ -19,11 +19,11 @@ Terra Station allows users to:
 - Upload and instantiate new contracts and query from and execute messages to existing contracts.
 - Deposit and withdraw UST from Anchor Protocol.
 
-## Running Terra Station
+## Running Rebel Station
 
 This project was bootstrapped with [Create React App](https://create-react-app.dev/).
 
-Run Terra Station with the following commands:
+Run Rebel Station with the following commands:
 
 ```
 git clone https://github.com/terra-money/station.git

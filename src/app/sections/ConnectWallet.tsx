@@ -61,7 +61,7 @@ const ConnectWallet = ({ renderButton }: Props) => {
         <List list={available.length ? available : list} />
         {!!available.length && (
           <FormHelp>
-            Use <ExternalLink href={STATION}>Terra Station</ExternalLink> on the
+            Use <ExternalLink href={STATION}>Rebel Station</ExternalLink> on the
             browser to access with Ledger device
           </FormHelp>
         )}
