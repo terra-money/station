@@ -1,9 +1,6 @@
 import { useTranslation } from "react-i18next"
 import classNames from "classnames/bind"
-import { useIsClassic } from "data/query"
 import { Col, Page } from "components/layout"
-import LunaPrice from "./LunaPrice"
-import TaxRate from "./TaxRate"
 import Issuance from "./Issuance"
 import CommunityPool from "./CommunityPool"
 import StakingRatio from "./StakingRatio"
@@ -14,14 +11,15 @@ const cx = classNames.bind(styles)
 
 const Dashboard = () => {
   const { t } = useTranslation()
-  const isClassic = useIsClassic()
 
   return (
     <Page title={t("Dashboard")}>
       <Col>
-        <header className={cx(styles.header, { trisect: !isClassic })}>
-          {isClassic && <LunaPrice />}
-          {isClassic && <TaxRate />}
+        <header className={cx(styles.header, { trisect: true })}>
+          {
+            // TODO: recreate LunaPrice with coingecko API
+            // isClassic && <LunaPrice />
+          }
           <Issuance />
           <CommunityPool />
           <StakingRatio />

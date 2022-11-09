@@ -1,8 +1,8 @@
 import { FormError } from "components/form"
 import { InternalButton } from "components/general"
 import { Grid } from "components/layout"
-import { useIsWalletEmpty, useTerraNativeLength } from "data/queries/bank"
-import { useActiveDenoms } from "data/queries/oracle"
+import { useIsWalletEmpty } from "data/queries/bank"
+import { useActiveDenoms } from "data/queries/coingecko"
 import {
   useCustomTokensCW20,
   useCustomTokensIBC,
@@ -36,12 +36,17 @@ const AssetList = () => {
         )}
         <section>
           {list.map(({ denom, ...item }) => (
-            <Asset {...readNativeDenom(denom)} {...item} key={denom} />
+            <Asset
+              denom={denom}
+              {...readNativeDenom(denom)}
+              {...item}
+              key={denom}
+            />
           ))}
           {!ibc.length
             ? null
-            : ibc.map(({ denom }) => (
-                <IBCAsset denom={denom} key={denom}>
+            : ibc.map(({ denom, base_denom }) => (
+                <IBCAsset denom={denom} base={base_denom} key={denom}>
                   {(item) => <Asset {...item} />}
                 </IBCAsset>
               ))}
@@ -49,7 +54,7 @@ const AssetList = () => {
             ? null
             : cw20.map((item) => (
                 <CW20Asset {...item} key={item.token}>
-                  {(item) => <Asset {...item} />}
+                  {(item) => <Asset {...item} denom={item.token} />}
                 </CW20Asset>
               ))}
         </section>

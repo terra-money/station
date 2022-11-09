@@ -84,7 +84,7 @@ const SelectAddress = () => {
 
   const renderDetails = ({ address, bip, ...rest }: Details) => {
     const { balance, delegations, unbondings } = rest
-    const coins = sortCoins(balance, currency)
+    const coins = sortCoins(balance, currency.id)
     const length = coins.length
 
     return (

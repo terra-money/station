@@ -11,7 +11,7 @@ import Chart from "./components/Chart"
 
 const LunaPriceChart = () => {
   const currency = useCurrency()
-  const denom = currency === "uluna" ? "uusd" : currency
+  const denom = currency.id === "uluna" ? "uusd" : currency.id
   const [chartInterval, setChartInterval] = useState(ChartInterval["15m"])
   const { data, isLoading } = useLunaPriceChart(denom, chartInterval)
   const animation = useThemeAnimation()

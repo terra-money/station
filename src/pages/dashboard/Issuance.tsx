@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
 import { useSupply } from "data/queries/bank"
-import { useMemoizedCalcValue } from "data/queries/oracle"
+import { useMemoizedCalcValue } from "data/queries/coingecko"
 import { Card } from "components/layout"
 import { Read } from "components/token"
 import DashboardContent from "./components/DashboardContent"

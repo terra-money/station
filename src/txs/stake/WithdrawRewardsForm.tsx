@@ -12,7 +12,7 @@ import { queryKey } from "data/query"
 import { useCurrency } from "data/settings/Currency"
 import { useAddress } from "data/wallet"
 import { useBankBalance } from "data/queries/bank"
-import { useMemoizedCalcValue } from "data/queries/oracle"
+import { useMemoizedCalcValue } from "data/queries/coingecko"
 import { getFindMoniker } from "data/queries/staking"
 import { calcRewardsValues } from "data/queries/distribution"
 import { WithTokenItem } from "data/token"
@@ -38,7 +38,7 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
   const bankBalance = useBankBalance()
   const calcValue = useMemoizedCalcValue()
   const findMoniker = getFindMoniker(validators)
-  const { byValidator } = calcRewardsValues(rewards, currency, calcValue)
+  const { byValidator } = calcRewardsValues(rewards, currency.id, calcValue)
 
   /* tx context */
   const initialGasDenom = getInitialGasDenom(bankBalance)

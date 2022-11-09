@@ -1,20 +1,26 @@
-import { atom, useRecoilState } from "recoil"
+import { atom, useRecoilState, useRecoilValue } from "recoil"
 import { SettingKey } from "utils/localStorage"
 import { getLocalSetting, setLocalSetting } from "utils/localStorage"
 
+interface Currency {
+  id: string
+  unit: string
+  name: string
+}
+
 export const currencyState = atom({
   key: "currency",
-  default: getLocalSetting<string>(SettingKey.Currency),
+  default: getLocalSetting<Currency>(SettingKey.Currency),
 })
 
 export const useCurrency = () => {
-  return "uluna"
+  return useRecoilValue(currencyState)
 }
 
 export const useCurrencyState = () => {
   const [currency, setCurrency] = useRecoilState(currencyState)
 
-  const set = (currency: string) => {
+  const set = (currency: Currency) => {
     setLocalSetting(SettingKey.Currency, currency)
     setCurrency(currency)
   }

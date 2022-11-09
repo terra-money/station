@@ -1,26 +1,19 @@
 import { useTranslation } from "react-i18next"
-import BoltIcon from "@mui/icons-material/Bolt"
 import { has } from "utils/num"
 import { getAmount, sortByDenom } from "utils/coin"
 import { useCurrency } from "data/settings/Currency"
 import { useMinimumValue } from "data/settings/MinimumValue"
 import { readNativeDenom } from "data/token"
-import { useIsClassic } from "data/query"
 import { useBankBalance } from "data/queries/bank"
-import { useIsWalletEmpty, useTerraNativeLength } from "data/queries/bank"
-import { useActiveDenoms } from "data/queries/oracle"
-import { useMemoizedCalcValue } from "data/queries/oracle"
-import { InternalLink } from "components/general"
-import { Card, Flex, Grid } from "components/layout"
+import { useIsWalletEmpty } from "data/queries/bank"
+import { useActiveDenoms } from "data/queries/coingecko"
+import { useMemoizedCalcValue } from "data/queries/coingecko"
+import { Card, Grid } from "components/layout"
 import { FormError } from "components/form"
 import Asset from "./Asset"
-import SelectMinimumValue from "./SelectMinimumValue"
-import styles from "./Coins.module.scss"
 
 const Coins = () => {
   const { t } = useTranslation()
-  const isClassic = useIsClassic()
-  const length = useTerraNativeLength()
   const isWalletEmpty = useIsWalletEmpty()
   const { data: denoms, ...state } = useActiveDenoms()
   const coins = useCoins(denoms)
@@ -28,8 +21,8 @@ const Coins = () => {
   const render = () => {
     if (!coins) return
 
-    const [all, filtered] = coins
-    const list = isClassic ? filtered : all
+    const [all] = coins
+    const list = all
 
     return (
       <>
@@ -38,16 +31,20 @@ const Coins = () => {
             <FormError>{t("Coins required to post transactions")}</FormError>
           )}
 
-          {isClassic && (
+          {/*
+            TODO: Same thing with Coingecko data
+          isClassic && (
             <Flex className={styles.select}>
               {!isWalletEmpty && <SelectMinimumValue />}
             </Flex>
-          )}
+          )
+          */}
 
           <section>
             {list.map(({ denom, ...item }) => (
               <Asset
-                {...readNativeDenom(denom, isClassic)}
+                denom={denom}
+                {...readNativeDenom(denom)}
                 {...item}
                 key={denom}
               />
@@ -58,18 +55,8 @@ const Coins = () => {
     )
   }
 
-  const extra = isClassic && (
-    <InternalLink
-      icon={<BoltIcon style={{ fontSize: 18 }} />}
-      to="/swap/multiple"
-      disabled={length < 2}
-    >
-      {t("Swap multiple coins")}
-    </InternalLink>
-  )
-
   return (
-    <Card {...state} title={t("Coins")} extra={extra}>
+    <Card {...state} title={t("Coins")}>
       <Grid gap={32}>{render()}</Grid>
     </Card>
   )
@@ -83,7 +70,7 @@ export const useCoins = (denoms?: Denom[]) => {
   const bankBalance = useBankBalance()
   const [minimumValue] = useMinimumValue()
   const calcValue = useMemoizedCalcValue()
-  const calcValueByUST = useMemoizedCalcValue("uusd")
+  const calcValueByUST = useMemoizedCalcValue()
 
   if (!denoms) return
 
@@ -100,7 +87,7 @@ export const useCoins = (denoms?: Denom[]) => {
 
   const coins = sortByDenom(
     nativeTokenValues,
-    currency,
+    currency.id,
     ({ $: a }, { $: b }) => b - a
   )
 

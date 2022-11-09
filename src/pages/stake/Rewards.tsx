@@ -2,8 +2,8 @@ import { useTranslation } from "react-i18next"
 import { useCurrency } from "data/settings/Currency"
 import { combineState } from "data/query"
 import { calcRewardsValues, useRewards } from "data/queries/distribution"
-import { useExchangeRates } from "data/queries/oracle"
-import { useMemoizedCalcValue } from "data/queries/oracle"
+import { useExchangeRates } from "data/queries/coingecko"
+import { useMemoizedCalcValue } from "data/queries/coingecko"
 import { WithTokenItem } from "data/token"
 import { ModalButton } from "components/feedback"
 import { TokenCard, TokenCardGrid } from "components/token"
@@ -14,7 +14,7 @@ import RewardsTooltip from "./RewardsTooltip"
 const Rewards = () => {
   const { t } = useTranslation()
   const currency = useCurrency()
-  const calcValue = useMemoizedCalcValue(currency)
+  const calcValue = useMemoizedCalcValue()
 
   const { data: rewards, ...rewardsState } = useRewards()
   const { data: exchangeRates, ...exchangeRatesState } = useExchangeRates()
@@ -24,7 +24,7 @@ const Rewards = () => {
   const title = t("Staking rewards")
   const render = () => {
     if (!rewards) return null
-    const { total } = calcRewardsValues(rewards, currency, calcValue)
+    const { total } = calcRewardsValues(rewards, currency.id, calcValue)
     const { sum, list } = total
     const amount = list.find(({ denom }) => denom === "uluna")?.amount ?? "0"
 

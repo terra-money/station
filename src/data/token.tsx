@@ -3,15 +3,12 @@ import { isDenomIBC, isDenomTerra } from "@terra.kitchen/utils"
 import { readDenom, truncate } from "@terra.kitchen/utils"
 import { AccAddress } from "@terra-money/terra.js"
 import { ASSETS } from "config/constants"
-import { useIsClassic } from "./query"
 import { useIBCBaseDenom } from "./queries/ibc"
 import { useTokenInfoCW20 } from "./queries/wasm"
 import { useCustomTokensCW20 } from "./settings/CustomTokens"
 import { useCW20Whitelist, useIBCWhitelist } from "./Terra/TerraAssets"
 
 export const useTokenItem = (token: Token): TokenItem | undefined => {
-  const isClassic = useIsClassic()
-
   /* CW20 */
   const matchToken = (item: TokenItem) => item.token === token
 
@@ -53,7 +50,7 @@ export const useTokenItem = (token: Token): TokenItem | undefined => {
     return readIBCDenom(item)
   }
 
-  return readNativeDenom(token, isClassic)
+  return readNativeDenom(token)
 }
 
 interface Props {
@@ -70,22 +67,14 @@ export const WithTokenItem = ({ token, children }: Props) => {
 /* helpers */
 export const getIcon = (path: string) => `${ASSETS}/icon/svg/${path}`
 
-export const readNativeDenom = (
-  denom: Denom,
-  isClassic?: boolean
-): TokenItem => {
+export const readNativeDenom = (denom: Denom): TokenItem => {
+  // TODO: support multiple native tokens
   const symbol = readDenom(denom)
-  const symbolClassic = denom === "uluna" ? "LUNC" : symbol + "C"
-
-  const path = isDenomTerra(denom)
-    ? `Terra/${symbol}.svg`
-    : isClassic
-    ? "LUNC.svg"
-    : "Luna.svg"
+  const path = "Luna.svg"
 
   return {
     token: denom,
-    symbol: isClassic ? symbolClassic : symbol,
+    symbol: symbol,
     name: isDenomTerra(denom)
       ? `Terra ${denom.slice(1).toUpperCase()}`
       : undefined,

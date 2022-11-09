@@ -6,16 +6,17 @@ import { Props as AssetProps } from "./Asset"
 
 interface Props {
   denom: IBCDenom
+  base: string
   children: (item: AssetProps) => ReactNode
 }
 
-const IBCAsset = ({ denom, children: render }: Props) => {
+const IBCAsset = ({ denom, base, children: render }: Props) => {
   const bankBalance = useBankBalance()
   const balance = getAmount(bankBalance, denom)
 
   return (
     <WithTokenItem token={denom} key={denom}>
-      {(item) => render({ ...item, balance })}
+      {(item) => render({ ...item, balance, denom: base })}
     </WithTokenItem>
   )
 }

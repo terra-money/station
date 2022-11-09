@@ -1,18 +1,22 @@
 import { useTranslation } from "react-i18next"
 import { WithFetching } from "components/feedback"
 import { Read, TokenIcon } from "components/token"
-import AssetActions from "./AssetActions"
+import { useMemoizedPrices } from "data/queries/coingecko"
 import styles from "./Asset.module.scss"
+import { combineState } from "data/query"
+import { useCurrency } from "data/settings/Currency"
 
 export interface Props extends TokenItem, QueryState {
   balance?: Amount
-  value?: Value
   hideActions?: boolean
+  denom: string
 }
 
 const Asset = (props: Props) => {
-  const { token, icon, symbol, balance, value, hideActions, ...state } = props
+  const { token, icon, symbol, balance, hideActions, denom, ...state } = props
   const { t } = useTranslation()
+  const currency = useCurrency()
+  const { data: prices, ...pricesState } = useMemoizedPrices()
 
   return (
     <article className={styles.asset} key={token}>
@@ -25,9 +29,11 @@ const Asset = (props: Props) => {
             <h2 className={styles.change}>+3.02%</h2>
           </div>
           <div className={styles.amount__container}>
-            <h1 className={styles.price}>$1,234.56</h1>
+            <h1 className={styles.price}>
+              {currency.unit} {prices?.[denom] || 0}
+            </h1>
             <h2 className={styles.amount}>
-              <WithFetching {...state} height={1}>
+              <WithFetching {...combineState(state, pricesState)} height={1}>
                 {(progress, wrong) => (
                   <>
                     {progress}
@@ -46,10 +52,6 @@ const Asset = (props: Props) => {
           </div>
         </div>
       </section>
-
-      {
-        //!hideActions && <AssetActions {...props} />
-      }
     </article>
   )
 }

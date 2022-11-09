@@ -4,7 +4,7 @@ import { calcRewardsValues, useRewards } from "data/queries/distribution"
 import { useDelegations, useValidators } from "data/queries/staking"
 import { has } from "utils/num"
 import { useCurrency } from "data/settings/Currency"
-import { useActiveDenoms, useMemoizedCalcValue } from "data/queries/oracle"
+import { useActiveDenoms, useMemoizedCalcValue } from "data/queries/coingecko"
 import { useIBCWhitelist } from "data/Terra/TerraAssets"
 import { Page, Card } from "components/layout"
 import DelegationsPromote from "app/containers/DelegationsPromote"
@@ -34,7 +34,7 @@ const WithdrawRewardsTx = () => {
     if (!activeDenoms) return null
     if (!(rewards && delegations && validators && IBCWhitelist)) return null
 
-    const { total } = calcRewardsValues(rewards, currency, calcValue)
+    const { total } = calcRewardsValues(rewards, currency.id, calcValue)
     const hasRewards = !!has(total.sum)
     const hasDelegations = !!delegations.length
 

@@ -26,7 +26,6 @@ import ProposalDetails from "pages/gov/ProposalDetails"
 import SendTx from "txs/send/SendTx"
 import TransferCW721Tx from "txs/wasm/TransferCW721Tx"
 import SwapTx from "txs/swap/SwapTx"
-import SwapMultipleTx from "txs/swap/SwapMultipleTx"
 import StakeTx from "txs/stake/StakeTx"
 import WithdrawRewardsTx from "txs/stake/WithdrawRewardsTx"
 import WithdrawCommissionTx from "txs/stake/WithdrawCommissionTx"
@@ -120,7 +119,6 @@ export const useNav = () => {
     /* txs */
     { path: "/send", element: <SendTx /> },
     { path: "/nft/transfer", element: <TransferCW721Tx /> },
-    { path: "/swap/multiple", element: <SwapMultipleTx /> },
     { path: "/stake/:address", element: <StakeTx /> },
     { path: "/rewards", element: <WithdrawRewardsTx /> },
     { path: "/commission", element: <WithdrawCommissionTx /> },

@@ -1,19 +1,26 @@
-import { readDenom } from "@terra.kitchen/utils"
-import { useActiveDenoms } from "data/queries/oracle"
+import { useSupportedFiat } from "data/queries/coingecko"
 import { useCurrencyState } from "data/settings/Currency"
 import { RadioGroup } from "components/form"
 
 const CurrencySetting = () => {
-  const { data: activeDenoms = [] } = useActiveDenoms()
+  const { data: fiatList = [] } = useSupportedFiat()
   const [currency, setCurrency] = useCurrencyState()
 
   return (
     <RadioGroup
-      options={activeDenoms.map((denom) => {
-        return { value: denom, label: readDenom(denom) }
+      options={fiatList.map((fiat) => {
+        return { value: fiat.id, label: `${fiat.unit} - ${fiat.name}` }
       })}
-      value={currency}
-      onChange={setCurrency}
+      value={currency.id}
+      onChange={(value) => {
+        setCurrency(
+          fiatList.find((fiat) => fiat.id === value) as {
+            name: string
+            unit: string
+            id: string
+          }
+        )
+      }}
     />
   )
 }

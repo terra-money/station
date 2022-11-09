@@ -6,7 +6,7 @@ import { sortCoins } from "utils/coin"
 import { queryKey, RefetchOptions } from "../query"
 import { useAddress } from "../wallet"
 import { useLCDClient } from "./lcdClient"
-import { CalcValue } from "./oracle"
+import { CalcValue } from "./coingecko"
 
 export const useRewards = () => {
   const address = useAddress()

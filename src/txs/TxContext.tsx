@@ -5,7 +5,6 @@ import { GasPrices, useGasPrices } from "data/Terra/TerraAPI"
 import { Card } from "components/layout"
 import { ErrorBoundary, Wrong } from "components/feedback"
 import { useTxKey } from "./Tx"
-import TaxParamsContext from "./wasm/TaxParams"
 
 export const [useTx, TxProvider] = createContext<{ gasPrices: GasPrices }>(
   "useTx"
@@ -27,11 +26,9 @@ const TxContext = ({ children }: PropsWithChildren<{}>) => {
   if (!gasPrices) return null
 
   return (
-    <TaxParamsContext>
-      <TxProvider value={{ gasPrices }} key={txKey}>
-        <ErrorBoundary fallback={fallback}>{children}</ErrorBoundary>
-      </TxProvider>
-    </TaxParamsContext>
+    <TxProvider value={{ gasPrices }} key={txKey}>
+      <ErrorBoundary fallback={fallback}>{children}</ErrorBoundary>
+    </TxProvider>
   )
 }
 

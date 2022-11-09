@@ -9,7 +9,6 @@ import { SAMPLE_ADDRESS } from "config/constants"
 import { sortCoins } from "utils/coin"
 import { parseJSON, validateMsg } from "utils/data"
 import { useAddress } from "data/wallet"
-import { useIsClassic } from "data/query"
 import { useBankBalance } from "data/queries/bank"
 import { WithTokenItem } from "data/token"
 import { Form, FormGroup, FormItem } from "components/form"
@@ -31,7 +30,6 @@ const InstantiateContractForm = () => {
   const { t } = useTranslation()
   const address = useAddress()
   const bankBalance = useBankBalance()
-  const isClassic = useIsClassic()
 
   /* tx context */
   const initialGasDenom = getInitialGasDenom(bankBalance)
@@ -175,11 +173,9 @@ const InstantiateContractForm = () => {
             })}
           </FormItem>
 
-          {!isClassic && (
-            <FormItem label={t("Label")} error={errors.label?.message}>
-              <Input {...register("label")} />
-            </FormItem>
-          )}
+          <FormItem label={t("Label")} error={errors.label?.message}>
+            <Input {...register("label")} />
+          </FormItem>
 
           {fee.render()}
           {submit.button}

@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next"
 import { getAmount, sortCoins } from "utils/coin"
 import { useCommunityPool } from "data/queries/distribution"
-import { useMemoizedCalcValue } from "data/queries/oracle"
+import { useMemoizedCalcValue } from "data/queries/coingecko"
 import { Card } from "components/layout"
 import { Read } from "components/token"
 import SelectDenom from "./components/SelectDenom"

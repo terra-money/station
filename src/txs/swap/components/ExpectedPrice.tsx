@@ -1,9 +1,8 @@
 import { useTranslation } from "react-i18next"
-import { isDenomLuna, isDenomTerra } from "@terra.kitchen/utils"
+import { isDenomLuna } from "@terra.kitchen/utils"
 import { readPercent } from "@terra.kitchen/utils"
 import { toPrice } from "utils/num"
 import { useMarketParams } from "data/queries/market"
-import { useOracleParams } from "data/queries/oracle"
 import { Read } from "components/token"
 import { TooltipIcon } from "components/display"
 import { PayloadOnchain, PayloadTerraswap } from "../useSwapUtils"
@@ -31,7 +30,6 @@ const ExpectedPrice = ({ mode, input, ...props }: Props) => {
 
   /* query: native */
   const minSpread = useSwapSpread()
-  const tobinTax = useTobinTax(askAsset)
 
   /* render: expected price */
   const renderPrice = (price?: Price) => <Price {...props} price={price} />
@@ -55,14 +53,6 @@ const ExpectedPrice = ({ mode, input, ...props }: Props) => {
           <p>
             {t("Minimum Luna swap spread: {{minSpread}}", {
               minSpread: readPercent(minSpread),
-            })}
-          </p>
-        )}
-
-        {askAsset && isDenomTerra(askAsset) && tobinTax && (
-          <p>
-            {t("Terra tobin tax: {{tobinTax}}", {
-              tobinTax: readPercent(tobinTax),
             })}
           </p>
         )}
@@ -160,13 +150,4 @@ const useSwapSpread = () => {
   const { data: marketParams } = useMarketParams()
   const minSpread = marketParams?.min_stability_spread
   return minSpread?.toString()
-}
-
-const useTobinTax = (askAsset?: CoinDenom) => {
-  const { data: oracleParams } = useOracleParams()
-  const tobinTax = oracleParams?.whitelist.find(
-    ({ name }) => name === askAsset
-  )?.tobin_tax
-
-  return tobinTax?.toString()
 }

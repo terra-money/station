@@ -1,13 +1,9 @@
 import { useTranslation } from "react-i18next"
-import { useIsClassic } from "data/query"
 import { useNetworkName } from "data/wallet"
 import { LinkButton } from "components/general"
 import { Card, Page } from "components/layout"
 import { Wrong } from "components/feedback"
 import TxContext from "../TxContext"
-import SwapContext from "./SwapContext"
-import SingleSwapContext from "./SingleSwapContext"
-import SwapForm from "./SwapForm"
 import TFMSwapContext from "./TFMSwapContext"
 import TFMSwapForm from "./TFMSwapForm"
 import TFMPoweredBy from "./TFMPoweredBy"
@@ -20,7 +16,6 @@ import TFMPoweredBy from "./TFMPoweredBy"
 const SwapTx = () => {
   const { t } = useTranslation()
   const networkName = useNetworkName()
-  const isClassic = useIsClassic()
 
   const extra = (
     <LinkButton to="/swap/multiple" size="small">
@@ -38,25 +33,12 @@ const SwapTx = () => {
     )
   }
 
-  if (!isClassic)
-    return (
-      <Page title={t("Swap")} small extra={<TFMPoweredBy />}>
-        <TxContext>
-          <TFMSwapContext>
-            <TFMSwapForm />
-          </TFMSwapContext>
-        </TxContext>
-      </Page>
-    )
-
   return (
-    <Page title={t("Swap")} small extra={extra}>
+    <Page title={t("Swap")} small extra={<TFMPoweredBy />}>
       <TxContext>
-        <SwapContext>
-          <SingleSwapContext>
-            <SwapForm />
-          </SingleSwapContext>
-        </SwapContext>
+        <TFMSwapContext>
+          <TFMSwapForm />
+        </TFMSwapContext>
       </TxContext>
     </Page>
   )

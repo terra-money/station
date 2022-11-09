@@ -6,7 +6,6 @@ import { OracleParams, ValAddress } from "@terra-money/terra.js"
 import { TerraValidator } from "types/validator"
 import { TerraProposalItem } from "types/proposal"
 import { useNetwork } from "data/wallet"
-import { useOracleParams } from "data/queries/oracle"
 import { useNetworks } from "app/InitNetworks"
 import { queryKey, RefetchOptions } from "../query"
 
@@ -161,22 +160,6 @@ export const useVotingPowerRate = (address: ValAddress) => {
     if (!calcRate) return
     return calcRate(address)
   }, [address, calcRate])
-
-  return { data, ...state }
-}
-
-export const useUptime = (validator: TerraValidator) => {
-  const { data: oracleParams, ...state } = useOracleParams()
-
-  const calc = useMemo(() => {
-    if (!oracleParams) return
-    return getCalcUptime(oracleParams)
-  }, [oracleParams])
-
-  const data = useMemo(() => {
-    if (!calc) return
-    return calc(validator)
-  }, [calc, validator])
 
   return { data, ...state }
 }

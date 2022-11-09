@@ -29,8 +29,8 @@ export const combineState = (...results: QueryState[]) => ({
 /* queryKey */
 const mirror = <T>(obj: T, parentKey?: string): T =>
   Object.entries(obj).reduce((acc, [key, value]) => {
-    const next = value 
-      ? mirror(value, key) 
+    const next = value
+      ? mirror(value, key)
       : [parentKey, key].filter(Boolean).join(".")
 
     return { ...acc, [key]: next }
@@ -63,7 +63,12 @@ export const queryKey = mirror({
   },
   ibc: { denomTrace: "" },
   market: { params: "" },
-  oracle: { activeDenoms: "", exchangeRates: "", params: "" },
+  coingecko: {
+    activeDenoms: "",
+    exchangeRates: "",
+    params: "",
+    supportedFiat: "",
+  },
   tendermint: { nodeInfo: "" },
   staking: {
     validators: "",
@@ -73,7 +78,6 @@ export const queryKey = mirror({
     unbondings: "",
     pool: "",
   },
-  treasury: { taxRate: "", taxCap: "" },
   tx: { txInfo: "", create: "" },
   wasm: { contractInfo: "", contractQuery: "" },
 

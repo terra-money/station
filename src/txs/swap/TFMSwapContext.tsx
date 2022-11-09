@@ -4,7 +4,7 @@ import { isDenomIBC } from "@terra.kitchen/utils"
 import { AccAddress } from "@terra-money/terra.js"
 import { getAmount } from "utils/coin"
 import createContext from "utils/createContext"
-import { combineState, useIsClassic } from "data/query"
+import { combineState } from "data/query"
 import { useBankBalance } from "data/queries/bank"
 import { useTokenBalances } from "data/queries/wasm"
 import { readIBCDenom, readNativeDenom } from "data/token"
@@ -41,7 +41,6 @@ export const [useTFMSwap, TFMSwapProvider] =
   createContext<TFMSwap>("useTFMSwap")
 
 const TFMSwapContext = ({ children }: PropsWithChildren<{}>) => {
-  const isClassic = useIsClassic()
   const bankBalance = useBankBalance()
   const { list } = useCustomTokensCW20()
   const customTokens = list.map(({ token }) => token)
@@ -95,7 +94,7 @@ const TFMSwapContext = ({ children }: PropsWithChildren<{}>) => {
 
     const coins = [
       {
-        ...readNativeDenom("uluna", isClassic),
+        ...readNativeDenom("uluna"),
         balance: getAmount(bankBalance, "uluna"),
       },
     ]
@@ -131,7 +130,6 @@ const TFMSwapContext = ({ children }: PropsWithChildren<{}>) => {
     cw20Whitelist,
     availableList,
     cw20TokensBalances,
-    isClassic,
   ])
 
   const state = combineState(

@@ -6,7 +6,7 @@ import { isDenom, isDenomLuna } from "@terra.kitchen/utils"
 import { isDenomTerra, isDenomTerraNative } from "@terra.kitchen/utils"
 import { TERRASWAP_COMMISSION_RATE } from "config/constants"
 import { has, toPrice } from "utils/num"
-import { getAmount, toAsset, toAssetInfo, toTokenItem } from "utils/coin"
+import { toAsset, toAssetInfo, toTokenItem } from "utils/coin"
 import { toBase64 } from "utils/data"
 import { useAddress } from "data/wallet"
 import { useLCDClient } from "data/queries/lcdClient"
@@ -54,7 +54,7 @@ const useSwapUtils = () => {
   const address = useAddress()
   const lcd = useLCDClient()
   const context = useSwap()
-  const { exchangeRates, pairs, contracts } = context
+  const { pairs, contracts } = context
 
   /* helpers */
   // terraswap
@@ -181,8 +181,7 @@ const useSwapUtils = () => {
   )
 
   const simulateOnchain = async (params: SwapParams) => {
-    const getRate = (denom: CoinDenom) =>
-      isDenomLuna(denom) ? "1" : getAmount(exchangeRates, denom)
+    const getRate = (denom: CoinDenom) => "1"
 
     const { amount, offerAsset, askAsset } = params
     const offerCoin = new Coin(offerAsset, amount)

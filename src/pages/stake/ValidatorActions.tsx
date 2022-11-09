@@ -4,7 +4,7 @@ import { ValAddress } from "@terra-money/terra.js"
 import { has } from "utils/num"
 import { combineState } from "data/query"
 import { useCurrency } from "data/settings/Currency"
-import { useMemoizedCalcValue } from "data/queries/oracle"
+import { useMemoizedCalcValue } from "data/queries/coingecko"
 import { useDelegations, useDelegation } from "data/queries/staking"
 import { getAvailableStakeActions } from "data/queries/staking"
 import { calcRewardsValues, useRewards } from "data/queries/distribution"
@@ -67,7 +67,7 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
   const rewardsValues = useMemo(() => {
     const defaultValues = { address: destination, sum: "0", list: [] }
     if (!rewards) return defaultValues
-    const { byValidator } = calcRewardsValues(rewards, currency, calcValue)
+    const { byValidator } = calcRewardsValues(rewards, currency.id, calcValue)
     const values = byValidator.find(({ address }) => address === destination)
     return values ?? defaultValues
   }, [calcValue, currency, destination, rewards])

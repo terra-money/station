@@ -7,7 +7,7 @@ import { sortCoins } from "utils/coin"
 import { useCurrency } from "data/settings/Currency"
 import { useAddress } from "data/wallet"
 import { useBankBalance } from "data/queries/bank"
-import { useMemoizedCalcValue } from "data/queries/oracle"
+import { useMemoizedCalcValue } from "data/queries/coingecko"
 import { useValidatorCommission } from "data/queries/distribution"
 import { useWithdrawAddress } from "data/queries/distribution"
 import { WithTokenItem } from "data/token"
@@ -56,7 +56,7 @@ const WithdrawCommissionForm = () => {
     const sorter = (a: CoinData, b: CoinData) =>
       Number(calcValue(b)) - Number(calcValue(a))
 
-    const list = sortCoins(validatorCommission, currency, sorter)
+    const list = sortCoins(validatorCommission, currency.id, sorter)
 
     return (
       <TokenCardGrid maxHeight>

@@ -4,7 +4,7 @@ import { has } from "utils/num"
 import { useCurrency } from "data/settings/Currency"
 import { combineState } from "data/query"
 import { calcRewardsValues, useRewards } from "data/queries/distribution"
-import { useMemoizedCalcValue } from "data/queries/oracle"
+import { useMemoizedCalcValue } from "data/queries/coingecko"
 import { calcDelegationsTotal } from "data/queries/staking"
 import { calcUnbondingsTotal } from "data/queries/staking"
 import { useDelegations, useUnbondings } from "data/queries/staking"
@@ -28,7 +28,7 @@ const Rewards = () => {
   const render = () => {
     if (!(rewards && delegations && unbondings)) return null
 
-    const rewardsValues = calcRewardsValues(rewards, currency, calcValue)
+    const rewardsValues = calcRewardsValues(rewards, currency.id, calcValue)
     const delegationTotal = calcDelegationsTotal(delegations)
     const unbondingsTotal = calcUnbondingsTotal(unbondings)
 

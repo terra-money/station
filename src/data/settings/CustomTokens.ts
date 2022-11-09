@@ -42,7 +42,8 @@ const useCustomTokens = <T extends CustomToken>({ type, key }: Params<T>) => {
 }
 
 export const useCustomTokensIBC = () => {
-  return useCustomTokens<CustomTokenIBC>({ type: "ibc", key: "denom" })
+  const ibc = useCustomTokens<CustomTokenIBC>({ type: "ibc", key: "denom" })
+  return ibc
 }
 
 export const useCustomTokensCW20 = () => {
