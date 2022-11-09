@@ -1,33 +1,58 @@
 import { FormError } from "components/form"
 import { InternalButton } from "components/general"
 import { Grid } from "components/layout"
-import { useIsWalletEmpty } from "data/queries/bank"
-import { useActiveDenoms } from "data/queries/coingecko"
+import { useBankBalance, useIsWalletEmpty } from "data/queries/bank"
+import { useMemoizedPrices } from "data/queries/coingecko"
 import {
   useCustomTokensCW20,
   useCustomTokensIBC,
 } from "data/settings/CustomTokens"
 import { readNativeDenom } from "data/token"
 import { useTranslation } from "react-i18next"
+import { getAmount } from "utils/coin"
 import AddTokens from "./AddTokens"
 import Asset from "./Asset"
 import styles from "./AssetList.module.scss"
 import { useCoins } from "./Coins"
 import CW20Asset from "./CW20Asset"
-import IBCAsset from "./IBCAsset"
 
 const AssetList = () => {
   const { t } = useTranslation()
   const isWalletEmpty = useIsWalletEmpty()
-  const { data: denoms } = useActiveDenoms()
   const { list: ibc } = useCustomTokensIBC()
   const { list: cw20 } = useCustomTokensCW20()
-  const coins = useCoins(denoms)
+  const coins = useCoins()
+  const { data: prices } = useMemoizedPrices()
+  const bankBalance = useBankBalance()
 
   const render = () => {
     if (!coins) return
-    const [all] = coins
-    const list = all
+
+    const list = [
+      ...coins.map(({ denom, balance }) => {
+        // TODO: support other tokens
+        const data = readNativeDenom(denom)
+        return {
+          denom,
+          balance,
+          icon: data.icon,
+          symbol: data.symbol,
+          price: prices?.[denom]?.price,
+          change: prices?.[denom]?.change,
+        }
+      }),
+      ...ibc.map(({ denom, base_denom, icon, symbol }) => {
+        const balance = getAmount(bankBalance, denom)
+        return {
+          denom,
+          balance,
+          icon,
+          symbol,
+          price: prices?.[base_denom]?.price,
+          change: prices?.[base_denom]?.change,
+        }
+      }),
+    ]
 
     return (
       <div>
@@ -43,13 +68,6 @@ const AssetList = () => {
               key={denom}
             />
           ))}
-          {!ibc.length
-            ? null
-            : ibc.map(({ denom, base_denom }) => (
-                <IBCAsset denom={denom} base={base_denom} key={denom}>
-                  {(item) => <Asset {...item} />}
-                </IBCAsset>
-              ))}
           {!cw20.length
             ? null
             : cw20.map((item) => (

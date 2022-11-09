@@ -58,11 +58,17 @@ export const useExchangeRates = () => {
       >(
         `https://api.coingecko.com/api/v3/simple/price?ids=${Object.values(
           coingeckoIDs
-        ).join(",")}&vs_currencies=${currency.id}`
+        ).join(",")}&vs_currencies=${currency.id}&include_24hr_change=true`
       )
 
       return Object.keys(coingeckoIDs).reduce((acc, denom) => {
-        return { ...acc, [denom]: prices[coingeckoIDs[denom]][currency.id] }
+        return {
+          ...acc,
+          [denom]: {
+            price: prices[coingeckoIDs[denom]][currency.id],
+            change: prices[coingeckoIDs[denom]][`${currency.id}_24h_change`],
+          },
+        }
       }, {})
     },
     { ...RefetchOptions.DEFAULT }
@@ -70,7 +76,7 @@ export const useExchangeRates = () => {
 }
 
 /* helpers */
-type Prices = Record<Denom, Price>
+type Prices = Record<Denom, { price: Price; change: number }>
 export const useMemoizedPrices = () => {
   const { data: exchangeRates, ...state } = useExchangeRates()
 

@@ -10,6 +10,8 @@ export interface Props extends TokenItem, QueryState {
   balance?: Amount
   hideActions?: boolean
   denom: string
+  price?: number
+  change?: number
 }
 
 const Asset = (props: Props) => {
@@ -17,6 +19,8 @@ const Asset = (props: Props) => {
   const { t } = useTranslation()
   const currency = useCurrency()
   const { data: prices, ...pricesState } = useMemoizedPrices()
+
+  const change = props.change || prices?.[denom]?.change || 0
 
   return (
     <article className={styles.asset} key={token}>
@@ -26,11 +30,15 @@ const Asset = (props: Props) => {
         <div className={styles.details__container}>
           <div>
             <h1 className={styles.symbol}>{symbol}</h1>
-            <h2 className={styles.change}>+3.02%</h2>
+            <h2
+              className={change >= 0 ? styles.change__up : styles.change__down}
+            >
+              {change.toFixed(2)}%
+            </h2>
           </div>
           <div className={styles.amount__container}>
             <h1 className={styles.price}>
-              {currency.unit} {prices?.[denom] || 0}
+              {currency.unit} {props.price || prices?.[denom]?.price || 0}
             </h1>
             <h2 className={styles.amount}>
               <WithFetching {...combineState(state, pricesState)} height={1}>

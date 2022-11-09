@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next"
 import { useNetworkName } from "data/wallet"
-import { LinkButton } from "components/general"
 import { Card, Page } from "components/layout"
 import { Wrong } from "components/feedback"
 import TxContext from "../TxContext"
@@ -16,12 +15,6 @@ import TFMPoweredBy from "./TFMPoweredBy"
 const SwapTx = () => {
   const { t } = useTranslation()
   const networkName = useNetworkName()
-
-  const extra = (
-    <LinkButton to="/swap/multiple" size="small">
-      {t("Swap multiple coins")}
-    </LinkButton>
-  )
 
   if (networkName === "testnet") {
     return (
