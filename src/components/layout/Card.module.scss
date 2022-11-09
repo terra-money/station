@@ -74,6 +74,7 @@
   @include truncate;
   gap: 8px; // for icon
   width: 100%;
+  color: var(--y-text);
 }
 
 .extra {

@@ -2,6 +2,7 @@ import { ReactNode } from "react"
 import { toAmount } from "@terra.kitchen/utils"
 
 /* animation */
+import AnimationRebel from "./Rebel/Broadcasting.png"
 import AnimationLight from "./Light/Broadcasting.png"
 import AnimationDark from "./Dark/Broadcasting.png"
 import AnimationBlossom from "./Blossom/Broadcasting.png"
@@ -10,6 +11,7 @@ import AnimationWhale from "./Whale/Broadcasting.png"
 import AnimationMadness from "./Madness/Broadcasting.png"
 
 /* favicon */
+import FaviconRebel from "./Rebel/favicon.svg"
 import FaviconLight from "./Light/favicon.svg"
 import FaviconDark from "./Dark/favicon.svg"
 import FaviconBlossom from "./Blossom/favicon.svg"
@@ -18,6 +20,7 @@ import FaviconWhale from "./Whale/favicon.svg"
 import FaviconMadness from "./Madness/favicon.svg"
 
 /* preview */
+import { ReactComponent as PreviewRebel } from "./Rebel/preview.svg"
 import { ReactComponent as PreviewLight } from "./Light/preview.svg"
 import { ReactComponent as PreviewDark } from "./Dark/preview.svg"
 import { ReactComponent as PreviewBlossom } from "./Blossom/preview.svg"
@@ -34,6 +37,13 @@ export interface Theme {
 }
 
 export const themes: Theme[] = [
+  {
+    name: "rebel",
+    unlock: toAmount("0"),
+    animation: AnimationRebel,
+    favicon: FaviconRebel,
+    preview: <PreviewRebel />,
+  },
   {
     name: "light",
     unlock: toAmount("0"),

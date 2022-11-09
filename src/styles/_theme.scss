@@ -92,6 +92,47 @@
   --extension-text: hsl(210 89% 61%);
 }
 
+.rebel {
+  --button-primary-bg-h: 218;
+  --button-primary-bg-s: 94%;
+  --button-primary-bg-l: 47%;
+  --button-primary-bg: hsl(
+    var(--button-primary-bg-h),
+    var(--button-primary-bg-s),
+    var(--button-primary-bg-l)
+  );
+  --button-primary-text: hsl(0 0% 95%);
+  --button-default-bg-h: 210;
+  --button-default-bg-s: 1%;
+  --button-default-bg-l: 30%;
+  --button-default-bg: hsl(
+    var(--button-default-bg-h),
+    var(--button-default-bg-s),
+    var(--button-default-bg-l)
+  );
+  --button-default-text: hsl(0 0% 87%);
+
+  --menu-bg: linear-gradient(to bottom, #162852, #1a1a1a);
+  --menu-border: hsl(0 0% 100% / 0.1);
+  --menu-text: hsl(0 0% 91%);
+
+  --link: hsl(210 100% 77%);
+  --text: #ffffff;
+  --y-text: #ffd83d;
+  --text-muted: hsl(0 0% 55%);
+  --chart: #162852;
+
+  --bg: #1a1a1a;
+  --bg-muted: hsl(0 0% 13%);
+  --card-bg: #1b1f28;
+  --card-border: hsl(210 2% 21%);
+  --input-bg: var(--card-bg);
+  --input-border: hsl(0 0% 30%);
+
+  --extension-bg: hsl(240 1% 15%);
+  --extension-text: hsl(210 100% 77%);
+}
+
 .dark {
   --button-primary-bg-h: 210;
   --button-primary-bg-s: 89%;
