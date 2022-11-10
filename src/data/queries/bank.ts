@@ -4,8 +4,10 @@ import { isDenomTerraNative } from "@terra.kitchen/utils"
 import { Coins } from "@terra-money/terra.js"
 import createContext from "utils/createContext"
 import { queryKey, RefetchOptions } from "../query"
-import { useAddress, useNetwork } from "../wallet"
-import { useLCDClient } from "./lcdClient"
+import { useNetwork } from "../wallet"
+import { useInterchainLCDClient, useLCDClient } from "./lcdClient"
+import { useInterchainAddresses } from "auth/hooks/useAddress"
+import { Coin } from "@terra-money/station.js"
 
 export const useSupply = () => {
   const { lcd } = useNetwork()
@@ -35,32 +37,51 @@ export const [useBankBalance, BankBalanceProvider] =
   createContext<Coins>("useBankBalance")
 
 export const useInitialBankBalance = () => {
-  const address = useAddress()
-  const lcd = useLCDClient()
+  const addresses = useInterchainAddresses()
+  const lcd = useInterchainLCDClient()
 
   return useQuery(
-    [queryKey.bank.balance, address],
+    [queryKey.bank.balance, addresses],
     async () => {
-      if (!address) return new Coins()
+      if (!addresses.length) return new Coins()
       // TODO: Pagination
       // Required when the number of results exceed 100
-      const [coins] = await lcd.bank.spendableBalances(address)
-      return coins
+      const balances = await Promise.all(
+        addresses.map((address) => lcd.bank.balance(address))
+      )
+      console.log(balances)
+      return new Coins([
+        ...balances.reduce(
+          (acc, balance) => acc.concat(balance[0].toArray()),
+          [] as Coin[]
+        ),
+      ])
     },
     { ...RefetchOptions.DEFAULT }
   )
 }
 
 export const useBalances = () => {
-  const address = useAddress()
+  const addresses = useInterchainAddresses()
   const lcd = useLCDClient()
 
   return useQuery(
-    [queryKey.bank.balances, address],
+    [queryKey.bank.balances, addresses],
     async () => {
-      if (!address) return new Coins()
-      const [coins] = await lcd.bank.balance(address)
-      return coins
+      if (!addresses.length) return new Coins()
+
+      const balances = await Promise.all(
+        // TODO: Pagination
+        // Required when the number of results exceed 100
+        addresses.map((address) => lcd.bank.balance(address))
+      )
+      console.log(balances)
+      return new Coins([
+        ...balances.reduce(
+          (acc, balance) => acc.concat(balance[0].toArray()),
+          [] as Coin[]
+        ),
+      ])
     },
     { ...RefetchOptions.DEFAULT }
   )

@@ -1,5 +1,5 @@
 import { ReactNode } from "react"
-import { isDenomIBC, isDenomTerra } from "@terra.kitchen/utils"
+import { isDenomIBC } from "@terra.kitchen/utils"
 import { readDenom, truncate } from "@terra.kitchen/utils"
 import { AccAddress } from "@terra-money/terra.js"
 import { ASSETS } from "config/constants"
@@ -67,20 +67,54 @@ export const WithTokenItem = ({ token, children }: Props) => {
 /* helpers */
 export const getIcon = (path: string) => `${ASSETS}/icon/svg/${path}`
 
+// TODO: move to assets.terra.money
+const WHITELIST: Record<string, TokenItem> = {
+  uluna: {
+    token: "uluna",
+    symbol: "Luna",
+    name: "Terra Luna",
+    icon: "https://assets.terra.money/icon/svg/Luna.svg",
+    decimals: 6,
+  },
+  uosmo: {
+    token: "uosmo",
+    symbol: "Osmo",
+    name: "Osmosis",
+    icon: "https://assets.terra.money/icon/svg/ibc/OSMO.svg",
+    decimals: 6,
+  },
+  // Luna on Osmosis
+  "ibc/785AFEC6B3741100D15E7AF01374E3C4C36F24888E96479B1C33F5C71F364EF9": {
+    token: "uluna",
+    symbol: "Luna",
+    name: "Terra Luna",
+    icon: "https://assets.terra.money/icon/svg/Luna.svg",
+    decimals: 6,
+  },
+  // Osmo on Terra
+  "ibc/0471F1C4E7AFD3F07702BEF6DC365268D64570F7C1FDC98EA6098DD6DE59817B": {
+    token: "uosmo",
+    symbol: "Osmo",
+    name: "Osmosis",
+    icon: "https://assets.terra.money/icon/svg/ibc/OSMO.svg",
+    decimals: 6,
+  },
+}
+
 export const readNativeDenom = (denom: Denom): TokenItem => {
   // TODO: support multiple native tokens
   const symbol = readDenom(denom)
-  const path = "Luna.svg"
 
-  return {
-    token: denom,
-    symbol: symbol,
-    name: isDenomTerra(denom)
-      ? `Terra ${denom.slice(1).toUpperCase()}`
-      : undefined,
-    icon: getIcon(path),
-    decimals: 6,
-  }
+  return (
+    // TODO: change default token icon
+    WHITELIST[denom] ?? {
+      token: denom,
+      symbol,
+      name: symbol,
+      icon: "https://assets.terra.money/icon/svg/Luna.svg",
+      decimals: 6,
+    }
+  )
 }
 
 export const readIBCDenom = (item: IBCTokenItem): TokenItem => {

@@ -8,14 +8,15 @@ import { useCurrency } from "data/settings/Currency"
 
 export interface Props extends TokenItem, QueryState {
   balance?: Amount
-  hideActions?: boolean
   denom: string
   price?: number
   change?: number
+  hideActions?: boolean
+  chainNum?: number
 }
 
 const Asset = (props: Props) => {
-  const { token, icon, symbol, balance, hideActions, denom, ...state } = props
+  const { token, icon, symbol, balance, denom, chainNum, ...state } = props
   const { t } = useTranslation()
   const currency = useCurrency()
   const { data: prices, ...pricesState } = useMemoizedPrices()
@@ -29,7 +30,9 @@ const Asset = (props: Props) => {
 
         <div className={styles.details__container}>
           <div>
-            <h1 className={styles.symbol}>{symbol}</h1>
+            <h1 className={styles.symbol}>
+              {symbol} {!!chainNum && chainNum > 1 && <span>{chainNum}</span>}
+            </h1>
             <h2
               className={change >= 0 ? styles.change__up : styles.change__down}
             >

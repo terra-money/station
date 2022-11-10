@@ -22,6 +22,13 @@
   font-size: 15px;
 }
 
+.symbol span {
+  background-color: var(--button-default-bg);
+  padding: 2px 10px;
+  font-size: 12px;
+  border-radius: 10px;
+}
+
 .change__up,
 .change__down,
 .amount {
