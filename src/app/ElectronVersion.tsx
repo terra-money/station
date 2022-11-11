@@ -6,7 +6,7 @@ import Overlay from "./components/Overlay"
 import electron, { links } from "./electron"
 import styles from "./ElectronVersion.module.scss"
 
-const REQUIRED_VERSION = "1.2.0"
+const REQUIRED_VERSION = "1.0.0"
 
 const ElectronVersion = () => {
   const { t } = useTranslation()
