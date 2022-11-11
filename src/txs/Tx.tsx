@@ -677,7 +677,9 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   const confirmButton = (
     <>
-      {walletError && <FormError>{walletError}</FormError>}
+      {walletError && confirmData?.requestType !== "signBytes" && (
+        <FormError>{walletError}</FormError>
+      )}
 
       {!address ? (
         <ConnectWallet
