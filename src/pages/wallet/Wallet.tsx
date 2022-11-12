@@ -3,9 +3,67 @@ import { ReactComponent as CloseIcon } from "styles/images/icons/WalletCloseArro
 import NetWorth from "./NetWorth"
 import AssetList from "./AssetList"
 import { useState } from "react"
+import createContext from "utils/createContext"
+import AssetPage from "./AssetPage"
+
+enum Path {
+  wallet = "wallet",
+  coin = "coin",
+}
+
+type Route =
+  | {
+      path: Path.wallet
+    }
+  | {
+      path: Path.coin
+      denom: string
+      previusPage: Route
+    }
+
+// Handle routing inside Wallet
+const [useWalletRoute, WalletRouter] = createContext<{
+  route: Route
+  setRoute: (route: Route) => void
+}>("useWalletRoute")
+
+export { useWalletRoute, Path }
 
 const Wallet = () => {
   const [isOpen, setIsOpen] = useState(true)
+  const [route, setRoute] = useState<Route>({ path: Path.wallet })
+
+  function BackButton() {
+    if (route.path === Path.wallet) return null
+
+    return (
+      <button
+        className={styles.back}
+        onClick={() => setRoute(route.previusPage)}
+      >
+        <CloseIcon width={18} height={18} />
+      </button>
+    )
+  }
+
+  function render() {
+    switch (route.path) {
+      case Path.wallet:
+        return (
+          <>
+            <NetWorth />
+            <AssetList />
+          </>
+        )
+      case Path.coin:
+        return (
+          <>
+            <BackButton />
+            <AssetPage />
+          </>
+        )
+    }
+  }
 
   return (
     <div className={`${styles.wallet} ${!isOpen && styles.wallet__closed}`}>
@@ -17,8 +75,7 @@ const Wallet = () => {
       >
         <CloseIcon width={18} height={18} />
       </button>
-      <NetWorth />
-      <AssetList />
+      <WalletRouter value={{ route, setRoute }}>{render()}</WalletRouter>
     </div>
   )
 }

@@ -9,6 +9,7 @@ import { useChains } from "data/queries/chains"
 import styles from "./Asset.module.scss"
 import { ReactComponent as PriceUp } from "styles/images/icons/PriceUp.svg"
 import { ReactComponent as PriceDown } from "styles/images/icons/PriceDown.svg"
+import { useWalletRoute, Path } from "./Wallet"
 
 export interface Props extends TokenItem, QueryState {
   balance?: Amount
@@ -26,11 +27,18 @@ const Asset = (props: Props) => {
   const currency = useCurrency()
   const chainsName = useChains()
   const { data: prices, ...pricesState } = useMemoizedPrices()
+  const { route, setRoute } = useWalletRoute()
 
-  const change = props.change || prices?.[denom]?.change || 0
+  const change = props.change || prices?.[token]?.change || 0
 
   return (
-    <article className={styles.asset} key={token}>
+    <article
+      className={styles.asset}
+      key={token}
+      onClick={() =>
+        setRoute({ path: Path.coin, denom: token, previusPage: route })
+      }
+    >
       <section className={styles.details}>
         <TokenIcon token={token} icon={icon} size={50} />
 
@@ -52,7 +60,7 @@ const Asset = (props: Props) => {
           <h1 className={styles.price}>
             {currency.unit}{" "}
             {(
-              ((props.price || prices?.[denom]?.price || 0) *
+              ((props.price || prices?.[token]?.price || 0) *
                 parseInt(balance ?? "0")) /
               10 ** decimals
             ).toFixed(2)}

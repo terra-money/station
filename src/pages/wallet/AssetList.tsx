@@ -1,12 +1,8 @@
 import { FormError } from "components/form"
 import { InternalButton } from "components/general"
-import { Grid } from "components/layout"
 import { useIsWalletEmpty } from "data/queries/bank"
 import { useMemoizedPrices } from "data/queries/coingecko"
-import {
-  useCustomTokensCW20,
-  //useCustomTokensIBC,
-} from "data/settings/CustomTokens"
+import { useCustomTokensCW20 } from "data/settings/CustomTokens"
 import { useNativeDenoms } from "data/token"
 import { useTranslation } from "react-i18next"
 import AddTokens from "./AddTokens"
@@ -18,7 +14,6 @@ import CW20Asset from "./CW20Asset"
 const AssetList = () => {
   const { t } = useTranslation()
   const isWalletEmpty = useIsWalletEmpty()
-  //const { list: ibc } = useCustomTokensIBC()
   const { list: cw20 } = useCustomTokensCW20()
   const coins = useCoins()
   const { data: prices } = useMemoizedPrices()
@@ -91,9 +86,7 @@ const AssetList = () => {
           )}
         </AddTokens>
       </div>
-      <Grid gap={32} className={styles.assetlist__list}>
-        {render()}
-      </Grid>
+      <div className={styles.assetlist__list}>{render()}</div>
     </article>
   )
 }

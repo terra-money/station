@@ -74,12 +74,15 @@ export const useNativeDenoms = () => {
   const whitelist = useWhitelist()
 
   function readNativeDenom(denom: Denom): TokenItem {
+    const fixedDenom = denom.startsWith("ibc/")
+      ? `${readDenom(denom).substring(0, 5)}...`
+      : readDenom(denom)
     return (
       // TODO: change default token icon
       whitelist[denom] ?? {
         token: denom,
-        symbol: readDenom(denom),
-        name: readDenom(denom),
+        symbol: fixedDenom,
+        name: fixedDenom,
         icon: "https://assets.terra.money/icon/svg/Terra.svg",
         decimals: 6,
       }

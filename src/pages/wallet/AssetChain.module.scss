@@ -1,0 +1,44 @@
+@import "mixins";
+
+.chain {
+  @include flex(space-between, center);
+  gap: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  position: relative; // to loading indicator
+  transition: 300ms;
+  height: fit-content;
+
+  &:hover {
+    background-color: var(--card-bg);
+  }
+}
+
+.details {
+  display: grid;
+  width: 100%;
+  max-width: 100%;
+  grid-template-areas:
+    "name price"
+    "name amount";
+}
+
+.name {
+  grid-area: name;
+  @include flex(flex-start, center);
+  font-size: 15px;
+}
+
+.price {
+  grid-area: price;
+  text-align: end;
+}
+
+.amount {
+  grid-area: amount;
+  text-align: end;
+  font-size: 15px;
+  font-weight: var(--normal);
+  color: var(--text-muted);
+  white-space: nowrap;
+}

@@ -4,7 +4,7 @@
   background-color: var(--card-bg-muted);
   padding-top: 1.6rem;
   padding-inline: 10px;
-  grid-area: assets;
+  grid-area: list;
   display: grid;
   grid-template-areas: "title" "list";
   grid-template-rows: min-content auto;
@@ -13,7 +13,7 @@
 
 .assetlist__title {
   @include flex(space-between);
-  padding-inline: 20px;
+  padding-inline: 10px;
   margin-bottom: 10px;
   grid-area: title;
 }

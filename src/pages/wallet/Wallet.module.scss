@@ -7,7 +7,7 @@
   border-left: 1px solid var(--menu-border);
   height: calc(100vh - var(--header-height));
   display: grid;
-  grid-template-areas: "networth" "assets";
+  grid-template-areas: "details" "list";
   grid-template-rows: min-content auto;
   transition: 400ms;
 }
@@ -37,4 +37,11 @@
       transform: rotate(180deg) translate(13px, 0);
     }
   }
+}
+
+.back {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  transform: rotate(180deg);
 }

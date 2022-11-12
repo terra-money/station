@@ -1,15 +1,14 @@
 import { AccAddress } from "@terra-money/terra.js"
-import { combineState } from "data/query"
 import { useCustomTokensIBC } from "data/settings/CustomTokens"
 import { useCustomTokensCW20 } from "data/settings/CustomTokens"
-import { useIBCWhitelist, useCW20Whitelist } from "data/Terra/TerraAssets"
+import { useCW20Whitelist } from "data/Terra/TerraAssets"
 import { useTokenInfoCW20 } from "data/queries/wasm"
 import { Fetching } from "components/feedback"
 import WithSearchInput from "./WithSearchInput"
 import TokenList from "./TokenList"
 
 interface Props {
-  whitelist: { ibc: IBCWhitelist; cw20: CW20Whitelist }
+  whitelist: { cw20: CW20Whitelist }
   keyword: string
 }
 
@@ -31,9 +30,7 @@ const Component = ({ whitelist, keyword }: Props) => {
   }
 
   const merged = {
-    ...added.ibc,
     ...added.cw20,
-    ...whitelist.ibc,
     ...whitelist.cw20,
   }
 
@@ -55,17 +52,10 @@ const Component = ({ whitelist, keyword }: Props) => {
       ? [result]
       : []
     : Object.values(merged).filter((item) => {
-        if ("base_denom" in item) {
-          // IBC
-          const { base_denom } = item
-          return base_denom.includes(keyword.toLowerCase())
-        } else {
-          // CW20
-          const { symbol, name } = item
-          return [symbol, name].some((word) =>
-            word?.toLowerCase().includes(keyword.toLowerCase())
-          )
-        }
+        const { symbol, name } = item
+        return [symbol, name].some((word) =>
+          word?.toLowerCase().includes(keyword.toLowerCase())
+        )
       })
 
   const manage = {
@@ -105,22 +95,21 @@ const Component = ({ whitelist, keyword }: Props) => {
 }
 
 const ManageCustomTokens = () => {
-  const { data: ibc, ...ibcWhitelistState } = useIBCWhitelist()
+  //const { data: ibc, ...ibcWhitelistState } = useIBCWhitelist()
   const { data: cw20, ...cw20WhitelistState } = useCW20Whitelist()
-  const state = combineState(ibcWhitelistState, cw20WhitelistState)
 
   const render = () => {
-    if (!(ibc && cw20)) return null
+    if (!cw20) return null
 
     return (
       <WithSearchInput>
-        {(input) => <Component whitelist={{ ibc, cw20 }} keyword={input} />}
+        {(input) => <Component whitelist={{ cw20 }} keyword={input} />}
       </WithSearchInput>
     )
   }
 
   return (
-    <Fetching {...state} height={2}>
+    <Fetching {...cw20WhitelistState} height={2}>
       {render()}
     </Fetching>
   )
