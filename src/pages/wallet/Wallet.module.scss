@@ -7,8 +7,8 @@
   border-left: 1px solid var(--menu-border);
   height: calc(100vh - var(--header-height));
   display: grid;
-  grid-template-areas: "details" "list";
-  grid-template-rows: min-content auto;
+  grid-template-areas: "details" "list" "actions";
+  grid-template-rows: min-content auto min-content;
   transition: 400ms;
 }
 
@@ -41,7 +41,7 @@
 
 .back {
   position: absolute;
-  top: 18px;
+  top: 20px;
   left: 18px;
   transform: rotate(180deg);
 }

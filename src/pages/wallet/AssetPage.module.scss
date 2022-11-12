@@ -5,6 +5,7 @@
   flex-direction: column;
 
   padding: 1.8rem 1rem;
+  padding-top: 2.6rem;
   height: fit-content;
   background-color: var(--card-bg);
   grid-area: details;
@@ -43,4 +44,18 @@
   overflow-y: auto;
   grid-area: list;
   padding-bottom: 1.6rem;
+}
+
+.actions {
+  @include flex(space-between);
+  background-color: var(--card-bg);
+  padding: 1rem;
+  gap: 0.6rem;
+
+  button {
+    min-width: 0;
+    width: 100%;
+    padding-block: 20px;
+    height: fit-content;
+  }
 }

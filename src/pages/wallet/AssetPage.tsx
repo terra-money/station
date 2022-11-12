@@ -6,6 +6,8 @@ import { useCurrency } from "data/settings/Currency"
 import { useMemoizedPrices } from "data/queries/coingecko"
 import { useBankBalance } from "data/queries/bank"
 import AssetChain from "./AssetChain"
+import { Button } from "components/general"
+import { useTranslation } from "react-i18next"
 
 const AssetPage = () => {
   const currency = useCurrency()
@@ -15,6 +17,7 @@ const AssetPage = () => {
   const { route } = useWalletRoute()
   const denom = route.path === Path.coin ? route.denom : "uluna"
   const { token, symbol, icon, decimals } = readNativeDenom(denom)
+  const { t } = useTranslation()
 
   const filteredBalances = balances.filter(
     (b) => readNativeDenom(b.denom).token === token
@@ -52,6 +55,11 @@ const AssetPage = () => {
               />
             ))}
         </div>
+      </section>
+      <section className={styles.actions}>
+        <Button>{t("Buy")}</Button>
+        <Button>{t("Deposit")}</Button>
+        <Button>{t("Send")}</Button>
       </section>
     </>
   )
