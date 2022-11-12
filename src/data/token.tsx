@@ -78,12 +78,15 @@ export const useNativeDenoms = () => {
       ? `${readDenom(denom).substring(0, 5)}...`
       : readDenom(denom)
     return (
-      // TODO: change default token icon
-      whitelist[denom] ?? {
+      whitelist[denom] ??
+      // that's needed for axl tokens
+      Object.values(whitelist).find((t) => t.token === denom) ?? { // default token icon
         token: denom,
         symbol: fixedDenom,
         name: fixedDenom,
-        icon: "https://assets.terra.money/icon/svg/Terra.svg",
+        icon: denom.startsWith("ibc/")
+          ? "https://assets.terra.money/icon/svg/IBC.svg"
+          : "https://assets.terra.money/icon/svg/Terra.svg",
         decimals: 6,
       }
     )

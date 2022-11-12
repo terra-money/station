@@ -5,6 +5,7 @@ import { useNativeDenoms } from "data/token"
 import { useTranslation } from "react-i18next"
 import { useCoins } from "./Coins"
 import styles from "./NetWorth.module.scss"
+import { useWalletRoute, Path } from "./Wallet"
 
 const NetWorth = () => {
   const { t } = useTranslation()
@@ -12,6 +13,7 @@ const NetWorth = () => {
   const coins = useCoins()
   const { data: prices } = useMemoizedPrices()
   const readNativeDenom = useNativeDenoms()
+  const { setRoute, route } = useWalletRoute()
 
   // TODO: show CW20 balances and staked tokens
   const coinsValue = coins?.reduce((acc, { amount, denom }) => {
@@ -32,7 +34,16 @@ const NetWorth = () => {
       </p>
       <div className={styles.networth__buttons}>
         <Button color="primary">{t("Buy")}</Button>
-        <Button>{t("Deposit")}</Button>
+        <Button
+          onClick={() =>
+            setRoute({
+              path: Path.receive,
+              previusPage: route,
+            })
+          }
+        >
+          {t("Receive")}
+        </Button>
         <Button>{t("Send")}</Button>
       </div>
     </article>

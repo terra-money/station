@@ -14,10 +14,10 @@ const AssetPage = () => {
   const { data: prices } = useMemoizedPrices()
   const balances = useBankBalance()
   const readNativeDenom = useNativeDenoms()
-  const { route } = useWalletRoute()
+  const { t } = useTranslation()
+  const { setRoute, route } = useWalletRoute()
   const denom = route.path === Path.coin ? route.denom : "uluna"
   const { token, symbol, icon, decimals } = readNativeDenom(denom)
-  const { t } = useTranslation()
 
   const filteredBalances = balances.filter(
     (b) => readNativeDenom(b.denom).token === token
@@ -58,7 +58,16 @@ const AssetPage = () => {
       </section>
       <section className={styles.actions}>
         <Button>{t("Buy")}</Button>
-        <Button>{t("Deposit")}</Button>
+        <Button
+          onClick={() =>
+            setRoute({
+              path: Path.receive,
+              previusPage: route,
+            })
+          }
+        >
+          {t("Receive")}
+        </Button>
         <Button>{t("Send")}</Button>
       </section>
     </>

@@ -5,10 +5,12 @@ import AssetList from "./AssetList"
 import { useState } from "react"
 import createContext from "utils/createContext"
 import AssetPage from "./AssetPage"
+import ReceivePage from "./ReceivePage"
 
 enum Path {
   wallet = "wallet",
   coin = "coin",
+  receive = "receive",
 }
 
 type Route =
@@ -18,6 +20,10 @@ type Route =
   | {
       path: Path.coin
       denom: string
+      previusPage: Route
+    }
+  | {
+      path: Path.receive
       previusPage: Route
     }
 
@@ -60,6 +66,13 @@ const Wallet = () => {
           <>
             <BackButton />
             <AssetPage />
+          </>
+        )
+      case Path.receive:
+        return (
+          <>
+            <BackButton />
+            <ReceivePage />
           </>
         )
     }
