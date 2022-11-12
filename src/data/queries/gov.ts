@@ -6,6 +6,7 @@ import { Proposal, Vote } from "@terra-money/terra.js"
 import { Color } from "types/components"
 import { Pagination, queryKey, RefetchOptions, useIsClassic } from "../query"
 import { useLCDClient } from "./lcdClient"
+import { PaginationOptions } from "@terra-money/terra.js/dist/client/lcd/APIRequester"
 
 export const useVotingParams = () => {
   const lcd = useLCDClient()
@@ -33,21 +34,23 @@ export const useTallyParams = () => {
 }
 
 /* proposals */
-export const useProposals = (status: Proposal.Status) => {
+export const useProposals = (
+  status: Proposal.Status,
+  paginationOptions: Partial<PaginationOptions>
+) => {
   const lcd = useLCDClient()
+
   return useQuery(
-    [queryKey.gov.proposals, status],
+    [queryKey.gov.proposals, status, paginationOptions],
     async () => {
-      // TODO: Pagination
-      // Required when the number of results exceed 100
-      // About 50 passed propsals from 2019 to 2021
-      const [proposals] = await lcd.gov.proposals({
+      const proposals = await lcd.gov.proposals({
         proposal_status: status,
         ...Pagination,
+        ...paginationOptions,
       })
       return proposals
     },
-    { ...RefetchOptions.DEFAULT }
+    { ...RefetchOptions.DEFAULT, keepPreviousData: true }
   )
 }
 
