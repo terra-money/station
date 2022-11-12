@@ -1,7 +1,7 @@
 @import "mixins";
 
 .wallet {
-  width: 380px;
+  width: var(--wallet-width);
   grid-area: walletbar;
   position: relative;
   border-left: 1px solid var(--menu-border);

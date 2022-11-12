@@ -20,7 +20,8 @@ export interface Props extends TokenItem, QueryState {
 }
 
 const Asset = (props: Props) => {
-  const { token, icon, symbol, balance, denom, chains, ...state } = props
+  const { token, icon, symbol, balance, denom, chains, decimals, ...state } =
+    props
   const { t } = useTranslation()
   const currency = useCurrency()
   const chainsName = useChains()
@@ -49,7 +50,12 @@ const Asset = (props: Props) => {
             {change >= 0 ? <PriceUp /> : <PriceDown />} {change.toFixed(2)}%
           </h2>
           <h1 className={styles.price}>
-            {currency.unit} {props.price || prices?.[denom]?.price || 0}
+            {currency.unit}{" "}
+            {(
+              ((props.price || prices?.[denom]?.price || 0) *
+                parseInt(balance ?? "0")) /
+              10 ** decimals
+            ).toFixed(2)}
           </h1>
           <h2 className={styles.amount}>
             <WithFetching {...combineState(state, pricesState)} height={1}>
