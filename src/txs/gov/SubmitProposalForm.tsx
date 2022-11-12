@@ -10,7 +10,7 @@ import { ExecuteContractProposal } from "@terra-money/terra.js/dist/core/wasm/pr
 import { isDenomTerraNative } from "@terra.kitchen/utils"
 import { readAmount, readDenom, toAmount } from "@terra.kitchen/utils"
 import { SAMPLE_ADDRESS } from "config/constants"
-import { getAmount, sortCoins } from "utils/coin"
+import { getAmount } from "utils/coin"
 import { has } from "utils/num"
 import { parseJSON } from "utils/data"
 import { queryKey } from "data/query"
@@ -79,10 +79,10 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
   const address = useAddress()
 
   const bankBalance = useBankBalance()
-  const balance = getAmount(bankBalance, "uluna")
+  const balance = bankBalance.find((b) => b.denom === "uluna")?.amount ?? "0"
 
   /* tx context */
-  const initialGasDenom = getInitialGasDenom(bankBalance)
+  const initialGasDenom = getInitialGasDenom()
   const defaultCoinItem = { denom: initialGasDenom }
 
   /* form */
@@ -349,7 +349,7 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
                   placeholder={getPlaceholder()}
                   selectBefore={
                     <Select {...register(`coins.${index}.denom`)} before>
-                      {sortCoins(bankBalance)
+                      {bankBalance
                         .filter(({ denom }) => isDenomTerraNative(denom))
                         .map(({ denom }) => (
                           <option value={denom} key={denom}>

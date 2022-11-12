@@ -12,10 +12,8 @@ import { toAmount } from "@terra.kitchen/utils"
 
 /* helpers */
 import { has } from "utils/num"
-import { getAmount, sortCoins } from "utils/coin"
 import { queryKey } from "data/query"
 import { useAddress } from "data/wallet"
-import { useBankBalance } from "data/queries/bank"
 import { queryTFMRoute, queryTFMSwap, TFM_ROUTER } from "data/external/tfm"
 
 /* components */
@@ -50,17 +48,12 @@ const TFMSwapForm = () => {
   const { t } = useTranslation()
   const address = useAddress()
   const { state } = useLocation()
-  const bankBalance = useBankBalance()
 
   /* swap context */
   const { options, findTokenItem, findDecimals } = useTFMSwap()
 
-  const initialOfferAsset =
-    (state as Token) ??
-    (getAmount(bankBalance, "uluna")
-      ? "uluna"
-      : sortCoins(bankBalance)[0].denom)
-  const initialGasDenom = getInitialGasDenom(bankBalance)
+  const initialOfferAsset = (state as Token) ?? "uluna"
+  const initialGasDenom = getInitialGasDenom()
 
   /* options */
   const [showAll, setShowAll] = useState(false)

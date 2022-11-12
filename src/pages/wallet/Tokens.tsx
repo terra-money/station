@@ -3,7 +3,6 @@ import { useCustomTokensIBC } from "data/settings/CustomTokens"
 import { useCustomTokensCW20 } from "data/settings/CustomTokens"
 import { InternalButton } from "components/general"
 import { Card } from "components/layout"
-import IBCAsset from "./IBCAsset"
 import CW20Asset from "./CW20Asset"
 import AddTokens from "./AddTokens"
 import Asset from "./Asset"
@@ -18,13 +17,6 @@ const Tokens = () => {
 
     return (
       <>
-        {!ibc.length
-          ? null
-          : ibc.map(({ denom, base_denom }) => (
-              <IBCAsset denom={denom} base={base_denom} key={denom}>
-                {(item) => <Asset {...item} />}
-              </IBCAsset>
-            ))}
         {!cw20.length
           ? null
           : cw20.map((item) => (

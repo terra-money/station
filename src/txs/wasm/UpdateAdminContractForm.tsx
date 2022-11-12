@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import { AccAddress, MsgUpdateContractAdmin } from "@terra-money/terra.js"
 import { useAddress } from "data/wallet"
-import { useBankBalance } from "data/queries/bank"
 import { Form, FormItem } from "components/form"
 import { Input } from "components/form"
 import validate from "../validate"
@@ -17,10 +16,9 @@ const UpdateAdminContractForm = ({ contract }: { contract: AccAddress }) => {
   const { t } = useTranslation()
 
   const address = useAddress()
-  const bankBalance = useBankBalance()
 
   /* tx context */
-  const initialGasDenom = getInitialGasDenom(bankBalance)
+  const initialGasDenom = getInitialGasDenom()
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })

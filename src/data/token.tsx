@@ -7,8 +7,11 @@ import { useIBCBaseDenom } from "./queries/ibc"
 import { useTokenInfoCW20 } from "./queries/wasm"
 import { useCustomTokensCW20 } from "./settings/CustomTokens"
 import { useCW20Whitelist, useIBCWhitelist } from "./Terra/TerraAssets"
+import { useWhitelist } from "./queries/chains"
 
 export const useTokenItem = (token: Token): TokenItem | undefined => {
+  const readNativeDenom = useNativeDenoms()
+
   /* CW20 */
   const matchToken = (item: TokenItem) => item.token === token
 
@@ -67,54 +70,23 @@ export const WithTokenItem = ({ token, children }: Props) => {
 /* helpers */
 export const getIcon = (path: string) => `${ASSETS}/icon/svg/${path}`
 
-// TODO: move to assets.terra.money
-const WHITELIST: Record<string, TokenItem> = {
-  uluna: {
-    token: "uluna",
-    symbol: "Luna",
-    name: "Terra Luna",
-    icon: "https://assets.terra.money/icon/svg/Luna.svg",
-    decimals: 6,
-  },
-  uosmo: {
-    token: "uosmo",
-    symbol: "Osmo",
-    name: "Osmosis",
-    icon: "https://assets.terra.money/icon/svg/ibc/OSMO.svg",
-    decimals: 6,
-  },
-  // Luna on Osmosis
-  "ibc/785AFEC6B3741100D15E7AF01374E3C4C36F24888E96479B1C33F5C71F364EF9": {
-    token: "uluna",
-    symbol: "Luna",
-    name: "Terra Luna",
-    icon: "https://assets.terra.money/icon/svg/Luna.svg",
-    decimals: 6,
-  },
-  // Osmo on Terra
-  "ibc/0471F1C4E7AFD3F07702BEF6DC365268D64570F7C1FDC98EA6098DD6DE59817B": {
-    token: "uosmo",
-    symbol: "Osmo",
-    name: "Osmosis",
-    icon: "https://assets.terra.money/icon/svg/ibc/OSMO.svg",
-    decimals: 6,
-  },
-}
+export const useNativeDenoms = () => {
+  const whitelist = useWhitelist()
 
-export const readNativeDenom = (denom: Denom): TokenItem => {
-  // TODO: support multiple native tokens
-  const symbol = readDenom(denom)
+  function readNativeDenom(denom: Denom): TokenItem {
+    return (
+      // TODO: change default token icon
+      whitelist[denom] ?? {
+        token: denom,
+        symbol: readDenom(denom),
+        name: readDenom(denom),
+        icon: "https://assets.terra.money/icon/svg/Terra.svg",
+        decimals: 6,
+      }
+    )
+  }
 
-  return (
-    // TODO: change default token icon
-    WHITELIST[denom] ?? {
-      token: denom,
-      symbol,
-      name: symbol,
-      icon: "https://assets.terra.money/icon/svg/Luna.svg",
-      decimals: 6,
-    }
-  )
+  return readNativeDenom
 }
 
 export const readIBCDenom = (item: IBCTokenItem): TokenItem => {

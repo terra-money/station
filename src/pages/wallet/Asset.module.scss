@@ -2,43 +2,84 @@
 
 .asset {
   @include flex(space-between, flex-start);
-  padding: 10px 0;
+  padding: 10px;
+  border-radius: 10px;
   position: relative; // to loading indicator
+  cursor: pointer;
+  transition: 300ms;
+
+  &:hover {
+    background-color: var(--card-bg);
+
+    .details__container {
+      grid-template-areas:
+        "symbol symbol"
+        "change amount";
+    }
+
+    .chain__num,
+    .price {
+      display: none;
+    }
+
+    .chains {
+      display: inline;
+      background-color: var(--button-default-bg);
+      padding: 2px 10px;
+      font-size: 12px;
+      border-radius: 10px;
+    }
+  }
 }
 
 .details {
   @include flex(flex-start);
-  gap: 12px;
+  gap: 10px;
   width: 100%;
 }
 
 .details__container {
-  @include flex(space-between);
+  display: grid;
   width: 100%;
+  max-width: 100%;
+  grid-template-areas:
+    "symbol price"
+    "change amount";
 }
 
-.symbol,
-.amount {
+.symbol {
+  @include flex(flex-start);
+  gap: 6px;
   font-size: 15px;
+  grid-area: symbol;
 }
 
-.symbol span {
+.chain__num {
   background-color: var(--button-default-bg);
   padding: 2px 10px;
   font-size: 12px;
   border-radius: 10px;
 }
 
-.change__up,
-.change__down,
-.amount {
-  font-weight: var(--normal);
-  color: var(--text-muted);
+.chains {
+  display: none;
 }
 
-.price,
 .amount {
+  font-size: 15px;
+  grid-area: amount;
+  font-weight: var(--normal);
+  color: var(--text-muted);
   text-align: right;
+  white-space: nowrap;
+}
+
+.change__up,
+.change__down {
+  @include flex(flex-start);
+  font-weight: var(--normal);
+  grid-area: change;
+  gap: 4px;
 }
 
 .change__up {
@@ -47,6 +88,11 @@
 
 .change__down {
   color: var(--danger);
+}
+
+.price {
+  text-align: right;
+  grid-area: price;
 }
 
 .value {

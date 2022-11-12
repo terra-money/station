@@ -7,7 +7,7 @@ import {
   useCustomTokensCW20,
   //useCustomTokensIBC,
 } from "data/settings/CustomTokens"
-import { readNativeDenom } from "data/token"
+import { useNativeDenoms } from "data/token"
 import { useTranslation } from "react-i18next"
 import AddTokens from "./AddTokens"
 import Asset from "./Asset"
@@ -22,48 +22,37 @@ const AssetList = () => {
   const { list: cw20 } = useCustomTokensCW20()
   const coins = useCoins()
   const { data: prices } = useMemoizedPrices()
+  const readNativeDenom = useNativeDenoms()
 
   const render = () => {
     if (!coins) return
 
     const list = [
       ...Object.values(
-        coins.reduce((acc, { denom, balance }) => {
+        coins.reduce((acc, { denom, amount, chain }) => {
           const data = readNativeDenom(denom)
           if (acc[data.token]) {
             acc[data.token].balance = `${
-              parseInt(acc[data.token].balance) + parseInt(balance)
+              parseInt(acc[data.token].balance) + parseInt(amount)
             }`
-            acc[data.token].chainNum++
+            acc[data.token].chains.push(chain)
             return acc
           } else {
             return {
               ...acc,
               [data.token]: {
                 denom,
-                balance,
+                balance: amount,
                 icon: data.icon,
                 symbol: data.symbol,
                 price: prices?.[data.token]?.price,
                 change: prices?.[data.token]?.change,
-                chainNum: 1,
+                chains: [chain],
               },
             }
           }
         }, {} as Record<string, any>)
       ),
-      /*
-      ...ibc.map(({ denom, base_denom, icon, symbol }) => {
-        const balance = getAmount(bankBalance, denom)
-        return {
-          denom,
-          balance,
-          icon,
-          symbol,
-          price: prices?.[base_denom]?.price,
-          change: prices?.[base_denom]?.change,
-        }
-      }),*/
     ]
 
     return (

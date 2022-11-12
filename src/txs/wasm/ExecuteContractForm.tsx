@@ -5,7 +5,6 @@ import { useFieldArray, useForm } from "react-hook-form"
 import AddIcon from "@mui/icons-material/Add"
 import RemoveIcon from "@mui/icons-material/Remove"
 import { MsgExecuteContract } from "@terra-money/terra.js"
-import { sortCoins } from "utils/coin"
 import { parseJSON, validateMsg } from "utils/data"
 import { queryKey } from "data/query"
 import { useAddress } from "data/wallet"
@@ -33,7 +32,7 @@ const ExecuteContractForm = () => {
   const bankBalance = useBankBalance()
 
   /* tx context */
-  const initialGasDenom = getInitialGasDenom(bankBalance)
+  const initialGasDenom = getInitialGasDenom()
   const defaultItem = { denom: initialGasDenom }
   const { findDecimals } = useIBCHelper()
 
@@ -124,7 +123,7 @@ const ExecuteContractForm = () => {
                     placeholder={getPlaceholder(decimals)}
                     selectBefore={
                       <Select {...register(`coins.${index}.denom`)} before>
-                        {sortCoins(bankBalance).map(({ denom }) => (
+                        {bankBalance.map(({ denom }) => (
                           <WithTokenItem token={denom} key={denom}>
                             {({ symbol }) => (
                               <option value={denom}>{symbol}</option>

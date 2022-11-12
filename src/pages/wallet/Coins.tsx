@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { getAmount } from "utils/coin"
-import { readNativeDenom } from "data/token"
+import { useNativeDenoms } from "data/token"
 import { useBankBalance } from "data/queries/bank"
 import { useIsWalletEmpty } from "data/queries/bank"
 import { Card, Grid } from "components/layout"
@@ -10,6 +9,7 @@ import Asset from "./Asset"
 const Coins = () => {
   const { t } = useTranslation()
   const isWalletEmpty = useIsWalletEmpty()
+  const readNativeDenom = useNativeDenoms()
   const coins = useCoins()
 
   const render = () => {
@@ -34,6 +34,7 @@ const Coins = () => {
           <section>
             {coins.map(({ denom, ...item }) => (
               <Asset
+                chains={[]}
                 denom={denom}
                 {...readNativeDenom(denom)}
                 {...item}
@@ -58,11 +59,5 @@ export default Coins
 /* hooks */
 export const useCoins = () => {
   const bankBalance = useBankBalance()
-
-  const nativeTokenValues = bankBalance.denoms().map((denom) => {
-    const balance = getAmount(bankBalance, denom)
-    return { denom, balance }
-  })
-
-  return nativeTokenValues
+  return bankBalance
 }

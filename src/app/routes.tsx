@@ -37,7 +37,6 @@ import InstantiateContractTx from "txs/wasm/InstantiateContractTx"
 import ExecuteContractTx from "txs/wasm/ExecuteContractTx"
 import MigrateContractTx from "txs/wasm/MigrateContractTx"
 import UpdateAdminContractTx from "txs/wasm/UpdateAdminContractTx"
-import AnchorEarnTx from "txs/earn/AnchorEarnTx"
 import SignMultisigTxPage from "pages/multisig/SignMultisigTxPage"
 import PostMultisigTxPage from "pages/multisig/PostMultisigTxPage"
 
@@ -133,7 +132,6 @@ export const useNav = () => {
       path: "/contract/updateadmin/:contract",
       element: <UpdateAdminContractTx />,
     },
-    { path: "/earn", element: <AnchorEarnTx /> },
     { path: "/donate", element: <DonateAllVestingTokensTx /> },
 
     /* auth */

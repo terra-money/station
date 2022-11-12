@@ -55,10 +55,8 @@ const SwapForm = () => {
   const { getMsgsFunction, getSimulateFunction, getSimulateQuery } = utils
   const { options, findTokenItem, findDecimals, calcExpected } = useSingleSwap()
 
-  const initialOfferAsset =
-    (state as Token) ??
-    (getAmount(bankBalance, "uusd") ? "uusd" : sortCoins(bankBalance)[0].denom)
-  const initialGasDenom = getInitialGasDenom(bankBalance)
+  const initialOfferAsset = (state as Token) ?? "uluna"
+  const initialGasDenom = getInitialGasDenom()
 
   /* options */
   const [showAll, setShowAll] = useState(false)

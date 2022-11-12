@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import { MsgDonateAllVestingTokens } from "@terra-money/terra.js"
 import { useAddress } from "data/wallet"
-import { useBankBalance } from "data/queries/bank"
 import { Account, parseVestingSchedule } from "data/queries/vesting"
 import { Form, FormItem, Input } from "components/form"
 import { toInput } from "txs/utils"
@@ -12,13 +11,12 @@ import Tx, { getInitialGasDenom } from "../Tx"
 const DonateAllVestingTokensForm = ({ account }: { account: Account }) => {
   const { t } = useTranslation()
   const address = useAddress()
-  const bankBalance = useBankBalance()
 
   const schedule = parseVestingSchedule(account)
   const balance = schedule.amount.total
 
   /* tx context */
-  const initialGasDenom = getInitialGasDenom(bankBalance)
+  const initialGasDenom = getInitialGasDenom()
 
   /* form */
   const { handleSubmit } = useForm({ mode: "onChange" })

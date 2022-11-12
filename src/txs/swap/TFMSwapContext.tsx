@@ -7,7 +7,7 @@ import createContext from "utils/createContext"
 import { combineState } from "data/query"
 import { useBankBalance } from "data/queries/bank"
 import { useTokenBalances } from "data/queries/wasm"
-import { readIBCDenom, readNativeDenom } from "data/token"
+import { readIBCDenom, useNativeDenoms } from "data/token"
 import { useIBCWhitelist } from "data/Terra/TerraAssets"
 import { useCW20Whitelist } from "data/Terra/TerraAssets"
 import { useCustomTokensCW20 } from "data/settings/CustomTokens"
@@ -43,6 +43,7 @@ export const [useTFMSwap, TFMSwapProvider] =
 const TFMSwapContext = ({ children }: PropsWithChildren<{}>) => {
   const bankBalance = useBankBalance()
   const { list } = useCustomTokensCW20()
+  const readNativeDenom = useNativeDenoms()
   const customTokens = list.map(({ token }) => token)
 
   /* contracts */
@@ -130,6 +131,7 @@ const TFMSwapContext = ({ children }: PropsWithChildren<{}>) => {
     cw20Whitelist,
     availableList,
     cw20TokensBalances,
+    readNativeDenom,
   ])
 
   const state = combineState(

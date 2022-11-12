@@ -9,7 +9,17 @@ interface Props extends TokenItem {
 const CW20Asset = ({ children: render, ...item }: Props) => {
   const { token } = item
   const { data: balance, ...state } = useTokenBalance(token)
-  return <>{render({ ...item, ...state, balance, denom: token })}</>
+  return (
+    <>
+      {render({
+        ...item,
+        ...state,
+        balance,
+        denom: token,
+        chains: ["phoenix-1"],
+      })}
+    </>
+  )
 }
 
 export default CW20Asset

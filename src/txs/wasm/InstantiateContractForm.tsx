@@ -6,7 +6,6 @@ import RemoveIcon from "@mui/icons-material/Remove"
 import { AccAddress } from "@terra-money/terra.js"
 import { MsgInstantiateContract } from "@terra-money/terra.js"
 import { SAMPLE_ADDRESS } from "config/constants"
-import { sortCoins } from "utils/coin"
 import { parseJSON, validateMsg } from "utils/data"
 import { useAddress } from "data/wallet"
 import { useBankBalance } from "data/queries/bank"
@@ -32,7 +31,7 @@ const InstantiateContractForm = () => {
   const bankBalance = useBankBalance()
 
   /* tx context */
-  const initialGasDenom = getInitialGasDenom(bankBalance)
+  const initialGasDenom = getInitialGasDenom()
   const defaultItem = { denom: initialGasDenom }
   const { findDecimals } = useIBCHelper()
 
@@ -158,7 +157,7 @@ const InstantiateContractForm = () => {
                     placeholder={getPlaceholder(decimals)}
                     selectBefore={
                       <Select {...register(`coins.${index}.denom`)} before>
-                        {sortCoins(bankBalance).map(({ denom }) => (
+                        {bankBalance.map(({ denom }) => (
                           <WithTokenItem token={denom} key={denom}>
                             {({ symbol }) => (
                               <option value={denom}>{symbol}</option>

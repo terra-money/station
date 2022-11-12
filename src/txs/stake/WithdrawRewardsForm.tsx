@@ -11,7 +11,6 @@ import { MsgWithdrawDelegatorReward } from "@terra-money/terra.js"
 import { queryKey } from "data/query"
 import { useCurrency } from "data/settings/Currency"
 import { useAddress } from "data/wallet"
-import { useBankBalance } from "data/queries/bank"
 import { useMemoizedCalcValue } from "data/queries/coingecko"
 import { getFindMoniker } from "data/queries/staking"
 import { calcRewardsValues } from "data/queries/distribution"
@@ -35,13 +34,12 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
   const { t } = useTranslation()
   const currency = useCurrency()
   const address = useAddress()
-  const bankBalance = useBankBalance()
   const calcValue = useMemoizedCalcValue()
   const findMoniker = getFindMoniker(validators)
   const { byValidator } = calcRewardsValues(rewards, currency.id, calcValue)
 
   /* tx context */
-  const initialGasDenom = getInitialGasDenom(bankBalance)
+  const initialGasDenom = getInitialGasDenom()
 
   /* select validators */
   const init = (value = false) =>

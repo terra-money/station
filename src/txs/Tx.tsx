@@ -6,11 +6,11 @@ import { useNavigate } from "react-router-dom"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import classNames from "classnames"
 import BigNumber from "bignumber.js"
-import { head, isNil } from "ramda"
+import { isNil } from "ramda"
 
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline"
-import { isDenom, isDenomIBC, readDenom } from "@terra.kitchen/utils"
+import { isDenom, readDenom } from "@terra.kitchen/utils"
 import { Coin, Coins, CreateTxOptions } from "@terra-money/terra.js"
 import { LCDClient, Fee } from "@terra-money/terra.js"
 import { ConnectType, UserDenied } from "@terra-money/wallet-types"
@@ -19,15 +19,13 @@ import { useWallet, useConnectedWallet } from "@terra-money/use-wallet"
 
 import { Contents } from "types/components"
 import { has } from "utils/num"
-import { getAmount, sortCoins } from "utils/coin"
 import { getErrorMessage } from "utils/error"
 import { getLocalSetting, SettingKey } from "utils/localStorage"
-import { useCurrency } from "data/settings/Currency"
 import { RefetchOptions } from "data/query"
 import { queryKey } from "data/query"
 import { useAddress, useNetwork } from "data/wallet"
 import { isBroadcastingState, latestTxState } from "data/queries/tx"
-import { useBankBalance, useIsWalletEmpty } from "data/queries/bank"
+import { useIsWalletEmpty } from "data/queries/bank"
 
 import { Pre } from "components/general"
 import { Flex, Grid } from "components/layout"
@@ -80,7 +78,6 @@ interface RenderProps<TxValues> {
 function Tx<TxValues>(props: Props<TxValues>) {
   const { token, decimals, amount, balance } = props
   const { initialGasDenom, estimationTxValues, createTx } = props
-  const { excludeGasDenom } = props
   const { children, onChangeMax } = props
   const { onPost, redirectAfterTx, queryKeys } = props
 
@@ -89,7 +86,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   /* context */
   const { t } = useTranslation()
-  const currency = useCurrency()
   const network = useNetwork()
   const { post } = useWallet()
   const connectedWallet = useConnectedWallet()
@@ -98,7 +94,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const isWalletEmpty = useIsWalletEmpty()
   const setLatestTx = useSetRecoilState(latestTxState)
   const isBroadcasting = useRecoilValue(isBroadcastingState)
-  const bankBalance = useBankBalance()
   const { gasPrices } = useTx()
 
   /* simulation: estimate gas */
@@ -268,15 +263,9 @@ function Tx<TxValues>(props: Props<TxValues>) {
     : false
 
   const availableGasDenoms = useMemo(() => {
-    return sortCoins(bankBalance, currency.id)
-      .map(({ denom }) => denom)
-      .filter(
-        (denom) =>
-          !excludeGasDenom?.(denom) &&
-          !isDenomIBC(denom) &&
-          new BigNumber(getAmount(bankBalance, denom)).gte(getGasAmount(denom))
-      )
-  }, [bankBalance, currency, excludeGasDenom, getGasAmount])
+    // TODO: that changes for each chain
+    return ["uluna"]
+  }, [])
 
   useEffect(() => {
     if (availableGasDenoms.includes(initialGasDenom)) return
@@ -451,10 +440,9 @@ function Tx<TxValues>(props: Props<TxValues>) {
 export default Tx
 
 /* utils */
-export const getInitialGasDenom = (bankBalance: Coins) => {
-  const denom = head(sortCoins(bankBalance))?.denom ?? "uusd"
-  const uusd = getAmount(bankBalance, "uusd")
-  return has(uusd) ? "uusd" : denom
+// TODO: fetch for each chain
+export const getInitialGasDenom = () => {
+  return "uluna"
 }
 
 export const calcMinimumTaxAmount = (

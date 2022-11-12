@@ -6,7 +6,6 @@ import { MsgWithdrawValidatorCommission } from "@terra-money/terra.js"
 import { sortCoins } from "utils/coin"
 import { useCurrency } from "data/settings/Currency"
 import { useAddress } from "data/wallet"
-import { useBankBalance } from "data/queries/bank"
 import { useMemoizedCalcValue } from "data/queries/coingecko"
 import { useValidatorCommission } from "data/queries/distribution"
 import { useWithdrawAddress } from "data/queries/distribution"
@@ -19,11 +18,10 @@ const WithdrawCommissionForm = () => {
   const { t } = useTranslation()
   const currency = useCurrency()
   const address = useAddress()
-  const bankBalance = useBankBalance()
   const calcValue = useMemoizedCalcValue()
 
   /* tx context */
-  const initialGasDenom = getInitialGasDenom(bankBalance)
+  const initialGasDenom = getInitialGasDenom()
 
   /* form */
   const { handleSubmit } = useForm({ mode: "onChange" })

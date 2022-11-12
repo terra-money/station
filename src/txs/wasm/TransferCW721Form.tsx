@@ -8,7 +8,6 @@ import { truncate } from "@terra.kitchen/utils"
 import { SAMPLE_ADDRESS } from "config/constants"
 import { queryKey } from "data/query"
 import { useAddress } from "data/wallet"
-import { useBankBalance } from "data/queries/bank"
 import { useTnsAddress } from "data/external/tns"
 import { Auto, Card, InlineFlex } from "components/layout"
 import { Form, FormItem, FormHelp, Input } from "components/form"
@@ -31,10 +30,9 @@ interface Props {
 const TransferCW721Form = ({ contract, id }: Props) => {
   const { t } = useTranslation()
   const connectedAddress = useAddress()
-  const bankBalance = useBankBalance()
 
   /* tx context */
-  const initialGasDenom = getInitialGasDenom(bankBalance)
+  const initialGasDenom = getInitialGasDenom()
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })

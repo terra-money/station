@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import { MsgStoreCode } from "@terra-money/terra.js"
 import { useAddress } from "data/wallet"
-import { useBankBalance } from "data/queries/bank"
 import { Form, FormItem, Upload } from "components/form"
 import Tx, { getInitialGasDenom } from "../Tx"
 
@@ -14,10 +13,9 @@ interface TxValues {
 const StoreCodeForm = () => {
   const { t } = useTranslation()
   const address = useAddress()
-  const bankBalance = useBankBalance()
 
   /* tx context */
-  const initialGasDenom = getInitialGasDenom(bankBalance)
+  const initialGasDenom = getInitialGasDenom()
 
   /* form */
   const [file, setFile] = useState<File>()

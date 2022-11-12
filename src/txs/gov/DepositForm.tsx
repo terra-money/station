@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import { MsgDeposit } from "@terra-money/terra.js"
 import { toAmount } from "@terra.kitchen/utils"
-import { getAmount } from "utils/coin"
 import { queryKey } from "data/query"
 import { useAddress } from "data/wallet"
 import { useBankBalance } from "data/queries/bank"
@@ -23,10 +22,10 @@ const DepositForm = () => {
   const address = useAddress()
 
   const bankBalance = useBankBalance()
-  const balance = getAmount(bankBalance, "uluna")
+  const balance = bankBalance.find((b) => b.denom === "uluna")?.amount ?? "0"
 
   /* tx context */
-  const initialGasDenom = getInitialGasDenom(bankBalance)
+  const initialGasDenom = getInitialGasDenom()
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })

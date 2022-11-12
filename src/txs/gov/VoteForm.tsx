@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form"
 import classNames from "classnames/bind"
 import { MsgVote, Vote } from "@terra-money/terra.js"
 import { useAddress } from "data/wallet"
-import { useBankBalance } from "data/queries/bank"
 import { useGetVoteOptionItem } from "data/queries/gov"
 import { Form } from "components/form"
 import useProposalId from "pages/gov/useProposalId"
@@ -32,10 +31,9 @@ const VoteForm = () => {
   if (!id) throw new Error("Proposal is not defined")
 
   const address = useAddress()
-  const bankBalance = useBankBalance()
 
   /* tx context */
-  const initialGasDenom = getInitialGasDenom(bankBalance)
+  const initialGasDenom = getInitialGasDenom()
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })

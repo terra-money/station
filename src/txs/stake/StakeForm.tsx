@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
-import { AccAddress, Coin, Coins, ValAddress } from "@terra-money/terra.js"
+import { AccAddress, Coin, ValAddress } from "@terra-money/terra.js"
 import { Delegation, Validator } from "@terra-money/terra.js"
 import { MsgDelegate, MsgUndelegate } from "@terra-money/terra.js"
 import { MsgBeginRedelegate } from "@terra-money/terra.js"
@@ -9,7 +9,6 @@ import { toAmount } from "@terra.kitchen/utils"
 import { getAmount } from "utils/coin"
 import { queryKey } from "data/query"
 import { useAddress } from "data/wallet"
-import { useBankBalance } from "data/queries/bank"
 import { getFindMoniker } from "data/queries/staking"
 import { Grid } from "components/layout"
 import { Form, FormItem, FormWarning, Input, Select } from "components/form"
@@ -31,7 +30,7 @@ export enum StakeAction {
 interface Props {
   tab: StakeAction
   destination: ValAddress
-  balances: Coins
+  balances: { denom: string; amount: string }[]
   validators: Validator[]
   delegations: Delegation[]
 }
@@ -41,7 +40,6 @@ const StakeForm = (props: Props) => {
 
   const { t } = useTranslation()
   const address = useAddress()
-  const bankBalance = useBankBalance()
   const findMoniker = getFindMoniker(validators)
 
   const delegationsOptions = delegations.filter(
@@ -56,7 +54,7 @@ const StakeForm = (props: Props) => {
     )
 
   /* tx context */
-  const initialGasDenom = getInitialGasDenom(bankBalance)
+  const initialGasDenom = getInitialGasDenom()
 
   /* form */
   const form = useForm<TxValues>({

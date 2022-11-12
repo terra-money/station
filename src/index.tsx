@@ -18,6 +18,7 @@ import InitWallet from "app/InitWallet"
 import InitTheme from "app/InitTheme"
 import ElectronVersion from "app/ElectronVersion"
 import App from "app/App"
+import InitChains from "app/InitChains"
 
 const connectorOpts = { bridge: BRIDGE }
 
@@ -29,11 +30,13 @@ getChainOptions().then((chainOptions) =>
           <ScrollToTop />
           <WalletProvider {...chainOptions} connectorOpts={connectorOpts}>
             <InitNetworks>
-              <InitWallet>
-                <InitTheme />
-                <ElectronVersion />
-                <App />
-              </InitWallet>
+              <InitChains>
+                <InitWallet>
+                  <InitTheme />
+                  <ElectronVersion />
+                  <App />
+                </InitWallet>
+              </InitChains>
             </InitNetworks>
           </WalletProvider>
           {debug.query && <ReactQueryDevtools position="bottom-right" />}
