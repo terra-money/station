@@ -1,25 +1,30 @@
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
+import { atom, useRecoilState } from "recoil"
 import { Proposal } from "@terra-money/terra.js"
 import { combineState } from "data/query"
 import { useProposals, useProposalStatusItem } from "data/queries/gov"
 import { useTerraAssets } from "data/Terra/TerraAssets"
 import { Col, Card } from "components/layout"
+import PaginationButtons from "components/layout/PaginationButtons"
 import { Fetching, Empty } from "components/feedback"
 import { Toggle } from "components/form"
 import ProposalItem from "./ProposalItem"
 import GovernanceParams from "./GovernanceParams"
-import styles from "./ProposalsByStatus.module.scss"
 import { useNetworkName } from "data/wallet"
-import PaginationButtons from "components/layout/PaginationButtons"
-import { ProposalStatus } from "@terra-money/terra.proto/cosmos/gov/v1beta1/gov"
+import styles from "./ProposalsByStatus.module.scss"
 
-interface PaginationState {
-  key: string
-  stack: string[]
-  status: ProposalStatus
-  total: number
+const DefaultGovernancePaginationState = {
+  key: "",
+  stack: [],
+  status: undefined,
+  total: 0,
 }
+
+const governancePaginationState = atom({
+  key: "governancePaginationState",
+  default: DefaultGovernancePaginationState,
+})
 
 const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   const { t } = useTranslation()
@@ -34,7 +39,9 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   const toggle = () => setShowAll((state) => !state)
 
   const pagination = 6
-  const [paginationState, setPaginationState] = useState<PaginationState>()
+  const [paginationState, setPaginationState] = useRecoilState(
+    governancePaginationState
+  )
   const key = (paginationState && paginationState.key) || ""
   const pageStack = (paginationState && paginationState.stack) || []
   const page = pageStack.length + 1
@@ -42,28 +49,17 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
 
   /* reset pagination on status change */
   useEffect(() => {
-    const pagination = JSON.parse(
-      window.localStorage.getItem("pagination-gov") || "{}"
+    if (
+      !(
+        paginationState &&
+        paginationState.status &&
+        paginationState.status !== status
+      )
     )
+      return
 
-    setPaginationState(
-      pagination.status === status
-        ? pagination
-        : {
-            key: "",
-            stack: [],
-            status: status,
-            total: 0,
-          }
-    )
-  }, [status])
-
-  useEffect(() => {
-    window.localStorage.setItem(
-      "pagination-gov",
-      JSON.stringify(paginationState)
-    )
-  }, [paginationState])
+    setPaginationState(DefaultGovernancePaginationState)
+  }, [paginationState, setPaginationState, status])
 
   const { data, ...proposalState } = useProposals(status, {
     "pagination.count_total": "true",
@@ -73,15 +69,20 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   })
   const [proposalData, paginationData] = data || []
 
-  if (
-    paginationData &&
-    paginationData.total > 0 &&
-    paginationData.total !== total
-  ) {
+  useEffect(() => {
+    if (
+      !(
+        paginationData &&
+        paginationData.total > 0 &&
+        paginationData.total !== total
+      )
+    )
+      return
+
     setPaginationState(
       Object.assign({}, paginationState, { total: paginationData.total })
     )
-  }
+  }, [paginationData, paginationState, setPaginationState, total])
 
   const { label } = useProposalStatusItem(status)
 
@@ -107,7 +108,7 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
     setPaginationState(
       Object.assign({}, paginationState, {
         stack: pageStack.slice(0, pageStack.length - 1),
-        key: pageStack.reverse()[1],
+        key: [...pageStack].reverse()[1],
         status: status,
         page: page - 1,
       })
