@@ -33,7 +33,7 @@ const NetWorth = () => {
         {currency.unit} {coinsValue.toFixed(2)} available
       </p>
       <div className={styles.networth__buttons}>
-        <Button color="primary">{t("Buy")}</Button>
+        <Button>{t("Send")}</Button>
         <Button
           onClick={() =>
             setRoute({
@@ -44,7 +44,6 @@ const NetWorth = () => {
         >
           {t("Receive")}
         </Button>
-        <Button>{t("Send")}</Button>
       </div>
     </article>
   )

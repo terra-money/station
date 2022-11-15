@@ -5,6 +5,8 @@ import { queryKey, RefetchOptions } from "../query"
 import { useNetwork } from "../wallet"
 import { useInterchainLCDClient, useLCDClient } from "./lcdClient"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
+import { useCustomTokensCW20 } from "data/settings/CustomTokens"
+import { useChains } from "./chains"
 
 export const useSupply = () => {
   const { lcd } = useNetwork()
@@ -26,6 +28,44 @@ export const useSupply = () => {
       return data.supply
     },
     { ...RefetchOptions.INFINITY }
+  )
+}
+
+export const useInitialTokenBalance = () => {
+  const addresses = useInterchainAddresses()
+  const chains = useChains()
+  const lcd = useInterchainLCDClient()
+  const { list: cw20 } = useCustomTokensCW20()
+
+  return useQuery(
+    [queryKey.bank.balances, addresses, cw20, chains],
+    async () => {
+      return (await Promise.all(
+        cw20.map(async ({ token }) => {
+          const chainID =
+            Object.values(chains).find(({ prefix }) => token.startsWith(prefix))
+              ?.chainID ?? ""
+
+          const address = addresses?.[chainID]
+          if (!address)
+            return {
+              amount: "0",
+              denom: token,
+              chain: chainID,
+            }
+          const { balance } = await lcd.wasm.contractQuery<{ balance: Amount }>(
+            token,
+            { balance: { address } }
+          )
+          return {
+            amount: balance,
+            denom: token,
+            chain: chainID,
+          }
+        })
+      )) as CoinBalance[]
+    },
+    { ...RefetchOptions.DEFAULT }
   )
 }
 

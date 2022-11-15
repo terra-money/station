@@ -24,8 +24,6 @@ export const useInterchainAddresses = () => {
     return acc
   }, {} as Record<string, string>)
 
-  console.table(addresses)
-
   return addresses
 }
 
