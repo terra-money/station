@@ -3,7 +3,9 @@ import { LAZY_LIMIT } from "config/constants"
 
 export const useIsClassic = () => {
   const chainId = useChainID()
-  return chainId.startsWith("columbus")
+  return ["columbus-5", "rebel-1", "rebel-2", "rogue-1", "rogue-2"].includes(
+    chainId
+  )
 }
 
 /* refetch */
@@ -29,8 +31,8 @@ export const combineState = (...results: QueryState[]) => ({
 /* queryKey */
 const mirror = <T>(obj: T, parentKey?: string): T =>
   Object.entries(obj).reduce((acc, [key, value]) => {
-    const next = value 
-      ? mirror(value, key) 
+    const next = value
+      ? mirror(value, key)
       : [parentKey, key].filter(Boolean).join(".")
 
     return { ...acc, [key]: next }
