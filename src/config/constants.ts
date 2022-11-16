@@ -34,3 +34,11 @@ export const TERRASWAP_COMMISSION_RATE = 0.003
 /* placeholder */
 // https://github.com/terra-money/localterra
 export const SAMPLE_ADDRESS = "terra1x46rqay4d3cssq8gxxvqz8xt6nwlz4td20k38v"
+
+export const CLASSIC_CHAIN_IDS = [
+  "columbus-5",
+  "rebel-1",
+  "rebel-2",
+  "rogue-1",
+  "rogue-2",
+]
