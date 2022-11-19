@@ -80,9 +80,9 @@ export const useInitialBankBalance = () => {
   return useQuery(
     [queryKey.bank.balances, addresses],
     async () => {
+      if (!addresses) return [] as CoinBalance[]
       const chains = Object.keys(addresses)
 
-      if (!chains.length) return [] as CoinBalance[]
       // TODO: Pagination
       // Required when the number of results exceed 100
       const balances = await Promise.all(
@@ -119,9 +119,9 @@ export const useBalances = () => {
   return useQuery(
     [queryKey.bank.balances, addresses],
     async () => {
+      if (!addresses) return [] as CoinBalance[]
       const chains = Object.keys(addresses)
 
-      if (!chains.length) return [] as CoinBalance[]
       // TODO: Pagination
       // Required when the number of results exceed 100
       const balances = await Promise.all(
@@ -146,6 +146,5 @@ export const useBalances = () => {
 
 export const useIsWalletEmpty = () => {
   const bankBalance = useBankBalance()
-  // check if wallet has uluna
   return !bankBalance.length
 }

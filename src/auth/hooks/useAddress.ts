@@ -16,7 +16,7 @@ export const useInterchainAddresses = () => {
   const chains = useChains()
 
   const address = wallet?.address ?? connected?.terraAddress
-  if (!address) return {}
+  if (!address) return
   const { words } = bech32.decode(address)
 
   const addresses = Object.values(chains).reduce((acc, { prefix, chainID }) => {

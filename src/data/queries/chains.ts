@@ -9,7 +9,7 @@ interface Chains {
         chainID: string
         lcd: string
         gasAdjustment: number
-        gasPrices: Object
+        gasPrices: Record<string, number>
         prefix: string
         name: string
         icon: string

@@ -6,11 +6,13 @@ import { useState } from "react"
 import createContext from "utils/createContext"
 import AssetPage from "./AssetPage"
 import ReceivePage from "./ReceivePage"
+import SendPage from "./SendPage"
 
 enum Path {
   wallet = "wallet",
   coin = "coin",
   receive = "receive",
+  send = "send",
 }
 
 type Route =
@@ -24,6 +26,11 @@ type Route =
     }
   | {
       path: Path.receive
+      previusPage: Route
+    }
+  | {
+      path: Path.send
+      denom?: string
       previusPage: Route
     }
 
@@ -73,6 +80,13 @@ const Wallet = () => {
           <>
             <BackButton />
             <ReceivePage />
+          </>
+        )
+      case Path.send:
+        return (
+          <>
+            <BackButton />
+            <SendPage />
           </>
         )
     }

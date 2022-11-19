@@ -24,6 +24,7 @@ const ReceivePage = () => {
     // eslint-disable-next-line
   }, [chains])
 
+  // TODO: handle wallet not connected
   return (
     <section className={styles.receive}>
       <h1>{t("Receive")}</h1>
@@ -40,7 +41,7 @@ const ReceivePage = () => {
         ))}
       </div>
       <p>Address</p>
-      <AddressBox address={addresses[chain]} />
+      <AddressBox address={addresses?.[chain] ?? "Connect wallet first"} />
     </section>
   )
 }

@@ -64,7 +64,17 @@ const AssetPage = () => {
         </div>
       </section>
       <section className={styles.actions}>
-        <Button>{t("Send")}</Button>
+        <Button
+          onClick={() =>
+            setRoute({
+              path: Path.send,
+              denom,
+              previusPage: route,
+            })
+          }
+        >
+          {t("Send")}
+        </Button>
         <Button
           onClick={() =>
             setRoute({

@@ -8,7 +8,6 @@ import { BankBalanceProvider } from "data/queries/bank"
 const InitBankBalance = ({ children }: PropsWithChildren<{}>) => {
   const { data: bankBalance } = useInitialBankBalance()
   const { data: tokenBalance } = useInitialTokenBalance()
-  console.log(tokenBalance)
   // If the balance doesn't exist, nothing is worth rendering.
   if (!bankBalance || !tokenBalance) return null
   return (

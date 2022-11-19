@@ -36,7 +36,7 @@ const TxIndicator = ({ txhash }: { txhash: string }) => {
 
   const [latestTx, setLatestTx] = useRecoilState(latestTxState)
   const [minimized, setMinimized] = useState(false)
-  const initLatestTx = () => setLatestTx({ txhash: "" })
+  const initLatestTx = () => setLatestTx({ txhash: "", chainID: "" })
   const { redirectAfterTx } = latestTx
 
   /* polling */
@@ -163,17 +163,21 @@ const TxIndicator = ({ txhash }: { txhash: string }) => {
     >
       {data && (
         <ul className={styles.messages}>
-          {getCanonicalMsgs(data).map((msg, index) => {
-            if (!msg) return null
-            const { canonicalMsg } = msg
-            return (
-              <li key={index}>
-                {canonicalMsg.map((msg, index) => (
-                  <TxMessage key={index}>{msg}</TxMessage>
-                ))}
-              </li>
-            )
-          })}
+          {
+            // TODO: update getCanonicalMsgs() to support station.js types
+            // @ts-expect-error
+            getCanonicalMsgs(data).map((msg, index) => {
+              if (!msg) return null
+              const { canonicalMsg } = msg
+              return (
+                <li key={index}>
+                  {canonicalMsg.map((msg, index) => (
+                    <TxMessage key={index}>{msg}</TxMessage>
+                  ))}
+                </li>
+              )
+            })
+          }
         </ul>
       )}
 

@@ -10,6 +10,7 @@
   grid-template-areas: "details" "list" "actions";
   grid-template-rows: min-content auto min-content;
   transition: 400ms;
+  background-color: var(--card-bg-muted);
 }
 
 .close {
