@@ -310,7 +310,7 @@ const SendPage = () => {
                         decimals
                       ),
                     })}
-                    //token={asset}
+                    token={asset}
                     inputMode="decimal"
                     onFocus={max.reset}
                     placeholder={getPlaceholder(decimals)}
