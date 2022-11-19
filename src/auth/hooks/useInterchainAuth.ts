@@ -20,7 +20,7 @@ import { useChains } from "data/queries/chains"
 import { getChainIDFromAddress } from "utils/bech32"
 
 const walletState = atom({
-  key: "wallet",
+  key: "interchain-wallet",
   default: getWallet(),
 })
 

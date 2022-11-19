@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
@@ -10,6 +10,7 @@ import { Form, FormError, FormItem, FormWarning } from "components/form"
 import { Checkbox, Input, Submit } from "components/form"
 import validate from "../scripts/validate"
 import useAuth from "../hooks/useAuth"
+import { isBleAvailable } from "utils/ledger"
 
 interface Values {
   index: number
@@ -22,6 +23,12 @@ const AccessWithLedgerForm = () => {
   const { connectLedger } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<Error>()
+
+  /* check bluetooth availability */
+  const [bleAvailable, setBleAvailable] = useState(false)
+  useEffect(() => {
+    isBleAvailable().then(setBleAvailable)
+  }, [])
 
   /* form */
   const form = useForm<Values>({
@@ -72,9 +79,11 @@ const AccessWithLedgerForm = () => {
 
         {index !== 0 && <FormWarning>{t("Default index is 0")}</FormWarning>}
 
-        <Checkbox {...register("bluetooth")} checked={bluetooth}>
-          Use Bluetooth
-        </Checkbox>
+        {bleAvailable && (
+          <Checkbox {...register("bluetooth")} checked={bluetooth}>
+            Use Bluetooth
+          </Checkbox>
+        )}
       </FormItem>
 
       {error && <FormError>{error.message}</FormError>}
