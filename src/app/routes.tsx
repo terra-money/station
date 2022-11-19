@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next"
 import { useNavigate, useRoutes } from "react-router-dom"
 
 import { ReactComponent as WalletIcon } from "styles/images/menu/Wallet.svg"
-import { ReactComponent as NFTIcon } from "styles/images/menu/NFT.svg"
 import { ReactComponent as HistoryIcon } from "styles/images/menu/History.svg"
 import { ReactComponent as SwapIcon } from "styles/images/menu/Swap.svg"
 import { ReactComponent as StakeIcon } from "styles/images/menu/Stake.svg"
@@ -12,7 +11,6 @@ import { ReactComponent as ContractIcon } from "styles/images/menu/Contract.svg"
 
 /* menu */
 import Dashboard from "pages/dashboard/Dashboard"
-import NFT from "pages/nft/NFT"
 import History from "pages/history/History"
 import Stake from "pages/stake/Stake"
 import Governance from "pages/gov/Governance"
@@ -91,12 +89,14 @@ export const useNav = () => {
       title: t("Governance"),
       icon: <GovernanceIcon {...ICON_SIZE} />,
     },
+    /*
     {
       path: "/nft",
       element: <NFT />,
       title: t("NFT"),
       icon: <NFTIcon {...ICON_SIZE} />,
     },
+    */
     {
       path: "/contract",
       element: <Contract />,

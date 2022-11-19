@@ -1,23 +1,19 @@
 import { FormError } from "components/form"
 import { InternalButton } from "components/general"
-import { useIsWalletEmpty } from "data/queries/bank"
+import { useBankBalance, useIsWalletEmpty } from "data/queries/bank"
 import { useMemoizedPrices } from "data/queries/coingecko"
-import { useCustomTokensCW20 } from "data/settings/CustomTokens"
 import { useNativeDenoms } from "data/token"
 import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import AddTokens from "./AddTokens"
 import Asset from "./Asset"
 import styles from "./AssetList.module.scss"
-import { useCoins } from "./Coins"
-import CW20Asset from "./CW20Asset"
 
 const AssetList = () => {
   const { t } = useTranslation()
   const isWalletEmpty = useIsWalletEmpty()
-  const { list: cw20 } = useCustomTokensCW20()
 
-  const coins = useCoins()
+  const coins = useBankBalance()
   const { data: prices } = useMemoizedPrices()
   const readNativeDenom = useNativeDenoms()
 
@@ -41,15 +37,17 @@ const AssetList = () => {
                   balance: amount,
                   icon: data.icon,
                   symbol: data.symbol,
-                  price: prices?.[data.token]?.price,
-                  change: prices?.[data.token]?.change,
+                  price: prices?.[data.token]?.price ?? 0,
+                  change: prices?.[data.token]?.change ?? 0,
                   chains: [chain],
                 },
               }
             }
           }, {} as Record<string, any>)
         ),
-      ].sort((a, b) => parseInt(b.balance) - parseInt(a.balance)),
+      ].sort(
+        (a, b) => b.price * parseInt(b.balance) - a.price * parseInt(a.balance)
+      ),
     [coins, readNativeDenom, prices]
   )
 
@@ -70,13 +68,6 @@ const AssetList = () => {
               key={denom}
             />
           ))}
-          {!cw20.length
-            ? null
-            : cw20.map((item) => (
-                <CW20Asset {...item} key={item.token}>
-                  {(item) => <Asset {...item} denom={item.token} />}
-                </CW20Asset>
-              ))}
         </section>
       </div>
     )

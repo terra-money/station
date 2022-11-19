@@ -34,6 +34,7 @@ interface Props {
 }
 
 const PostMultisigTxForm = ({ publicKey, sequence, ...props }: Props) => {
+  // TODO: multisig is available only on terra, we need to handle it
   const { defaultValues } = props
   const { t } = useTranslation()
 
@@ -81,7 +82,7 @@ const PostMultisigTxForm = ({ publicKey, sequence, ...props }: Props) => {
       // broadcast
       const result = await lcd.tx.broadcastSync(tx)
       if (isTxError(result)) throw new Error(result.raw_log)
-      setLatestTx({ txhash: result.txhash })
+      setLatestTx({ txhash: result.txhash, chainID: "phoenix-1" })
     } catch (error) {
       setError(error as Error)
     }

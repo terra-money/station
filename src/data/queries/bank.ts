@@ -5,6 +5,8 @@ import { queryKey, RefetchOptions } from "../query"
 import { useNetwork } from "../wallet"
 import { useInterchainLCDClient, useLCDClient } from "./lcdClient"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
+import { useCustomTokensCW20 } from "data/settings/CustomTokens"
+import { useChains } from "./chains"
 
 export const useSupply = () => {
   const { lcd } = useNetwork()
@@ -29,6 +31,44 @@ export const useSupply = () => {
   )
 }
 
+export const useInitialTokenBalance = () => {
+  const addresses = useInterchainAddresses()
+  const chains = useChains()
+  const lcd = useInterchainLCDClient()
+  const { list: cw20 } = useCustomTokensCW20()
+
+  return useQuery(
+    [queryKey.bank.balances, addresses, cw20, chains],
+    async () => {
+      return (await Promise.all(
+        cw20.map(async ({ token }) => {
+          const chainID =
+            Object.values(chains).find(({ prefix }) => token.startsWith(prefix))
+              ?.chainID ?? ""
+
+          const address = addresses?.[chainID]
+          if (!address)
+            return {
+              amount: "0",
+              denom: token,
+              chain: chainID,
+            }
+          const { balance } = await lcd.wasm.contractQuery<{ balance: Amount }>(
+            token,
+            { balance: { address } }
+          )
+          return {
+            amount: balance,
+            denom: token,
+            chain: chainID,
+          }
+        })
+      )) as CoinBalance[]
+    },
+    { ...RefetchOptions.DEFAULT }
+  )
+}
+
 // As a wallet app, native token balance is always required from the beginning.
 export const [useBankBalance, BankBalanceProvider] =
   createContext<CoinBalance[]>("useBankBalance")
@@ -40,9 +80,9 @@ export const useInitialBankBalance = () => {
   return useQuery(
     [queryKey.bank.balances, addresses],
     async () => {
+      if (!addresses) return [] as CoinBalance[]
       const chains = Object.keys(addresses)
 
-      if (!chains.length) return [] as CoinBalance[]
       // TODO: Pagination
       // Required when the number of results exceed 100
       const balances = await Promise.all(
@@ -79,9 +119,9 @@ export const useBalances = () => {
   return useQuery(
     [queryKey.bank.balances, addresses],
     async () => {
+      if (!addresses) return [] as CoinBalance[]
       const chains = Object.keys(addresses)
 
-      if (!chains.length) return [] as CoinBalance[]
       // TODO: Pagination
       // Required when the number of results exceed 100
       const balances = await Promise.all(
@@ -106,6 +146,5 @@ export const useBalances = () => {
 
 export const useIsWalletEmpty = () => {
   const bankBalance = useBankBalance()
-  // check if wallet has uluna
   return !bankBalance.length
 }

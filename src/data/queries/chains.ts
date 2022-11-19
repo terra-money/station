@@ -9,10 +9,14 @@ interface Chains {
         chainID: string
         lcd: string
         gasAdjustment: number
-        gasPrices: Object
+        gasPrices: Record<string, number>
         prefix: string
         name: string
         icon: string
+        ibc?: {
+          toTerra: string
+          fromTerra: string
+        }
       }
     >
   >
@@ -47,4 +51,25 @@ export function useWhitelist(): Chains["whitelist"] {
   if (!data) return {}
 
   return data.whitelist
+}
+
+export function useIBCChannels() {
+  const chains = useChains()
+
+  return function getIBCChannel({
+    from,
+    to,
+  }: {
+    from: string
+    to: string
+  }): string {
+    if (chains[from].name === "Terra") {
+      return chains[to].ibc?.fromTerra ?? ""
+    } else if (chains[to].name === "Terra") {
+      return chains[from].ibc?.toTerra ?? ""
+    } else {
+      // one of the 2 chains MUST be Terra
+      return ""
+    }
+  }
 }

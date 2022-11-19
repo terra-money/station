@@ -72,6 +72,7 @@ export const getIcon = (path: string) => `${ASSETS}/icon/svg/${path}`
 
 export const useNativeDenoms = () => {
   const whitelist = useWhitelist()
+  const { list: cw20 } = useCustomTokensCW20()
 
   function readNativeDenom(denom: Denom): TokenItem {
     const fixedDenom = denom.startsWith("ibc/")
@@ -79,8 +80,10 @@ export const useNativeDenoms = () => {
       : readDenom(denom)
     return (
       whitelist[denom] ??
+      cw20.find(({ token }) => denom === token) ??
       // that's needed for axl tokens
-      Object.values(whitelist).find((t) => t.token === denom) ?? { // default token icon
+      Object.values(whitelist).find((t) => t.token === denom) ?? {
+        // default token icon
         token: denom,
         symbol: fixedDenom,
         name: fixedDenom,

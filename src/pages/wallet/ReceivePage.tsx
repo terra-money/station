@@ -1,5 +1,4 @@
 import { useInterchainAddresses } from "auth/hooks/useAddress"
-import { Input } from "components/form"
 import AddressBox from "components/form/AddressBox"
 import { useChains } from "data/queries/chains"
 import { useEffect, useState } from "react"
@@ -22,9 +21,10 @@ const ReceivePage = () => {
     if (list.length > 0) {
       setChain(list[0].chainID)
     }
-    // @ts-ignore
+    // eslint-disable-next-line
   }, [chains])
 
+  // TODO: handle wallet not connected
   return (
     <section className={styles.receive}>
       <h1>{t("Receive")}</h1>
@@ -41,7 +41,7 @@ const ReceivePage = () => {
         ))}
       </div>
       <p>Address</p>
-      <AddressBox address={addresses[chain]} />
+      <AddressBox address={addresses?.[chain] ?? "Connect wallet first"} />
     </section>
   )
 }

@@ -14,7 +14,6 @@ const TxContext = ({ children }: PropsWithChildren<{}>) => {
   const { t } = useTranslation()
   const txKey = useTxKey()
   const { data: gasPrices } = useGasPrices()
-
   /* on error */
   const fallback = () => (
     <Card>

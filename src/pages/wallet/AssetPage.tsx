@@ -33,14 +33,21 @@ const AssetPage = () => {
       <section className={styles.details}>
         <TokenIcon token={token} icon={icon} size={50} />
         <h1>
-          {currency.unit} {((totalBalance * price) / 10 ** decimals).toFixed(2)}
+          {currency.unit}{" "}
+          <Read
+            decimals={decimals}
+            amount={totalBalance * price}
+            fixed={2}
+            token={symbol}
+          />
         </h1>
         <p>
-          <Read decimals={decimals} amount={totalBalance} token="" /> {symbol}
+          <Read decimals={decimals} amount={totalBalance} token={symbol} />{" "}
+          {symbol}
         </p>
       </section>
       <section className={styles.chainlist}>
-        <h3>Chains</h3>
+        <h3>{t("Chains")}</h3>
         <div className={styles.chainlist__list}>
           {filteredBalances
             .sort((a, b) => parseInt(b.amount) - parseInt(a.amount))
@@ -57,7 +64,17 @@ const AssetPage = () => {
         </div>
       </section>
       <section className={styles.actions}>
-        <Button>{t("Buy")}</Button>
+        <Button
+          onClick={() =>
+            setRoute({
+              path: Path.send,
+              denom,
+              previusPage: route,
+            })
+          }
+        >
+          {t("Send")}
+        </Button>
         <Button
           onClick={() =>
             setRoute({
@@ -68,7 +85,6 @@ const AssetPage = () => {
         >
           {t("Receive")}
         </Button>
-        <Button>{t("Send")}</Button>
       </section>
     </>
   )

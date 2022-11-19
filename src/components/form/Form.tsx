@@ -4,7 +4,7 @@ import { Grid } from "../layout"
 import styles from "./Form.module.scss"
 
 const Form = (attrs: HTMLAttributes<HTMLFormElement>) => {
-  return <form {...attrs} className={styles.form} />
+  return <form {...attrs} className={`${styles.form} ${attrs.className}`} />
 }
 
 export default Form
