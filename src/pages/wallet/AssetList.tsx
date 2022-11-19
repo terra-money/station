@@ -1,6 +1,6 @@
 import { FormError } from "components/form"
 import { InternalButton } from "components/general"
-import { useIsWalletEmpty } from "data/queries/bank"
+import { useBankBalance, useIsWalletEmpty } from "data/queries/bank"
 import { useMemoizedPrices } from "data/queries/coingecko"
 import { useNativeDenoms } from "data/token"
 import { useMemo } from "react"
@@ -8,13 +8,12 @@ import { useTranslation } from "react-i18next"
 import AddTokens from "./AddTokens"
 import Asset from "./Asset"
 import styles from "./AssetList.module.scss"
-import { useCoins } from "./Coins"
 
 const AssetList = () => {
   const { t } = useTranslation()
   const isWalletEmpty = useIsWalletEmpty()
 
-  const coins = useCoins()
+  const coins = useBankBalance()
   const { data: prices } = useMemoizedPrices()
   const readNativeDenom = useNativeDenoms()
 

@@ -1,16 +1,16 @@
 import { Button } from "components/general"
+import { useBankBalance } from "data/queries/bank"
 import { useMemoizedPrices } from "data/queries/coingecko"
 import { useCurrency } from "data/settings/Currency"
 import { useNativeDenoms } from "data/token"
 import { useTranslation } from "react-i18next"
-import { useCoins } from "./Coins"
 import styles from "./NetWorth.module.scss"
 import { useWalletRoute, Path } from "./Wallet"
 
 const NetWorth = () => {
   const { t } = useTranslation()
   const currency = useCurrency()
-  const coins = useCoins()
+  const coins = useBankBalance()
   const { data: prices } = useMemoizedPrices()
   const readNativeDenom = useNativeDenoms()
   const { setRoute, route } = useWalletRoute()

@@ -23,7 +23,7 @@ import { CoinInput, getPlaceholder, toInput } from "txs/utils"
 import styles from "./SendPage.module.scss"
 import { useWalletRoute } from "./Wallet"
 import validate from "../../txs/validate"
-import { useChains } from "data/queries/chains"
+import { useChains, useIBCChannels } from "data/queries/chains"
 import CheckIcon from "@mui/icons-material/Check"
 import { getChainIDFromAddress } from "utils/bech32"
 
@@ -49,6 +49,7 @@ interface AssetType {
 const SendPage = () => {
   const addresses = useInterchainAddresses()
   const chains = useChains()
+  const getIBCChannel = useIBCChannels()
   const { t } = useTranslation()
   const balances = useBankBalance()
   const { data: prices } = useMemoizedPrices()
@@ -155,7 +156,11 @@ const SendPage = () => {
           readNativeDenom(denom).token === watch("asset")
       )
 
-      if (getChainIDFromAddress(address, chains) === chain) {
+      const destinationChain = getChainIDFromAddress(address, chains)
+
+      if (!chain || !destinationChain) return
+
+      if (destinationChain === chain) {
         const msgs = isDenom(token?.denom)
           ? [
               new MsgSend(
@@ -178,7 +183,7 @@ const SendPage = () => {
           ? [
               new MsgTransfer(
                 "transfer",
-                "channel-1",
+                getIBCChannel({ from: chain, to: destinationChain }),
                 new Coin(token?.denom ?? "", amount),
                 addresses[token?.chain ?? ""],
                 address,
@@ -190,7 +195,16 @@ const SendPage = () => {
         return { msgs, memo, chainID: chain }
       }
     },
-    [addresses, decimals, balances, chain, readNativeDenom, watch, chains]
+    [
+      addresses,
+      decimals,
+      balances,
+      chain,
+      readNativeDenom,
+      watch,
+      chains,
+      getIBCChannel,
+    ]
   )
 
   const onChangeMax = useCallback(

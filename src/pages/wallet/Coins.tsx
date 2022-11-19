@@ -10,7 +10,7 @@ const Coins = () => {
   const { t } = useTranslation()
   const isWalletEmpty = useIsWalletEmpty()
   const readNativeDenom = useNativeDenoms()
-  const coins = useCoins()
+  const coins = useBankBalance()
 
   const render = () => {
     if (!coins) return
@@ -55,9 +55,3 @@ const Coins = () => {
 }
 
 export default Coins
-
-/* hooks */
-export const useCoins = () => {
-  const bankBalance = useBankBalance()
-  return bankBalance
-}
