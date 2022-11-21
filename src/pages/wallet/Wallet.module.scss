@@ -1,7 +1,7 @@
 @import "mixins";
 
 .wallet {
-  width: var(--wallet-width);
+  width: min(var(--wallet-width), 100vw);
   grid-area: walletbar;
   position: relative;
   border-left: 1px solid var(--menu-border);
@@ -11,33 +11,54 @@
   grid-template-rows: min-content auto min-content;
   transition: 400ms;
   background-color: var(--card-bg-muted);
+
+  @media (max-width: (1400px - 0.02)) {
+    position: absolute;
+    right: 0;
+    box-shadow: 0 0 15px #000b;
+    clip-path: inset(0px 0px 0px -100px);
+  }
 }
 
 .close {
   position: absolute;
-  top: 30px;
-  left: -24px;
-  padding: 8px;
-  background-color: var(--bg);
-  border-radius: 50%;
+  top: 10px;
+  left: 0;
+  transform: translate(-100%, 0);
+  padding: 10px 8px;
+  background-color: var(--card-bg-muted);
+  border-radius: 10px 0 0 10px;
   border: 1px solid var(--menu-border);
   transition: 300ms;
+  @include flex(center);
+  flex-direction: column;
+  gap: 0.3rem;
 
-  @include mobile {
-    display: none;
+  &:hover {
+    background-color: var(--card-bg);
+  }
+
+  svg {
+    fill: currentColor;
+  }
+
+  span {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    font-weight: 500;
+    font-size: 10pt;
+  }
+
+  @media (max-width: (1200px - 0.02)) {
+    box-shadow: 0 0 15px #000b;
+    clip-path: inset(-15px 0px -15px -15px);
   }
 }
 
 .wallet__closed {
   width: 0;
   transform: translate(100%, 0);
-  .close {
-    transform: rotate(180deg);
-
-    &:hover {
-      transform: rotate(180deg) translate(13px, 0);
-    }
-  }
 }
 
 .back {

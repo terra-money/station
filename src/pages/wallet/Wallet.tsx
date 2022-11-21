@@ -1,5 +1,6 @@
 import styles from "./Wallet.module.scss"
 import { ReactComponent as CloseIcon } from "styles/images/icons/WalletCloseArrow.svg"
+import { ReactComponent as WalletIcon } from "styles/images/menu/Wallet.svg"
 import NetWorth from "./NetWorth"
 import AssetList from "./AssetList"
 import { useState } from "react"
@@ -100,7 +101,14 @@ const Wallet = () => {
           setIsOpen((o) => !o)
         }}
       >
-        <CloseIcon width={18} height={18} />
+        {isOpen ? (
+          <CloseIcon width={18} height={18} />
+        ) : (
+          <>
+            <span>Wallet</span>
+            <WalletIcon width={16} height={16} />
+          </>
+        )}
       </button>
       <WalletRouter value={{ route, setRoute }}>{render()}</WalletRouter>
     </div>
