@@ -9,7 +9,7 @@ export const ASSETS = "https://assets.terra.money"
 export const OBSERVER = "wss://observer.terra.dev"
 
 /* website */
-export const STATION = "https://station.terra.money"
+export const STATION = "https://station.terrarebels.net"
 export const FINDER = "https://terrascope.info"
 export const EXTENSION =
   "https://chrome.google.com/webstore/detail/aiifbnbfobpmeekipheeijimdpnlpgpp"
