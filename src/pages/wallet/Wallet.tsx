@@ -1,5 +1,6 @@
 import styles from "./Wallet.module.scss"
 import { ReactComponent as CloseIcon } from "styles/images/icons/WalletCloseArrow.svg"
+import { ReactComponent as BackIcon } from "styles/images/icons/BackButton.svg"
 import { ReactComponent as WalletIcon } from "styles/images/menu/Wallet.svg"
 import NetWorth from "./NetWorth"
 import AssetList from "./AssetList"
@@ -55,7 +56,7 @@ const Wallet = () => {
         className={styles.back}
         onClick={() => setRoute(route.previusPage)}
       >
-        <CloseIcon width={18} height={18} />
+        <BackIcon width={18} height={18} />
       </button>
     )
   }

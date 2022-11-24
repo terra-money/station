@@ -9,7 +9,7 @@ import { Form, FormItem, Input } from "components/form"
 import useProposalId from "pages/gov/useProposalId"
 import { getPlaceholder, toInput } from "../utils"
 import validate from "../validate"
-import Tx, { getInitialGasDenom } from "../Tx"
+import { getInitialGasDenom } from "../Tx"
 import InterchainTx from "../InterchainTx"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { useChains } from "data/queries/chains"
@@ -48,7 +48,7 @@ const DepositForm = () => {
       ]
       return { msgs, chainID: chain }
     },
-    [addresses, id, chain]
+    [addresses, id, chain, chains]
   )
 
   /* fee */

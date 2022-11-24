@@ -2,7 +2,6 @@ import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useRoutes } from "react-router-dom"
 
-import { ReactComponent as WalletIcon } from "styles/images/menu/Wallet.svg"
 import { ReactComponent as HistoryIcon } from "styles/images/menu/History.svg"
 import { ReactComponent as SwapIcon } from "styles/images/menu/Swap.svg"
 import { ReactComponent as StakeIcon } from "styles/images/menu/Stake.svg"
@@ -10,7 +9,6 @@ import { ReactComponent as GovernanceIcon } from "styles/images/menu/Governance.
 import { ReactComponent as ContractIcon } from "styles/images/menu/Contract.svg"
 
 /* menu */
-import Dashboard from "pages/dashboard/Dashboard"
 import History from "pages/history/History"
 import Stake from "pages/stake/Stake"
 import Governance from "pages/gov/Governance"
