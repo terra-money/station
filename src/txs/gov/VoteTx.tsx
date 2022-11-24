@@ -8,8 +8,8 @@ import VoteForm from "./VoteForm"
 
 const VoteTx = () => {
   const { t } = useTranslation()
-  const id = useProposalId()
-  const { data: proposal, ...state } = useProposal(id)
+  const { id, chain } = useProposalId()
+  const { data: proposal, ...state } = useProposal(id, chain)
 
   return (
     <Page title={t("Vote")}>
@@ -21,7 +21,7 @@ const VoteTx = () => {
             </TxContext>
           </Card>,
           <Card {...state}>
-            {proposal && <ProposalHeader proposal={proposal} />}
+            {proposal && <ProposalHeader proposal={proposal} chain={chain} />}
           </Card>,
         ]}
       />

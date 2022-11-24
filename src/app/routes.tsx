@@ -59,14 +59,16 @@ export const useNav = () => {
   const { t } = useTranslation()
 
   const menu = [
+    /*
     {
       path: "/",
       element: <Dashboard />,
       title: t("Dashboard"),
       icon: <WalletIcon {...ICON_SIZE} />,
     },
+    */
     {
-      path: "/swap",
+      path: "/",
       element: <SwapTx />,
       title: t("Swap"),
       icon: <SwapIcon {...ICON_SIZE} />,
@@ -109,7 +111,7 @@ export const useNav = () => {
     /* pages */
     ...menu,
     { path: "/validator/:address", element: <ValidatorDetails /> },
-    { path: "/proposal/:id", element: <ProposalDetails /> },
+    { path: "/proposal/:chain/:id", element: <ProposalDetails /> },
 
     /* multisig */
     { path: "/multisig/sign", element: <SignMultisigTxPage /> },
@@ -122,8 +124,8 @@ export const useNav = () => {
     { path: "/rewards", element: <WithdrawRewardsTx /> },
     { path: "/commission", element: <WithdrawCommissionTx /> },
     { path: "/proposal/new", element: <SubmitProposalTx /> },
-    { path: "/proposal/:id/deposit", element: <DepositTx /> },
-    { path: "/proposal/:id/vote", element: <VoteTx /> },
+    { path: "/proposal/:chain/:id/deposit", element: <DepositTx /> },
+    { path: "/proposal/:chain/:id/vote", element: <VoteTx /> },
     { path: "/contract/instantiate", element: <InstantiateContractTx /> },
     { path: "/contract/store", element: <StoreCodeTx /> },
     { path: "/contract/execute/:contract", element: <ExecuteContractTx /> },

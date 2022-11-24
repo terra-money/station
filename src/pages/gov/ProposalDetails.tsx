@@ -17,8 +17,8 @@ import useProposalId from "./useProposalId"
 const ProposalDetails = () => {
   const { t } = useTranslation()
 
-  const id = useProposalId()
-  const { data: proposal, ...state } = useProposal(id)
+  const { id, chain } = useProposalId()
+  const { data: proposal, ...state } = useProposal(id, chain)
 
   useGoBackOnError(state)
 
@@ -33,12 +33,11 @@ const ProposalDetails = () => {
           <Col span={2}>
             <Card>
               <Grid gap={28}>
-                <ProposalHeader proposal={proposal} />
+                <ProposalHeader proposal={proposal} chain={chain} />
                 <ProposalDescription proposal={proposal} />
               </Grid>
             </Card>
           </Col>
-
           <ProposalSummary proposal={proposal} />
         </Row>
 
@@ -54,7 +53,7 @@ const ProposalDetails = () => {
           </Row>
         ) : (
           status !== Proposal.Status.PROPOSAL_STATUS_REJECTED && (
-            <ProposalVotes id={id} card />
+            <ProposalVotes id={id} chain={chain} card />
           )
         )}
 
@@ -62,7 +61,7 @@ const ProposalDetails = () => {
           <ProposalVotesByValidator id={id} />
         )}
 
-        <ProposalParams />
+        <ProposalParams chain={chain} />
       </Col>
     )
   }

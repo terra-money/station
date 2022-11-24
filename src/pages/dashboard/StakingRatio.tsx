@@ -12,7 +12,7 @@ import DashboardTag from "./components/DashboardTag"
 const StakingRatio = () => {
   const { t } = useTranslation()
 
-  const { data: stakingPool, ...stakingPoolState } = useStakingPool()
+  const { data: stakingPool, ...stakingPoolState } = useStakingPool("phoenix-1")
   const { data: supply, ...supplyState } = useSupply()
   const state = combineState(stakingPoolState, supplyState)
 

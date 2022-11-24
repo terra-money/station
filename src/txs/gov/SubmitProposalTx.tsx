@@ -10,7 +10,8 @@ import SubmitProposalForm from "./SubmitProposalForm"
 const SubmitProposalTx = () => {
   const { t } = useTranslation()
 
-  const { data: communityPool, ...communityPoolState } = useCommunityPool()
+  const { data: communityPool, ...communityPoolState } =
+    useCommunityPool("phoenix-1")
   const { data: depositParams, ...depositParamsState } = useDepositParams()
   const state = combineState(communityPoolState, depositParamsState)
 

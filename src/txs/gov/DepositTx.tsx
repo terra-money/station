@@ -8,8 +8,8 @@ import DepositForm from "./DepositForm"
 
 const DepositTx = () => {
   const { t } = useTranslation()
-  const id = useProposalId()
-  const { data: proposal, ...state } = useProposal(id)
+  const { id, chain } = useProposalId()
+  const { data: proposal, ...state } = useProposal(id, chain)
 
   return (
     <Page title={t("Deposit")}>
@@ -21,7 +21,7 @@ const DepositTx = () => {
             </TxContext>
           </Card>,
           <Card {...state}>
-            {proposal && <ProposalHeader proposal={proposal} />}
+            {proposal && <ProposalHeader proposal={proposal} chain={chain} />}
           </Card>,
         ]}
       />

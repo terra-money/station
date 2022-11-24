@@ -156,7 +156,9 @@ function InterchainTx<TxValues>(props: Props<TxValues>) {
   /* max */
   const getNativeMax = () => {
     if (!balance) return
-    return gasFee.denom === token ? gasFee.amount : "0"
+    return gasFee.denom === token
+      ? (Number(balance) - Number(gasFee.amount)).toFixed(0)
+      : balance
   }
 
   const max = !gasFee.amount

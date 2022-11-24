@@ -18,7 +18,7 @@ interface Props {
 
 const ProposalDeposits = ({ id, card }: Props) => {
   const { t } = useTranslation()
-  const { data: proposal, ...proposalState } = useProposal(id)
+  const { data: proposal, ...proposalState } = useProposal(id, "phoenix-1")
   const { data: deposits, ...depositsState } = useDeposits(id)
   const { data: depositParams, ...depositParamsState } = useDepositParams()
   const state = combineState(proposalState, depositsState, depositParamsState)

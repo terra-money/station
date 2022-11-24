@@ -12,8 +12,11 @@
 .link {
   display: grid;
   color: inherit;
+  border: 2px solid var(--card-bg);
 
   &:hover {
     text-decoration: none;
+    border: 2px solid var(--info);
+    box-sizing: border-box;
   }
 }

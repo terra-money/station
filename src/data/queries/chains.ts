@@ -11,6 +11,7 @@ interface Chains {
         gasAdjustment: number
         gasPrices: Record<string, number>
         prefix: string
+        baseAsset: string
         name: string
         icon: string
         ibc?: {

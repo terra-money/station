@@ -3,10 +3,13 @@ import { useTranslation } from "react-i18next"
 import { useFieldArray, useForm } from "react-hook-form"
 import AddIcon from "@mui/icons-material/Add"
 import RemoveIcon from "@mui/icons-material/Remove"
-import { AccAddress, Coins, MsgSubmitProposal } from "@terra-money/terra.js"
-import { TextProposal, CommunityPoolSpendProposal } from "@terra-money/terra.js"
-import { ParameterChangeProposal, ParamChange } from "@terra-money/terra.js"
-import { ExecuteContractProposal } from "@terra-money/terra.js/dist/core/wasm/proposals"
+import { AccAddress, Coins, MsgSubmitProposal } from "@terra-money/station.js"
+import {
+  TextProposal,
+  CommunityPoolSpendProposal,
+} from "@terra-money/station.js"
+import { ParameterChangeProposal, ParamChange } from "@terra-money/station.js"
+import { ExecuteContractProposal } from "@terra-money/station.js/dist/core/wasm/proposals"
 import { isDenomTerraNative } from "@terra.kitchen/utils"
 import { readAmount, readDenom, toAmount } from "@terra.kitchen/utils"
 import { SAMPLE_ADDRESS } from "config/constants"
@@ -25,6 +28,9 @@ import { TooltipIcon } from "components/display"
 import { getCoins, getPlaceholder, toInput } from "../utils"
 import validate from "../validate"
 import Tx, { getInitialGasDenom } from "../Tx"
+import ChainSelector from "components/form/ChainSelector"
+import { useChains } from "data/queries/chains"
+import InterchainTx from "txs/InterchainTx"
 
 enum ProposalType {
   TEXT = "Text proposal",
@@ -36,6 +42,7 @@ enum ProposalType {
 interface DefaultValues {
   title: string
   description: string
+  chain?: string
   input?: number
 }
 
@@ -77,6 +84,8 @@ interface Props {
 const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
   const { t } = useTranslation()
   const address = useAddress()
+  const chains = useChains()
+  const availableChains = Object.keys(chains)
 
   const bankBalance = useBankBalance()
   const balance = bankBalance.find((b) => b.denom === "uluna")?.amount ?? "0"
@@ -140,6 +149,7 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
             runAs,
             contractAddress,
             execute_msg,
+            // @ts-expect-error
             coins
           )
         }
@@ -148,7 +158,7 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
       }
 
       const msgs = [new MsgSubmitProposal(getContent(), deposit, address)]
-      return { msgs }
+      return { msgs, chainID: values.chain ?? "" }
     },
     [address]
   )
@@ -183,10 +193,12 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
     onChangeMax,
     onSuccess: { label: t("Gov"), path: "/gov" },
     queryKeys: [queryKey.gov.proposals],
+    chain: values.chain ?? "",
   }
 
   const render = () => {
     if (values.type === ProposalType.SPEND) {
+      // @ts-expect-error
       const max = values.spend && getAmount(communityPool, values.spend.denom)
       const placeholder = readAmount(max, { integer: true })
 
@@ -368,7 +380,7 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
   }
 
   return (
-    <Tx {...tx}>
+    <InterchainTx {...tx}>
       {({ max, fee, submit }) => (
         <Form onSubmit={handleSubmit(submit.fn)}>
           <Grid gap={4}>
@@ -389,6 +401,13 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
               </FormWarning>
             )}
           </Grid>
+
+          <FormItem label={t("Source chain")}>
+            <ChainSelector
+              chainsList={availableChains}
+              onChange={(chain) => setValue("chain", chain)}
+            />
+          </FormItem>
 
           <FormItem label={t("Proposal type")} error={errors.type?.message}>
             <Select {...register("type")}>
@@ -453,7 +472,7 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
           {submit.button}
         </Form>
       )}
-    </Tx>
+    </InterchainTx>
   )
 }
 

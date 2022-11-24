@@ -1,6 +1,5 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { reverse } from "ramda"
 import { Proposal } from "@terra-money/terra.js"
 import { combineState } from "data/query"
 import { useProposals, useProposalStatusItem } from "data/queries/gov"
@@ -17,12 +16,13 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   const { t } = useTranslation()
   const networkName = useNetworkName()
 
-  const { data: whitelistData, ...whitelistState } = useTerraAssets<{ [key: string]: number[] }> ("/station/proposals.json")
+  const { data: whitelistData, ...whitelistState } = useTerraAssets<{
+    [key: string]: number[]
+  }>("/station/proposals.json")
   const whitelist = whitelistData?.[networkName]
 
   const [showAll, setShowAll] = useState(!!whitelist)
   const toggle = () => setShowAll((state) => !state)
-
 
   const { data, ...proposalState } = useProposals(status)
   const { label } = useProposalStatusItem(status)
@@ -34,8 +34,17 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
 
     const proposals =
       status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && !showAll
-        ? data.filter(({ id }) => whitelist?.includes(id))
+        ? data.filter(
+            ({ prop, chain }) =>
+              chain !== "phoenix-1" || whitelist?.includes(prop.id)
+          )
         : data
+
+    proposals.sort(
+      (a, b) =>
+        (b.prop.voting_start_time || b.prop.submit_time).getTime() -
+        (a.prop.voting_start_time || a.prop.submit_time).getTime()
+    )
 
     return !proposals.length ? (
       <>
@@ -51,9 +60,19 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
     ) : (
       <>
         <section className={styles.list}>
-          {reverse(proposals).map((item) => (
-            <Card to={`/proposal/${item.id}`} className={styles.link} key={item.id}>
-              <ProposalItem proposal={item} showVotes={!showAll} />
+          {proposals.map(({ prop, chain }) => (
+            <Card
+              to={`/proposal/${chain}/${prop.id}`}
+              className={styles.link}
+              key={prop.id}
+            >
+              <ProposalItem
+                proposal={prop}
+                chain={chain}
+                showVotes={
+                  status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD
+                }
+              />
             </Card>
           ))}
         </section>
@@ -66,13 +85,14 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   return (
     <Fetching {...state}>
       <Col>
-        {!!whitelist && status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && (
-          <section>
-            <Toggle checked={showAll} onChange={toggle}>
-              {t("Show all")}
-            </Toggle>
-          </section>
-        )}
+        {!!whitelist &&
+          status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && (
+            <section>
+              <Toggle checked={showAll} onChange={toggle}>
+                {t("Show all")}
+              </Toggle>
+            </section>
+          )}
 
         {render()}
       </Col>
