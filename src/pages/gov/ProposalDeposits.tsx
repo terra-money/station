@@ -32,14 +32,14 @@ const ProposalDeposits = ({ id, chain, card }: Props) => {
     const getProposalDeposited = () => {
       const deposited = deposits.reduce(
         (acc, { amount }) =>
-          // @ts-expect-error
           new BigNumber(acc)
+            // @ts-expect-error
             .plus(getAmount(amount, chains[chain].baseAsset))
             .toString(),
         "0"
       )
-      // @ts-expect-error
       const minimum = getAmount(
+        // @ts-expect-error
         depositParams.min_deposit,
         chains[chain].baseAsset
       )
@@ -53,7 +53,7 @@ const ProposalDeposits = ({ id, chain, card }: Props) => {
     const contents = [
       {
         title: t("Deposited"),
-        content: <Read amount={deposited} denom="uluna" />,
+        content: <Read amount={deposited} denom={chains[chain].baseAsset} />,
       },
       {
         title: t("Deposit end time"),
