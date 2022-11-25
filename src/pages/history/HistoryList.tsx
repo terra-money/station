@@ -9,6 +9,7 @@ import { Button } from "components/general"
 import { Card, Col, Page } from "components/layout"
 import { Empty } from "components/feedback"
 import HistoryItem from "./HistoryItem"
+import ChainFilter from "components/layout/ChainFilter"
 
 const HistoryList = () => {
   const { t } = useTranslation()
@@ -48,33 +49,44 @@ const HistoryList = () => {
   const render = () => {
     if (address && !data) return null
 
-    return !pages.length ? (
-      <Card>
-        <Empty />
-      </Card>
-    ) : (
-      <Col>
-        {pages.map(({ list }, i) => (
-          <Fragment key={i}>
-            {list.map((item) => (
-              <HistoryItem {...item} key={item.txhash} />
-            ))}
-          </Fragment>
-        ))}
+    return (
+      <ChainFilter all outside>
+        {(chain) =>
+          !pages.length ? (
+            <Card>
+              <Empty />
+            </Card>
+          ) : (
+            <Col>
+              {pages.map(({ list }, i) => (
+                <Fragment key={i}>
+                  {list.map((item) => (
+                    // TODO: remove hardcoded chain
+                    <HistoryItem
+                      {...item}
+                      chain={"phoenix-1"}
+                      key={item.txhash}
+                    />
+                  ))}
+                </Fragment>
+              ))}
 
-        <Button
-          onClick={() => fetchNextPage()}
-          disabled={!hasNextPage || isFetchingNextPage}
-          loading={isFetchingNextPage}
-          block
-        >
-          {isFetchingNextPage
-            ? t("Loading more...")
-            : hasNextPage
-            ? t("Load more")
-            : t("Nothing more to load")}
-        </Button>
-      </Col>
+              <Button
+                onClick={() => fetchNextPage()}
+                disabled={!hasNextPage || isFetchingNextPage}
+                loading={isFetchingNextPage}
+                block
+              >
+                {isFetchingNextPage
+                  ? t("Loading more...")
+                  : hasNextPage
+                  ? t("Load more")
+                  : t("Nothing more to load")}
+              </Button>
+            </Col>
+          )
+        }
+      </ChainFilter>
     )
   }
 

@@ -6,10 +6,18 @@ import { Dl, ToNow } from "components/display"
 import { ReadMultiple } from "components/token"
 import HistoryMessage from "./HistoryMessage"
 import styles from "./HistoryItem.module.scss"
+import { useChains } from "data/queries/chains"
+import DateRangeIcon from "@mui/icons-material/DateRange"
 
-const HistoryItem = ({ txhash, timestamp, ...props }: AccountHistoryItem) => {
+const HistoryItem = ({
+  txhash,
+  timestamp,
+  chain,
+  ...props
+}: AccountHistoryItem & { chain: string }) => {
   const { success, msgs, collapsed, fee, memo, raw_log } = props
   const { t } = useTranslation()
+  const chains = useChains()
 
   const data = [
     { title: t("Fee"), content: <ReadMultiple list={fee} /> },
@@ -18,19 +26,30 @@ const HistoryItem = ({ txhash, timestamp, ...props }: AccountHistoryItem) => {
   ]
 
   return (
-    <Card
-      title={
-        <FinderLink tx short>
-          {txhash}
-        </FinderLink>
-      }
-      extra={<ToNow>{new Date(timestamp)}</ToNow>}
-      size="small"
-      bordered
-    >
-      {msgs?.map((msg, index) => (
-        <HistoryMessage msg={msg} success={success} key={index} />
-      ))}
+    <Card size="small" bordered>
+      <header className={styles.header}>
+        <p className={styles.txhash}>
+          <span className={styles.chain}>
+            <img src={chains[chain].icon} alt={chain} />
+            {chains[chain].name}
+          </span>
+          <span className={styles.link}>
+            <FinderLink tx short>
+              {txhash}
+            </FinderLink>
+          </span>
+        </p>
+        <p className={styles.time}>
+          <DateRangeIcon />
+          <ToNow>{new Date(timestamp)}</ToNow>
+        </p>
+      </header>
+
+      <div className={styles.msgs}>
+        {msgs?.map((msg, index) => (
+          <HistoryMessage msg={msg} success={success} key={index} />
+        ))}
+      </div>
 
       {collapsed && <small>{t("{{collapsed}} more", { collapsed })}</small>}
 

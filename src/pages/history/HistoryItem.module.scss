@@ -1,6 +1,66 @@
+@import "mixins";
+
+.header {
+  @include flex(space-between);
+  padding: var(--card-padding);
+  padding-top: 0;
+  font-size: var(--font-size-small);
+  border-bottom: 1px solid var(--card-border);
+  margin: 0 calc(-1 * var(--card-padding));
+  margin-bottom: var(--card-padding);
+
+  .txhash {
+    @include flex(flex-start);
+    gap: 0.8rem;
+
+    .chain {
+      @include flex(flex-start);
+      gap: 0.4rem;
+      width: fit-content;
+      background-color: var(--button-default-bg);
+      padding: 0.4rem 0.6rem;
+      border-radius: 2rem;
+      font-size: 10pt;
+      font-weight: 500;
+
+      img {
+        width: 20px;
+      }
+    }
+
+    .link {
+      font-weight: 500;
+      font-size: 10pt;
+    }
+  }
+
+  .time {
+    @include flex(flex-end);
+    gap: 0.4rem;
+    font-size: 10pt;
+    font-weight: 400;
+    color: var(--text-muted);
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+.msgs {
+  @include flex(flex-start, flex-start);
+  flex-direction: column;
+  gap: calc(var(--card-padding) * 0.6);
+}
+
 .footer {
+  color: var(--text-muted);
   border-top: 1px solid var(--card-border);
   font-size: var(--font-size-small);
   margin-top: 20px;
-  padding-top: 20px;
+  padding: var(--card-padding);
+  padding-bottom: 0;
+  margin: 0 calc(-1 * var(--card-padding));
+  margin-top: var(--card-padding);
 }

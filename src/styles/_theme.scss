@@ -68,7 +68,7 @@
   --menu-border: hsl(0 0% 100% / 0.1);
   --menu-text: hsl(0 0% 91%);
 
-  --link: hsl(210 89% 61%);
+  --link: var(--button-primary-bg);
   --text: hsl(226 70% 42%);
   --text-muted: hsl(227 51% 70%);
   --chart: hsl(215 90% 57%);
@@ -117,7 +117,7 @@
   --menu-border: hsl(239, 5%, 22%);
   --menu-text: hsl(239, 2%, 76%);
 
-  --link: hsl(210 89% 61%);
+  --link: var(--button-primary-bg);
   --text: hsl(0, 0%, 95%);
   --text-muted: hsl(0 0% 55%);
   --chart: hsl(215 90% 57%);
