@@ -4,12 +4,14 @@ import { useDeposits } from "data/queries/gov"
 import { FinderLink } from "components/general"
 import { Card, Table } from "components/layout"
 import { Read } from "components/token"
+import { useChains } from "data/queries/chains"
 
 // FIXME: Pagination (Client)
 
-const ProposalDepositors = ({ id }: { id: number }) => {
+const ProposalDepositors = ({ id, chain }: { id: number; chain: string }) => {
   const { t } = useTranslation()
-  const { data: deposits, ...state } = useDeposits(id)
+  const chains = useChains()
+  const { data: deposits, ...state } = useDeposits(id, chain)
 
   return (
     <Card {...state} title={t("Depositors")} bordered>
@@ -27,7 +29,10 @@ const ProposalDepositors = ({ id }: { id: number }) => {
               title: t("Amount"),
               dataIndex: "amount",
               render: (amount) => (
-                <Read amount={getAmount(amount, "uluna")} denom="uluna" />
+                <Read
+                  amount={getAmount(amount, chains[chain].baseAsset)}
+                  denom={chains[chain].baseAsset}
+                />
               ),
               align: "right",
             },

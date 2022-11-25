@@ -12,11 +12,11 @@
 .link {
   display: grid;
   color: inherit;
-  border: 2px solid var(--card-bg);
+  border: var(--border-width) solid var(--card-border);
 
   &:hover {
     text-decoration: none;
-    border: 2px solid var(--info);
+    border: var(--border-width) solid var(--info);
     box-sizing: border-box;
   }
 }

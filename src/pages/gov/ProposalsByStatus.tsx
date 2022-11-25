@@ -11,6 +11,7 @@ import ProposalItem from "./ProposalItem"
 import GovernanceParams from "./GovernanceParams"
 import styles from "./ProposalsByStatus.module.scss"
 import { useNetworkName } from "data/wallet"
+import ChainFilter from "components/layout/ChainFilter"
 
 const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   const { t } = useTranslation()
@@ -46,38 +47,49 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
         (a.prop.voting_start_time || a.prop.submit_time).getTime()
     )
 
-    return !proposals.length ? (
+    return (
       <>
-        <Card>
-          <Empty>
-            {t("No proposals in {{label}} period", {
-              label: label.toLowerCase(),
-            })}
-          </Empty>
-        </Card>
-        <GovernanceParams />
-      </>
-    ) : (
-      <>
-        <section className={styles.list}>
-          {proposals.map(({ prop, chain }) => (
-            <Card
-              to={`/proposal/${chain}/${prop.id}`}
-              className={styles.link}
-              key={prop.id}
-            >
-              <ProposalItem
-                proposal={prop}
-                chain={chain}
-                showVotes={
-                  status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD
-                }
-              />
-            </Card>
-          ))}
-        </section>
-
-        <GovernanceParams />
+        <ChainFilter all>
+          {(chain) => {
+            const filtered = proposals.filter(
+              (p) => !chain || p.chain === chain
+            )
+            return !filtered.length ? (
+              <>
+                <Card>
+                  <Empty>
+                    {t("No proposals in {{label}} period", {
+                      label: label.toLowerCase(),
+                    })}
+                  </Empty>
+                </Card>
+                {chain && <GovernanceParams chain={chain} />}
+              </>
+            ) : (
+              <>
+                <section className={styles.list}>
+                  {filtered.map(({ prop, chain }) => (
+                    <Card
+                      to={`/proposal/${chain}/${prop.id}`}
+                      className={styles.link}
+                      key={prop.id}
+                    >
+                      <ProposalItem
+                        proposal={prop}
+                        chain={chain}
+                        showVotes={
+                          status ===
+                          Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD
+                        }
+                      />
+                    </Card>
+                  ))}
+                </section>
+                {chain && <GovernanceParams chain={chain} />}
+              </>
+            )
+          }}
+        </ChainFilter>
       </>
     )
   }

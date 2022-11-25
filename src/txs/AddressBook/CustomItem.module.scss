@@ -4,7 +4,7 @@
   --padding: 12px 16px;
   @include flex(flex-start, stretch);
   background: var(--card-bg);
-  border: 1px solid var(--card-border);
+  border: var(--border-width) solid var(--card-border);
   border-radius: var(--border-radius);
   font-size: var(--font-size-small);
   overflow: hidden;

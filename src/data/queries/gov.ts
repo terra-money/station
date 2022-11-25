@@ -5,23 +5,23 @@ import { sentenceCase } from "sentence-case"
 import { Proposal, Vote } from "@terra-money/station.js"
 import { Color } from "types/components"
 import { Pagination, queryKey, RefetchOptions, useIsClassic } from "../query"
-import { useInterchainLCDClient, useLCDClient } from "./lcdClient"
+import { useInterchainLCDClient } from "./lcdClient"
 import { useChains } from "./chains"
 
-export const useVotingParams = () => {
-  const lcd = useLCDClient()
+export const useVotingParams = (chain: string) => {
+  const lcd = useInterchainLCDClient()
   return useQuery(
-    [queryKey.gov.votingParams],
-    () => lcd.gov.votingParameters(),
+    [queryKey.gov.votingParams, chain],
+    () => lcd.gov.votingParameters(chain),
     { ...RefetchOptions.INFINITY }
   )
 }
 
-export const useDepositParams = () => {
-  const lcd = useLCDClient()
+export const useDepositParams = (chain: string) => {
+  const lcd = useInterchainLCDClient()
   return useQuery(
-    [queryKey.gov.depositParams],
-    () => lcd.gov.depositParameters(),
+    [queryKey.gov.depositParams, chain],
+    () => lcd.gov.depositParameters(chain),
     { ...RefetchOptions.INFINITY }
   )
 }
@@ -126,14 +126,14 @@ export const useProposal = (id: number, chain: string) => {
 }
 
 /* proposal: deposits */
-export const useDeposits = (id: number) => {
-  const lcd = useLCDClient()
+export const useDeposits = (id: number, chain: string) => {
+  const lcd = useInterchainLCDClient()
   return useQuery(
-    [queryKey.gov.deposits, id],
+    [queryKey.gov.deposits, id, chain],
     async () => {
       // TODO: Pagination
       // Required when the number of results exceed 100
-      const [deposits] = await lcd.gov.deposits(id)
+      const [deposits] = await lcd.gov.deposits(id, chain)
       return deposits
     },
     { ...RefetchOptions.DEFAULT }

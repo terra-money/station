@@ -44,11 +44,11 @@ const ProposalDetails = () => {
         {status === Proposal.Status.PROPOSAL_STATUS_DEPOSIT_PERIOD ? (
           <Row>
             <Col>
-              <ProposalDeposits id={id} card />
+              <ProposalDeposits id={id} chain={chain} card />
             </Col>
 
             <Col span={2}>
-              <ProposalDepositors id={id} />
+              <ProposalDepositors id={id} chain={chain} />
             </Col>
           </Row>
         ) : (

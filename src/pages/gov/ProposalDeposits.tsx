@@ -10,17 +10,20 @@ import { Read } from "components/token"
 import { ToNow } from "components/display"
 import Orb from "./components/Orb"
 import styles from "./ProposalDeposits.module.scss"
+import { useChains } from "data/queries/chains"
 
 interface Props {
   id: number
+  chain: string
   card?: boolean
 }
 
-const ProposalDeposits = ({ id, card }: Props) => {
+const ProposalDeposits = ({ id, chain, card }: Props) => {
   const { t } = useTranslation()
-  const { data: proposal, ...proposalState } = useProposal(id, "phoenix-1")
-  const { data: deposits, ...depositsState } = useDeposits(id)
-  const { data: depositParams, ...depositParamsState } = useDepositParams()
+  const chains = useChains()
+  const { data: proposal, ...proposalState } = useProposal(id, chain)
+  const { data: deposits, ...depositsState } = useDeposits(id, chain)
+  const { data: depositParams, ...depositParamsState } = useDepositParams(chain)
   const state = combineState(proposalState, depositsState, depositParamsState)
 
   const render = () => {
@@ -29,11 +32,17 @@ const ProposalDeposits = ({ id, card }: Props) => {
     const getProposalDeposited = () => {
       const deposited = deposits.reduce(
         (acc, { amount }) =>
-          new BigNumber(acc).plus(getAmount(amount, "uluna")).toString(),
+          // @ts-expect-error
+          new BigNumber(acc)
+            .plus(getAmount(amount, chains[chain].baseAsset))
+            .toString(),
         "0"
       )
-
-      const minimum = getAmount(depositParams.min_deposit, "uluna")
+      // @ts-expect-error
+      const minimum = getAmount(
+        depositParams.min_deposit,
+        chains[chain].baseAsset
+      )
       const ratio = Number(deposited) / Number(minimum)
       return { deposited, ratio }
     }
