@@ -80,7 +80,7 @@
   --input-bg: var(--card-bg);
   --input-border: hsl(220 39% 86%);
 
-  --info: hsl(224, 82%, 60%);
+  --info: hsl(221, 91%, 59%);
   --info-light: hsl(224, 82%, 60% / 0.1);
   --warning: hsl(36 98% 50%);
   --warning-light: hsl(36 98% 50% / 0.1);
@@ -94,9 +94,9 @@
 }
 
 .dark {
-  --button-primary-bg-h: 224;
-  --button-primary-bg-s: 82%;
-  --button-primary-bg-l: 60%;
+  --button-primary-bg-h: 221;
+  --button-primary-bg-s: 91%;
+  --button-primary-bg-l: 59%;
   --button-primary-bg: hsl(
     var(--button-primary-bg-h),
     var(--button-primary-bg-s),

@@ -8,6 +8,19 @@
   @include flex(space-between);
   font-size: var(--font-size-small);
   margin-bottom: 12px;
+
+  aside {
+    @include flex(flex-start);
+    gap: 8px;
+
+    img {
+      width: 34px;
+      height: 34px;
+      padding: 8px;
+      background-color: var(--button-default-bg);
+      border-radius: 50%;
+    }
+  }
 }
 
 .title {

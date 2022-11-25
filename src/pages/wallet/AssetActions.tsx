@@ -11,7 +11,11 @@ import { useNetworkName } from "data/wallet"
 import { useIsWalletEmpty } from "data/queries/bank"
 import { useCW20Pairs } from "data/Terra/TerraAssets"
 import { useTFMTokens } from "data/external/tfm"
-import { InternalButton, InternalLink, ExternalIconLink } from "components/general"
+import {
+  InternalButton,
+  InternalLink,
+  ExternalIconLink,
+} from "components/general"
 import { ExtraActions } from "components/layout"
 import { ModalButton } from "components/feedback"
 import { ListGroup } from "components/display"
@@ -65,9 +69,11 @@ const AssetActions = ({ token, symbol, balance }: Props) => {
       {networkName !== "testnet" && (
         <InternalLink
           icon={<RestartAltIcon style={{ fontSize: 18 }} />}
-          to="/swap"
+          to="/"
           state={token}
-          disabled={isWalletEmpty || !has(balance) || !getIsSwappableToken(token)}
+          disabled={
+            isWalletEmpty || !has(balance) || !getIsSwappableToken(token)
+          }
         >
           {t("Swap")}
         </InternalLink>

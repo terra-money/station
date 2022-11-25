@@ -9,6 +9,7 @@
 
   .text {
     flex: 1;
+    font-weight: 400;
   }
 }
 
@@ -19,10 +20,15 @@
   border-radius: 10px;
   width: 40px;
   height: 20px;
-  transition: background var(--transition);
+  transition: var(--transition);
 
   .checked & {
-    background: var(--button-default-text);
+    background: hsla(
+      var(--button-primary-bg-h),
+      var(--button-primary-bg-s),
+      var(--button-primary-bg-l),
+      0.3
+    );
   }
 }
 
@@ -36,5 +42,6 @@
 
   .checked & {
     transform: translate(10px, 0);
+    background: var(--button-primary-bg);
   }
 }

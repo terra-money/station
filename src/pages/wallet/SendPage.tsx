@@ -225,7 +225,12 @@ const SendPage = () => {
   }, [addresses, decimals, chain])
 
   const tx = {
-    token: "",
+    token:
+      balances.find(
+        ({ denom, chain }) =>
+          chain === watch("chain") &&
+          readNativeDenom(denom).token === watch("asset")
+      )?.denom ?? "",
     decimals,
     amount,
     coins,
@@ -270,11 +275,7 @@ const SendPage = () => {
                   </Select>
                 </FormItem>
                 {availableChains && (
-                  <FormItem
-                    label={t("Source chain")}
-                    //extra={renderResolvedAddress()}
-                    error={errors.asset?.message ?? errors.address?.message}
-                  >
+                  <FormItem label={t("Source chain")}>
                     <ChainSelector
                       chainsList={availableChains}
                       onChange={(chain) => setValue("chain", chain)}

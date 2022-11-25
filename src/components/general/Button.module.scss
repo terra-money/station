@@ -80,7 +80,7 @@ $colors: (
 
 /* outline */
 .outline {
-  border: 1px solid currentColor;
+  border: var(--border-width) solid currentColor;
   color: currentColor;
 }
 

@@ -3,28 +3,35 @@ import { useTranslation } from "react-i18next"
 import { useFieldArray, useForm } from "react-hook-form"
 import AddIcon from "@mui/icons-material/Add"
 import RemoveIcon from "@mui/icons-material/Remove"
-import { AccAddress, Coins, MsgSubmitProposal } from "@terra-money/terra.js"
-import { TextProposal, CommunityPoolSpendProposal } from "@terra-money/terra.js"
-import { ParameterChangeProposal, ParamChange } from "@terra-money/terra.js"
-import { ExecuteContractProposal } from "@terra-money/terra.js/dist/core/wasm/proposals"
+import { AccAddress, Coins, MsgSubmitProposal } from "@terra-money/station.js"
+import {
+  TextProposal,
+  CommunityPoolSpendProposal,
+} from "@terra-money/station.js"
+import { ParameterChangeProposal, ParamChange } from "@terra-money/station.js"
+import { ExecuteContractProposal } from "@terra-money/station.js/dist/core/wasm/proposals"
 import { isDenomTerraNative } from "@terra.kitchen/utils"
 import { readAmount, readDenom, toAmount } from "@terra.kitchen/utils"
 import { SAMPLE_ADDRESS } from "config/constants"
 import { getAmount } from "utils/coin"
 import { has } from "utils/num"
 import { parseJSON } from "utils/data"
-import { queryKey } from "data/query"
-import { useAddress } from "data/wallet"
+import { combineState, queryKey } from "data/query"
 import { useBankBalance } from "data/queries/bank"
 import { ExternalLink } from "components/general"
-import { Grid } from "components/layout"
+import { Card, Grid } from "components/layout"
 import { Form, FormGroup, FormItem } from "components/form"
 import { FormHelp, FormWarning } from "components/form"
 import { Input, TextArea, Select } from "components/form"
 import { TooltipIcon } from "components/display"
 import { getCoins, getPlaceholder, toInput } from "../utils"
 import validate from "../validate"
-import Tx, { getInitialGasDenom } from "../Tx"
+import { getInitialGasDenom } from "../Tx"
+import { useChains } from "data/queries/chains"
+import InterchainTx from "txs/InterchainTx"
+import { useCommunityPool } from "data/queries/distribution"
+import { useDepositParams } from "data/queries/gov"
+import { useInterchainAddresses } from "auth/hooks/useAddress"
 
 enum ProposalType {
   TEXT = "Text proposal",
@@ -36,6 +43,7 @@ enum ProposalType {
 interface DefaultValues {
   title: string
   description: string
+  chain?: string
   input?: number
 }
 
@@ -69,21 +77,27 @@ type TxValues =
 
 const DEFAULT_PAREMETER_CHANGE = { subspace: "", key: "", value: "" }
 
-interface Props {
-  communityPool: Coins
-  minDeposit: Amount
-}
-
-const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
+const SubmitProposalForm = ({ chain }: { chain: string }) => {
   const { t } = useTranslation()
-  const address = useAddress()
+  const addresses = useInterchainAddresses()
+  const chains = useChains()
 
   const bankBalance = useBankBalance()
-  const balance = bankBalance.find((b) => b.denom === "uluna")?.amount ?? "0"
+  const balance =
+    bankBalance.find((b) => b.denom === chains[chain].baseAsset)?.amount ?? "0"
 
   /* tx context */
   const initialGasDenom = getInitialGasDenom()
   const defaultCoinItem = { denom: initialGasDenom }
+
+  const { data: communityPool, ...communityPoolState } = useCommunityPool(chain)
+  const { data: depositParams, ...depositParamsState } = useDepositParams(chain)
+  const state = combineState(communityPoolState, depositParamsState)
+  //if(!depositParams || communityPool) return null
+  const minDeposit = depositParams
+    ? // @ts-expect-error
+      getAmount(depositParams.min_deposit, chains[chain].baseAsset)
+    : 0
 
   /* form */
   const form = useForm<TxValues>({
@@ -98,6 +112,11 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
   const { fields, append, remove } = useFieldArray({ control, name: "changes" })
   const coinsFieldArray = useFieldArray({ control, name: "coins" })
 
+  /* update input */
+  useEffect(() => {
+    setValue("input", toInput(minDeposit))
+  }, [minDeposit, setValue])
+
   /* effect: ParameterChangeProposal */
   const shouldAppendChange =
     values.type === ProposalType.PARAMS && !values.changes.length
@@ -109,9 +128,11 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
   /* tx */
   const createTx = useCallback(
     ({ input, title, description, ...values }: TxValues) => {
-      if (!address) return
+      if (!addresses) return
       const amount = toAmount(input)
-      const deposit = has(amount) ? new Coins({ uluna: amount }) : []
+      const deposit = has(amount)
+        ? new Coins({ [chains[chain].baseAsset]: amount })
+        : []
 
       const getContent = () => {
         if (values.type === ProposalType.SPEND) {
@@ -140,6 +161,7 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
             runAs,
             contractAddress,
             execute_msg,
+            // @ts-expect-error
             coins
           )
         }
@@ -147,10 +169,12 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
         return new TextProposal(title, description)
       }
 
-      const msgs = [new MsgSubmitProposal(getContent(), deposit, address)]
-      return { msgs }
+      const msgs = [
+        new MsgSubmitProposal(getContent(), deposit, addresses[chain]),
+      ]
+      return { msgs, chainID: chain ?? "" }
     },
-    [address]
+    [addresses, chain, chains]
   )
 
   /* fee */
@@ -172,9 +196,8 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
     [setValue, trigger]
   )
 
-  const token = "uluna"
   const tx = {
-    token,
+    token: chains[chain].baseAsset,
     amount,
     balance,
     initialGasDenom,
@@ -183,10 +206,12 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
     onChangeMax,
     onSuccess: { label: t("Gov"), path: "/gov" },
     queryKeys: [queryKey.gov.proposals],
+    chain: chain ?? "",
   }
 
   const render = () => {
     if (values.type === ProposalType.SPEND) {
+      // @ts-expect-error
       const max = values.spend && getAmount(communityPool, values.spend.denom)
       const placeholder = readAmount(max, { integer: true })
 
@@ -219,7 +244,7 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
               placeholder={placeholder}
               selectBefore={
                 <Select {...register("spend.denom")} before>
-                  {["uluna", "uusd"].map((denom) => (
+                  {[chains[chain].baseAsset].map((denom) => (
                     <option value={denom} key={denom}>
                       {readDenom(denom)}
                     </option>
@@ -368,92 +393,94 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
   }
 
   return (
-    <Tx {...tx}>
-      {({ max, fee, submit }) => (
-        <Form onSubmit={handleSubmit(submit.fn)}>
-          <Grid gap={4}>
-            <FormHelp>
-              Upload proposal only after forum discussion on{" "}
-              <ExternalLink href="https://agora.terra.money">
-                agora.terra.money
-              </ExternalLink>
-            </FormHelp>
-            <FormWarning>
-              {t(
-                "Proposal deposits will not be refunded if the proposal fails to reach the quorum or the result is NO_WITH_VETO"
-              )}
-            </FormWarning>
-            {values.type === ProposalType.TEXT && (
+    <Card {...state}>
+      <InterchainTx {...tx}>
+        {({ max, fee, submit }) => (
+          <Form onSubmit={handleSubmit(submit.fn)}>
+            <Grid gap={4}>
+              <FormHelp>
+                Upload proposal only after forum discussion on{" "}
+                <ExternalLink href="https://agora.terra.money">
+                  agora.terra.money
+                </ExternalLink>
+              </FormHelp>
               <FormWarning>
-                {t("Parameters cannot be changed by text proposals")}
+                {t(
+                  "Proposal deposits will not be refunded if the proposal fails to reach the quorum or the result is NO_WITH_VETO"
+                )}
               </FormWarning>
-            )}
-          </Grid>
-
-          <FormItem label={t("Proposal type")} error={errors.type?.message}>
-            <Select {...register("type")}>
-              {Object.values(ProposalType).map((type) => (
-                <option value={type} key={type}>
-                  {t(type)}
-                </option>
-              ))}
-            </Select>
-          </FormItem>
-
-          <FormItem label={t("Title")} error={errors.title?.message}>
-            <Input
-              {...register("title", { required: "Title is required" })}
-              placeholder={t("Burn community pool")}
-              autoFocus
-            />
-          </FormItem>
-
-          <FormItem
-            label={t("Description")}
-            error={errors.description?.message}
-          >
-            <TextArea
-              {...register("description", {
-                required: "Description is required",
-              })}
-              placeholder={t(
-                "We're proposing to spend 100,000 LUNA from the Community Pool to fund the creation of public goods for the Terra ecosystem"
+              {values.type === ProposalType.TEXT && (
+                <FormWarning>
+                  {t("Parameters cannot be changed by text proposals")}
+                </FormWarning>
               )}
-            />
-          </FormItem>
+            </Grid>
 
-          <FormItem
-            label={
-              <TooltipIcon content="To help push the proposal to the voting period, consider depositing more LUNA to reach the minimum 512 LUNA (optional).">
-                {t("Initial deposit")} ({t("optional")})
-              </TooltipIcon>
-            }
-            extra={max.render()}
-            error={errors.input?.message}
-          >
-            <Input
-              {...register("input", {
-                valueAsNumber: true,
-                validate: validate.input(
-                  toInput(max.amount),
-                  undefined,
-                  "Initial deposit",
-                  true
-                ),
-              })}
-              token="uluna"
-              onFocus={max.reset}
-              inputMode="decimal"
-              placeholder={getPlaceholder()}
-            />
-          </FormItem>
+            <FormItem label={t("Proposal type")} error={errors.type?.message}>
+              <Select {...register("type")}>
+                {Object.values(ProposalType).map((type) => (
+                  <option value={type} key={type}>
+                    {t(type)}
+                  </option>
+                ))}
+              </Select>
+            </FormItem>
 
-          {render()}
-          {fee.render()}
-          {submit.button}
-        </Form>
-      )}
-    </Tx>
+            <FormItem label={t("Title")} error={errors.title?.message}>
+              <Input
+                {...register("title", { required: "Title is required" })}
+                placeholder={t("Burn community pool")}
+                autoFocus
+              />
+            </FormItem>
+
+            <FormItem
+              label={t("Description")}
+              error={errors.description?.message}
+            >
+              <TextArea
+                {...register("description", {
+                  required: "Description is required",
+                })}
+                placeholder={t(
+                  "We're proposing to spend 100,000 LUNA from the Community Pool to fund the creation of public goods for the Terra ecosystem"
+                )}
+              />
+            </FormItem>
+
+            <FormItem
+              label={
+                <TooltipIcon content="To help push the proposal to the voting period, consider depositing more LUNA to reach the minimum 512 LUNA (optional).">
+                  {t("Initial deposit")} ({t("optional")})
+                </TooltipIcon>
+              }
+              extra={max.render()}
+              error={errors.input?.message}
+            >
+              <Input
+                {...register("input", {
+                  valueAsNumber: true,
+                  validate: validate.input(
+                    toInput(max.amount),
+                    undefined,
+                    "Initial deposit",
+                    true
+                  ),
+                })}
+                token={chains[chain].baseAsset}
+                onFocus={max.reset}
+                inputMode="decimal"
+                placeholder={getPlaceholder()}
+              />
+            </FormItem>
+
+            {render()}
+            {fee.render()}
+            {submit.button}
+          </Form>
+        )}
+      </InterchainTx>
+    </Card>
   )
 }
 

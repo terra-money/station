@@ -9,7 +9,7 @@ import { has } from "utils/num"
 import { StakeAction } from "txs/stake/StakeForm"
 import { queryKey, Pagination, RefetchOptions } from "../query"
 import { useAddress } from "../wallet"
-import { useLCDClient } from "./lcdClient"
+import { useInterchainLCDClient, useLCDClient } from "./lcdClient"
 
 export const useValidators = () => {
   const lcd = useLCDClient()
@@ -110,9 +110,9 @@ export const useUnbondings = () => {
   )
 }
 
-export const useStakingPool = () => {
-  const lcd = useLCDClient()
-  return useQuery([queryKey.staking.pool], () => lcd.staking.pool(), {
+export const useStakingPool = (chain: string) => {
+  const lcd = useInterchainLCDClient()
+  return useQuery([queryKey.staking.pool], () => lcd.staking.pool(chain), {
     ...RefetchOptions.INFINITY,
   })
 }

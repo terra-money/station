@@ -3,7 +3,7 @@
 .item {
   --padding: 8px 12px;
 
-  border: 1px solid var(--card-border);
+  border: var(--border-width) solid var(--card-border);
   border-radius: var(--border-radius);
   text-align: left;
   width: 100%;

@@ -2,19 +2,17 @@ import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useRoutes } from "react-router-dom"
 
-import { ReactComponent as WalletIcon } from "styles/images/menu/Wallet.svg"
 import { ReactComponent as HistoryIcon } from "styles/images/menu/History.svg"
 import { ReactComponent as SwapIcon } from "styles/images/menu/Swap.svg"
 import { ReactComponent as StakeIcon } from "styles/images/menu/Stake.svg"
 import { ReactComponent as GovernanceIcon } from "styles/images/menu/Governance.svg"
-import { ReactComponent as ContractIcon } from "styles/images/menu/Contract.svg"
+//import { ReactComponent as ContractIcon } from "styles/images/menu/Contract.svg"
 
 /* menu */
-import Dashboard from "pages/dashboard/Dashboard"
 import History from "pages/history/History"
 import Stake from "pages/stake/Stake"
 import Governance from "pages/gov/Governance"
-import Contract from "pages/contract/Contract"
+//import Contract from "pages/contract/Contract"
 
 /* details */
 import ValidatorDetails from "pages/stake/ValidatorDetails"
@@ -59,14 +57,16 @@ export const useNav = () => {
   const { t } = useTranslation()
 
   const menu = [
+    /*
     {
       path: "/",
       element: <Dashboard />,
       title: t("Dashboard"),
       icon: <WalletIcon {...ICON_SIZE} />,
     },
+    */
     {
-      path: "/swap",
+      path: "/",
       element: <SwapTx />,
       title: t("Swap"),
       icon: <SwapIcon {...ICON_SIZE} />,
@@ -96,20 +96,20 @@ export const useNav = () => {
       title: t("NFT"),
       icon: <NFTIcon {...ICON_SIZE} />,
     },
-    */
     {
       path: "/contract",
       element: <Contract />,
       title: t("Contract"),
       icon: <ContractIcon {...ICON_SIZE} />,
     },
+    */
   ]
 
   const routes = [
     /* pages */
     ...menu,
     { path: "/validator/:address", element: <ValidatorDetails /> },
-    { path: "/proposal/:id", element: <ProposalDetails /> },
+    { path: "/proposal/:chain/:id", element: <ProposalDetails /> },
 
     /* multisig */
     { path: "/multisig/sign", element: <SignMultisigTxPage /> },
@@ -122,8 +122,8 @@ export const useNav = () => {
     { path: "/rewards", element: <WithdrawRewardsTx /> },
     { path: "/commission", element: <WithdrawCommissionTx /> },
     { path: "/proposal/new", element: <SubmitProposalTx /> },
-    { path: "/proposal/:id/deposit", element: <DepositTx /> },
-    { path: "/proposal/:id/vote", element: <VoteTx /> },
+    { path: "/proposal/:chain/:id/deposit", element: <DepositTx /> },
+    { path: "/proposal/:chain/:id/vote", element: <VoteTx /> },
     { path: "/contract/instantiate", element: <InstantiateContractTx /> },
     { path: "/contract/store", element: <StoreCodeTx /> },
     { path: "/contract/execute/:contract", element: <ExecuteContractTx /> },

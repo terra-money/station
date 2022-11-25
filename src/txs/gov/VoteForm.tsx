@@ -2,13 +2,14 @@ import { useCallback, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import classNames from "classnames/bind"
-import { MsgVote, Vote } from "@terra-money/terra.js"
-import { useAddress } from "data/wallet"
+import { MsgVote, Vote } from "@terra-money/station.js"
 import { useGetVoteOptionItem } from "data/queries/gov"
 import { Form } from "components/form"
 import useProposalId from "pages/gov/useProposalId"
-import Tx, { getInitialGasDenom } from "../Tx"
+import { getInitialGasDenom } from "../Tx"
 import styles from "./VoteForm.module.scss"
+import InterchainTx from "txs/InterchainTx"
+import { useInterchainAddresses } from "auth/hooks/useAddress"
 
 const cx = classNames.bind(styles)
 
@@ -26,11 +27,11 @@ const Options = [
 const VoteForm = () => {
   const { t } = useTranslation()
   const getVoteOptionItem = useGetVoteOptionItem()
-  const id = useProposalId()
+  const { id, chain } = useProposalId()
 
   if (!id) throw new Error("Proposal is not defined")
 
-  const address = useAddress()
+  const addresses = useInterchainAddresses()
 
   /* tx context */
   const initialGasDenom = getInitialGasDenom()
@@ -44,11 +45,11 @@ const VoteForm = () => {
   /* tx */
   const createTx = useCallback(
     ({ option }: TxValues) => {
-      if (!address) return
-      const msgs = [new MsgVote(id, address, Number(option))]
-      return { msgs }
+      if (!addresses) return
+      const msgs = [new MsgVote(id, addresses[chain], Number(option))]
+      return { msgs, chainID: chain }
     },
-    [address, id]
+    [addresses, id, chain]
   )
 
   /* fee */
@@ -63,12 +64,13 @@ const VoteForm = () => {
     createTx,
     onSuccess: {
       label: [t("Proposal"), id].join(" "),
-      path: `/proposal/${id}`,
+      path: `/proposal/${chain}/${id}`,
     },
+    chain,
   }
 
   return (
-    <Tx {...tx}>
+    <InterchainTx {...tx}>
       {({ fee, submit }) => (
         <Form onSubmit={handleSubmit(submit.fn)}>
           <section className={styles.options}>
@@ -96,7 +98,7 @@ const VoteForm = () => {
           {submit.button}
         </Form>
       )}
-    </Tx>
+    </InterchainTx>
   )
 }
 
