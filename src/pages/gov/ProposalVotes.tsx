@@ -17,9 +17,9 @@ import styles from "./ProposalVotes.module.scss"
 
 export const options = [
   Vote.Option.VOTE_OPTION_YES,
-  Vote.Option.VOTE_OPTION_ABSTAIN,
   Vote.Option.VOTE_OPTION_NO,
   Vote.Option.VOTE_OPTION_NO_WITH_VETO,
+  Vote.Option.VOTE_OPTION_ABSTAIN,
 ]
 
 const ProposalVotes = ({ id, card }: { id: number; card?: boolean }) => {
@@ -136,7 +136,7 @@ export default ProposalVotes
 /* helpers */
 const calcTallies = (
   tally: Tally,
-  { quorum, threshold }: TallyParams,
+  { quorum, threshold, veto_threshold }: TallyParams,
   pool: StakingPool
 ) => {
   const getTallyItem = (option: Vote.Option) => {
@@ -182,10 +182,22 @@ const calcTallies = (
     ? { x: quorum.toNumber(), type: "quorum" as const }
     : { x: thresholdX, type: "threshold" as const }
 
-  const yesRatio = list[0].ratio.byVoted
-  const noRatio = list.slice(2, 4).map(({ ratio }) => ratio.byVoted)
+  /* passing, not passing */
+  const abstained =
+    list.find((p) => p.option === Vote.Option.VOTE_OPTION_ABSTAIN)?.voted || 0
+  const consent =
+    list.find((p) => p.option === Vote.Option.VOTE_OPTION_YES)?.voted || 0
+  const veto =
+    list.find((p) => p.option === Vote.Option.VOTE_OPTION_NO_WITH_VETO)
+      ?.voted || 0
 
-  const isPassing = !isBelowQuorum && BigNumber.sum(...noRatio).lte(yesRatio)
+  const hasConsent =
+    Number(consent) / (Number(total.voted) - Number(abstained)) >
+    threshold.toNumber()
+  const isVetoed =
+    Number(veto) / Number(total.voted) > veto_threshold.toNumber()
+
+  const isPassing = !isBelowQuorum && !isVetoed && hasConsent
 
   return { list, total: { ...total, ratio }, flag, isPassing }
 }
