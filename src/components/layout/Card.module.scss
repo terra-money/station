@@ -10,16 +10,6 @@
   background: var(--card-bg);
   overflow: hidden; // truncate title, linear progress
   position: relative; // for progress bar
-
-  @include mobile {
-    border-left: 0;
-    border-right: 0;
-    border-radius: 0;
-
-    & & {
-      @include border;
-    }
-  }
 }
 
 // as a button

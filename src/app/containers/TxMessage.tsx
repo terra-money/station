@@ -8,6 +8,7 @@ import { WithTokenItem } from "data/token"
 import { useCW20Contracts, useCW20Whitelist } from "data/Terra/TerraAssets"
 import { FinderLink } from "components/general"
 import { Read } from "components/token"
+import styles from "./TxMessage.module.scss"
 
 const ValidatorAddress = ({ children: address }: { children: string }) => {
   const { data: validators } = useValidators()
@@ -74,7 +75,9 @@ const TxMessage = ({ children: sentence, className }: Props) => {
     if (word.endsWith(",")) return <>{parse(word.slice(0, -1), index)},</>
 
     return validateTokens(word) ? (
-      <Tokens>{word}</Tokens>
+      <span className={styles.textmain}>
+        <Tokens>{word}</Tokens>
+      </span>
     ) : AccAddress.validate(word) ? (
       <TerraAddress>{word}</TerraAddress>
     ) : ValAddress.validate(word) ? (
@@ -95,7 +98,7 @@ const TxMessage = ({ children: sentence, className }: Props) => {
           const parsed = parse(word, index)
 
           return !index ? (
-            <strong key={index}>{parsed}</strong>
+            <span key={index}>{parsed}</span>
           ) : (
             <span key={index}> {parsed}</span>
           )

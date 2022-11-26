@@ -16,9 +16,7 @@ const HistoryMessage = ({ success, msg }: Props) => {
   return (
     <div className={styles.component}>
       {type && (
-        <Tag color={success ? "info" : "danger"} small>
-          {sentenceCase(type)}
-        </Tag>
+        <Tag color={success ? "info" : "danger"}>{sentenceCase(type)}</Tag>
       )}
 
       <section>
