@@ -182,8 +182,10 @@ const calcTallies = (
     ? { x: quorum.toNumber(), type: "quorum" as const }
     : { x: thresholdX, type: "threshold" as const }
 
-  const consentRatio = list.slice(0, 2).map(({ ratio }) => ratio.byVoted)
-  const isPassing = !isBelowQuorum && BigNumber.sum(...consentRatio).gte(0.5)
+  const yesRatio = list[0].ratio.byVoted
+  const noRatio = list.slice(2, 4).map(({ ratio }) => ratio.byVoted)
+
+  const isPassing = !isBelowQuorum && BigNumber.sum(...noRatio).lte(yesRatio)
 
   return { list, total: { ...total, ratio }, flag, isPassing }
 }
