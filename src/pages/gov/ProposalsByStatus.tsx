@@ -36,9 +36,16 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   const whitelist = whitelistData?.[networkName]
 
   const [showAll, setShowAll] = useState(!!whitelist)
-  const toggle = () => setShowAll((state) => !state)
+  const toggle = () => {
+    setShowAll((state) => !state)
+    setPaginationState(DefaultGovernancePaginationState)
+  }
 
-  const pagination = 6
+  const PAGINATION_LENGTH =
+    status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && !showAll
+      ? 999
+      : 6
+
   const [paginationState, setPaginationState] = useRecoilState(
     governancePaginationState
   )
@@ -64,7 +71,10 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   const { data, ...proposalState } = useProposals(status, {
     "pagination.count_total": "true",
     "pagination.reverse": "true",
-    "pagination.limit": String(pagination),
+    "pagination.limit":
+      status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && !showAll
+        ? "999"
+        : String(PAGINATION_LENGTH),
     "pagination.key": key,
   })
   const [proposalData, paginationData] = data || []
@@ -116,8 +126,8 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   }
 
   const renderPagination = () => {
-    if (!(pagination && paginationData)) return null
-    const recordTotal = Math.ceil(total / pagination)
+    if (!(PAGINATION_LENGTH && paginationData)) return null
+    const recordTotal = Math.ceil(total / PAGINATION_LENGTH)
 
     if (!recordTotal || recordTotal === 1) return null
     const prevPage = page > 1 ? () => handlePrevious() : undefined
