@@ -1,4 +1,4 @@
-import { AccAddress } from "@terra-money/station.js"
+import { AccAddress } from "@terra-money/feather.js"
 
 export function getChainIDFromAddress(
   address: AccAddress,
