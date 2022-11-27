@@ -68,8 +68,16 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
     setPaginationState(DefaultGovernancePaginationState)
   }, [paginationState, setPaginationState, status])
 
-  const { data, ...proposalState } = useProposals(status, {
+  /* Note the following duplicate call to useProposals is a workaround
+  for the issue described by https://github.com/terra-money/station/issues/133 */
+  const { data: countData, ...proposalCountState } = useProposals(status, {
     "pagination.count_total": "true",
+    "pagination.limit": "1",
+  })
+  const [, paginationCountData] = countData || []
+
+  const { data, ...proposalState } = useProposals(status, {
+    "pagination.count_total": "false",
     "pagination.reverse": "true",
     "pagination.limit":
       status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && !showAll
@@ -82,21 +90,27 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   useEffect(() => {
     if (
       !(
-        paginationData &&
-        paginationData.total > 0 &&
-        paginationData.total !== total
+        paginationCountData &&
+        paginationCountData.total > 0 &&
+        paginationCountData.total !== total
       )
     )
       return
 
     setPaginationState(
-      Object.assign({}, paginationState, { total: paginationData.total })
+      Object.assign({}, paginationState, { total: paginationCountData.total })
     )
-  }, [paginationData, paginationState, setPaginationState, total])
+  }, [
+    paginationCountData,
+    paginationState,
+    proposalCountState,
+    setPaginationState,
+    total,
+  ])
 
   const { label } = useProposalStatusItem(status)
 
-  const state = combineState(whitelistState, proposalState)
+  const state = combineState(whitelistState, proposalState, proposalCountState)
 
   /* pagination */
   const handleNext = () => {
