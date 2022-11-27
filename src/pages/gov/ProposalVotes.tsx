@@ -199,9 +199,12 @@ const calcTallies = (
       ?.voted || 0
 
   const hasConsent =
+    has(total.voted) &&
+    total.voted > abstained &&
     Number(consent) / (Number(total.voted) - Number(abstained)) >
-    threshold.toNumber()
+      threshold.toNumber()
   const isVetoed =
+    has(total.voted) &&
     Number(veto) / Number(total.voted) > veto_threshold.toNumber()
 
   const isPassing = !isBelowQuorum && !isVetoed && hasConsent
