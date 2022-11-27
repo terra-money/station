@@ -42,7 +42,7 @@ const ProposalVotes = ({ id, card }: { id: number; card?: boolean }) => {
     if (!(proposal && tally && tallyParams && pool)) return null
 
     const tallies = calcTallies(tally, tallyParams, pool)
-    const { total, list, flag, isPassing } = tallies
+    const { total, list, flag, isPassing, isVetoed } = tallies
     const { voting_end_time } = proposal
 
     const flagLabel = { quorum: t("Quorum"), threshold: t("Pass threshold") }
@@ -66,6 +66,13 @@ const ProposalVotes = ({ id, card }: { id: number; card?: boolean }) => {
                       <strong className="danger">{t("Not passing...")}</strong>
                     )}
                   </p>
+                  {isVetoed && (
+                    <p>
+                      <strong className="danger">
+                        {t("Exceeds veto threshold...")}
+                      </strong>
+                    </p>
+                  )}
                 </section>
               </article>
             </Col>
@@ -199,5 +206,5 @@ const calcTallies = (
 
   const isPassing = !isBelowQuorum && !isVetoed && hasConsent
 
-  return { list, total: { ...total, ratio }, flag, isPassing }
+  return { list, total: { ...total, ratio }, flag, isPassing, isVetoed }
 }
