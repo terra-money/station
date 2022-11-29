@@ -50,7 +50,7 @@ const ProposalVotes = ({ id, card }: { id: number; card?: boolean }) => {
     if (!has(total.voted)) return <Empty>{t("No votes yet")}</Empty>
 
     return (
-      <Grid gap={40}>
+      <Grid gap={40} style={{ width: "calc(100% - var(--grid-gap))" }}>
         {card && (
           <Row>
             <Col span={1}>
