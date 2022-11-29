@@ -56,7 +56,7 @@ const Validators = () => {
         const TerraValidator = TerraValidators[indexOfTerraValidator]
 
         const rank = indexOfTerraValidator + 1
-        const voting_power_rate = calcRate(operator_address)
+        const voting_power_rate = calcRate(operator_address) || 0
 
         return {
           ...TerraValidator,
@@ -65,7 +65,7 @@ const Validators = () => {
           voting_power_rate,
         }
       })
-      .sort(({ rank: a }, { rank: b }) => a - b)
+      .sort(({ voting_power_rate: a }, { voting_power_rate: b }) => b - a)
   }, [TerraValidators, validators])
 
   const renderCount = () => {
