@@ -23,19 +23,19 @@ const Staked = () => {
     if (!staked) return <DelegationsPromote horizontal />
 
     return (
-      <Row>
-        <Col>
-          <Delegations />
-        </Col>
+      <Col>
+        {/* <Col> */}
+        <Delegations />
+        {/* </Col> */}
 
-        <Col>
-          <Unbondings />
-        </Col>
+        {/* <Col> */}
+        <Unbondings />
+        {/* </Col> */}
 
-        <Col>
-          <Rewards />
-        </Col>
-      </Row>
+        {/* <Col> */}
+        <Rewards />
+        {/* </Col> */}
+      </Col>
     )
   }
 

@@ -94,9 +94,9 @@
 }
 
 .dark {
-  --button-primary-bg-h: 221;
-  --button-primary-bg-s: 91%;
-  --button-primary-bg-l: 59%;
+  --button-primary-bg-h: 224;
+  --button-primary-bg-s: 82%;
+  --button-primary-bg-l: 60%;
   --button-primary-bg: hsl(
     var(--button-primary-bg-h),
     var(--button-primary-bg-s),
@@ -113,20 +113,20 @@
   );
   --button-default-text: hsl(0 0% 87%);
 
-  --menu-bg: hsl(239, 6%, 17%);
-  --menu-border: hsl(239, 5%, 22%);
-  --menu-text: hsl(239, 2%, 76%);
+  --menu-bg: hsl(240, 6%, 17%);
+  --menu-border: hsl(240, 5%, 22%);
+  --menu-text: hsl(0, 0%, 91%);
 
   --link: var(--button-primary-bg);
   --text: hsl(0, 0%, 95%);
   --text-muted: hsl(0 0% 55%);
   --chart: hsl(215 90% 57%);
 
-  --bg: hsl(0, 0%, 10%);
-  --bg-muted: hsl(0 0% 13%);
+  --bg: hsl(0, 0%, 12%);
+  --bg-muted: hsl(240 5% 22%);
   --card-bg: hsl(239, 6%, 17%);
-  --card-bg-muted: hsl(240, 6%, 15%);
-  --card-border: hsl(210 2% 21%);
+  --card-bg-muted: hsl(240, 5%, 15%);
+  --card-border: hsl(240 5% 22%);
   --input-bg: var(--card-bg);
   --input-border: hsl(0 0% 30%);
 

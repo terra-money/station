@@ -1,0 +1,22 @@
+@import "mixins";
+
+.list {
+  display: grid;
+  gap: var(--grid-gap);
+
+  @include desktop {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.link {
+  display: grid;
+  color: inherit;
+  border: var(--border-width) solid var(--card-border);
+
+  &:hover {
+    text-decoration: none;
+    border: var(--border-width) solid var(--info);
+    box-sizing: border-box;
+  }
+}

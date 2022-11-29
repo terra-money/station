@@ -41,6 +41,30 @@ export const useValidators = () => {
   )
 }
 
+export const useInterchainDelegations = () => {
+  const address = useAddress()
+  const lcd = useInterchainLCDClient()
+
+  return useQuery(
+    [queryKey.staking.interchainDelegations],
+    async () => {
+      if (!address) return []
+      // TODO: Pagination
+      // Required when the number of results exceed LAZY_LIMIT
+      const [delegations] = await lcd.staking.delegations(
+        address,
+        undefined,
+        Pagination
+      )
+
+      return delegations.filter(({ balance }: { balance: any }) =>
+        has(balance.amount.toString())
+      )
+    },
+    { ...RefetchOptions.DEFAULT }
+  )
+}
+
 export const useValidator = (operatorAddress: ValAddress) => {
   const lcd = useLCDClient()
   return useQuery(
