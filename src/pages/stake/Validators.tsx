@@ -58,7 +58,7 @@ const Validators = () => {
           const TerraValidator = TerraValidators[indexOfTerraValidator]
 
           const rank = indexOfTerraValidator + 1
-          const voting_power_rate = calcRate(operator_address) || 0
+          const voting_power_rate = calcRate(operator_address)
 
           return {
             ...TerraValidator,
