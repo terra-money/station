@@ -381,20 +381,22 @@ function InterchainTx<TxValues>(props: Props<TxValues>) {
         />
       ) : (
         <Grid gap={4}>
-          {passwordRequired && (
-            <FormItem label={t("Password")} error={incorrect}>
-              <Input
-                type="password"
-                value={password}
-                onChange={(e) => {
-                  setIncorrect(undefined)
-                  setPassword(e.target.value)
-                }}
-              />
-            </FormItem>
+          {failed ? (
+            <FormError>{failed}</FormError>
+          ) : (
+            passwordRequired && (
+              <FormItem label={t("Password")} error={incorrect}>
+                <Input
+                  type="password"
+                  value={password}
+                  onChange={(e) => {
+                    setIncorrect(undefined)
+                    setPassword(e.target.value)
+                  }}
+                />
+              </FormItem>
+            )
           )}
-
-          {failed && <FormError>{failed}</FormError>}
 
           <Submit
             disabled={!estimatedGas || !!disabled || !!walletError}
