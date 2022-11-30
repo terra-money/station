@@ -21,6 +21,7 @@ import ProfileIcon from "./components/ProfileIcon"
 import Uptime from "./components/Uptime"
 import { ValidatorJailed } from "./components/ValidatorTag"
 import styles from "./Validators.module.scss"
+import shuffle from "utils/shuffle"
 
 const Validators = () => {
   const { t } = useTranslation()
@@ -44,28 +45,29 @@ const Validators = () => {
 
     const calcRate = getCalcVotingPowerRate(TerraValidators)
 
-    return validators
-      .filter(({ status }) => !getIsUnbonded(status))
-      .map((validator) => {
-        const { operator_address } = validator
+    return shuffle(
+      validators
+        .filter(({ status }) => !getIsUnbonded(status))
+        .map((validator) => {
+          const { operator_address } = validator
 
-        const indexOfTerraValidator = TerraValidators.findIndex(
-          (validator) => validator.operator_address === operator_address
-        )
+          const indexOfTerraValidator = TerraValidators.findIndex(
+            (validator) => validator.operator_address === operator_address
+          )
 
-        const TerraValidator = TerraValidators[indexOfTerraValidator]
+          const TerraValidator = TerraValidators[indexOfTerraValidator]
 
-        const rank = indexOfTerraValidator + 1
-        const voting_power_rate = calcRate(operator_address)
+          const rank = indexOfTerraValidator + 1
+          const voting_power_rate = calcRate(operator_address)
 
-        return {
-          ...TerraValidator,
-          ...validator,
-          rank,
-          voting_power_rate,
-        }
-      })
-      .sort(({ rank: a }, { rank: b }) => a - b)
+          return {
+            ...TerraValidator,
+            ...validator,
+            rank,
+            voting_power_rate,
+          }
+        })
+    )
   }, [TerraValidators, validators])
 
   const renderCount = () => {
