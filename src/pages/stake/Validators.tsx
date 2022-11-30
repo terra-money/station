@@ -67,7 +67,6 @@ const Validators = () => {
       })
       .sort(({ rank: a }, { rank: b }) => a - b)
   }, [TerraValidators, validators])
-
   const renderCount = () => {
     if (!validators) return null
     const count = validators.filter(({ status }) => getIsBonded(status)).length
