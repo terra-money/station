@@ -1,7 +1,7 @@
 @import "mixins";
 
 .receive {
-  background-color: var(--card-bg);
+  background-color: var(--card-bg-muted);
   padding-inline: 20px;
   padding-top: 4rem;
   grid-area: list;

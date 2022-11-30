@@ -57,32 +57,30 @@ const SendPage = () => {
   const { route } = useWalletRoute() as unknown as { route: { denom?: string } }
   const availableAssets = useMemo(
     () =>
-      [
-        ...Object.values(
-          (balances ?? []).reduce((acc, { denom, amount, chain }) => {
-            const data = readNativeDenom(denom)
-            if (acc[data.token]) {
-              acc[data.token].balance = `${
-                parseInt(acc[data.token].balance) + parseInt(amount)
-              }`
-              acc[data.token].chains.push(chain)
-              return acc as Record<string, AssetType>
-            } else {
-              return {
-                ...acc,
-                [data.token]: {
-                  denom: data.token,
-                  balance: amount,
-                  icon: data.icon,
-                  symbol: data.symbol,
-                  price: prices?.[data.token]?.price ?? 0,
-                  chains: [chain],
-                },
-              } as Record<string, AssetType>
-            }
-          }, {} as Record<string, AssetType>)
-        ),
-      ].sort(
+      Object.values(
+        (balances ?? []).reduce((acc, { denom, amount, chain }) => {
+          const data = readNativeDenom(denom)
+          if (acc[data.token]) {
+            acc[data.token].balance = `${
+              parseInt(acc[data.token].balance) + parseInt(amount)
+            }`
+            acc[data.token].chains.push(chain)
+            return acc as Record<string, AssetType>
+          } else {
+            return {
+              ...acc,
+              [data.token]: {
+                denom: data.token,
+                balance: amount,
+                icon: data.icon,
+                symbol: data.symbol,
+                price: prices?.[data.token]?.price ?? 0,
+                chains: [chain],
+              },
+            } as Record<string, AssetType>
+          }
+        }, {} as Record<string, AssetType>)
+      ).sort(
         (a, b) => b.price * parseInt(b.balance) - a.price * parseInt(a.balance)
       ),
     [balances, readNativeDenom, prices]
