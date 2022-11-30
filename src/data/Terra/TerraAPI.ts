@@ -121,8 +121,12 @@ export const useTerraProposal = (id: number) => {
 
 /* helpers */
 export const getCalcVotingPowerRate = (TerraValidators: TerraValidator[]) => {
-  const total = BigNumber.sum(
+  const totalVotePower = BigNumber.sum(
     ...TerraValidators.map(({ voting_power = 0 }) => voting_power)
+  ).toNumber()
+
+  const totalTokens = BigNumber.sum(
+    ...TerraValidators.map(({ tokens = 0 }) => tokens)
   ).toNumber()
 
   return (address: ValAddress) => {
@@ -131,8 +135,10 @@ export const getCalcVotingPowerRate = (TerraValidators: TerraValidator[]) => {
     )
 
     if (!validator) return
-    const { voting_power } = validator
-    return voting_power ? Number(validator.voting_power) / total : undefined
+    const { voting_power, tokens } = validator
+    return voting_power
+      ? Number(voting_power) / totalVotePower
+      : Number(tokens) / totalTokens
   }
 }
 

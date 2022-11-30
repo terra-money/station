@@ -52,10 +52,10 @@ const Validators = () => {
         const indexOfTerraValidator = TerraValidators.findIndex(
           (validator) => validator.operator_address === operator_address
         )
-
         const TerraValidator = TerraValidators[indexOfTerraValidator]
 
-        const rank = indexOfTerraValidator + 1
+        const rank =
+          indexOfTerraValidator === -1 ? 999 : indexOfTerraValidator + 1
         const voting_power_rate = calcRate(operator_address)
 
         return {
@@ -67,7 +67,6 @@ const Validators = () => {
       })
       .sort(({ rank: a }, { rank: b }) => a - b)
   }, [TerraValidators, validators])
-
   const renderCount = () => {
     if (!validators) return null
     const count = validators.filter(({ status }) => getIsBonded(status)).length
