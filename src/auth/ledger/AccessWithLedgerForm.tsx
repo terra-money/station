@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import UsbIcon from "@mui/icons-material/Usb"
-import { LedgerKey } from "@terra-money/ledger-terra-js"
+import { LedgerKey } from "@terra-money/ledger-station-js"
 import BluetoothTransport from "@ledgerhq/hw-transport-web-ble"
 import { LEDGER_TRANSPORT_TIMEOUT } from "config/constants"
 import { Form, FormError, FormItem, FormWarning } from "components/form"
@@ -49,8 +49,8 @@ const AccessWithLedgerForm = () => {
         ? await BluetoothTransport.create(LEDGER_TRANSPORT_TIMEOUT)
         : undefined
 
-      const { accAddress } = await LedgerKey.create(transport, index)
-      connectLedger(accAddress, index, bluetooth)
+      const key = await LedgerKey.create(transport, index)
+      connectLedger(key.accAddress("terra"), index, bluetooth)
       navigate("/", { replace: true })
     } catch (error) {
       setError(error as Error)
