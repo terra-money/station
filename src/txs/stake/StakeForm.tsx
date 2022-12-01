@@ -93,7 +93,6 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
 
       const amount = toAmount(input)
       const coin = new Coin("umis", amount)
-
       if (tab === StakeAction.REDELEGATE) {
         if (!source) return
         const msg = new MsgBeginRedelegate(address, destination, source, coin)
