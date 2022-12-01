@@ -11,9 +11,9 @@ import { head, isNil } from "ramda"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline"
 import { isDenom, isDenomIBC, readDenom } from "@terra.kitchen/utils"
-import { Coin, Coins, Msg } from "@terra-money/terra.js"
+import { AuthInfo, Coin, Coins, LCDClient, SignDoc, TxBody } from "@terra-money/terra.js"
 import { CreateTxOptions, Fee } from "@terra-money/terra.js"
-import { ConnectType, UserDenied } from "@terra-money/wallet-provider"
+import { ConnectType, useLCDClient, UserDenied } from "@terra-money/wallet-provider"
 import { CreateTxFailed, TxFailed } from "@terra-money/wallet-provider"
 import { useConnectedWallet } from "@terra-money/wallet-provider"
 import { Contents } from "types/components"
@@ -23,7 +23,7 @@ import { getErrorMessage } from "utils/error"
 import { getLocalSetting, SettingKey } from "utils/localStorage"
 import { useCurrency } from "data/settings/Currency"
 import { queryKey, RefetchOptions } from "data/query"
-import { useAddress, useNetwork } from "data/wallet"
+import { useAddress, useChainID, useNetwork } from "data/wallet"
 import { isBroadcastingState, latestTxState } from "data/queries/tx"
 import { useBankBalance, useIsWalletEmpty } from "data/queries/bank"
 
@@ -38,13 +38,11 @@ import useToPostMultisigTx from "pages/multisig/utils/useToPostMultisigTx"
 import { isWallet, useAuth } from "auth"
 import { PasswordError } from "auth/scripts/keystore"
 
-import { toInput } from "./utils"
+import { MisesClient, toInput } from "./utils"
 import { useTx } from "./TxContext"
 import styles from "./Tx.module.scss"
 import { StakeAction } from "./stake/StakeForm"
-import { toHump } from "utils/data"
 import { useConnectWallet } from "auth/hooks/useAddress"
-import { useMetamaskProvider } from "utils/hooks/useMetamaskProvider"
 
 export interface CreateTxErrorOptions {
   code: -1
@@ -121,26 +119,25 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const { data: estimatedGas, ...estimatedGasState } = useQuery(
     [queryKey.tx.create, key],
     async () => {
-      return 2000000
-      // if (!address || isWalletEmpty) return 0
+      // return 2000000
+      if (!address || isWalletEmpty) return 0
       // if (!(wallet || connectedWallet?.availablePost)) return 0
-      // if (!simulationTx || !simulationTx.msgs.length) return 0
+      if (!simulationTx || !simulationTx.msgs.length) return 0
 
-      // const config = {
-      //   ...network,
-      //   URL: network.lcd,
-      //   gasAdjustment,
-      //   gasPrices: { [initialGasDenom]: gasPrices[initialGasDenom] },
-      // }
+      const config = {
+        ...network,
+        URL: network.lcd,
+        gasAdjustment,
+        gasPrices: { [initialGasDenom]: gasPrices[initialGasDenom] },
+      }
 
-      // const lcd = new LCDClient(config)
-
-      // const unsignedTx = await lcd.tx.create([{ address }], {
-      //   ...simulationTx,
-      //   feeDenoms: [initialGasDenom],
-      // })
-
-      // return unsignedTx.auth_info.fee.gas_limit
+      const lcd = new LCDClient(config)
+      const misesClient = new MisesClient(lcd, network.lcd)
+      const unsignedTx = await misesClient.create([{ address }], {
+        ...simulationTx,
+        feeDenoms: [initialGasDenom],
+      })
+      return unsignedTx.auth_info.fee.gas_limit
     },
     {
       ...RefetchOptions.INFINITY,
@@ -180,6 +177,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
     : isDenom(token)
     ? getNativeMax()
     : balance
+  const chainID = useChainID()
 
   /* (effect): Call the onChangeMax function whenever the max changes */
   useEffect(() => {
@@ -217,9 +215,9 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const [error, setError] = useState<Error>()
 
   const navigate = useNavigate()
+  const lcd = useLCDClient()
   const toPostMultisigTx = useToPostMultisigTx()
   const misesState = useRecoilValue(misesStateDefault)
-  const provider = useMetamaskProvider()
   const submit = async (values: TxValues) => {
     setSubmitting(true)
     try {
@@ -239,33 +237,32 @@ function Tx<TxValues>(props: Props<TxValues>) {
         const result = await auth.post({ ...tx, fee }, password)
         setLatestTx({ txhash: result.txhash, queryKeys, redirectAfterTx })
       } else {
-        const txString = tx.msgs.map((val: Msg) => {
-          const msg = JSON.parse(val.toJSON())
-          const newMsg = {} as { [key: string]: any }
-          for (const key in msg) {
-            const labelKey = key as string
-            newMsg[`${toHump(labelKey)}`] = msg[key]
-          }
-          delete newMsg["@type"]
-          return {
-            typeUrl: msg["@type"],
-            value: newMsg,
-          }
-        })
-        const result = await provider.request({
-          method: "mises_stakingPostTx",
-          params: [
-            {
-              tx: txString,
-              misesId: misesState.misesId,
-              gasFee: [gasFee],
-              gasLimit: fee.gas_limit,
-              feeAmount: toInput(gasFee.amount, 6),
-              title: props.tabType,
-            },
-          ],
-        })
-        setLatestTx({ txhash: result.txHash, queryKeys, redirectAfterTx })
+        const provider = window.keplr;
+        const accountInfo = await lcd.auth.accountInfo(misesState.misesId)
+
+        const doc = new SignDoc(
+          chainID,
+          accountInfo.getAccountNumber(),
+          accountInfo.getSequenceNumber(),
+          new AuthInfo([], fee),
+          new TxBody(tx.msgs,tx.memo,tx.timeoutHeight)
+        )
+        const signResponse = await provider.signAmino(chainID,misesState.misesId,doc.toAmino(),{});
+        console.log(signResponse);
+        // const result = await provider.request({
+        //   method: "mises_stakingPostTx",
+        //   params: [
+        //     {
+        //       tx: txString,
+        //       misesId: misesState.misesId,
+        //       gasFee: [gasFee],
+        //       gasLimit: fee.gas_limit,
+        //       feeAmount: toInput(gasFee.amount, 6),
+        //       title: props.tabType,
+        //     },
+        //   ],
+        // })
+        // setLatestTx({ txhash, queryKeys, redirectAfterTx })
       }
       onPost?.()
     } catch (error) {

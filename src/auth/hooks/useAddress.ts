@@ -1,7 +1,7 @@
 /*
  * @Author: lmk
  * @Date: 2022-05-25 15:17:49
- * @LastEditTime: 2022-10-19 11:26:24
+ * @LastEditTime: 2022-11-14 10:06:42
  * @LastEditors: lmk
  * @Description:
  */
@@ -10,7 +10,7 @@
 
 import { misesStateDefault } from "app/sections/ConnectWallet"
 import { useRecoilState, useRecoilValue } from "recoil"
-import { useMetamaskProvider } from "utils/hooks/useMetamaskProvider"
+// import { useMetamaskProvider } from "utils/hooks/useMetamaskProvider"
 
 /* auth | wallet-provider */
 const useAddress = () => {
@@ -23,23 +23,26 @@ export default useAddress
 
 export function useConnectWallet() {
   const [misesState, setmisesState] = useRecoilState(misesStateDefault)
-  const provider = useMetamaskProvider()
-  const getAddress = (open?: () => void) => {
-    provider
-      ?.request({
-        method: "mises_requestAccounts",
-        params: [],
-      })
-      .then((res: { misesId: string }) => {
-        setmisesState({ ...misesState, misesId: res.misesId })
-        localStorage.setItem("metamask", JSON.stringify(true))
-      })
-    if (!provider || !provider.chainId) {
+  const provider = window.keplr;
+  const chainId = 'mainnet';
+  const getAddress = async (open?: () => void) => {
+    await provider.enable(chainId);
+    const offlineSigner = provider.getOfflineSigner?.(chainId);
+    if(offlineSigner){
+      offlineSigner.getAccounts().then((res:{address: string}[])=>{
+        const [account] = res;
+        setmisesState({ ...misesState, misesId: account.address })
+        localStorage.setItem('isConnected', 'true');
+      });
+    }else{
       open?.()
-      // window.location.reload()
     }
+  }
+  const isUnlocked = ()=>{
+    return provider ? provider.isunlocked() : Promise.resolve(false);
   }
   return {
     getAddress,
+    isUnlocked
   }
 }
