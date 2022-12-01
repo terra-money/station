@@ -2,7 +2,6 @@ import BigNumber from "bignumber.js"
 import { readAmount, toAmount } from "@terra.kitchen/utils"
 import { AuthInfo, Coin, Coins, CreateTxOptions, Dec, Fee, LCDClient, Numeric, SignerData, SignerOptions, SimulateResponse, Tx, TxBody } from "@terra-money/terra.js"
 import { has } from "utils/num"
-import axios from "axios"
 
 export const getPlaceholder = (decimals = 6) => "0.".padEnd(decimals + 2, "0")
 
