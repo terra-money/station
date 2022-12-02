@@ -125,9 +125,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
       if (!address || isWalletEmpty) return 0
       // if (!(wallet || connectedWallet?.availablePost)) return 0
       if (!simulationTx || !simulationTx.msgs.length) return 0
-      
-      const msg: any = simulationTx.msgs[0].toData();
-      if(msg.amount.amount === '0') return 0;
+
 
       const config = {
         ...network,
