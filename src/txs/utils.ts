@@ -81,7 +81,7 @@ export class MisesClient {
     const gasPrices = options.gasPrices || this.lcd.config.gasPrices;
     const gasAdjustment =
       options.gasAdjustment || this.lcd.config.gasAdjustment;
-    const feeDenoms = options.feeDenoms || ['uluna'];
+    const feeDenoms = options.feeDenoms || ['umis'];
     let gas = options.gas;
     let gasPricesCoins: Coins | undefined;
 

@@ -132,7 +132,9 @@ function Tx<TxValues>(props: Props<TxValues>) {
       }
 
       const lcd = new LCDClient(config)
-      const misesClient = new MisesClient(lcd, network.lcd)
+
+      const misesClient = new MisesClient(lcd,  network.lcd)
+
       const unsignedTx = await misesClient.create([{ address }], {
         ...simulationTx,
         feeDenoms: [initialGasDenom],
@@ -154,6 +156,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
     (denom: CoinDenom) => {
       const gasPrice = gasPrices[denom]
       if (isNil(estimatedGas) || !gasPrice) return "0"
+      console.log(estimatedGas)
       return new BigNumber(estimatedGas)
         .times(gasPrice)
         .integerValue(BigNumber.ROUND_CEIL)
@@ -164,7 +167,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   const gasAmount = getGasAmount(gasDenom)
   const gasFee = { amount: gasAmount, denom: gasDenom }
-
+  console.log(gasFee)
   /* max */
   const getNativeMax = () => {
     if (!balance) return
