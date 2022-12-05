@@ -123,7 +123,7 @@ const SendPage = () => {
     if (availableChains?.length) {
       setValue("chain", availableChains[0])
     }
-  }, [asset])
+  }, [asset]) // eslint-disable-line
 
   /* render detected destination chain */
   function renderDestinationChain() {
