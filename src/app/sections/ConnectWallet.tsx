@@ -25,6 +25,9 @@ export const misesStateDefault = atom({
     misesId: "",
   },
 })
+
+let connectLoading = false;
+
 const ConnectWallet = ({ renderButton }: Props) => {
   const { t } = useTranslation()
 
@@ -38,10 +41,22 @@ const ConnectWallet = ({ renderButton }: Props) => {
     (async () => {
       const isunlocked = await isUnlocked()
       const isConnected = localStorage.getItem('isConnected');
-      if(isunlocked && !!isConnected) getAddress()
+      if(isunlocked && !!isConnected && !connectLoading) {
+        connectLoading = true;
+
+        await getAddress();
+
+        connectLoading = false;
+      }
     })()
-    window.addEventListener("keplr_keystorechange", () => {
-      getAddress()
+    window.addEventListener("mises_keystorechange", async () => {
+      if(!connectLoading){
+        connectLoading = true;
+
+        await getAddress()
+
+        connectLoading = false;
+      }
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

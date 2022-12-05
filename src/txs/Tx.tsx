@@ -239,7 +239,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
         const result = await auth.post({ ...tx, fee }, password)
         setLatestTx({ txhash: result.txhash, queryKeys, redirectAfterTx })
       } else {
-        const provider = window.keplr;
+        const provider = window.mises;
         const accountInfo = await lcd.auth.accountInfo(misesState.misesId)
 
         const doc = new SignDoc(
