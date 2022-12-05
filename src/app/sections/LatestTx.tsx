@@ -70,7 +70,7 @@ const TxIndicator = ({ txhash }: { txhash: string }) => {
   }[status]
 
   const txLink = (
-    <FinderLink chainID={latestTx.chainID} tx short>
+    <FinderLink tx short>
       {txhash}
     </FinderLink>
   )
