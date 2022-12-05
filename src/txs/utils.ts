@@ -22,13 +22,13 @@ export const getCoins = (coins: CoinInput[]) => {
       .map(({ amount, denom }) => new Coin(denom, amount))
   )
 }
-
 export class MisesClient {
   lcd: LCDClient
-  baseURL: string
-  constructor(lcd: LCDClient, baseURL: string) {
+  baseURL?: string
+  constructor(lcd: LCDClient, baseURL?: string) {
     this.lcd = lcd;
-    this.baseURL = baseURL;
+    if(baseURL) this.baseURL = baseURL;
+    
   }
   public async create(
     signers: SignerOptions[],
@@ -62,12 +62,13 @@ export class MisesClient {
     if (fee === undefined) {
       fee = await this.estimateFee(signerDatas, options);
     }
-
-    return new Tx(
+    const txParams = new Tx(
       new TxBody(msgs, memo || '', timeoutHeight || 0),
       new AuthInfo([], fee),
       []
-    );
+    )
+    txParams.appendEmptySignatures(signerDatas)
+    return txParams;
   }
   /**
    * Estimates the transaction's fee by simulating it within the node
@@ -134,12 +135,24 @@ export class MisesClient {
 
     const baseURL = this.baseURL;
 
-    const simulateRes = await fetch(baseURL + "/cosmos/tx/v1beta1/simulate",{
-      method:'post',
-      body: JSON.stringify({tx_bytes: this.encode(tx)})
-    }).then(res=>(res.json())).then(d => SimulateResponse.fromData(d))
+    try {
+      const simulateRes = await fetch(baseURL + "/cosmos/tx/v1beta1/simulate",{
+        method:'post',
+        body: JSON.stringify({tx_bytes: this.encode(tx)})
+      }).then(res=>(res.json()))
 
-    return new Dec(gasAdjustment).mul(simulateRes.gas_info.gas_used).toNumber();
+      console.log(simulateRes)
+      
+      if(simulateRes.code===0 || simulateRes.gas_info){
+        const simulate = SimulateResponse.fromData(simulateRes)
+        return new Dec(gasAdjustment).mul(simulate.gas_info.gas_used).toNumber();
+      }
+
+      throw new Error(simulateRes.message)
+    } catch (error: any) {
+      console.log(error)
+      throw new Error(error);
+    }
   }
 
   /**
