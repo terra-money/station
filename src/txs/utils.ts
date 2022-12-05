@@ -24,10 +24,11 @@ export const getCoins = (coins: CoinInput[]) => {
 }
 export class MisesClient {
   lcd: LCDClient
-  baseURL: string
-  constructor(lcd: LCDClient, baseURL: string) {
+  baseURL?: string
+  constructor(lcd: LCDClient, baseURL?: string) {
     this.lcd = lcd;
-    this.baseURL = baseURL;
+    if(baseURL) this.baseURL = baseURL;
+    
   }
   public async create(
     signers: SignerOptions[],
@@ -61,12 +62,13 @@ export class MisesClient {
     if (fee === undefined) {
       fee = await this.estimateFee(signerDatas, options);
     }
-
-    return new Tx(
+    const txParams = new Tx(
       new TxBody(msgs, memo || '', timeoutHeight || 0),
       new AuthInfo([], fee),
       []
-    );
+    )
+    txParams.appendEmptySignatures(signerDatas)
+    return txParams;
   }
   /**
    * Estimates the transaction's fee by simulating it within the node

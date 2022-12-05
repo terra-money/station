@@ -11,7 +11,7 @@ import { head, isNil } from "ramda"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline"
 import { isDenom, isDenomIBC, readDenom } from "@terra.kitchen/utils"
-import { AuthInfo, Coin, Coins, LCDClient, SignDoc, TxBody } from "@terra-money/terra.js"
+import { AuthInfo, Coin, Coins, LCDClient, Msg, SignDoc, TxBody } from "@terra-money/terra.js"
 import { CreateTxOptions, Fee } from "@terra-money/terra.js"
 import { ConnectType, useLCDClient, UserDenied } from "@terra-money/wallet-provider"
 import { CreateTxFailed, TxFailed } from "@terra-money/wallet-provider"
@@ -43,6 +43,7 @@ import { useTx } from "./TxContext"
 import styles from "./Tx.module.scss"
 import { StakeAction } from "./stake/StakeForm"
 import { useConnectWallet } from "auth/hooks/useAddress"
+import { toHump } from "utils/data"
 
 export interface CreateTxErrorOptions {
   code: -1
@@ -156,7 +157,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
     (denom: CoinDenom) => {
       const gasPrice = gasPrices[denom]
       if (isNil(estimatedGas) || !gasPrice) return "0"
-      console.log(estimatedGas)
       return new BigNumber(estimatedGas)
         .times(gasPrice)
         .integerValue(BigNumber.ROUND_CEIL)
@@ -167,7 +167,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   const gasAmount = getGasAmount(gasDenom)
   const gasFee = { amount: gasAmount, denom: gasDenom }
-  console.log(gasFee)
   /* max */
   const getNativeMax = () => {
     if (!balance) return
@@ -250,22 +249,30 @@ function Tx<TxValues>(props: Props<TxValues>) {
           new AuthInfo([], fee),
           new TxBody(tx.msgs,tx.memo,tx.timeoutHeight)
         )
-        const signResponse = await provider.signAmino(chainID,misesState.misesId,doc.toAmino(),{});
-        console.log(signResponse);
-        // const result = await provider.request({
-        //   method: "mises_stakingPostTx",
-        //   params: [
-        //     {
-        //       tx: txString,
-        //       misesId: misesState.misesId,
-        //       gasFee: [gasFee],
-        //       gasLimit: fee.gas_limit,
-        //       feeAmount: toInput(gasFee.amount, 6),
-        //       title: props.tabType,
-        //     },
-        //   ],
-        // })
-        // setLatestTx({ txhash, queryKeys, redirectAfterTx })
+        
+        await provider.signAmino(chainID, address, doc.toAmino(),{});
+        
+        const txString = tx.msgs.map((val: Msg) => {
+          const msg = JSON.parse(val.toJSON())
+          const newMsg = {} as { [key: string]: any }
+          for (const key in msg) {
+            const labelKey = key as string
+            newMsg[`${toHump(labelKey)}`] = msg[key]
+          }
+          delete newMsg["@type"]
+          return {
+            typeUrl: msg["@type"],
+            value: newMsg,
+          }
+        })
+
+        const result = await provider.staking({
+          msgs: txString,
+          gasLimit: fee.gas_limit,
+          gasFee: [gasFee],
+        })
+
+        setLatestTx({ txhash: result.transactionHash, queryKeys, redirectAfterTx })
       }
       onPost?.()
     } catch (error) {

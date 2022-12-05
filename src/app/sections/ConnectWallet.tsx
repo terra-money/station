@@ -40,6 +40,9 @@ const ConnectWallet = ({ renderButton }: Props) => {
       const isConnected = localStorage.getItem('isConnected');
       if(isunlocked && !!isConnected) getAddress()
     })()
+    window.addEventListener("keplr_keystorechange", () => {
+      getAddress()
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
