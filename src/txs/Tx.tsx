@@ -11,7 +11,7 @@ import { head, isNil } from "ramda"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline"
 import { isDenom, isDenomIBC, readDenom } from "@terra.kitchen/utils"
-import { Coin, Coins, Msg } from "@terra-money/terra.js"
+import { Coin, Coins, LCDClient, Msg } from "@terra-money/terra.js"
 import { CreateTxOptions, Fee } from "@terra-money/terra.js"
 import { ConnectType, UserDenied } from "@terra-money/wallet-provider"
 import { CreateTxFailed, TxFailed } from "@terra-money/wallet-provider"
@@ -38,7 +38,7 @@ import useToPostMultisigTx from "pages/multisig/utils/useToPostMultisigTx"
 import { isWallet, useAuth } from "auth"
 import { PasswordError } from "auth/scripts/keystore"
 
-import { toInput } from "./utils"
+import { MisesClient, toInput } from "./utils"
 import { useTx } from "./TxContext"
 import styles from "./Tx.module.scss"
 import { StakeAction } from "./stake/StakeForm"
@@ -121,26 +121,29 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const { data: estimatedGas, ...estimatedGasState } = useQuery(
     [queryKey.tx.create, key],
     async () => {
-      return 2000000
-      // if (!address || isWalletEmpty) return 0
+      // return 2000000
+      if (!address || isWalletEmpty) return 0
       // if (!(wallet || connectedWallet?.availablePost)) return 0
-      // if (!simulationTx || !simulationTx.msgs.length) return 0
+      if (!simulationTx || !simulationTx.msgs.length) return 0
 
-      // const config = {
-      //   ...network,
-      //   URL: network.lcd,
-      //   gasAdjustment,
-      //   gasPrices: { [initialGasDenom]: gasPrices[initialGasDenom] },
-      // }
 
-      // const lcd = new LCDClient(config)
+      const config = {
+        ...network,
+        URL: network.lcd,
+        gasAdjustment,
+        gasPrices: { [initialGasDenom]: gasPrices[initialGasDenom] },
+      }
 
-      // const unsignedTx = await lcd.tx.create([{ address }], {
-      //   ...simulationTx,
-      //   feeDenoms: [initialGasDenom],
-      // })
+      const lcd = new LCDClient(config)
 
-      // return unsignedTx.auth_info.fee.gas_limit
+      const misesClient = new MisesClient(lcd,  network.lcd)
+
+      const unsignedTx = await misesClient.create([{ address }], {
+        ...simulationTx,
+        feeDenoms: [initialGasDenom],
+      })
+
+      return unsignedTx.auth_info.fee.gas_limit
     },
     {
       ...RefetchOptions.INFINITY,
@@ -157,6 +160,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
     (denom: CoinDenom) => {
       const gasPrice = gasPrices[denom]
       if (isNil(estimatedGas) || !gasPrice) return "0"
+      console.log(estimatedGas)
       return new BigNumber(estimatedGas)
         .times(gasPrice)
         .integerValue(BigNumber.ROUND_CEIL)
@@ -167,7 +171,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   const gasAmount = getGasAmount(gasDenom)
   const gasFee = { amount: gasAmount, denom: gasDenom }
-
+  console.log(gasFee)
   /* max */
   const getNativeMax = () => {
     if (!balance) return
