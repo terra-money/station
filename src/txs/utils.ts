@@ -135,12 +135,24 @@ export class MisesClient {
 
     const baseURL = this.baseURL;
 
-    const simulateRes = await fetch(baseURL + "/cosmos/tx/v1beta1/simulate",{
-      method:'post',
-      body: JSON.stringify({tx_bytes: this.encode(tx)})
-    }).then(res=>(res.json())).then(d => SimulateResponse.fromData(d))
+    try {
+      const simulateRes = await fetch(baseURL + "/cosmos/tx/v1beta1/simulate",{
+        method:'post',
+        body: JSON.stringify({tx_bytes: this.encode(tx)})
+      }).then(res=>(res.json()))
 
-    return new Dec(gasAdjustment).mul(simulateRes.gas_info.gas_used).toNumber();
+      console.log(simulateRes)
+      
+      if(simulateRes.code===0 || simulateRes.gas_info){
+        const simulate = SimulateResponse.fromData(simulateRes)
+        return new Dec(gasAdjustment).mul(simulate.gas_info.gas_used).toNumber();
+      }
+
+      throw new Error(simulateRes.message)
+    } catch (error: any) {
+      console.log(error)
+      throw new Error(error);
+    }
   }
 
   /**
