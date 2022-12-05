@@ -11,6 +11,7 @@ export const OBSERVER = "wss://observer.terra.dev"
 /* website */
 export const STATION = "https://station.terra.money"
 export const FINDER = "https://terrascope.info"
+export const MINT_SCAN = "https://www.mintscan.io"
 export const EXTENSION =
   "https://chrome.google.com/webstore/detail/aiifbnbfobpmeekipheeijimdpnlpgpp"
 export const TUTORIAL =

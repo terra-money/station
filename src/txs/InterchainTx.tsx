@@ -191,16 +191,13 @@ function InterchainTx<TxValues>(props: Props<TxValues>) {
   const [password, setPassword] = useState("")
   const [incorrect, setIncorrect] = useState<string>()
 
-  const disabled =
-    passwordRequired && !password
-      ? t("Failed to load tax data")
-      : estimatedGasState.isLoading
-      ? t("Estimating fee...")
-      : estimatedGasState.error
-      ? t("Fee estimation failed")
-      : isBroadcasting
-      ? t("Broadcasting a tx...")
-      : props.disabled || ""
+  const disabled = estimatedGasState.isLoading
+    ? t("Estimating fee...")
+    : estimatedGasState.error
+    ? t("Fee estimation failed")
+    : isBroadcasting
+    ? t("Broadcasting a tx...")
+    : props.disabled || ""
 
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<Error>()

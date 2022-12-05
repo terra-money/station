@@ -2,19 +2,19 @@ import { ForwardedRef, HTMLAttributes, PropsWithChildren } from "react"
 import { forwardRef } from "react"
 import classNames from "classnames"
 import { truncate } from "@terra.kitchen/utils"
-import { FINDER } from "config/constants"
+import { FINDER, MINT_SCAN } from "config/constants"
 import { useNetworkName } from "data/wallet"
+import { useChains } from "data/queries/chains"
 import { ExternalLink } from "./External"
 import styles from "./FinderLink.module.scss"
 
 interface Props extends HTMLAttributes<HTMLAnchorElement> {
   value?: string
-
   /* path (default: address) */
   block?: boolean
   tx?: boolean
   validator?: boolean
-
+  chainID?: string
   /* customize */
   short?: boolean
 }
@@ -22,11 +22,22 @@ interface Props extends HTMLAttributes<HTMLAnchorElement> {
 const FinderLink = forwardRef(
   (
     { children, short, ...rest }: PropsWithChildren<Props>,
-    ref: ForwardedRef<HTMLAnchorElement>,
+    ref: ForwardedRef<HTMLAnchorElement>
   ) => {
-    const { block, tx, validator, ...attrs } = rest
+    const { block, tx, validator, chainID, ...attrs } = rest
     const networkName = useNetworkName()
-    const path = tx
+    const chains = useChains()
+    const network = chainID && chains[chainID]?.name.toLowerCase()
+
+    const interchainPath = tx
+      ? "txs"
+      : block
+      ? "blocks"
+      : validator
+      ? "validators"
+      : "account"
+
+    const finderPath = tx
       ? "tx"
       : block
       ? "block"
@@ -35,7 +46,11 @@ const FinderLink = forwardRef(
       : "address"
 
     const value = rest.value ?? children
-    const link = [FINDER, networkName, path, value].join("/")
+    const link =
+      network === "terra"
+        ? [FINDER, networkName, finderPath, value].join("/")
+        : [MINT_SCAN, network, interchainPath, value].join("/")
+
     const className = classNames(attrs.className, styles.link)
 
     return (
@@ -43,7 +58,7 @@ const FinderLink = forwardRef(
         {short && typeof children === "string" ? truncate(children) : children}
       </ExternalLink>
     )
-  },
+  }
 )
 
 export default FinderLink
