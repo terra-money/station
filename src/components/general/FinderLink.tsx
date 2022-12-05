@@ -47,7 +47,7 @@ const FinderLink = forwardRef(
 
     const value = rest.value ?? children
     const link =
-      network === "terra"
+      !network || network === "terra"
         ? [FINDER, networkName, finderPath, value].join("/")
         : [MINT_SCAN, network, interchainPath, value].join("/")
 
