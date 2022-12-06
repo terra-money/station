@@ -20,7 +20,7 @@ const ChainSelector = ({ chainsList, onChange }: Props) => {
 
   useEffect(() => {
     setChain(list[0].chainID)
-  }, [list]) // eslint-disable-line
+  }, [list])
 
   useEffect(() => {
     onChange(chain)
