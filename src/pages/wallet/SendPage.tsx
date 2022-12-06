@@ -118,6 +118,13 @@ const SendPage = () => {
     }
   }, [form, recipient, setValue])
 
+  /* resolve source chain */
+  useEffect(() => {
+    if (availableChains?.length) {
+      setValue("chain", availableChains[0])
+    }
+  }, [asset]) // eslint-disable-line
+
   /* render detected destination chain */
   function renderDestinationChain() {
     if (!destinationAddress || !AccAddress.validate(destinationAddress))
