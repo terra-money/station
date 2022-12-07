@@ -1,7 +1,7 @@
 import { combineState } from "data/query"
 import { useDelegations, useUnbondings } from "data/queries/staking"
 import { useRewards } from "data/queries/distribution"
-import { Col, Row } from "components/layout"
+import { Col } from "components/layout"
 import { Fetching } from "components/feedback"
 import DelegationsPromote from "app/containers/DelegationsPromote"
 import Delegations from "./Delegations"
@@ -24,17 +24,9 @@ const Staked = () => {
 
     return (
       <Col>
-        {/* <Col> */}
         <Delegations />
-        {/* </Col> */}
-
-        {/* <Col> */}
         <Unbondings />
-        {/* </Col> */}
-
-        {/* <Col> */}
         <Rewards />
-        {/* </Col> */}
       </Col>
     )
   }

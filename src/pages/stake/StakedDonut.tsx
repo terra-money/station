@@ -1,118 +1,123 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Proposal } from "@terra-money/terra.js"
-import { Col, Row, Card } from "components/layout"
+import { combineState } from "data/query"
+import { Col } from "components/layout"
+import { Fetching } from "components/feedback"
 import styles from "./StakedDonut.module.scss"
 import ChainFilter from "components/layout/ChainFilter"
-import { useNetworkName } from "data/wallet"
-import { useProposals, useProposalStatusItem } from "data/queries/gov"
-import { useTerraAssets } from "data/Terra/TerraAssets"
-import { combineState } from "data/query"
-import { Fetching, Empty } from "components/feedback"
-import ProposalItem from "../gov/ProposalItem"
-import { useDelegations } from "data/queries/staking"
-import GovernanceParams from "../gov/GovernanceParams"
 import {
-  calcDelegationsTotal,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts"
+import {
   useInterchainDelegations,
+  useCalcInterchainDelegationsTotal,
 } from "data/queries/staking"
-import { useMemoizedCalcValue } from "data/queries/coingecko"
 
-// import { Page, Card, Table, Flex, Grid } from "components/layout";
-
-const StakedDonut = ({ status }: { status: Proposal.Status }) => {
+const StakedDonut = () => {
   const { t } = useTranslation()
-  const calcValue = useMemoizedCalcValue()
 
-  const { data: delegations, ...delegationsState } = useDelegations()
-  const { data: interchainDelegations, ...interChaindelegationsState } =
-    useInterchainDelegations()
-  console.log(
-    "🚀 ~ file: StakedDonut.tsx ~ line 29 ~ StakedDonut ~ interchainDelegations",
+  const interchainDelegations = useInterchainDelegations()
+  const state = combineState(...interchainDelegations)
+
+  const { currencyTotal, tableData } = useCalcInterchainDelegationsTotal(
     interchainDelegations
   )
 
-  const state = combineState(delegationsState)
+  const COLORS = ["#4672ED", "#7893F5", "#FF7940", "#FF9F40", "#F4BE37"]
 
-  const networkName = useNetworkName()
+  const RenderLegend = (props: any) => {
+    const { payload } = props
 
-  const { data: whitelistData, ...whitelistState } = useTerraAssets<{
-    [key: string]: number[]
-  }>("/station/proposals.json")
-  console.log(
-    "🚀 ~ file: StakedDonut.tsx ~ line 35 ~ StakedDonut ~ whitelistData",
-    whitelistData
-  )
-  const whitelist = whitelistData?.[networkName]
+    return (
+      <ul className={styles.legend}>
+        {payload.map((entry: any, index: any) => (
+          <li key={`item-${index}`} className={styles.detailLine}>
+            <div
+              className={styles.circle}
+              style={{ backgroundColor: entry.color }}
+            ></div>
+            <p className={styles.denom}>{entry.value}</p>
+            <p className={styles.percent}>
+              {Math.round(entry.payload.percent * 100)}%
+            </p>
+          </li>
+        ))}
+      </ul>
+    )
+  }
 
-  const [showAll, setShowAll] = useState(!!whitelist)
-  const toggle = () => setShowAll((state) => !state)
+  const RenderTooltip = (props: any) => {
+    const { payload } = props
 
-  const { data, ...proposalState } = useProposals(status)
-  const { label } = useProposalStatusItem(status)
+    return (
+      <div className={styles.tooltip}>
+        <h6>{payload[0]?.name}</h6>
+        <div className={styles.infoLine}>
+          <p>Balance: </p>
+          <p>{payload[0]?.payload.amount}</p>
+        </div>
+        <div className={styles.infoLine}>
+          <p>Value: </p>
+          <p>{payload[0]?.payload.value.toFixed(5)}</p>
+        </div>
+      </div>
+    )
+  }
 
-  if (!(data && whitelistData)) return null
+  const render = () => {
+    if (!interchainDelegations) return null
 
-  const proposals =
-    status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && !showAll
-      ? data.filter(
-          ({ prop, chain }) =>
-            chain !== "phoenix-1" || whitelist?.includes(prop.id)
-        )
-      : data
-
-  proposals.sort(
-    (a, b) =>
-      (b.prop.voting_start_time || b.prop.submit_time).getTime() -
-      (a.prop.voting_start_time || a.prop.submit_time).getTime()
-  )
-
-  if (!delegations) return null
-
-  const total = calcDelegationsTotal(delegations)
-
-  return (
-    <Col span={2}>
-      <ChainFilter title="Staked Funds" all>
-        {(chain) => {
-          const filtered = proposals.filter((p) => !chain || p.chain === chain)
-          return !filtered.length ? (
-            <>
-              <Card>
-                <Empty>
-                  {t("No proposals in {{label}} period", {
-                    label: label.toLowerCase(),
-                  })}
-                </Empty>
-              </Card>
-              {chain && <GovernanceParams chain={chain} />}
-            </>
-          ) : (
-            <>
-              <section className={styles.list}>
-                {filtered.map(({ prop, chain }) => (
-                  <Card
-                    to={`/proposal/${chain}/${prop.id}`}
-                    className={styles.link}
-                    key={prop.id}
-                  >
-                    <ProposalItem
-                      proposal={prop}
-                      chain={chain}
-                      showVotes={
-                        status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD
-                      }
+    return (
+      <Col span={2}>
+        <ChainFilter title={t("Staked Funds")} all>
+          {(chain) => {
+            return (
+              <section className={styles.graphContainer}>
+                <ResponsiveContainer>
+                  <PieChart>
+                    <Legend
+                      layout="vertical"
+                      verticalAlign="middle"
+                      align="right"
+                      content={<RenderLegend />}
+                      className="legend"
                     />
-                  </Card>
-                ))}
+                    <Tooltip content={<RenderTooltip />} />
+                    <Pie
+                      data={tableData[chain || "all"]}
+                      cx={125}
+                      innerRadius={60}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      paddingAngle={0}
+                      dataKey="value"
+                    >
+                      {tableData[chain || "all"].map(
+                        (entry: any, index: any) => (
+                          <Cell
+                            key={`cell-${index}`}
+                            fill={COLORS[index % COLORS.length]}
+                            stroke="none"
+                          />
+                        )
+                      )}
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
               </section>
-              {chain && <GovernanceParams chain={chain} />}
-            </>
-          )
-        }}
-      </ChainFilter>
-    </Col>
-  )
+            )
+          }}
+        </ChainFilter>
+      </Col>
+    )
+  }
+
+  return <Fetching {...state}>{render()}</Fetching>
 }
 
 export default StakedDonut

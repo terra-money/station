@@ -1,22 +1,66 @@
 @import "mixins";
 
-.list {
-  display: grid;
-  gap: var(--grid-gap);
+.graphContainer {
+  height: 300px;
+  max-width: 475px;
 
-  @include desktop {
-    grid-template-columns: repeat(2, 1fr);
+  .rechartsWrapper {
+    outline: none;
   }
 }
 
-.link {
-  display: grid;
-  color: inherit;
-  border: var(--border-width) solid var(--card-border);
+.legend {
+  margin-right: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 
-  &:hover {
-    text-decoration: none;
-    border: var(--border-width) solid var(--info);
-    box-sizing: border-box;
+  .detailLine {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .circle {
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+  }
+
+  .denom {
+    text-transform: uppercase;
+    font-weight: 300;
+    color: var(--text-muted);
+  }
+
+  .percent {
+    font-weight: 400;
+  }
+}
+
+.tooltip {
+  min-width: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: var(--card-bg);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+
+  h6 {
+    text-transform: uppercase;
+    font-weight: var(--bold);
+  }
+
+  .infoLine {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  p {
+    font-weight: var(--normal);
+    font-size: 12px;
   }
 }

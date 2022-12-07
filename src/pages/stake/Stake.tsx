@@ -1,16 +1,17 @@
 import { useTranslation } from "react-i18next"
 import { LinkButton } from "components/general"
 import { Col, Page, Row } from "components/layout"
-import classNames from "classnames/bind"
 import Staked from "./Staked"
 import Validators from "./Validators"
 import StakedDonut from "./StakedDonut"
-import styles from "./Stake.module.scss"
-
-const cx = classNames.bind(styles)
+import { useInterchainDelegations } from "data/queries/staking"
 
 const Stake = () => {
   const { t } = useTranslation()
+
+  const interchainDelegations = useInterchainDelegations()
+
+  if (!interchainDelegations) return null
 
   return (
     <Page
@@ -22,15 +23,14 @@ const Stake = () => {
       }
     >
       <Col>
-        <Row>
-          <StakedDonut status={2} />
+        {interchainDelegations.length ? (
+          <Row>
+            <StakedDonut />
+            <Staked />
+          </Row>
+        ) : (
           <Staked />
-        </Row>
-        {/* <header className={cx(styles.header, { trisect: false })}>
-          <StakedDonut />
-          <Staked />
-        </header> */}
-
+        )}
         <Validators />
       </Col>
     </Page>
