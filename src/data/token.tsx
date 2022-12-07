@@ -62,9 +62,8 @@ interface Props {
 }
 
 export const WithTokenItem = ({ token, children }: Props) => {
-  const tokenItem = useTokenItem(token)
-  if (!tokenItem) return null
-  return <>{children(tokenItem)}</>
+  const readNativeDenom = useNativeDenoms()
+  return <>{children(readNativeDenom(token))}</>
 }
 
 /* helpers */

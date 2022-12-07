@@ -19,9 +19,12 @@ const ChainSelector = ({ chainsList, onChange }: Props) => {
   const [chain, setChain] = useState(list[0].chainID)
 
   useEffect(() => {
+    setChain(list[0].chainID)
+  }, [list])
+
+  useEffect(() => {
     onChange(chain)
-    // eslint-disable-next-line
-  }, [chain])
+  }, [chain]) // eslint-disable-line
 
   return (
     <div className={styles.chain__selector}>
