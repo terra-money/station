@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { isDenomTerraNative } from "@terra.kitchen/utils"
+import { isDenomTerraNative } from "@terra-rebels/kitchen-utils"
 import { WithTokenItem } from "data/token"
 import { ModalButton } from "components/feedback"
 import { TokenCard, TokenCardGrid } from "components/token"

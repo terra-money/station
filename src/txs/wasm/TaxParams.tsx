@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react"
 import { zipObj } from "ramda"
-import { Coin } from "@terra-money/terra.js"
+import { Coin } from "@terra-rebels/terra.js"
 import createContext from "utils/createContext"
 import { useIsClassic } from "data/query"
 import { useBankBalance } from "data/queries/bank"

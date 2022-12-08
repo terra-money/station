@@ -1,6 +1,6 @@
 import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
-import { ValAddress } from "@terra-money/terra.js"
+import { ValAddress } from "@terra-rebels/terra.js"
 import { has } from "utils/num"
 import { combineState } from "data/query"
 import { useCurrency } from "data/settings/Currency"

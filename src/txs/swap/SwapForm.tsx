@@ -4,9 +4,9 @@ import { useLocation } from "react-router-dom"
 import { useQuery } from "react-query"
 import { useForm } from "react-hook-form"
 import BigNumber from "bignumber.js"
-import { AccAddress } from "@terra-money/terra.js"
-import { isDenomTerra } from "@terra.kitchen/utils"
-import { toAmount } from "@terra.kitchen/utils"
+import { AccAddress } from "@terra-rebels/terra.js"
+import { isDenomTerra } from "@terra-rebels/kitchen-utils"
+import { toAmount } from "@terra-rebels/kitchen-utils"
 
 /* helpers */
 import { has } from "utils/num"

@@ -1,7 +1,7 @@
 import { PropsWithChildren, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { zipObj } from "ramda"
-import { isDenomTerraNative } from "@terra.kitchen/utils"
+import { isDenomTerraNative } from "@terra-rebels/kitchen-utils"
 import { getAmount, sortCoins } from "utils/coin"
 import createContext from "utils/createContext"
 import { useCurrency } from "data/settings/Currency"

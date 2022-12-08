@@ -1,4 +1,4 @@
-import { AccAddress } from "@terra-money/terra.js"
+import { AccAddress } from "@terra-rebels/terra.js"
 import { combineState } from "data/query"
 import { useCustomTokensIBC } from "data/settings/CustomTokens"
 import { useCustomTokensCW20 } from "data/settings/CustomTokens"

@@ -1,4 +1,4 @@
-import { Proposal } from "@terra-money/terra.js"
+import { Proposal } from "@terra-rebels/terra.js"
 import { useGetProposalStatusItem } from "data/queries/gov"
 import { Tabs } from "components/layout"
 import ProposalsByStatus from "./ProposalsByStatus"

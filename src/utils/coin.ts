@@ -1,5 +1,5 @@
-import { Coins } from "@terra-money/terra.js"
-import { isDenom, isDenomIBC } from "@terra.kitchen/utils"
+import { Coins } from "@terra-rebels/terra.js"
+import { isDenom, isDenomIBC } from "@terra-rebels/kitchen-utils"
 
 /* coin */
 export const getAmount = (coins: Coins, denom: Denom, fallback = "0") => {

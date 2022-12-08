@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { formatNumber } from "@terra.kitchen/utils"
+import { formatNumber } from "@terra-rebels/kitchen-utils"
 import { useCurrency } from "data/settings/Currency"
 import { useThemeAnimation } from "data/settings/Theme"
 import { ChartInterval, useLunaPriceChart } from "data/Terra/TerraAPI"

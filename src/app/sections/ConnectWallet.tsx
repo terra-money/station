@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
 import UsbIcon from "@mui/icons-material/Usb"
-import { useWallet } from "@terra-money/wallet-provider"
+import { useWallet } from "@terra-rebels/wallet-provider"
 import { STATION } from "config/constants"
 import { RenderButton } from "types/components"
 import { useAddress } from "data/wallet"

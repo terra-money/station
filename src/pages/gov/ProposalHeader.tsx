@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { Proposal } from "@terra-money/terra.js"
+import { Proposal } from "@terra-rebels/terra.js"
 import { useParseProposalType } from "data/queries/gov"
 import { useProposalStatusItem } from "data/queries/gov"
 import { ToNow } from "components/display"

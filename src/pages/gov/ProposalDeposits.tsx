@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
 import BigNumber from "bignumber.js"
-import { readPercent } from "@terra.kitchen/utils"
+import { readPercent } from "@terra-rebels/kitchen-utils"
 import { getAmount } from "utils/coin"
 import { combineState } from "data/query"
 import { useProposal } from "data/queries/gov"

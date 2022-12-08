@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import { LCDClient } from "@terra-money/terra.js"
+import { LCDClient } from "@terra-rebels/terra.js"
 import { useNetwork } from "data/wallet"
 import { useIsClassic } from "data/query"
 

@@ -1,4 +1,4 @@
-import { readDenom } from "@terra.kitchen/utils"
+import { readDenom } from "@terra-rebels/kitchen-utils"
 import { useActiveDenoms } from "data/queries/oracle"
 import { useCurrencyState } from "data/settings/Currency"
 import { RadioGroup } from "components/form"

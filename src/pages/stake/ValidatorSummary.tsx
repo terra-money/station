@@ -1,6 +1,6 @@
 import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
-import { readPercent } from "@terra.kitchen/utils"
+import { readPercent } from "@terra-rebels/kitchen-utils"
 import { TerraValidator } from "types/validator"
 import { calcSelfDelegation } from "data/Terra/TerraAPI"
 import { Card } from "components/layout"

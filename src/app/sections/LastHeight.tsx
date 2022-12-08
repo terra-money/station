@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
 import classNames from "classnames"
-import { formatNumber } from "@terra.kitchen/utils"
+import { formatNumber } from "@terra-rebels/kitchen-utils"
 import { useTerraObserver } from "data/Terra/TerraObserver"
 import { FinderLink } from "components/general"
 import { Flex } from "components/layout"

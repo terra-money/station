@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react"
 import { useTranslation } from "react-i18next"
-import { readPercent } from "@terra.kitchen/utils"
+import { readPercent } from "@terra-rebels/kitchen-utils"
 import { useAnchorAPY } from "data/external/anchor"
 import { Card } from "components/layout"
 import AnchorEarnLogo from "styles/images/AnchorEarn/AnchorEarnLogo"

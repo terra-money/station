@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { atom, useRecoilState } from "recoil"
-import { Proposal } from "@terra-money/terra.js"
+import { Proposal } from "@terra-rebels/terra.js"
 import { combineState } from "data/query"
 import { useProposals, useProposalStatusItem } from "data/queries/gov"
 import { useTerraAssets } from "data/Terra/TerraAssets"

@@ -1,6 +1,6 @@
 import { always } from "ramda"
 import BigNumber from "bignumber.js"
-import { AccAddress } from "@terra-money/terra.js"
+import { AccAddress } from "@terra-rebels/terra.js"
 import { validateMsg } from "utils/data"
 
 const lessThan = (max: number, label = "Amount", optional = false) => {

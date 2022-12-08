@@ -1,5 +1,5 @@
 import { useQueries, useQuery } from "react-query"
-import { isDenom, isDenomLuna, isDenomTerra } from "@terra.kitchen/utils"
+import { isDenom, isDenomLuna, isDenomTerra } from "@terra-rebels/kitchen-utils"
 import { queryKey, RefetchOptions } from "../query"
 import { useLCDClient } from "./lcdClient"
 
@@ -17,7 +17,9 @@ export const useTaxRate = (disabled = false) => {
 
 const useGetQueryTaxCap = (disabled = false) => {
   const lcd = useLCDClient(),
-    { config: { isClassic } } = useLCDClient()
+    {
+      config: { isClassic },
+    } = useLCDClient()
   return (denom?: Denom) => ({
     queryKey: [queryKey.treasury.taxCap, denom],
     queryFn: async () => {

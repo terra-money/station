@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { AccAddress, Validator } from "@terra-money/terra.js"
+import { AccAddress, Validator } from "@terra-rebels/terra.js"
 import { FinderLink } from "components/general"
 import { Card, Grid } from "components/layout"
 import { ValidatorNumber } from "./components/ValidatorNumbers"

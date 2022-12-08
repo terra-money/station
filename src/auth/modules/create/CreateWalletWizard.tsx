@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import { MnemonicKey } from "@terra-money/terra.js"
+import { MnemonicKey } from "@terra-rebels/terra.js"
 import createContext from "utils/createContext"
 import { addWallet } from "../../scripts/keystore"
 import CreateWalletForm from "./CreateWalletForm"

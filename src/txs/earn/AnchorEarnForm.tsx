@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next"
 import { useCallback, useMemo } from "react"
 import { useForm } from "react-hook-form"
-import { toAmount } from "@terra.kitchen/utils"
+import { toAmount } from "@terra-rebels/kitchen-utils"
 import { has } from "utils/num"
 import { getAmount } from "utils/coin"
 import { queryKey } from "data/query"

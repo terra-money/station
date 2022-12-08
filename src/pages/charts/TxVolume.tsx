@@ -3,7 +3,11 @@ import { useTranslation } from "react-i18next"
 import BigNumber from "bignumber.js"
 import { head, last } from "ramda"
 import { capitalize } from "@mui/material"
-import { isDenomTerraNative, readAmount, readDenom } from "@terra.kitchen/utils"
+import {
+  isDenomTerraNative,
+  readAmount,
+  readDenom,
+} from "@terra-rebels/kitchen-utils"
 import { sortDenoms } from "utils/coin"
 import { useCurrency } from "data/settings/Currency"
 import { Aggregate, useTxVolume } from "data/Terra/TerraAPI"

@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
-import { isDenomLuna, isDenomTerra } from "@terra.kitchen/utils"
-import { readPercent } from "@terra.kitchen/utils"
+import { isDenomLuna, isDenomTerra } from "@terra-rebels/kitchen-utils"
+import { readPercent } from "@terra-rebels/kitchen-utils"
 import { toPrice } from "utils/num"
 import { useMarketParams } from "data/queries/market"
 import { useOracleParams } from "data/queries/oracle"

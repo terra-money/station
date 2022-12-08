@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { readAmount } from "@terra.kitchen/utils"
+import { readAmount } from "@terra-rebels/kitchen-utils"
 import { combineState } from "data/query"
 import { useSupply } from "data/queries/bank"
 import { useStakingPool } from "data/queries/staking"

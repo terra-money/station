@@ -1,7 +1,7 @@
 import { ForwardedRef, HTMLAttributes, PropsWithChildren } from "react"
 import { forwardRef } from "react"
 import classNames from "classnames"
-import { truncate } from "@terra.kitchen/utils"
+import { truncate } from "@terra-rebels/kitchen-utils"
 import { FINDER } from "config/constants"
 import { useNetworkName } from "data/wallet"
 import { ExternalLink } from "./External"
@@ -22,7 +22,7 @@ interface Props extends HTMLAttributes<HTMLAnchorElement> {
 const FinderLink = forwardRef(
   (
     { children, short, ...rest }: PropsWithChildren<Props>,
-    ref: ForwardedRef<HTMLAnchorElement>,
+    ref: ForwardedRef<HTMLAnchorElement>
   ) => {
     const { block, tx, validator, ...attrs } = rest
     const networkName = useNetworkName()
@@ -43,7 +43,7 @@ const FinderLink = forwardRef(
         {short && typeof children === "string" ? truncate(children) : children}
       </ExternalLink>
     )
-  },
+  }
 )
 
 export default FinderLink

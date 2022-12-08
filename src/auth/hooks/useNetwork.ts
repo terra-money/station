@@ -1,5 +1,5 @@
 import { atom, useRecoilState, useRecoilValue } from "recoil"
-import { useWallet } from "@terra-money/wallet-provider"
+import { useWallet } from "@terra-rebels/wallet-provider"
 import { useNetworks } from "app/InitNetworks"
 import { sandbox } from "../scripts/env"
 import { getStoredNetwork, storeNetwork } from "../scripts/network"

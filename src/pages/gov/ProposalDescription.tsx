@@ -1,7 +1,7 @@
 import { Fragment, useState } from "react"
 import { useTranslation } from "react-i18next"
 import xss from "xss"
-import { Proposal } from "@terra-money/terra.js"
+import { Proposal } from "@terra-rebels/terra.js"
 import { ExternalLink } from "components/general"
 import { Grid } from "components/layout"
 import { TooltipIcon } from "components/display"

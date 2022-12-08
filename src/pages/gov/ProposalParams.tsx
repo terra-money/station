@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { readPercent } from "@terra.kitchen/utils"
+import { readPercent } from "@terra-rebels/kitchen-utils"
 import { useTallyParams } from "data/queries/gov"
 import { Card } from "components/layout"
 import DataList from "./components/DataList"

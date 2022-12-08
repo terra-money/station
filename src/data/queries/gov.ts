@@ -2,11 +2,11 @@ import { useTranslation } from "react-i18next"
 import { useQuery } from "react-query"
 import { last } from "ramda"
 import { sentenceCase } from "sentence-case"
-import { Proposal, Vote } from "@terra-money/terra.js"
+import { Proposal, Vote } from "@terra-rebels/terra.js"
 import { Color } from "types/components"
 import { Pagination, queryKey, RefetchOptions, useIsClassic } from "../query"
 import { useLCDClient } from "./lcdClient"
-import { PaginationOptions } from "@terra-money/terra.js/dist/client/lcd/APIRequester"
+import { PaginationOptions } from "@terra-rebels/terra.js/dist/client/lcd/APIRequester"
 
 export const useVotingParams = () => {
   const lcd = useLCDClient()

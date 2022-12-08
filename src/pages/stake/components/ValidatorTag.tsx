@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next"
 /* FIXME(terra.js): Import from terra.js */
-import { BondStatus } from "@terra-money/terra.proto/cosmos/staking/v1beta1/staking"
-import { bondStatusFromJSON } from "@terra-money/terra.proto/cosmos/staking/v1beta1/staking"
+import { BondStatus } from "@terra-rebels/terra.proto/cosmos/staking/v1beta1/staking"
+import { bondStatusFromJSON } from "@terra-rebels/terra.proto/cosmos/staking/v1beta1/staking"
 import { Tag } from "components/display"
 
 export const ValidatorStatus = ({ status }: { status: BondStatus }) => {

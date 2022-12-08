@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { ContractInfo } from "@terra-money/terra.js"
+import { ContractInfo } from "@terra-rebels/terra.js"
 import { Pre, FinderLink } from "components/general"
 import { Grid } from "components/layout"
 import styles from "./ContractDetails.module.scss"

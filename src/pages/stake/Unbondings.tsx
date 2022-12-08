@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { AccAddress, Dec } from "@terra-money/terra.js"
+import { AccAddress, Dec } from "@terra-rebels/terra.js"
 import { getMaxHeightStyle } from "utils/style"
 import { useCurrency } from "data/settings/Currency"
 import { combineState } from "data/query"

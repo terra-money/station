@@ -1,4 +1,4 @@
-import { Vote } from "@terra-money/terra.js"
+import { Vote } from "@terra-rebels/terra.js"
 
 export interface TerraProposalItem {
   voter: string

@@ -1,6 +1,6 @@
 import classNames from "classnames/bind"
 import BigNumber from "bignumber.js"
-import { readPercent } from "@terra.kitchen/utils"
+import { readPercent } from "@terra-rebels/kitchen-utils"
 import { ReactComponent as Tilde } from "./Tilde.svg"
 import styles from "./Orb.module.scss"
 

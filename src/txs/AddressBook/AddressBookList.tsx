@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next"
 import AddIcon from "@mui/icons-material/Add"
 import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined"
-import { truncate } from "@terra.kitchen/utils"
+import { truncate } from "@terra-rebels/kitchen-utils"
 import { RenderButton } from "types/components"
 import { useAddressBook } from "data/settings/AddressBook"
 import { InternalButton } from "components/general"

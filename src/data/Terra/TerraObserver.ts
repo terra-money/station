@@ -1,4 +1,4 @@
-import { Block } from "@terra-money/terra.js"
+import { Block } from "@terra-rebels/terra.js"
 import { useEffect, useRef, useState } from "react"
 import { OBSERVER } from "config/constants"
 import { useChainID } from "../wallet"
