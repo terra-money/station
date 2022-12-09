@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { combineState } from "data/query"
 import { Col } from "components/layout"
@@ -41,6 +40,11 @@ const StakedDonut = () => {
               className={styles.circle}
               style={{ backgroundColor: entry.color }}
             ></div>
+            <img
+              className={styles.icon}
+              src={entry.payload.icon}
+              alt={entry.value}
+            />
             <p className={styles.denom}>{entry.value}</p>
             <p className={styles.percent}>
               {Math.round(entry.payload.percent * 100)}%
@@ -74,50 +78,52 @@ const StakedDonut = () => {
 
     return (
       <Col span={2}>
-        <ChainFilter title={t("Staked Funds")} all>
-          {(chain) => {
-            return (
-              <section className={styles.graphContainer}>
-                <ResponsiveContainer>
-                  <PieChart>
-                    <Legend
-                      layout="vertical"
-                      verticalAlign="middle"
-                      align="right"
-                      content={<RenderLegend />}
-                      className="legend"
-                    />
-                    <Tooltip content={<RenderTooltip />} />
-                    <Pie
-                      data={tableData[chain || "all"]}
-                      cx={125}
-                      innerRadius={60}
-                      outerRadius={100}
-                      fill="#8884d8"
-                      paddingAngle={0}
-                      dataKey="value"
-                    >
-                      {tableData[chain || "all"].map(
-                        (entry: any, index: any) => (
-                          <Cell
-                            key={`cell-${index}`}
-                            fill={COLORS[index % COLORS.length]}
-                            stroke="none"
-                          />
-                        )
-                      )}
-                    </Pie>
-                  </PieChart>
-                </ResponsiveContainer>
-              </section>
-            )
-          }}
-        </ChainFilter>
+        <div className={styles.forFetchingBar}>
+          <Fetching {...state}>
+            <ChainFilter title={t("Staked Funds")} all {...state}>
+              {(chain) => (
+                <section className={styles.graphContainer}>
+                  <ResponsiveContainer>
+                    <PieChart>
+                      <Legend
+                        layout="vertical"
+                        verticalAlign="middle"
+                        align="right"
+                        content={<RenderLegend />}
+                        className="legend"
+                      />
+                      <Tooltip content={<RenderTooltip />} />
+                      <Pie
+                        data={tableData[chain || "all"]}
+                        cx={125}
+                        innerRadius={60}
+                        outerRadius={100}
+                        fill="#8884d8"
+                        paddingAngle={0}
+                        dataKey="value"
+                      >
+                        {tableData[chain || "all"].map(
+                          (entry: any, index: any) => (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={COLORS[index % COLORS.length]}
+                              stroke="none"
+                            />
+                          )
+                        )}
+                      </Pie>
+                    </PieChart>
+                  </ResponsiveContainer>
+                </section>
+              )}
+            </ChainFilter>
+          </Fetching>
+        </div>
       </Col>
     )
   }
 
-  return <Fetching {...state}>{render()}</Fetching>
+  return render()
 }
 
 export default StakedDonut

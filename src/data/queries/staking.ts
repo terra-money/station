@@ -49,8 +49,6 @@ export const useInterchainDelegations = () => {
   const addresses = useInterchainAddresses() || {}
   const lcd = useInterchainLCDClient()
 
-  const validatorList = [] as any
-
   return useQueries(
     Object.keys(addresses).map((chainName) => {
       return {
@@ -67,12 +65,6 @@ export const useInterchainDelegations = () => {
               return has(balance.amount.toString())
             }
           )
-
-          console.log(
-            "🚀 ~ file: staking.ts ~ line 67 ~ queryFn: ~ delegation",
-            delegation
-          )
-          validatorList.push(...delegation)
 
           return { delegation, chainName }
         },
@@ -302,19 +294,25 @@ export const useCalcInterchainDelegationsTotal = (
     tableDataByChain[chainName] = Object.keys(
       delegationsByChain[chainName]
     ).map((denom) => {
+      const { symbol, icon } = readNativeDenom(denom)
       return {
-        name: denom,
+        name: symbol,
         value: delegationsByChain[chainName][denom].value,
         amount: readAmount(delegationsByChain[chainName][denom].amount, {}),
+        icon,
       }
     })
   })
 
-  const allData = Object.keys(delegationsByDemon).map((demonName) => ({
-    name: demonName,
-    value: delegationsByDemon[demonName],
-    amount: readAmount(delegationsAmountsByDemon[demonName], {}),
-  }))
+  const allData = Object.keys(delegationsByDemon).map((demonName) => {
+    const { symbol, icon } = readNativeDenom(demonName)
+    return {
+      name: symbol,
+      value: delegationsByDemon[demonName],
+      amount: readAmount(delegationsAmountsByDemon[demonName], {}),
+      icon,
+    }
+  })
 
   return { currencyTotal, tableData: { all: allData, ...tableDataByChain } }
 }

@@ -23,7 +23,7 @@ const ChainFilter = ({
   return (
     <div className={outside ? styles.chainfilter__out : styles.chainfilter}>
       <div className={styles.header}>
-        {title && <h1>Staked Funds</h1>}
+        {title && <h1>{title}</h1>}
         <div className={styles.pills}>
           {all && (
             <button
