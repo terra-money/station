@@ -6,7 +6,7 @@ import { Proposal, Vote } from "@terra-money/feather.js"
 import { Color } from "types/components"
 import { Pagination, queryKey, RefetchOptions, useIsClassic } from "../query"
 import { useInterchainLCDClient } from "./lcdClient"
-import { useChains } from "./chains"
+import { useNetwork } from "data/wallet"
 
 export const useVotingParams = (chain: string) => {
   const lcd = useInterchainLCDClient()
@@ -40,11 +40,11 @@ export const useTallyParams = (chain: string) => {
 /* proposals */
 export const useProposals = (status: Proposal.Status) => {
   const lcd = useInterchainLCDClient()
-  const chains = useChains()
+  const networks = useNetwork()
   return useQuery(
     [queryKey.gov.proposals, status],
     async () => {
-      const chainList = Object.keys(chains)
+      const chainList = Object.keys(networks)
       // TODO: Pagination
       // Required when the number of results exceed 100
       // About 50 passed propsals from 2019 to 2021

@@ -5,8 +5,7 @@ import BigNumber from "bignumber.js"
 import { OracleParams, ValAddress } from "@terra-money/terra.js"
 import { TerraValidator } from "types/validator"
 import { TerraProposalItem } from "types/proposal"
-import { useNetwork } from "data/wallet"
-import { useNetworks } from "app/InitNetworks"
+import { useNetworkName } from "data/wallet"
 import { queryKey, RefetchOptions } from "../query"
 
 export enum Aggregate {
@@ -25,10 +24,11 @@ export enum AggregateWallets {
   ACTIVE = "active",
 }
 
-export const useTerraAPIURL = (mainnet?: true) => {
-  const network = useNetwork()
-  const networks = useNetworks()
-  return mainnet ? networks["mainnet"].api : network.api
+export const useTerraAPIURL = () => {
+  const network = useNetworkName()
+  return network !== "mainnet"
+    ? "https://pisco-api.terra.dev"
+    : "https://phoenix-api.terra.dev"
 }
 
 export const useIsTerraAPIAvailable = () => {
@@ -57,8 +57,7 @@ export type GasPrices = Record<Denom, Amount>
 
 export const useGasPrices = () => {
   const current = useTerraAPIURL()
-  const mainnet = useTerraAPIURL(true)
-  const baseURL = current ?? mainnet
+  const baseURL = current
   const path = "/gas-prices"
 
   return useQuery(

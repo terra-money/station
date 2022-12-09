@@ -1,32 +1,26 @@
 import { PropsWithChildren, useEffect, useState } from "react"
-import { fromPairs } from "ramda"
 import axios from "axios"
 import { ASSETS } from "config/constants"
 import createContext from "utils/createContext"
 import { useCustomNetworks } from "data/settings/CustomNetworks"
 
 export const [useNetworks, NetworksProvider] =
-  createContext<CustomNetworks>("useNetworks")
+  createContext<InterchainNetworks>("useNetworks")
 
 const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
-  const [networks, setNetworks] = useState<CustomNetworks>()
+  const [networks, setNetworks] = useState<InterchainNetworks>()
   const { list } = useCustomNetworks()
 
   useEffect(() => {
     const fetchChains = async () => {
-      const { data: chains } = await axios.get<TerraNetworks>("/chains.json", {
-        baseURL: ASSETS,
-      })
+      const { data: chains } = await axios.get<InterchainNetworks>(
+        "/station/chains.json",
+        {
+          baseURL: ASSETS,
+        }
+      )
 
-      const networks = {
-        ...chains,
-        localterra: { ...chains.localterra, preconfigure: true },
-      }
-
-      setNetworks({
-        ...networks,
-        ...fromPairs(list.map((item) => [item.name, item])),
-      })
+      setNetworks(chains)
     }
 
     fetchChains()

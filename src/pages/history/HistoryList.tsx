@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next"
 import { useInfiniteQuery } from "react-query"
 import axios from "axios"
 import { queryKey } from "data/query"
-import { useAddress } from "data/wallet"
+import { useAddress, useChainID } from "data/wallet"
 import { useTerraAPIURL } from "data/Terra/TerraAPI"
 import { Button } from "components/general"
 import { Card, Col, Page } from "components/layout"
@@ -15,6 +15,7 @@ const HistoryList = () => {
   const { t } = useTranslation()
   const address = useAddress()
   const baseURL = useTerraAPIURL()
+  const chainID = useChainID()
 
   /* query */
   const fetchAccountHistory = useCallback(
@@ -62,11 +63,7 @@ const HistoryList = () => {
                 <Fragment key={i}>
                   {list.map((item) => (
                     // TODO: remove hardcoded chain
-                    <HistoryItem
-                      {...item}
-                      chain={"phoenix-1"}
-                      key={item.txhash}
-                    />
+                    <HistoryItem {...item} chain={chainID} key={item.txhash} />
                   ))}
                 </Fragment>
               ))}

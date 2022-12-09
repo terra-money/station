@@ -4,12 +4,12 @@ import { Read, TokenIcon } from "components/token"
 import { useMemoizedPrices } from "data/queries/coingecko"
 import { combineState } from "data/query"
 import { useCurrency } from "data/settings/Currency"
-import { useChains } from "data/queries/chains"
 
 import styles from "./Asset.module.scss"
 import { ReactComponent as PriceUp } from "styles/images/icons/PriceUp.svg"
 import { ReactComponent as PriceDown } from "styles/images/icons/PriceDown.svg"
 import { useWalletRoute, Path } from "./Wallet"
+import { useNetwork } from "data/wallet"
 
 export interface Props extends TokenItem, QueryState {
   balance?: Amount
@@ -25,7 +25,7 @@ const Asset = (props: Props) => {
     props
   const { t } = useTranslation()
   const currency = useCurrency()
-  const chainsName = useChains()
+  const networks = useNetwork()
   const { data: prices, ...pricesState } = useMemoizedPrices()
   const { route, setRoute } = useWalletRoute()
 
@@ -47,7 +47,7 @@ const Asset = (props: Props) => {
             {symbol}
             {chains.map((chain) => (
               <span key={chain} className={styles.chains}>
-                {chainsName[chain].name || chain}
+                {networks[chain].name || chain}
               </span>
             ))}
             {chains && chains.length > 1 && (

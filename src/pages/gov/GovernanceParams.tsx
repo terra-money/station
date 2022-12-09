@@ -5,19 +5,19 @@ import { useVotingParams } from "data/queries/gov"
 import { Card } from "components/layout"
 import { Read } from "components/token"
 import DataList from "./components/DataList"
-import { useChains } from "data/queries/chains"
 import styles from "./GovernanceParams.module.scss"
+import { useNetwork } from "data/wallet"
 
 const GovernanceParams = ({ chain }: { chain: string }) => {
   const { t } = useTranslation()
-  const chains = useChains()
+  const network = useNetwork()
 
   const { data: votingParams } = useVotingParams(chain)
   const { data: depositParams } = useDepositParams(chain)
 
   if (!(votingParams && depositParams)) return null
 
-  const minDeposit = depositParams.min_deposit.get(chains[chain].baseAsset)
+  const minDeposit = depositParams.min_deposit.get(network[chain].baseAsset)
 
   const contents = [
     {
@@ -25,7 +25,7 @@ const GovernanceParams = ({ chain }: { chain: string }) => {
       content: minDeposit && (
         <Read
           amount={minDeposit.amount.toString()}
-          token={chains[chain].baseAsset}
+          token={network[chain].baseAsset}
         />
       ),
     },

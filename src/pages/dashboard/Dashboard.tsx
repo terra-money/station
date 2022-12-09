@@ -1,9 +1,7 @@
 import { useTranslation } from "react-i18next"
 import classNames from "classnames/bind"
 import { Col, Page } from "components/layout"
-import Issuance from "./Issuance"
 import CommunityPool from "./CommunityPool"
-import StakingRatio from "./StakingRatio"
 import Charts from "./Charts"
 import styles from "./Dashboard.module.scss"
 
@@ -20,9 +18,7 @@ const Dashboard = () => {
             // TODO: recreate LunaPrice with coingecko API
             // isClassic && <LunaPrice />
           }
-          <Issuance />
           <CommunityPool />
-          <StakingRatio />
         </header>
 
         <Charts />

@@ -1,23 +1,34 @@
 import axios from "axios"
 import { ASSETS } from "config/constants"
-import { ChainsProvider } from "data/queries/chains"
+import { WhitelistProvider } from "data/queries/chains"
 import { PropsWithChildren, useEffect, useState } from "react"
 
+type Whitelist = Record<
+  string,
+  {
+    token: string
+    symbol: string
+    name: string
+    icon: string
+    chains: string[]
+    decimals: number
+  }
+>
+
 const InitChains = ({ children }: PropsWithChildren<{}>) => {
-  const [data, setData] = useState<any>()
+  const [data, setData] = useState<Whitelist>()
   useEffect(() => {
     ;(async () => {
-      const [{ data: chains }, { data: whitelist }] = await Promise.all([
-        axios.get("/station/chains.json", { baseURL: ASSETS }),
-        axios.get("/station/coins.json", { baseURL: ASSETS }),
-      ])
-      setData({ chains, whitelist })
+      const { data: whitelist } = await axios.get("/station/coins.json", {
+        baseURL: ASSETS,
+      })
+      setData(whitelist)
     })()
   }, [])
 
   if (!data) return null
 
-  return <ChainsProvider value={data}>{children}</ChainsProvider>
+  return <WhitelistProvider value={data}>{children}</WhitelistProvider>
 }
 
 export default InitChains

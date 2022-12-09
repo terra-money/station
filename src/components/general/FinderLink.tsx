@@ -3,8 +3,7 @@ import { forwardRef } from "react"
 import classNames from "classnames"
 import { truncate } from "@terra.kitchen/utils"
 import { FINDER, MINT_SCAN } from "config/constants"
-import { useNetworkName } from "data/wallet"
-import { useChains } from "data/queries/chains"
+import { useNetwork, useNetworkName } from "data/wallet"
 import { latestTxState } from "data/queries/tx"
 import { ExternalLink } from "./External"
 import { useRecoilValue } from "recoil"
@@ -27,9 +26,9 @@ const FinderLink = forwardRef(
   ) => {
     const { block, tx, validator, ...attrs } = rest
     const networkName = useNetworkName()
-    const chains = useChains()
+    const networks = useNetwork()
     const { chainID } = useRecoilValue(latestTxState)
-    const network = chains[chainID]?.name.toLowerCase()
+    const network = networks[chainID]?.name.toLowerCase()
 
     const interchainPath = tx
       ? "txs"

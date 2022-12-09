@@ -12,7 +12,7 @@ import validate from "../validate"
 import { getInitialGasDenom } from "../Tx"
 import InterchainTx from "../InterchainTx"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
-import { useChains } from "data/queries/chains"
+import { useNetwork } from "data/wallet"
 
 interface TxValues {
   input?: number
@@ -22,11 +22,12 @@ const DepositForm = () => {
   const { t } = useTranslation()
   const { id, chain } = useProposalId()
   const addresses = useInterchainAddresses()
-  const chains = useChains()
+  const networks = useNetwork()
 
   const bankBalance = useBankBalance()
   const balance =
-    bankBalance.find((b) => b.denom === chains[chain].baseAsset)?.amount ?? "0"
+    bankBalance.find((b) => b.denom === networks[chain].baseAsset)?.amount ??
+    "0"
 
   /* tx context */
   const initialGasDenom = getInitialGasDenom()
@@ -44,11 +45,15 @@ const DepositForm = () => {
       if (!addresses) return
       const amount = toAmount(input)
       const msgs = [
-        new MsgDeposit(id, addresses[chain], amount + chains[chain].baseAsset),
+        new MsgDeposit(
+          id,
+          addresses[chain],
+          amount + networks[chain].baseAsset
+        ),
       ]
       return { msgs, chainID: chain }
     },
-    [addresses, id, chain, chains]
+    [addresses, id, chain, networks]
   )
 
   /* fee */
@@ -66,7 +71,7 @@ const DepositForm = () => {
   )
 
   const tx = {
-    token: chains[chain].baseAsset,
+    token: networks[chain].baseAsset,
     amount,
     balance,
     initialGasDenom,
@@ -95,7 +100,7 @@ const DepositForm = () => {
                 valueAsNumber: true,
                 validate: validate.input(toInput(max.amount)),
               })}
-              token={chains[chain].baseAsset}
+              token={networks[chain].baseAsset}
               onFocus={max.reset}
               inputMode="decimal"
               placeholder={getPlaceholder()}

@@ -4,12 +4,16 @@ import { useForm } from "react-hook-form"
 import { useNetworkState } from "data/wallet"
 import { useCustomNetworks } from "data/settings/CustomNetworks"
 import { Form, FormItem, Submit, Input, Checkbox } from "components/form"
-import { useNetworks } from "app/InitNetworks"
 
 const AddNetwork = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const { mainnet } = useNetworks()
+  //const { mainnet } = useNetworks()
+  const mainnet = {
+    name: "mainnet",
+    chainID: "phoenix-1",
+    lcd: "https://phoenix-lcd.terra.dev",
+  }
   const [, setNetwork] = useNetworkState()
   const { add, validateName } = useCustomNetworks()
 

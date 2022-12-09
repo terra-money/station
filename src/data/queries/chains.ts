@@ -1,61 +1,31 @@
+import { useNetwork } from "data/wallet"
 import createContext from "utils/createContext"
 
-interface Chains {
-  chains: Record<
-    "mainnet" | "testnet",
-    Record<
-      string,
-      {
-        chainID: string
-        lcd: string
-        gasAdjustment: number
-        gasPrices: Record<string, number>
-        prefix: string
-        baseAsset: string
-        name: string
-        icon: string
-        ibc?: {
-          toTerra: string
-          fromTerra: string
-        }
-      }
-    >
-  >
-  whitelist: Record<
-    string,
-    {
-      token: string
-      symbol: string
-      name: string
-      icon: string
-      chains: string[]
-      decimals: number
-    }
-  >
-}
+type Whitelist = Record<
+  string,
+  {
+    token: string
+    symbol: string
+    name: string
+    icon: string
+    chains: string[]
+    decimals: number
+  }
+>
 
 // chains and token withelist are always required from the beginning.
-const [useFetchedData, ChainsProvider] = createContext<Chains>("useChains")
-export { ChainsProvider }
+const [useFetchedData, WhitelistProvider] =
+  createContext<Whitelist>("useWhitelist")
+export { WhitelistProvider }
 
-export function useChains(
-  network?: "mainnet" | "testnet"
-): Chains["chains"]["mainnet"] {
+export function useWhitelist(): Whitelist {
   const data = useFetchedData()
   if (!data) return {}
-
-  return data.chains[network ?? "mainnet"]
-}
-
-export function useWhitelist(): Chains["whitelist"] {
-  const data = useFetchedData()
-  if (!data) return {}
-
-  return data.whitelist
+  return data
 }
 
 export function useIBCChannels() {
-  const chains = useChains()
+  const networks = useNetwork()
 
   return function getIBCChannel({
     from,
@@ -64,10 +34,10 @@ export function useIBCChannels() {
     from: string
     to: string
   }): string {
-    if (chains[from].name === "Terra") {
-      return chains[to].ibc?.fromTerra ?? ""
-    } else if (chains[to].name === "Terra") {
-      return chains[from].ibc?.toTerra ?? ""
+    if (networks[from].name === "Terra") {
+      return networks[to].ibc?.fromTerra ?? ""
+    } else if (networks[to].name === "Terra") {
+      return networks[from].ibc?.toTerra ?? ""
     } else {
       // one of the 2 chains MUST be Terra
       return ""

@@ -23,9 +23,10 @@ import { CoinInput, getPlaceholder, toInput } from "txs/utils"
 import styles from "./SendPage.module.scss"
 import { useWalletRoute } from "./Wallet"
 import validate from "../../txs/validate"
-import { useChains, useIBCChannels } from "data/queries/chains"
+import { useIBCChannels } from "data/queries/chains"
 import CheckIcon from "@mui/icons-material/Check"
 import { getChainIDFromAddress } from "utils/bech32"
+import { useNetwork } from "data/wallet"
 
 interface TxValues {
   asset: string
@@ -48,7 +49,7 @@ interface AssetType {
 
 const SendPage = () => {
   const addresses = useInterchainAddresses()
-  const chains = useChains()
+  const networks = useNetwork()
   const getIBCChannel = useIBCChannels()
   const { t } = useTranslation()
   const balances = useBankBalance()
@@ -137,7 +138,7 @@ const SendPage = () => {
           Destination chain:{" "}
           <strong>
             {
-              Object.values(chains).find(
+              Object.values(networks).find(
                 ({ prefix }) => prefix === addressPrefix
               )?.name
             }
@@ -161,7 +162,7 @@ const SendPage = () => {
           readNativeDenom(denom).token === watch("asset")
       )
 
-      const destinationChain = getChainIDFromAddress(address, chains)
+      const destinationChain = getChainIDFromAddress(address, networks)
 
       if (!chain || !destinationChain) return
 
@@ -207,7 +208,7 @@ const SendPage = () => {
       chain,
       readNativeDenom,
       watch,
-      chains,
+      networks,
       getIBCChannel,
     ]
   )
