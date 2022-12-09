@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
 import { combineState } from "data/query"
-import { Col } from "components/layout"
+import { Card, Col, Flex, Grid } from "components/layout"
 import { Fetching } from "components/feedback"
 import styles from "./StakedDonut.module.scss"
 import ChainFilter from "components/layout/ChainFilter"
@@ -16,6 +16,7 @@ import {
   useInterchainDelegations,
   useCalcInterchainDelegationsTotal,
 } from "data/queries/staking"
+import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined"
 
 const StakedDonut = () => {
   const { t } = useTranslation()
@@ -23,9 +24,7 @@ const StakedDonut = () => {
   const interchainDelegations = useInterchainDelegations()
   const state = combineState(...interchainDelegations)
 
-  const { currencyTotal, tableData } = useCalcInterchainDelegationsTotal(
-    interchainDelegations
-  )
+  const { graphData } = useCalcInterchainDelegationsTotal(interchainDelegations)
 
   const COLORS = ["#4672ED", "#7893F5", "#FF7940", "#FF9F40", "#F4BE37"]
 
@@ -82,39 +81,63 @@ const StakedDonut = () => {
           <Fetching {...state}>
             <ChainFilter title={t("Staked Funds")} all {...state}>
               {(chain) => (
-                <section className={styles.graphContainer}>
-                  <ResponsiveContainer>
-                    <PieChart>
-                      <Legend
-                        layout="vertical"
-                        verticalAlign="middle"
-                        align="right"
-                        content={<RenderLegend />}
-                        className="legend"
-                      />
-                      <Tooltip content={<RenderTooltip />} />
-                      <Pie
-                        data={tableData[chain || "all"]}
-                        cx={125}
-                        innerRadius={60}
-                        outerRadius={100}
-                        fill="#8884d8"
-                        paddingAngle={0}
-                        dataKey="value"
-                      >
-                        {tableData[chain || "all"].map(
-                          (entry: any, index: any) => (
-                            <Cell
-                              key={`cell-${index}`}
-                              fill={COLORS[index % COLORS.length]}
-                              stroke="none"
-                            />
-                          )
-                        )}
-                      </Pie>
-                    </PieChart>
-                  </ResponsiveContainer>
-                </section>
+                <>
+                  {graphData[chain || "all"] ? (
+                    <section className={styles.graphContainer}>
+                      <ResponsiveContainer>
+                        <PieChart>
+                          <Legend
+                            layout="vertical"
+                            verticalAlign="middle"
+                            align="right"
+                            content={<RenderLegend />}
+                            className="legend"
+                          />
+                          <Tooltip content={<RenderTooltip />} />
+                          <Pie
+                            data={graphData[chain || "all"]}
+                            cx={125}
+                            innerRadius={60}
+                            outerRadius={100}
+                            fill="#8884d8"
+                            paddingAngle={0}
+                            dataKey="value"
+                          >
+                            {graphData[chain || "all"].map(
+                              (entry: any, index: any) => (
+                                <Cell
+                                  key={`cell-${index}`}
+                                  fill={COLORS[index % COLORS.length]}
+                                  stroke="none"
+                                />
+                              )
+                            )}
+                          </Pie>
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </section>
+                  ) : (
+                    <Card className={styles.noDelegationsCard}>
+                      <article className={styles.vertical}>
+                        <Flex>
+                          <PaymentsOutlinedIcon style={{ fontSize: 56 }} />
+                        </Flex>
+
+                        <section className={styles.main}>
+                          <h1 className={styles.title}>
+                            {t("No Delegations")}
+                          </h1>
+
+                          <Grid gap={8}>
+                            <p>
+                              {t("There are no delegations on this chain.")}
+                            </p>
+                          </Grid>
+                        </section>
+                      </article>
+                    </Card>
+                  )}
+                </>
               )}
             </ChainFilter>
           </Fetching>

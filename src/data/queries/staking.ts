@@ -52,7 +52,7 @@ export const useInterchainDelegations = () => {
   return useQueries(
     Object.keys(addresses).map((chainName) => {
       return {
-        queryKey: [addresses[chainName]],
+        queryKey: ["interchainDelegations", addresses[chainName]],
         queryFn: async () => {
           const [delegations] = await lcd.staking.delegations(
             addresses[chainName],
@@ -209,7 +209,7 @@ export const useCalcInterchainDelegationsTotal = (
 
   delegationsQueryResults.forEach((result) => {
     if (result.status === "success") {
-      currencyTotal += result.data.delegation.length
+      currencyTotal += result.data?.delegation?.length
         ? BigNumber.sum(
             ...result.data.delegation.map(({ balance }) => {
               const amount = BigNumber.sum(
@@ -279,7 +279,7 @@ export const useCalcInterchainDelegationsTotal = (
     }
   })
 
-  return { currencyTotal, tableData: { all: allData, ...tableDataByChain } }
+  return { currencyTotal, graphData: { all: allData, ...tableDataByChain } }
 }
 
 /* unbonding */

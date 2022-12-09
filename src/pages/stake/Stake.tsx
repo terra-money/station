@@ -4,14 +4,16 @@ import { Col, Page, Row } from "components/layout"
 import Staked from "./Staked"
 import Validators from "./Validators"
 import StakedDonut from "./StakedDonut"
-import { useInterchainDelegations } from "data/queries/staking"
+import {
+  useInterchainDelegations,
+  useCalcInterchainDelegationsTotal,
+} from "data/queries/staking"
 
 const Stake = () => {
   const { t } = useTranslation()
 
   const interchainDelegations = useInterchainDelegations()
-
-  if (!interchainDelegations) return null
+  const { graphData } = useCalcInterchainDelegationsTotal(interchainDelegations)
 
   return (
     <Page
@@ -23,7 +25,7 @@ const Stake = () => {
       }
     >
       <Col>
-        {interchainDelegations.length ? (
+        {graphData.all.length ? (
           <Row>
             <StakedDonut />
             <Staked />

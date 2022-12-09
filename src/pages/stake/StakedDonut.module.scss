@@ -1,5 +1,28 @@
 @import "mixins";
 
+.noDelegationsCard {
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .vertical {
+    text-align: center;
+    display: grid;
+    gap: 12px;
+
+    .main {
+      display: grid;
+      gap: 12px;
+    }
+
+    .title {
+      font-size: 20px;
+      font-weight: var(--bold);
+    }
+  }
+}
+
 .forFetchingBar {
   position: relative;
   overflow: hidden;
