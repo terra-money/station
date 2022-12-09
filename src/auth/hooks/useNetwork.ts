@@ -1,7 +1,7 @@
-import { atom, useRecoilState } from "recoil"
+import { atom, useRecoilState, useRecoilValue } from "recoil"
 import { useNetworks } from "app/InitNetworks"
 import { getStoredNetwork, storeNetwork } from "../scripts/network"
-import { useWallet } from "@terra-money/wallet-provider"
+import { useWallet, WalletStatus } from "@terra-money/wallet-provider"
 import { sandbox } from "../scripts/env"
 
 const networkState = atom({
@@ -10,14 +10,16 @@ const networkState = atom({
 })
 
 export const useNetworkState = () => {
-  const [network, setNetwork] = useRecoilState(networkState)
+  const [storedNetwork, setNetwork] = useRecoilState(networkState)
 
   const changeNetwork = (network: NetworkName) => {
-    setNetwork(network)
-    storeNetwork(network)
+    if (network !== storedNetwork) {
+      setNetwork(network)
+      storeNetwork(network)
+    }
   }
 
-  return [network, changeNetwork] as const
+  return [storedNetwork, changeNetwork] as const
 }
 
 /* helpers */
@@ -33,27 +35,29 @@ export const useNetwork = () => {
   const [network, setNetwork] = useNetworkState()
   const wallet = useWallet()
 
-  if (sandbox) return networks[network] ?? networks.mainnet
+  if (sandbox || wallet.status !== WalletStatus.WALLET_CONNECTED) {
+    if (networks[network]) {
+      return networks[network]
+    } else {
+      setNetwork("mainnet")
+      return networks.mainnet
+    }
+  }
 
-  if (
-    Object.keys(wallet.network).find((chainID) =>
-      chainID.startsWith("phoenix-")
-    ) &&
-    network !== "mainnet"
-  ) {
+  if (wallet.network["phoenix-1"] && network !== "mainnet") {
     setNetwork("mainnet")
-  } else if (network !== "testnet") {
+  } else if (wallet.network["pisco-1"] && network !== "testnet") {
     setNetwork("testnet")
   }
   return wallet.network as unknown as Record<string, InterchainNetwork>
 }
 
 export const useNetworkName = () => {
-  const [network] = useNetworkState()
+  const network = useRecoilValue(networkState)
   return network
 }
 
 export const useChainID = () => {
-  const [network] = useNetworkState()
+  const network = useRecoilValue(networkState)
   return network === "mainnet" ? "phoenix-1" : "pisco-1"
 }
