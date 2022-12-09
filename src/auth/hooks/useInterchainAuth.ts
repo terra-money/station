@@ -16,8 +16,8 @@ import { clearWallet, lockWallet } from "../scripts/keystore"
 import { getStoredWallet, getStoredWallets } from "../scripts/keystore"
 import encrypt from "../scripts/encrypt"
 import useAvailable from "./useAvailable"
-import { useChains } from "data/queries/chains"
 import { getChainIDFromAddress } from "utils/bech32"
+import { useNetwork } from "./useNetwork"
 
 const walletState = atom({
   key: "interchain-wallet",
@@ -26,7 +26,7 @@ const walletState = atom({
 
 const useInterchainAuth = () => {
   const lcd = useInterchainLCDClient()
-  const chains = useChains()
+  const networks = useNetwork()
   const available = useAvailable()
 
   const [wallet, setWallet] = useRecoilState(walletState)
@@ -140,7 +140,7 @@ const useInterchainAuth = () => {
     const accountInfo = await lcd.auth.accountInfo(address)
 
     const doc = new SignDoc(
-      getChainIDFromAddress(address, chains) ?? "",
+      getChainIDFromAddress(address, networks) ?? "",
       accountInfo.getAccountNumber(),
       accountInfo.getSequenceNumber(),
       tx.auth_info,

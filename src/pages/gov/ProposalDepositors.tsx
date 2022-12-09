@@ -4,13 +4,13 @@ import { useDeposits } from "data/queries/gov"
 import { FinderLink } from "components/general"
 import { Card, Table } from "components/layout"
 import { Read } from "components/token"
-import { useChains } from "data/queries/chains"
+import { useNetwork } from "data/wallet"
 
 // FIXME: Pagination (Client)
 
 const ProposalDepositors = ({ id, chain }: { id: number; chain: string }) => {
   const { t } = useTranslation()
-  const chains = useChains()
+  const networks = useNetwork()
   const { data: deposits, ...state } = useDeposits(id, chain)
 
   return (
@@ -30,8 +30,8 @@ const ProposalDepositors = ({ id, chain }: { id: number; chain: string }) => {
               dataIndex: "amount",
               render: (amount) => (
                 <Read
-                  amount={getAmount(amount, chains[chain].baseAsset)}
-                  denom={chains[chain].baseAsset}
+                  amount={getAmount(amount, networks[chain].baseAsset)}
+                  denom={networks[chain].baseAsset}
                 />
               ),
               align: "right",

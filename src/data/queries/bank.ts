@@ -1,50 +1,26 @@
 import { useQuery } from "react-query"
-import axios from "axios"
 import createContext from "utils/createContext"
 import { queryKey, RefetchOptions } from "../query"
-import { useNetwork } from "../wallet"
 import { useInterchainLCDClient, useLCDClient } from "./lcdClient"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { useCustomTokensCW20 } from "data/settings/CustomTokens"
-import { useChains } from "./chains"
-
-export const useSupply = () => {
-  const { lcd } = useNetwork()
-
-  return useQuery(
-    [queryKey.bank.supply],
-    async () => {
-      // FIXME: Import from terra.js
-      const { data } = await axios.get<{ supply: CoinData[] }>(
-        "cosmos/bank/v1beta1/supply",
-        {
-          baseURL: lcd,
-          params: {
-            "pagination.reverse": "true",
-          },
-        }
-      )
-
-      return data.supply
-    },
-    { ...RefetchOptions.INFINITY }
-  )
-}
+import { useNetwork } from "data/wallet"
 
 export const useInitialTokenBalance = () => {
   const addresses = useInterchainAddresses()
-  const chains = useChains()
+  const networks = useNetwork()
   const lcd = useInterchainLCDClient()
   const { list: cw20 } = useCustomTokensCW20()
 
   return useQuery(
-    [queryKey.bank.balances, addresses, cw20, chains],
+    [queryKey.bank.balances, addresses, cw20, networks],
     async () => {
       return (await Promise.all(
         cw20.map(async ({ token }) => {
           const chainID =
-            Object.values(chains).find(({ prefix }) => token.startsWith(prefix))
-              ?.chainID ?? ""
+            Object.values(networks).find(({ prefix }) =>
+              token.startsWith(prefix)
+            )?.chainID ?? ""
 
           const address = addresses?.[chainID]
           if (!address)

@@ -27,11 +27,11 @@ import { TooltipIcon } from "components/display"
 import { getCoins, getPlaceholder, toInput } from "../utils"
 import validate from "../validate"
 import { getInitialGasDenom } from "../Tx"
-import { useChains } from "data/queries/chains"
 import InterchainTx from "txs/InterchainTx"
 import { useCommunityPool } from "data/queries/distribution"
 import { useDepositParams } from "data/queries/gov"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
+import { useNetwork } from "data/wallet"
 
 enum ProposalType {
   TEXT = "Text proposal",
@@ -80,11 +80,12 @@ const DEFAULT_PAREMETER_CHANGE = { subspace: "", key: "", value: "" }
 const SubmitProposalForm = ({ chain }: { chain: string }) => {
   const { t } = useTranslation()
   const addresses = useInterchainAddresses()
-  const chains = useChains()
+  const networks = useNetwork()
 
   const bankBalance = useBankBalance()
   const balance =
-    bankBalance.find((b) => b.denom === chains[chain].baseAsset)?.amount ?? "0"
+    bankBalance.find((b) => b.denom === networks[chain].baseAsset)?.amount ??
+    "0"
 
   /* tx context */
   const initialGasDenom = getInitialGasDenom()
@@ -96,7 +97,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
   //if(!depositParams || communityPool) return null
   const minDeposit = depositParams
     ? // @ts-expect-error
-      getAmount(depositParams.min_deposit, chains[chain].baseAsset)
+      getAmount(depositParams.min_deposit, networks[chain].baseAsset)
     : 0
 
   /* form */
@@ -131,7 +132,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
       if (!addresses) return
       const amount = toAmount(input)
       const deposit = has(amount)
-        ? new Coins({ [chains[chain].baseAsset]: amount })
+        ? new Coins({ [networks[chain].baseAsset]: amount })
         : []
 
       const getContent = () => {
@@ -174,7 +175,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
       ]
       return { msgs, chainID: chain ?? "" }
     },
-    [addresses, chain, chains]
+    [addresses, chain, networks]
   )
 
   /* fee */
@@ -197,7 +198,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
   )
 
   const tx = {
-    token: chains[chain].baseAsset,
+    token: networks[chain].baseAsset,
     amount,
     balance,
     initialGasDenom,
@@ -244,7 +245,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
               placeholder={placeholder}
               selectBefore={
                 <Select {...register("spend.denom")} before>
-                  {[chains[chain].baseAsset].map((denom) => (
+                  {[networks[chain].baseAsset].map((denom) => (
                     <option value={denom} key={denom}>
                       {readDenom(denom)}
                     </option>
@@ -467,7 +468,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
                     true
                   ),
                 })}
-                token={chains[chain].baseAsset}
+                token={networks[chain].baseAsset}
                 onFocus={max.reset}
                 inputMode="decimal"
                 placeholder={getPlaceholder()}

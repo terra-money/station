@@ -1,4 +1,4 @@
-import { useChains } from "data/queries/chains"
+import { useNetwork } from "data/wallet"
 import { useState } from "react"
 import styles from "./ChainFilter.module.scss"
 
@@ -11,11 +11,11 @@ const ChainFilter = ({
   all?: boolean
   outside?: boolean
 }) => {
-  const chains = Object.values(useChains()).sort((a, b) =>
+  const networks = Object.values(useNetwork()).sort((a, b) =>
     a.name === "Terra" ? -1 : b.name === "Terra" ? 1 : 0
   )
   const [selectedChain, setChain] = useState<string | undefined>(
-    all ? undefined : chains[0].chainID
+    all ? undefined : networks[0].chainID
   )
 
   return (
@@ -29,7 +29,7 @@ const ChainFilter = ({
             All
           </button>
         )}
-        {chains.map((chain) => (
+        {networks.map((chain) => (
           <button
             key={chain.chainID}
             onClick={() => setChain(chain.chainID)}

@@ -1,8 +1,8 @@
 import { WithFetching } from "components/feedback"
 import { Read, TokenIcon } from "components/token"
-import { useChains } from "data/queries/chains"
 import { useMemoizedPrices } from "data/queries/coingecko"
 import { useCurrency } from "data/settings/Currency"
+import { useNetwork } from "data/wallet"
 import { useTranslation } from "react-i18next"
 import styles from "./AssetChain.module.scss"
 
@@ -17,11 +17,11 @@ export interface Props {
 const AssetChain = (props: Props) => {
   const { chain, symbol, balance, decimals, token } = props
   const currency = useCurrency()
-  const chainsName = useChains()
+  const network = useNetwork()
   const { data: prices, ...pricesState } = useMemoizedPrices()
   const { t } = useTranslation()
 
-  const { icon, name } = chainsName[chain]
+  const { icon, name } = network[chain]
   return (
     <article className={styles.chain} key={name}>
       <TokenIcon token={name} icon={icon} size={50} />

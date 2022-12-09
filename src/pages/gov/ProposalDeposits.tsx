@@ -10,7 +10,7 @@ import { Read } from "components/token"
 import { ToNow } from "components/display"
 import Orb from "./components/Orb"
 import styles from "./ProposalDeposits.module.scss"
-import { useChains } from "data/queries/chains"
+import { useNetwork } from "data/wallet"
 
 interface Props {
   id: number
@@ -20,7 +20,7 @@ interface Props {
 
 const ProposalDeposits = ({ id, chain, card }: Props) => {
   const { t } = useTranslation()
-  const chains = useChains()
+  const networks = useNetwork()
   const { data: proposal, ...proposalState } = useProposal(id, chain)
   const { data: deposits, ...depositsState } = useDeposits(id, chain)
   const { data: depositParams, ...depositParamsState } = useDepositParams(chain)
@@ -34,14 +34,14 @@ const ProposalDeposits = ({ id, chain, card }: Props) => {
         (acc, { amount }) =>
           new BigNumber(acc)
             // @ts-expect-error
-            .plus(getAmount(amount, chains[chain].baseAsset))
+            .plus(getAmount(amount, networks[chain].baseAsset))
             .toString(),
         "0"
       )
       const minimum = getAmount(
         // @ts-expect-error
         depositParams.min_deposit,
-        chains[chain].baseAsset
+        networks[chain].baseAsset
       )
       const ratio = Number(deposited) / Number(minimum)
       return { deposited, ratio }
@@ -53,7 +53,7 @@ const ProposalDeposits = ({ id, chain, card }: Props) => {
     const contents = [
       {
         title: t("Deposited"),
-        content: <Read amount={deposited} denom={chains[chain].baseAsset} />,
+        content: <Read amount={deposited} denom={networks[chain].baseAsset} />,
       },
       {
         title: t("Deposit end time"),

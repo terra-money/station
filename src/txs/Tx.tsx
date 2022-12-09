@@ -23,7 +23,7 @@ import { getErrorMessage } from "utils/error"
 import { getLocalSetting, SettingKey } from "utils/localStorage"
 import { RefetchOptions } from "data/query"
 import { queryKey } from "data/query"
-import { useAddress, useNetwork } from "data/wallet"
+import { useAddress, useChainID, useNetwork } from "data/wallet"
 import { isBroadcastingState, latestTxState } from "data/queries/tx"
 import { useIsWalletEmpty } from "data/queries/bank"
 
@@ -87,6 +87,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
   /* context */
   const { t } = useTranslation()
   const network = useNetwork()
+  const chainID = useChainID()
   const { post } = useWallet()
   const connectedWallet = useConnectedWallet()
   const { wallet, validatePassword, ...auth } = useAuth()
@@ -117,8 +118,8 @@ function Tx<TxValues>(props: Props<TxValues>) {
       if (!simulationTx || !simulationTx.msgs.length) return 0
 
       const config = {
-        ...network,
-        URL: network.lcd,
+        ...network[chainID],
+        URL: network[chainID].lcd,
         gasAdjustment,
         gasPrices: { [initialGasDenom]: gasPrices[initialGasDenom] },
       }
@@ -238,6 +239,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
           chainID: "phoenix-1",
         })
       } else {
+        // @ts-expect-error
         const { result } = await post({ ...tx, fee })
         setLatestTx({
           txhash: result.txhash,

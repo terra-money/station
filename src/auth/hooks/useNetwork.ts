@@ -1,8 +1,8 @@
-import { atom, useRecoilState, useRecoilValue } from "recoil"
-import { useWallet } from "@terra-money/wallet-provider"
+import { atom, useRecoilState } from "recoil"
 import { useNetworks } from "app/InitNetworks"
-import { sandbox } from "../scripts/env"
 import { getStoredNetwork, storeNetwork } from "../scripts/network"
+import { useWallet } from "@terra-money/wallet-provider"
+import { sandbox } from "../scripts/env"
 
 const networkState = atom({
   key: "network",
@@ -22,30 +22,38 @@ export const useNetworkState = () => {
 
 /* helpers */
 export const useNetworkOptions = () => {
-  const networks = useNetworks()
-
-  if (!sandbox) return
-
-  return Object.values(networks).map(({ name }) => {
-    return { value: name, label: name }
-  })
+  return [
+    { value: "mainnet", label: "mainnet" },
+    { value: "testnet", label: "testnet" },
+  ]
 }
 
-export const useNetwork = (): CustomNetwork => {
+export const useNetwork = () => {
   const networks = useNetworks()
-  const network = useRecoilValue(networkState)
+  const [network, setNetwork] = useNetworkState()
   const wallet = useWallet()
 
   if (sandbox) return networks[network] ?? networks.mainnet
-  return wallet.network
+
+  if (
+    Object.keys(wallet.network).find((chainID) =>
+      chainID.startsWith("phoenix-")
+    ) &&
+    network !== "mainnet"
+  ) {
+    setNetwork("mainnet")
+  } else if (network !== "testnet") {
+    setNetwork("testnet")
+  }
+  return wallet.network as unknown as Record<string, InterchainNetwork>
 }
 
 export const useNetworkName = () => {
-  const { name } = useNetwork()
-  return name
+  const [network] = useNetworkState()
+  return network
 }
 
 export const useChainID = () => {
-  const { chainID } = useNetwork()
-  return chainID
+  const [network] = useNetworkState()
+  return network === "mainnet" ? "phoenix-1" : "pisco-1"
 }
