@@ -202,92 +202,57 @@ export const useCalcInterchainDelegationsTotal = (
   if (!delegationsQueryResults.length)
     return { currencyTotal: 0, tableData: {} }
 
-  const FORTESTING = [...delegationsQueryResults] as any
-
-  FORTESTING.push({
-    status: FORTESTING[0].status,
-    data: {
-      chainName: "osmosis-1",
-      delegation: FORTESTING[0].data?.delegation[0]
-        ? [FORTESTING[0].data?.delegation[0]]
-        : [],
-    },
-  })
-  FORTESTING.push({
-    status: FORTESTING[1].status,
-    data: {
-      chainName: "osmosis-1",
-      delegation: FORTESTING[1].data?.delegation[0]
-        ? [FORTESTING[1].data?.delegation[0]]
-        : [],
-    },
-  })
-  FORTESTING.push({
-    status: FORTESTING[0].status,
-    data: {
-      chainName: "phoenix-1",
-      delegation: FORTESTING[0].data?.delegation[0]
-        ? [FORTESTING[0].data?.delegation[0]]
-        : [],
-    },
-  })
-
   const delegationsByDemon = {} as any
   const delegationsByChain = {} as any
   const delegationsAmountsByDemon = {} as any
   let currencyTotal = 0
 
-  FORTESTING.forEach(
-    (result: {
-      status: string
-      data: { delegation: { balance: any }[]; chainName: string | number }
-    }) => {
-      if (result.status === "success") {
-        currencyTotal += result.data.delegation.length
-          ? BigNumber.sum(
-              ...result.data.delegation.map(({ balance }) => {
-                const amount = BigNumber.sum(
-                  delegationsAmountsByDemon[balance.denom] || 0,
-                  balance.amount.toNumber()
-                ).toNumber()
+  delegationsQueryResults.forEach((result) => {
+    if (result.status === "success") {
+      currencyTotal += result.data.delegation.length
+        ? BigNumber.sum(
+            ...result.data.delegation.map(({ balance }) => {
+              const amount = BigNumber.sum(
+                delegationsAmountsByDemon[balance.denom] || 0,
+                balance.amount.toNumber()
+              ).toNumber()
 
-                const { token, decimals } = readNativeDenom(balance.denom)
-                const currecyPrice: any =
-                  (amount * (prices?.[token]?.price || 0)) / 10 ** decimals
+              const { token, decimals } = readNativeDenom(balance.denom)
+              const currecyPrice: any =
+                (amount * (prices?.[token]?.price || 0)) / 10 ** decimals
 
-                delegationsByDemon[balance.denom] = currecyPrice
-                delegationsAmountsByDemon[balance.denom] = amount
+              delegationsByDemon[balance.denom] = currecyPrice
+              delegationsAmountsByDemon[balance.denom] = amount
 
-                if (!delegationsByChain[result.data.chainName]) {
-                  delegationsByChain[result.data.chainName] = {}
-                  delegationsByChain[result.data.chainName][balance.denom] = {
-                    value: 0,
-                    amount: 0,
-                  }
-                }
-
-                const chainSpecificAmount = BigNumber.sum(
-                  delegationsByChain[result.data.chainName][balance.denom]
-                    ?.amount || 0,
-                  balance.amount.toNumber()
-                ).toNumber()
-
-                const chainSpecificCurrecyPrice: any =
-                  (chainSpecificAmount * (prices?.[token]?.price || 0)) /
-                  10 ** decimals
-
+              if (!delegationsByChain[result.data.chainName]) {
+                delegationsByChain[result.data.chainName] = {}
                 delegationsByChain[result.data.chainName][balance.denom] = {
-                  value: chainSpecificCurrecyPrice,
-                  amount: chainSpecificAmount,
+                  value: 0,
+                  amount: 0,
                 }
+              }
 
-                return currecyPrice
-              })
-            ).toNumber()
-          : 0
-      }
+              const chainSpecificAmount = BigNumber.sum(
+                delegationsByChain[result.data.chainName][balance.denom]
+                  ?.amount || 0,
+                balance.amount.toNumber()
+              ).toNumber()
+
+              const chainSpecificCurrecyPrice: any =
+                (chainSpecificAmount * (prices?.[token]?.price || 0)) /
+                10 ** decimals
+
+              delegationsByChain[result.data.chainName][balance.denom] = {
+                value: chainSpecificCurrecyPrice,
+                amount: chainSpecificAmount,
+              }
+
+              return currecyPrice
+            })
+          ).toNumber()
+        : 0
     }
-  )
+  })
 
   const tableDataByChain = {} as any
   Object.keys(delegationsByChain).forEach((chainName) => {
