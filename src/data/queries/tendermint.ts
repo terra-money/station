@@ -10,7 +10,7 @@ export const useNodeInfo = (chainID: string) => {
     [queryKey.tendermint.nodeInfo],
     async () => {
       const { data } = await axios.get("node_info", {
-        baseURL: networks[chainID].lcd,
+        baseURL: networks[chainID]?.lcd,
       })
       return data
     },
