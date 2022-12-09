@@ -11,7 +11,6 @@ import WithNodeInfo from "./WithNodeInfo"
 const InitWallet = ({ children }: PropsWithChildren<{}>) => {
   useOnNetworkChange()
   const { status } = useWallet()
-  console.log(status)
   const queryClient = useQueryClient()
   const networkName = useNetworkName()
 
