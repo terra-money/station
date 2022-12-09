@@ -9,9 +9,9 @@ const InitBankBalance = ({ children }: PropsWithChildren<{}>) => {
   const { data: bankBalance } = useInitialBankBalance()
   const { data: tokenBalance } = useInitialTokenBalance()
   // If the balance doesn't exist, nothing is worth rendering.
-  if (!bankBalance || !tokenBalance) return null
+  if (!bankBalance) return null
   return (
-    <BankBalanceProvider value={[...bankBalance, ...tokenBalance]}>
+    <BankBalanceProvider value={[...bankBalance, ...(tokenBalance ?? [])]}>
       {children}
     </BankBalanceProvider>
   )
