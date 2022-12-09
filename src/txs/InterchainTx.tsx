@@ -208,7 +208,10 @@ function InterchainTx<TxValues>(props: Props<TxValues>) {
 
     try {
       if (disabled) throw new Error(disabled)
-      if (!estimatedGas || !has(gasAmount))
+      if (
+        !estimatedGas ||
+        (!has(gasAmount) && network[chain]?.gasPrices[gasDenom])
+      )
         throw new Error("Fee is not estimated")
 
       const tx = createTx(values)
