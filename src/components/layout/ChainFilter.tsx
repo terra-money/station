@@ -6,10 +6,12 @@ const ChainFilter = ({
   children,
   all,
   outside,
+  title,
 }: {
   children: (chain?: string) => React.ReactNode
   all?: boolean
   outside?: boolean
+  title?: string
 }) => {
   const networks = Object.values(useNetwork()).sort((a, b) =>
     a.name === "Terra" ? -1 : b.name === "Terra" ? 1 : 0
@@ -21,26 +23,29 @@ const ChainFilter = ({
   return (
     <div className={outside ? styles.chainfilter__out : styles.chainfilter}>
       <div className={styles.header}>
-        {all && (
-          <button
-            onClick={() => setChain(undefined)}
-            className={selectedChain ?? styles.active}
-          >
-            All
-          </button>
-        )}
-        {networks.map((chain) => (
-          <button
-            key={chain.chainID}
-            onClick={() => setChain(chain.chainID)}
-            className={
-              selectedChain === chain.chainID ? styles.active : undefined
-            }
-          >
-            <img src={chain.icon} alt={chain.name} />
-            {chain.name}
-          </button>
-        ))}
+        {title && <h1>{title}</h1>}
+        <div className={styles.pills}>
+          {all && (
+            <button
+              onClick={() => setChain(undefined)}
+              className={`${styles.all} ${selectedChain ?? styles.active}`}
+            >
+              All
+            </button>
+          )}
+          {networks.map((chain) => (
+            <button
+              key={chain.chainID}
+              onClick={() => setChain(chain.chainID)}
+              className={
+                selectedChain === chain.chainID ? styles.active : undefined
+              }
+            >
+              <img src={chain.icon} alt={chain.name} />
+              {chain.name}
+            </button>
+          ))}
+        </div>
       </div>
       <div className={styles.content}>{children(selectedChain)}</div>
     </div>

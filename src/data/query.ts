@@ -73,6 +73,7 @@ export const queryKey = mirror({
   staking: {
     validators: "",
     validator: "",
+    interchainDelegations: "",
     delegations: "",
     delegation: "",
     unbondings: "",

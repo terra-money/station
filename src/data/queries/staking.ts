@@ -1,4 +1,4 @@
-import { useQuery } from "react-query"
+import { useQuery, useQueries, UseQueryResult } from "react-query"
 import { flatten, path, uniqBy } from "ramda"
 import BigNumber from "bignumber.js"
 import { AccAddress, ValAddress, Validator } from "@terra-money/terra.js"
@@ -10,6 +10,10 @@ import { StakeAction } from "txs/stake/StakeForm"
 import { queryKey, Pagination, RefetchOptions } from "../query"
 import { useAddress } from "../wallet"
 import { useInterchainLCDClient, useLCDClient } from "./lcdClient"
+import { useInterchainAddresses } from "auth/hooks/useAddress"
+import { readAmount } from "@terra.kitchen/utils"
+import { useMemoizedPrices } from "data/queries/coingecko"
+import { useNativeDenoms } from "data/token"
 
 export const useValidators = () => {
   const lcd = useLCDClient()
@@ -38,6 +42,34 @@ export const useValidators = () => {
       return uniqBy(path(["operator_address"]), [...v1, ...v2, ...v3])
     },
     { ...RefetchOptions.INFINITY }
+  )
+}
+
+export const useInterchainDelegations = () => {
+  const addresses = useInterchainAddresses() || {}
+  const lcd = useInterchainLCDClient()
+
+  return useQueries(
+    Object.keys(addresses).map((chainName) => {
+      return {
+        queryKey: ["interchainDelegations", addresses[chainName]],
+        queryFn: async () => {
+          const [delegations] = await lcd.staking.delegations(
+            addresses[chainName],
+            undefined,
+            Pagination
+          )
+
+          const delegation = delegations.filter(
+            ({ balance }: { balance: any }) => {
+              return has(balance.amount.toString())
+            }
+          )
+
+          return { delegation, chainName }
+        },
+      }
+    })
   )
 }
 
@@ -156,6 +188,98 @@ export const calcDelegationsTotal = (delegations: Delegation[]) => {
         ...delegations.map(({ balance }) => balance.amount.toString())
       ).toString()
     : "0"
+}
+
+export const useCalcInterchainDelegationsTotal = (
+  delegationsQueryResults: UseQueryResult<{
+    delegation: Delegation[]
+    chainName: string
+  }>[]
+) => {
+  const { data: prices } = useMemoizedPrices()
+  const readNativeDenom = useNativeDenoms()
+
+  if (!delegationsQueryResults.length)
+    return { currencyTotal: 0, tableData: {} }
+
+  const delegationsByDemon = {} as any
+  const delegationsByChain = {} as any
+  const delegationsAmountsByDemon = {} as any
+  let currencyTotal = 0
+
+  delegationsQueryResults.forEach((result) => {
+    if (result.status === "success") {
+      currencyTotal += result.data?.delegation?.length
+        ? BigNumber.sum(
+            ...result.data.delegation.map(({ balance }) => {
+              const amount = BigNumber.sum(
+                delegationsAmountsByDemon[balance.denom] || 0,
+                balance.amount.toNumber()
+              ).toNumber()
+
+              const { token, decimals } = readNativeDenom(balance.denom)
+              const currecyPrice: any =
+                (amount * (prices?.[token]?.price || 0)) / 10 ** decimals
+
+              delegationsByDemon[balance.denom] = currecyPrice
+              delegationsAmountsByDemon[balance.denom] = amount
+
+              if (!delegationsByChain[result.data.chainName]) {
+                delegationsByChain[result.data.chainName] = {}
+                delegationsByChain[result.data.chainName][balance.denom] = {
+                  value: 0,
+                  amount: 0,
+                }
+              }
+
+              const chainSpecificAmount = BigNumber.sum(
+                delegationsByChain[result.data.chainName][balance.denom]
+                  ?.amount || 0,
+                balance.amount.toNumber()
+              ).toNumber()
+
+              const chainSpecificCurrecyPrice: any =
+                (chainSpecificAmount * (prices?.[token]?.price || 0)) /
+                10 ** decimals
+
+              delegationsByChain[result.data.chainName][balance.denom] = {
+                value: chainSpecificCurrecyPrice,
+                amount: chainSpecificAmount,
+              }
+
+              return currecyPrice
+            })
+          ).toNumber()
+        : 0
+    }
+  })
+
+  const tableDataByChain = {} as any
+  Object.keys(delegationsByChain).forEach((chainName) => {
+    tableDataByChain[chainName] = Object.keys(
+      delegationsByChain[chainName]
+    ).map((denom) => {
+      const { symbol, icon } = readNativeDenom(denom)
+      return {
+        name: symbol,
+        value: delegationsByChain[chainName][denom].value,
+        amount: readAmount(delegationsByChain[chainName][denom].amount, {}),
+        icon,
+      }
+    })
+  })
+
+  const allData = Object.keys(delegationsByDemon).map((demonName) => {
+    const { symbol, icon } = readNativeDenom(demonName)
+    return {
+      name: symbol,
+      value: delegationsByDemon[demonName],
+      amount: readAmount(delegationsAmountsByDemon[demonName], {}),
+      icon,
+    }
+  })
+
+  return { currencyTotal, graphData: { all: allData, ...tableDataByChain } }
 }
 
 /* unbonding */

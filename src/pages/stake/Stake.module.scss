@@ -1,0 +1,26 @@
+@import "mixins";
+
+.header {
+  display: grid;
+  gap: var(--grid-gap);
+
+  @include desktop {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: $breakpoint) and (max-width: (1400px - 0.02)) {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto repeat(2, 1fr);
+  }
+}
+
+.trisect {
+  @include desktop {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (min-width: $breakpoint) and (max-width: (1400px - 0.02)) {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+  }
+}

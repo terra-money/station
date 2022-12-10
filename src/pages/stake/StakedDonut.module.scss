@@ -1,0 +1,100 @@
+@import "mixins";
+
+.noDelegationsCard {
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .vertical {
+    text-align: center;
+    display: grid;
+    gap: 12px;
+
+    .main {
+      display: grid;
+      gap: 12px;
+    }
+
+    .title {
+      font-size: 20px;
+      font-weight: var(--bold);
+    }
+  }
+}
+
+.forFetchingBar {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.graphContainer {
+  height: 300px;
+  max-width: 475px;
+
+  .rechartsWrapper {
+    outline: none;
+  }
+}
+
+.legend {
+  margin-right: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .detailLine {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .icon {
+    height: 12px;
+    width: 12px;
+  }
+
+  .circle {
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+  }
+
+  .denom {
+    text-transform: uppercase;
+    font-weight: 300;
+    color: var(--text-muted);
+  }
+
+  .percent {
+    font-weight: 400;
+  }
+}
+
+.tooltip {
+  min-width: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: var(--card-bg);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+
+  h6 {
+    text-transform: uppercase;
+    font-weight: var(--bold);
+  }
+
+  .infoLine {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  p {
+    font-weight: var(--normal);
+    font-size: 12px;
+  }
+}
