@@ -2,7 +2,7 @@ import { PropsWithChildren } from "react"
 import { useNodeInfo } from "data/queries/tendermint"
 import Overlay from "./components/Overlay"
 import NetworkError from "./NetworkError"
-import { useChainID, useNetworkName } from "data/wallet"
+import { useChainID } from "data/wallet"
 
 const WithNodeInfo = ({ children }: PropsWithChildren<{}>) => {
   const chainID = useChainID()
