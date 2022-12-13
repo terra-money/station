@@ -7,7 +7,6 @@
 }
 
 .table {
-  th,
   td {
     background: var(--card-bg);
   }
@@ -27,9 +26,25 @@
 }
 
 .default {
+  border-collapse: separate;
+  border-spacing: 0 10px;
+
+  tr {
+    padding: 30px 35px;
+  }
+
+  td:first-child {
+    border-bottom-left-radius: var(--border-radius);
+    border-top-left-radius: var(--border-radius);
+  }
+  td:last-child {
+    border-bottom-right-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+  }
+
   td {
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding: 20px 25px;
+    border-top: 0;
   }
 }
 

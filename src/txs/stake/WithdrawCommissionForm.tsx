@@ -54,6 +54,7 @@ const WithdrawCommissionForm = () => {
     const sorter = (a: CoinData, b: CoinData) =>
       Number(calcValue(b)) - Number(calcValue(a))
 
+    // @ts-expect-error
     const list = sortCoins(validatorCommission, currency.id, sorter)
 
     return (

@@ -1,6 +1,12 @@
 import { useQuery } from "react-query"
 import BigNumber from "bignumber.js"
-import { Coins, Rewards, ValAddress, Validator } from "@terra-money/terra.js"
+import {
+  AccAddress,
+  Coins,
+  Rewards,
+  ValAddress,
+  Validator,
+} from "@terra-money/feather.js"
 import { has } from "utils/num"
 import { sortCoins } from "utils/coin"
 import { queryKey, RefetchOptions } from "../query"
@@ -41,7 +47,10 @@ export const useValidatorCommission = () => {
     [queryKey.distribution.validatorCommission],
     async () => {
       if (!address) return new Coins()
-      const validatorAddress = ValAddress.fromAccAddress(address)
+      const validatorAddress = ValAddress.fromAccAddress(
+        address,
+        AccAddress.getPrefix(address)
+      )
       return await lcd.distribution.validatorCommission(validatorAddress)
     },
     { ...RefetchOptions.DEFAULT }
@@ -69,7 +78,10 @@ export const getConnectedMoniker = (
 ) => {
   if (!(address && validators)) return
 
-  const validatorAddress = ValAddress.fromAccAddress(address)
+  const validatorAddress = ValAddress.fromAccAddress(
+    address,
+    AccAddress.getPrefix(address)
+  )
   const validator = validators.find(
     ({ operator_address }) => operator_address === validatorAddress
   )
@@ -86,6 +98,7 @@ export const calcRewardsValues = (
   calcValue: CalcValue
 ) => {
   const calc = (coins: Coins) => {
+    // @ts-expect-error
     const list = sortCoins(coins, currency).filter(({ amount }) => has(amount))
     const sum = BigNumber.sum(
       ...list.map((item) => calcValue(item) ?? 0)
