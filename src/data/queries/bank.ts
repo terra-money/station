@@ -1,7 +1,7 @@
 import { useQuery } from "react-query"
 import createContext from "utils/createContext"
 import { queryKey, RefetchOptions } from "../query"
-import { useInterchainLCDClient, useLCDClient } from "./lcdClient"
+import { useInterchainLCDClient } from "./lcdClient"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { useCustomTokensCW20 } from "data/settings/CustomTokens"
 import { useNetwork } from "data/wallet"
@@ -90,7 +90,7 @@ interface CoinBalance {
 
 export const useBalances = () => {
   const addresses = useInterchainAddresses()
-  const lcd = useLCDClient()
+  const lcd = useInterchainLCDClient()
 
   return useQuery(
     [queryKey.bank.balances, addresses],

@@ -1,45 +1,78 @@
 import { useQuery, useQueries, UseQueryResult } from "react-query"
 import { flatten, path, uniqBy } from "ramda"
 import BigNumber from "bignumber.js"
-import { AccAddress, ValAddress, Validator } from "@terra-money/terra.js"
-import { Delegation, UnbondingDelegation } from "@terra-money/terra.js"
-/* FIXME(terra.js): Import from terra.js */
-import { BondStatus } from "@terra-money/terra.proto/cosmos/staking/v1beta1/staking"
+import {
+  AccAddress,
+  Coin,
+  MsgDelegate,
+  MsgUndelegate,
+  ValAddress,
+  Validator,
+} from "@terra-money/feather.js"
+import { Delegation, UnbondingDelegation } from "@terra-money/feather.js"
 import { has } from "utils/num"
 import { StakeAction } from "txs/stake/StakeForm"
 import { queryKey, Pagination, RefetchOptions } from "../query"
 import { useAddress } from "../wallet"
 import { useInterchainLCDClient, useLCDClient } from "./lcdClient"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
-import { readAmount } from "@terra.kitchen/utils"
+import { readAmount, toAmount } from "@terra.kitchen/utils"
 import { useMemoizedPrices } from "data/queries/coingecko"
 import { useNativeDenoms } from "data/token"
+import shuffle from "utils/shuffle"
+import { getIsBonded } from "pages/stake/ValidatorsList"
 
-export const useValidators = () => {
-  const lcd = useLCDClient()
+export const useInterchainValidators = () => {
+  const addresses = useInterchainAddresses() || {}
+  const lcd = useInterchainLCDClient()
+
+  return useQueries(
+    Object.keys(addresses).map((chainID) => {
+      return {
+        queryKey: [queryKey.staking.interchainValidators, addresses, chainID],
+        queryFn: async () => {
+          const result: Validator[] = []
+          let key: string | null = ""
+
+          do {
+            // @ts-expect-error
+            const [list, pagination] = await lcd.staking.validators(chainID, {
+              "pagination.limit": "100",
+              "pagination.key": key,
+            })
+
+            result.push(...list)
+            key = pagination?.next_key
+          } while (key)
+
+          return uniqBy(path(["operator_address"]), result)
+        },
+      }
+    })
+  )
+}
+
+export const useValidators = (chainID: string) => {
+  const lcd = useInterchainLCDClient()
 
   return useQuery(
-    [queryKey.staking.validators],
+    [queryKey.staking.validators, chainID],
     async () => {
-      // TODO: Pagination
-      // Required when the number of results exceed LAZY_LIMIT
+      const result: Validator[] = []
+      let key: string | null = ""
 
-      const [v1] = await lcd.staking.validators({
-        status: BondStatus[BondStatus.BOND_STATUS_UNBONDED],
-        ...Pagination,
-      })
+      do {
+        // @ts-expect-error
+        const [list, pagination] = await lcd.staking.validators(chainID, {
+          "pagination.limit": "100",
+          "pagination.key": key,
+        })
 
-      const [v2] = await lcd.staking.validators({
-        status: BondStatus[BondStatus.BOND_STATUS_UNBONDING],
-        ...Pagination,
-      })
+        result.push(...list)
+        key = pagination?.next_key
+      } while (key)
 
-      const [v3] = await lcd.staking.validators({
-        status: BondStatus[BondStatus.BOND_STATUS_BONDED],
-        ...Pagination,
-      })
-
-      return uniqBy(path(["operator_address"]), [...v1, ...v2, ...v3])
+      return uniqBy(path(["operator_address"]), result)
     },
     { ...RefetchOptions.INFINITY }
   )
@@ -50,12 +83,12 @@ export const useInterchainDelegations = () => {
   const lcd = useInterchainLCDClient()
 
   return useQueries(
-    Object.keys(addresses).map((chainName) => {
+    Object.keys(addresses).map((chainID) => {
       return {
-        queryKey: ["interchainDelegations", addresses[chainName]],
+        queryKey: [queryKey.staking.interchainDelegations, addresses, chainID],
         queryFn: async () => {
           const [delegations] = await lcd.staking.delegations(
-            addresses[chainName],
+            addresses[chainID],
             undefined,
             Pagination
           )
@@ -66,7 +99,7 @@ export const useInterchainDelegations = () => {
             }
           )
 
-          return { delegation, chainName }
+          return { delegation, chainID }
         },
       }
     })
@@ -74,7 +107,7 @@ export const useInterchainDelegations = () => {
 }
 
 export const useValidator = (operatorAddress: ValAddress) => {
-  const lcd = useLCDClient()
+  const lcd = useInterchainLCDClient()
   return useQuery(
     [queryKey.staking.validator, operatorAddress],
     () => lcd.staking.validator(operatorAddress),
@@ -82,18 +115,18 @@ export const useValidator = (operatorAddress: ValAddress) => {
   )
 }
 
-export const useDelegations = () => {
-  const address = useAddress()
-  const lcd = useLCDClient()
+export const useDelegations = (chainID: string) => {
+  const addresses = useInterchainAddresses()
+  const lcd = useInterchainLCDClient()
 
   return useQuery(
-    [queryKey.staking.delegations, address],
+    [queryKey.staking.delegations, addresses, chainID],
     async () => {
-      if (!address) return []
+      if (!addresses || !addresses[chainID]) return []
       // TODO: Pagination
       // Required when the number of results exceed LAZY_LIMIT
       const [delegations] = await lcd.staking.delegations(
-        address,
+        addresses[chainID],
         undefined,
         Pagination
       )
@@ -126,27 +159,52 @@ export const useDelegation = (validatorAddress: ValAddress) => {
   )
 }
 
-export const useUnbondings = () => {
-  const address = useAddress()
-  const lcd = useLCDClient()
+export const useInterchainUnbondings = () => {
+  const addresses = useInterchainAddresses() || {}
+  const lcd = useInterchainLCDClient()
+
+  return useQueries(
+    Object.keys(addresses).map((chainID) => {
+      return {
+        queryKey: [queryKey.staking.interchainUnbondings, addresses, chainID],
+        queryFn: async () => {
+          const [unbondings] = await lcd.staking.unbondingDelegations(
+            addresses[chainID]
+          )
+          return unbondings
+        },
+      }
+    })
+  )
+}
+
+export const useUnbondings = (chainID: string) => {
+  const addresses = useInterchainAddresses()
+  const lcd = useInterchainLCDClient()
 
   return useQuery(
-    [queryKey.staking.unbondings, address],
+    [queryKey.staking.unbondings, addresses, chainID],
     async () => {
-      if (!address) return []
+      if (!addresses || !addresses[chainID]) return []
       // Pagination is not required because it is already limited
-      const [unbondings] = await lcd.staking.unbondingDelegations(address)
+      const [unbondings] = await lcd.staking.unbondingDelegations(
+        addresses[chainID]
+      )
       return unbondings
     },
     { ...RefetchOptions.DEFAULT }
   )
 }
 
-export const useStakingPool = (chain: string) => {
+export const useStakingPool = (chainID: string) => {
   const lcd = useInterchainLCDClient()
-  return useQuery([queryKey.staking.pool], () => lcd.staking.pool(chain), {
-    ...RefetchOptions.INFINITY,
-  })
+  return useQuery(
+    [queryKey.staking.pool, chainID],
+    () => lcd.staking.pool(chainID),
+    {
+      ...RefetchOptions.INFINITY,
+    }
+  )
 }
 
 /* helpers */
@@ -193,7 +251,7 @@ export const calcDelegationsTotal = (delegations: Delegation[]) => {
 export const useCalcInterchainDelegationsTotal = (
   delegationsQueryResults: UseQueryResult<{
     delegation: Delegation[]
-    chainName: string
+    chainID: string
   }>[]
 ) => {
   const { data: prices } = useMemoizedPrices()
@@ -224,16 +282,16 @@ export const useCalcInterchainDelegationsTotal = (
               delegationsByDemon[balance.denom] = currecyPrice
               delegationsAmountsByDemon[balance.denom] = amount
 
-              if (!delegationsByChain[result.data.chainName]) {
-                delegationsByChain[result.data.chainName] = {}
-                delegationsByChain[result.data.chainName][balance.denom] = {
+              if (!delegationsByChain[result.data.chainID]) {
+                delegationsByChain[result.data.chainID] = {}
+                delegationsByChain[result.data.chainID][balance.denom] = {
                   value: 0,
                   amount: 0,
                 }
               }
 
               const chainSpecificAmount = BigNumber.sum(
-                delegationsByChain[result.data.chainName][balance.denom]
+                delegationsByChain[result.data.chainID][balance.denom]
                   ?.amount || 0,
                 balance.amount.toNumber()
               ).toNumber()
@@ -242,7 +300,7 @@ export const useCalcInterchainDelegationsTotal = (
                 (chainSpecificAmount * (prices?.[token]?.price || 0)) /
                 10 ** decimals
 
-              delegationsByChain[result.data.chainName][balance.denom] = {
+              delegationsByChain[result.data.chainID][balance.denom] = {
                 value: chainSpecificCurrecyPrice,
                 amount: chainSpecificAmount,
               }
@@ -280,6 +338,111 @@ export const useCalcInterchainDelegationsTotal = (
   })
 
   return { currencyTotal, graphData: { all: allData, ...tableDataByChain } }
+}
+
+/* Quick stake helpers */
+export const getQuickStakeEligibleVals = (validators: Validator[]) => {
+  const MAX_COMMISSION = 0.05
+  const VOTE_POWER_INCLUDE = 0.65
+
+  const totalStaked = getTotalStakedTokens(validators)
+  const vals = validators
+    .map((v) => ({ ...v, votingPower: Number(v.tokens) / totalStaked }))
+    .filter(
+      ({ commission, status }) =>
+        getIsBonded(status) &&
+        Number(commission.commission_rates.rate) <= MAX_COMMISSION
+    )
+    .sort((a, b) => a.votingPower - b.votingPower) // least to greatest
+    .reduce(
+      (acc, cur) => {
+        acc.sumVotePower += cur.votingPower
+        if (acc.sumVotePower < VOTE_POWER_INCLUDE) {
+          acc.elgible.push(cur.operator_address)
+        }
+        return acc
+      },
+      {
+        sumVotePower: 0,
+        elgible: [] as ValAddress[],
+      }
+    )
+  return shuffle(vals.elgible)
+}
+
+export const getTotalStakedTokens = (validators: Validator[]) => {
+  return BigNumber.sum(
+    ...validators.map(({ tokens = 0 }) => Number(tokens))
+  ).toNumber()
+}
+
+export const getQuickStakeMsgs = (
+  address: string,
+  coin: Coin,
+  elgibleVals: ValAddress[],
+  decimals: number
+) => {
+  const { denom, amount } = coin.toData()
+  const totalAmt = new BigNumber(amount)
+  const isLessThanAmt = (amt: number) =>
+    totalAmt.isLessThan(toAmount(amt, { decimals }))
+
+  const numOfValDests = isLessThanAmt(100)
+    ? 1
+    : isLessThanAmt(1000)
+    ? 2
+    : isLessThanAmt(10000)
+    ? 3
+    : 4
+
+  const destVals = shuffle(elgibleVals).slice(0, numOfValDests)
+
+  const msgs = destVals.map(
+    (valDest) =>
+      new MsgDelegate(
+        address,
+        valDest,
+        new Coin(denom, totalAmt.dividedToIntegerBy(destVals.length).toString())
+      )
+  )
+  return msgs
+}
+
+//  choose random val and undelegate amount and if not matchign amount add next random validator until remainder of desired stake is met
+export const getQuickUnstakeMsgs = (
+  address: string,
+  coin: Coin,
+  delegations: Delegation[]
+) => {
+  const { denom, amount } = coin.toData()
+  const bnAmt = new BigNumber(amount)
+  const msgs = []
+  let remaining = bnAmt
+
+  for (const delegation of delegations) {
+    const { balance, validator_address } = delegation
+    const delAmt = new BigNumber(balance.amount.toString())
+    msgs.push(
+      new MsgUndelegate(
+        address,
+        validator_address,
+        new Coin(
+          denom,
+          remaining.lt(delAmt) ? remaining.toString() : delAmt.toString()
+        )
+      )
+    )
+    if (remaining.lt(delAmt)) {
+      remaining = new BigNumber(0)
+    } else {
+      remaining = remaining.minus(delAmt)
+    }
+    if (remaining.isZero()) {
+      break
+    }
+  }
+
+  return msgs
 }
 
 /* unbonding */

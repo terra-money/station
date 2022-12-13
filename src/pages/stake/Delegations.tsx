@@ -1,33 +1,44 @@
 import { useTranslation } from "react-i18next"
-import { AccAddress, Coin } from "@terra-money/terra.js"
+import { AccAddress, Coin, Delegation } from "@terra-money/feather.js"
 import { getMaxHeightStyle } from "utils/style"
 import { combineState } from "data/query"
-import { useMemoizedCalcValue } from "data/queries/coingecko"
-import { calcDelegationsTotal } from "data/queries/staking"
-import { useDelegations } from "data/queries/staking"
-import { useValidators } from "data/queries/staking"
+import { useMemoizedPrices } from "data/queries/coingecko"
+import { useInterchainDelegations } from "data/queries/staking"
 import { ValidatorLink } from "components/general"
 import { ModalButton } from "components/feedback"
 import { Table } from "components/layout"
 import { Read } from "components/token"
 import StakedCard from "./components/StakedCard"
+import { useNativeDenoms } from "data/token"
 
 const Delegations = () => {
   const { t } = useTranslation()
-  const calcValue = useMemoizedCalcValue()
+  const readNativeDenom = useNativeDenoms()
+  const { data: prices, ...pricesState } = useMemoizedPrices()
 
-  const { data: validators, ...validatorsState } = useValidators()
-  const { data: delegations, ...delegationsState } = useDelegations()
-  const state = combineState(validatorsState, delegationsState)
+  const interchainDelegations = useInterchainDelegations()
+
+  const delegations: Delegation[] = interchainDelegations.reduce(
+    (acc, { data }) => (data ? [...data?.delegation, ...acc] : acc),
+    [] as Delegation[]
+  )
+  const state = combineState(pricesState, ...interchainDelegations)
 
   /* render */
   const title = t("Delegations")
 
   const render = () => {
-    if (!delegations) return null
+    if (!delegations || !prices) return null
 
-    const total = calcDelegationsTotal(delegations)
-    const value = calcValue({ amount: total, denom: "uluna" })
+    //const total = calcDelegationsTotal(delegations);
+    const total = delegations.reduce((acc, { balance }) => {
+      const { token, decimals } = readNativeDenom(balance.denom)
+      return (
+        acc +
+        (balance.amount.toNumber() * (prices[token]?.price || 0)) /
+          10 ** decimals
+      )
+    }, 0)
 
     return (
       <ModalButton
@@ -36,8 +47,7 @@ const Delegations = () => {
           <StakedCard
             {...state}
             title={title}
-            amount={total}
-            value={value}
+            amount={total.toString()}
             onClick={open}
           />
         )}

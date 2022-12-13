@@ -36,6 +36,7 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
   const address = useAddress()
   const calcValue = useMemoizedCalcValue()
   const findMoniker = getFindMoniker(validators)
+  // @ts-expect-error
   const { byValidator } = calcRewardsValues(rewards, currency.id, calcValue)
 
   /* tx context */

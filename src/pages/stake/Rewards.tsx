@@ -2,9 +2,9 @@ import { useTranslation } from "react-i18next"
 import { useCurrency } from "data/settings/Currency"
 import { combineState } from "data/query"
 import { calcRewardsValues, useRewards } from "data/queries/distribution"
-import { useExchangeRates } from "data/queries/coingecko"
+import { useExchangeRates, useMemoizedPrices } from "data/queries/coingecko"
 import { useMemoizedCalcValue } from "data/queries/coingecko"
-import { WithTokenItem } from "data/token"
+import { useNativeDenoms, WithTokenItem } from "data/token"
 import { ModalButton } from "components/feedback"
 import { TokenCard, TokenCardGrid } from "components/token"
 import { TooltipIcon } from "components/display"
@@ -15,18 +15,30 @@ const Rewards = () => {
   const { t } = useTranslation()
   const currency = useCurrency()
   const calcValue = useMemoizedCalcValue()
+  const readNativeDenom = useNativeDenoms()
+  const { data: prices, ...pricesState } = useMemoizedPrices()
 
   const { data: rewards, ...rewardsState } = useRewards()
   const { data: exchangeRates, ...exchangeRatesState } = useExchangeRates()
-  const state = combineState(rewardsState, exchangeRatesState)
+  const state = combineState(rewardsState, exchangeRatesState, pricesState)
 
   /* render */
   const title = t("Staking rewards")
   const render = () => {
-    if (!rewards) return null
+    if (!rewards || !prices) return null
+
+    const coinsValue = rewards.total
+      .toData()
+      ?.reduce((acc, { amount, denom }) => {
+        const { token, decimals } = readNativeDenom(denom)
+        return (
+          acc +
+          (parseInt(amount) * (prices?.[token]?.price || 0)) / 10 ** decimals
+        )
+      }, 0)
+
     const { total } = calcRewardsValues(rewards, currency.id, calcValue)
-    const { sum, list } = total
-    const amount = list.find(({ denom }) => denom === "uluna")?.amount ?? "0"
+    const { list } = total
 
     return (
       <ModalButton
@@ -39,13 +51,9 @@ const Rewards = () => {
                 {title}
               </TooltipIcon>
             }
-            amount={amount}
-            value={sum}
+            amount={coinsValue.toString()}
             onClick={open}
-          >
-            {list.length > 1 &&
-              `+${t("{{length}} coins", { length: list.length - 1 })}`}
-          </StakedCard>
+          ></StakedCard>
         )}
       >
         <TokenCardGrid maxHeight>

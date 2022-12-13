@@ -25,7 +25,7 @@ const NetWorth = () => {
 
   return (
     <article className={styles.networth}>
-      <p>Net Worth</p>
+      <p>Asset Value</p>
       <h1>
         {currency.unit} {coinsValue.toFixed(2)}
       </h1>
