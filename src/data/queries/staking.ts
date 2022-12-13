@@ -20,6 +20,7 @@ import { readAmount, toAmount } from "@terra.kitchen/utils"
 import { useMemoizedPrices } from "data/queries/coingecko"
 import { useNativeDenoms } from "data/token"
 import shuffle from "utils/shuffle"
+import { getIsBonded } from "pages/stake/ValidatorsList"
 
 export const useInterchainValidators = () => {
   const addresses = useInterchainAddresses() || {}
@@ -348,7 +349,8 @@ export const getQuickStakeEligibleVals = (validators: Validator[]) => {
   const vals = validators
     .map((v) => ({ ...v, votingPower: Number(v.tokens) / totalStaked }))
     .filter(
-      ({ commission }) =>
+      ({ commission, status }) =>
+        getIsBonded(status) &&
         Number(commission.commission_rates.rate) <= MAX_COMMISSION
     )
     .sort((a, b) => a.votingPower - b.votingPower) // least to greatest
