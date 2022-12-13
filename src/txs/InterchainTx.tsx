@@ -111,7 +111,7 @@ function InterchainTx<TxValues>(props: Props<TxValues>) {
     gasAdjustment,
     msgs: simulationTx?.msgs.map((msg) => msg.toData()),
   }
-
+  console.log(key)
   const { data: estimatedGas, ...estimatedGasState } = useQuery(
     [queryKey.tx.create, key, isWalletEmpty],
     async () => {

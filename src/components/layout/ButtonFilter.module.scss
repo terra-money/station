@@ -1,0 +1,57 @@
+@use "sass:color";
+@import "mixins";
+
+.buttonfilter {
+  .header {
+    margin-bottom: 10px;
+    color: var(--text-muted);
+  }
+
+  .actions {
+    @include flex(flex-start);
+    gap: 0.4rem;
+    margin-bottom: 20px;
+    color: var(--text-muted);
+
+    button {
+      @include flex(center);
+      gap: 0.5rem;
+      min-width: 4rem;
+      border: var(--border-width) solid var(--card-border);
+      border-radius: 1rem;
+      padding: 0.1rem 1rem;
+      box-shadow: inset 0px 0px 0 0.5px var(--card-border);
+      transition: all 0.1s;
+      height: 3rem;
+
+      img {
+        height: 1rem;
+        opacity: 0.75;
+      }
+
+      &:hover {
+        border-color: var(--input-border);
+        box-shadow: inset 0px 0px 0 0.5px var(--input-border);
+
+        img {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .active {
+    background-color: var(--button-default-bg);
+    border: var(--border-width) solid var(--button-default-bg);
+    color: var(--text);
+
+    img {
+      height: 1rem;
+      opacity: 1;
+    }
+
+    &:hover {
+      cursor: default;
+    }
+  }
+}

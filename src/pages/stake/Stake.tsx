@@ -8,6 +8,7 @@ import {
   useInterchainDelegations,
   useCalcInterchainDelegationsTotal,
 } from "data/queries/staking"
+import QuickStake from "./QuickStake"
 
 const Stake = () => {
   const { t } = useTranslation()
@@ -19,7 +20,7 @@ const Stake = () => {
     {
       key: "quick",
       tab: "Quick Stake",
-      children: <Validators />,
+      children: <QuickStake />,
     },
     {
       key: "manual",
