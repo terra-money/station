@@ -2,34 +2,57 @@ import { useTranslation } from "react-i18next"
 import { AccAddress, Dec } from "@terra-money/terra.js"
 import { getMaxHeightStyle } from "utils/style"
 import { combineState } from "data/query"
-import { useMemoizedCalcValue } from "data/queries/coingecko"
-import { calcUnbondingsTotal, flattenUnbondings } from "data/queries/staking"
-import { useValidators, useUnbondings } from "data/queries/staking"
+import { useMemoizedPrices } from "data/queries/coingecko"
+import {
+  flattenUnbondings,
+  useInterchainUnbondings,
+} from "data/queries/staking"
 import { ValidatorLink } from "components/general"
 import { ModalButton } from "components/feedback"
 import { Table } from "components/layout"
 import { Read } from "components/token"
 import { ToNow, TooltipIcon } from "components/display"
 import StakedCard from "./components/StakedCard"
-import { useChainID } from "data/wallet"
+import { UnbondingDelegation } from "@terra-money/feather.js"
+import { useNetwork } from "data/wallet"
+import { useNativeDenoms } from "data/token"
 
 const Unbondings = () => {
   const { t } = useTranslation()
-  const calcValue = useMemoizedCalcValue()
-  const chainID = useChainID()
+  const networks = useNetwork()
+  const readNativeDenom = useNativeDenoms()
+  const { data: prices, ...pricesState } = useMemoizedPrices()
 
-  const { data: validators, ...validatorsState } = useValidators(chainID)
-  const { data: unbondings, ...unbondingsState } = useUnbondings(chainID)
-  const state = combineState(validatorsState, unbondingsState)
+  const interchainUnbondings = useInterchainUnbondings()
+  const unbondings = interchainUnbondings.reduce(
+    (acc, { data }) => (data ? [...data, ...acc] : acc),
+    [] as UnbondingDelegation[]
+  )
+
+  const state = combineState(pricesState, ...interchainUnbondings)
 
   /* render */
   const title = t("Undelegations")
 
   const render = () => {
-    if (!unbondings) return null
+    if (!unbondings || !prices) return null
 
-    const total = calcUnbondingsTotal(unbondings)
-    const value = calcValue({ amount: total, denom: "uluna" })
+    //const total = calcUnbondingsTotal(unbondings)
+    const total = unbondings.reduce((acc, unbonding) => {
+      let balance = 0
+
+      unbonding.entries.forEach((entry) => {
+        balance += entry.balance.toNumber()
+      })
+
+      const { token, decimals } = readNativeDenom(
+        Object.values(networks).find(
+          ({ prefix }) => prefix === unbonding.delegator_address
+        )?.baseAsset || "uluna"
+      )
+      return acc + (balance * (prices[token]?.price || 0)) / 10 ** decimals
+    }, 0)
+
     const list = flattenUnbondings(unbondings)
 
     return (
@@ -48,8 +71,7 @@ const Unbondings = () => {
                 {title}
               </TooltipIcon>
             }
-            amount={total}
-            value={value}
+            amount={total.toString()}
             onClick={open}
           />
         )}

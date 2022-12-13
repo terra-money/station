@@ -71,11 +71,13 @@ export const queryKey = mirror({
   },
   tendermint: { nodeInfo: "" },
   staking: {
+    interchainValidators: "",
     validators: "",
     validator: "",
     interchainDelegations: "",
     delegations: "",
     delegation: "",
+    interchainUnbondings: "",
     unbondings: "",
     pool: "",
   },

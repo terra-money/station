@@ -7,7 +7,6 @@ import { TerraValidator } from "types/validator"
 import { TerraProposalItem } from "types/proposal"
 import { useNetwork, useNetworkName } from "data/wallet"
 import { queryKey, RefetchOptions } from "../query"
-import { BondStatus } from "@terra-money/terra.proto/cosmos/staking/v1beta1/staking"
 import { useValidators } from "data/queries/staking"
 
 export enum Aggregate {

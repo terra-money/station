@@ -80,7 +80,6 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
   const rewardsValues = useMemo(() => {
     const defaultValues = { address: destination, sum: "0", list: [] }
     if (!rewards) return defaultValues
-    // @ts-expect-error
     const { byValidator } = calcRewardsValues(rewards, currency.id, calcValue)
     const values = byValidator.find(({ address }) => address === destination)
     return values ?? defaultValues

@@ -2,6 +2,7 @@ import { useQuery } from "react-query"
 import BigNumber from "bignumber.js"
 import {
   AccAddress,
+  Coin,
   Coins,
   Rewards,
   ValAddress,
@@ -13,16 +14,30 @@ import { queryKey, RefetchOptions } from "../query"
 import { useAddress } from "../wallet"
 import { useInterchainLCDClient, useLCDClient } from "./lcdClient"
 import { CalcValue } from "./coingecko"
+import { useInterchainAddresses } from "auth/hooks/useAddress"
 
 export const useRewards = () => {
-  const address = useAddress()
-  const lcd = useLCDClient()
+  const addresses = useInterchainAddresses()
+  const lcd = useInterchainLCDClient()
 
   return useQuery(
-    [queryKey.distribution.rewards, address],
+    [queryKey.distribution.rewards, addresses],
     async () => {
-      if (!address) return { total: new Coins(), rewards: {} }
-      return await lcd.distribution.rewards(address)
+      if (!addresses) return { total: new Coins(), rewards: {} }
+      const results = await Promise.all(
+        Object.values(addresses).map((address) =>
+          lcd.distribution.rewards(address)
+        )
+      )
+      let total: Coin.Data[] = []
+      let rewards = {}
+
+      results.forEach((result) => {
+        total = [...total, ...result.total.toData()]
+        rewards = { ...rewards, ...result.rewards }
+      })
+
+      return { total: Coins.fromData(total), rewards }
     },
     { ...RefetchOptions.DEFAULT }
   )

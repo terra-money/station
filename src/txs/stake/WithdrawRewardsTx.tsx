@@ -35,7 +35,6 @@ const WithdrawRewardsTx = () => {
   const render = () => {
     if (!activeDenoms) return null
     if (!(rewards && delegations && validators && IBCWhitelist)) return null
-    // @ts-expect-error
     const { total } = calcRewardsValues(rewards, currency.id, calcValue)
     const hasRewards = !!has(total.sum)
     const hasDelegations = !!delegations.length

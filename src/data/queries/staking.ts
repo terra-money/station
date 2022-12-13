@@ -21,6 +21,36 @@ import { useMemoizedPrices } from "data/queries/coingecko"
 import { useNativeDenoms } from "data/token"
 import shuffle from "utils/shuffle"
 
+export const useInterchainValidators = () => {
+  const addresses = useInterchainAddresses() || {}
+  const lcd = useInterchainLCDClient()
+
+  return useQueries(
+    Object.keys(addresses).map((chainID) => {
+      return {
+        queryKey: [queryKey.staking.interchainValidators, addresses, chainID],
+        queryFn: async () => {
+          const result: Validator[] = []
+          let key: string | null = ""
+
+          do {
+            // @ts-expect-error
+            const [list, pagination] = await lcd.staking.validators(chainID, {
+              "pagination.limit": "100",
+              "pagination.key": key,
+            })
+
+            result.push(...list)
+            key = pagination?.next_key
+          } while (key)
+
+          return uniqBy(path(["operator_address"]), result)
+        },
+      }
+    })
+  )
+}
+
 export const useValidators = (chainID: string) => {
   const lcd = useInterchainLCDClient()
 
@@ -52,16 +82,12 @@ export const useInterchainDelegations = () => {
   const lcd = useInterchainLCDClient()
 
   return useQueries(
-    Object.keys(addresses).map((chainName) => {
+    Object.keys(addresses).map((chainID) => {
       return {
-        queryKey: [
-          queryKey.staking.interchainDelegations,
-          addresses,
-          chainName,
-        ],
+        queryKey: [queryKey.staking.interchainDelegations, addresses, chainID],
         queryFn: async () => {
           const [delegations] = await lcd.staking.delegations(
-            addresses[chainName],
+            addresses[chainID],
             undefined,
             Pagination
           )
@@ -72,7 +98,7 @@ export const useInterchainDelegations = () => {
             }
           )
 
-          return { delegation, chainName }
+          return { delegation, chainID }
         },
       }
     })
@@ -129,6 +155,25 @@ export const useDelegation = (validatorAddress: ValAddress) => {
       }
     },
     { ...RefetchOptions.DEFAULT }
+  )
+}
+
+export const useInterchainUnbondings = () => {
+  const addresses = useInterchainAddresses() || {}
+  const lcd = useInterchainLCDClient()
+
+  return useQueries(
+    Object.keys(addresses).map((chainID) => {
+      return {
+        queryKey: [queryKey.staking.interchainUnbondings, addresses, chainID],
+        queryFn: async () => {
+          const [unbondings] = await lcd.staking.unbondingDelegations(
+            addresses[chainID]
+          )
+          return unbondings
+        },
+      }
+    })
   )
 }
 
@@ -205,7 +250,7 @@ export const calcDelegationsTotal = (delegations: Delegation[]) => {
 export const useCalcInterchainDelegationsTotal = (
   delegationsQueryResults: UseQueryResult<{
     delegation: Delegation[]
-    chainName: string
+    chainID: string
   }>[]
 ) => {
   const { data: prices } = useMemoizedPrices()
@@ -236,16 +281,16 @@ export const useCalcInterchainDelegationsTotal = (
               delegationsByDemon[balance.denom] = currecyPrice
               delegationsAmountsByDemon[balance.denom] = amount
 
-              if (!delegationsByChain[result.data.chainName]) {
-                delegationsByChain[result.data.chainName] = {}
-                delegationsByChain[result.data.chainName][balance.denom] = {
+              if (!delegationsByChain[result.data.chainID]) {
+                delegationsByChain[result.data.chainID] = {}
+                delegationsByChain[result.data.chainID][balance.denom] = {
                   value: 0,
                   amount: 0,
                 }
               }
 
               const chainSpecificAmount = BigNumber.sum(
-                delegationsByChain[result.data.chainName][balance.denom]
+                delegationsByChain[result.data.chainID][balance.denom]
                   ?.amount || 0,
                 balance.amount.toNumber()
               ).toNumber()
@@ -254,7 +299,7 @@ export const useCalcInterchainDelegationsTotal = (
                 (chainSpecificAmount * (prices?.[token]?.price || 0)) /
                 10 ** decimals
 
-              delegationsByChain[result.data.chainName][balance.denom] = {
+              delegationsByChain[result.data.chainID][balance.denom] = {
                 value: chainSpecificCurrecyPrice,
                 amount: chainSpecificAmount,
               }

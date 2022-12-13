@@ -29,7 +29,6 @@ const Rewards = () => {
 
   const render = () => {
     if (!(rewards && delegations && unbondings)) return null
-    // @ts-expect-error
     const rewardsValues = calcRewardsValues(rewards, currency.id, calcValue)
     const delegationTotal = calcDelegationsTotal(delegations)
     const unbondingsTotal = calcUnbondingsTotal(unbondings)
