@@ -11,15 +11,13 @@ import { Table } from "components/layout"
 import { Read } from "components/token"
 import { ToNow, TooltipIcon } from "components/display"
 import StakedCard from "./components/StakedCard"
-import { useChainID } from "data/wallet"
 
 const Unbondings = () => {
   const { t } = useTranslation()
   const calcValue = useMemoizedCalcValue()
-  const chainID = useChainID()
 
-  const { data: validators, ...validatorsState } = useValidators(chainID)
-  const { data: unbondings, ...unbondingsState } = useUnbondings(chainID)
+  const { data: validators, ...validatorsState } = useValidators()
+  const { data: unbondings, ...unbondingsState } = useUnbondings()
   const state = combineState(validatorsState, unbondingsState)
 
   /* render */

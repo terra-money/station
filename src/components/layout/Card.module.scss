@@ -106,10 +106,6 @@
   background: var(--bg);
 }
 
-.muted {
-  background: var(--card-bg-muted);
-}
-
 .error .main {
   @include flex;
 }

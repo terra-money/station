@@ -2,7 +2,7 @@ import { ReactNode, useMemo } from "react"
 import { capitalize } from "@mui/material"
 import { isDenom, truncate } from "@terra.kitchen/utils"
 import { AccAddress, Coin, Coins, ValAddress } from "@terra-money/terra.js"
-import { useAddress, useChainID } from "data/wallet"
+import { useAddress } from "data/wallet"
 import { useValidators } from "data/queries/staking"
 import { WithTokenItem } from "data/token"
 import { useCW20Contracts, useCW20Whitelist } from "data/Terra/TerraAssets"
@@ -11,9 +11,7 @@ import { Read } from "components/token"
 import styles from "./TxMessage.module.scss"
 
 const ValidatorAddress = ({ children: address }: { children: string }) => {
-  // TODO: handle multichain
-  const chainID = useChainID()
-  const { data: validators } = useValidators(chainID)
+  const { data: validators } = useValidators()
   const moniker = validators?.find(
     ({ operator_address }) => operator_address === address
   )?.description.moniker

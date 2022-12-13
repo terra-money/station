@@ -6,7 +6,7 @@ import themes, { Theme } from "styles/themes/themes"
 import { DefaultTheme, SettingKey } from "utils/localStorage"
 import { getLocalSetting, setLocalSetting } from "utils/localStorage"
 import { debug } from "utils/env"
-import { useAddress, useChainID, useNetworkName } from "data/wallet"
+import { useAddress, useNetworkName } from "data/wallet"
 import { calcDelegationsTotal, useDelegations } from "../queries/staking"
 
 export const themeNameState = atom({
@@ -68,9 +68,8 @@ export const validateTheme = (staked: string, theme?: Theme) => {
 
 export const useValidateTheme = () => {
   const networkName = useNetworkName()
-  const chainID = useChainID()
   const address = useAddress()
-  const { data: delegations } = useDelegations(chainID)
+  const { data: delegations } = useDelegations()
   if (debug.theme || networkName !== "mainnet") return always(true)
   if (!address || !delegations) return always(true)
   const staked = calcDelegationsTotal(delegations)

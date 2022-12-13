@@ -7,12 +7,10 @@ import DelegationsPromote from "app/containers/DelegationsPromote"
 import Delegations from "./Delegations"
 import Unbondings from "./Unbondings"
 import Rewards from "./Rewards"
-import { useChainID } from "data/wallet"
 
 const Staked = () => {
-  const chainID = useChainID()
-  const { data: delegations, ...delegationsState } = useDelegations(chainID)
-  const { data: unbondings, ...unbondingsState } = useUnbondings(chainID)
+  const { data: delegations, ...delegationsState } = useDelegations()
+  const { data: unbondings, ...unbondingsState } = useUnbondings()
   const { data: rewards, ...rewardsState } = useRewards()
   const state = combineState(delegationsState, unbondingsState, rewardsState)
 

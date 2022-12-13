@@ -24,7 +24,6 @@ const Rewards = () => {
   const title = t("Staking rewards")
   const render = () => {
     if (!rewards) return null
-    // @ts-expect-error
     const { total } = calcRewardsValues(rewards, currency.id, calcValue)
     const { sum, list } = total
     const amount = list.find(({ denom }) => denom === "uluna")?.amount ?? "0"

@@ -1,11 +1,11 @@
 import { useTranslation } from "react-i18next"
 import { readPercent } from "@terra.kitchen/utils"
+import { TerraValidator } from "types/validator"
 import { Card } from "components/layout"
 import { ToNow } from "components/display"
 import ValidatorNumbers from "./components/ValidatorNumbers"
-import { Validator } from "@terra-money/feather.js"
 
-const ValidatorCommission = ({ validator }: { validator: Validator }) => {
+const ValidatorCommission = ({ validator }: { validator: TerraValidator }) => {
   const { t } = useTranslation()
 
   const { commission } = validator
@@ -15,15 +15,15 @@ const ValidatorCommission = ({ validator }: { validator: Validator }) => {
   const commissions = [
     {
       title: t("Current"),
-      content: readPercent(Number(rate)),
+      content: readPercent(rate),
     },
     {
       title: t("Max"),
-      content: readPercent(Number(max_rate)),
+      content: readPercent(max_rate),
     },
     {
       title: t("Max daily change"),
-      content: readPercent(Number(max_change_rate)),
+      content: readPercent(max_change_rate),
     },
     {
       title: t("Last changed"),

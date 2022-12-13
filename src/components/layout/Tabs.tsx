@@ -9,7 +9,7 @@ const cx = classNames.bind(styles)
 interface Props {
   tabs: { key: string; tab: string; children: ReactNode; disabled?: boolean }[]
   defaultActiveKey?: string
-  type: "line" | "card" | "page"
+  type: "line" | "card"
   reversed?: boolean
   state?: boolean
 }
@@ -28,7 +28,7 @@ const Tabs = ({ tabs, defaultActiveKey, type, reversed, state }: Props) => {
   const [activeKey, setActiveKey] = useState(initial)
 
   return (
-    <div>
+    <>
       <section className={cx(styles.tabs, type, { reversed })}>
         {tabs.map(({ key, tab, disabled }) =>
           state ? (
@@ -59,14 +59,9 @@ const Tabs = ({ tabs, defaultActiveKey, type, reversed, state }: Props) => {
           )
         )}
       </section>
-      {type === "page" ? (
-        <div className={styles.content}>
-          {tabs.find((tab) => tab.key === (state ? activeKey : hash))?.children}
-        </div>
-      ) : (
-        tabs.find((tab) => tab.key === (state ? activeKey : hash))?.children
-      )}
-    </div>
+
+      {tabs.find((tab) => tab.key === (state ? activeKey : hash))?.children}
+    </>
   )
 }
 
