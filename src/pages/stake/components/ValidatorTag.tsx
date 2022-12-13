@@ -28,3 +28,12 @@ export const ValidatorJailed = () => {
     </Tag>
   )
 }
+
+export const ValidatorUnbonded = () => {
+  const { t } = useTranslation()
+  return (
+    <Tag color="warning" small>
+      {t("Inactive")}
+    </Tag>
+  )
+}

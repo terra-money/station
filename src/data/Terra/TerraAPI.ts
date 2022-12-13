@@ -122,9 +122,11 @@ export const useTerraProposal = (id: number) => {
 /* helpers */
 export const getCalcVotingPowerRate = (validators: Validator[]) => {
   const total = BigNumber.sum(
-    ...validators.map(({ tokens = 0, status }) =>
-      status === BondStatus.BOND_STATUS_BONDED ? Number(tokens) : 0
-    )
+    ...validators
+      .filter(
+        ({ status }) => (status as unknown as string) === "BOND_STATUS_BONDED"
+      )
+      .map(({ tokens }) => tokens.toString())
   ).toNumber()
 
   return (address: ValAddress) => {
@@ -134,7 +136,7 @@ export const getCalcVotingPowerRate = (validators: Validator[]) => {
 
     if (!validator) return
     const { tokens, status } = validator
-    return status === BondStatus.BOND_STATUS_BONDED
+    return (status as unknown as string) === "BOND_STATUS_BONDED"
       ? Number(tokens ?? 0) / total
       : 0
   }

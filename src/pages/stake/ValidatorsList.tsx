@@ -1,4 +1,4 @@
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 import { readPercent } from "@terra.kitchen/utils"
@@ -12,8 +12,9 @@ import { useDelegations, useUnbondings } from "data/queries/staking"
 import { getCalcVotingPowerRate } from "data/Terra/TerraAPI"
 import { Table, Flex, Grid, Page } from "components/layout"
 import ProfileIcon from "./components/ProfileIcon"
-import { ValidatorJailed } from "./components/ValidatorTag"
+import { ValidatorJailed, ValidatorUnbonded } from "./components/ValidatorTag"
 import styles from "./Validators.module.scss"
+import { Toggle } from "components/form"
 
 const ValidatorsList = ({
   chainID,
@@ -28,6 +29,9 @@ const ValidatorsList = ({
   const { data: delegations, ...delegationsState } = useDelegations(chainID)
   const { data: undelegations, ...undelegationsState } = useUnbondings(chainID)
 
+  const [showAll, setShowAll] = useState(false)
+  const toggle = () => setShowAll((state) => !state)
+
   const state = combineState(
     validatorsState,
     delegationsState,
@@ -40,7 +44,7 @@ const ValidatorsList = ({
     const calcRate = getCalcVotingPowerRate(validators)
 
     return validators
-      .filter(({ status }) => !getIsUnbonded(status))
+      .filter(({ status }) => showAll || !getIsUnbonded(status))
       .map((validator) => {
         const { operator_address } = validator
 
@@ -58,13 +62,16 @@ const ValidatorsList = ({
         }
       })
       .sort(({ rank: a }, { rank: b }) => a - b)
-  }, [validators])
+  }, [validators, showAll])
 
   if (!activeValidators) return null
 
   return (
     <Page {...state} invisible>
       <section className={styles.table}>
+        <Toggle checked={showAll} onChange={toggle}>
+          {t("Show inactive validators")}
+        </Toggle>
         <Table
           dataSource={activeValidators}
           filter={({ description: { moniker }, operator_address }) => {
@@ -74,7 +81,13 @@ const ValidatorsList = ({
             if (operator_address === keyword) return true
             return false
           }}
-          sorter={(a, b) => Number(a.jailed) - Number(b.jailed)}
+          sorter={(a, b) => {
+            const jailed = Number(a.jailed) - Number(b.jailed)
+            if (jailed) return jailed
+            return (
+              Number(getIsUnbonded(a.status)) - Number(getIsUnbonded(b.status))
+            )
+          }}
           rowKey={({ operator_address }) => operator_address}
           columns={[
             {
@@ -84,7 +97,7 @@ const ValidatorsList = ({
               sorter: ({ description: a }, { description: b }) =>
                 a.moniker.localeCompare(b.moniker),
               render: (moniker, validator) => {
-                const { operator_address, jailed } = validator
+                const { operator_address, jailed, status } = validator
                 //const { contact } = validator
 
                 const delegated = delegations?.find(
@@ -118,6 +131,9 @@ const ValidatorsList = ({
                       )*/}
 
                         {jailed && <ValidatorJailed />}
+                        {!jailed && getIsUnbonded(status) && (
+                          <ValidatorUnbonded />
+                        )}
                       </Flex>
 
                       {(delegated || undelegated) && (
