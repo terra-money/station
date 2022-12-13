@@ -11,13 +11,15 @@ import { ModalButton } from "components/feedback"
 import { Table } from "components/layout"
 import { Read } from "components/token"
 import StakedCard from "./components/StakedCard"
+import { useChainID } from "data/wallet"
 
 const Delegations = () => {
   const { t } = useTranslation()
   const calcValue = useMemoizedCalcValue()
+  const chainID = useChainID()
 
-  const { data: validators, ...validatorsState } = useValidators()
-  const { data: delegations, ...delegationsState } = useDelegations()
+  const { data: validators, ...validatorsState } = useValidators(chainID)
+  const { data: delegations, ...delegationsState } = useDelegations(chainID)
   const state = combineState(validatorsState, delegationsState)
 
   /* render */

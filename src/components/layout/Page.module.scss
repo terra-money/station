@@ -30,6 +30,10 @@
   margin-top: 20px;
 }
 
+.invisible {
+  padding: unset;
+}
+
 .header {
   @include flex(space-between);
 

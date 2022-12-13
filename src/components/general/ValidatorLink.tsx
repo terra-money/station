@@ -1,5 +1,5 @@
-import { ValAddress } from "@terra-money/terra.js"
-import { getFindMoniker, useValidators } from "data/queries/staking"
+import { ValAddress } from "@terra-money/feather.js"
+import { useValidator } from "data/queries/staking"
 import { FinderLink } from "../general"
 import { InternalLink } from "./Internal"
 
@@ -9,11 +9,13 @@ interface Props {
 }
 
 const ValidatorLink = ({ address, internal }: Props) => {
-  const { data: validators } = useValidators()
+  const { data: validator } = useValidator(address)
 
   const render = () => {
-    if (!validators) return null
-    const moniker = getFindMoniker(validators)(address)
+    if (!validator) return null
+    const {
+      description: { moniker },
+    } = validator
     return internal ? (
       <InternalLink to={`/validator/${address}`}>{moniker}</InternalLink>
     ) : (
