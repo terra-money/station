@@ -4,7 +4,7 @@
 .chainfilter,
 .chainfilter__out {
   .header {
-    padding: var(--grid-gap) 0;
+    padding-block: var(--grid-gap);
 
     .pills {
       @include flex(flex-start);

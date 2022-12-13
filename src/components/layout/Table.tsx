@@ -35,6 +35,7 @@ interface Props<T> {
   initialSorterKey?: string
   onSort?: () => void
 
+  className?: string
   size?: "default" | "small"
   bordered?: boolean
   style?: CSSProperties
@@ -43,7 +44,7 @@ interface Props<T> {
 
 function Table<T>({ dataSource, filter, rowKey, ...props }: Props<T>) {
   const { initialSorterKey, size = "default", bordered, style } = props
-  const { pagination } = props
+  const { pagination, className } = props
   const columns = props.columns.filter(({ hidden }) => !hidden)
 
   /* helpers */
@@ -119,7 +120,10 @@ function Table<T>({ dataSource, filter, rowKey, ...props }: Props<T>) {
   }
 
   return (
-    <div className={cx(styles.container, { bordered })} style={style}>
+    <div
+      className={classNames(cx(styles.container, { bordered }), className)}
+      style={style}
+    >
       <table className={cx(styles.table, size)}>
         <thead>
           <tr>

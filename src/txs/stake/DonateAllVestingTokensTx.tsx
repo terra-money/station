@@ -6,13 +6,14 @@ import { Page, Card } from "components/layout"
 import { Wrong } from "components/feedback"
 import TxContext from "../TxContext"
 import DonateAllVestingTokensForm from "./DonateAllVestingTokensForm"
+import { useChainID } from "data/wallet"
 
 const DonateAllVestingTokensTx = () => {
   const { t } = useTranslation()
-
+  const chainID = useChainID()
   const { data: account, ...accountState } = useAccount()
-  const { data: delegations, ...delegationsState } = useDelegations()
-  const { data: unbondings, ...unbondingsState } = useUnbondings()
+  const { data: delegations, ...delegationsState } = useDelegations(chainID)
+  const { data: unbondings, ...unbondingsState } = useUnbondings(chainID)
 
   const state = combineState(accountState, delegationsState, unbondingsState)
 

@@ -1,0 +1,184 @@
+import { useCallback, useMemo } from "react"
+import { useTranslation } from "react-i18next"
+import { useForm } from "react-hook-form"
+import { Coin } from "@terra-money/feather.js"
+import { toAmount } from "@terra.kitchen/utils"
+import { getAmount } from "utils/coin"
+import { combineState, queryKey } from "data/query"
+import { useNetwork } from "data/wallet"
+import { Grid, Page } from "components/layout"
+import { Form, FormItem, FormWarning, Input } from "components/form"
+import { getPlaceholder, toInput } from "../utils"
+import validate from "../validate"
+import InterchainTx from "txs/InterchainTx"
+import { getInitialGasDenom } from "../Tx"
+import { useNativeDenoms } from "data/token"
+import { QuickStakeAction } from "pages/stake/QuickStake"
+import {
+  getQuickStakeMsgs,
+  getQuickUnstakeMsgs,
+  getQuickStakeEligibleVals,
+  useValidators,
+  useDelegations,
+  calcDelegationsTotal,
+} from "data/queries/staking"
+import { useInterchainAddresses } from "auth/hooks/useAddress"
+
+interface TxValues {
+  input?: number
+}
+
+interface Props {
+  action: string
+  balances: { denom: string; amount: string }[]
+  chainID: string
+}
+
+const QuickStakeForm = (props: Props) => {
+  const { action, balances, chainID } = props
+
+  const { t } = useTranslation()
+  const addresses = useInterchainAddresses()
+  const address = addresses?.[chainID]
+  const network = useNetwork()
+  const { data: validators, ...validatorState } = useValidators(chainID)
+  const { data: delegations, ...delegationsState } = useDelegations(chainID)
+  const readNativeDenom = useNativeDenoms()
+  const state = combineState(validatorState, delegationsState)
+
+  const { baseAsset } = network[chainID]
+
+  /* tx context */
+  const initialGasDenom = getInitialGasDenom()
+
+  /* form */
+  const form = useForm<TxValues>({
+    mode: "onChange",
+  })
+
+  const { register, trigger, watch, setValue, handleSubmit, formState } = form
+  const { errors } = formState
+  const { input } = watch()
+  const amount = toAmount(input)
+
+  const elegibleVals = useMemo(() => {
+    if (!validators) return
+    return getQuickStakeEligibleVals(validators)
+  }, [validators])
+
+  const stakeMsgs = useMemo(() => {
+    if (!(address && elegibleVals)) return
+    const coin = new Coin(baseAsset, toAmount(input || toInput(1)))
+    const { decimals } = readNativeDenom(baseAsset)
+    return getQuickStakeMsgs(address, coin, elegibleVals, decimals)
+  }, [address, elegibleVals, baseAsset, input, readNativeDenom])
+
+  const unstakeMsgs = useMemo(() => {
+    if (!(address && delegations)) return
+    const coin = new Coin(baseAsset, toAmount(input || toInput(1)))
+    return getQuickUnstakeMsgs(address, coin, delegations)
+  }, [address, baseAsset, input, delegations])
+
+  /* tx */
+  const createTx = useCallback(
+    ({ input }: TxValues) => {
+      const msgs =
+        action === QuickStakeAction.DELEGATE ? stakeMsgs : unstakeMsgs
+      if (!msgs) return
+      return { msgs, chainID }
+    },
+    [action, unstakeMsgs, stakeMsgs, chainID]
+  )
+
+  /* fee */
+  const balance = {
+    [QuickStakeAction.DELEGATE]: getAmount(balances, baseAsset), // TODO flexible denom
+    [QuickStakeAction.UNBOND]: calcDelegationsTotal(delegations ?? []),
+  }[action]
+
+  const estimationTxValues = useMemo(() => ({ input: toInput(1) }), [])
+
+  const onChangeMax = useCallback(
+    async (input: number) => {
+      setValue("input", input)
+      await trigger("input")
+    },
+    [setValue, trigger]
+  )
+
+  const token = action === QuickStakeAction.DELEGATE ? baseAsset : ""
+
+  const tx = {
+    token,
+    amount,
+    balance,
+    initialGasDenom,
+    estimationTxValues,
+    createTx,
+    onChangeMax,
+    queryKeys: [
+      queryKey.staking.delegations,
+      queryKey.staking.unbondings,
+      queryKey.distribution.rewards,
+    ],
+    chain: chainID,
+  }
+
+  return (
+    <Page invisible {...state}>
+      <InterchainTx {...tx}>
+        {({ max, fee, submit }) => (
+          <Form onSubmit={handleSubmit(submit.fn)}>
+            {
+              {
+                [QuickStakeAction.DELEGATE]: (
+                  <FormWarning>
+                    {t(
+                      "Leave enough amount of coins to pay fee for subsequent transactions"
+                    )}
+                  </FormWarning>
+                ),
+                [QuickStakeAction.UNBOND]: (
+                  <Grid gap={4}>
+                    <FormWarning>
+                      {t(
+                        "Maximum 7 undelegations can be in progress at the same time"
+                      )}
+                    </FormWarning>
+                    <FormWarning>
+                      {t(
+                        "No reward is distributed during 21 days undelegation period"
+                      )}
+                    </FormWarning>
+                  </Grid>
+                ),
+              }[action]
+            }
+            <FormItem
+              label={t("Amount")}
+              extra={max.render()}
+              error={errors.input?.message}
+            >
+              <Input
+                {...register("input", {
+                  valueAsNumber: true,
+                  validate: validate.input(toInput(max.amount)),
+                })}
+                token={baseAsset}
+                onFocus={max.reset}
+                inputMode="decimal"
+                placeholder={getPlaceholder()}
+                autoFocus
+              />
+            </FormItem>
+
+            {fee.render()}
+            {submit.button}
+          </Form>
+        )}
+      </InterchainTx>
+    </Page>
+  )
+}
+
+export default QuickStakeForm
