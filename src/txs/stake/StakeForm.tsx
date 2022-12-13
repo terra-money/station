@@ -1,21 +1,20 @@
 import { useCallback, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
-import { AccAddress, Coin, ValAddress } from "@terra-money/feather.js"
-import { Delegation, Validator } from "@terra-money/feather.js"
-import { MsgDelegate, MsgUndelegate } from "@terra-money/feather.js"
-import { MsgBeginRedelegate } from "@terra-money/feather.js"
+import { AccAddress, Coin, ValAddress } from "@terra-money/terra.js"
+import { Delegation, Validator } from "@terra-money/terra.js"
+import { MsgDelegate, MsgUndelegate } from "@terra-money/terra.js"
+import { MsgBeginRedelegate } from "@terra-money/terra.js"
 import { toAmount } from "@terra.kitchen/utils"
 import { getAmount } from "utils/coin"
 import { queryKey } from "data/query"
-import { useNetwork } from "data/wallet"
+import { useAddress } from "data/wallet"
 import { getFindMoniker } from "data/queries/staking"
 import { Grid } from "components/layout"
 import { Form, FormItem, FormWarning, Input, Select } from "components/form"
 import { getPlaceholder, toInput } from "../utils"
 import validate from "../validate"
-import InterchainTx from "txs/InterchainTx"
-import { useInterchainAddresses } from "auth/hooks/useAddress"
+import Tx, { getInitialGasDenom } from "../Tx"
 
 interface TxValues {
   source?: ValAddress
@@ -34,18 +33,14 @@ interface Props {
   balances: { denom: string; amount: string }[]
   validators: Validator[]
   delegations: Delegation[]
-  chainID: string
 }
 
 const StakeForm = (props: Props) => {
-  const { tab, destination, balances, validators, delegations, chainID } = props
+  const { tab, destination, balances, validators, delegations } = props
 
   const { t } = useTranslation()
-  const addresses = useInterchainAddresses()
-  const address = addresses?.[chainID]
-  const networks = useNetwork()
+  const address = useAddress()
   const findMoniker = getFindMoniker(validators)
-  const { baseAsset } = networks[chainID]
 
   const delegationsOptions = delegations.filter(
     ({ validator_address }) =>
@@ -59,7 +54,7 @@ const StakeForm = (props: Props) => {
     )
 
   /* tx context */
-  const initialGasDenom = baseAsset
+  const initialGasDenom = getInitialGasDenom()
 
   /* form */
   const form = useForm<TxValues>({
@@ -78,12 +73,12 @@ const StakeForm = (props: Props) => {
       if (!address) return
 
       const amount = toAmount(input)
-      const coin = new Coin(baseAsset, amount)
+      const coin = new Coin("uluna", amount)
 
       if (tab === StakeAction.REDELEGATE) {
         if (!source) return
         const msg = new MsgBeginRedelegate(address, source, destination, coin)
-        return { msgs: [msg], chainID }
+        return { msgs: [msg] }
       }
 
       const msgs = {
@@ -91,14 +86,14 @@ const StakeForm = (props: Props) => {
         [StakeAction.UNBOND]: [new MsgUndelegate(address, destination, coin)],
       }[tab]
 
-      return { msgs, chainID }
+      return { msgs }
     },
-    [address, destination, tab, baseAsset, chainID]
+    [address, destination, tab]
   )
 
   /* fee */
   const balance = {
-    [StakeAction.DELEGATE]: getAmount(balances, baseAsset),
+    [StakeAction.DELEGATE]: getAmount(balances, "uluna"),
     [StakeAction.REDELEGATE]:
       (source && findDelegation(source)?.balance.amount.toString()) ?? "0",
     [StakeAction.UNBOND]:
@@ -121,7 +116,7 @@ const StakeForm = (props: Props) => {
     [setValue, trigger]
   )
 
-  const token = tab === StakeAction.DELEGATE ? baseAsset : ""
+  const token = tab === StakeAction.DELEGATE ? "uluna" : ""
   const tx = {
     token,
     amount,
@@ -139,11 +134,10 @@ const StakeForm = (props: Props) => {
       queryKey.staking.unbondings,
       queryKey.distribution.rewards,
     ],
-    chain: chainID,
   }
 
   return (
-    <InterchainTx {...tx}>
+    <Tx {...tx}>
       {({ max, fee, submit }) => (
         <Form onSubmit={handleSubmit(submit.fn)}>
           {
@@ -212,7 +206,7 @@ const StakeForm = (props: Props) => {
                 valueAsNumber: true,
                 validate: validate.input(toInput(max.amount)),
               })}
-              token={baseAsset}
+              token="uluna"
               onFocus={max.reset}
               inputMode="decimal"
               placeholder={getPlaceholder()}
@@ -224,7 +218,7 @@ const StakeForm = (props: Props) => {
           {submit.button}
         </Form>
       )}
-    </InterchainTx>
+    </Tx>
   )
 }
 

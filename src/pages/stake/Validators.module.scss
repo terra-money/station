@@ -14,12 +14,6 @@
   text-transform: uppercase;
 }
 
-.filter {
-  padding-inline: var(--main-padding-horizontal);
-}
-
-.table {
-  background-color: var(--card-bg-muted);
-  padding: 20px var(--main-padding-horizontal);
-  border-top: var(--border-width) solid var(--card-border);
+.tooltip {
+  white-space: nowrap;
 }

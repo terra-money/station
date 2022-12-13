@@ -1,8 +1,10 @@
 import { useQuery, useQueries, UseQueryResult } from "react-query"
 import { flatten, path, uniqBy } from "ramda"
 import BigNumber from "bignumber.js"
-import { AccAddress, ValAddress, Validator } from "@terra-money/feather.js"
-import { Delegation, UnbondingDelegation } from "@terra-money/feather.js"
+import { AccAddress, ValAddress, Validator } from "@terra-money/terra.js"
+import { Delegation, UnbondingDelegation } from "@terra-money/terra.js"
+/* FIXME(terra.js): Import from terra.js */
+import { BondStatus } from "@terra-money/terra.proto/cosmos/staking/v1beta1/staking"
 import { has } from "utils/num"
 import { StakeAction } from "txs/stake/StakeForm"
 import { queryKey, Pagination, RefetchOptions } from "../query"
@@ -13,27 +15,31 @@ import { readAmount } from "@terra.kitchen/utils"
 import { useMemoizedPrices } from "data/queries/coingecko"
 import { useNativeDenoms } from "data/token"
 
-export const useValidators = (chainID: string) => {
-  const lcd = useInterchainLCDClient()
+export const useValidators = () => {
+  const lcd = useLCDClient()
 
   return useQuery(
-    [queryKey.staking.validators, chainID],
+    [queryKey.staking.validators],
     async () => {
-      const result: Validator[] = []
-      let key: string | null = ""
+      // TODO: Pagination
+      // Required when the number of results exceed LAZY_LIMIT
 
-      do {
-        // @ts-expect-error
-        const [list, pagination] = await lcd.staking.validators(chainID, {
-          "pagination.limit": "100",
-          "pagination.key": key,
-        })
+      const [v1] = await lcd.staking.validators({
+        status: BondStatus[BondStatus.BOND_STATUS_UNBONDED],
+        ...Pagination,
+      })
 
-        result.push(...list)
-        key = pagination?.next_key
-      } while (key)
+      const [v2] = await lcd.staking.validators({
+        status: BondStatus[BondStatus.BOND_STATUS_UNBONDING],
+        ...Pagination,
+      })
 
-      return uniqBy(path(["operator_address"]), result)
+      const [v3] = await lcd.staking.validators({
+        status: BondStatus[BondStatus.BOND_STATUS_BONDED],
+        ...Pagination,
+      })
+
+      return uniqBy(path(["operator_address"]), [...v1, ...v2, ...v3])
     },
     { ...RefetchOptions.INFINITY }
   )
@@ -46,11 +52,7 @@ export const useInterchainDelegations = () => {
   return useQueries(
     Object.keys(addresses).map((chainName) => {
       return {
-        queryKey: [
-          queryKey.staking.interchainDelegations,
-          addresses,
-          chainName,
-        ],
+        queryKey: ["interchainDelegations", addresses[chainName]],
         queryFn: async () => {
           const [delegations] = await lcd.staking.delegations(
             addresses[chainName],
@@ -72,7 +74,7 @@ export const useInterchainDelegations = () => {
 }
 
 export const useValidator = (operatorAddress: ValAddress) => {
-  const lcd = useInterchainLCDClient()
+  const lcd = useLCDClient()
   return useQuery(
     [queryKey.staking.validator, operatorAddress],
     () => lcd.staking.validator(operatorAddress),
@@ -80,18 +82,18 @@ export const useValidator = (operatorAddress: ValAddress) => {
   )
 }
 
-export const useDelegations = (chainID: string) => {
-  const addresses = useInterchainAddresses()
-  const lcd = useInterchainLCDClient()
+export const useDelegations = () => {
+  const address = useAddress()
+  const lcd = useLCDClient()
 
   return useQuery(
-    [queryKey.staking.delegations, addresses, chainID],
+    [queryKey.staking.delegations, address],
     async () => {
-      if (!addresses || !addresses[chainID]) return []
+      if (!address) return []
       // TODO: Pagination
       // Required when the number of results exceed LAZY_LIMIT
       const [delegations] = await lcd.staking.delegations(
-        addresses[chainID],
+        address,
         undefined,
         Pagination
       )
@@ -124,33 +126,27 @@ export const useDelegation = (validatorAddress: ValAddress) => {
   )
 }
 
-export const useUnbondings = (chainID: string) => {
-  const addresses = useInterchainAddresses()
-  const lcd = useInterchainLCDClient()
+export const useUnbondings = () => {
+  const address = useAddress()
+  const lcd = useLCDClient()
 
   return useQuery(
-    [queryKey.staking.unbondings, addresses, chainID],
+    [queryKey.staking.unbondings, address],
     async () => {
-      if (!addresses || !addresses[chainID]) return []
+      if (!address) return []
       // Pagination is not required because it is already limited
-      const [unbondings] = await lcd.staking.unbondingDelegations(
-        addresses[chainID]
-      )
+      const [unbondings] = await lcd.staking.unbondingDelegations(address)
       return unbondings
     },
     { ...RefetchOptions.DEFAULT }
   )
 }
 
-export const useStakingPool = (chainID: string) => {
+export const useStakingPool = (chain: string) => {
   const lcd = useInterchainLCDClient()
-  return useQuery(
-    [queryKey.staking.pool, chainID],
-    () => lcd.staking.pool(chainID),
-    {
-      ...RefetchOptions.INFINITY,
-    }
-  )
+  return useQuery([queryKey.staking.pool], () => lcd.staking.pool(chain), {
+    ...RefetchOptions.INFINITY,
+  })
 }
 
 /* helpers */

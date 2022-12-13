@@ -2,13 +2,11 @@ import { useMemo } from "react"
 import { useQuery } from "react-query"
 import axios, { AxiosError } from "axios"
 import BigNumber from "bignumber.js"
-import { ValAddress, Validator } from "@terra-money/feather.js"
+import { OracleParams, ValAddress } from "@terra-money/terra.js"
 import { TerraValidator } from "types/validator"
 import { TerraProposalItem } from "types/proposal"
-import { useNetwork, useNetworkName } from "data/wallet"
+import { useNetworkName } from "data/wallet"
 import { queryKey, RefetchOptions } from "../query"
-import { BondStatus } from "@terra-money/terra.proto/cosmos/staking/v1beta1/staking"
-import { useValidators } from "data/queries/staking"
 
 export enum Aggregate {
   PERIODIC = "periodic",
@@ -120,23 +118,19 @@ export const useTerraProposal = (id: number) => {
 }
 
 /* helpers */
-export const getCalcVotingPowerRate = (validators: Validator[]) => {
+export const getCalcVotingPowerRate = (TerraValidators: TerraValidator[]) => {
   const total = BigNumber.sum(
-    ...validators.map(({ tokens = 0, status }) =>
-      status === BondStatus.BOND_STATUS_BONDED ? Number(tokens) : 0
-    )
+    ...TerraValidators.map(({ voting_power = 0 }) => voting_power)
   ).toNumber()
 
   return (address: ValAddress) => {
-    const validator = validators.find(
+    const validator = TerraValidators.find(
       ({ operator_address }) => operator_address === address
     )
 
     if (!validator) return
-    const { tokens, status } = validator
-    return status === BondStatus.BOND_STATUS_BONDED
-      ? Number(tokens ?? 0) / total
-      : 0
+    const { voting_power } = validator
+    return voting_power ? Number(validator.voting_power) / total : undefined
   }
 }
 
@@ -146,18 +140,20 @@ export const calcSelfDelegation = (validator?: TerraValidator) => {
   return self ? Number(self) / Number(tokens) : undefined
 }
 
-export const useVotingPowerRate = (address: ValAddress) => {
-  const networks = useNetwork()
-  const prefix = ValAddress.getPrefix(address)
-  const chainID = Object.values(networks).find(
-    ({ prefix: p }) => p === prefix
-  )?.chainID
+export const getCalcUptime = ({ slash_window }: OracleParams) => {
+  return (validator?: TerraValidator) => {
+    if (!validator) return
+    const { miss_counter } = validator
+    return miss_counter ? 1 - Number(miss_counter) / slash_window : undefined
+  }
+}
 
-  const { data: validators, ...state } = useValidators(chainID ?? "")
+export const useVotingPowerRate = (address: ValAddress) => {
+  const { data: TerraValidators, ...state } = useTerraValidators()
   const calcRate = useMemo(() => {
-    if (!validators) return
-    return getCalcVotingPowerRate(validators)
-  }, [validators])
+    if (!TerraValidators) return
+    return getCalcVotingPowerRate(TerraValidators)
+  }, [TerraValidators])
 
   const data = useMemo(() => {
     if (!calcRate) return

@@ -33,16 +33,9 @@
 /* search */
 .search {
   position: relative;
-  margin: 0 var(--main-padding-horizontal);
 
   .input {
     padding-left: 50px;
-    background-color: var(--card-bg-muted);
-    border: 0;
-
-    &::placeholder {
-      color: var(--text-muted);
-    }
   }
 
   .icon {
@@ -50,6 +43,5 @@
     left: 16px;
     position: absolute;
     transform: translate(0, -50%);
-    color: var(--text-muted);
   }
 }

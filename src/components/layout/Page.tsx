@@ -13,11 +13,10 @@ interface Props extends QueryState {
   mainClassName?: string
   small?: boolean
   sub?: boolean // used as a page in a page
-  invisible?: boolean // used as a page in a page with no margin
 }
 
 const Page = (props: PropsWithChildren<Props>) => {
-  const { title, extra, children, small, sub, invisible, mainClassName } = props
+  const { title, extra, children, small, sub, mainClassName } = props
 
   return (
     <WithFetching {...props}>
@@ -25,7 +24,7 @@ const Page = (props: PropsWithChildren<Props>) => {
         <>
           {progress}
 
-          <article className={cx(styles.page, { sub, small, invisible })}>
+          <article className={cx(styles.page, { sub, small })}>
             <Container className={styles.grid}>
               {title && (
                 <header className={styles.header}>

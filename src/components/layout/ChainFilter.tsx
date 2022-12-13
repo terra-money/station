@@ -1,4 +1,3 @@
-import classNames from "classnames"
 import { useNetwork } from "data/wallet"
 import { useState } from "react"
 import styles from "./ChainFilter.module.scss"
@@ -8,13 +7,11 @@ const ChainFilter = ({
   all,
   outside,
   title,
-  className,
 }: {
   children: (chain?: string) => React.ReactNode
   all?: boolean
   outside?: boolean
   title?: string
-  className?: string
 }) => {
   const networks = Object.values(useNetwork()).sort((a, b) =>
     a.name === "Terra" ? -1 : b.name === "Terra" ? 1 : 0
@@ -25,7 +22,7 @@ const ChainFilter = ({
 
   return (
     <div className={outside ? styles.chainfilter__out : styles.chainfilter}>
-      <div className={classNames(className, styles.header)}>
+      <div className={styles.header}>
         {title && <h1>{title}</h1>}
         <div className={styles.pills}>
           {all && (

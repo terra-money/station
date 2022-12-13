@@ -6,10 +6,10 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined"
 import { readPercent } from "@terra.kitchen/utils"
 import { ValAddress, Vote } from "@terra-money/terra.js"
 import { combineState } from "data/query"
-import { useDelegations, useValidators } from "data/queries/staking"
+import { useDelegations } from "data/queries/staking"
 import { useGetVoteOptionItem } from "data/queries/gov"
 import { getCalcVotingPowerRate } from "data/Terra/TerraAPI"
-import { useTerraProposal } from "data/Terra/TerraAPI"
+import { useTerraProposal, useTerraValidators } from "data/Terra/TerraAPI"
 import { ExternalLink } from "components/general"
 import { Card, Grid, Table } from "components/layout"
 import { Checkbox } from "components/form"
@@ -18,13 +18,11 @@ import { Tooltip } from "components/display"
 import { getIsUnbonded } from "../stake/Validators"
 import { options } from "./ProposalVotes"
 import styles from "./ProposalVotesByValidator.module.scss"
-import { useChainID } from "data/wallet"
 
 const cx = classNames.bind(styles)
 
 const ProposalVotesByValidator = ({ id }: { id: number }) => {
   const { t } = useTranslation()
-  const chainID = useChainID()
 
   const tooltipContents: Record<Vote.Option, string> = {
     [Vote.Option.VOTE_OPTION_YES]: t("Agree"),
@@ -44,10 +42,10 @@ const ProposalVotesByValidator = ({ id }: { id: number }) => {
   const [tab, setTab] = useState<Vote.Option>()
   const [delegatedOnly, setDelegatedOnly] = useState(false)
 
-  const { data: delegations, ...delegationsState } = useDelegations(chainID)
+  const { data: delegations, ...delegationsState } = useDelegations()
   const { data: TerraProposal, ...TerraProposalState } = useTerraProposal(id)
   const { data: TerraValidators, ...TerraValidatorsState } =
-    useValidators(chainID)
+    useTerraValidators()
 
   const state = combineState(
     delegationsState,
