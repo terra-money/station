@@ -1,3 +1,6 @@
-export function useMetamaskProvider() {
-  return window.misesEthereum || window.ethereum
+export function useWalletProvider() {
+  return walletPrivider()
+}
+export function walletPrivider() {
+  return window.misesWallet || window.misesEthereum || window.ethereum
 }

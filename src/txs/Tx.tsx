@@ -42,8 +42,9 @@ import { MisesClient, toInput } from "./utils"
 import { useTx } from "./TxContext"
 import styles from "./Tx.module.scss"
 import { StakeAction } from "./stake/StakeForm"
-import { useConnectWallet } from "auth/hooks/useAddress"
+import { isMisesWallet, useConnectWallet } from "auth/hooks/useAddress"
 import { toHump } from "utils/data"
+import { useWalletProvider } from "utils/hooks/useMetamaskProvider"
 
 export interface CreateTxErrorOptions {
   code: -1
@@ -134,7 +135,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
       const lcd = new LCDClient(config)
 
-      const misesClient = new MisesClient(lcd,  network.lcd)
+      const misesClient = new MisesClient(lcd, network.lcd)
 
       const unsignedTx = await misesClient.create([{ address }], {
         ...simulationTx,
@@ -177,8 +178,8 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const max = !gasFee.amount
     ? undefined
     : isDenom(token)
-    ? getNativeMax()
-    : balance
+      ? getNativeMax()
+      : balance
   const chainID = useChainID()
 
   /* (effect): Call the onChangeMax function whenever the max changes */
@@ -206,12 +207,12 @@ function Tx<TxValues>(props: Props<TxValues>) {
     passwordRequired && !password
       ? t("Enter password")
       : estimatedGasState.isLoading
-      ? t("Estimating fee...")
-      : estimatedGasState.error
-      ? t("Fee estimation failed")
-      : isBroadcasting
-      ? t("Broadcasting a tx...")
-      : props.disabled || ""
+        ? t("Estimating fee...")
+        : estimatedGasState.error
+          ? t("Fee estimation failed")
+          : isBroadcasting
+            ? t("Broadcasting a tx...")
+            : props.disabled || ""
 
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<Error>()
@@ -220,6 +221,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const lcd = useLCDClient()
   const toPostMultisigTx = useToPostMultisigTx()
   const misesState = useRecoilValue(misesStateDefault)
+  const provider = useWalletProvider();
   const submit = async (values: TxValues) => {
     setSubmitting(true)
     try {
@@ -239,7 +241,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
         const result = await auth.post({ ...tx, fee }, password)
         setLatestTx({ txhash: result.txhash, queryKeys, redirectAfterTx })
       } else {
-        const provider = window.mises;
+
         const accountInfo = await lcd.auth.accountInfo(misesState.misesId)
 
         const doc = new SignDoc(
@@ -247,11 +249,13 @@ function Tx<TxValues>(props: Props<TxValues>) {
           accountInfo.getAccountNumber(),
           accountInfo.getSequenceNumber(),
           new AuthInfo([], fee),
-          new TxBody(tx.msgs,tx.memo,tx.timeoutHeight)
+          new TxBody(tx.msgs, tx.memo, tx.timeoutHeight)
         )
-        
-        await provider.signAmino(chainID, address, doc.toAmino(),{});
-        
+        const isMises = isMisesWallet();
+        if (isMises) {
+          await provider.signAmino(chainID, address, doc.toAmino(), {});
+        }
+
         const txString = tx.msgs.map((val: Msg) => {
           const msg = JSON.parse(val.toJSON())
           const newMsg = {} as { [key: string]: any }
@@ -266,12 +270,24 @@ function Tx<TxValues>(props: Props<TxValues>) {
           }
         })
 
-        const result = await provider.staking({
-          msgs: txString,
-          gasLimit: fee.gas_limit,
-          gasFee: [gasFee],
-        })
-
+        const result = isMises ?
+          await provider.staking({
+            msgs: txString,
+            gasLimit: fee.gas_limit,
+            gasFee: [gasFee],
+          }) : await provider.request({
+            method: "mises_stakingPostTx",
+            params: [
+              {
+                tx: txString,
+                misesId: misesState.misesId,
+                gasFee: [gasFee],
+                gasLimit: fee.gas_limit,
+                feeAmount: toInput(gasFee.amount, 6),
+                title: props.tabType,
+              },
+            ],
+          })
         setLatestTx({ txhash: result.transactionHash, queryKeys, redirectAfterTx })
       }
       onPost?.()
@@ -396,10 +412,10 @@ function Tx<TxValues>(props: Props<TxValues>) {
     connectedWallet?.connectType === ConnectType.READONLY
       ? t("Wallet is connected as read-only mode")
       : !availableGasDenoms.length
-      ? t("Insufficient balance to pay transaction fee")
-      : isWalletEmpty
-      ? t("Coins required to post transactions")
-      : ""
+        ? t("Insufficient balance to pay transaction fee")
+        : isWalletEmpty
+          ? t("Coins required to post transactions")
+          : ""
 
   const submitButton = (
     <>
@@ -444,21 +460,21 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const modal = !error
     ? undefined
     : {
-        title:
-          error instanceof UserDenied
-            ? t("User denied")
-            : error instanceof CreateTxFailed
+      title:
+        error instanceof UserDenied
+          ? t("User denied")
+          : error instanceof CreateTxFailed
             ? t("Failed to create tx")
             : error instanceof TxFailed
-            ? t("Tx failed")
-            : t("Error"),
-        children:
-          error instanceof UserDenied ? null : (
-            <Pre height={120} normal break>
-              {error.message}
-            </Pre>
-          ),
-      }
+              ? t("Tx failed")
+              : t("Error"),
+      children:
+        error instanceof UserDenied ? null : (
+          <Pre height={120} normal break>
+            {error.message}
+          </Pre>
+        ),
+    }
 
   return (
     <>

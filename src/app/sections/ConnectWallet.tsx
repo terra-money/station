@@ -12,8 +12,9 @@ import { ModalButton } from "components/feedback"
 import Connected from "./Connected"
 import { useEffect } from "react"
 import { atom } from "recoil"
-import { useConnectWallet } from "auth/hooks/useAddress"
+import { isMisesWallet, useConnectWallet } from "auth/hooks/useAddress"
 import { Button as MuiButton } from "@mui/material"
+import { useWalletProvider } from "utils/hooks/useMetamaskProvider"
 // import { useWallet } from "@terra-money/wallet-provider"
 
 interface Props {
@@ -36,7 +37,8 @@ const ConnectWallet = ({ renderButton }: Props) => {
   const address = useAddress()
   // const [list] = useState<any>([])
   const { getAddress, isUnlocked } = useConnectWallet()
-  
+  const provider = useWalletProvider()
+
   useEffect(() => {
     (async () => {
       const isunlocked = await isUnlocked()
@@ -49,15 +51,26 @@ const ConnectWallet = ({ renderButton }: Props) => {
         connectLoading = false;
       }
     })()
-    window.addEventListener("mises_keystorechange", async () => {
-      if(!connectLoading){
-        connectLoading = true;
+    
+    if(!isMisesWallet()){
+      provider.on("accountsChanged", async (res: string[]) => {
+        const metamask = JSON.parse(localStorage.getItem("isConnected") || "false")
+        if (res.length && metamask) {
+          getAddress()
+        }
+      })
 
-        await getAddress()
-
-        connectLoading = false;
-      }
-    })
+    }else{
+      window.addEventListener("mises_keystorechange", async () => {
+        if(!connectLoading){
+          connectLoading = true;
+  
+          await getAddress()
+  
+          connectLoading = false;
+        }
+      })
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

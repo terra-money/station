@@ -3,6 +3,7 @@
 
 import { misesStateDefault } from "app/sections/ConnectWallet"
 import { useRecoilState, useRecoilValue } from "recoil"
+import { useWalletProvider, walletPrivider } from "utils/hooks/useMetamaskProvider"
 
 /* auth | wallet-provider */
 const useAddress = () => {
@@ -13,32 +14,51 @@ const useAddress = () => {
 }
 export default useAddress
 
+export const isMisesWallet = ()=>{
+  const provider = walletPrivider();
+  return provider.version==="0.0.1"
+}
 export function useConnectWallet() {
   const [misesState, setmisesState] = useRecoilState(misesStateDefault)
-  const provider = window.mises;
+  const provider = useWalletProvider();
   const chainId = 'mainnet';
 
   const getAddress = async (open?: () => void) => {
-    await provider.enable(chainId);
+    if(isMisesWallet()){
+      await provider.enable(chainId);
     
-    const offlineSigner = provider.getOfflineSigner?.(chainId);
-    
-    if(offlineSigner){
-      offlineSigner.getAccounts().then((res:{address: string}[])=>{
-        const [account] = res;
-        setmisesState({ ...misesState, misesId: account.address })
-        localStorage.setItem('isConnected', 'true');
-      });
-      return Promise.resolve();
+      const offlineSigner = provider.getOfflineSigner?.(chainId);
+      
+      if(offlineSigner){
+        offlineSigner.getAccounts().then((res:{address: string}[])=>{
+          const [account] = res;
+          setmisesState({ ...misesState, misesId: account.address })
+          localStorage.setItem('isConnected', 'true');
+        });
+        return Promise.resolve();
+      }
+      open?.()
+    }else{
+      provider.request({
+          method: "mises_requestAccounts",
+          params: [],
+        })
+        .then((res: { misesId: string }) => {
+          setmisesState({ ...misesState, misesId: res.misesId })
+          localStorage.setItem("isConnected", "true")
+        })
+      if (!provider || !provider.chainId) {
+        open?.()
+        // window.location.reload()
+      }
     }
-    
-    open?.()
   }
   const isUnlocked = ()=>{
-    return provider ? provider.isunlocked() : Promise.resolve(false);
+    return provider ? (!isMisesWallet() ? provider._metamask.isUnlocked() : provider.isUnlocked()) : Promise.resolve(false);
   }
   return {
     getAddress,
     isUnlocked
   }
 }
+

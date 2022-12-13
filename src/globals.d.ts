@@ -58,7 +58,7 @@ interface SecretUtils {
 interface Window {
   misesEthereum: ethereum,
   ethereum: ethereum,
-  mises?: any;
+  misesWallet?: any;
   getOfflineSigner?: (
     chainId: string
   ) => OfflineAminoSigner & OfflineDirectSigner;
