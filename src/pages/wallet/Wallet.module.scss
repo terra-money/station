@@ -4,7 +4,7 @@
   width: min(var(--wallet-width), 100vw);
   grid-area: walletbar;
   position: relative;
-  border-left: 1px solid var(--menu-border);
+  border-left: 1px solid var(--card-border);
   height: calc(100vh - var(--header-height));
   display: grid;
   grid-template-areas: "details" "list" "actions";
@@ -28,7 +28,7 @@
   padding: 10px 8px;
   background-color: var(--card-bg-muted);
   border-radius: 10px 0 0 10px;
-  border: var(--border-width) solid var(--menu-border);
+  border: var(--border-width) solid var(--card-border);
   transition: 300ms;
   @include flex(center);
   flex-direction: column;

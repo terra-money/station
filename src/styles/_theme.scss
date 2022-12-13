@@ -65,18 +65,19 @@
   --button-default-text: hsl(226 71% 43%);
 
   --menu-bg: hsl(215 100% 33%);
-  --menu-border: hsl(0 0% 100% / 0.1);
+  --menu-border: hsla(0, 0%, 100%, 0.15);
   --menu-text: hsl(0 0% 91%);
 
   --link: var(--button-primary-bg);
   --text: hsl(226 70% 42%);
-  --text-muted: hsl(227 51% 70%);
+  --text-muted: hsl(226deg 70% 42% / 85%);
   --chart: hsl(215 90% 57%);
 
-  --bg: hsl(230 100% 99%);
+  --bg: hsl(223, 47%, 97%);
   --bg-muted: hsl(229 73% 97%);
   --card-bg: hsl(0 0% 100%);
-  --card-border: hsl(222 48% 95%);
+  --card-bg-muted: hsl(220, 60%, 99%);
+  --card-border: hsl(213, 16%, 89%);
   --input-bg: var(--card-bg);
   --input-border: hsl(220 39% 86%);
 
