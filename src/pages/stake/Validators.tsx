@@ -10,7 +10,7 @@ import { Page } from "components/layout"
 const Validators = () => {
   return (
     <Page sub>
-      <WithSearchInput gap={0} placeholder="Search for validator...">
+      <WithSearchInput gap={0} placeholder="Search for validator..." padding>
         {(keyword: string) => (
           <ChainFilter outside className={styles.filter}>
             {(chainID?: string) => (
