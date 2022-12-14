@@ -7,13 +7,16 @@ import { useNetwork, useNetworkName } from "data/wallet"
 import { latestTxState } from "data/queries/tx"
 import { ExternalLink } from "./External"
 import { useRecoilValue } from "recoil"
+import { getChainIDFromAddress } from "utils/bech32"
 import styles from "./FinderLink.module.scss"
+import { AccAddress } from "@terra-money/feather.js"
 
 interface Props extends HTMLAttributes<HTMLAnchorElement> {
   value?: string
   /* path (default: address) */
   block?: boolean
   tx?: boolean
+  chain?: string
   validator?: boolean
   /* customize */
   short?: boolean
@@ -24,13 +27,19 @@ const FinderLink = forwardRef(
     { children, short, ...rest }: PropsWithChildren<Props>,
     ref: ForwardedRef<HTMLAnchorElement>
   ) => {
-    const { block, tx, validator, ...attrs } = rest
+    const { block, tx, validator, chain, ...attrs } = rest
     const networkName = useNetworkName()
     const networks = useNetwork()
-    // FIXME: Finder Link is not used just inside latestTx
-    // pass the chain as a parameter (for txhashes) or retrieve it from the prefix
-    const { chainID } = useRecoilValue(latestTxState)
-    const network = networks[chainID]?.name.toLowerCase()
+    const { chainID: lastTxChainID } = useRecoilValue(latestTxState)
+    const value = rest.value ?? children
+    const chainID =
+      rest.value &&
+      AccAddress.validate(rest.value) &&
+      getChainIDFromAddress(rest.value, networks)
+
+    const network =
+      chain?.toLowerCase() ||
+      networks[chainID || lastTxChainID]?.name.toLowerCase()
 
     const interchainPath = tx
       ? "txs"
@@ -48,7 +57,6 @@ const FinderLink = forwardRef(
       ? "validator"
       : "address"
 
-    const value = rest.value ?? children
     const link =
       network === "terra"
         ? [FINDER, networkName, finderPath, value].join("/")
