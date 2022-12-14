@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { ReactComponent as Terra } from "styles/images/Terra.svg"
+import { ReactComponent as Terra } from "styles/images/Station.svg"
 import styles from "./ProfileIcon.module.scss"
 
 interface Props {

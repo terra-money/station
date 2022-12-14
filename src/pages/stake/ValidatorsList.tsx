@@ -113,7 +113,6 @@ const ValidatorsList = ({
                 return (
                   <Flex start gap={8}>
                     <ProfileIcon src={/*validator.picture*/ ""} size={22} />
-
                     <Grid gap={2}>
                       <Flex gap={4} start>
                         <Link
