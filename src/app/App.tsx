@@ -7,7 +7,7 @@ import { ErrorBoundary, Wrong } from "components/feedback"
 import { useNav } from "./routes"
 
 /* banner */
-import NetworkName from "./sections/NetworkName"
+import UpdateExtension from "./sections/UpdateExtension"
 
 /* sidebar */
 import Nav from "./sections/Nav"
@@ -35,7 +35,7 @@ const App = () => {
   return (
     <Layout>
       <Banner>
-        <NetworkName />
+        <UpdateExtension />
       </Banner>
 
       <Sidebar>
