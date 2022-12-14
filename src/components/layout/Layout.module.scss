@@ -95,6 +95,7 @@
 .actions {
   @include flex;
   gap: 10px;
+  margin-left: auto;
 }
 
 .main {
