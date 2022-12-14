@@ -23,7 +23,7 @@ import SendTx from "txs/send/SendTx"
 import TransferCW721Tx from "txs/wasm/TransferCW721Tx"
 import SwapTx from "txs/swap/SwapTx"
 import StakeTx from "txs/stake/StakeTx"
-import WithdrawRewardsTx from "txs/stake/WithdrawRewardsTx"
+import WithdrawRewards from "txs/stake/WithdrawRewards"
 import WithdrawCommissionTx from "txs/stake/WithdrawCommissionTx"
 import SubmitProposalTx from "txs/gov/SubmitProposalTx"
 import DepositTx from "txs/gov/DepositTx"
@@ -119,7 +119,7 @@ export const useNav = () => {
     { path: "/send", element: <SendTx /> },
     { path: "/nft/transfer", element: <TransferCW721Tx /> },
     { path: "/stake/:address", element: <StakeTx /> },
-    { path: "/rewards", element: <WithdrawRewardsTx /> },
+    { path: "/rewards", element: <WithdrawRewards /> },
     { path: "/commission", element: <WithdrawCommissionTx /> },
     { path: "/proposal/new", element: <SubmitProposalTx /> },
     { path: "/proposal/:chain/:id/deposit", element: <DepositTx /> },

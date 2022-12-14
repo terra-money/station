@@ -23,7 +23,6 @@ const ChainSelector = ({ chainsList, onChange }: Props) => {
   const [index, setIndex] = useState(0)
 
   useEffect(() => {
-    console.log("list", list)
     if (index >= list.length) setIndex(0)
   }, [list, index])
 

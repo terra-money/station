@@ -16,28 +16,33 @@ import { useInterchainLCDClient, useLCDClient } from "./lcdClient"
 import { CalcValue } from "./coingecko"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 
-export const useRewards = () => {
+export const useRewards = (chainID?: string) => {
   const addresses = useInterchainAddresses()
   const lcd = useInterchainLCDClient()
 
   return useQuery(
-    [queryKey.distribution.rewards, addresses],
+    [queryKey.distribution.rewards, addresses, chainID],
     async () => {
       if (!addresses) return { total: new Coins(), rewards: {} }
-      const results = await Promise.all(
-        Object.values(addresses).map((address) =>
-          lcd.distribution.rewards(address)
+
+      if (chainID) {
+        return await lcd.distribution.rewards(addresses[chainID])
+      } else {
+        const results = await Promise.all(
+          Object.values(addresses).map((address) =>
+            lcd.distribution.rewards(address)
+          )
         )
-      )
-      let total: Coin.Data[] = []
-      let rewards = {}
+        let total: Coin.Data[] = []
+        let rewards = {}
 
-      results.forEach((result) => {
-        total = [...total, ...result.total.toData()]
-        rewards = { ...rewards, ...result.rewards }
-      })
+        results.forEach((result) => {
+          total = [...total, ...result.total.toData()]
+          rewards = { ...rewards, ...result.rewards }
+        })
 
-      return { total: Coins.fromData(total), rewards }
+        return { total: Coins.fromData(total), rewards }
+      }
     },
     { ...RefetchOptions.DEFAULT }
   )
@@ -118,7 +123,6 @@ export const calcRewardsValues = (
     const sum = BigNumber.sum(
       ...list.map((item) => calcValue(item) ?? 0)
     ).toString()
-
     return { sum, list }
   }
 

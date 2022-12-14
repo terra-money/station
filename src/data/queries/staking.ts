@@ -13,8 +13,7 @@ import { Delegation, UnbondingDelegation } from "@terra-money/feather.js"
 import { has } from "utils/num"
 import { StakeAction } from "txs/stake/StakeForm"
 import { queryKey, Pagination, RefetchOptions } from "../query"
-import { useAddress } from "../wallet"
-import { useInterchainLCDClient, useLCDClient } from "./lcdClient"
+import { useInterchainLCDClient } from "./lcdClient"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { readAmount, toAmount } from "@terra.kitchen/utils"
 import { useMemoizedPrices } from "data/queries/coingecko"
@@ -138,12 +137,17 @@ export const useDelegations = (chainID: string) => {
 }
 
 export const useDelegation = (validatorAddress: ValAddress) => {
-  const address = useAddress()
-  const lcd = useLCDClient()
+  const addresses = useInterchainAddresses()
+  const lcd = useInterchainLCDClient()
 
   return useQuery(
-    [queryKey.staking.delegation, address, validatorAddress],
+    [queryKey.staking.delegation, addresses, validatorAddress],
     async () => {
+      if (!addresses) return
+      const prefix = ValAddress.getPrefix(validatorAddress)
+      const address = Object.values(addresses).find(
+        (a) => AccAddress.getPrefix(a) === prefix
+      )
       if (!address) return
       try {
         const delegation = await lcd.staking.delegation(
@@ -217,9 +221,13 @@ export const getFindValidator = (validators: Validator[]) => {
 }
 
 export const getFindMoniker = (validators: Validator[]) => {
-  return (address: AccAddress) => {
-    const validator = getFindValidator(validators)(address)
-    return validator.description.moniker
+  return (address: ValAddress) => {
+    try {
+      const validator = getFindValidator(validators)(address)
+      return validator.description.moniker
+    } catch {
+      return address
+    }
   }
 }
 

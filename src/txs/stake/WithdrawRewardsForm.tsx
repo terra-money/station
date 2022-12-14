@@ -1,16 +1,15 @@
-import { useCallback, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import BigNumber from "bignumber.js"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import ExpandLessIcon from "@mui/icons-material/ExpandLess"
-import { isDenomTerraNative } from "@terra.kitchen/utils"
-import { Validator, ValAddress } from "@terra-money/terra.js"
-import { Rewards } from "@terra-money/terra.js"
-import { MsgWithdrawDelegatorReward } from "@terra-money/terra.js"
+import { Validator, ValAddress } from "@terra-money/feather.js"
+import { Rewards } from "@terra-money/feather.js"
+import { MsgWithdrawDelegatorReward } from "@terra-money/feather.js"
 import { queryKey } from "data/query"
 import { useCurrency } from "data/settings/Currency"
-import { useAddress } from "data/wallet"
+import { useNetwork } from "data/wallet"
 import { useMemoizedCalcValue } from "data/queries/coingecko"
 import { getFindMoniker } from "data/queries/staking"
 import { calcRewardsValues } from "data/queries/distribution"
@@ -19,34 +18,49 @@ import { ValidatorLink } from "components/general"
 import { Form, FormArrow, FormItem, Checkbox } from "components/form"
 import { Card, Flex, Grid } from "components/layout"
 import { TokenCard, TokenCardGrid } from "components/token"
-import Tx, { getInitialGasDenom } from "../Tx"
 import styles from "./WithdrawRewardsForm.module.scss"
+import InterchainTx from "txs/InterchainTx"
+import { useInterchainAddresses } from "auth/hooks/useAddress"
 
 interface Props {
-  activeDenoms: Denom[]
   rewards: Rewards
   validators: Validator[]
-  IBCWhitelist: IBCWhitelist
+  chain: string
 }
 
-const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
-  const { IBCWhitelist } = props
+const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
   const { t } = useTranslation()
   const currency = useCurrency()
-  const address = useAddress()
+  const addresses = useInterchainAddresses()
+  const address = addresses && addresses[chain]
   const calcValue = useMemoizedCalcValue()
   const findMoniker = getFindMoniker(validators)
-  // @ts-expect-error
-  const { byValidator } = calcRewardsValues(rewards, currency.id, calcValue)
+  const { byValidator } = useMemo(
+    () =>
+      calcRewardsValues(rewards, currency.id, (coin) => Number(coin.amount)),
+    [rewards, currency]
+  )
+  const networks = useNetwork()
 
   /* tx context */
-  const initialGasDenom = getInitialGasDenom()
+  const initialGasDenom = networks[chain].baseAsset
 
   /* select validators */
-  const init = (value = false) =>
-    byValidator.reduce((acc, { address }) => ({ ...acc, [address]: value }), {})
+  const init = useCallback(
+    (value = false) =>
+      byValidator.reduce(
+        (acc, { address }) => ({ ...acc, [address]: value }),
+        {}
+      ),
+    [byValidator]
+  )
 
   const [state, setState] = useState<Record<ValAddress, boolean>>(init(true))
+
+  useEffect(() => {
+    setState(init(true))
+  }, [init])
+
   const selectable = byValidator.length > 1
   const selected = useMemo(
     () => Object.keys(state).filter((address) => state[address]),
@@ -61,7 +75,7 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
     (prev, address) => {
       const item = byValidator.find((item) => item.address === address)
 
-      if (!item) throw new Error()
+      if (!item) return prev
 
       return {
         ...prev,
@@ -100,8 +114,8 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
       return new MsgWithdrawDelegatorReward(address, operatorAddress)
     })
 
-    return { msgs }
-  }, [address, selected])
+    return { msgs, chainID: chain }
+  }, [address, selected, chain])
 
   /* fee */
   const estimationTxValues = useMemo(() => ({}), [])
@@ -112,10 +126,11 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
     createTx,
     onSuccess: { label: t("Stake"), path: "/stake" },
     querykeys: [queryKey.distribution.rewards],
+    chain,
   }
 
   return (
-    <Tx {...tx}>
+    <InterchainTx {...tx}>
       {({ fee, submit }) => (
         <Form onSubmit={handleSubmit(submit.fn)}>
           <Grid gap={12}>
@@ -186,23 +201,18 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
 
             <FormItem>
               <TokenCardGrid maxHeight>
-                {Object.entries(selectedTotal)
-                  .filter(([denom]) => {
-                    const isListedIBC = IBCWhitelist[denom.replace("ibc/", "")]
-                    return isDenomTerraNative(denom) || isListedIBC
-                  })
-                  .map(([denom, amount]) => (
-                    <WithTokenItem token={denom} key={denom}>
-                      {(item) => (
-                        <TokenCard
-                          {...item}
-                          name=""
-                          value={calcValue({ amount, denom })}
-                          amount={amount}
-                        />
-                      )}
-                    </WithTokenItem>
-                  ))}
+                {Object.entries(selectedTotal).map(([denom, amount]) => (
+                  <WithTokenItem token={denom} key={denom}>
+                    {(item) => (
+                      <TokenCard
+                        {...item}
+                        name=""
+                        value={calcValue({ amount, denom })}
+                        amount={amount}
+                      />
+                    )}
+                  </WithTokenItem>
+                ))}
               </TokenCardGrid>
             </FormItem>
           </Grid>
@@ -211,7 +221,7 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
           {submit.button}
         </Form>
       )}
-    </Tx>
+    </InterchainTx>
   )
 }
 
