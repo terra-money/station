@@ -3,37 +3,53 @@ import { useTranslation } from "react-i18next"
 import { useInfiniteQuery } from "react-query"
 import axios from "axios"
 import { queryKey } from "data/query"
-import { useAddress, useChainID } from "data/wallet"
-import { useTerraAPIURL } from "data/Terra/TerraAPI"
+import { useNetwork } from "data/wallet"
 import { Button } from "components/general"
 import { Card, Col, Page } from "components/layout"
 import { Empty } from "components/feedback"
 import HistoryItem from "./HistoryItem"
-import ChainFilter from "components/layout/ChainFilter"
+import { useInterchainAddresses } from "auth/hooks/useAddress"
 
-const HistoryList = () => {
+interface Props {
+  chainID: string
+}
+
+const HistoryList = ({ chainID }: Props) => {
   const { t } = useTranslation()
-  const address = useAddress()
-  const baseURL = useTerraAPIURL()
-  const chainID = useChainID()
+  const addresses = useInterchainAddresses()
+  const address = addresses?.[chainID]
+  const networks = useNetwork()
+
+  const LIMIT = 10
 
   /* query */
   const fetchAccountHistory = useCallback(
     async ({ pageParam = 0 }) => {
       const { data } = await axios.get<AccountHistory>(
-        `tx-history/station/${address}`,
-        { baseURL, params: { offset: pageParam || undefined } }
+        `/cosmos/tx/v1beta1/txs?events=message.sender=%27${address}%27&pagination.reverse=true&order_by=ORDER_BY_DESC&pagination.limit=${LIMIT}`,
+        {
+          baseURL: networks[chainID].lcd,
+          params: { "pagination.offset": pageParam || undefined },
+        }
       )
 
-      return data
+      return {
+        ...data,
+        next:
+          Number(data.pagination.total) > pageParam + LIMIT &&
+          pageParam + LIMIT,
+      }
     },
-    [address, baseURL]
+    [address, networks, chainID]
   )
 
   const { data, error, fetchNextPage, ...state } = useInfiniteQuery(
-    [queryKey.TerraAPI, "history", baseURL, address],
+    [queryKey.TerraAPI, "history", networks, address, chainID],
     fetchAccountHistory,
-    { getNextPageParam: ({ next }) => next, enabled: !!(address && baseURL) }
+    {
+      getNextPageParam: ({ next }) => next,
+      enabled: !!(address && networks[chainID]),
+    }
   )
 
   const { hasNextPage, isFetchingNextPage } = state
@@ -41,8 +57,8 @@ const HistoryList = () => {
   const getPages = () => {
     if (!data) return []
     const { pages } = data
-    const [{ list }] = data.pages
-    return list.length ? pages : []
+    const [{ tx_responses }] = pages
+    return tx_responses.length ? pages : []
   }
 
   const pages = getPages()
@@ -50,45 +66,38 @@ const HistoryList = () => {
   const render = () => {
     if (address && !data) return null
 
-    return (
-      <ChainFilter all outside>
-        {(chain) =>
-          !pages.length ? (
-            <Card>
-              <Empty />
-            </Card>
-          ) : (
-            <Col>
-              {pages.map(({ list }, i) => (
-                <Fragment key={i}>
-                  {list.map((item) => (
-                    // TODO: remove hardcoded chain
-                    <HistoryItem {...item} chain={chainID} key={item.txhash} />
-                  ))}
-                </Fragment>
-              ))}
+    return !pages.length ? (
+      <Card>
+        <Empty />
+      </Card>
+    ) : (
+      <Col>
+        {pages.map(({ tx_responses }, i) => (
+          <Fragment key={i}>
+            {tx_responses.map((item) => (
+              <HistoryItem {...item} chain={chainID} key={item.txhash} />
+            ))}
+          </Fragment>
+        ))}
 
-              <Button
-                onClick={() => fetchNextPage()}
-                disabled={!hasNextPage || isFetchingNextPage}
-                loading={isFetchingNextPage}
-                block
-              >
-                {isFetchingNextPage
-                  ? t("Loading more...")
-                  : hasNextPage
-                  ? t("Load more")
-                  : t("Nothing more to load")}
-              </Button>
-            </Col>
-          )
-        }
-      </ChainFilter>
+        <Button
+          onClick={() => fetchNextPage()}
+          disabled={!hasNextPage || isFetchingNextPage}
+          loading={isFetchingNextPage}
+          block
+        >
+          {isFetchingNextPage
+            ? t("Loading more...")
+            : hasNextPage
+            ? t("Load more")
+            : t("Nothing more to load")}
+        </Button>
+      </Col>
     )
   }
 
   return (
-    <Page {...state} title={t("History")}>
+    <Page {...state} invisible>
       {render()}
     </Page>
   )

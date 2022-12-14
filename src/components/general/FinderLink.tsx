@@ -27,6 +27,8 @@ const FinderLink = forwardRef(
     const { block, tx, validator, ...attrs } = rest
     const networkName = useNetworkName()
     const networks = useNetwork()
+    // FIXME: Finder Link is not used just inside latestTx
+    // pass the chain as a parameter (for txhashes) or retrieve it from the prefix
     const { chainID } = useRecoilValue(latestTxState)
     const network = networks[chainID]?.name.toLowerCase()
 

@@ -7,7 +7,13 @@ import { ReadMultiple } from "components/token"
 import HistoryMessage from "./HistoryMessage"
 import styles from "./HistoryItem.module.scss"
 import DateRangeIcon from "@mui/icons-material/DateRange"
-import { useNetwork } from "data/wallet"
+import { useNetwork, useNetworkName } from "data/wallet"
+import {
+  createActionRuleSet,
+  createLogMatcherForActions,
+  getTxCanonicalMsgs,
+} from "@terra-money/log-finder-ruleset"
+import { TxInfo } from "@terra-money/feather.js"
 
 const HistoryItem = ({
   txhash,
@@ -15,15 +21,38 @@ const HistoryItem = ({
   chain,
   ...props
 }: AccountHistoryItem & { chain: string }) => {
-  const { success, msgs, collapsed, fee, memo, raw_log } = props
+  const {
+    code,
+    tx: {
+      body: { memo },
+      auth_info: {
+        fee: { amount: fee },
+      },
+    },
+    raw_log,
+  } = props
+  const success = code === 0
   const { t } = useTranslation()
   const network = useNetwork()
+  const networkName = useNetworkName()
 
   const data = [
     { title: t("Fee"), content: <ReadMultiple list={fee} /> },
     { title: t("Memo"), content: memo },
     { title: t("Log"), content: !success && raw_log },
   ]
+
+  const ruleset = createActionRuleSet(networkName)
+  const logMatcher = createLogMatcherForActions(ruleset)
+  const getCanonicalMsgs = (txInfo: TxInfo) => {
+    // @ts-expect-error
+    const matchedMsg = getTxCanonicalMsgs(txInfo, logMatcher)
+    return matchedMsg
+      ? matchedMsg
+          .map((matchedLog) => matchedLog.map(({ transformed }) => transformed))
+          .flat(2)
+      : []
+  }
 
   return (
     <Card size="small" bordered>
@@ -46,12 +75,19 @@ const HistoryItem = ({
       </header>
 
       <div className={styles.msgs}>
-        {msgs?.map((msg, index) => (
-          <HistoryMessage msg={msg} success={success} key={index} />
-        ))}
+        {getCanonicalMsgs({
+          txhash,
+          timestamp,
+          ...props,
+        } as any)?.map(
+          (msg, index) =>
+            msg && <HistoryMessage msg={msg} success={success} key={index} />
+        )}
       </div>
 
-      {collapsed && <small>{t("{{collapsed}} more", { collapsed })}</small>}
+      {
+        //collapsed && <small>{t("{{collapsed}} more", { collapsed })}</small>
+      }
 
       <footer className={styles.footer}>
         <Dl>
