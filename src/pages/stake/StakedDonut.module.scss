@@ -51,24 +51,24 @@
   }
 
   .icon {
-    height: 12px;
-    width: 12px;
+    height: 15px;
+    width: 15px;
   }
 
   .circle {
-    height: 12px;
-    width: 12px;
+    height: 15px;
+    width: 15px;
     border-radius: 50%;
   }
 
   .denom {
     text-transform: uppercase;
-    font-weight: 300;
+    font-weight: 500;
     color: var(--text-muted);
   }
 
   .percent {
-    font-weight: 400;
+    font-weight: 500;
   }
 }
 

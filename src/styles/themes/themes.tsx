@@ -31,6 +31,7 @@ export interface Theme {
   animation: string
   favicon: string
   preview: ReactNode
+  donutColors?: string[]
 }
 
 export const themes: Theme[] = [

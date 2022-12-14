@@ -17,16 +17,19 @@ import {
   useCalcInterchainDelegationsTotal,
 } from "data/queries/staking"
 import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined"
+import { useThemeState } from "data/settings/Theme"
 
 const StakedDonut = () => {
   const { t } = useTranslation()
+  const [current, setTheme] = useThemeState()
 
   const interchainDelegations = useInterchainDelegations()
   const state = combineState(...interchainDelegations)
 
   const { graphData } = useCalcInterchainDelegationsTotal(interchainDelegations)
 
-  const COLORS = ["#4672ED", "#7893F5", "#FF7940", "#FF9F40", "#F4BE37"]
+  const defaultColors = ["#4672ED", "#7893F5", "#FF7940", "#FF9F40", "#F4BE37"]
+  const COLORS = current?.donutColors || defaultColors
 
   const RenderLegend = (props: any) => {
     const { payload } = props
