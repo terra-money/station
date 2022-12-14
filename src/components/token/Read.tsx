@@ -14,6 +14,7 @@ interface Props extends Partial<FormatConfig> {
 
   approx?: boolean
   block?: boolean
+  lessThan?: number
   className?: string
 
   auto?: boolean
@@ -21,7 +22,7 @@ interface Props extends Partial<FormatConfig> {
 
 const Read = forwardRef(
   (
-    { amount, denom, approx, block, auto, ...props }: Props,
+    { amount, denom, approx, block, auto, lessThan, ...props }: Props,
     ref: ForwardedRef<HTMLSpanElement>
   ) => {
     if (!(amount || Number.isFinite(amount))) return null
@@ -38,13 +39,14 @@ const Read = forwardRef(
 
     const config = { ...props, comma, fixed }
     const [integer, decimal] = readAmount(amount, config).split(".")
+    const isLessThan = lessThan && amount && amount < lessThan
 
     const renderDecimal = () => {
-      if (!decimal) return null
+      if (!(decimal || isLessThan)) return null
 
       return (
         <span className={cx({ small: !props.prefix })}>
-          {decimal && `.${decimal}`}
+          {isLessThan ? `${lessThan}` : decimal && `.${decimal}`}
         </span>
       )
     }
@@ -69,6 +71,7 @@ const Read = forwardRef(
     return (
       <span className={className} ref={ref}>
         {approx && "≈ "}
+        {isLessThan && "< "}
         {integer}
         {renderDecimal()}
         {renderSymbol()}
