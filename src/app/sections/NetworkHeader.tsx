@@ -4,7 +4,9 @@ import styles from "./NetworkHeader.module.scss"
 const NetworkHeader = () => {
   const network = useNetworkName()
 
-  return <div className={styles.component}>{network}</div>
+  if (network === "mainnet") return null
+
+  return <div className={styles.component}>{network.toUpperCase()}</div>
 }
 
 export default NetworkHeader
