@@ -7,7 +7,13 @@ import styles from "./Tabs.module.scss"
 const cx = classNames.bind(styles)
 
 interface Props {
-  tabs: { key: string; tab: string; children: ReactNode; disabled?: boolean }[]
+  tabs: {
+    key: string
+    tab: string
+    children: ReactNode
+    disabled?: boolean
+    extra?: ReactNode
+  }[]
   defaultActiveKey?: string
   type: "line" | "card" | "page"
   reversed?: boolean
@@ -30,7 +36,7 @@ const Tabs = ({ tabs, defaultActiveKey, type, reversed, state }: Props) => {
   return (
     <div>
       <section className={cx(styles.tabs, type, { reversed })}>
-        {tabs.map(({ key, tab, disabled }) =>
+        {tabs.map(({ key, tab, disabled, extra }) =>
           state ? (
             <button
               type="button"
@@ -42,11 +48,13 @@ const Tabs = ({ tabs, defaultActiveKey, type, reversed, state }: Props) => {
               disabled={disabled}
               key={key}
             >
-              {capitalize(tab)}
+              <div className={styles.title}>{capitalize(tab)}</div>
+              {extra}
             </button>
           ) : disabled ? (
             <span className={classNames(styles.tab, styles.disabled)} key={key}>
-              {capitalize(tab)}
+              <div className={styles.title}>{capitalize(tab)}</div>
+              {extra}
             </span>
           ) : (
             <Link
@@ -54,7 +62,8 @@ const Tabs = ({ tabs, defaultActiveKey, type, reversed, state }: Props) => {
               to={{ hash: key }}
               key={key}
             >
-              {capitalize(tab)}
+              <div className={styles.title}>{capitalize(tab)}</div>
+              {extra}
             </Link>
           )
         )}

@@ -9,6 +9,8 @@ import {
   useCalcInterchainDelegationsTotal,
 } from "data/queries/staking"
 import QuickStake from "./QuickStake"
+import { TooltipIcon } from "components/display"
+import QuickStakeTooltip from "./QuickStakeTooltip"
 
 const Stake = () => {
   const { t } = useTranslation()
@@ -21,6 +23,7 @@ const Stake = () => {
       key: "quick",
       tab: "Quick Stake",
       children: <QuickStake />,
+      extra: <TooltipIcon content={<QuickStakeTooltip />} placement="bottom" />,
     },
     {
       key: "manual",

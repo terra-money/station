@@ -30,7 +30,7 @@ export const useRewards = (chainID?: string) => {
       } else {
         const results = await Promise.all(
           Object.values(addresses).map((address) =>
-            lcd.distribution.rewards(address)
+            lcd.distribution.rewards(address as string)
           )
         )
         let total: Coin.Data[] = []

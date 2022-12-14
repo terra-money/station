@@ -29,7 +29,7 @@ export default Tooltip
 
 /* derive */
 interface Props extends Omit<TippyProps, "children"> {
-  children: ReactNode
+  children?: ReactNode
 }
 
 export const TooltipIcon = (props: Props) => {
