@@ -20,6 +20,7 @@ export interface Props extends QueryState {
 
   className?: string
   mainClassName?: string
+  inputCard?: boolean
 
   /* button */
   onClick?: () => void
@@ -32,8 +33,16 @@ export interface Props extends QueryState {
 
 const Card = (props: PropsWithChildren<Props>) => {
   const { title, extra, children, onClick, to, href } = props
-  const { size, bordered, bg, disabled, className, mainClassName, muted } =
-    props
+  const {
+    size,
+    bordered,
+    bg,
+    disabled,
+    className,
+    mainClassName,
+    muted,
+    inputCard,
+  } = props
 
   return (
     <WithFetching {...props} height={2}>
@@ -85,7 +94,9 @@ const Card = (props: PropsWithChildren<Props>) => {
             {content}
           </button>
         ) : (
-          <article className={cardClassName}>{content}</article>
+          <article className={cx(cardClassName, inputCard ? "inputCard" : "")}>
+            {content}
+          </article>
         )
       }}
     </WithFetching>

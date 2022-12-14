@@ -2,7 +2,7 @@
 
 .header {
   @include flex(space-between);
-  border-bottom: var(--border-width) solid;
+  border-bottom: var(--border-width) solid var(--menu-border);
   margin-bottom: 26px;
 }
 

@@ -12,6 +12,10 @@
   position: relative; // for progress bar
 }
 
+.inputCard {
+  background: var(--card-bg-muted);
+}
+
 // as a button
 .link,
 .button {

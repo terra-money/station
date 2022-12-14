@@ -76,7 +76,7 @@
   --bg: hsl(223, 47%, 97%);
   --bg-muted: hsl(229 73% 97%);
   --card-bg: hsl(0 0% 100%);
-  --card-bg-muted: hsl(220, 60%, 99%);
+  --card-bg-muted: var(--button-default-bg);
   --card-border: hsl(213, 16%, 89%);
   --input-bg: var(--card-bg);
   --input-border: hsl(220 39% 86%);
@@ -167,6 +167,7 @@
   --bg: hsl(321 100% 96%);
   --bg-muted: hsl(321 100% 97%);
   --card-bg: hsl(300 100% 98%);
+  --card-bg-muted: var(--button-default-bg);
   --card-border: hsl(342 100% 94%);
   --input-bg: var(--card-bg);
   --input-border: hsl(344 100% 92%);
@@ -177,7 +178,7 @@
 
 .moon {
   --border-width: 0;
-  --border-radius: 16px;
+  --border-radius: 8px;
 
   --button-primary-bg-h: 47;
   --button-primary-bg-s: 93%;
@@ -208,8 +209,9 @@
 
   --bg: hsl(249 54% 3%);
   --bg-muted: hsl(248 55% 8%);
-  --card-bg: hsl(247 55% 6%);
-  --card-border: hsl(0 0% 100% / 0.1);
+  --card-bg: hsl(247, 55%, 9%);
+  --card-bg-muted: #130f32;
+  --card-border: hsl(240 5% 22%);
   --input-bg: var(--card-bg);
   --input-border: hsl(0 0% 100% / 0.1);
 
@@ -249,6 +251,7 @@
   --bg: hsl(0 0% 94%);
   --bg-muted: hsl(0 0% 91%);
   --card-bg: hsl(0 0% 100%);
+  --card-bg-muted: var(--button-default-bg);
   --card-border: hsl(0 0% 92%);
   --input-bg: var(--card-bg);
   --input-border: hsl(0 0% 91%);
@@ -292,6 +295,7 @@
   --bg: hsl(0 0% 8%);
   --bg-muted: hsl(260 62% 26% / 0.75);
   --card-bg: hsl(260 66% 37%);
+  --card-bg-muted: var(--button-default-bg);
   --card-border: hsl(261 66% 47%);
   --input-bg: var(--card-bg);
   --input-border: hsl(0 0% 100% / 0.3);
