@@ -394,7 +394,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
   }
 
   return (
-    <Card {...state} inputCard={true}>
+    <Card {...state} inputCard>
       <InterchainTx {...tx}>
         {({ max, fee, submit }) => (
           <Form onSubmit={handleSubmit(submit.fn)}>

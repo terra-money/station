@@ -94,7 +94,7 @@ const Card = (props: PropsWithChildren<Props>) => {
             {content}
           </button>
         ) : (
-          <article className={cx(cardClassName, inputCard ? "inputCard" : "")}>
+          <article className={cx(cardClassName, { inputCard })}>
             {content}
           </article>
         )
