@@ -56,7 +56,10 @@ export const useInitialBankBalance = () => {
   return useQuery(
     [queryKey.bank.balances, addresses],
     async () => {
-      if (!addresses) return [] as CoinBalance[]
+      if (!addresses)
+        return [
+          { denom: "uluna", amount: "0", chain: "phoenix-1" },
+        ] as CoinBalance[]
       const chains = Object.keys(addresses)
 
       // TODO: Pagination
@@ -76,6 +79,9 @@ export const useInitialBankBalance = () => {
         )
       })
 
+      if (!result.find(({ denom }) => denom === "uluna")) {
+        result.push({ denom: "uluna", amount: "0", chain: "phoenix-1" })
+      }
       return result
     },
     { ...RefetchOptions.DEFAULT }
