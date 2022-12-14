@@ -146,12 +146,12 @@ export const useDelegation = (validatorAddress: ValAddress) => {
       if (!addresses) return
       const prefix = ValAddress.getPrefix(validatorAddress)
       const address = Object.values(addresses).find(
-        (a) => AccAddress.getPrefix(a) === prefix
+        (a) => AccAddress.getPrefix(a as string) === prefix
       )
       if (!address) return
       try {
         const delegation = await lcd.staking.delegation(
-          address,
+          address as string,
           validatorAddress
         )
         return delegation
@@ -416,7 +416,6 @@ export const getQuickStakeMsgs = (
   return msgs
 }
 
-//  choose random val and undelegate amount and if not matchign amount add next random validator until remainder of desired stake is met
 export const getQuickUnstakeMsgs = (
   address: string,
   coin: Coin,
