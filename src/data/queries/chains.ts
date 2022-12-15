@@ -24,6 +24,15 @@ export function useWhitelist(): Whitelist {
   return data
 }
 
+export function useGetChainNamefromID() {
+  const chains = useNetwork()
+  if (!chains) return null
+  return (id: string) =>
+    Object.values(chains)
+      .find(({ chainID }) => chainID === id)
+      ?.name.toLowerCase()
+}
+
 export function useIBCChannels() {
   const networks = useNetwork()
 
