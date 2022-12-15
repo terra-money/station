@@ -66,13 +66,6 @@ const ProposalVotes = ({ id, card }: { id: number; card?: boolean }) => {
                       <strong className="danger">{t("Not passing...")}</strong>
                     )}
                   </p>
-                  {isVetoed && (
-                    <p>
-                      <strong className="danger">
-                        {t("Exceeds veto threshold...")}
-                      </strong>
-                    </p>
-                  )}
                 </section>
               </article>
             </Col>
