@@ -1,6 +1,6 @@
 import { useState } from "react"
-import { ReactComponent as Terra } from "styles/images/Terra.svg"
 import styles from "./ProfileIcon.module.scss"
+import { useThemeFavicon } from "data/settings/Theme"
 
 interface Props {
   src?: string
@@ -9,8 +9,10 @@ interface Props {
 
 const ProfileIcon = ({ src, size }: Props) => {
   const [error, setError] = useState(false)
+  const stationIcon = useThemeFavicon()
+  
   const attrs = { className: styles.icon, width: size, height: size }
-  if (error || !src) return <Terra {...attrs} />
+  if (error || !src) return <img {...attrs} src={stationIcon} alt="" />
   return <img {...attrs} src={src} onError={() => setError(true)} alt="" />
 }
 
