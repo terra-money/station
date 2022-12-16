@@ -134,7 +134,7 @@ const QuickStakeForm = (props: Props) => {
                 [QuickStakeAction.DELEGATE]: (
                   <FormWarning>
                     {t(
-                      "Leave enough amount of coins to pay fee for subsequent transactions"
+                      "Leave enough coins to pay fee for subsequent transactions"
                     )}
                   </FormWarning>
                 ),
@@ -147,7 +147,7 @@ const QuickStakeForm = (props: Props) => {
                     </FormWarning>
                     <FormWarning>
                       {t(
-                        "No reward is distributed during 21 days undelegation period"
+                        "No rewards are distributed during 21 days undelegation period"
                       )}
                     </FormWarning>
                   </Grid>

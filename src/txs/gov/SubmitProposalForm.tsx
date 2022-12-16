@@ -404,6 +404,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
                 <ExternalLink href="https://agora.terra.money">
                   agora.terra.money
                 </ExternalLink>
+                or the corresponding chain's forum.
               </FormHelp>
               <FormWarning>
                 {t(
