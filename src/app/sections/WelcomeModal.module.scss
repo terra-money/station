@@ -15,8 +15,8 @@
 
 .modal {
   @include flex-column;
-
   min-height: 740px;
+  max-height: 90%;
 
   background: var(--card-bg-muted);
   border-radius: var(--border-radius);
@@ -24,24 +24,37 @@
   outline: 0;
   position: relative;
   overflow: hidden;
+  padding: 50px 40px 40px;
+  width: 789px;
+  max-width: 95%;
+  border: var(--border-width) solid var(--card-border);
 
-  @include desktop {
-    padding: 40px;
-    width: 789px;
+  --accordion-width: 615px;
+
+  @media (max-width: 770px) {
+    --accordion-width: 575px;
   }
-
-  @include mobile {
-    padding: 48px 20px;
-    width: calc(100% - 40px);
+  @media (max-width: 725px) {
+    --accordion-width: 525px;
+  }
+  @media (max-width: 675px) {
+    --accordion-width: 450px;
+  }
+  @media (max-width: 590px) {
+    --accordion-width: 350px;
+  }
+  @media (max-width: 450px) {
+    --accordion-width: 285px;
   }
 }
 
 .title {
-  font-size: 38px;
+  font-size: clamp(17px, 4.5vw, 38px);
+  text-align: center;
 }
 
 .subtitle {
-  font-size: 20px;
+  font-size: clamp(14px, 2vw, 20px);
   margin-top: 10px;
   margin-bottom: 50px;
   color: var(--text-muted);
@@ -52,114 +65,179 @@
   @include flex-column(flex-start, center);
   gap: 12px;
   min-height: 510px;
-}
+  overflow: scroll;
 
-.accordion,
-.lessImportantAccordion {
-  @include flex-column(center, normal);
-  background-color: var(--card-bg-muted);
-  border-radius: var(--border-radius);
-  width: 615px;
-
-  .top {
-    @include inline-flex(space-between, center);
-    background-color: var(--card-bg);
-    padding: 20px;
-    border: 1px solid var(--card-border);
+  .accordion,
+  .lessImportantAccordion {
+    @include flex-column(center, normal);
+    background-color: var(--card-bg-muted);
     border-radius: var(--border-radius);
-    flex-grow: 1;
+    width: var(--accordion-width);
 
-    .title {
-      font-size: 20px;
-      font-weight: var(--bold);
+    .top {
+      @include inline-flex(space-between, center);
+      background-color: var(--card-bg);
+      padding: 20px;
+      border: 1px solid var(--card-border);
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: all 0.3s, border-radius 0.3s 0.3s;
+
+      .title {
+        font-size: clamp(14px, 2vw, 18px);
+        font-weight: var(--bold);
+      }
+
+      .icon {
+        width: 30px;
+        transition: transform 0.3s;
+      }
+
+      &:hover {
+        background-color: var(--bg-muted);
+        border-color: var(--input-border);
+      }
     }
 
-    .icon {
-      width: 30px;
+    .content {
+      padding: 0 20px;
+      border: 1px solid var(--card-border);
+      border-top: 0;
+      border-radius: 0 0 var(--border-radius) var(--border-radius);
+
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition: opacity 0.5s ease-in, max-height 0.4s ease-in,
+        padding-top 0.3s ease-in 0.05s, padding-bottom 0.4s ease 0.2s;
+
+      ul {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        list-style: disc;
+        margin-left: 15px;
+
+        li {
+          .highlighted {
+            background-color: #35353a;
+            border-radius: 3px;
+            color: var(--danger);
+            font-weight: var(--bold);
+            padding: 4px 6px;
+          }
+
+          &::marker {
+            font-size: 18px;
+            color: var(--text-muted);
+          }
+        }
+      }
     }
-  }
 
-  .content {
-    padding: 20px;
-    border: 1px solid var(--card-border);
-    border-top: 0;
-    border-radius: 0 0 var(--border-radius) var(--border-radius);
-    flex-grow: 1;
-    font-size: 16px;
-    line-height: 1.5;
+    &.opened {
+      .top {
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+      }
 
-    display: none;
+      .content {
+        opacity: 1;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        max-height: 300px;
+      }
 
-    ul {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      list-style: disc;
-      font-size: 14px;
-      gap: 12px;
-      margin-left: 15px;
-
-      li {
-        font-size: 14px;
-
-        .highlighted {
-          background-color: #35353a;
-          border-radius: 3px;
-          color: var(--danger);
-          font-weight: var(--bold);
-          padding: 4px 6px;
-        }
-
-        &::marker {
-          font-size: 18px;
-          color: var(--text-muted);
-        }
+      .icon {
+        transform: rotate(180deg);
       }
     }
   }
 
-  &.opened {
-    .top {
-      border-radius: var(--border-radius) var(--border-radius) 0 0;
-    }
-    .content {
-      display: block;
-    }
-
-    .icon {
-      transform: rotate(180deg);
-    }
-  }
-}
-
-.lessImportantAccordion {
-  background-color: rgba(26, 26, 26, 0.55);
-  margin-top: 32px;
-
-  .top {
-    background-color: var(--card-bg-muted);
-    padding: 14px 20px;
-
-    .title {
-      font-size: 16px;
-      color: var(--text-muted);
-    }
-  }
-
-  .content {
-    padding: 12px 20px;
-  }
-
-  p {
+  .lessImportantAccordion {
+    background-color: rgba(26, 26, 26, 0.55);
+    margin-top: 32px;
     font-size: 12px;
     color: var(--text-muted);
+
+    .top {
+      background-color: var(--card-bg-muted);
+      padding: 14px 20px;
+
+      .title {
+        font-size: clamp(14px, 2vw, 16px);
+      }
+    }
+
+    &.opened {
+      .content {
+        padding-top: 12px;
+        padding-bottom: 12px;
+      }
+    }
   }
 }
 
 .confirm {
   background-color: var(--button-primary-bg);
-  height: 50px;
-  width: 100%;
+  min-height: 50px;
+  width: var(--accordion-width);
   border-radius: 16px;
   margin-top: 32px;
+  transition: all 0.3s;
+
+  @include mobile {
+    margin-top: 12px;
+  }
+
+  &:hover {
+    background-color: hsl(
+      var(--button-primary-bg-h),
+      var(--button-primary-bg-s),
+      calc(var(--button-primary-bg-l) - 5%)
+    );
+  }
+}
+
+@media (max-height: 800px) {
+  .modal {
+    min-height: unset;
+    padding: 28px 20px 20px;
+    max-height: 95%;
+  }
+
+  .subtitle {
+    margin-bottom: 20px;
+  }
+
+  .accordions {
+    min-height: unset;
+  }
+}
+
+@media (max-width: 590px) {
+  .modal {
+    padding: 28px 20px 20px;
+    min-height: unset;
+  }
+
+  .subtitle {
+    margin-bottom: 20px;
+    text-align: center;
+    max-width: 90%;
+  }
+
+  .accordions {
+    .accordion {
+      .top {
+        padding: 14px;
+      }
+    }
+    .lessImportantAccordion {
+      margin-top: 12px;
+
+      .top {
+        padding: 10px 14px;
+      }
+    }
+  }
 }
