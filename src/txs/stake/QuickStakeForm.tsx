@@ -21,6 +21,8 @@ import {
   useValidators,
   useDelegations,
   calcDelegationsTotal,
+  useStakingParams,
+  getChainUnbondTime,
 } from "data/queries/staking"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 
@@ -44,9 +46,11 @@ const QuickStakeForm = (props: Props) => {
   const { data: validators, ...validatorState } = useValidators(chainID)
   const { data: delegations, ...delegationsState } = useDelegations(chainID)
   const readNativeDenom = useNativeDenoms()
-  const state = combineState(validatorState, delegationsState)
+  const { data: stakeParams, ...stakeState } = useStakingParams(chainID)
+  const state = combineState(validatorState, delegationsState, stakeState)
 
   const { baseAsset } = network[chainID]
+  // const daysToUnbond = getChainUnbondTime(stakeParams)
 
   /* tx context */
   const initialGasDenom = getInitialGasDenom()
@@ -60,6 +64,11 @@ const QuickStakeForm = (props: Props) => {
   const { errors } = formState
   const { input } = watch()
   const amount = toAmount(input)
+
+  const daysToUnbond = useMemo(() => {
+    if (!stakeParams) return
+    return getChainUnbondTime(stakeParams)
+  }, [stakeParams])
 
   const elegibleVals = useMemo(() => {
     if (!validators) return
@@ -147,7 +156,7 @@ const QuickStakeForm = (props: Props) => {
                     </FormWarning>
                     <FormWarning>
                       {t(
-                        "No rewards are distributed during 21 days undelegation period"
+                        `No rewards are distributed during ${daysToUnbond} days undelegation period`
                       )}
                     </FormWarning>
                   </Grid>

@@ -6,6 +6,7 @@ import {
   Coin,
   MsgDelegate,
   MsgUndelegate,
+  StakingParams,
   ValAddress,
   Validator,
 } from "@terra-money/feather.js"
@@ -113,6 +114,18 @@ export const useValidator = (operatorAddress: ValAddress) => {
     { ...RefetchOptions.INFINITY }
   )
 }
+
+export const useStakingParams = (chainID: string) => {
+  const lcd = useInterchainLCDClient()
+  return useQuery(
+    [queryKey.staking.params, chainID],
+    () => lcd.staking.parameters(chainID),
+    { ...RefetchOptions.INFINITY }
+  )
+}
+
+export const getChainUnbondTime = (stakingParams: StakingParams) =>
+  stakingParams?.unbonding_time / (60 * 60 * 24)
 
 export const useDelegations = (chainID: string) => {
   const addresses = useInterchainAddresses()
