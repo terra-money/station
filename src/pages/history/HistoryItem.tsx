@@ -63,7 +63,7 @@ const HistoryItem = ({
             {network[chain].name}
           </span>
           <span className={styles.link}>
-            <FinderLink chain={network[chain].name} tx short>
+            <FinderLink chainID={chain} tx short>
               {txhash}
             </FinderLink>
           </span>

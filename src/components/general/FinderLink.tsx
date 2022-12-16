@@ -34,12 +34,14 @@ const FinderLink = forwardRef(
     const getChainNamefromID = useGetChainNamefromID()
     const { chainID: lastTxChainID } = useRecoilValue(latestTxState)
 
+    const value = rest.value ?? children
+
     const targetChainId =
       lastTxChainID ||
       chainID ||
       (rest.value && getChainIDFromAddress(rest.value, networks))
 
-    getChainNamefromID(targetChainId)
+    const chainName = getChainNamefromID(targetChainId)
 
     const interchainPath = tx
       ? "txs"
@@ -58,8 +60,8 @@ const FinderLink = forwardRef(
       : "address"
 
     const link =
-      network !== "terra"
-        ? [MINTSCAN, network, interchainPath, value].join("/")
+      chainName !== "terra"
+        ? [MINTSCAN, chainName, interchainPath, value].join("/")
         : [FINDER, networkName, finderPath, value].join("/")
 
     const className = classNames(attrs.className, styles.link)

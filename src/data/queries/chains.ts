@@ -26,8 +26,8 @@ export function useWhitelist(): Whitelist {
 
 export function useGetChainNamefromID() {
   const chains = useNetwork()
-  if (!chains) return null
-  return (id: string) =>
+
+  return (id: string | undefined) =>
     Object.values(chains)
       .find(({ chainID }) => chainID === id)
       ?.name.toLowerCase()
