@@ -150,9 +150,7 @@ const StakeForm = (props: Props) => {
             {
               [StakeAction.DELEGATE]: (
                 <FormWarning>
-                  {t(
-                    "Leave enough amount of coins to pay fee for subsequent transactions"
-                  )}
+                  {t("Leave coins to pay fee for subsequent transactions")}
                 </FormWarning>
               ),
               [StakeAction.REDELEGATE]: (
@@ -171,7 +169,7 @@ const StakeForm = (props: Props) => {
                   </FormWarning>
                   <FormWarning>
                     {t(
-                      "No reward is distributed during 21 days undelegation period"
+                      "No rewards are distributed during 21 days undelegation period"
                     )}
                   </FormWarning>
                 </Grid>

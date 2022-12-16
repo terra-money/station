@@ -12,7 +12,6 @@ import styles from "./TxMessage.module.scss"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 
 const ValidatorAddress = ({ children: address }: { children: string }) => {
-  // TODO: handle multichain
   const chainID = useChainID()
   const { data: validators } = useValidators(chainID)
   const moniker = validators?.find(

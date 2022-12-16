@@ -403,7 +403,8 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
                 Upload proposal only after forum discussion on{" "}
                 <ExternalLink href="https://agora.terra.money">
                   agora.terra.money
-                </ExternalLink>
+                </ExternalLink>{" "}
+                or that chain's forum.
               </FormHelp>
               <FormWarning>
                 {t(

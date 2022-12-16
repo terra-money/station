@@ -11,6 +11,8 @@ export function getChainIDFromAddress(
   >
 ) {
   const addressPrefix = AccAddress.getPrefix(address)
-  return Object.values(chains).find(({ prefix }) => prefix === addressPrefix)
-    ?.chainID
+  return Object.values(chains).find(
+    ({ prefix }) =>
+      prefix === addressPrefix || `${prefix}valoper` === addressPrefix
+  )?.chainID
 }

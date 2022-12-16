@@ -10,10 +10,17 @@ interface Props {
 const ProfileIcon = ({ src, size }: Props) => {
   const [error, setError] = useState(false)
   const stationIcon = useThemeFavicon()
-  
+
   const attrs = { className: styles.icon, width: size, height: size }
   if (error || !src) return <img {...attrs} src={stationIcon} alt="" />
-  return <img {...attrs} src={src} onError={() => setError(true)} alt="" />
+  return (
+    <img
+      {...attrs}
+      src={`https://raw.githubusercontent.com/terra-money/validator-images/main/images/${src}.jpg`}
+      onError={() => setError(true)}
+      alt=""
+    />
+  )
 }
 
 export default ProfileIcon
