@@ -5,10 +5,13 @@ import { useTerraObserver } from "data/Terra/TerraObserver"
 import { FinderLink } from "components/general"
 import { Flex } from "components/layout"
 import styles from "./LastHeight.module.scss"
+import { useChainID } from "data/wallet"
 
 const LastHeight = () => {
   const { t } = useTranslation()
   const { block } = useTerraObserver()
+  const chainID = useChainID()
+
   const height = block?.header.height
 
   return (
@@ -21,7 +24,12 @@ const LastHeight = () => {
       />
 
       {height ? (
-        <FinderLink className={styles.link} value={height} block>
+        <FinderLink
+          chainID={chainID}
+          className={styles.link}
+          value={height}
+          block
+        >
           #{formatNumber(height, { comma: true })}
         </FinderLink>
       ) : (
