@@ -1,0 +1,165 @@
+@import "mixins";
+
+.overlay {
+  @include flex;
+  background: hsl(0 0% 0% / 0.8);
+
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  z-index: 1050;
+}
+
+.modal {
+  @include flex-column;
+
+  min-height: 740px;
+
+  background: var(--card-bg-muted);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  outline: 0;
+  position: relative;
+  overflow: hidden;
+
+  @include desktop {
+    padding: 40px;
+    width: 789px;
+  }
+
+  @include mobile {
+    padding: 48px 20px;
+    width: calc(100% - 40px);
+  }
+}
+
+.title {
+  font-size: 38px;
+}
+
+.subtitle {
+  font-size: 20px;
+  margin-top: 10px;
+  margin-bottom: 50px;
+  color: var(--text-muted);
+  font-weight: var(--normal);
+}
+
+.accordions {
+  @include flex-column(flex-start, center);
+  gap: 12px;
+  min-height: 510px;
+}
+
+.accordion,
+.lessImportantAccordion {
+  @include flex-column(center, normal);
+  background-color: var(--card-bg-muted);
+  border-radius: var(--border-radius);
+  width: 615px;
+
+  .top {
+    @include inline-flex(space-between, center);
+    background-color: var(--card-bg);
+    padding: 20px;
+    border: 1px solid var(--card-border);
+    border-radius: var(--border-radius);
+    flex-grow: 1;
+
+    .title {
+      font-size: 20px;
+      font-weight: var(--bold);
+    }
+
+    .icon {
+      width: 30px;
+    }
+  }
+
+  .content {
+    padding: 20px;
+    border: 1px solid var(--card-border);
+    border-top: 0;
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    flex-grow: 1;
+    font-size: 16px;
+    line-height: 1.5;
+
+    display: none;
+
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      list-style: disc;
+      font-size: 14px;
+      gap: 12px;
+      margin-left: 15px;
+
+      li {
+        font-size: 14px;
+
+        .highlighted {
+          background-color: #35353a;
+          border-radius: 3px;
+          color: var(--danger);
+          font-weight: var(--bold);
+          padding: 4px 6px;
+        }
+
+        &::marker {
+          font-size: 18px;
+          color: var(--text-muted);
+        }
+      }
+    }
+  }
+
+  &.opened {
+    .top {
+      border-radius: var(--border-radius) var(--border-radius) 0 0;
+    }
+    .content {
+      display: block;
+    }
+
+    .icon {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.lessImportantAccordion {
+  background-color: rgba(26, 26, 26, 0.55);
+  margin-top: 32px;
+
+  .top {
+    background-color: var(--card-bg-muted);
+    padding: 14px 20px;
+
+    .title {
+      font-size: 16px;
+      color: var(--text-muted);
+    }
+  }
+
+  .content {
+    padding: 12px 20px;
+  }
+
+  p {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+}
+
+.confirm {
+  background-color: var(--button-primary-bg);
+  height: 50px;
+  width: 100%;
+  border-radius: 16px;
+  margin-top: 32px;
+}
