@@ -24,13 +24,13 @@ export function useWhitelist(): Whitelist {
   return data
 }
 
-export function useGetChainNamefromID() {
-  const chains = useNetwork()
-
-  return (id: string | undefined) =>
-    Object.values(chains)
-      .find(({ chainID }) => chainID === id)
-      ?.name.toLowerCase()
+export function getChainNamefromID(
+  id: string | undefined,
+  chains: Record<string, InterchainNetwork>
+) {
+  return Object.values(chains)
+    .find(({ chainID }) => chainID === id)
+    ?.name.toLowerCase()
 }
 
 export function useIBCChannels() {

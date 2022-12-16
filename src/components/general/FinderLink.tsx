@@ -10,7 +10,7 @@ import { useRecoilValue } from "recoil"
 import { getChainIDFromAddress } from "utils/bech32"
 import styles from "./FinderLink.module.scss"
 import { AccAddress } from "@terra-money/feather.js"
-import { useGetChainNamefromID } from "data/queries/chains"
+import { getChainNamefromID } from "data/queries/chains"
 
 interface Props extends HTMLAttributes<HTMLAnchorElement> {
   value?: string
@@ -29,19 +29,16 @@ const FinderLink = forwardRef(
     ref: ForwardedRef<HTMLAnchorElement>
   ) => {
     const { block, tx, validator, chainID, ...attrs } = rest
-    const networkName = useNetworkName()
+    const networkName = useNetworkName() // mainnet or testnet for Terra
     const networks = useNetwork()
-    const getChainNamefromID = useGetChainNamefromID()
     const { chainID: lastTxChainID } = useRecoilValue(latestTxState)
 
     const value = rest.value ?? children
-
     const targetChainId =
       lastTxChainID ||
       chainID ||
       (rest.value && getChainIDFromAddress(rest.value, networks))
-
-    const chainName = getChainNamefromID(targetChainId)
+    const chainName = getChainNamefromID(targetChainId, networks)
 
     const interchainPath = tx
       ? "txs"
