@@ -80,13 +80,11 @@ const WelcomeModal = () => {
 
         <section
           className={cx(styles.lessImportantAccordion, openWhy && "opened")}
+          onClick={() => setOpenWhy(!openWhy)}
         >
           <div className={styles.top}>
             <h5 className={styles.title}>Why do I need to do this?</h5>
-            <KeyboardArrowDownIcon
-              className={styles.icon}
-              onClick={() => setOpenWhy(!openWhy)}
-            />
+            <KeyboardArrowDownIcon className={styles.icon} />
           </div>
           <div className={styles.content}>
             <p>
@@ -99,11 +97,10 @@ const WelcomeModal = () => {
             </p>
           </div>
         </section>
-
-        <button className={styles.confirm} onClick={submitButton}>
-          Confirm
-        </button>
       </div>
+      <button className={styles.confirm} onClick={submitButton}>
+        Confirm
+      </button>
     </ReactModal>
   )
 }
