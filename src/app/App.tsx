@@ -28,9 +28,12 @@ import DevTools from "./sections/DevTools"
 /* init */
 import InitBankBalance from "./InitBankBalance"
 import Wallet from "pages/wallet/Wallet"
+import WelcomeModal from "./sections/WelcomeModal"
 
 const App = () => {
   const { element: routes } = useNav()
+
+  const showWelcomeModal = localStorage.getItem("welcomeModal") === null
 
   return (
     <Layout>
@@ -63,9 +66,9 @@ const App = () => {
         <ErrorBoundary fallback={fallback}>
           <InitBankBalance>
             <MainContainer>
-              {/* <Page>{routes}</Page> */}
               {routes}
               <Wallet />
+              {showWelcomeModal && <WelcomeModal />}
             </MainContainer>
           </InitBankBalance>
         </ErrorBoundary>
