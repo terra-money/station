@@ -6,6 +6,7 @@ import { Card, Flex, Grid } from "components/layout"
 import { ValidatorJailed, ValidatorStatus } from "./components/ValidatorTag"
 import useAddressParams from "./useAddressParams"
 import styles from "./ValidatorCompact.module.scss"
+import ProfileIcon from "./components/ProfileIcon"
 
 const cx = classNames.bind(styles)
 
@@ -22,9 +23,7 @@ const ValidatorCompact = ({ vertical }: { vertical?: boolean }) => {
     <Card {...state}>
       <Grid gap={16}>
         <header className={cx(styles.header, { vertical })}>
-          {/*TerraValidator && (
-            <ProfileIcon src={TerraValidator.picture} size={60} />
-          )*/}
+          <ProfileIcon src={validator.description.identity} size={60} />
 
           <Grid gap={4}>
             <Flex gap={10} start>
