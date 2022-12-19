@@ -66,12 +66,15 @@
   }
 }
 
+.tabsContainer {
+  @include flex-column(unset, unset);
+}
+
 .content {
   background: var(--card-bg);
   border: var(--border-width) solid var(--card-border);
   border-top: var(--border-width) solid transparent;
   border-radius: 0 0 var(--border-radius) var(--border-radius);
-  padding: 1px; // Just for Moon Theme but doesn't affect other themes
 }
 
 .card {
