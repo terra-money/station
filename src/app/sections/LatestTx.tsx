@@ -37,7 +37,7 @@ const TxIndicator = ({ txhash }: { txhash: string }) => {
   const [latestTx, setLatestTx] = useRecoilState(latestTxState)
   const [minimized, setMinimized] = useState(false)
   const initLatestTx = () => setLatestTx({ txhash: "", chainID: "" })
-  const { redirectAfterTx } = latestTx
+  const { redirectAfterTx, chainID } = latestTx
 
   /* polling */
   const { data, isSuccess } = useTxInfo(latestTx)
@@ -70,7 +70,7 @@ const TxIndicator = ({ txhash }: { txhash: string }) => {
   }[status]
 
   const txLink = (
-    <FinderLink tx short>
+    <FinderLink chainID={chainID} tx short>
       {txhash}
     </FinderLink>
   )
