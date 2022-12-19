@@ -57,6 +57,7 @@ const Connected = () => {
                   </ModalButton>
                 </section>
               </Tooltip>
+
               <Flex gap={4} start>
                 <Copy text={address} />
                 <WalletQR

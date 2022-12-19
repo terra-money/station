@@ -24,6 +24,7 @@ const AddressModalTable = ({ keyword }: { keyword: string }) => {
   return (
     <Table
       className={styles.table}
+      size="small"
       dataSource={addressData}
       filter={({ chainName }) => {
         if (!keyword) return true
@@ -35,7 +36,7 @@ const AddressModalTable = ({ keyword }: { keyword: string }) => {
           title: t("Chain Name"),
           dataIndex: "chainName",
           render: (chainName: string) => (
-            <div className={styles.chainName}>{chainName}</div>
+            <div className={styles.chain}>{chainName}</div>
           ),
         },
         {
@@ -47,6 +48,7 @@ const AddressModalTable = ({ keyword }: { keyword: string }) => {
         },
         {
           dataIndex: "address",
+          align: "right",
           render: (address: AccAddress) => <Copy text={address} />,
         },
       ]}

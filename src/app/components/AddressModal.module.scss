@@ -3,6 +3,7 @@
   border-top: var(--border-width) solid var(--card-border);
 }
 
-.chainName {
+.chain {
   text-transform: capitalize;
+  box-sizing: content-box;
 }
