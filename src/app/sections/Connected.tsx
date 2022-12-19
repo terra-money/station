@@ -8,7 +8,7 @@ import { truncate } from "@terra.kitchen/utils"
 import { useWallet } from "@terra-money/wallet-provider"
 import { useAddress } from "data/wallet"
 import { useTnsName } from "data/external/tns"
-import { Button, Copy, FinderLink } from "components/general"
+import { Button, Copy } from "components/general"
 import CopyStyles from "components/general/Copy.module.scss"
 import { Flex, Grid } from "components/layout"
 import { Tooltip, Popover } from "components/display"
@@ -17,6 +17,8 @@ import SwitchWallet from "auth/modules/select/SwitchWallet"
 import PopoverNone from "../components/PopoverNone"
 import WalletQR from "./WalletQR"
 import styles from "./Connected.module.scss"
+import { ModalButton } from "components/feedback"
+import AddressModal from "app/components/AddressModal"
 
 const Connected = () => {
   const { t } = useTranslation()
@@ -42,14 +44,19 @@ const Connected = () => {
         <PopoverNone className={styles.popover} footer={footer}>
           <Grid gap={16}>
             <Grid gap={4}>
-              <section>
-                <Tooltip content={t("View on Terra Finder")}>
-                  <FinderLink className={styles.link} short>
-                    {address}
-                  </FinderLink>
-                </Tooltip>
-              </section>
-
+              <Tooltip content={t("View Interchain Addresses")}>
+                <section>
+                  <ModalButton
+                    renderButton={(open) => (
+                      <button className={styles.modalLink} onClick={open}>
+                        {truncate(address)}
+                      </button>
+                    )}
+                  >
+                    <AddressModal />
+                  </ModalButton>
+                </section>
+              </Tooltip>
               <Flex gap={4} start>
                 <Copy text={address} />
                 <WalletQR
