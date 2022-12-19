@@ -9,7 +9,6 @@ import { ExternalLink } from "./External"
 import { useRecoilValue } from "recoil"
 import { getChainIDFromAddress } from "utils/bech32"
 import styles from "./FinderLink.module.scss"
-import { AccAddress } from "@terra-money/feather.js"
 import { getChainNamefromID } from "data/queries/chains"
 
 interface Props extends HTMLAttributes<HTMLAnchorElement> {

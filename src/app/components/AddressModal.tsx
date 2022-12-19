@@ -10,6 +10,7 @@ import { FinderLink } from "components/general"
 import { getChainNamefromID } from "data/queries/chains"
 import { useNetwork } from "data/wallet"
 import { truncate } from "@terra.kitchen/utils"
+import { Copy } from "components/general"
 
 const AddressModalTable = ({ keyword }: { keyword: string }) => {
   const addresses = useInterchainAddresses()
@@ -17,17 +18,25 @@ const AddressModalTable = ({ keyword }: { keyword: string }) => {
   const { t } = useTranslation()
   const addressData = Object.keys(addresses).map((key) => ({
     address: addresses[key],
-    name: getChainNamefromID(key, networks) ?? key,
+    chainName: getChainNamefromID(key, networks) ?? key,
   }))
 
   return (
     <Table
+      className={styles.table}
       dataSource={addressData}
+      filter={({ chainName }) => {
+        if (!keyword) return true
+        if (chainName.toLowerCase().includes(keyword.toLowerCase())) return true
+        return false
+      }}
       columns={[
         {
           title: t("Chain Name"),
-          dataIndex: "name",
-          render: (name: string) => <div>{name}</div>,
+          dataIndex: "chainName",
+          render: (chainName: string) => (
+            <div className={styles.chainName}>{chainName}</div>
+          ),
         },
         {
           title: t("Address"),
@@ -35,6 +44,10 @@ const AddressModalTable = ({ keyword }: { keyword: string }) => {
           render: (address: AccAddress) => (
             <FinderLink value={address}>{truncate(address)}</FinderLink>
           ),
+        },
+        {
+          dataIndex: "address",
+          render: (address: AccAddress) => <Copy text={address} />,
         },
       ]}
       style={getMaxHeightStyle(320)}
@@ -45,7 +58,7 @@ const AddressModalTable = ({ keyword }: { keyword: string }) => {
 const AddressModal = () => {
   return (
     <Page sub>
-      <WithSearchInput gap={0} placeholder="Search for a chain...">
+      <WithSearchInput gap={10} placeholder="Search for a chain...">
         {(keyword: string) => <AddressModalTable keyword={keyword} />}
       </WithSearchInput>
     </Page>

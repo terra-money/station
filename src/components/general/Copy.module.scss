@@ -2,7 +2,6 @@
 
 .button {
   @include inline-flex;
-
   border-radius: 10px;
   border: solid 1px var(--text);
   color: var(--text);
@@ -11,4 +10,5 @@
   height: 20px;
   padding: 0 10px;
   text-transform: uppercase;
+  box-sizing: border-box;
 }
