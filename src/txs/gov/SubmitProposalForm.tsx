@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from "react"
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useFieldArray, useForm } from "react-hook-form"
 import AddIcon from "@mui/icons-material/Add"
@@ -11,6 +11,7 @@ import { isDenomTerraNative } from "@terra.kitchen/utils"
 import { readAmount, readDenom, toAmount } from "@terra.kitchen/utils"
 import { SAMPLE_ADDRESS } from "config/constants"
 import { getAmount, sortCoins } from "utils/coin"
+import { isExempted, isWhitelisted, URL_REGEX } from "utils/gov"
 import { has } from "utils/num"
 import { parseJSON } from "utils/data"
 import { queryKey, useIsClassic } from "data/query"
@@ -98,6 +99,8 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
   const amount = toAmount(input)
   const { fields, append, remove } = useFieldArray({ control, name: "changes" })
   const coinsFieldArray = useFieldArray({ control, name: "coins" })
+  const [hasExternalLink, setHasExternalLink] = useState(false)
+  const [externalLinks, setExternalLinks] = useState("")
 
   /* effect: ParameterChangeProposal */
   const shouldAppendChange =
@@ -370,6 +373,27 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
 
   const agoraURL = isClassic ? "classic-agora.terra.money" : "agora.terra.money"
 
+  const validateDescription = (event: ChangeEvent<HTMLInputElement>) => {
+    const parts = event.target.value.split(URL_REGEX)
+
+    setHasExternalLink(
+      !!parts.filter(
+        (part) =>
+          part.match(URL_REGEX) && !isWhitelisted(part) && !isExempted(part)
+      ).length
+    )
+
+    setExternalLinks(
+      parts
+        .filter(
+          (part) =>
+            part.match(URL_REGEX) && !isWhitelisted(part) && !isExempted(part)
+        )
+        .map((part) => part.replace(/\s/g, ""))
+        .join(", ")
+    )
+  }
+
   return (
     <Tx {...tx}>
       {({ max, fee, submit }) => (
@@ -391,11 +415,6 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
                 {t("Parameters cannot be changed by text proposals")}
               </FormWarning>
             )}
-            <FormWarning>
-              {t(
-                "Links to websites outside the Terra ecosystem will not be displayed"
-              )}
-            </FormWarning>
           </Grid>
 
           <FormItem label={t("Proposal type")} error={errors.type?.message}>
@@ -420,9 +439,17 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
             label={t("Description")}
             error={errors.description?.message}
           >
+            {hasExternalLink && (
+              <FormWarning>
+                {t(
+                  `A potential reference to a website outside the Terra ecosystem was detected. These reference(s) will not be displayed in the proposal description: ${externalLinks}`
+                )}
+              </FormWarning>
+            )}
             <TextArea
               {...register("description", {
                 required: "Description is required",
+                onChange: validateDescription,
               })}
               placeholder={t(
                 "We're proposing to spend 100,000 LUNA from the Community Pool to fund the creation of public goods for the Terra ecosystem"

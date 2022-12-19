@@ -6,6 +6,7 @@ import { ExternalLink } from "components/general"
 import { Grid } from "components/layout"
 import { TooltipIcon } from "components/display"
 import { Checkbox, FormHelp, FormWarning } from "components/form"
+import { isExempted, isWhitelisted, URL_REGEX } from "utils/gov"
 
 const ProposalDescription = ({ proposal }: { proposal: Proposal }) => {
   const { description } = proposal.content
@@ -13,17 +14,17 @@ const ProposalDescription = ({ proposal }: { proposal: Proposal }) => {
   const { t } = useTranslation()
   const [showOriginal, setShowOriginal] = useState(false)
 
-  const urlRegex = /(https?:\/\/[^\s]+)/g
-  const parts = description.split(urlRegex)
+  const parts = description.split(URL_REGEX)
 
   const showCheckbox = !!parts.filter(
-    (part) => part.match(urlRegex) && !isWhitelisted(part)
+    (part) => part.match(URL_REGEX) && !isWhitelisted(part) && !isExempted(part)
   ).length
 
   const renderPart = (part: string) => {
-    const url = xss(part.match(urlRegex)?.[0] ?? "")
+    const url = xss(part.match(URL_REGEX)?.[0] ?? "")
 
     if (!url) return part
+    if (isExempted(url)) return part
 
     if (isWhitelisted(url))
       return (
@@ -37,7 +38,7 @@ const ProposalDescription = ({ proposal }: { proposal: Proposal }) => {
     const tooltip = (
       <TooltipIcon
         content={t(
-          "References to websites outside the Terra ecosystem are not displayed in the proposal description"
+          `A potential reference to a website outside the Terra ecosystem (${part}) was not displayed in the proposal description. See guidance below if you intend to visit this website.`
         )}
       >
         <i>{t("external link")}</i>
@@ -80,8 +81,3 @@ const ProposalDescription = ({ proposal }: { proposal: Proposal }) => {
 }
 
 export default ProposalDescription
-
-const isWhitelisted = (url?: string) => {
-  if (!url) return false
-  return new URL(url).hostname.endsWith("terra.money")
-}
