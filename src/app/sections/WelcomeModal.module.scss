@@ -64,7 +64,7 @@
 .accordions {
   @include flex-column(flex-start, center);
   gap: 12px;
-  min-height: 510px;
+  min-height: 450px;
   overflow: scroll;
 
   .accordion,
@@ -120,7 +120,7 @@
 
         li {
           .highlighted {
-            background-color: #35353a;
+            background-color: var(--input-border);
             border-radius: 3px;
             color: var(--danger);
             font-weight: var(--bold);
@@ -154,7 +154,7 @@
   }
 
   .lessImportantAccordion {
-    background-color: rgba(26, 26, 26, 0.55);
+    background-color: var(--bg);
     margin-top: 32px;
     font-size: 12px;
     color: var(--text-muted);
@@ -179,6 +179,7 @@
 
 .confirm {
   background-color: var(--button-primary-bg);
+  color: var(--button-primary-text);
   min-height: 50px;
   width: var(--accordion-width);
   border-radius: 16px;
