@@ -2,6 +2,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
 import { truncate } from "@terra.kitchen/utils"
 import classNames from "classnames/bind"
 import { Flex } from "components/layout"
+import { useAddress } from "data/wallet"
 import AuthButton from "../../components/AuthButton"
 import MultisigBadge from "../../components/MultisigBadge"
 import useAuth from "../../hooks/useAuth"
@@ -13,11 +14,12 @@ const cx = classNames.bind(styles)
 
 const SwitchWallet = () => {
   const { connectedWallet, wallets, connect } = useAuth()
+  const address = useAddress()
 
   const localWallets = !!wallets.length && (
     <ul className={styles.list}>
       {wallets.map((wallet) => {
-        const { name, address, lock } = wallet
+        const { name, lock } = wallet
         const active = name === connectedWallet?.name
         const children = (
           <>
@@ -29,7 +31,7 @@ const SwitchWallet = () => {
             {lock ? (
               <LockOutlinedIcon fontSize="inherit" className="muted" />
             ) : (
-              truncate(address)
+              truncate(address ?? "")
             )}
           </>
         )

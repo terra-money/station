@@ -1,4 +1,5 @@
 import { AccAddress } from "@terra-money/feather.js"
+import { bech32 } from "bech32"
 
 export function getChainIDFromAddress(
   address: AccAddress,
@@ -15,4 +16,12 @@ export function getChainIDFromAddress(
     ({ prefix }) =>
       prefix === addressPrefix || `${prefix}valoper` === addressPrefix
   )?.chainID
+}
+
+export function addressFromWords(words: string, prefix = "terra") {
+  return bech32.encode(prefix, Buffer.from(words, "hex"))
+}
+
+export function wordsFromAddress(address: AccAddress) {
+  return Buffer.from(bech32.decode(address).words).toString("hex")
 }

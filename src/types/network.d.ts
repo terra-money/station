@@ -14,6 +14,7 @@ interface InterchainNetwork {
   baseAsset: string
   name: string
   icon: string
+  coinType: "118" | "330"
   ibc?: {
     toTerra: string
     fromTerra: string

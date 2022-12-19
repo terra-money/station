@@ -2,7 +2,8 @@ import { atom, useRecoilState, useRecoilValue } from "recoil"
 import { useNetworks } from "app/InitNetworks"
 import { getStoredNetwork, storeNetwork } from "../scripts/network"
 import { useWallet, WalletStatus } from "@terra-money/wallet-provider"
-import { sandbox } from "../scripts/env"
+import { walletState } from "./useAuth"
+import is from "../scripts/is"
 
 const networkState = atom({
   key: "network",
@@ -30,26 +31,43 @@ export const useNetworkOptions = () => {
   ]
 }
 
-export const useNetwork = () => {
+export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
   const networks = useNetworks()
   const [network, setNetwork] = useNetworkState()
-  const wallet = useWallet()
+  const wallet = useRecoilValue(walletState)
+  const connectedWallet = useWallet()
 
-  if (sandbox || wallet.status !== WalletStatus.WALLET_CONNECTED) {
-    if (networks[network]) {
-      return networks[network]
-    } else {
+  // check connected wallet
+  if (connectedWallet.status === WalletStatus.WALLET_CONNECTED) {
+    if (network !== "mainnet" && "phoenix-1" in connectedWallet.network) {
       setNetwork("mainnet")
-      return networks.mainnet
+    } else if (network !== "testnet" && "pisco-1" in connectedWallet.network) {
+      setNetwork("testnet")
     }
+    return connectedWallet.network as any
   }
 
-  if (wallet.network["phoenix-1"] && network !== "mainnet") {
-    setNetwork("mainnet")
-  } else if (wallet.network["pisco-1"] && network !== "testnet") {
-    setNetwork("testnet")
+  // multisig wallet are supported only on terra
+  if (is.multisig(wallet)) {
+    const terra = Object.values(
+      networks[network as NetworkName] as Record<ChainID, InterchainNetwork>
+    ).find(({ prefix }) => prefix === "terra")
+    if (!terra) return {}
+    return { [terra.chainID]: terra }
   }
-  return wallet.network as unknown as Record<string, InterchainNetwork>
+
+  if (!wallet?.words?.["118"]) {
+    const chains330 = Object.values(
+      networks[network as NetworkName] as Record<ChainID, InterchainNetwork>
+    ).filter(({ coinType }) => coinType === "330")
+
+    return chains330.reduce((acc, chain) => {
+      acc[chain.chainID] = chain
+      return acc
+    }, {} as Record<ChainID, InterchainNetwork>)
+  }
+
+  return networks[network as NetworkName]
 }
 
 export const useNetworkName = () => {

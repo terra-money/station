@@ -10,8 +10,8 @@ const validate = {
       "Enter 3-20 lowercase alphanumeric characters",
     exists: (name: string) => {
       try {
-        const { address } = getStoredWallet(name)
-        return `Already exists: ${address}`
+        getStoredWallet(name)
+        return `A wallet with this name already exists.`
       } catch {
         return true
       }

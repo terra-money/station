@@ -35,7 +35,7 @@ import { Details } from "components/display"
 import { Read } from "components/token"
 import ConnectWallet from "app/sections/ConnectWallet"
 import useToPostMultisigTx from "pages/multisig/utils/useToPostMultisigTx"
-import { isWallet, useInterchainAuth } from "auth"
+import { isWallet, useAuth } from "auth"
 import { PasswordError } from "auth/scripts/keystore"
 
 import { toInput, CoinInput } from "./utils"
@@ -93,7 +93,7 @@ function InterchainTx<TxValues>(props: Props<TxValues>) {
   const networks = useNetwork()
   const { post } = useWallet()
   const connectedWallet = useConnectedWallet()
-  const { wallet, validatePassword, ...auth } = useInterchainAuth()
+  const { wallet, validatePassword, ...auth } = useAuth()
   const addresses = useInterchainAddresses()
   const isWalletEmpty = useIsWalletEmpty()
   const setLatestTx = useSetRecoilState(latestTxState)

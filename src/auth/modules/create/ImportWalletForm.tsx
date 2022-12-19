@@ -8,6 +8,7 @@ import { Input, TextArea, Submit } from "components/form"
 import decrypt from "../../scripts/decrypt"
 import { addWallet, PasswordError } from "../../scripts/keystore"
 import useAuth from "../../hooks/useAuth"
+import { wordsFromAddress } from "utils/bech32"
 
 interface Values {
   key: string
@@ -41,7 +42,14 @@ const ImportWalletForm = () => {
 
       if (!pk) throw new PasswordError(t("Incorrect password"))
 
-      addWallet({ name, password, address, key: Buffer.from(pk, "hex") })
+      addWallet({
+        name,
+        password,
+        words: {
+          "330": wordsFromAddress(address),
+        },
+        key: { "330": Buffer.from(pk, "hex") },
+      })
       connect(name)
       navigate("/")
     } catch (error) {
