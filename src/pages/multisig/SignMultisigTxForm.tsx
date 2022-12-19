@@ -1,9 +1,9 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
-import { AccAddress, SignatureV2 } from "@terra-money/terra.js"
+import { AccAddress, SignatureV2 } from "@terra-money/feather.js"
 import { SAMPLE_ADDRESS } from "config/constants"
-import { useLCDClient } from "data/queries/lcdClient"
+import { useInterchainLCDClient } from "data/queries/lcdClient"
 import { Pre } from "components/general"
 import { Form, FormError, FormItem } from "components/form"
 import { Input, Submit, TextArea } from "components/form"
@@ -25,7 +25,7 @@ interface Props {
 const SignMultisigTxForm = ({ defaultValues }: Props) => {
   const { t } = useTranslation()
   const { wallet, createSignature } = useAuth()
-  const lcd = useLCDClient()
+  const lcd = useInterchainLCDClient()
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange", defaultValues })

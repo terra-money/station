@@ -5,12 +5,14 @@ import { Grid } from "components/layout"
 import { Submit } from "components/form"
 import { Details } from "components/display"
 import useAuth from "../../hooks/useAuth"
+import { addressFromWords } from "utils/bech32"
 
-const CreatedWallet = ({ name, address }: SingleWallet) => {
+const CreatedWallet = ({ name, words }: SingleWallet) => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { connect } = useAuth()
 
+  const address = addressFromWords(words["330"])
   const submit = () => {
     connect(name)
     navigate("/", { replace: true })

@@ -9,6 +9,7 @@ import { addWallet } from "../../scripts/keystore"
 import validate from "../../scripts/validate"
 import CreateMultisigWalletForm from "./CreateMultisigWalletForm"
 import CreatedWallet from "./CreatedWallet"
+import { wordsFromAddress } from "utils/bech32"
 
 interface Values {
   name: string
@@ -33,7 +34,8 @@ const NewMultisigWalletForm = () => {
   const submit = async ({ name }: Values) => {
     if (!publicKey) return
     const address = publicKey.address()
-    const wallet = { name, address, multisig: true as const }
+    const words = { "330": wordsFromAddress(address) }
+    const wallet = { name, words, multisig: true as const }
 
     addWallet(wallet)
     setWallet(wallet)

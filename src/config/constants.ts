@@ -24,7 +24,7 @@ export const TERRA_VALIDATORS =
 export const STAKE_ID = "https://stake.id/#/validator/"
 
 /* ledger */
-export const LEDGER_TRANSPORT_TIMEOUT = 120000
+export const LEDGER_TRANSPORT_TIMEOUT = 180000
 
 /* tx */
 export const DEFAULT_GAS_ADJUSTMENT = 2

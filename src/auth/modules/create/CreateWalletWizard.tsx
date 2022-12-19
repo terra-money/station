@@ -1,10 +1,11 @@
 import { ReactNode, useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import { MnemonicKey } from "@terra-money/terra.js"
+import { MnemonicKey } from "@terra-money/feather.js"
 import createContext from "utils/createContext"
 import { addWallet } from "../../scripts/keystore"
 import CreateWalletForm from "./CreateWalletForm"
 import CreatedWallet from "./CreatedWallet"
+import { wordsFromAddress } from "utils/bech32"
 
 export interface Values {
   name: string
@@ -53,10 +54,18 @@ const CreateWalletWizard = ({ defaultMnemonic = "", beforeCreate }: Props) => {
   const [createdWallet, setCreatedWallet] = useState<SingleWallet>()
   const createWallet = (coinType: Bip, index = 0) => {
     const { name, password, mnemonic } = values
-    const mk = new MnemonicKey({ mnemonic, coinType, index })
-    const address = mk.accAddress
-    addWallet({ name, password, address, key: mk.privateKey })
-    setCreatedWallet({ name, address })
+    const mk330 = new MnemonicKey({ mnemonic, coinType, index })
+    const mk118 = new MnemonicKey({ mnemonic, coinType: 118, index })
+    const words = {
+      "330": wordsFromAddress(mk330.accAddress("terra")),
+      "118": wordsFromAddress(mk118.accAddress("terra")),
+    }
+    const key = {
+      "330": mk330.privateKey,
+      "118": mk118.privateKey,
+    }
+    addWallet({ name, password, words, key })
+    setCreatedWallet({ name, words })
     setStep(3)
   }
 

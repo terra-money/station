@@ -21,11 +21,12 @@ export interface Props extends TokenItem, QueryState {
 }
 
 const Asset = (props: Props) => {
-  const { token, icon, symbol, balance, denom, chains, decimals, ...state } =
-    props
+  const { token, icon, symbol, balance, denom, decimals, ...state } = props
   const { t } = useTranslation()
   const currency = useCurrency()
-  const networks = useNetwork()
+  const network = useNetwork()
+  const chains = props.chains.filter((chain) => !!network[chain])
+
   const { data: prices, ...pricesState } = useMemoizedPrices()
   const { route, setRoute } = useWalletRoute()
 
@@ -47,7 +48,7 @@ const Asset = (props: Props) => {
             {symbol}
             {chains.map((chain) => (
               <span key={chain} className={styles.chains}>
-                {networks[chain].name || chain}
+                {network[chain].name || chain}
               </span>
             ))}
             {chains && chains.length > 1 && (
