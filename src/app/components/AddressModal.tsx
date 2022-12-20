@@ -11,6 +11,7 @@ import { getChainNamefromID } from "data/queries/chains"
 import { useNetwork } from "data/wallet"
 import { truncate } from "@terra.kitchen/utils"
 import { CopyIcon } from "components/general"
+import { TokenIcon } from "components/token"
 
 const AddressModalTable = ({ keyword }: { keyword: string }) => {
   const addresses = useInterchainAddresses() as { [key: string]: AccAddress }
@@ -19,6 +20,7 @@ const AddressModalTable = ({ keyword }: { keyword: string }) => {
   const addressData = Object.keys(addresses).map((key) => ({
     address: addresses?.[key],
     chainName: getChainNamefromID(key, networks) ?? key,
+    id: key,
   }))
 
   return (
@@ -35,21 +37,26 @@ const AddressModalTable = ({ keyword }: { keyword: string }) => {
         {
           title: t("Chain Name"),
           dataIndex: "chainName",
-          render: (chainName: string) => (
-            <div className={styles.chain}>{chainName}</div>
+          align: "left",
+          render: (chainName: string, { id }) => (
+            <div className={styles.chain}>
+              <TokenIcon
+                token={networks[id]?.baseAsset}
+                icon={networks[id]?.icon}
+              />
+              <div className={styles.name}>{chainName}</div>
+            </div>
           ),
         },
         {
           title: t("Address"),
           dataIndex: "address",
           render: (address: AccAddress) => (
-            <FinderLink value={address}>{truncate(address)}</FinderLink>
+            <div className={styles.address}>
+              <FinderLink value={address}>{truncate(address)}</FinderLink>
+              <CopyIcon text={address} />
+            </div>
           ),
-        },
-        {
-          dataIndex: "address",
-          align: "right",
-          render: (address: AccAddress) => <CopyIcon text={address} />,
         },
       ]}
       style={getMaxHeightStyle(320)}

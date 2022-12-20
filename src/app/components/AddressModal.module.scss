@@ -1,9 +1,18 @@
+@import "mixins";
+
 .table {
   padding: 5px var(--main-padding-horizontal);
-  border-top: var(--border-width) solid var(--card-border);
+}
+
+.address {
+  @include flex(space-between);
 }
 
 .chain {
   text-transform: capitalize;
-  box-sizing: content-box;
+  @include flex(align-items);
+}
+
+.chain .name {
+  margin-left: 10px;
 }
