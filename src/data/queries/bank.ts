@@ -50,8 +50,8 @@ export const [useBankBalance, BankBalanceProvider] =
   createContext<CoinBalance[]>("useBankBalance")
 
 export const useInitialBankBalance = () => {
-  const addresses = useInterchainAddresses()
   const lcd = useInterchainLCDClient()
+  const addresses = useInterchainAddresses()
 
   return useQuery(
     [queryKey.bank.balances, addresses],
@@ -65,7 +65,9 @@ export const useInitialBankBalance = () => {
       // TODO: Pagination
       // Required when the number of results exceed 100
       const balances = await Promise.all(
-        chains.map((chain) => lcd.bank.balance(addresses[chain]))
+        chains.map((chain) => {
+          return lcd.bank.balance(addresses[chain])
+        })
       )
 
       const result = [] as CoinBalance[]

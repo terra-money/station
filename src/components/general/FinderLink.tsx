@@ -4,9 +4,7 @@ import classNames from "classnames"
 import { truncate } from "@terra.kitchen/utils"
 import { FINDER, MINTSCAN } from "config/constants"
 import { useNetwork, useNetworkName } from "data/wallet"
-import { latestTxState } from "data/queries/tx"
 import { ExternalLink } from "./External"
-import { useRecoilValue } from "recoil"
 import { getChainIDFromAddress } from "utils/bech32"
 import styles from "./FinderLink.module.scss"
 import { getChainNamefromID } from "data/queries/chains"
@@ -30,13 +28,13 @@ const FinderLink = forwardRef(
     const { block, tx, validator, chainID, ...attrs } = rest
     const networkName = useNetworkName() // mainnet or testnet for Terra
     const networks = useNetwork()
-    const { chainID: lastTxChainID } = useRecoilValue(latestTxState)
 
     const value = rest.value ?? children
     const targetChainId =
-      lastTxChainID ||
-      chainID ||
-      (rest.value && getChainIDFromAddress(rest.value, networks))
+      typeof value === "string"
+        ? getChainIDFromAddress(value, networks)
+        : chainID
+
     const chainName = getChainNamefromID(targetChainId, networks)
 
     const interchainPath = tx

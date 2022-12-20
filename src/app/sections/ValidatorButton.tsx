@@ -7,6 +7,7 @@ const ValidatorButton = () => {
   const chainID = useChainID()
   const address = useAddress()
   const { data: validators } = useValidators(chainID)
+  if (!address) return null
   const moniker = getConnectedMoniker(address, validators ?? [])
   if (!moniker) return null
 

@@ -19,7 +19,6 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
           baseURL: ASSETS,
         }
       )
-
       setNetworks(chains)
     }
 

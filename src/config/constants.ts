@@ -16,6 +16,7 @@ export const EXTENSION =
   "https://chrome.google.com/webstore/detail/aiifbnbfobpmeekipheeijimdpnlpgpp"
 export const TUTORIAL =
   "https://docs.terra.money/learn/terra-station/Download/terra-station-desktop.html"
+export const SETUP = "https://setup-station.terra.money/"
 
 /* website: stake */
 export const TERRA_VALIDATORS =
@@ -24,7 +25,7 @@ export const TERRA_VALIDATORS =
 export const STAKE_ID = "https://stake.id/#/validator/"
 
 /* ledger */
-export const LEDGER_TRANSPORT_TIMEOUT = 120000
+export const LEDGER_TRANSPORT_TIMEOUT = 180000
 
 /* tx */
 export const DEFAULT_GAS_ADJUSTMENT = 2

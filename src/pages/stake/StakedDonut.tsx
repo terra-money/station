@@ -21,7 +21,7 @@ import { useThemeState } from "data/settings/Theme"
 
 const StakedDonut = () => {
   const { t } = useTranslation()
-  const [current, setTheme] = useThemeState()
+  const [current] = useThemeState()
 
   const interchainDelegations = useInterchainDelegations()
   const state = combineState(...interchainDelegations)

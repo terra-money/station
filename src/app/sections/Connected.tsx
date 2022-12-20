@@ -75,8 +75,8 @@ const Connected = () => {
                     <button
                       className={CopyStyles.button}
                       onClick={async () => {
-                        const lk = await getLedgerKey()
-                        lk.showAddressAndPubKey()
+                        const lk = await getLedgerKey("330")
+                        lk.showAddressAndPubKey("terra")
                       }}
                     >
                       <UsbIcon fontSize="inherit" />

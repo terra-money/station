@@ -1,33 +1,65 @@
 type Bip = 118 | 330
 
-type Wallet = SingleWallet | PreconfiguredWallet | MultisigWallet | LedgerWallet
-type LocalWallet = SingleWallet | MultisigWallet // wallet with name
+type LocalWallet = SingleWallet | LegacySingleWallet | MultisigWallet // wallet with name
 
+type Wallet = LedgerWallet | SingleWallet //| LegacyWallet
+type StoredWallet =
+  | InterchainStoredWallet
+  | LegacySingleWallet
+  | StoredWalletLegacy
+  | MultisigWallet
+type ResultStoredWallet = LegacyStoredWallet | MultisigWallet | StoredWallet
+
+// interchain types
 interface SingleWallet {
-  address: string
+  words: {
+    "330": string
+    "118"?: string
+  }
   name: string
   lock?: boolean
 }
-
-interface PreconfiguredWallet extends SingleWallet {
-  mnemonic: string
+interface LedgerWallet {
+  words: {
+    "330": string
+    "118"?: string
+  }
+  ledger: true
+  index: number
+  bluetooth: boolean
 }
 
 interface MultisigWallet extends SingleWallet {
   multisig: true
 }
 
-interface LedgerWallet {
-  address: string
-  ledger: true
-  index: number
-  bluetooth: boolean
+interface InterchainStoredWallet extends SingleWallet {
+  encrypted: {
+    "330": string
+    "118"?: string
+  }
 }
 
-interface StoredWallet extends SingleWallet {
+// legacy types (pre-interchain)
+interface LegacySingleWallet {
+  address: string
+  name: string
+  lock?: boolean
+}
+
+interface LegacyMultisigWallet extends LegacySingleWallet {
+  multisig: true
+}
+
+interface LegacyStoredWallet extends LegacySingleWallet {
   encrypted: string
 }
 
-interface StoredWalletLegacy extends SingleWallet {
+interface PreconfiguredWallet extends SingleWallet {
+  mnemonic: string
+}
+
+// super old legacy wallet
+interface StoredWalletLegacy extends LegacySingleWallet {
   wallet: string
 }

@@ -6,7 +6,7 @@ import useAuth from "../../hooks/useAuth"
 
 const SelectPreconfigured = () => {
   const { t } = useTranslation()
-  const { connectedWallet, connectPreconfigured } = useAuth()
+  const { connectedWallet } = useAuth()
   const preconfigured = usePreconfigured()
   const { preconfigure } = useNetwork()
 
@@ -20,8 +20,8 @@ const SelectPreconfigured = () => {
     <Select
       value={selected?.name ?? ""}
       onChange={(e) => {
-        const wallet = preconfigured.find(({ name }) => name === e.target.value)
-        if (wallet) connectPreconfigured(wallet)
+        //const wallet = preconfigured.find(({ name }) => name === e.target.value)
+        //if (wallet) connectPreconfigured(wallet)
       }}
     >
       <option value="" disabled>
