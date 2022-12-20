@@ -15,7 +15,7 @@
   @media (max-width: (1400px - 0.02)) {
     position: absolute;
     right: 0;
-    box-shadow: 0 0 15px #000b;
+    box-shadow: var(--wallet-shadow);
     clip-path: inset(0px 0px 0px -100px);
   }
 }
@@ -51,7 +51,7 @@
   }
 
   @media (max-width: (1200px - 0.02)) {
-    box-shadow: 0 0 15px #000b;
+    box-shadow: var(--wallet-shadow);
     clip-path: inset(-15px 0px -15px -15px);
   }
 }
