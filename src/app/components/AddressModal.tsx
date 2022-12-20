@@ -13,11 +13,11 @@ import { truncate } from "@terra.kitchen/utils"
 import { Copy } from "components/general"
 
 const AddressModalTable = ({ keyword }: { keyword: string }) => {
-  const addresses = useInterchainAddresses()
+  const addresses = useInterchainAddresses() as { [key: string]: AccAddress }
   const networks = useNetwork()
   const { t } = useTranslation()
   const addressData = Object.keys(addresses).map((key) => ({
-    address: addresses[key],
+    address: addresses?.[key],
     chainName: getChainNamefromID(key, networks) ?? key,
   }))
 
