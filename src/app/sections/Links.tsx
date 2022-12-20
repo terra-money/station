@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next"
 import DescriptionIcon from "@mui/icons-material/Description"
-import { TUTORIAL } from "config/constants"
+import BoltIcon from "@mui/icons-material/Bolt"
+import { TUTORIAL, SETUP } from "config/constants"
 import { ExternalLink } from "components/general"
 import { Contacts } from "components/layout"
 import styles from "./Links.module.scss"
@@ -19,6 +20,10 @@ const Links = () => {
   return (
     <div className={styles.links}>
       <div className={styles.tutorial}>
+        <ExternalLink href={SETUP} className={styles.link}>
+          <BoltIcon style={{ fontSize: 18 }} />
+          {t("Setup")}
+        </ExternalLink>
         <ExternalLink href={TUTORIAL} className={styles.link}>
           <DescriptionIcon style={{ fontSize: 18 }} />
           {t("Tutorial")}

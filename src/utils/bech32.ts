@@ -11,10 +11,10 @@ export function getChainIDFromAddress(
     }
   >
 ) {
-  const addressPrefix = AccAddress.getPrefix(address)
+  if (!AccAddress.validate(address)) return undefined
+  const addPrefix = AccAddress.getPrefix(address)
   return Object.values(chains).find(
-    ({ prefix }) =>
-      prefix === addressPrefix || `${prefix}valoper` === addressPrefix
+    ({ prefix }) => prefix === addPrefix || `${prefix}valoper` === addPrefix
   )?.chainID
 }
 

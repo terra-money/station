@@ -21,15 +21,9 @@ const Nav = () => {
   return (
     <nav>
       <header className={styles.header}>
-        <a
-          href="https://setup-station.terra.money/"
-          target="_blank"
-          rel="noreferrer"
-          className={classNames(styles.item, styles.logo)}
-        >
+        <div className={classNames(styles.item, styles.logo)}>
           <img src={icon} alt="Station" /> <strong>Station</strong>
-        </a>
-
+        </div>
         <button className={styles.toggle} onClick={toggle}>
           {isOpen ? <CloseIcon /> : <MenuIcon />}
         </button>
