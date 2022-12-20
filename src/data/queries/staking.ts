@@ -369,7 +369,7 @@ export const getPriorityVals = (validators: Validator[]) => {
   const totalStaked = getTotalStakedTokens(validators)
   const getVotePower = (v: Validator) => Number(v.tokens) / totalStaked
 
-  const { elgible } = validators
+  return validators
     .sort((a, b) => getVotePower(a) - getVotePower(b)) // least to greatest
     .reduce(
       (acc, cur) => {
@@ -382,9 +382,7 @@ export const getPriorityVals = (validators: Validator[]) => {
         elgible: [] as Validator[],
       }
     )
-
-  return elgible
-    .filter(
+    .elgible.filter(
       ({ commission, status }) =>
         getIsBonded(status) &&
         Number(commission.commission_rates.rate) <= MAX_COMMISSION
