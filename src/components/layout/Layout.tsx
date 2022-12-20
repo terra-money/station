@@ -1,7 +1,6 @@
 import { PropsWithChildren } from "react"
 import { atom, useRecoilValue } from "recoil"
 import classNames from "classnames/bind"
-import Container from "./Container"
 import styles from "./Layout.module.scss"
 
 const cx = classNames.bind(styles)
@@ -31,9 +30,7 @@ export const Page = ({ children }: PropsWithChildren<{}>) => {
 export const Header = ({ children }: PropsWithChildren<{}>) => {
   return (
     <header className={styles.header}>
-      <Container className={styles.container}>
-        <div className={styles.wrapper}>{children}</div>
-      </Container>
+      <div className={styles.wrapper}>{children}</div>
     </header>
   )
 }
