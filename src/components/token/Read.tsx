@@ -36,15 +36,19 @@ const Read = forwardRef(
       ? props.decimals
       : 2
 
+    const lessThanFloor = fixed && Math.pow(10, -fixed)
+    const lessThanFixed =
+      amount && lessThanFloor && amount > 0 && amount < lessThanFloor
+
     const config = { ...props, comma, fixed }
     const [integer, decimal] = readAmount(amount, config).split(".")
 
     const renderDecimal = () => {
-      if (!decimal) return null
+      if (!(decimal || lessThanFixed)) return null
 
       return (
         <span className={cx({ small: !props.prefix })}>
-          {decimal && `.${decimal}`}
+          {lessThanFixed ? `${lessThanFloor}` : decimal && `.${decimal}`}
         </span>
       )
     }
@@ -69,6 +73,7 @@ const Read = forwardRef(
     return (
       <span className={className} ref={ref}>
         {approx && "≈ "}
+        {lessThanFixed && "< "}
         {integer}
         {renderDecimal()}
         {renderSymbol()}
