@@ -10,7 +10,7 @@ import { FinderLink } from "components/general"
 import { getChainNamefromID } from "data/queries/chains"
 import { useNetwork } from "data/wallet"
 import { truncate } from "@terra.kitchen/utils"
-import { Copy } from "components/general"
+import { CopyIcon } from "components/general"
 
 const AddressModalTable = ({ keyword }: { keyword: string }) => {
   const addresses = useInterchainAddresses() as { [key: string]: AccAddress }
@@ -49,7 +49,7 @@ const AddressModalTable = ({ keyword }: { keyword: string }) => {
         {
           dataIndex: "address",
           align: "right",
-          render: (address: AccAddress) => <Copy text={address} />,
+          render: (address: AccAddress) => <CopyIcon text={address} />,
         },
       ]}
       style={getMaxHeightStyle(320)}

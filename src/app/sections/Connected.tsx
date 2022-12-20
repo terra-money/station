@@ -44,20 +44,19 @@ const Connected = () => {
         <PopoverNone className={styles.popover} footer={footer}>
           <Grid gap={16}>
             <Grid gap={4}>
-              <Tooltip content={t("View Interchain Addresses")}>
-                <section>
-                  <ModalButton
-                    renderButton={(open) => (
+              <section>
+                <ModalButton
+                  renderButton={(open) => (
+                    <Tooltip content={t("View Interchain Addresses")}>
                       <button className={styles.modalLink} onClick={open}>
                         {truncate(address)}
                       </button>
-                    )}
-                  >
-                    <AddressModal />
-                  </ModalButton>
-                </section>
-              </Tooltip>
-
+                    </Tooltip>
+                  )}
+                >
+                  <AddressModal />
+                </ModalButton>
+              </section>
               <Flex gap={4} start>
                 <Copy text={address} />
                 <WalletQR
