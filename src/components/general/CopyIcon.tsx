@@ -6,7 +6,7 @@ interface Props {
   text: string
   className?: string
 }
-const CopyBox = ({ text, className }: Props) => {
+const CopyIcon = ({ text, className }: Props) => {
   const [copied, setCopied] = useState(false)
 
   return (
@@ -23,4 +23,4 @@ const CopyBox = ({ text, className }: Props) => {
   )
 }
 
-export default CopyBox
+export default CopyIcon
