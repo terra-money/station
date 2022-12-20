@@ -5,7 +5,8 @@ export const isWhitelisted = (url?: string) => {
   }
 
   try {
-    return new URL(url).hostname.endsWith("terra.money")
+    const hostname = new URL(url).hostname
+    return hostname === "terra.money" || hostname.endsWith(".terra.money")
   } catch (error) {
     return false
   }
