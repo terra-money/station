@@ -17,7 +17,7 @@ import { QuickStakeAction } from "pages/stake/QuickStake"
 import {
   getQuickStakeMsgs,
   getQuickUnstakeMsgs,
-  getQuickStakeEligibleVals,
+  getPriorityVals,
   useValidators,
   useDelegations,
   calcDelegationsTotal,
@@ -25,6 +25,7 @@ import {
   getChainUnbondTime,
 } from "data/queries/staking"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
+import shuffle from "utils/shuffle"
 
 interface TxValues {
   input?: number
@@ -72,7 +73,7 @@ const QuickStakeForm = (props: Props) => {
 
   const elegibleVals = useMemo(() => {
     if (!validators) return
-    return getQuickStakeEligibleVals(validators)
+    return shuffle(getPriorityVals(validators))
   }, [validators])
 
   const stakeMsgs = useMemo(() => {
