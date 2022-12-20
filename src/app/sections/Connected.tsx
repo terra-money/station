@@ -48,7 +48,7 @@ const Connected = () => {
                 <ModalButton
                   renderButton={(open) => (
                     <Tooltip content={t("View Interchain Addresses")}>
-                      <button className={styles.modalLink} onClick={open}>
+                      <button className={styles.modal} onClick={open}>
                         {truncate(address)}
                       </button>
                     </Tooltip>

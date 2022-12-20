@@ -2,11 +2,16 @@ import ContentCopy from "@mui/icons-material/ContentCopy"
 import Check from "@mui/icons-material/Check"
 import { useState } from "react"
 
-const CopyBox = ({ text }: { text: string }) => {
+interface Props {
+  text: string
+  className?: string
+}
+const CopyBox = ({ text, className }: Props) => {
   const [copied, setCopied] = useState(false)
 
   return (
     <button
+      className={className}
       onClick={() => {
         navigator.clipboard.writeText(text)
         setCopied(true)
