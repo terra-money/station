@@ -34,7 +34,7 @@ const Tabs = ({ tabs, defaultActiveKey, type, reversed, state }: Props) => {
   const [activeKey, setActiveKey] = useState(initial)
 
   return (
-    <div>
+    <div className={styles.tabsContainer}>
       <section className={cx(styles.tabs, type, { reversed })}>
         {tabs.map(({ key, tab, disabled, extra }) =>
           state ? (
