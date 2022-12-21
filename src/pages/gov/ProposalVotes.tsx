@@ -42,7 +42,7 @@ const ProposalVotes = ({ id, card }: { id: number; card?: boolean }) => {
     if (!(proposal && tally && tallyParams && pool)) return null
 
     const tallies = calcTallies(tally, tallyParams, pool)
-    const { total, list, flag, isPassing, isVetoed } = tallies
+    const { total, list, flag, isPassing } = tallies
     const { voting_end_time } = proposal
 
     const flagLabel = { quorum: t("Quorum"), threshold: t("Pass threshold") }

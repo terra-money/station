@@ -1,10 +1,9 @@
 import { useQuery } from "react-query"
-import { flatten, path, uniqBy } from "ramda"
+import { flatten } from "ramda"
 import BigNumber from "bignumber.js"
 import { AccAddress, ValAddress, Validator } from "@terra-money/terra.js"
 import { Delegation, UnbondingDelegation } from "@terra-money/terra.js"
 /* FIXME(terra.js): Import from terra.js */
-import { BondStatus } from "@terra-money/terra.proto/cosmos/staking/v1beta1/staking"
 import { has } from "utils/num"
 import { StakeAction } from "txs/stake/StakeForm"
 import { queryKey, Pagination, RefetchOptions } from "../query"
@@ -19,23 +18,11 @@ export const useValidators = () => {
     async () => {
       // TODO: Pagination
       // Required when the number of results exceed LAZY_LIMIT
-
       const [v1] = await lcd.staking.validators({
-        status: BondStatus[BondStatus.BOND_STATUS_UNBONDED],
         ...Pagination,
       })
 
-      const [v2] = await lcd.staking.validators({
-        status: BondStatus[BondStatus.BOND_STATUS_UNBONDING],
-        ...Pagination,
-      })
-
-      const [v3] = await lcd.staking.validators({
-        status: BondStatus[BondStatus.BOND_STATUS_BONDED],
-        ...Pagination,
-      })
-
-      return uniqBy(path(["operator_address"]), [...v1, ...v2, ...v3])
+      return v1
     },
     { ...RefetchOptions.INFINITY }
   )

@@ -32,9 +32,7 @@ const ValidatorCompact = ({ vertical }: { vertical?: boolean }) => {
     <Card {...state}>
       <Grid gap={16}>
         <header className={cx(styles.header, { vertical })}>
-          {TerraValidator && (
-            <ProfileIcon src={TerraValidator.picture} size={60} />
-          )}
+          <ProfileIcon src={validator.description.identity} size={60} />
 
           <Grid gap={4}>
             <Flex gap={10} start>
@@ -50,11 +48,13 @@ const ValidatorCompact = ({ vertical }: { vertical?: boolean }) => {
               </Flex>
             )}
 
-            {TerraValidator?.contact?.email && (
+            {validator.description.security_contact && (
               <Flex gap={4} className={styles.link} start>
                 <EmailOutlinedIcon fontSize="inherit" />
-                <ExternalLink href={`mailto:${TerraValidator.contact.email}`}>
-                  {TerraValidator.contact.email}
+                <ExternalLink
+                  href={`mailto:${validator.description.security_contact}`}
+                >
+                  {validator.description.security_contact}
                 </ExternalLink>
               </Flex>
             )}

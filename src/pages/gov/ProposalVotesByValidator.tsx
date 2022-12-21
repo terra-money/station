@@ -6,10 +6,10 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined"
 import { readPercent } from "@terra.kitchen/utils"
 import { ValAddress, Vote } from "@terra-money/terra.js"
 import { combineState } from "data/query"
-import { useDelegations } from "data/queries/staking"
+import { useDelegations, useValidators } from "data/queries/staking"
 import { useGetVoteOptionItem } from "data/queries/gov"
 import { getCalcVotingPowerRate } from "data/Terra/TerraAPI"
-import { useTerraProposal, useTerraValidators } from "data/Terra/TerraAPI"
+import { useTerraProposal } from "data/Terra/TerraAPI"
 import { ExternalLink } from "components/general"
 import { Card, Grid, Table } from "components/layout"
 import { Checkbox } from "components/form"
@@ -44,18 +44,17 @@ const ProposalVotesByValidator = ({ id }: { id: number }) => {
 
   const { data: delegations, ...delegationsState } = useDelegations()
   const { data: TerraProposal, ...TerraProposalState } = useTerraProposal(id)
-  const { data: TerraValidators, ...TerraValidatorsState } =
-    useTerraValidators()
+  const { data: validators, ...validatorsState } = useValidators()
 
   const state = combineState(
     delegationsState,
     TerraProposalState,
-    TerraValidatorsState
+    validatorsState
   )
 
   const getList = useCallback(
     (tab?: Vote.Option) => {
-      if (!(delegations && TerraProposal && TerraValidators)) return []
+      if (!(delegations && TerraProposal && validators)) return []
 
       const getIsDelegated = (address: ValAddress) => {
         return delegations.some(
@@ -75,14 +74,14 @@ const ProposalVotesByValidator = ({ id }: { id: number }) => {
         })
       }
 
-      return TerraValidators.filter(({ operator_address, status }) => {
+      return validators.filter(({ operator_address, status }) => {
         if (getIsUnbonded(status)) return false
         if (delegatedOnly && !getIsDelegated(operator_address)) return false
         if (!tab) return !getHasVoted(operator_address)
         return getHasVoted(operator_address, tab)
       })
     },
-    [TerraProposal, TerraValidators, delegatedOnly, delegations]
+    [TerraProposal, validators, delegatedOnly, delegations]
   )
 
   const getCount = useCallback(
@@ -91,9 +90,9 @@ const ProposalVotesByValidator = ({ id }: { id: number }) => {
   )
 
   const render = () => {
-    if (!(delegations && TerraProposal && TerraValidators)) return null
+    if (!(delegations && TerraProposal && validators)) return null
 
-    const calcRate = getCalcVotingPowerRate(TerraValidators)
+    const calcRate = getCalcVotingPowerRate(validators)
 
     const dataSource = getList(tab)
       .map((validator) => {
