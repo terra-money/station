@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
 import { useNetworkName } from "data/wallet"
-import { Card, Page } from "components/layout"
+import { Card, ChainFilter, Page } from "components/layout"
 import { Wrong } from "components/feedback"
 import TxContext from "../TxContext"
 import TFMSwapContext from "./TFMSwapContext"
@@ -30,7 +30,13 @@ const SwapTx = () => {
     <Page title={t("Swap")} small extra={<TFMPoweredBy />}>
       <TxContext>
         <TFMSwapContext>
-          <TFMSwapForm />
+          <ChainFilter
+            outside
+            title={"Select a chain to perform swaps on"}
+            swap
+          >
+            {(chainID) => <TFMSwapForm chainId />}
+          </ChainFilter>
         </TFMSwapContext>
       </TxContext>
     </Page>
