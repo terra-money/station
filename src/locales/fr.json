@@ -16,7 +16,8 @@
     "Buy": "Achat",
     "Exchanges": "Echanges",
     "Fiat": "Monnaie",
-    "APY": "APY"
+    "APY": "APY",
+    "chain": "chaîne"
   },
   "Form": {
     "Amount": "Montant",
@@ -51,9 +52,7 @@
     "Broadcasting transaction": "Soumission de la transaction",
     "Queued": "En attente"
   },
-  "Success": {
-    "Success!": "Succès!"
-  },
+  "Success": { "Success!": "Succès!" },
   "Failure": {
     "Failed": "Erreur",
     "Simulation failed": "Erreur de simulation",
@@ -69,17 +68,12 @@
     "Copied": "Copié",
     "Active": "Actif",
     "Inactive": "Inactif",
-    "Not found": "Introuvable"
+    "Not found": "Introuvable",
+    "setup": "configuration",
+    "documentation": "documentation"
   },
-  "Units": {
-    "year": "année",
-    "day": "jour",
-    "{{d}} days": "{{d}} jours"
-  },
-  "Preferences": {
-    "Language": "Langue",
-    "Currency": "Monnaie"
-  },
+  "Units": { "year": "année", "day": "jour", "{{d}} days": "{{d}} jours" },
+  "Preferences": { "Language": "Langue", "Currency": "Monnaie" },
   "Auth": {
     "Connect": "Connexion",
     "Disconnect": "Déconnection",
@@ -122,7 +116,11 @@
   },
   "Wallet": {
     "Add tokens": "Ajouter des tokens",
-    "Manage list": "Gérer la liste"
+    "Manage list": "Gérer la liste",
+    "Assets": "Actifs",
+    "receive": "recevoir",
+    "select a coin": "sélectionnez une pièce",
+    "asset value": "valeur des actifs"
   },
   "Txs": {
     "Send": "Envoyer",
@@ -137,7 +135,9 @@
     "Deposit": "Dépot",
     "Vote": "Voter",
     "Transfer NFT": "Transfert NFT",
-    "Earn": "Gain"
+    "Earn": "Gain",
+    "Leave enough coins to pay fee for subsequent transactions": "Laissez suffisamment de pièces pour payer les frais des transactions ultérieures",
+    "Balance after tx": "Solde après tx"
   },
   "Swap": {
     "From": "Origine",
@@ -155,7 +155,18 @@
     "Undelegations": "Retirer les délégations",
     "Delegated": "Délégué",
     "Undelegated": "Non délégué",
-    "Staking rewards": "Récompenses de staking"
+    "Staking rewards": "Récompenses de staking",
+    "Maximum 7 undelegations can be in progress at the same time": "Un maximum de 7 délégations peuvent être en cours en même temps.",
+    "No rewards are distributed during the 21 day undelegation period": "Aucune récompense n'est distribuée pendant la période de non-délégation de 21 jours.",
+    "Quick stake selects validators that": "Quick stake sélectionne les validateurs qui",
+    "Are outside of top third by voting power": "Ne font pas partie du premier tiers en nombre de voix",
+    "Charge 5% commission or less": "Prélever une commission de 5 % ou moins",
+    "Have not been slashed recently": "N'ont pas fait l'objet d'une réduction récente",
+    "Are in the active set": "font partie de l'ensemble actif",
+    "staking": "jalonnement",
+    "staked Funds": "Fonds mis en gage",
+    "quick stake ": "enjeu rapide",
+    "manual stake": "pieu manuel"
   },
   "Validator": {
     "Validators": "Validateurs",
@@ -194,7 +205,9 @@
     "Tallying procedure": "Procédure de décompte",
     "Quorum": "Quorum",
     "Pass threshold": "Seuil d'acceptance",
-    "Veto threshold": "Seuil de veto"
+    "Veto threshold": "Seuil de veto",
+    "Proposal deposits will not be refunded if the proposal fails to reach the quorum or the result is NO_WITH_VETO": "Les dépôts de proposition ne seront pas remboursés si la proposition n'atteint pas le quorum ou si le résultat est NO_WITH_VETO.",
+    "Parameters cannot be changed by text proposals": "Les paramètres ne peuvent pas être modifiés par des propositions de texte"
   },
   "Contract": {
     "Upload": "Uploader",
@@ -206,10 +219,7 @@
     "Size": "Taille",
     "Instantiate a code": "Instancier"
   },
-  "NFT": {
-    "Marketplace": "Place d'échange",
-    "Collection": "Collection"
-  },
+  "NFT": { "Marketplace": "Place d'échange", "Collection": "Collection" },
   "Address book": {
     "Address book": "Carnet d'adresse",
     "Add a new address": "Ajouter une nouvelle adresse"

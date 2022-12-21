@@ -1,91 +1,85 @@
 {
   "Blockchain": {
-    "Mnemonic": "",
+    "Mnemonic": "记忆法",
     "Address": "地址",
     "Wallet": "钱包",
-    "Wallets": "",
+    "Wallets": "钱包",
     "Coins": "货币",
-    "Tokens": "",
-    "Balance": "",
-    "Tx hash": "",
-    "Gas": "",
+    "Tokens": "代币",
+    "Balance": "平衡",
+    "Tx hash": "Tx哈希值",
+    "Gas": "燃气",
     "Tax": "税金",
     "Fee": "手续费",
     "Memo": "Memo",
-    "decimals": "",
-    "Buy": "",
-    "Exchanges": "",
-    "Fiat": "",
-    "APY": ""
+    "decimals": "小数",
+    "Buy": "购买",
+    "Exchanges": "交流会",
+    "Fiat": "菲亚特",
+    "APY": "APY",
+    "chain": "链条"
   },
   "Form": {
     "Amount": "数量",
     "Recipient": "接受者",
     "Name": "智能合约名称",
-    "optional": "",
-    "Submit": "",
+    "optional": "可选",
+    "Submit": "提交",
     "Confirm": "确认",
-    "Reset": ""
+    "Reset": "复位"
   },
   "Validate": {
     "{{label}} is required": "请输入{{label}}",
-    "{{label}} is not defined": "",
-    "{{label}} is not available": "",
-    "{{label}} is not supported": "",
+    "{{label}} is not defined": "{{label}}未被定义",
+    "{{label}} is not available": "{{label}}无法使用",
+    "{{label}} is not supported": "不支持{{label}}。",
     "{{label}} is invalid": "{{label}}无效",
     "{{label}} already exists": "{{label}}已存在",
-    "{{label}} does not exist": "",
-    "{{label}} must be longer than {{length}} characters": "",
-    "Already exists": "",
+    "{{label}} does not exist": "{{label}}不存在",
+    "{{label}} must be longer than {{length}} characters": "{{label}}必须长于{{length}}字符。",
+    "Already exists": "已经存在",
     "Invalid": "无效",
-    "Invalid {{label}}": ""
+    "Invalid {{label}}": "无效的{{标签}}。"
   },
   "Loading": {
-    "Initializing app...": "",
+    "Initializing app...": "初始化应用程序...",
     "Loading...": "加载中...",
-    "Load more": "",
-    "Loading more...": "",
-    "Nothing more to load": "",
+    "Load more": "载入更多",
+    "Loading more...": "载入更多...",
+    "Nothing more to load": "没有更多的东西需要加载",
     "Simulating...": "模拟中...",
-    "Broadcasting a tx...": "",
-    "Broadcasting transaction": "",
-    "Queued": ""
+    "Broadcasting a tx...": "播送一个Tx...",
+    "Broadcasting transaction": "广播交易",
+    "Queued": "已排队"
   },
-  "Success": {
-    "Success!": "成功！"
-  },
+  "Success": { "Success!": "成功！" },
   "Failure": {
-    "Failed": "",
-    "Simulation failed": "",
-    "User denied": "",
-    "Failed to create tx": "",
-    "Tx failed": ""
+    "Failed": "失败",
+    "Simulation failed": "仿真失败",
+    "User denied": "用户被拒绝",
+    "Failed to create tx": "创建tx失败",
+    "Tx failed": "Tx失败"
   },
   "Application": {
-    "Go back": "",
-    "View": "",
-    "Show all": "",
+    "Go back": "回去吧",
+    "View": "查看",
+    "Show all": "显示所有",
     "Copy": "复制",
     "Copied": "复制完成",
     "Active": "Active",
-    "Inactive": "",
-    "Not found": ""
+    "Inactive": "不活跃",
+    "Not found": "未找到",
+    "setup": "设置",
+    "documentation": "文件"
   },
-  "Units": {
-    "year": "",
-    "day": "",
-    "{{d}} days": "{{d}} 天"
-  },
-  "Preferences": {
-    "Language": "",
-    "Currency": ""
-  },
+  "Units": { "year": "年", "day": "日", "{{d}} days": "{{d}} 天" },
+  "Preferences": { "Language": "语言", "Currency": "货币" },
   "Auth": {
     "Connect": "连接",
-    "Disconnect": "",
+    "Disconnect": "断开连接",
     "New wallet": "新钱包",
-    "Recover wallet": "",
-    "Connect wallet": "",
+    "Recover wallet": "恢复钱包",
+    "Connect wallet": "连接钱包",
     "Password": "密码",
     "Confirm password": "确认密码",
     "Password does not match": "密码不匹配",
@@ -94,16 +88,16 @@
     "New password": "新密码",
     "Confirm new password": "确认新密码",
     "Incorrect password": "密码不正确",
-    "Export wallet": "",
+    "Export wallet": "出口钱包",
     "Delete wallet": "删除钱包",
-    "Install extension": ""
+    "Install extension": "安装扩展"
   },
   "Menu": {
     "Dashboard": "仪表盘",
     "Wallet": "钱包",
-    "NFT": "",
+    "NFT": "NFT",
     "History": "交易记录",
-    "Stake": "",
+    "Stake": "桩子",
     "Governance": "治理",
     "Contract": "智能合约"
   },
@@ -118,61 +112,78 @@
     "Transaction volume": "交易量",
     "Staking return": "质押收益",
     "Tax rewards": "税收奖励",
-    "Wallets": ""
+    "Wallets": "钱包"
   },
   "Wallet": {
-    "Add tokens": "",
-    "Manage list": ""
+    "Add tokens": "添加代币",
+    "Manage list": "管理列表",
+    "Assets": "资产",
+    "receive": "收到",
+    "select a coin": "选择一个硬币",
+    "asset value": "资产价值"
   },
   "Txs": {
     "Send": "转出",
     "Swap": "兑换",
-    "Stake": "",
+    "Stake": "桩子",
     "Delegate": "委托",
     "Redelegate": "再委托",
     "Undelegate": "取消委托",
-    "Withdraw rewards": "",
-    "Withdraw commission": "",
+    "Withdraw rewards": "提取奖励",
+    "Withdraw commission": "提取佣金",
     "New proposal": "提案",
     "Deposit": "保证金",
     "Vote": "投票",
-    "Transfer NFT": "",
-    "Earn": ""
+    "Transfer NFT": "转移 NFT",
+    "Earn": "赚取",
+    "Leave enough coins to pay fee for subsequent transactions": "留下足够的硬币来支付后续交易的费用",
+    "Balance after tx": "治疗后的余额"
   },
   "Swap": {
-    "From": "",
-    "To": "",
+    "From": "来自",
+    "To": "拟",
     "Spread": "价差(Spread)",
-    "Slippage tolerance": "",
-    "Oracle price": "",
-    "Pair price": "",
-    "Expected price": "",
-    "Minimum received": "",
-    "Trading fee": ""
+    "Slippage tolerance": "滑动公差",
+    "Oracle price": "甲骨文价格",
+    "Pair price": "配套价格",
+    "Expected price": "预期的价格",
+    "Minimum received": "至少收到",
+    "Trading fee": "交易费"
   },
   "Stake": {
     "Delegations": "委托",
-    "Undelegations": "",
+    "Undelegations": "未授权",
     "Delegated": "委托",
     "Undelegated": "取消委托",
-    "Staking rewards": ""
+    "Staking rewards": "赌注奖励",
+    "Maximum 7 undelegations can be in progress at the same time": "最多可以同时进行7次撤诉",
+    "No rewards are distributed during the 21 day undelegation period": "在21天的未授权期间，不发放奖励。",
+    "Quick stake selects validators that": "Quick stake选择的验证器是",
+    "Are outside of top third by voting power": "处于投票权的前三分之一之外",
+    "Charge 5% commission or less": "收取5%或更少的佣金",
+    "Have not been slashed recently": "最近没有被砍过",
+    "Are in the active set": "处于活跃状态",
+    "staking": "绑架",
+    "staked Funds": "投入的资金",
+    "quick stake ": "快捷键",
+    "manual stake": "手持桩"
   },
   "Validator": {
-    "Validators": "",
+    "Validators": "验证人",
     "Voting power": "投票权",
-    "Self delegation": "",
+    "Self delegation": "自我授权",
     "Commission": "手续费",
-    "Uptime": "",
+    "Uptime": "正常运行时间",
     "Validator details": "验证人详情",
     "Operator address": "运营地址",
     "Account address": "账户地址",
-    "Jailed": ""
+    "Jailed": "入狱"
   },
   "Governance": {
     "Voting": "投票中",
-    "Votes": "",
+    "Votes": "投票",
     "Initial deposit": "初始保证金",
-    "Deposited": "",
+    "Deposited": "已存款",
     "Depositors": "担保人们",
     "Depositor": "担保人",
     "Deposit end time": "保证金结束时间",
@@ -181,37 +192,36 @@
     "Minimum deposit": "最小保证金",
     "Maximum deposit period": "最大保证金周期",
     "Voting period": "投票期",
-    "Proposal": "",
+    "Proposal": "提案",
     "Proposal details": "提案详情",
-    "Proposal type": "",
+    "Proposal type": "提案类型",
     "Title": "标题",
     "Description": "描述",
     "Changes": "更改的内容",
     "Yes": "赞成",
     "No": "反对",
-    "No with veto": "",
+    "No with veto": "否定有否决权",
     "Abstain": "弃权",
     "Tallying procedure": "统计过程",
     "Quorum": "法定人数(Quorum)",
     "Pass threshold": "通过门槛",
-    "Veto threshold": "否决门槛"
+    "Veto threshold": "否决门槛",
+    "Proposal deposits will not be refunded if the proposal fails to reach the quorum or the result is NO_WITH_VETO": "如果提案未达到法定人数或结果为NO_WITH_VETO，提案押金将不予退还。",
+    "Parameters cannot be changed by text proposals": "参数不能通过文本建议来改变"
   },
   "Contract": {
     "Upload": "上传",
-    "Instantiate": "",
+    "Instantiate": "实例化",
     "Query": "查询",
-    "Execute": "",
-    "Upload a wasm file": "",
+    "Execute": "执行",
+    "Upload a wasm file": "上传一个wasm文件",
     "File": "文件",
     "Size": "文件大小",
-    "Instantiate a code": ""
+    "Instantiate a code": "实例化一个代码"
   },
-  "NFT": {
-    "Marketplace": "",
-    "Collection": ""
-  },
+  "NFT": { "Marketplace": "市场", "Collection": "收藏品" },
   "Address book": {
-    "Address book": "",
-    "Add a new address": ""
+    "Address book": "地址簿",
+    "Add a new address": "添加一个新的地址"
   }
 }

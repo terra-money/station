@@ -1,6 +1,6 @@
 {
   "Blockchain": {
-    "Mnemonic": "",
+    "Mnemonic": "Мнемоника",
     "Address": "Адрес",
     "Wallet": "Кошелёк",
     "Wallets": "Кошельки",
@@ -16,7 +16,8 @@
     "Buy": "Купить",
     "Exchanges": "Обменники",
     "Fiat": "фиатная валюта",
-    "APY": "ГПД"
+    "APY": "ГПД",
+    "chain": "цепь"
   },
   "Form": {
     "Amount": "Количество",
@@ -51,9 +52,7 @@
     "Broadcasting transaction": "Отправление транзакции",
     "Queued": "В очереди"
   },
-  "Success": {
-    "Success!": "Успешно!"
-  },
+  "Success": { "Success!": "Успешно!" },
   "Failure": {
     "Failed": "Не удалось",
     "Simulation failed": "Симуляция не удалась",
@@ -69,17 +68,12 @@
     "Copied": "Скопировано",
     "Active": "Активный",
     "Inactive": "Неактивный",
-    "Not found": "Не найдено"
+    "Not found": "Не найдено",
+    "setup": "настройка",
+    "documentation": "документация"
   },
-  "Units": {
-    "year": "год",
-    "day": "день",
-    "{{d}} days": "{{d}} дней"
-  },
-  "Preferences": {
-    "Language": "Язык",
-    "Currency": "Валюта"
-  },
+  "Units": { "year": "год", "day": "день", "{{d}} days": "{{d}} дней" },
+  "Preferences": { "Language": "Язык", "Currency": "Валюта" },
   "Auth": {
     "Connect": "Подключиться",
     "Disconnect": "Отключиться",
@@ -122,7 +116,11 @@
   },
   "Wallet": {
     "Add tokens": "Добавить токен",
-    "Manage list": "Управление списком"
+    "Manage list": "Управление списком",
+    "Assets": "Активы",
+    "receive": "получить",
+    "select a coin": "выберите монету",
+    "asset value": "стоимость активов"
   },
   "Txs": {
     "Send": "Отправить",
@@ -137,7 +135,9 @@
     "Deposit": "Депозит",
     "Vote": "Голосование",
     "Transfer NFT": "Отправить NFT",
-    "Earn": "Заработать"
+    "Earn": "Заработать",
+    "Leave enough coins to pay fee for subsequent transactions": "Оставьте достаточно монет, чтобы оплатить комиссию за последующие транзакции",
+    "Balance after tx": "Баланс после лечения"
   },
   "Swap": {
     "From": "С",
@@ -155,7 +155,18 @@
     "Undelegations": "Отмена Делегаций",
     "Delegated": "Делегированный",
     "Undelegated": "Неделегированный",
-    "Staking rewards": "Стейкинговые награды"
+    "Staking rewards": "Стейкинговые награды",
+    "Maximum 7 undelegations can be in progress at the same time": "Одновременно может проводиться не более 7 неделегаций",
+    "No rewards are distributed during the 21 day undelegation period": "Вознаграждения не распределяются в течение 21-дневного периода нераспределения",
+    "Quick stake selects validators that": "Быстрая ставка выбирает валидаторы, которые",
+    "Are outside of top third by voting power": "Находятся за пределами первой трети по количеству голосов",
+    "Charge 5% commission or less": "Взимайте комиссию в размере 5% или меньше",
+    "Have not been slashed recently": "Не были сокращены в последнее время",
+    "Are in the active set": "Находятся в активной группе",
+    "staking": "ставка",
+    "staked Funds": "стабфонды",
+    "quick stake ": "быстрая ставка",
+    "manual stake": "ручная ставка"
   },
   "Validator": {
     "Validators": "Валидаторы",
@@ -194,7 +205,9 @@
     "Tallying procedure": "Процедура подсчета",
     "Quorum": "Кворум",
     "Pass threshold": "Порог прохождения",
-    "Veto threshold": "Порог вето"
+    "Veto threshold": "Порог вето",
+    "Proposal deposits will not be refunded if the proposal fails to reach the quorum or the result is NO_WITH_VETO": "Задаток за предложение не возвращается, если предложение не набрало кворума или результат голосования НЕТ_ВООБЩЕ_ВЕТО",
+    "Parameters cannot be changed by text proposals": "Параметры не могут быть изменены с помощью текстовых предложений"
   },
   "Contract": {
     "Upload": "Загрузить",
@@ -206,10 +219,7 @@
     "Size": "Размер",
     "Instantiate a code": "Инициализация кода"
   },
-  "NFT": {
-    "Marketplace": "Торговые площадки",
-    "Collection": "Коллекция"
-  },
+  "NFT": { "Marketplace": "Торговые площадки", "Collection": "Коллекция" },
   "Address book": {
     "Address book": "Адресная книга",
     "Add a new address": "Добавить новый адрес"

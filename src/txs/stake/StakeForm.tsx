@@ -169,7 +169,7 @@ const StakeForm = (props: Props) => {
                   </FormWarning>
                   <FormWarning>
                     {t(
-                      "No rewards are distributed during 21 days undelegation period"
+                      "No rewards are distributed during the 21 day undelegation period"
                     )}
                   </FormWarning>
                 </Grid>

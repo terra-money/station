@@ -156,7 +156,7 @@ const QuickStakeForm = (props: Props) => {
                     </FormWarning>
                     <FormWarning>
                       {t(
-                        `No rewards are distributed during ${daysToUnbond} days undelegation period`
+                        `No rewards are distributed during ${daysToUnbond} day undelegation period`
                       )}
                     </FormWarning>
                   </Grid>
