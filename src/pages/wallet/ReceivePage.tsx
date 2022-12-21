@@ -2,7 +2,7 @@ import { useInterchainAddresses } from "auth/hooks/useAddress"
 import AddressBox from "components/form/AddressBox"
 import ChainSelector from "components/form/ChainSelector"
 import { useNetwork } from "data/wallet"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import styles from "./ReceivePage.module.scss"
 

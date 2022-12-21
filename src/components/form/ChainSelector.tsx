@@ -2,14 +2,11 @@ import { useNetwork } from "data/wallet"
 import { useEffect, useMemo, useState } from "react"
 import styles from "./ChainSelector.module.scss"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
-import classNames from "classnames"
 
 interface Props {
   chainsList: string[]
   onChange: (chain: string) => void
 }
-
-const cx = classNames.bind(styles)
 
 const ChainSelector = ({ chainsList, onChange }: Props) => {
   const networks = useNetwork()
