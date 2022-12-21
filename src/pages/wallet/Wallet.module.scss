@@ -15,7 +15,7 @@
   @media (max-width: (1400px - 0.02)) {
     position: absolute;
     right: 0;
-    box-shadow: 0 0 15px #000b;
+    box-shadow: 0 0 15px var(--bg);
     clip-path: inset(0px 0px 0px -100px);
   }
 }
@@ -50,8 +50,8 @@
     font-size: 10pt;
   }
 
-  @media (max-width: (1200px - 0.02)) {
-    box-shadow: 0 0 15px #000b;
+  @media (max-width: (1400px - 0.02)) {
+    box-shadow: 0 0 15px var(--bg);
     clip-path: inset(-15px 0px -15px -15px);
   }
 }
