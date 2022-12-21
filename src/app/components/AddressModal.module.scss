@@ -1,0 +1,18 @@
+@import "mixins";
+
+.table {
+  padding-top: 10px;
+}
+
+.address {
+  @include flex(space-between);
+}
+
+.chain {
+  text-transform: capitalize;
+  @include flex(align-items);
+}
+
+.chain .name {
+  margin-left: 10px;
+}

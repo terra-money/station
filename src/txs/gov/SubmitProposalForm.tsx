@@ -32,6 +32,7 @@ import { useCommunityPool } from "data/queries/distribution"
 import { useDepositParams } from "data/queries/gov"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { useNetwork } from "data/wallet"
+import { useNativeDenoms } from "data/token"
 
 enum ProposalType {
   TEXT = "Text proposal",
@@ -81,6 +82,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
   const { t } = useTranslation()
   const addresses = useInterchainAddresses()
   const networks = useNetwork()
+  const readNetiveDenom = useNativeDenoms()
 
   const bankBalance = useBankBalance()
   const balance =
@@ -399,13 +401,14 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
         {({ max, fee, submit }) => (
           <Form onSubmit={handleSubmit(submit.fn)}>
             <Grid gap={4}>
-              <FormHelp>
-                Upload proposal only after forum discussion on{" "}
-                <ExternalLink href="https://agora.terra.money">
-                  agora.terra.money
-                </ExternalLink>{" "}
-                or that chain's forum.
-              </FormHelp>
+              {networks[chain].prefix === "terra" && (
+                <FormHelp>
+                  Upload proposal only after forum discussion on{" "}
+                  <ExternalLink href="https://agora.terra.money">
+                    agora.terra.money
+                  </ExternalLink>
+                </FormHelp>
+              )}
               <FormWarning>
                 {t(
                   "Proposal deposits will not be refunded if the proposal fails to reach the quorum or the result is NO_WITH_VETO"
@@ -445,14 +448,27 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
                   required: "Description is required",
                 })}
                 placeholder={t(
-                  "We're proposing to spend 100,000 LUNA from the Community Pool to fund the creation of public goods for the Terra ecosystem"
+                  `We're proposing to spend 100,000 ${
+                    readNetiveDenom(networks[chain].baseAsset).symbol
+                  } from the Community Pool to fund the creation of public goods for the ${
+                    networks[chain].name
+                  } ecosystem`
                 )}
               />
             </FormItem>
 
             <FormItem
               label={
-                <TooltipIcon content="To help push the proposal to the voting period, consider depositing more LUNA to reach the minimum 512 LUNA (optional).">
+                <TooltipIcon
+                  content={`To help push the proposal to the voting period, consider depositing more ${
+                    readNetiveDenom(networks[chain].baseAsset).symbol
+                  } to reach the minimum ${
+                    Number(minDeposit) /
+                    10 ** readNetiveDenom(networks[chain].baseAsset).decimals
+                  } ${
+                    readNetiveDenom(networks[chain].baseAsset).symbol
+                  } (optional).`}
+                >
                   {t("Initial deposit")} ({t("optional")})
                 </TooltipIcon>
               }

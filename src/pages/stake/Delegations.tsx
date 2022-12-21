@@ -30,7 +30,6 @@ const Delegations = () => {
   const render = () => {
     if (!delegations || !prices) return null
 
-    //const total = calcDelegationsTotal(delegations);
     const total = delegations.reduce((acc, { balance }) => {
       const { token, decimals } = readNativeDenom(balance.denom)
       return (

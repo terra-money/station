@@ -1,18 +1,53 @@
 @import "mixins";
+@import "forms";
 
-.chain__selector {
-  @include flex(flex-start);
-  gap: 10px;
+.container {
+  position: relative;
+}
+
+.selector {
+  @include border;
+  @include size;
+  @include flex(space-between);
+  appearance: none;
+  width: 100%;
+
+  span {
+    @include flex(flex-start);
+
+    img {
+      width: 18px;
+      height: 18px;
+      margin-right: 8px;
+    }
+  }
+}
+
+.options {
+  position: absolute;
+  width: 100%;
+  @include flex(flex-start, flex-start);
+  flex-direction: column;
+  padding: 4px 0;
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  border: var(--border-width) solid var(--card-border);
+  border-top: 0;
 
   button {
-    font-weight: var(--normal);
-    background-color: var(--button-default-bg);
-    padding: 4px 15px;
-    border-radius: 20px;
-  }
+    padding: 6px 12px;
+    width: 100%;
+    @include flex(flex-start);
+    border-radius: var(--border-radius);
 
-  .active {
-    background-color: var(--button-primary-bg);
-    color: var(--button-primary-text);
+    img {
+      width: 18px;
+      height: 18px;
+      margin-right: 8px;
+    }
+
+    &:hover {
+      background-color: var(--card-bg-muted);
+    }
   }
 }

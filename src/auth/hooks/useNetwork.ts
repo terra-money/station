@@ -56,7 +56,7 @@ export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
     return { [terra.chainID]: terra }
   }
 
-  if (!wallet?.words?.["118"]) {
+  if (wallet && !wallet?.words?.["118"]) {
     const chains330 = Object.values(
       networks[network as NetworkName] as Record<ChainID, InterchainNetwork>
     ).filter(({ coinType }) => coinType === "330")

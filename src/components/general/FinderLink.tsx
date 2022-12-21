@@ -31,7 +31,10 @@ const FinderLink = forwardRef(
 
     const value = rest.value ?? children
     const targetChainId =
-      chainID || (rest.value && getChainIDFromAddress(rest.value, networks))
+      typeof value === "string"
+        ? getChainIDFromAddress(value, networks)
+        : chainID
+
     const chainName = getChainNamefromID(targetChainId, networks)
 
     const interchainPath = tx
