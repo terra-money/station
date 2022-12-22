@@ -85,7 +85,6 @@ export const useInitialBankBalance = () => {
         result.push({ denom: "uluna", amount: "0", chain: "phoenix-1" })
       }
 
-      console.log(result)
       return result
     },
     { ...RefetchOptions.DEFAULT }

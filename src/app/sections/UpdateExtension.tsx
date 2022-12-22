@@ -3,14 +3,6 @@ import { EXTENSION } from "config/constants"
 import styles from "./UpdateExtension.module.scss"
 
 const UpdateExtension = () => {
-  console.log(
-    "window.isTerraExtensionAvailable",
-    window.isTerraExtensionAvailable
-  )
-  console.log(
-    "window.isStationExtensionAvailable",
-    window.isStationExtensionAvailable
-  )
   if (window.isTerraExtensionAvailable && !window.isStationExtensionAvailable)
     return (
       <div className={classNames(styles.text, styles.info)}>
