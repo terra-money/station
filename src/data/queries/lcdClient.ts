@@ -32,11 +32,11 @@ export const useLCDClient = () => {
 
 export const useInterchainLCDClient = () => {
   const network = useNetworkName()
-  const chains = useNetworks()
+  const { networks, filterEnabledNetworks } = useNetworks()
 
   const lcdClient = useMemo(
-    () => new InterchainLCDClient(chains[network]),
-    [chains, network]
+    () => new InterchainLCDClient(filterEnabledNetworks(networks[network])),
+    [networks, network, filterEnabledNetworks]
   )
 
   return lcdClient

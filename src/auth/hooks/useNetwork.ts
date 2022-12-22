@@ -32,7 +32,7 @@ export const useNetworkOptions = () => {
 }
 
 export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
-  const networks = useNetworks()
+  const { networks, filterEnabledNetworks } = useNetworks()
   const [network, setNetwork] = useNetworkState()
   const wallet = useRecoilValue(walletState)
   const connectedWallet = useWallet()
@@ -44,7 +44,10 @@ export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
     } else if (network !== "testnet" && "pisco-1" in connectedWallet.network) {
       setNetwork("testnet")
     }
-    return connectedWallet.network as any
+
+    return filterEnabledNetworks(
+      connectedWallet.network as Record<ChainID, InterchainNetwork>
+    )
   }
 
   // multisig wallet are supported only on terra
@@ -53,7 +56,7 @@ export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
       networks[network as NetworkName] as Record<ChainID, InterchainNetwork>
     ).find(({ prefix }) => prefix === "terra")
     if (!terra) return {}
-    return { [terra.chainID]: terra }
+    return filterEnabledNetworks({ [terra.chainID]: terra })
   }
 
   if (wallet && !wallet?.words?.["118"]) {
@@ -61,13 +64,15 @@ export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
       networks[network as NetworkName] as Record<ChainID, InterchainNetwork>
     ).filter(({ coinType }) => coinType === "330")
 
-    return chains330.reduce((acc, chain) => {
-      acc[chain.chainID] = chain
-      return acc
-    }, {} as Record<ChainID, InterchainNetwork>)
+    return filterEnabledNetworks(
+      chains330.reduce((acc, chain) => {
+        acc[chain.chainID] = chain
+        return acc
+      }, {} as Record<ChainID, InterchainNetwork>)
+    )
   }
 
-  return networks[network as NetworkName]
+  return filterEnabledNetworks(networks[network as NetworkName])
 }
 
 export const useNetworkName = () => {
