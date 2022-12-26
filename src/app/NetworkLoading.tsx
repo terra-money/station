@@ -1,23 +1,25 @@
 import { FlexColumn } from "components/layout"
 import styles from "./NetworkError.module.scss"
-import { useFindTheme } from "data/settings/Theme"
+import { useTheme } from "data/settings/Theme"
+import Overlay from "./components/Overlay"
 
 interface Props {
   title: string
 }
 
 const NetworkLoading = ({ title }: Props) => {
-  const find = useFindTheme()
-  const { animation } = find("light")
+  const { name, animation } = useTheme()
 
   return (
-    <FlexColumn gap={20}>
-      <img src={animation} alt="Loading..." width={120} height={120} />
+    <Overlay className={name}>
+      <FlexColumn gap={20}>
+        <img src={animation} alt="Loading..." width={120} height={120} />
 
-      <article>
-        <h1 className={styles.title}>{title}</h1>
-      </article>
-    </FlexColumn>
+        <article>
+          <h1 className={styles.title}>{title}</h1>
+        </article>
+      </FlexColumn>
+    </Overlay>
   )
 }
 

@@ -3,7 +3,6 @@ import axios from "axios"
 import { ASSETS } from "config/constants"
 import createContext from "utils/createContext"
 import NetworkLoading from "./NetworkLoading"
-import Overlay from "./components/Overlay"
 
 export const [useNetworks, NetworksProvider] = createContext<{
   networks: InterchainNetworks
@@ -62,11 +61,7 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
   }, [networks])
 
   if (!networks || !enabledNetworks.length)
-    return (
-      <Overlay>
-        <NetworkLoading title="Connecting to the available networks..." />
-      </Overlay>
-    )
+    return <NetworkLoading title="Connecting to the available networks..." />
 
   return (
     <NetworksProvider
