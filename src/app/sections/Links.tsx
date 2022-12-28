@@ -26,7 +26,7 @@ const Links = () => {
         </ExternalLink>
         <ExternalLink href={TUTORIAL} className={styles.link}>
           <DescriptionIcon style={{ fontSize: 18 }} />
-          {t("Tutorial")}
+          {t("Documentation")}
         </ExternalLink>
       </div>
 
