@@ -29,7 +29,7 @@ export const useInterchainValidators = () => {
   return useQueries(
     Object.keys(addresses).map((chainID) => {
       return {
-        queryKey: [queryKey.staking.interchainValidators, addresses, chainID],
+        queryKey: [queryKey.interchain.staking.validators, addresses, chainID],
         queryFn: async () => {
           const result: Validator[] = []
           let key: string | null = ""
@@ -85,7 +85,7 @@ export const useInterchainDelegations = () => {
   return useQueries(
     Object.keys(addresses).map((chainID) => {
       return {
-        queryKey: [queryKey.staking.interchainDelegations, addresses, chainID],
+        queryKey: [queryKey.interchain.staking.delegations, addresses, chainID],
         queryFn: async () => {
           const [delegations] = await lcd.staking.delegations(
             addresses[chainID],
@@ -183,7 +183,7 @@ export const useInterchainUnbondings = () => {
   return useQueries(
     Object.keys(addresses).map((chainID) => {
       return {
-        queryKey: [queryKey.staking.interchainUnbondings, addresses, chainID],
+        queryKey: [queryKey.interchain.staking.unbondings, addresses, chainID],
         queryFn: async () => {
           const [unbondings] = await lcd.staking.unbondingDelegations(
             addresses[chainID]
