@@ -61,7 +61,7 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
   }, [networks])
 
   if (!networks || !enabledNetworks.length)
-    return <NetworkLoading title="Connecting to the available networks..." />
+    return <NetworkLoading title="Connecting to available networks..." />
 
   return (
     <NetworksProvider

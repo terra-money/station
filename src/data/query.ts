@@ -1,10 +1,4 @@
-import { useChainID } from "auth/hooks/useNetwork"
 import { LAZY_LIMIT } from "config/constants"
-
-export const useIsClassic = () => {
-  const chainId = useChainID()
-  return chainId.startsWith("columbus")
-}
 
 /* refetch */
 export const RefetchOptions = {
@@ -71,20 +65,23 @@ export const queryKey = mirror({
   },
   tendermint: { nodeInfo: "" },
   staking: {
-    interchainValidators: "",
     params: "",
     validators: "",
     validator: "",
-    interchainDelegations: "",
     delegations: "",
     delegation: "",
-    interchainUnbondings: "",
     unbondings: "",
     pool: "",
   },
   tx: { txInfo: "", create: "" },
   wasm: { contractInfo: "", contractQuery: "" },
-
+  interchain: {
+    staking: {
+      validators: "",
+      delegations: "",
+      unbondings: "",
+    },
+  },
   /* external */
   Anchor: { TotalDeposit: "", APY: "", MarketEpochState: "" },
   TNS: "",

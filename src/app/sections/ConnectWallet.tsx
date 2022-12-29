@@ -21,6 +21,7 @@ const ConnectWallet = ({ renderButton }: Props) => {
   const { t } = useTranslation()
 
   const { connect, availableConnections, availableInstallations } = useWallet()
+
   const { available } = useAuth()
 
   const address = useAddress()
@@ -33,11 +34,13 @@ const ConnectWallet = ({ renderButton }: Props) => {
   )
 
   const list = [
-    ...availableConnections.map(({ type, identifier, name, icon }) => ({
-      src: icon,
-      children: name,
-      onClick: () => connect(type, identifier),
-    })),
+    ...availableConnections
+      .filter(({ type }) => type !== "READONLY")
+      .map(({ type, identifier, name, icon }) => ({
+        src: icon,
+        children: name,
+        onClick: () => connect(type, identifier),
+      })),
     {
       icon: <UsbIcon />,
       to: "/auth/ledger",

@@ -4,7 +4,7 @@ import { last } from "ramda"
 import { sentenceCase } from "sentence-case"
 import { Proposal, Vote } from "@terra-money/feather.js"
 import { Color } from "types/components"
-import { Pagination, queryKey, RefetchOptions, useIsClassic } from "../query"
+import { Pagination, queryKey, RefetchOptions } from "../query"
 import { useInterchainLCDClient } from "./lcdClient"
 import { useNetwork } from "data/wallet"
 
@@ -191,7 +191,6 @@ export const useGetVoteOptionItem = () => {
 
 /* helpers */
 export const useParseProposalType = (content: Proposal.Content) => {
-  const isClassic = useIsClassic()
-  const { "@type": type } = content.toData(isClassic)
+  const { "@type": type } = content.toData()
   return sentenceCase(last(type.split(".")) ?? "")
 }
