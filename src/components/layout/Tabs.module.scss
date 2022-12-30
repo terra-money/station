@@ -2,6 +2,7 @@
 
 .tabs {
   white-space: nowrap;
+  position: relative;
 }
 
 .page {
@@ -24,12 +25,8 @@
   @for $i from 1 through 20 {
     .tab:first-child:nth-last-child(#{$i}),
     .tab:first-child:nth-last-child(#{$i}) ~ .tab {
-      width: calc(100% / #{$i});
+      width: calc(100% / #{$i - 1});
     }
-  }
-
-  .tab:last-child {
-    border-right: 0;
   }
 }
 
@@ -41,6 +38,8 @@
   height: 60px;
   border-right: var(--border-width) solid var(--card-border);
   color: var(--text-muted);
+  transition: all 0.3s ease-out;
+  z-index: 1;
 
   @include mobile {
     &:last-child {
@@ -53,8 +52,8 @@
   }
 
   &.active {
-    background: var(--card-bg);
     color: var(--text);
+    position: relative;
   }
 
   &.disabled {
@@ -63,6 +62,10 @@
 
   @include desktop {
     padding: 0 30px;
+  }
+
+  &:nth-last-child(2) {
+    border-right: 0;
   }
 }
 
@@ -107,6 +110,8 @@
   height: 60px;
   border-right: var(--border-width) solid var(--card-border);
   color: var(--text-muted);
+  transition: all 0.3s ease-out;
+  z-index: 1;
 
   @include mobile {
     &:last-child {
@@ -119,7 +124,7 @@
   }
 
   &.active {
-    background: var(--card-bg);
+    position: relative;
     color: var(--text);
   }
 
@@ -139,6 +144,11 @@
 
 .line {
   --border-color: var(--text);
+  margin-bottom: 12px;
+
+  .slider {
+    background-color: var(--border-color);
+  }
 }
 
 .reversed {
@@ -147,18 +157,20 @@
 
 .line .tab {
   border-bottom: 1px solid var(--border-color);
-  margin-bottom: 12px;
   font-size: var(--font-size-small);
   font-weight: var(--bold);
   padding: 0 14px;
   padding-bottom: 5px;
-
-  &.active {
-    border-bottom: 2px solid var(--border-color);
-    padding-bottom: 4px;
-  }
 }
 
 .disabled {
   @include disabled;
+}
+
+.slider {
+  position: absolute;
+  background: var(--card-bg);
+  transform: translatex(0%);
+  bottom: 0;
+  transition: 0.15s ease, transform 0.25s ease-out;
 }
