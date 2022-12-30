@@ -26,59 +26,12 @@ const Tabs = ({ tabs, defaultActiveKey, type, reversed, state }: Props) => {
   const location = useLocation()
   const hash = location.hash.replace("#", "")
 
-  /* state */
-  const [activeKey, setActiveKey] = useState(initial)
-  const [sliderStyles, setSliderStyles] = useState({
-    width: 0,
-    height: 0,
-    transform: "translateX(0px)",
-  })
-  const [windowSize, setWindowSize] = useState({
-    width: 0,
-    height: 0,
-  })
-
   useEffect(() => {
     if (!state && !hash) navigate({ hash: initial }, { replace: true })
-    if (type !== "line") {
-      const selectedTab = document.querySelector<HTMLElement>(
-        `[href="${location.pathname}#${hash}"]`
-      )
-      setSliderStyles({
-        width: selectedTab?.offsetWidth || 0,
-        height: selectedTab?.offsetHeight || 0,
-        transform: `translateX(${selectedTab?.offsetLeft}px)`,
-      })
-    } else {
-      const selectedTab = document.getElementById(activeKey)
-      setSliderStyles({
-        width: selectedTab?.offsetWidth || 88,
-        height: 2,
-        transform: `translateX(${selectedTab?.offsetLeft}px)`,
-      })
-    }
+  }, [hash, initial, navigate, state])
 
-    function handleResize() {
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      })
-    }
-    window.addEventListener("resize", handleResize)
-    handleResize()
-
-    return () => window.removeEventListener("resize", handleResize)
-  }, [
-    activeKey,
-    hash,
-    initial,
-    location.pathname,
-    navigate,
-    state,
-    type,
-    windowSize.width,
-    windowSize.height,
-  ])
+  /* state */
+  const [activeKey, setActiveKey] = useState(initial)
 
   return (
     <div className={styles.tabsContainer}>
@@ -94,7 +47,6 @@ const Tabs = ({ tabs, defaultActiveKey, type, reversed, state }: Props) => {
               onClick={() => !disabled && setActiveKey(key)}
               disabled={disabled}
               key={key}
-              id={key}
             >
               <div className={styles.title}>{capitalize(tab)}</div>
               {extra}
@@ -115,14 +67,6 @@ const Tabs = ({ tabs, defaultActiveKey, type, reversed, state }: Props) => {
             </Link>
           )
         )}
-        <div
-          className={styles.slider}
-          style={{
-            width: sliderStyles.width + "px",
-            height: sliderStyles.height + "px",
-            transform: sliderStyles.transform,
-          }}
-        ></div>
       </section>
       {type === "page" ? (
         <div className={styles.content}>
