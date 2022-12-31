@@ -2,7 +2,7 @@
   "Blockchain": {
     "Mnemonic": "Mnemonic",
     "Address": "Indirizzo",
-    "Wallet": "Portafoglio",
+    "Wallet": "Wallet",
     "Wallets": "Portafogli",
     "Coins": "Coins",
     "Tokens": "Tokens",
@@ -17,7 +17,7 @@
     "Exchanges": "Exchanges",
     "Fiat": "Fiat",
     "APY": "APY",
-    "chain": "catena"
+    "chain": "chain"
   },
   "Form": {
     "Amount": "Quantità",
@@ -26,7 +26,7 @@
     "optional": "opzionale",
     "Submit": "Invia",
     "Confirm": "Conferma",
-    "Reset": "Resetta"
+    "Reset": "Annulla"
   },
   "Validate": {
     "{{label}} is required": "{{label}} è obbligatorio",
@@ -69,7 +69,7 @@
     "Active": "Attivo",
     "Inactive": "Inattivo",
     "Not found": "Non trovato",
-    "setup": "impostazione",
+    "setup": "configurazione",
     "documentation": "documentazione"
   },
   "Units": { "year": "anno", "day": "giorno", "{{d}} days": "{{d}} giorni" },
@@ -77,9 +77,9 @@
   "Auth": {
     "Connect": "Connettiti",
     "Disconnect": "Disconnettiti",
-    "New wallet": "Crea un nuovo Portafoglio",
-    "Recover wallet": "Recupera portafoglio",
-    "Connect wallet": "Connetti portafoglio",
+    "New wallet": "Crea un nuovo wallet",
+    "Recover wallet": "Recupera wallet",
+    "Connect wallet": "Connetti wallet",
     "Password": "Password",
     "Confirm password": "Conferma password",
     "Password does not match": "La Password non corrisponde",
@@ -88,13 +88,13 @@
     "New password": "Nuova password",
     "Confirm new password": "Conferma nuova password",
     "Incorrect password": "Password errata",
-    "Export wallet": "Esporta portafoglio",
-    "Delete wallet": "Cancella wallet",
+    "Export wallet": "Esporta wallet",
+    "Delete wallet": "Elimina wallet",
     "Install extension": "Installa l'estensione"
   },
   "Menu": {
     "Dashboard": "Dashboard",
-    "Wallet": "Portafoglio",
+    "Wallet": "Wallet",
     "NFT": "NFT",
     "History": "Cronologia",
     "Stake": "Stake",
@@ -117,10 +117,10 @@
   "Wallet": {
     "Add tokens": "Aggiungi tokens",
     "Manage list": "Gestisci lista",
-    "Assets": "Attività",
+    "Assets": "Assets",
     "receive": "ricevere",
-    "select a coin": "selezionare una moneta",
-    "asset value": "valore dell'attività"
+    "select a coin": "selezionare un token",
+    "asset value": "valore degli asset"
   },
   "Txs": {
     "Send": "Invia",
@@ -128,16 +128,16 @@
     "Stake": "Stake",
     "Delegate": "Delega",
     "Redelegate": "Ridelega",
-    "Undelegate": "Revoca la delega",
+    "Undelegate": "Un-delega",
     "Withdraw rewards": "Preleva ricompense",
     "Withdraw commission": "Preleva commissioni",
-    "New proposal": "Nuova proposta",
+    "New proposal": "Crea una proposal",
     "Deposit": "Deposito",
     "Vote": "Vota",
     "Transfer NFT": "Trasferisci NFT",
     "Earn": "Guadagna",
-    "Leave enough coins to pay fee for subsequent transactions": "Lasciate abbastanza monete per pagare le spese delle transazioni successive",
-    "Balance after tx": "Saldo dopo il trattamento"
+    "Leave enough coins to pay fee for subsequent transactions": "Lasciate abbastanza monete per pagare le commissioni delle transazioni successive",
+    "Balance after tx": "Saldo dopo la transazione"
   },
   "Swap": {
     "From": "Da",
@@ -152,31 +152,31 @@
   },
   "Stake": {
     "Delegations": "Delegazioni",
-    "Undelegations": "Undelegazioni",
+    "Undelegations": "Un-delegazioni",
     "Delegated": "Delegato",
     "Undelegated": "Non delegato",
-    "Staking rewards": "Ricompense dello staking",
-    "Maximum 7 undelegations can be in progress at the same time": "Possono essere in corso al massimo 7 delegamenti contemporaneamente.",
-    "No rewards are distributed during the 21 day undelegation period": "Non vengono distribuiti premi durante il periodo di non delega di 21 giorni.",
+    "Staking rewards": "Rewards dello staking",
+    "Maximum 7 undelegations can be in progress at the same time": "Possono essere in corso al massimo 7 un-delegazioni contemporaneamente.",
+    "No rewards are distributed during the 21 day undelegation period": "Non vengono distribuiti rewards durante il periodo di un-delega di 21 giorni.",
     "Quick stake selects validators that": "Quick stake seleziona i validatori che",
-    "Are outside of top third by voting power": "Sono fuori dal terzo posto per potere di voto",
-    "Charge 5% commission or less": "Applicare una commissione del 5% o meno",
-    "Have not been slashed recently": "Non sono stati tagliati di recente",
-    "Are in the active set": "Sono nel set attivo",
-    "staking": "picchettamento",
-    "staked Funds": "Fondi puntati",
-    "quick stake ": "paletto rapido",
-    "manual stake": "paletto manuale"
+    "Are outside of top third by voting power": "Sono fuori dal top 33% di voting power",
+    "Charge 5% commission or less": "Hanno commissioni inferiori o uguali al 5%",
+    "Have not been slashed recently": "Non hanno subito slashing di recente",
+    "Are in the active set": "Sono attivi",
+    "staking": "staking",
+    "staked Funds": "Fondi in stake",
+    "quick stake ": "staking rapido",
+    "manual stake": "staking manuale"
   },
   "Validator": {
     "Validators": "Validatori",
-    "Voting power": "Potere di Voto",
+    "Voting power": "Voting power",
     "Self delegation": "Auto-delegati",
-    "Commission": "Commissione",
+    "Commission": "Commissioni",
     "Uptime": "Uptime",
     "Validator details": "Informazioni sul validatore",
     "Operator address": "Indirizzo operatore",
-    "Account address": "Indirizzo Account",
+    "Account address": "Indirizzo account",
     "Jailed": "Jailato"
   },
   "Governance": {
@@ -189,15 +189,15 @@
     "Deposit end time": "Fine deposito",
     "Passed": "Approvato",
     "Rejected": "Respinto",
-    "Minimum deposit": "Deposito Minimo",
-    "Maximum deposit period": "Deposito Massimo",
+    "Minimum deposit": "Deposito minimo",
+    "Maximum deposit period": "Periodo massimo per il deposito",
     "Voting period": "Periodo di voto",
-    "Proposal": "Proposta",
-    "Proposal details": "Dettagli proposta",
-    "Proposal type": "Tipo proposta",
+    "Proposal": "Proposal",
+    "Proposal details": "Dettagli proposal",
+    "Proposal type": "Tipo proposal",
     "Title": "Titolo",
     "Description": "Descrizione",
-    "Changes": "Cambio",
+    "Changes": "Cambiamenti",
     "Yes": "Sí",
     "No": "No",
     "No with veto": "No con veto",
@@ -207,12 +207,12 @@
     "Pass threshold": "Soglia di passaggio",
     "Veto threshold": "Soglia di veto",
     "Proposal deposits will not be refunded if the proposal fails to reach the quorum or the result is NO_WITH_VETO": "I depositi delle proposte non saranno rimborsati se la proposta non raggiunge il quorum o se il risultato è NO_WITH_VETO.",
-    "Parameters cannot be changed by text proposals": "I parametri non possono essere modificati da proposte di testo"
+    "Parameters cannot be changed by text proposals": "Le Text Proposal non hanno alcun effetto sui parametri."
   },
   "Contract": {
     "Upload": "Carica",
     "Instantiate": "Inizializza",
-    "Query": "Ricerca",
+    "Query": "Query",
     "Execute": "Esegui",
     "Upload a wasm file": "Carica un file wasm",
     "File": "File",
