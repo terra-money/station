@@ -14,7 +14,6 @@ const NetworkLoading = ({ title }: Props) => {
     <Overlay className={name}>
       <FlexColumn gap={20}>
         <img src={animation} alt="Loading..." width={120} height={120} />
-
         <article>
           <h1 className={styles.title}>{title}</h1>
         </article>
