@@ -76,14 +76,14 @@ const QuickStakeForm = (props: Props) => {
   }, [validators])
 
   const stakeMsgs = useMemo(() => {
-    if (!(address && elegibleVals)) return
+    if (!address || !elegibleVals) return
     const coin = new Coin(baseAsset, toAmount(input || toInput(1)))
     const { decimals } = readNativeDenom(baseAsset)
     return getQuickStakeMsgs(address, coin, elegibleVals, decimals)
   }, [address, elegibleVals, baseAsset, input, readNativeDenom])
 
   const unstakeMsgs = useMemo(() => {
-    if (!(address && delegations)) return
+    if (!address || !delegations) return
     const coin = new Coin(baseAsset, toAmount(input || toInput(1)))
     return getQuickUnstakeMsgs(address, coin, delegations)
   }, [address, baseAsset, input, delegations])

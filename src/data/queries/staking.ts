@@ -132,7 +132,7 @@ export const useDelegations = (chainID: string) => {
   const lcd = useInterchainLCDClient()
 
   return useQuery(
-    [queryKey.staking.delegations, addresses, chainID],
+    [queryKey.staking.delegations, addresses?.[chainID]],
     async () => {
       if (!addresses || !addresses[chainID]) return []
       // TODO: Pagination
