@@ -45,6 +45,8 @@ import { StakeAction } from "./stake/StakeForm"
 import { isMisesWallet, useConnectWallet } from "auth/hooks/useAddress"
 import { toHump } from "utils/data"
 import { useWalletProvider } from "utils/hooks/useMetamaskProvider"
+import { useAnalytics } from "auth/hooks/useAnalytics"
+import { logEvent } from "firebase/analytics"
 
 export interface CreateTxErrorOptions {
   code: -1
@@ -222,6 +224,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const toPostMultisigTx = useToPostMultisigTx()
   const misesState = useRecoilValue(misesStateDefault)
   const provider = useWalletProvider();
+  const analytics = useAnalytics()
   const submit = async (values: TxValues) => {
     setSubmitting(true)
     try {
@@ -292,10 +295,13 @@ function Tx<TxValues>(props: Props<TxValues>) {
         setLatestTx({ txhash: result.transactionHash, queryKeys, redirectAfterTx })
       }
       onPost?.()
-    } catch (error) {
-      console.log(error)
-      if (error instanceof PasswordError) setIncorrect(error.message)
-      else setError(error as Error)
+    } catch (error: any) {
+      if (error instanceof PasswordError) {
+        setIncorrect(error.message)
+      }else{ 
+        setError(error as Error)
+        logEvent(analytics, "portal_error", error?.message||"portal-staking-error" )
+      }
     }
 
     setSubmitting(false)
