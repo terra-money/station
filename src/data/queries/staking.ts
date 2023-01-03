@@ -362,33 +362,32 @@ export const useCalcInterchainDelegationsTotal = (
 }
 
 /* Quick stake helpers */
-export const getQuickStakeEligibleVals = (validators: Validator[]) => {
+export const getPriorityVals = (validators: Validator[]) => {
   const MAX_COMMISSION = 0.05
   const VOTE_POWER_INCLUDE = 0.65
 
   const totalStaked = getTotalStakedTokens(validators)
-  const vals = validators
-    .map((v) => ({ ...v, votingPower: Number(v.tokens) / totalStaked }))
-    .filter(
-      ({ commission, status }) =>
-        getIsBonded(status) &&
-        Number(commission.commission_rates.rate) <= MAX_COMMISSION
-    )
-    .sort((a, b) => a.votingPower - b.votingPower) // least to greatest
+  const getVotePower = (v: Validator) => Number(v.tokens) / totalStaked
+
+  return validators
+    .sort((a, b) => getVotePower(a) - getVotePower(b)) // least to greatest
     .reduce(
       (acc, cur) => {
-        acc.sumVotePower += cur.votingPower
-        if (acc.sumVotePower < VOTE_POWER_INCLUDE) {
-          acc.elgible.push(cur.operator_address)
-        }
+        acc.sumVotePower += getVotePower(cur)
+        if (acc.sumVotePower < VOTE_POWER_INCLUDE) acc.elgible.push(cur)
         return acc
       },
       {
         sumVotePower: 0,
-        elgible: [] as ValAddress[],
+        elgible: [] as Validator[],
       }
     )
-  return shuffle(vals.elgible)
+    .elgible.filter(
+      ({ commission, status }) =>
+        getIsBonded(status) &&
+        Number(commission.commission_rates.rate) <= MAX_COMMISSION
+    )
+    .map(({ operator_address }) => operator_address)
 }
 
 export const getTotalStakedTokens = (validators: Validator[]) => {
