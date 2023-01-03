@@ -47,17 +47,27 @@ export default Input
 /* search */
 export const SearchInput = forwardRef(
   (
-    attrs: InputHTMLAttributes<HTMLInputElement> & { padding?: boolean },
+    attrs: InputHTMLAttributes<HTMLInputElement> & {
+      padding?: boolean
+      small?: boolean
+    },
     ref: ForwardedRef<HTMLInputElement>
   ) => {
     return (
       <div
-        className={classNames(styles.wrapper, styles.search)}
+        className={classNames(
+          styles.wrapper,
+          styles.search,
+          attrs.small && styles.search__small
+        )}
         style={attrs.padding ? {} : { margin: 0 }}
       >
         <input
           {...attrs}
-          className={styles.input}
+          className={classNames(
+            styles.input,
+            attrs.small && styles.input__small
+          )}
           inputMode="search"
           autoComplete="off"
           ref={ref}

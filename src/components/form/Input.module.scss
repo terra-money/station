@@ -53,3 +53,20 @@
     color: var(--text-muted);
   }
 }
+
+.search__small {
+  font-size: small;
+
+  .icon {
+    width: 18px;
+    left: 10px;
+  }
+
+  .input {
+    padding-left: 36px;
+  }
+}
+
+.input__small {
+  height: 38px;
+}
