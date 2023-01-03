@@ -253,6 +253,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
         )
         const isMises = isMisesWallet();
         if (isMises) {
+          await provider.enable("mainnet")
           await provider.signAmino(chainID, address, doc.toAmino(), {});
         }
 
