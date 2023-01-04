@@ -13,7 +13,9 @@ const ElectronVersion = () => {
   if (!electron) return null
 
   const version = electron("version")
-  const shouldUpdate = semver.lt(version, REQUIRED_VERSION)
+  const shouldUpdate =
+    semver.lt(version.split("-")[0], REQUIRED_VERSION) ||
+    version.split("-")[1] !== "legacy"
 
   if (!shouldUpdate) return null
   return (
