@@ -300,7 +300,9 @@ function Tx<TxValues>(props: Props<TxValues>) {
         setIncorrect(error.message)
       }else{ 
         setError(error as Error)
-        logEvent(analytics, "portal_error", error?.message||"portal-staking-error" )
+        logEvent(analytics, "portal_error", {
+          error_message: error?.message || "portal-staking-error" 
+        })
       }
     }
 
