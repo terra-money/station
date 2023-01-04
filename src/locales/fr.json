@@ -6,14 +6,14 @@
     "Wallets": "Portefeuilles",
     "Coins": "Monnaies",
     "Tokens": "Tokens",
-    "Balance": "Balance",
+    "Balance": "Solde",
     "Tx hash": "Tx hash",
     "Gas": "Gas",
-    "Tax": "Frais",
+    "Tax": "Taxe",
     "Fee": "Frais",
-    "Memo": "Mémo",
+    "Memo": "Memo",
     "decimals": "Décimales",
-    "Buy": "Achat",
+    "Buy": "Acheter",
     "Exchanges": "Echanges",
     "Fiat": "Monnaie",
     "APY": "APY",
@@ -119,7 +119,7 @@
     "Manage list": "Gérer la liste",
     "Assets": "Actifs",
     "receive": "recevoir",
-    "select a coin": "sélectionnez une pièce",
+    "select a coin": "sélectionnez une monnaie",
     "asset value": "valeur des actifs"
   },
   "Txs": {
@@ -128,15 +128,15 @@
     "Stake": "Stake",
     "Delegate": "Déléguer",
     "Redelegate": "Redéléguer",
-    "Undelegate": "Retirer la délégration",
+    "Undelegate": "Retirer la délégation",
     "Withdraw rewards": "Retirer les récompenses",
     "Withdraw commission": "Retirer les commissions",
     "New proposal": "Nouvelle proposition",
-    "Deposit": "Dépot",
+    "Deposit": "Déposer",
     "Vote": "Voter",
     "Transfer NFT": "Transfert NFT",
-    "Earn": "Gain",
-    "Leave enough coins to pay fee for subsequent transactions": "Laissez suffisamment de pièces pour payer les frais des transactions ultérieures",
+    "Earn": "Gagner",
+    "Leave enough coins to pay fee for subsequent transactions": "Laissez suffisamment de monnaies pour payer les frais des transactions ultérieures",
     "Balance after tx": "Solde après tx"
   },
   "Swap": {
@@ -148,7 +148,7 @@
     "Pair price": "Prix de la paire",
     "Expected price": "Prix attendu",
     "Minimum received": "Minimum à recevoir",
-    "Trading fee": "Frais de trading"
+    "Trading fee": "Frais d'échange"
   },
   "Stake": {
     "Delegations": "Délégations",
@@ -161,12 +161,12 @@
     "Quick stake selects validators that": "Quick stake sélectionne les validateurs qui",
     "Are outside of top third by voting power": "Ne font pas partie du premier tiers en nombre de voix",
     "Charge 5% commission or less": "Prélever une commission de 5 % ou moins",
-    "Have not been slashed recently": "N'ont pas fait l'objet d'une réduction récente",
+    "Have not been slashed recently": "N'ont pas fait l'objet d'une pénalité récente",
     "Are in the active set": "font partie de l'ensemble actif",
-    "staking": "jalonnement",
-    "staked Funds": "Fonds mis en gage",
-    "quick stake ": "enjeu rapide",
-    "manual stake": "pieu manuel"
+    "staking": "staking",
+    "staked Funds": "Fonds en staking",
+    "quick stake ": "staking rapide",
+    "manual stake": "staking manuel"
   },
   "Validator": {
     "Validators": "Validateurs",
@@ -183,7 +183,7 @@
     "Voting": "Vote",
     "Votes": "Votes",
     "Initial deposit": "Dépôt initial",
-    "Deposited": "Dépôt",
+    "Deposited": "Déposé",
     "Depositors": "Déposants",
     "Depositor": "Déposant",
     "Deposit end time": "Date de fin du dépot",
@@ -204,7 +204,7 @@
     "Abstain": "Abstention",
     "Tallying procedure": "Procédure de décompte",
     "Quorum": "Quorum",
-    "Pass threshold": "Seuil d'acceptance",
+    "Pass threshold": "Seuil de passage",
     "Veto threshold": "Seuil de veto",
     "Proposal deposits will not be refunded if the proposal fails to reach the quorum or the result is NO_WITH_VETO": "Les dépôts de proposition ne seront pas remboursés si la proposition n'atteint pas le quorum ou si le résultat est NO_WITH_VETO.",
     "Parameters cannot be changed by text proposals": "Les paramètres ne peuvent pas être modifiés par des propositions de texte"
@@ -212,7 +212,7 @@
   "Contract": {
     "Upload": "Uploader",
     "Instantiate": "Instancier",
-    "Query": "Appeler",
+    "Query": "Requête",
     "Execute": "Executer",
     "Upload a wasm file": "Uploader un fichier wasm",
     "File": "Fichier",
