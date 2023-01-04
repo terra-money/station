@@ -38,8 +38,8 @@ const FinderLink = forwardRef(
       : block
       ? "block"
       : validator
-      ? "validator"
-      : "address"
+      ? "validators"
+      : "holders"
 
     const value = rest.value ?? children
     const link = [FINDER, path, value].join("/")
