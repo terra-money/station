@@ -35,7 +35,7 @@ const Connected = () => {
     : {
         onClick: () => {
           resetMisesState()
-          localStorage.removeItem("metamask")
+          localStorage.removeItem("isConnected")
         },
         children: t("Disconnect"),
       }

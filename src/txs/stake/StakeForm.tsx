@@ -94,7 +94,7 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
       const amount = toAmount(input)
       const coin = new Coin("umis", amount)
 
-      if(amount === "0") return
+      if(amount === "0" && [StakeAction.REDELEGATE,  StakeAction.DELEGATE].includes(tab)) return
       
       if (tab === StakeAction.REDELEGATE) {
         if (!source) return
@@ -106,7 +106,7 @@ const StakeForm = ({ tab, destination, validators, delegations }: Props) => {
         return { msgs: [msg] }
       }
       if (tab === StakeAction.REINVEST) {
-        if (!source || !rewards) return
+        if (!rewards) return
         const msg0 = new MsgWithdrawDelegatorReward(address, destination)
         const { byValidator } = calcRewardsValues(rewards, currency, calcValue)
         const values = byValidator.find(

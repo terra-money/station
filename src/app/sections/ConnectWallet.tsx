@@ -1,17 +1,3 @@
-/*
- * @Author: lmk
- * @Date: 2022-06-02 16:12:07
- * @LastEditTime: 2022-10-13 12:50:34
- * @LastEditors: lmk
- * @Description:
- */
-/*
- * @Author: lmk
- * @Date: 2022-05-25 11:23:10
- * @LastEditTime: 2022-06-07 16:05:08
- * @LastEditors: lmk
- * @Description:
- */
 import { useTranslation } from "react-i18next"
 // import { STATION } from "config/constants"
 import { RenderButton } from "types/components"
@@ -26,9 +12,9 @@ import { ModalButton } from "components/feedback"
 import Connected from "./Connected"
 import { useEffect } from "react"
 import { atom } from "recoil"
-import { useConnectWallet } from "auth/hooks/useAddress"
+import { isMisesWallet, useConnectWallet } from "auth/hooks/useAddress"
 import { Button as MuiButton } from "@mui/material"
-import { useMetamaskProvider } from "utils/hooks/useMetamaskProvider"
+import { useWalletProvider } from "utils/hooks/useMetamaskProvider"
 // import { useWallet } from "@terra-money/wallet-provider"
 
 interface Props {
@@ -40,6 +26,9 @@ export const misesStateDefault = atom({
     misesId: "",
   },
 })
+
+let connectLoading = false;
+
 const ConnectWallet = ({ renderButton }: Props) => {
   const { t } = useTranslation()
 
@@ -47,28 +36,47 @@ const ConnectWallet = ({ renderButton }: Props) => {
   // const { available } = useAuth()
   const address = useAddress()
   // const [list] = useState<any>([])
-  const { getAddress } = useConnectWallet()
-  const provider = useMetamaskProvider()
-  useEffect(() => {
-    if (provider?.chainId) {
-      provider._metamask&&provider._metamask.isUnlocked?.().then((res: any) => {
-        const metamask = JSON.parse(localStorage.getItem("metamask") || "false")
-        metamask && res && getAddress()
-      })
+  const { getAddress, isUnlocked } = useConnectWallet()
+  const provider = useWalletProvider()
 
+  useEffect(() => {
+    (async () => {
+      const isunlocked = await isUnlocked()
+      const isConnected = localStorage.getItem('isConnected');
+      if(isunlocked && !!isConnected && !connectLoading) {
+        connectLoading = true;
+
+        await getAddress();
+
+        connectLoading = false;
+      }
+    })()
+    
+    if(!isMisesWallet()){
       provider.on("accountsChanged", async (res: string[]) => {
-        const metamask = JSON.parse(localStorage.getItem("metamask") || "false")
+        const metamask = JSON.parse(localStorage.getItem("isConnected") || "false")
         if (res.length && metamask) {
           getAddress()
+        }
+      })
+
+    }else{
+      window.addEventListener("mises_keystorechange", async () => {
+        if(!connectLoading){
+          connectLoading = true;
+  
+          await getAddress()
+  
+          connectLoading = false;
         }
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
   if (address) return <Connected />
   const defaultRenderButton: Props["renderButton"] = (open) => (
     <Button onClick={() => getAddress(open)} size="small" outline>
-      {/* 刷新 */}
       {t("Connect")}
     </Button>
   )
