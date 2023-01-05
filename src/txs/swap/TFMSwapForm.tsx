@@ -200,16 +200,7 @@ const TFMSwapForm = ({ chainID }: { chainID: string }) => {
     initialGasDenom,
     estimationTxValues,
     createTx,
-    queryKeys: [
-      queryKey.bank.balances,
-      ...[offerAsset, askAsset]
-        .filter((asset) => asset && AccAddress.validate(asset))
-        .map((token) => [
-          queryKey.wasm.contractQuery,
-          token,
-          { balance: address },
-        ]),
-    ],
+    queryKeys: [queryKey.bank.balances],
     chain: chainID,
   }
 
