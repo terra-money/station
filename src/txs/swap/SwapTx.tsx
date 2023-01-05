@@ -35,7 +35,7 @@ const SwapTx = () => {
             title={"Select a chain to perform swaps on"}
             swap
           >
-            {(chainID) => <TFMSwapForm chainId />}
+            {(chainID) => <TFMSwapForm chainID={chainID ?? ""} />}
           </ChainFilter>
         </TFMSwapContext>
       </TxContext>

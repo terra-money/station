@@ -5,8 +5,8 @@ import { useQuery } from "react-query"
 import { useForm } from "react-hook-form"
 import update from "immutability-helper"
 import BigNumber from "bignumber.js"
-import { AccAddress, Coin, Coins } from "@terra-money/terra.js"
-import { MsgExecuteContract } from "@terra-money/terra.js"
+import { AccAddress, Coin, Coins } from "@terra-money/feather.js"
+import { MsgExecuteContract } from "@terra-money/feather.js"
 import { isDenomTerra } from "@terra.kitchen/utils"
 import { toAmount } from "@terra.kitchen/utils"
 
@@ -24,7 +24,7 @@ import { Read } from "components/token"
 /* tx modules */
 import { getPlaceholder, toInput } from "../utils"
 import validate from "../validate"
-import Tx, { getInitialGasDenom } from "../Tx"
+import { getInitialGasDenom } from "../Tx"
 
 /* swap modules */
 import AssetFormItem from "./components/AssetFormItem"
@@ -36,6 +36,7 @@ import { SwapAssets, validateAssets } from "./useSwapUtils"
 import { validateParams } from "./useSwapUtils"
 import { calcMinimumReceive, SlippageParams } from "./SingleSwapContext"
 import { useTFMSwap, validateTFMSlippageParams } from "./TFMSwapContext"
+import InterchainTx from "txs/InterchainTx"
 
 interface TFMSwapParams extends SwapAssets {
   amount: string
@@ -44,7 +45,7 @@ interface TFMSwapParams extends SwapAssets {
 
 interface TxValues extends Partial<SlippageParams> {}
 
-const TFMSwapForm = ({ chainId }: any) => {
+const TFMSwapForm = ({ chainID }: { chainID: string }) => {
   const { t } = useTranslation()
   const address = useAddress()
   const { state } = useLocation()
@@ -177,8 +178,9 @@ const TFMSwapForm = ({ chainId }: any) => {
 
     return {
       msgs: [new MsgExecuteContract(address, contract, execute_msg, coins)],
+      chainID,
     }
-  }, [address, offerAsset, simulationResults])
+  }, [address, offerAsset, simulationResults, chainID])
 
   /* fee */
   const { data: estimationTxValues } = useQuery(
@@ -208,6 +210,7 @@ const TFMSwapForm = ({ chainId }: any) => {
         token,
         { balance: address },
       ]),
+    chain: chainID,
   }
 
   const disabled = isFetching ? t("Simulating...") : false
@@ -238,7 +241,7 @@ const TFMSwapForm = ({ chainId }: any) => {
   }, [simulationResults])
 
   return (
-    <Tx {...tx} disabled={disabled}>
+    <InterchainTx {...tx} disabled={disabled}>
       {({ max, fee, submit }) => (
         <Form onSubmit={handleSubmit(submit.fn)}>
           <AssetFormItem
@@ -331,7 +334,7 @@ const TFMSwapForm = ({ chainId }: any) => {
           {submit.button}
         </Form>
       )}
-    </Tx>
+    </InterchainTx>
   )
 }
 
