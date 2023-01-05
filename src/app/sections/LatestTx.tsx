@@ -69,6 +69,8 @@ const TxIndicator = ({ txhash }: { txhash: string }) => {
     [Status.FAILURE]: t("Failed"),
   }[status]
 
+  console.log(chainID, txhash)
+
   const txLink = (
     <FinderLink chainID={chainID} tx short>
       {txhash}
