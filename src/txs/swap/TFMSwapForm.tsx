@@ -157,10 +157,7 @@ const TFMSwapForm = ({ chainID }: { chainID: string }) => {
   /* tx */
   const balance = offerTokenItem?.balance
   const createTx = useCallback(() => {
-    if (!address) return
-    if (!offerAsset) return
-    if (!simulationResults) return
-
+    if (!(address && offerAsset && simulationResults)) return
     const [, swap] = simulationResults
 
     if (!("value" in swap)) return
@@ -203,13 +200,16 @@ const TFMSwapForm = ({ chainID }: { chainID: string }) => {
     initialGasDenom,
     estimationTxValues,
     createTx,
-    queryKeys: [offerAsset, askAsset]
-      .filter((asset) => asset && AccAddress.validate(asset))
-      .map((token) => [
-        queryKey.wasm.contractQuery,
-        token,
-        { balance: address },
-      ]),
+    queryKeys: [
+      queryKey.bank.balances,
+      ...[offerAsset, askAsset]
+        .filter((asset) => asset && AccAddress.validate(asset))
+        .map((token) => [
+          queryKey.wasm.contractQuery,
+          token,
+          { balance: address },
+        ]),
+    ],
     chain: chainID,
   }
 

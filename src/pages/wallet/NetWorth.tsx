@@ -30,7 +30,7 @@ const NetWorth = () => {
         {currency.unit} {coinsValue.toFixed(2)}
       </h1>
       <p>
-        {currency.unit} {coinsValue.toFixed(2)} available
+        {currency.unit} {coinsValue.toFixed(2)} {t("available")}
       </p>
       <div className={styles.networth__buttons}>
         <Button
