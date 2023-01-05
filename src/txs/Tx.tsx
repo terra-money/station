@@ -293,6 +293,9 @@ function Tx<TxValues>(props: Props<TxValues>) {
             ],
           })
         setLatestTx({ txhash: result.transactionHash, queryKeys, redirectAfterTx })
+        logEvent(analytics, "portal_success", {
+          success_message: result.transactionHash
+        })
       }
       onPost?.()
     } catch (error: any) {
@@ -300,10 +303,10 @@ function Tx<TxValues>(props: Props<TxValues>) {
         setIncorrect(error.message)
       }else{ 
         setError(error as Error)
-        logEvent(analytics, "portal_error", {
-          error_message: error?.message || "portal-staking-error" 
-        })
       }
+      logEvent(analytics, "portal_error", {
+        error_message: error?.message || "portal-staking-error" 
+      })
     }
 
     setSubmitting(false)
