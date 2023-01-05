@@ -6,7 +6,6 @@ import { useAccountInfo } from "data/queries/auth"
 import { Card, Grid, Page } from "components/layout"
 import { FormHelp } from "components/form"
 import { Wrong } from "components/feedback"
-import TxContext from "txs/TxContext"
 import { isWallet, useAuth } from "auth"
 import CreateMultisigWalletForm from "auth/modules/create/CreateMultisigWalletForm"
 import ConfirmModal from "auth/modules/manage/ConfirmModal"
@@ -91,7 +90,7 @@ const PostMultisigTxPage = () => {
   const publicKey = account?.getPublicKey() ?? publicKeyFromNetwork
   return (
     <Page {...state} title={t("Post a multisig tx")} small={!publicKey}>
-      <TxContext>{render()}</TxContext>
+      {render()}
     </Page>
   )
 }

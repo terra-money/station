@@ -39,7 +39,6 @@ import { isWallet, useAuth } from "auth"
 import { PasswordError } from "auth/scripts/keystore"
 
 import { toInput, CoinInput } from "./utils"
-import { useTx } from "./TxContext"
 import styles from "./Tx.module.scss"
 import { useInterchainLCDClient } from "data/queries/lcdClient"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
@@ -77,7 +76,7 @@ interface RenderProps<TxValues> {
   submit: { fn: (values: TxValues) => Promise<void>; button: ReactNode }
 }
 
-function InterchainTx<TxValues>(props: Props<TxValues>) {
+function Tx<TxValues>(props: Props<TxValues>) {
   const { token, decimals, amount, balance, chain } = props
   const { estimationTxValues, createTx } = props
   const { children, onChangeMax } = props
@@ -98,7 +97,6 @@ function InterchainTx<TxValues>(props: Props<TxValues>) {
   const isWalletEmpty = useIsWalletEmpty()
   const setLatestTx = useSetRecoilState(latestTxState)
   const isBroadcasting = useRecoilValue(isBroadcastingState)
-  const { gasPrices } = useTx()
 
   /* simulation: estimate gas */
   const simulationTx = estimationTxValues && createTx(estimationTxValues)
@@ -107,7 +105,6 @@ function InterchainTx<TxValues>(props: Props<TxValues>) {
   const key = {
     address: addresses?.[chain],
     network,
-    gasPrices,
     gasAdjustment,
     msgs: simulationTx?.msgs.map((msg) => msg.toData()),
   }
@@ -444,14 +441,9 @@ function InterchainTx<TxValues>(props: Props<TxValues>) {
   )
 }
 
-export default InterchainTx
+export default Tx
 
 /* utils */
-// TODO: fetch for each chain
-export const getInitialGasDenom = () => {
-  return "uluna"
-}
-
 export const calcMinimumTaxAmount = (
   amount: BigNumber.Value,
   { rate, cap }: { rate: BigNumber.Value; cap: BigNumber.Value }

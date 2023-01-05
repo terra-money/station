@@ -14,7 +14,7 @@ import { Grid } from "components/layout"
 import { Form, FormItem, FormWarning, Input, Select } from "components/form"
 import { getPlaceholder, toInput } from "../utils"
 import validate from "../validate"
-import InterchainTx from "txs/InterchainTx"
+import Tx from "txs/Tx"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 
 interface TxValues {
@@ -143,7 +143,7 @@ const StakeForm = (props: Props) => {
   }
 
   return (
-    <InterchainTx {...tx}>
+    <Tx {...tx}>
       {({ max, fee, submit }) => (
         <Form onSubmit={handleSubmit(submit.fn)}>
           {
@@ -222,7 +222,7 @@ const StakeForm = (props: Props) => {
           {submit.button}
         </Form>
       )}
-    </InterchainTx>
+    </Tx>
   )
 }
 

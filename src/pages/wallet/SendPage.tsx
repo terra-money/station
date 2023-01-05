@@ -17,8 +17,6 @@ import { useNativeDenoms } from "data/token"
 import { useCallback, useEffect, useMemo } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
-import InterchainTx from "txs/InterchainTx"
-import TxContext from "txs/TxContext"
 import { CoinInput, getPlaceholder, toInput } from "txs/utils"
 import styles from "./SendPage.module.scss"
 import { useWalletRoute } from "./Wallet"
@@ -27,6 +25,8 @@ import { useIBCChannels } from "data/queries/chains"
 import CheckIcon from "@mui/icons-material/Check"
 import { getChainIDFromAddress } from "utils/bech32"
 import { useNetwork } from "data/wallet"
+import { queryKey } from "data/query"
+import Tx from "txs/Tx"
 
 interface TxValues {
   asset: string
@@ -253,106 +253,105 @@ const SendPage = () => {
     onChangeMax,
     onSuccess: { label: t("Wallet"), path: "/wallet" },
     taxRequired: true,
+    queryKeys: [queryKey.bank.balances, queryKey.bank.balance],
   }
 
   return (
-    <TxContext>
-      {/* @ts-ignore */}
-      <InterchainTx {...tx}>
-        {({ max, fee, submit }) => (
-          <Form onSubmit={handleSubmit(submit.fn)} className={styles.form}>
-            <section className={styles.send}>
-              <div className={styles.form__container}>
-                <h1>{t("Send")}</h1>
+    // @ts-expect-error
+    <Tx {...tx}>
+      {({ max, fee, submit }) => (
+        <Form onSubmit={handleSubmit(submit.fn)} className={styles.form}>
+          <section className={styles.send}>
+            <div className={styles.form__container}>
+              <h1>{t("Send")}</h1>
 
-                <FormItem
-                  label={t("Asset")}
-                  error={errors.asset?.message ?? errors.address?.message}
+              <FormItem
+                label={t("Asset")}
+                error={errors.asset?.message ?? errors.address?.message}
+              >
+                <Select
+                  {...register("asset", {
+                    value: defaultAsset,
+                  })}
+                  autoFocus
                 >
-                  <Select
-                    {...register("asset", {
-                      value: defaultAsset,
-                    })}
-                    autoFocus
-                  >
-                    {availableAssets.map(({ denom, symbol }) => (
-                      <option value={denom}>{symbol}</option>
-                    ))}
-                  </Select>
-                </FormItem>
-                {availableChains && (
-                  <FormItem label={t("Source chain")}>
-                    <ChainSelector
-                      chainsList={availableChains}
-                      onChange={(chain) => setValue("chain", chain)}
-                    />
-                  </FormItem>
-                )}
-                <FormItem
-                  label={t("Recipient")}
-                  extra={renderDestinationChain()}
-                  error={errors.recipient?.message ?? errors.address?.message}
-                >
-                  <Input
-                    {...register("recipient", {
-                      validate: validate.recipient(),
-                    })}
-                    placeholder={SAMPLE_ADDRESS}
-                    autoFocus
-                  />
-
-                  <input {...register("address")} readOnly hidden />
-                </FormItem>
-
-                <FormItem
-                  label={t("Amount")}
-                  extra={max.render()}
-                  error={errors.input?.message}
-                >
-                  <Input
-                    {...register("input", {
-                      valueAsNumber: true,
-                      validate: validate.input(
-                        toInput(max.amount, decimals),
-                        decimals
-                      ),
-                    })}
-                    token={asset}
-                    inputMode="decimal"
-                    onFocus={max.reset}
-                    placeholder={getPlaceholder(decimals)}
+                  {availableAssets.map(({ denom, symbol }) => (
+                    <option value={denom}>{symbol}</option>
+                  ))}
+                </Select>
+              </FormItem>
+              {availableChains && (
+                <FormItem label={t("Source chain")}>
+                  <ChainSelector
+                    chainsList={availableChains}
+                    onChange={(chain) => setValue("chain", chain)}
                   />
                 </FormItem>
+              )}
+              <FormItem
+                label={t("Recipient")}
+                extra={renderDestinationChain()}
+                error={errors.recipient?.message ?? errors.address?.message}
+              >
+                <Input
+                  {...register("recipient", {
+                    validate: validate.recipient(),
+                  })}
+                  placeholder={SAMPLE_ADDRESS}
+                  autoFocus
+                />
 
-                <FormItem
-                  label={`${t("Memo")} (${t("optional")})`}
-                  error={errors.memo?.message}
-                >
-                  <Input
-                    {...register("memo", {
-                      validate: {
-                        size: validate.size(256, "Memo"),
-                        brackets: validate.memo(),
-                      },
-                    })}
-                  />
-                </FormItem>
+                <input {...register("address")} readOnly hidden />
+              </FormItem>
 
-                {fee.render()}
-              </div>
-              <Grid gap={4}>
-                {!memo && (
-                  <FormWarning>
-                    {t("Check if this transaction requires a memo")}
-                  </FormWarning>
-                )}
-              </Grid>
-            </section>
-            <section className={styles.actions}>{submit.button}</section>
-          </Form>
-        )}
-      </InterchainTx>
-    </TxContext>
+              <FormItem
+                label={t("Amount")}
+                extra={max.render()}
+                error={errors.input?.message}
+              >
+                <Input
+                  {...register("input", {
+                    valueAsNumber: true,
+                    validate: validate.input(
+                      toInput(max.amount, decimals),
+                      decimals
+                    ),
+                  })}
+                  token={asset}
+                  inputMode="decimal"
+                  onFocus={max.reset}
+                  placeholder={getPlaceholder(decimals)}
+                />
+              </FormItem>
+
+              <FormItem
+                label={`${t("Memo")} (${t("optional")})`}
+                error={errors.memo?.message}
+              >
+                <Input
+                  {...register("memo", {
+                    validate: {
+                      size: validate.size(256, "Memo"),
+                      brackets: validate.memo(),
+                    },
+                  })}
+                />
+              </FormItem>
+
+              {fee.render()}
+            </div>
+            <Grid gap={4}>
+              {!memo && (
+                <FormWarning>
+                  {t("Check if this transaction requires a memo")}
+                </FormWarning>
+              )}
+            </Grid>
+          </section>
+          <section className={styles.actions}>{submit.button}</section>
+        </Form>
+      )}
+    </Tx>
   )
 }
 
