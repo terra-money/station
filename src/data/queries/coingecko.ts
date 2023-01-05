@@ -51,15 +51,16 @@ export const useExchangeRates = () => {
         ).join(",")}&vs_currencies=${currency.id}&include_24hr_change=true`
       )
 
-      return Object.keys(coingeckoIDs).reduce((acc, denom) => {
-        return {
+      return Object.keys(coingeckoIDs).reduce(
+        (acc, denom) => ({
           ...acc,
           [denom]: {
             price: prices[coingeckoIDs[denom]][currency.id],
             change: prices[coingeckoIDs[denom]][`${currency.id}_24h_change`],
           },
-        }
-      }, {})
+        }),
+        {}
+      )
     },
     { ...RefetchOptions.DEFAULT }
   )

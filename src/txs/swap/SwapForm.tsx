@@ -328,9 +328,7 @@ const SwapForm = () => {
               }
             />
           </AssetFormItem>
-
           <FormArrow onClick={swapAssets} />
-
           <AssetFormItem label={t("To")}>
             <SelectToken
               value={askAsset}

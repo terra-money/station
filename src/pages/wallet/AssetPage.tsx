@@ -45,7 +45,31 @@ const AssetPage = () => {
           <Read decimals={decimals} amount={totalBalance} token={symbol} />{" "}
           {symbol}
         </p>
+        <section className={styles.actions}>
+          <Button
+            onClick={() =>
+              setRoute({
+                path: Path.send,
+                denom,
+                previusPage: route,
+              })
+            }
+          >
+            {t("Send")}
+          </Button>
+          <Button
+            onClick={() =>
+              setRoute({
+                path: Path.receive,
+                previusPage: route,
+              })
+            }
+          >
+            {t("Receive")}
+          </Button>
+        </section>
       </section>
+
       <section className={styles.chainlist}>
         <h3>{t("Chains")}</h3>
         <div className={styles.chainlist__list}>
@@ -62,29 +86,6 @@ const AssetPage = () => {
               />
             ))}
         </div>
-      </section>
-      <section className={styles.actions}>
-        <Button
-          onClick={() =>
-            setRoute({
-              path: Path.send,
-              denom,
-              previusPage: route,
-            })
-          }
-        >
-          {t("Send")}
-        </Button>
-        <Button
-          onClick={() =>
-            setRoute({
-              path: Path.receive,
-              previusPage: route,
-            })
-          }
-        >
-          {t("Receive")}
-        </Button>
       </section>
     </>
   )
