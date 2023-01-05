@@ -2,6 +2,7 @@ import axios from "axios"
 import { ASSETS } from "config/constants"
 import { WhitelistProvider } from "data/queries/chains"
 import { PropsWithChildren, useEffect, useState } from "react"
+import NetworkLoading from "./NetworkLoading"
 
 type Whitelist = Record<
   string,
@@ -26,7 +27,8 @@ const InitChains = ({ children }: PropsWithChildren<{}>) => {
     })()
   }, [])
 
-  if (!data) return null
+  if (!data)
+    return <NetworkLoading title="Connecting to available networks..." />
 
   return <WhitelistProvider value={data}>{children}</WhitelistProvider>
 }
