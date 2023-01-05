@@ -256,7 +256,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
         )
         const isMises = isMisesWallet();
         if (isMises) {
-          await provider.enable("mainnet")
+          await provider.enable(chainID)
           await provider.signAmino(chainID, address, doc.toAmino(), {});
         }
 
@@ -292,7 +292,11 @@ function Tx<TxValues>(props: Props<TxValues>) {
               },
             ],
           })
-        setLatestTx({ txhash: result.transactionHash, queryKeys, redirectAfterTx })
+        console.log(result)
+        setLatestTx({ txhash: result.transactionHash || result.txHash, queryKeys, redirectAfterTx })
+        logEvent(analytics, "portal_success", {
+          success_message: result.transactionHash || result.txHash
+        })
       }
       onPost?.()
     } catch (error: any) {
@@ -300,10 +304,11 @@ function Tx<TxValues>(props: Props<TxValues>) {
         setIncorrect(error.message)
       }else{ 
         setError(error as Error)
-        logEvent(analytics, "portal_error", {
-          error_message: error?.message || "portal-staking-error" 
-        })
       }
+      console.log(error)
+      logEvent(analytics, "portal_error", {
+        error_message: error?.message || "portal-staking-error" 
+      })
     }
 
     setSubmitting(false)
