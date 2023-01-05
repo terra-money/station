@@ -12,7 +12,7 @@ import { has } from "utils/num"
 import { sortCoins } from "utils/coin"
 import { queryKey, RefetchOptions } from "../query"
 import { useAddress } from "../wallet"
-import { useInterchainLCDClient, useLCDClient } from "./lcdClient"
+import { useInterchainLCDClient } from "./lcdClient"
 import { CalcValue } from "./coingecko"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 
@@ -59,8 +59,9 @@ export const useCommunityPool = (chain: string) => {
 }
 
 /* commission */
+// TODO: make interchain
 export const useValidatorCommission = () => {
-  const lcd = useLCDClient()
+  const lcd = useInterchainLCDClient()
   const address = useAddress()
 
   return useQuery(
@@ -77,8 +78,9 @@ export const useValidatorCommission = () => {
   )
 }
 
+// TODO: make interchain
 export const useWithdrawAddress = () => {
-  const lcd = useLCDClient()
+  const lcd = useInterchainLCDClient()
   const address = useAddress()
 
   return useQuery(
@@ -118,7 +120,6 @@ export const calcRewardsValues = (
   calcValue: CalcValue
 ) => {
   const calc = (coins: Coins) => {
-    // @ts-expect-error
     const list = sortCoins(coins, currency).filter(({ amount }) => has(amount))
     const sum = BigNumber.sum(
       ...list.map((item) => calcValue(item) ?? 0)

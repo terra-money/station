@@ -2,10 +2,10 @@ import { useTranslation } from "react-i18next"
 import { useQuery } from "react-query"
 import { useForm } from "react-hook-form"
 import { readAmount, readDenom } from "@terra.kitchen/utils"
-import { MnemonicKey, AccAddress } from "@terra-money/terra.js"
-import { Coins, Delegation, UnbondingDelegation } from "@terra-money/terra.js"
+import { MnemonicKey, AccAddress } from "@terra-money/feather.js"
+import { Coins, Delegation, UnbondingDelegation } from "@terra-money/feather.js"
 import { sortCoins } from "utils/coin"
-import { useLCDClient } from "data/queries/lcdClient"
+import { useInterchainLCDClient } from "data/queries/lcdClient"
 import { useCurrency } from "data/settings/Currency"
 import { useThemeAnimation } from "data/settings/Theme"
 import { Flex, Grid } from "components/layout"
@@ -18,7 +18,7 @@ import styles from "./SelectAddress.module.scss"
 const SelectAddress = () => {
   const { t } = useTranslation()
   const currency = useCurrency()
-  const lcd = useLCDClient()
+  const lcd = useInterchainLCDClient()
   const { values, createWallet } = useCreateWallet()
   const { mnemonic, index } = values
 
@@ -30,7 +30,7 @@ const SelectAddress = () => {
       const results = await Promise.allSettled(
         ([118, 330] as const).map(async (bip) => {
           const mk = new MnemonicKey({ mnemonic, coinType: bip, index })
-          const address = mk.accAddress
+          const address = mk.accAddress("terra")
           const [balance] = await lcd.bank.balance(address)
           const [delegations] = await lcd.staking.delegations(address)
           const [unbondings] = await lcd.staking.unbondingDelegations(address)

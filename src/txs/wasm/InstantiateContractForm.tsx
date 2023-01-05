@@ -3,11 +3,11 @@ import { useTranslation } from "react-i18next"
 import { useFieldArray, useForm } from "react-hook-form"
 import AddIcon from "@mui/icons-material/Add"
 import RemoveIcon from "@mui/icons-material/Remove"
-import { AccAddress } from "@terra-money/terra.js"
-import { MsgInstantiateContract } from "@terra-money/terra.js"
+import { AccAddress } from "@terra-money/feather.js"
+import { MsgInstantiateContract } from "@terra-money/feather.js"
 import { SAMPLE_ADDRESS } from "config/constants"
 import { parseJSON, validateMsg } from "utils/data"
-import { useAddress } from "data/wallet"
+import { useAddress, useChainID } from "data/wallet"
 import { useBankBalance } from "data/queries/bank"
 import { WithTokenItem } from "data/token"
 import { Form, FormGroup, FormItem } from "components/form"
@@ -25,10 +25,12 @@ interface TxValues {
   label?: string
 }
 
+// TODO: make this interchain
 const InstantiateContractForm = () => {
   const { t } = useTranslation()
   const address = useAddress()
   const bankBalance = useBankBalance()
+  const chainID = useChainID()
 
   /* tx context */
   const initialGasDenom = getInitialGasDenom()
@@ -68,9 +70,9 @@ const InstantiateContractForm = () => {
         ),
       ]
 
-      return { msgs }
+      return { msgs, chainID }
     },
-    [address, findDecimals]
+    [address, chainID, findDecimals]
   )
 
   /* fee */
@@ -83,6 +85,7 @@ const InstantiateContractForm = () => {
     createTx,
     onSuccess: { label: t("Contract"), path: "/contract" },
     taxRequired: true,
+    chain: chainID,
   }
 
   const length = fields.length

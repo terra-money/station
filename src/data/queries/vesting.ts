@@ -3,8 +3,8 @@ import axios from "axios"
 import BigNumber from "bignumber.js"
 import { isFuture, isPast } from "date-fns"
 import { last } from "ramda"
-import { useAddress } from "../wallet"
-import { useLCDClient } from "./lcdClient"
+import { useAddress, useChainID } from "../wallet"
+import { useInterchainLCDClient } from "./lcdClient"
 
 /* types */
 interface Coin {
@@ -153,13 +153,15 @@ export const queryAccounts = async (address: string, lcd: string) => {
   return data.account
 }
 
+// TODO: make interchain
 export const useAccount = () => {
   const address = useAddress()
-  const lcd = useLCDClient()
+  const chainID = useChainID()
+  const lcd = useInterchainLCDClient()
 
   return useQuery(["accounts", address], async () => {
     if (!address) return null
-    return await queryAccounts(address, lcd.config.URL)
+    return await queryAccounts(address, lcd.config[chainID].lcd)
   })
 }
 

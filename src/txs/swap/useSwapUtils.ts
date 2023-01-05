@@ -1,15 +1,15 @@
 import { useCallback } from "react"
 import BigNumber from "bignumber.js"
 import { fromPairs, zipObj } from "ramda"
-import { Coin, Coins, MsgExecuteContract, MsgSwap } from "@terra-money/terra.js"
+import { Coin, Coins, MsgExecuteContract } from "@terra-money/feather.js"
 import { isDenom, isDenomLuna } from "@terra.kitchen/utils"
-import { isDenomTerra, isDenomTerraNative } from "@terra.kitchen/utils"
+import { isDenomTerra } from "@terra.kitchen/utils"
 import { TERRASWAP_COMMISSION_RATE } from "config/constants"
 import { has, toPrice } from "utils/num"
 import { toAsset, toAssetInfo, toTokenItem } from "utils/coin"
 import { toBase64 } from "utils/data"
 import { useAddress } from "data/wallet"
-import { useLCDClient } from "data/queries/lcdClient"
+import { useInterchainLCDClient } from "data/queries/lcdClient"
 import { useSwap } from "./SwapContext"
 import { SwapSpread } from "./SingleSwapContext"
 
@@ -17,7 +17,6 @@ import { SwapSpread } from "./SingleSwapContext"
 Then, various helper functions will be generated based on the fetched data. */
 
 export enum SwapMode {
-  ONCHAIN = "Market",
   TERRASWAP = "Terraswap",
   ASTROPORT = "Astroport",
   ROUTESWAP = "Route",
@@ -52,7 +51,7 @@ export type PayloadRouteswap = string[]
 
 const useSwapUtils = () => {
   const address = useAddress()
-  const lcd = useLCDClient()
+  const lcd = useInterchainLCDClient()
   const context = useSwap()
   const { pairs, contracts } = context
 
@@ -75,14 +74,6 @@ const useSwapUtils = () => {
     [pairs]
   )
 
-  /* determine swap mode */
-  const getIsOnchainAvailable = useCallback(
-    ({ offerAsset, askAsset }: SwapAssets) => {
-      return [offerAsset, askAsset].every(isDenomTerraNative)
-    },
-    []
-  )
-
   const getIsTerraswapAvailable = useCallback(
     (assets: SwapAssets) => !!findPair(assets, "terraswap"),
     [findPair]
@@ -96,20 +87,15 @@ const useSwapUtils = () => {
   const getIsRouteswapAvaialble = useCallback(
     (assets: SwapAssets) => {
       if (!contracts) return false
-      if (getIsOnchainAvailable(assets)) return false
       if (getIsTerraswapAvailable(assets)) return false
 
-      const r0 =
-        getIsOnchainAvailable({ ...assets, askAsset: "uusd" }) ||
-        getIsTerraswapAvailable({ ...assets, askAsset: "uusd" })
+      const r0 = getIsTerraswapAvailable({ ...assets, askAsset: "uusd" })
 
-      const r1 =
-        getIsOnchainAvailable({ ...assets, offerAsset: "uusd" }) ||
-        getIsTerraswapAvailable({ ...assets, offerAsset: "uusd" })
+      const r1 = getIsTerraswapAvailable({ ...assets, offerAsset: "uusd" })
 
       return r0 && r1
     },
-    [contracts, getIsOnchainAvailable, getIsTerraswapAvailable]
+    [contracts, getIsTerraswapAvailable]
   )
 
   const getAvailableSwapModes = useCallback(
@@ -117,7 +103,6 @@ const useSwapUtils = () => {
       if (!validateAssets(assets)) return []
 
       const functions = {
-        [SwapMode.ONCHAIN]: getIsOnchainAvailable,
         [SwapMode.TERRASWAP]: getIsTerraswapAvailable,
         [SwapMode.ASTROPORT]: getIsAstroportAvailable,
         [SwapMode.ROUTESWAP]: getIsRouteswapAvaialble,
@@ -127,12 +112,7 @@ const useSwapUtils = () => {
         .filter(([, fn]) => fn(assets))
         .map(([key]) => key as SwapMode)
     },
-    [
-      getIsOnchainAvailable,
-      getIsTerraswapAvailable,
-      getIsAstroportAvailable,
-      getIsRouteswapAvaialble,
-    ]
+    [getIsTerraswapAvailable, getIsAstroportAvailable, getIsRouteswapAvaialble]
   )
 
   const getIsSwapAvailable = (assets: Partial<SwapAssets>) =>
@@ -147,67 +127,12 @@ const useSwapUtils = () => {
           ? SwapMode.TERRASWAP
           : SwapMode.ROUTESWAP
       }
-
-      return SwapMode.ONCHAIN
     },
     [getIsTerraswapAvailable]
   )
 
   /* simulate | execute */
   type SimulateFn<T = any> = (params: SwapParams) => Promise<SimulateResult<T>>
-  const getOnchainParams = useCallback(
-    ({ amount, offerAsset, askAsset, minimum_receive }: SwapParams) => {
-      if (!address) return { msgs: [] }
-
-      const getAssertMessage = () => {
-        if (!getAssertRequired({ offerAsset, askAsset })) return
-        if (!(contracts?.assertLimitOrder && minimum_receive)) return
-
-        return new MsgExecuteContract(address, contracts.assertLimitOrder, {
-          assert_limit_order: {
-            offer_coin: { denom: offerAsset, amount },
-            ask_denom: askAsset,
-            minimum_receive,
-          },
-        })
-      }
-
-      const assert = getAssertMessage()
-      const offerCoin = new Coin(offerAsset, amount)
-      const swap = new MsgSwap(address, offerCoin, askAsset)
-      return { msgs: assert ? [assert, swap] : [swap] }
-    },
-    [address, contracts]
-  )
-
-  const simulateOnchain = async (params: SwapParams) => {
-    const getRate = (denom: CoinDenom) => "1"
-
-    const { amount, offerAsset, askAsset } = params
-    const offerCoin = new Coin(offerAsset, amount)
-    const res = await lcd.market.swapRate(offerCoin, askAsset)
-    const result = res.amount.toString()
-
-    /* spread */
-    const offerRate = getRate(offerAsset)
-    const askRate = getRate(askAsset)
-    const rate = new BigNumber(offerRate).div(askRate)
-    const value = new BigNumber(amount).div(rate)
-    const spread = value.minus(result).toString()
-
-    if (!result) throw new Error("Simulation failed")
-
-    const ratio = toPrice(new BigNumber(amount).div(result))
-
-    return {
-      mode: SwapMode.ONCHAIN,
-      query: params,
-      value: result,
-      ratio,
-      rate: toPrice(rate),
-      payload: spread,
-    }
-  }
 
   const getTerraswapParams = useCallback(
     (params: SwapParams, dex: Dex) => {
@@ -286,7 +211,7 @@ const useSwapUtils = () => {
         const offer_asset_info = toAssetInfo(offerAsset)
         const ask_asset_info = toAssetInfo(askAsset)
         const buyLuna = isDenomTerra(offerAsset) && isDenomLuna(askAsset)
-        return buyLuna || !getIsOnchainAvailable({ offerAsset, askAsset })
+        return buyLuna
           ? { terra_swap: { offer_asset_info, ask_asset_info } }
           : { native_swap: { offer_denom: offerAsset, ask_denom: askAsset } }
       }
@@ -321,7 +246,7 @@ const useSwapUtils = () => {
 
       return { route, simulation, msgs }
     },
-    [address, contracts?.routeswap, getIsOnchainAvailable]
+    [address, contracts?.routeswap]
   )
 
   const simulateRouteswap: SimulateFn<Token[]> = async (params: SwapParams) => {
@@ -346,7 +271,6 @@ const useSwapUtils = () => {
 
   const getSimulateFunction = (mode: SwapMode) => {
     const simulationFunctions = {
-      [SwapMode.ONCHAIN]: simulateOnchain,
       [SwapMode.TERRASWAP]: simulateTerraswap,
       [SwapMode.ASTROPORT]: simulateAstroport,
       [SwapMode.ROUTESWAP]: simulateRouteswap,
@@ -358,8 +282,6 @@ const useSwapUtils = () => {
   const getMsgsFunction = useCallback(
     (mode: SwapMode) => {
       const getMsgs = {
-        [SwapMode.ONCHAIN]: (params: SwapParams) =>
-          getOnchainParams(params).msgs,
         [SwapMode.TERRASWAP]: (params: SwapParams) =>
           getTerraswapParams(params, "terraswap").msgs,
         [SwapMode.ASTROPORT]: (params: SwapParams) =>
@@ -370,12 +292,7 @@ const useSwapUtils = () => {
 
       return getMsgs[mode]
     },
-    [
-      getOnchainParams,
-      getTerraswapParams,
-      getAstroportParams,
-      getRouteswapParams,
-    ]
+    [getTerraswapParams, getAstroportParams, getRouteswapParams]
   )
 
   const getSimulateQuery = (params: Partial<SwapParams>) => ({
@@ -426,11 +343,6 @@ export const validateParams = (
   const { amount, ...assets } = params
   return has(amount) && validateAssets(assets)
 }
-
-/* determinant */
-const getAssertRequired = ({ offerAsset, askAsset }: SwapAssets) =>
-  [offerAsset, askAsset].some(isDenomTerra) &&
-  [offerAsset, askAsset].some(isDenomLuna)
 
 /* helpers */
 const findProfitable = (results: SimulateResult[]) => {

@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react"
 import { useTranslation } from "react-i18next"
-import { useLCDClient } from "data/queries/lcdClient"
+import { useInterchainLCDClient } from "data/queries/lcdClient"
 import { Pre } from "components/general"
 import { Auto, Card, Grid } from "components/layout"
 import { Wrong } from "components/feedback"
@@ -9,7 +9,7 @@ import { ReadMultiple } from "components/token"
 const ReadTx = (props: PropsWithChildren<{ tx: string }>) => {
   const { tx: encoded, children } = props
   const { t } = useTranslation()
-  const lcd = useLCDClient()
+  const lcd = useInterchainLCDClient()
 
   const decodeTx = (encoded: string) => {
     try {

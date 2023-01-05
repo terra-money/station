@@ -33,13 +33,11 @@ const ProposalDeposits = ({ id, chain, card }: Props) => {
       const deposited = deposits.reduce(
         (acc, { amount }) =>
           new BigNumber(acc)
-            // @ts-expect-error
             .plus(getAmount(amount, networks[chain].baseAsset))
             .toString(),
         "0"
       )
       const minimum = getAmount(
-        // @ts-expect-error
         depositParams.min_deposit,
         networks[chain].baseAsset
       )

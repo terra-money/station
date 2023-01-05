@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 import classNames from "classnames/bind"
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined"
 import { readPercent } from "@terra.kitchen/utils"
-import { ValAddress, Vote } from "@terra-money/terra.js"
+import { ValAddress, Vote } from "@terra-money/feather.js"
 import { combineState } from "data/query"
 import { useDelegations, useValidators } from "data/queries/staking"
 import { useGetVoteOptionItem } from "data/queries/gov"
@@ -67,7 +67,8 @@ const ProposalVotesByValidator = ({ id }: { id: number }) => {
 
       const getHasVoted = (address: ValAddress, option?: Vote.Option) => {
         return TerraProposal.some(({ voter, options }) => {
-          if (ValAddress.fromAccAddress(voter) !== address) return false
+          if (ValAddress.fromAccAddress(voter, "terra") !== address)
+            return false
 
           const voted = options.some(
             (o) => (Vote.Option[o.option] as unknown as Vote.Option) === option

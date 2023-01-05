@@ -2,7 +2,7 @@ import { PropsWithChildren, useMemo } from "react"
 import { flatten, uniq, zipObj } from "ramda"
 import BigNumber from "bignumber.js"
 import { isDenomIBC, toAmount } from "@terra.kitchen/utils"
-import { AccAddress } from "@terra-money/terra.js"
+import { AccAddress } from "@terra-money/feather.js"
 import { getAmount, sortDenoms } from "utils/coin"
 import { toPrice } from "utils/num"
 import createContext from "utils/createContext"
@@ -71,7 +71,7 @@ const SingleSwapContext = ({ children }: PropsWithChildren<{}>) => {
       .filter((denom) => ibcWhitelist[denom.replace("ibc/", "")])
 
     const cw20 = terraswapAvailableList
-      .filter(AccAddress.validate)
+      .filter((addr) => AccAddress.validate(addr))
       .filter((token) => cw20Whitelist[token])
 
     return { ibc, cw20 }
