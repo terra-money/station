@@ -1,9 +1,8 @@
 import { ReactNode } from "react"
 import { isDenomIBC } from "@terra.kitchen/utils"
 import { readDenom, truncate } from "@terra.kitchen/utils"
-import { AccAddress } from "@terra-money/terra.js"
+import { AccAddress } from "@terra-money/feather.js"
 import { ASSETS } from "config/constants"
-import { useIBCBaseDenom } from "./queries/ibc"
 import { useTokenInfoCW20 } from "./queries/wasm"
 import { useCustomTokensCW20 } from "./settings/CustomTokens"
 import { useCW20Whitelist, useIBCWhitelist } from "./Terra/TerraAssets"
@@ -32,12 +31,12 @@ export const useTokenItem = (token: Token): TokenItem | undefined => {
 
   /* IBC */
   // 1. Whitelist
-  const { data: ibcWhitelist = {}, ...ibcWhitelistState } = useIBCWhitelist()
+  const { data: ibcWhitelist = {} } = useIBCWhitelist()
   const listedIBCTokenItem = ibcWhitelist[token.replace("ibc/", "")]
 
   // 2. Query denom trace
-  const shouldQueryIBC = ibcWhitelistState.isSuccess && !listedIBCTokenItem
-  const { data: base_denom } = useIBCBaseDenom(token, shouldQueryIBC)
+  //const shouldQueryIBC = ibcWhitelistState.isSuccess && !listedIBCTokenItem
+  //const { data: base_denom } = useIBCBaseDenom(token, shouldQueryIBC)
 
   if (AccAddress.validate(token)) {
     return customTokenItem ?? listedCW20TokenItem ?? tokenInfoItem
@@ -47,7 +46,7 @@ export const useTokenItem = (token: Token): TokenItem | undefined => {
     const item = {
       ...listedIBCTokenItem,
       denom: token,
-      base_denom: listedIBCTokenItem?.base_denom ?? base_denom,
+      base_denom: listedIBCTokenItem?.base_denom,
     }
 
     return readIBCDenom(item)

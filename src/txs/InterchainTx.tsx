@@ -224,7 +224,6 @@ function InterchainTx<TxValues>(props: Props<TxValues>) {
       if (isWallet.multisig(wallet)) {
         // TODO: broadcast only to terra if wallet is multisig
         const unsignedTx = await auth.create({ ...tx, fee })
-        // @ts-expect-error
         navigate(toPostMultisigTx(unsignedTx))
       } else if (wallet) {
         const result = await auth.post({ ...tx, fee }, password)

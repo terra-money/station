@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
-import { AccAddress, MsgMigrateContract } from "@terra-money/terra.js"
+import { AccAddress, MsgMigrateContract } from "@terra-money/feather.js"
 import { parseJSON, validateMsg } from "utils/data"
-import { useAddress } from "data/wallet"
+import { useAddress, useChainID } from "data/wallet"
 import { Form, FormItem } from "components/form"
 import { Input, EditorInput } from "components/form"
 import validate from "../validate"
@@ -14,10 +14,12 @@ interface TxValues {
   msg?: string
 }
 
+// TODO: make this interchain
 const MigrateContractForm = ({ contract }: { contract: AccAddress }) => {
   const { t } = useTranslation()
 
   const address = useAddress()
+  const chainID = useChainID()
 
   /* tx context */
   const initialGasDenom = getInitialGasDenom()
@@ -40,9 +42,9 @@ const MigrateContractForm = ({ contract }: { contract: AccAddress }) => {
         new MsgMigrateContract(address, contract, code_id, migrate_msg),
       ]
 
-      return { msgs }
+      return { msgs, chainID }
     },
-    [address, contract]
+    [address, chainID, contract]
   )
 
   /* fee */
@@ -53,6 +55,7 @@ const MigrateContractForm = ({ contract }: { contract: AccAddress }) => {
     estimationTxValues,
     createTx,
     onSuccess: { label: t("Contract"), path: "/contract" },
+    chain: chainID,
   }
 
   return (

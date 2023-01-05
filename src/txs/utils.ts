@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js"
 import { readAmount, toAmount } from "@terra.kitchen/utils"
-import { Coin, Coins } from "@terra-money/terra.js"
+import { Coin, Coins } from "@terra-money/feather.js"
 import { has } from "utils/num"
 import { FindDecimals } from "./IBCHelperContext"
 

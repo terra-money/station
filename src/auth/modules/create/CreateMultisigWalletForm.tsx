@@ -4,11 +4,11 @@ import { useFieldArray, useForm } from "react-hook-form"
 import axios from "axios"
 import AddIcon from "@mui/icons-material/Add"
 import RemoveIcon from "@mui/icons-material/Remove"
-import { AccAddress, SimplePublicKey } from "@terra-money/terra.js"
-import { LegacyAminoMultisigPublicKey } from "@terra-money/terra.js"
+import { AccAddress, SimplePublicKey } from "@terra-money/feather.js"
+import { LegacyAminoMultisigPublicKey } from "@terra-money/feather.js"
 import { SAMPLE_ADDRESS } from "config/constants"
 import { getErrorMessage } from "utils/error"
-import { useLCDClient } from "data/queries/lcdClient"
+import { useInterchainLCDClient } from "data/queries/lcdClient"
 import { Grid } from "components/layout"
 import { Form, FormGroup, FormItem } from "components/form"
 import { FormError, FormWarning } from "components/form"
@@ -26,7 +26,7 @@ interface Props {
 
 const CreateMultisigWalletForm = ({ onCreated }: Props) => {
   const { t } = useTranslation()
-  const lcd = useLCDClient()
+  const lcd = useInterchainLCDClient()
 
   /* form */
   const defaultValues = {
@@ -45,7 +45,9 @@ const CreateMultisigWalletForm = ({ onCreated }: Props) => {
   const [error, setError] = useState<Error>()
 
   const paste = async (lines: string[]) => {
-    const values = lines.filter(AccAddress.validate).map((value) => ({ value }))
+    const values = lines
+      .filter((addr) => AccAddress.validate(addr, "terra"))
+      .map((value) => ({ value }))
     if (values.length) fieldArray.replace(values)
   }
 

@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { LegacyAminoMultisigPublicKey } from "@terra-money/terra.js"
-import { useAddress } from "data/wallet"
+import { LegacyAminoMultisigPublicKey } from "@terra-money/feather.js"
+import { useChainID } from "data/wallet"
 import { useAccountInfo } from "data/queries/auth"
 import { Card, Grid, Page } from "components/layout"
 import { FormHelp } from "components/form"
@@ -12,10 +12,12 @@ import CreateMultisigWalletForm from "auth/modules/create/CreateMultisigWalletFo
 import ConfirmModal from "auth/modules/manage/ConfirmModal"
 import useDefaultValues from "./utils/useDefaultValues"
 import PostMultisigTxForm from "./PostMultisigTxForm"
+import { useInterchainAddresses } from "auth/hooks/useAddress"
 
 const PostMultisigTxPage = () => {
   const { t } = useTranslation()
-  const address = useAddress()
+  const addresses = useInterchainAddresses()
+  const chainID = useChainID()
   const { wallet } = useAuth()
 
   /* account info */
@@ -27,7 +29,7 @@ const PostMultisigTxPage = () => {
   const [errorMessage, setErrorMessage] = useState<string>()
 
   const onCreated = (publicKey: LegacyAminoMultisigPublicKey) => {
-    if (publicKey.address() !== address)
+    if (publicKey.address("terra") !== addresses?.[chainID])
       setErrorMessage(t("Data does not match the connected wallet"))
     else setPublicKeyFromNetwork(publicKey)
   }
@@ -35,7 +37,7 @@ const PostMultisigTxPage = () => {
   /* render */
   const defaultValues = useDefaultValues()
   const render = () => {
-    if (!(account && address)) return null
+    if (!(account && addresses?.[chainID])) return null
 
     if (!isWallet.multisig(wallet))
       return (
@@ -68,7 +70,7 @@ const PostMultisigTxPage = () => {
       )
 
     const signatures = publicKey.pubkeys.map((pubKey) => {
-      const address = pubKey.address()
+      const address = pubKey.address("terra")
       const publicKey = pubKey.toData()
       return { address, publicKey, signature: "" }
     })
@@ -77,7 +79,11 @@ const PostMultisigTxPage = () => {
       <PostMultisigTxForm
         publicKey={publicKey}
         sequence={sequence}
-        defaultValues={{ ...defaultValues, address, signatures }}
+        defaultValues={{
+          ...defaultValues,
+          address: addresses[chainID],
+          signatures,
+        }}
       />
     )
   }

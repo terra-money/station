@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { AccAddress, Dec } from "@terra-money/terra.js"
+import { AccAddress, Dec } from "@terra-money/feather.js"
 import { getMaxHeightStyle } from "utils/style"
 import { combineState } from "data/query"
 import { useMemoizedPrices } from "data/queries/coingecko"

@@ -2,7 +2,7 @@ import { useQuery } from "react-query"
 import { Buffer } from "buffer"
 import keccak256 from "keccak256"
 import { queryKey, RefetchOptions } from "../query"
-import { useLCDClient } from "../queries/lcdClient"
+import { useInterchainLCDClient } from "../queries/lcdClient"
 import { useTerraContracts } from "../Terra/TerraAssets"
 
 /**
@@ -12,7 +12,7 @@ import { useTerraContracts } from "../Terra/TerraAssets"
  * @returns The terra address of the specified name, null if not resolvable
  */
 export const useTnsAddress = (name: string) => {
-  const lcd = useLCDClient()
+  const lcd = useInterchainLCDClient()
   const { data: contracts } = useTerraContracts()
 
   return useQuery(
@@ -57,7 +57,7 @@ export const useTnsAddress = (name: string) => {
  * @returns The TNS name of the specified address, null if not resolvable
  */
 export const useTnsName = (address: string) => {
-  const lcd = useLCDClient()
+  const lcd = useInterchainLCDClient()
   const { data: contracts } = useTerraContracts()
 
   return useQuery(
