@@ -6,8 +6,7 @@ import { useAddress, useChainID } from "data/wallet"
 import { Account, parseVestingSchedule } from "data/queries/vesting"
 import { Form, FormItem, Input } from "components/form"
 import { toInput } from "txs/utils"
-import { getInitialGasDenom } from "../Tx"
-import InterchainTx from "../Tx"
+import Tx from "../Tx"
 
 const DonateAllVestingTokensForm = ({ account }: { account: Account }) => {
   const { t } = useTranslation()
@@ -15,9 +14,6 @@ const DonateAllVestingTokensForm = ({ account }: { account: Account }) => {
   const chainID = useChainID()
   const schedule = parseVestingSchedule(account)
   const balance = schedule.amount.total
-
-  /* tx context */
-  const initialGasDenom = getInitialGasDenom()
 
   /* form */
   const { handleSubmit } = useForm({ mode: "onChange" })
@@ -33,14 +29,13 @@ const DonateAllVestingTokensForm = ({ account }: { account: Account }) => {
   const estimationTxValues = useMemo(() => ({}), [])
 
   const tx = {
-    initialGasDenom,
     estimationTxValues,
     createTx,
     chain: chainID,
   }
 
   return (
-    <InterchainTx {...tx}>
+    <Tx {...tx}>
       {({ fee, submit }) => (
         <Form onSubmit={handleSubmit(submit.fn)}>
           <FormItem label={t("Amount")}>
@@ -50,7 +45,7 @@ const DonateAllVestingTokensForm = ({ account }: { account: Account }) => {
           {submit.button}
         </Form>
       )}
-    </InterchainTx>
+    </Tx>
   )
 }
 

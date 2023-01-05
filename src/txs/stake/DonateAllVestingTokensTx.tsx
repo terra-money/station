@@ -4,7 +4,6 @@ import { isVestingAccount, useAccount } from "data/queries/vesting"
 import { useDelegations, useUnbondings } from "data/queries/staking"
 import { Page, Card } from "components/layout"
 import { Wrong } from "components/feedback"
-import TxContext from "../TxContext"
 import DonateAllVestingTokensForm from "./DonateAllVestingTokensForm"
 import { useChainID } from "data/wallet"
 
@@ -26,11 +25,7 @@ const DonateAllVestingTokensTx = () => {
     if (delegations.length || unbondings.length)
       return <Wrong>{t("All Luna must be undelegated")}</Wrong>
 
-    return (
-      <TxContext>
-        <DonateAllVestingTokensForm account={account} />
-      </TxContext>
-    )
+    return <DonateAllVestingTokensForm account={account} />
   }
 
   return (

@@ -26,8 +26,7 @@ import { Input, TextArea, Select } from "components/form"
 import { TooltipIcon } from "components/display"
 import { getCoins, getPlaceholder, toInput } from "../utils"
 import validate from "../validate"
-import { getInitialGasDenom } from "../Tx"
-import InterchainTx from "txs/InterchainTx"
+import Tx from "../Tx"
 import { useCommunityPool } from "data/queries/distribution"
 import { useDepositParams } from "data/queries/gov"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
@@ -90,8 +89,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
     "0"
 
   /* tx context */
-  const initialGasDenom = getInitialGasDenom()
-  const defaultCoinItem = { denom: initialGasDenom }
+  const defaultCoinItem = { denom: networks[chain].baseAsset }
 
   const { data: communityPool, ...communityPoolState } = useCommunityPool(chain)
   const { data: depositParams, ...depositParamsState } = useDepositParams(chain)
@@ -201,7 +199,6 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
     token: networks[chain].baseAsset,
     amount,
     balance,
-    initialGasDenom,
     estimationTxValues,
     createTx,
     onChangeMax,
@@ -395,7 +392,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
 
   return (
     <Card {...state} inputCard>
-      <InterchainTx {...tx}>
+      <Tx {...tx}>
         {({ max, fee, submit }) => (
           <Form onSubmit={handleSubmit(submit.fn)}>
             <Grid gap={4}>
@@ -495,7 +492,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
             {submit.button}
           </Form>
         )}
-      </InterchainTx>
+      </Tx>
     </Card>
   )
 }

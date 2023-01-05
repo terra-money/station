@@ -19,7 +19,7 @@ import { Form, FormArrow, FormItem, Checkbox } from "components/form"
 import { Card, Flex, Grid } from "components/layout"
 import { TokenCard, TokenCardGrid } from "components/token"
 import styles from "./WithdrawRewardsForm.module.scss"
-import InterchainTx from "txs/InterchainTx"
+import Tx from "txs/Tx"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 
 interface Props {
@@ -130,7 +130,7 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
   }
 
   return (
-    <InterchainTx {...tx}>
+    <Tx {...tx}>
       {({ fee, submit }) => (
         <Form onSubmit={handleSubmit(submit.fn)}>
           <Grid gap={12}>
@@ -221,7 +221,7 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
           {submit.button}
         </Form>
       )}
-    </InterchainTx>
+    </Tx>
   )
 }
 
