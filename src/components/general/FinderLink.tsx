@@ -1,4 +1,4 @@
-import { ForwardedRef, HTMLAttributes, PropsWithChildren } from "react"
+import { ForwardedRef, HTMLAttributes, PropsWithChildren, useMemo } from "react"
 import { forwardRef } from "react"
 import classNames from "classnames"
 import { truncate } from "@terra.kitchen/utils"
@@ -28,14 +28,12 @@ const FinderLink = forwardRef(
     const { block, tx, validator, chainID, ...attrs } = rest
     const networkName = useNetworkName() // mainnet or testnet for Terra
     const networks = useNetwork()
-
     const value = rest.value ?? children
-    const targetChainId =
-      typeof value === "string"
-        ? getChainIDFromAddress(value, networks)
-        : chainID
 
-    const chainName = getChainNamefromID(targetChainId, networks)
+    const chainName = useMemo(() => {
+      const targetChainId = chainID || getChainIDFromAddress(value, networks)
+      return getChainNamefromID(targetChainId, networks)
+    }, [value, chainID, networks])
 
     const interchainPath = tx
       ? "txs"
