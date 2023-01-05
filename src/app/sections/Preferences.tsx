@@ -8,9 +8,11 @@ import HeaderIconButton from "../components/HeaderIconButton"
 import NetworkSetting from "./NetworkSetting"
 import LanguageSetting from "./LanguageSetting"
 import CurrencySetting from "./CurrencySetting"
+import { useWallet, WalletStatus } from "@terra-money/wallet-provider"
 
 const Preferences = () => {
   const { t } = useTranslation()
+  const connectedWallet = useWallet()
 
   const network = {
     key: "network",
@@ -35,7 +37,8 @@ const Preferences = () => {
 
   const tabs = [network, lang, currency].filter(({ condition }) => {
     if (!condition) return true
-    if (condition.includes("sandbox")) return sandbox
+    if (condition.includes("sandbox"))
+      return sandbox || connectedWallet.status !== WalletStatus.WALLET_CONNECTED
     return true
   })
 
