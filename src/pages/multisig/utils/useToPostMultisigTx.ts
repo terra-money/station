@@ -1,11 +1,11 @@
 import qs from "qs"
-import { Tx as UnsignedTx } from "@terra-money/terra.js"
+import { Tx as UnsignedTx } from "@terra-money/feather.js"
 import { useAddress } from "data/wallet"
-import { useLCDClient } from "data/queries/lcdClient"
+import { useInterchainLCDClient } from "data/queries/lcdClient"
 
 const useToPostMultisigTx = () => {
   const address = useAddress()
-  const lcd = useLCDClient()
+  const lcd = useInterchainLCDClient()
 
   return (tx: UnsignedTx) => {
     const pathname = "/multisig/post"

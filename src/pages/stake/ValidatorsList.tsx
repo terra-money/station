@@ -2,7 +2,7 @@ import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 import { readPercent } from "@terra.kitchen/utils"
-import { Validator } from "@terra-money/terra.js"
+import { Validator } from "@terra-money/feather.js"
 /* FIXME(terra.js): Import from terra.js */
 import { BondStatus } from "@terra-money/terra.proto/cosmos/staking/v1beta1/staking"
 import { bondStatusFromJSON } from "@terra-money/terra.proto/cosmos/staking/v1beta1/staking"

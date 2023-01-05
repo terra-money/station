@@ -1,7 +1,7 @@
 import { PropsWithChildren, useMemo } from "react"
 import { zipObj } from "ramda"
 import { isDenomIBC } from "@terra.kitchen/utils"
-import { AccAddress } from "@terra-money/terra.js"
+import { AccAddress } from "@terra-money/feather.js"
 import { getAmount } from "utils/coin"
 import createContext from "utils/createContext"
 import { combineState } from "data/query"
@@ -64,7 +64,7 @@ const TFMSwapContext = ({ children }: PropsWithChildren<{}>) => {
       .filter((denom) => ibcWhitelist[denom.replace("ibc/", "")])
 
     const cw20 = tokens
-      .filter(AccAddress.validate)
+      .filter((addr) => AccAddress.validate(addr))
       .filter((token) => cw20Whitelist[token])
 
     return { ibc, cw20 }

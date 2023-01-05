@@ -98,8 +98,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
   const state = combineState(communityPoolState, depositParamsState)
   //if(!depositParams || communityPool) return null
   const minDeposit = depositParams
-    ? // @ts-expect-error
-      getAmount(depositParams.min_deposit, networks[chain].baseAsset)
+    ? getAmount(depositParams.min_deposit, networks[chain].baseAsset)
     : 0
 
   /* form */
@@ -164,7 +163,6 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
             runAs,
             contractAddress,
             execute_msg,
-            // @ts-expect-error
             coins
           )
         }

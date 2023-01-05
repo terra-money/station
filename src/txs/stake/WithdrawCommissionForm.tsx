@@ -1,11 +1,11 @@
 import { useCallback, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
-import { ValAddress } from "@terra-money/terra.js"
-import { MsgWithdrawValidatorCommission } from "@terra-money/terra.js"
+import { ValAddress } from "@terra-money/feather.js"
+import { MsgWithdrawValidatorCommission } from "@terra-money/feather.js"
 import { sortCoins } from "utils/coin"
 import { useCurrency } from "data/settings/Currency"
-import { useAddress } from "data/wallet"
+import { useAddress, useChainID } from "data/wallet"
 import { useMemoizedCalcValue } from "data/queries/coingecko"
 import { useValidatorCommission } from "data/queries/distribution"
 import { useWithdrawAddress } from "data/queries/distribution"
@@ -14,10 +14,12 @@ import { Form, FormArrow, Input } from "components/form"
 import { TokenCard, TokenCardGrid } from "components/token"
 import Tx, { getInitialGasDenom } from "../Tx"
 
+// TODO: make this interchain
 const WithdrawCommissionForm = () => {
   const { t } = useTranslation()
   const currency = useCurrency()
   const address = useAddress()
+  const chainID = useChainID()
   const calcValue = useMemoizedCalcValue()
 
   /* tx context */
@@ -29,10 +31,10 @@ const WithdrawCommissionForm = () => {
   /* tx */
   const createTx = useCallback(() => {
     if (!address) return
-    const validatorAddress = ValAddress.fromAccAddress(address)
+    const validatorAddress = ValAddress.fromAccAddress(address, "terra")
     const msgs = [new MsgWithdrawValidatorCommission(validatorAddress)]
-    return { msgs }
-  }, [address])
+    return { msgs, chainID }
+  }, [address, chainID])
 
   /* fee */
   const estimationTxValues = useMemo(() => ({}), [])
@@ -42,6 +44,7 @@ const WithdrawCommissionForm = () => {
     estimationTxValues,
     createTx,
     onSuccess: { label: t("Stake"), path: "/stake" },
+    chain: chainID,
   }
 
   /* render */
@@ -54,7 +57,6 @@ const WithdrawCommissionForm = () => {
     const sorter = (a: CoinData, b: CoinData) =>
       Number(calcValue(b)) - Number(calcValue(a))
 
-    // @ts-expect-error
     const list = sortCoins(validatorCommission, currency.id, sorter)
 
     return (

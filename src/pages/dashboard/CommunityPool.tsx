@@ -16,10 +16,8 @@ const CommunityPool = () => {
 
   const render = () => {
     if (!data) return null
-    // @ts-expect-error
     const amount = getAmount(data, "uluna")
     const value = <Read amount={amount} denom="uluna" prefix />
-    // @ts-expect-error
     const list = sortCoins(data)
       .map((item) => ({ ...item, value: calcValue(item) }))
       .sort(({ value: a }, { value: b }) => Number(b) - Number(a))

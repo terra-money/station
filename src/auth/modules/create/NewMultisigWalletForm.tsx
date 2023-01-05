@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
-import { LegacyAminoMultisigPublicKey } from "@terra-money/terra.js"
+import { LegacyAminoMultisigPublicKey } from "@terra-money/feather.js"
 import { Form, FormItem } from "components/form"
 import { Input, Submit } from "components/form"
 import { Modal } from "components/feedback"
@@ -33,7 +33,7 @@ const NewMultisigWalletForm = () => {
 
   const submit = async ({ name }: Values) => {
     if (!publicKey) return
-    const address = publicKey.address()
+    const address = publicKey.address("terra")
     const words = { "330": wordsFromAddress(address) }
     const wallet = { name, words, multisig: true as const }
 

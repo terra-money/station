@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import UsbIcon from "@mui/icons-material/Usb"
+import BluetoothIcon from "@mui/icons-material/Bluetooth"
 import { LedgerKey } from "@terra-money/ledger-station-js"
 import { Form, FormError, FormItem, FormWarning } from "components/form"
 import { Checkbox, Input, Submit } from "components/form"
@@ -111,8 +112,17 @@ const AccessWithLedgerForm = () => {
         return (
           <>
             <section className="center">
-              <UsbIcon style={{ fontSize: 56 }} />
-              <p>{t("Plug in a Ledger device")}</p>
+              {bluetooth ? (
+                <>
+                  <BluetoothIcon style={{ fontSize: 56 }} />
+                  <p>{t("Turn on your Ledger device")}</p>
+                </>
+              ) : (
+                <>
+                  <UsbIcon style={{ fontSize: 56 }} />
+                  <p>{t("Plug in a Ledger device")}</p>
+                </>
+              )}
             </section>
 
             <FormItem /* do not translate this */
