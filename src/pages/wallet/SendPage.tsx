@@ -333,6 +333,7 @@ const SendPage = () => {
                     validate: {
                       size: validate.size(256, "Memo"),
                       brackets: validate.memo(),
+                      mnemonic: validate.isNotMnemonic(),
                     },
                   })}
                 />

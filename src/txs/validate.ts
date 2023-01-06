@@ -2,6 +2,7 @@ import { always } from "ramda"
 import BigNumber from "bignumber.js"
 import { AccAddress } from "@terra-money/feather.js"
 import { validateMsg } from "utils/data"
+import wordlist from "bip39/src/wordlists/english.json"
 
 const lessThan = (max: number, label = "Amount", optional = false) => {
   return (value = 0) => {
@@ -68,6 +69,15 @@ const memo = () => (value?: string) => {
   )
 }
 
+const isNotMnemonic = () => (value?: string) => {
+  if (!value) return
+  const seed = value.trim().split(" ")
+  if (seed.length === 12 || seed.length === 24) {
+    const isNotMnemonic = seed.find((word) => !wordlist.includes(word))
+    return isNotMnemonic || `You cannot enter a mnemonic in the memo field.`
+  }
+}
+
 const msg = () => {
   return (value?: string) => {
     if (!value) return `Msg is required`
@@ -83,6 +93,7 @@ const validate = {
   address,
   size,
   memo,
+  isNotMnemonic,
   msg,
 }
 

@@ -1,5 +1,5 @@
 import { getStoredWallet } from "./keystore"
-import wordlist from "./wordlist.json"
+import wordlist from "bip39/src/wordlists/english.json"
 
 const validate = {
   name: {
