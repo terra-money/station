@@ -43,9 +43,9 @@
   },
   "Loading": {
     "Initializing app...": "Initialisiere App...",
-    "Loading...": "Lädt...",
+    "Loading...": "Am Laden...",
     "Load more": "Mehr laden",
-    "Loading more...": "Wird geladen...",
+    "Loading more...": "Es wird mehr geladen...",
     "Nothing more to load": "Nichts mehr zu laden",
     "Simulating...": "Simuliere...",
     "Broadcasting a tx...": "Senden der Transaktion...",
@@ -63,7 +63,7 @@
   "Application": {
     "Go back": "Zurück",
     "View": "Anzeigen",
-    "Show all": "Alle zeigen",
+    "Show all": "Alles anzeigen",
     "Copy": "Kopieren",
     "Copied": "Kopiert",
     "Active": "Aktiv",
@@ -137,7 +137,7 @@
     "Transfer NFT": "NFT transferieren",
     "Earn": "Verdienen",
     "Leave enough coins to pay fee for subsequent transactions": "Lassen Sie genügend Münzen übrig, um die Gebühren für nachfolgende Transaktionen zu bezahlen.",
-    "Balance after tx": "Bilanz nach der Behandlung"
+    "Balance after tx": "Bilanz nach der Ausführung"
   },
   "Swap": {
     "From": "Von",
