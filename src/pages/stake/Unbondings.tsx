@@ -64,7 +64,7 @@ const Unbondings = () => {
             title={
               <TooltipIcon
                 content={t(
-                  "Maximum 7 undelegations can be in progress at the same time"
+                  "A maximum 7 undelegations can be in progress at the same time"
                 )}
                 placement="bottom"
               >

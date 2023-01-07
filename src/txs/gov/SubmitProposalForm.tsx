@@ -406,7 +406,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
               )}
               <FormWarning>
                 {t(
-                  "Proposal deposits will not be refunded if the proposal fails to reach the quorum or the result is NO_WITH_VETO"
+                  "Proposal deposits will not be refunded if the proposal is vetoed, fails to meet quorum, or does not meet the minimum deposit"
                 )}
               </FormWarning>
               {values.type === ProposalType.TEXT && (

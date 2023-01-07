@@ -17,7 +17,7 @@ import { useAddress } from "data/wallet"
 import { queryTFMRoute, queryTFMSwap, TFM_ROUTER } from "data/external/tfm"
 
 /* components */
-import { Form, FormArrow, FormError } from "components/form"
+import { Form, FormArrow, FormError, FormWarning } from "components/form"
 import { Checkbox } from "components/form"
 import { Read } from "components/token"
 
@@ -241,6 +241,9 @@ const TFMSwapForm = ({ chainID }: { chainID: string }) => {
     <Tx {...tx} disabled={disabled}>
       {({ max, fee, submit }) => (
         <Form onSubmit={handleSubmit(submit.fn)}>
+          <FormWarning>
+            {t("Leave coins to pay fees for subsequent transactions")}
+          </FormWarning>
           <AssetFormItem
             label={t("From")}
             extra={max.render(async (value) => {

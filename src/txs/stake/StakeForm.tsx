@@ -150,7 +150,7 @@ const StakeForm = (props: Props) => {
             {
               [StakeAction.DELEGATE]: (
                 <FormWarning>
-                  {t("Leave coins to pay fee for subsequent transactions")}
+                  {t("Leave coins to pay fees for subsequent transactions")}
                 </FormWarning>
               ),
               [StakeAction.REDELEGATE]: (
@@ -164,7 +164,7 @@ const StakeForm = (props: Props) => {
                 <Grid gap={4}>
                   <FormWarning>
                     {t(
-                      "Maximum 7 undelegations can be in progress at the same time"
+                      "A maximum 7 undelegations can be in progress at the same time"
                     )}
                   </FormWarning>
                   <FormWarning>

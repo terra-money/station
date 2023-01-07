@@ -147,12 +147,13 @@ const QuickStakeForm = (props: Props) => {
                   <Grid gap={4}>
                     <FormWarning>
                       {t(
-                        "Maximum 7 undelegations can be in progress at the same time"
+                        "A maximum 7 undelegations can be in progress at the same time"
                       )}
                     </FormWarning>
                     <FormWarning>
                       {t(
-                        `No rewards are distributed during ${daysToUnbond} days undelegation period`
+                        "Undelegating funds do not accrue rewards and are locked for {{daysToUnbond}} days",
+                        { daysToUnbond }
                       )}
                     </FormWarning>
                   </Grid>
