@@ -152,7 +152,8 @@ const QuickStakeForm = (props: Props) => {
                     </FormWarning>
                     <FormWarning>
                       {t(
-                        `Undelegating funds do not accrue rewards and are locked for ${daysToUnbond} days`
+                        "Undelegating funds do not accrue rewards and are locked for {{daysToUnbond}} days",
+                        { daysToUnbond }
                       )}
                     </FormWarning>
                   </Grid>
