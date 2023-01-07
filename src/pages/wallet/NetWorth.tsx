@@ -42,7 +42,7 @@ const NetWorth = () => {
             })
           }
         >
-          {capitalize(t("send"))}
+          {capitalize(t("Send"))}
         </Button>
         <Button
           onClick={() =>
