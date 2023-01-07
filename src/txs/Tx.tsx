@@ -335,7 +335,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
                 <Read amount={balance} token={token} decimals={decimals} />
               </dd>
 
-              <dt>{t("Balance after tx")}</dt>
+              <dt>{t("Balance after transaction")}</dt>
               <dd>
                 <Read
                   amount={balanceAfterTx}

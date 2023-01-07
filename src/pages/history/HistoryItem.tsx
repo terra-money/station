@@ -107,7 +107,7 @@ const HistoryItem = ({
         {"multi" in signer_infos[0]?.mode_info
           ? "public_keys" in signer_infos[0].public_key && (
               <p className={styles.sign__mode}>
-                <GroupIcon /> Multisig tx: signed by{" "}
+                <GroupIcon /> {t("Multisig tx: signed by ")}
                 {signer_infos[0].mode_info.multi.mode_infos.length}/
                 {signer_infos[0].public_key.public_keys.length} signers
               </p>
@@ -115,7 +115,7 @@ const HistoryItem = ({
           : signer_infos[0]?.mode_info?.single.mode ===
               "SIGN_MODE_LEGACY_AMINO_JSON" && (
               <p className={styles.sign__mode}>
-                <GppGoodIcon /> Signed with an hardware wallet
+                <GppGoodIcon /> {t("Signed with a hardware wallet")}
               </p>
             )}
       </footer>
