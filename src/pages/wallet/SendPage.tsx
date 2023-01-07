@@ -23,6 +23,7 @@ import { useWalletRoute } from "./Wallet"
 import validate from "../../txs/validate"
 import { useIBCChannels } from "data/queries/chains"
 import CheckIcon from "@mui/icons-material/Check"
+import ClearIcon from "@mui/icons-material/Clear"
 import { getChainIDFromAddress } from "utils/bech32"
 import { useNetwork } from "data/wallet"
 import { queryKey } from "data/query"
@@ -128,24 +129,41 @@ const SendPage = () => {
 
   /* render detected destination chain */
   function renderDestinationChain() {
-    if (!destinationAddress || !AccAddress.validate(destinationAddress))
-      return null
-    const addressPrefix = AccAddress.getPrefix(destinationAddress)
-    return (
-      <span className={styles.destination}>
-        <Flex gap={4} start>
-          <CheckIcon fontSize="inherit" className={styles.icon} />
-          Destination chain:{" "}
-          <strong>
-            {
-              Object.values(networks).find(
-                ({ prefix }) => prefix === addressPrefix
-              )?.name
-            }
-          </strong>
-        </Flex>
-      </span>
+    if (
+      !chain ||
+      !destinationAddress ||
+      !AccAddress.validate(destinationAddress)
     )
+      return null
+
+    const destinationChain = getChainIDFromAddress(destinationAddress, networks)
+
+    if (!destinationChain) return null
+
+    if (
+      getIBCChannel({ from: chain, to: destinationChain }) &&
+      !AccAddress.validate(asset)
+    ) {
+      return (
+        <span className={styles.destination}>
+          <Flex gap={4} start>
+            <CheckIcon fontSize="inherit" className={styles.icon} />
+            Destination chain:{" "}
+            <strong>{networks[destinationChain]?.name}</strong>
+          </Flex>
+        </span>
+      )
+    } else {
+      return (
+        <span className={styles.destination__error}>
+          <Flex gap={4} start>
+            <ClearIcon fontSize="inherit" className={styles.icon} />
+            Destination chain:{" "}
+            <strong>{networks[destinationChain]?.name}</strong>
+          </Flex>
+        </span>
+      )
+    }
   }
 
   /* tx */
@@ -185,11 +203,14 @@ const SendPage = () => {
 
         return { msgs, memo, chainID: chain }
       } else {
+        const channel = getIBCChannel({ from: chain, to: destinationChain })
+        if (!channel) throw new Error("No IBC channel found")
+
         const msgs = isDenom(token?.denom)
           ? [
               new MsgTransfer(
                 "transfer",
-                getIBCChannel({ from: chain, to: destinationChain }),
+                channel,
                 new Coin(token?.denom ?? "", amount),
                 addresses[token?.chain ?? ""],
                 address,
@@ -295,7 +316,15 @@ const SendPage = () => {
               >
                 <Input
                   {...register("recipient", {
-                    validate: validate.recipient(),
+                    validate: {
+                      ...validate.recipient(),
+                      ...validate.ibc(
+                        networks,
+                        chain ?? "",
+                        asset,
+                        getIBCChannel
+                      ),
+                    },
                   })}
                   placeholder={SAMPLE_ADDRESS}
                   autoFocus
@@ -324,30 +353,46 @@ const SendPage = () => {
                 />
               </FormItem>
 
-              <FormItem
-                label={`${t("Memo")} (${t("optional")})`}
-                error={errors.memo?.message}
-              >
-                <Input
-                  {...register("memo", {
-                    validate: {
-                      size: validate.size(256, "Memo"),
-                      brackets: validate.memo(),
-                      mnemonic: validate.isNotMnemonic(),
-                    },
-                  })}
-                />
-              </FormItem>
+              {!destinationAddress ||
+              getChainIDFromAddress(destinationAddress, networks) === chain ? (
+                <>
+                  <FormItem
+                    label={`${t("Memo")} (${t("optional")})`}
+                    error={errors.memo?.message}
+                  >
+                    <Input
+                      {...register("memo", {
+                        validate: {
+                          size: validate.size(256, "Memo"),
+                          brackets: validate.memo(),
+                          mnemonic: validate.isNotMnemonic(),
+                        },
+                      })}
+                    />
+                  </FormItem>
+
+                  <Grid gap={4}>
+                    {!memo && (
+                      <FormWarning>
+                        {t("Check if this transaction requires a memo")}
+                      </FormWarning>
+                    )}
+                  </Grid>
+                </>
+              ) : (
+                <Grid gap={4}>
+                  {!memo && (
+                    <FormWarning>
+                      {t(
+                        "This is a cross-chain transaction. Don't send tokens to exchanges with this tx."
+                      )}
+                    </FormWarning>
+                  )}
+                </Grid>
+              )}
 
               {fee.render()}
             </div>
-            <Grid gap={4}>
-              {!memo && (
-                <FormWarning>
-                  {t("Check if this transaction requires a memo")}
-                </FormWarning>
-              )}
-            </Grid>
           </section>
           <section className={styles.actions}>{submit.button}</section>
         </Form>

@@ -44,14 +44,11 @@ export function useIBCChannels() {
   }: {
     from: string
     to: string
-  }): string {
+  }): string | undefined {
     if (networks[from].name === "Terra") {
       return networks[to].ibc?.fromTerra ?? ""
     } else if (networks[to].name === "Terra") {
       return networks[from].ibc?.toTerra ?? ""
-    } else {
-      // one of the 2 chains MUST be Terra
-      return ""
     }
   }
 }
