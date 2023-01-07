@@ -22,11 +22,14 @@
   "Form": {
     "Amount": "数量",
     "Recipient": "接受者",
+    "Asset": "",
+    "Source chain": "",
     "Name": "智能合约名称",
     "optional": "可选",
     "Submit": "提交",
     "Confirm": "确认",
-    "Reset": "复位"
+    "Reset": "复位",
+    "All": ""
   },
   "Validate": {
     "{{label}} is required": "请输入{{label}}",
@@ -58,7 +61,8 @@
     "Simulation failed": "仿真失败",
     "User denied": "用户被拒绝",
     "Failed to create tx": "创建tx失败",
-    "Tx failed": "Tx失败"
+    "Tx failed": "Tx失败",
+    "Connect wallet to see your address": ""
   },
   "Application": {
     "Go back": "回去吧",
@@ -70,7 +74,9 @@
     "Inactive": "不活跃",
     "Not found": "未找到",
     "setup": "设置",
-    "documentation": "文件"
+    "documentation": "文件",
+    "Search for a chain...": "",
+    "Select theme": ""
   },
   "Units": { "year": "年", "day": "日", "{{d}} days": "{{d}} 天" },
   "Preferences": { "Language": "语言", "Currency": "货币" },
@@ -120,7 +126,8 @@
     "Assets": "资产",
     "receive": "收到",
     "select a coin": "选择一个硬币",
-    "asset value": "资产价值"
+    "asset value": "资产价值",
+    "{{balance}} available": ""
   },
   "Txs": {
     "Send": "转出",
@@ -137,6 +144,7 @@
     "Transfer NFT": "转移 NFT",
     "Earn": "赚取",
     "Leave enough coins to pay fee for subsequent transactions": "留下足够的硬币来支付后续交易的费用",
+    "Check if this transaction requires a memo": "",
     "Balance after tx": "治疗后的余额"
   },
   "Swap": {
@@ -152,10 +160,12 @@
   },
   "Stake": {
     "Delegations": "委托",
+    "My delegations": "",
     "Undelegations": "未授权",
     "Delegated": "委托",
     "Undelegated": "取消委托",
     "Staking rewards": "赌注奖励",
+    "My rewards": "",
     "Maximum 7 undelegations can be in progress at the same time": "最多可以同时进行7次撤诉",
     "No rewards are distributed during the 21 day undelegation period": "在21天的未授权期间，不发放奖励。",
     "Quick stake selects validators that": "Quick stake选择的验证器是",
@@ -164,19 +174,27 @@
     "Have not been slashed recently": "最近没有被砍过",
     "Are in the active set": "处于活跃状态",
     "staking": "绑架",
-    "staked Funds": "投入的资金",
-    "quick stake ": "快捷键",
-    "manual stake": "手持桩"
+    "Staked funds": "投入的资金",
+    "Quick Stake": "快捷键",
+    "Manual Stake": "手持桩",
+    "Select action": "",
+    "Withdraw all rewards": "",
+    "Show inactive validators": "",
+    "Search for validator...": ""
   },
   "Validator": {
     "Validators": "验证人",
     "Voting power": "投票权",
     "Self delegation": "自我授权",
     "Commission": "手续费",
+    "Current": "",
+    "Max": "",
+    "Max daily change": "",
+    "Last changed": "",
     "Uptime": "正常运行时间",
     "Validator details": "验证人详情",
     "Operator address": "运营地址",
-    "Account address": "账户地址",
+    "Wallet address": "账户地址",
     "Jailed": "入狱"
   },
   "Governance": {
@@ -207,7 +225,8 @@
     "Pass threshold": "通过门槛",
     "Veto threshold": "否决门槛",
     "Proposal deposits will not be refunded if the proposal fails to reach the quorum or the result is NO_WITH_VETO": "如果提案未达到法定人数或结果为NO_WITH_VETO，提案押金将不予退还。",
-    "Parameters cannot be changed by text proposals": "参数不能通过文本建议来改变"
+    "Parameters cannot be changed by text proposals": "参数不能通过文本建议来改变",
+    "No proposals in {{label}} period": ""
   },
   "Contract": {
     "Upload": "上传",

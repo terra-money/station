@@ -22,11 +22,14 @@
   "Form": {
     "Amount": "Cantidad",
     "Recipient": "Destinatario",
+    "Asset": "",
+    "Source chain": "",
     "Name": "Nombre",
     "optional": "opcional",
     "Submit": "Enviar",
     "Confirm": "Confirmar",
-    "Reset": "Resetear"
+    "Reset": "Resetear",
+    "All": ""
   },
   "Validate": {
     "{{label}} is required": "{{label}} es obligatorio",
@@ -52,15 +55,16 @@
     "Broadcasting transaction": "Enviando la transacción",
     "Queued": "En cola"
   },
-  "Success": { 
-    "Success!": "Éxito!" 
+  "Success": {
+    "Success!": "Éxito!"
   },
   "Failure": {
     "Failed": "Ha fallado",
     "Simulation failed": "Ha fallado la simulación",
     "User denied": "Denegado por el usuario",
     "Failed to create tx": "No se pudo crear la transacción",
-    "Tx failed": "Ha fallado la transacción"
+    "Tx failed": "Ha fallado la transacción",
+    "Connect wallet to see your address": ""
   },
   "Application": {
     "Go back": "Volver atras",
@@ -72,11 +76,13 @@
     "Inactive": "Inactivo",
     "Not found": "No se ha encontrado",
     "setup": "configuración",
-    "documentation": "documentación"
+    "documentation": "documentación",
+    "Search for a chain...": "",
+    "Select theme": ""
   },
-  "Units": { 
-    "year": "año", 
-    "day": "día", 
+  "Units": {
+    "year": "año",
+    "day": "día",
     "{{d}} days": "{{d}} días"
   },
   "Preferences": {
@@ -129,7 +135,8 @@
     "Assets": "Activos",
     "receive": "reciba",
     "select a coin": "seleccione una moneda",
-    "asset value": "valor del activo"
+    "asset value": "valor del activo",
+    "{{balance}} available": ""
   },
   "Txs": {
     "Send": "Enviar",
@@ -146,6 +153,7 @@
     "Transfer NFT": "Transifere NFT",
     "Earn": "Gain",
     "Leave enough coins to pay fee for subsequent transactions": "Deje suficientes monedas para pagar la comisión de las transacciones posteriores",
+    "Check if this transaction requires a memo": "",
     "Balance after tx": "Saldo después de tx"
   },
   "Swap": {
@@ -161,10 +169,12 @@
   },
   "Stake": {
     "Delegations": "Delegaciones",
+    "My delegations": "",
     "Undelegations": "Delegaciones canceladas",
     "Delegated": "Delegado",
     "Undelegated": "No delegado",
     "Staking rewards": "Recompensas por delegación",
+    "My rewards": "",
     "Maximum 7 undelegations can be in progress at the same time": "Se puede tener un maximo de 7 delegaciónes canceladas al mismo tiempo.",
     "No rewards are distributed during the 21 day undelegation period": "No se distribuyen recompensas durante el periodo de 21 días de retorno mientras la delegación se encuentra cancelada.",
     "Quick stake selects validators that": "Delegación rapida selecciona los validadores que",
@@ -173,19 +183,27 @@
     "Have not been slashed recently": "No han recibido penalizaciónes recientemente",
     "Are in the active set": "Están en el conjunto de validadores activos",
     "staking": "delegando",
-    "staked Funds": "Fondos delegados",
-    "quick stake ": "delegación rapida",
-    "manual stake": "delegación manual"
+    "Staked funds": "Fondos delegados",
+    "Quick Stake": "delegación rapida",
+    "Manual Stake": "delegación manual",
+    "Select action": "",
+    "Withdraw all rewards": "",
+    "Show inactive validators": "",
+    "Search for validator...": ""
   },
   "Validator": {
     "Validators": "Validadores",
     "Voting power": "Poder de voto",
     "Self delegation": "Delegación del operador",
     "Commission": "Comisión",
+    "Current": "",
+    "Max": "",
+    "Max daily change": "",
+    "Last changed": "",
     "Uptime": "Tempo activo",
     "Validator details": "Información del validador",
     "Operator address": "Dirección del operador",
-    "Account address": "Dirección de la cuenta",
+    "Wallet address": "Dirección de la cuenta",
     "Jailed": "Encarcelado"
   },
   "Governance": {
@@ -216,7 +234,8 @@
     "Pass threshold": "Umbral de aceptación",
     "Veto threshold": "Umbral de veto",
     "Proposal deposits will not be refunded if the proposal fails to reach the quorum or the result is NO_WITH_VETO": "Los depósitos de las propuestas no se reembolsarán si la propuesta no alcanza el quórum o el resultado es NO_WITH_VETO.",
-    "Parameters cannot be changed by text proposals": "Los parámetros no pueden modificarse mediante propuestas de texto"
+    "Parameters cannot be changed by text proposals": "Los parámetros no pueden modificarse mediante propuestas de texto",
+    "No proposals in {{label}} period": ""
   },
   "Contract": {
     "Upload": "Subir",
@@ -229,7 +248,7 @@
     "Instantiate a code": "Instanciar un código"
   },
   "NFT": {
-    "Marketplace": "Marcado", 
+    "Marketplace": "Marcado",
     "Collection": "Colección"
   },
   "Address book": {

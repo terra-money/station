@@ -23,9 +23,9 @@ interface TxValues {
 }
 
 export enum StakeAction {
-  DELEGATE = "delegate",
-  REDELEGATE = "redelegate",
-  UNBOND = "undelegate",
+  DELEGATE = "Delegate",
+  REDELEGATE = "Redelegate",
+  UNBOND = "Undelegate",
 }
 
 interface Props {

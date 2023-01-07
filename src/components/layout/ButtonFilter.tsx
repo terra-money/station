@@ -1,6 +1,5 @@
 import { useState } from "react"
 import styles from "./ButtonFilter.module.scss"
-import { capitalize } from "@mui/material"
 import { useTranslation } from "react-i18next"
 
 const ButtonFilter = ({
@@ -27,7 +26,7 @@ const ButtonFilter = ({
             onClick={() => setAction(action)}
             className={selectedAction === action ? styles.active : undefined}
           >
-            {capitalize(t(action))}
+            {t(action)}
           </button>
         ))}
       </div>

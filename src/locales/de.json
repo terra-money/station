@@ -22,11 +22,14 @@
   "Form": {
     "Amount": "Menge",
     "Recipient": "Empfänger",
+    "Asset": "",
+    "Source chain": "",
     "Name": "Name",
     "optional": "optional",
     "Submit": "Absenden",
     "Confirm": "Bestätigen",
-    "Reset": "Zurücksetzen"
+    "Reset": "Zurücksetzen",
+    "All": ""
   },
   "Validate": {
     "{{label}} is required": "{{label}} wird benötigt",
@@ -58,7 +61,8 @@
     "Simulation failed": "Simulation fehlgeschlagen",
     "User denied": "Benutzer abgelehnt",
     "Failed to create tx": "Transaktion konnte nicht erstellt werden",
-    "Tx failed": "Transaktion fehlgeschlagen"
+    "Tx failed": "Transaktion fehlgeschlagen",
+    "Connect wallet to see your address": ""
   },
   "Application": {
     "Go back": "Zurück",
@@ -70,7 +74,9 @@
     "Inactive": "Inaktiv",
     "Not found": "Nicht gefunden",
     "setup": "Einrichtung",
-    "documentation": "Dokumentation"
+    "documentation": "Dokumentation",
+    "Search for a chain...": "",
+    "Select theme": ""
   },
   "Units": { "year": "Jahr", "day": "Tag", "{{d}} days": "{{d}} Tage" },
   "Preferences": { "Language": "Sprache", "Currency": "Währung" },
@@ -120,7 +126,8 @@
     "Assets": "Vermögenswerte",
     "receive": "erhalten",
     "select a coin": "eine Münze auswählen",
-    "asset value": "Anlagenwert"
+    "asset value": "Anlagenwert",
+    "{{balance}} available": ""
   },
   "Txs": {
     "Send": "Senden",
@@ -137,6 +144,7 @@
     "Transfer NFT": "NFT transferieren",
     "Earn": "Verdienen",
     "Leave enough coins to pay fee for subsequent transactions": "Lassen Sie genügend Münzen übrig, um die Gebühren für nachfolgende Transaktionen zu bezahlen.",
+    "Check if this transaction requires a memo": "",
     "Balance after tx": "Bilanz nach der Ausführung"
   },
   "Swap": {
@@ -152,10 +160,12 @@
   },
   "Stake": {
     "Delegations": "Zuteilungen",
+    "My delegations": "",
     "Undelegations": "Entziehungen",
     "Delegated": "Zugeteilt",
     "Undelegated": "Entzogen",
     "Staking rewards": "Staking Belohnungen",
+    "My rewards": "",
     "Maximum 7 undelegations can be in progress at the same time": "Maximal 7 Ablehnungen können gleichzeitig bearbeitet werden",
     "No rewards are distributed during the 21 day undelegation period": "Während der 21-tägigen Nichtweiterleitungsfrist werden keine Prämien ausgeschüttet.",
     "Quick stake selects validators that": "Quick stake wählt Prüfer aus, die",
@@ -164,19 +174,27 @@
     "Have not been slashed recently": "wurden in letzter Zeit nicht gekürzt",
     "Are in the active set": "sind in der aktiven Gruppe",
     "staking": "Abstecken",
-    "staked Funds": "eingesetzte Mittel",
-    "quick stake ": "schneller Einsatz",
-    "manual stake": "manueller Einsatz"
+    "Staked funds": "eingesetzte Mittel",
+    "Quick Stake": "schneller Einsatz",
+    "Manual Stake": "manueller Einsatz",
+    "Select action": "",
+    "Withdraw all rewards": "",
+    "Show inactive validators": "",
+    "Search for validator...": ""
   },
   "Validator": {
     "Validators": "Validatoren",
     "Voting power": "Stimmgewicht",
     "Self delegation": "Selbstzuteilung",
     "Commission": "Gebühr",
+    "Current": "",
+    "Max": "",
+    "Max daily change": "",
+    "Last changed": "",
     "Uptime": "Betriebszeit",
     "Validator details": "Validator Details",
     "Operator address": "Betreiberadresse",
-    "Account address": "Kontoadresse",
+    "Wallet address": "Kontoadresse",
     "Jailed": "Gesperrt"
   },
   "Governance": {
@@ -207,7 +225,8 @@
     "Pass threshold": "Erfolgs-Untergrenze",
     "Veto threshold": "Veto-Untergrenze",
     "Proposal deposits will not be refunded if the proposal fails to reach the quorum or the result is NO_WITH_VETO": "Die Kaution für den Vorschlag wird nicht zurückerstattet, wenn der Vorschlag das Quorum nicht erreicht oder das Ergebnis NO_WITH_VETO lautet.",
-    "Parameters cannot be changed by text proposals": "Parameter können nicht durch Textvorschläge geändert werden"
+    "Parameters cannot be changed by text proposals": "Parameter können nicht durch Textvorschläge geändert werden",
+    "No proposals in {{label}} period": ""
   },
   "Contract": {
     "Upload": "Hochladen",

@@ -18,7 +18,6 @@ import {
 } from "data/queries/staking"
 import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined"
 import { useThemeState } from "data/settings/Theme"
-import { capitalize } from "@mui/material"
 
 const StakedDonut = () => {
   const { t } = useTranslation()
@@ -83,7 +82,7 @@ const StakedDonut = () => {
       <Col span={2}>
         <div className={styles.forFetchingBar}>
           <Fetching {...state}>
-            <ChainFilter title={capitalize(t("staked funds"))} all {...state}>
+            <ChainFilter title={t("Staked funds")} all {...state}>
               {(chain) => (
                 <>
                   {graphData[chain || "all"] ? (

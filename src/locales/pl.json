@@ -22,11 +22,14 @@
   "Form": {
     "Amount": "Ilość",
     "Recipient": "Odbiorca",
+    "Asset": "",
+    "Source chain": "",
     "Name": "Nazwa",
     "optional": "opcjonalnie",
     "Submit": "Prześlij",
     "Confirm": "Potwierdź",
-    "Reset": "Reset"
+    "Reset": "Reset",
+    "All": ""
   },
   "Validate": {
     "{{label}} is required": "{{label}} jest wymagana",
@@ -58,7 +61,8 @@
     "Simulation failed": "Symulacja nie powiodła się",
     "User denied": "Anulowane przez użytkownika",
     "Failed to create tx": "Nie udało się utworzyć tx",
-    "Tx failed": "Tx nie powiodło się"
+    "Tx failed": "Tx nie powiodło się",
+    "Connect wallet to see your address": ""
   },
   "Application": {
     "Go back": "Wróć",
@@ -70,7 +74,9 @@
     "Inactive": "Nieaktywny",
     "Not found": "Nie znaleziono",
     "setup": "ustawienia",
-    "documentation": "dokumentacja"
+    "documentation": "dokumentacja",
+    "Search for a chain...": "",
+    "Select theme": ""
   },
   "Units": { "year": "rok", "day": "dzień", "{{d}} days": "{{d}} dni" },
   "Preferences": { "Language": "Język", "Currency": "Waluta" },
@@ -120,7 +126,8 @@
     "Assets": "Aktywa",
     "receive": "odbierać",
     "select a coin": "Wybierz monetę",
-    "asset value": "wartość aktywów"
+    "asset value": "wartość aktywów",
+    "{{balance}} available": ""
   },
   "Txs": {
     "Send": "Wyślij",
@@ -137,6 +144,7 @@
     "Transfer NFT": "Transfer NFT",
     "Earn": "Zarabiaj",
     "Leave enough coins to pay fee for subsequent transactions": "Pozostaw wystarczającą ilości monet, aby uiścić opłatę za kolejne transakcje",
+    "Check if this transaction requires a memo": "",
     "Balance after tx": "Saldo po tx"
   },
   "Swap": {
@@ -152,10 +160,12 @@
   },
   "Stake": {
     "Delegations": "Delegacje",
+    "My delegations": "",
     "Undelegations": "Oddelegowane",
     "Delegated": "Delegowane",
     "Undelegated": "Oddelegowane",
     "Staking rewards": "Nagrody za stakowanie",
+    "My rewards": "",
     "Maximum 7 undelegations can be in progress at the same time": "W tym samym czasie może być prowadzonych maksymalnie 7 procesów oddelegowania",
     "No rewards are distributed during the 21 day undelegation period": "W ciągu 21-dniowego okresu oddelegowania nie są wypłacane żadne nagrody.",
     "Quick stake selects validators that": "Szybka stawka wybiera walidatory, które",
@@ -164,19 +174,27 @@
     "Have not been slashed recently": "Nie zostały ostatnio przycięte",
     "Are in the active set": "Są w aktywnym zestawie",
     "staking": "stakowanie",
-    "staked Funds": "Fundusze zestakowane",
-    "quick stake ": "szybkie stakowanie",
-    "manual stake": "ręczne stakowanie"
+    "Staked funds": "Fundusze zestakowane",
+    "Quick Stake": "szybkie stakowanie",
+    "Manual Stake": "ręczne stakowanie",
+    "Select action": "",
+    "Withdraw all rewards": "",
+    "Show inactive validators": "",
+    "Search for validator...": ""
   },
   "Validator": {
     "Validators": "Walidatorzy",
     "Voting power": "Siła głosowania",
     "Self delegation": "Samodzielne przekazywanie uprawnień",
     "Commission": "Prowizja",
+    "Current": "",
+    "Max": "",
+    "Max daily change": "",
+    "Last changed": "",
     "Uptime": "Czas działania",
     "Validator details": "Informacje o walidatorze",
     "Operator address": "Adres operatora",
-    "Account address": "Adres konta",
+    "Wallet address": "Adres konta",
     "Jailed": "Uwięziony"
   },
   "Governance": {
@@ -207,7 +225,8 @@
     "Pass threshold": "Próg przegłosowania",
     "Veto threshold": "Próg veto",
     "Proposal deposits will not be refunded if the proposal fails to reach the quorum or the result is NO_WITH_VETO": "Kaucja za propozycję nie podlega zwrotowi, jeśli propozycja nie osiągnie kworum lub wynik jest NIE_WITH_VETO",
-    "Parameters cannot be changed by text proposals": "Parametry nie mogą być zmieniane przez propozycje tekstowe"
+    "Parameters cannot be changed by text proposals": "Parametry nie mogą być zmieniane przez propozycje tekstowe",
+    "No proposals in {{label}} period": ""
   },
   "Contract": {
     "Upload": "Prześlij",

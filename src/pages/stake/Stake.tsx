@@ -21,13 +21,13 @@ const Stake = () => {
   const tabs = [
     {
       key: "quick",
-      tab: "Quick Stake",
+      tab: t("Quick Stake"),
       children: <QuickStake />,
       extra: <TooltipIcon content={<QuickStakeTooltip />} placement="bottom" />,
     },
     {
       key: "manual",
-      tab: "Manual Stake",
+      tab: t("Manual Stake"),
       children: <Validators />,
     },
   ]

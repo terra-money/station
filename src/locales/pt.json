@@ -22,11 +22,14 @@
   "Form": {
     "Amount": "Quantidade",
     "Recipient": "Destinatário",
+    "Asset": "",
+    "Source chain": "",
     "Name": "Nome",
     "optional": "opcional",
     "Submit": "Enviar",
     "Confirm": "Confirmar",
-    "Reset": "Reset"
+    "Reset": "Reset",
+    "All": ""
   },
   "Validate": {
     "{{label}} is required": "{{label}} é obrigatório",
@@ -58,7 +61,8 @@
     "Simulation failed": "Simulação falhou",
     "User denied": "Usuário não autorizado",
     "Failed to create tx": "Não foi possível criar a tx",
-    "Tx failed": "Tx falhou"
+    "Tx failed": "Tx falhou",
+    "Connect wallet to see your address": ""
   },
   "Application": {
     "Go back": "Voltar",
@@ -70,7 +74,9 @@
     "Inactive": "Inativo",
     "Not found": "Não encontrado",
     "setup": "configuração",
-    "documentation": "documentação"
+    "documentation": "documentação",
+    "Search for a chain...": "",
+    "Select theme": ""
   },
   "Units": { "year": "ano", "day": "dia", "{{d}} days": "{{d}} dias" },
   "Preferences": { "Language": "Idioma", "Currency": "Moeda" },
@@ -120,7 +126,8 @@
     "Assets": "Bens",
     "receive": "receber",
     "select a coin": "seleccione uma moeda",
-    "asset value": "valor patrimonial"
+    "asset value": "valor patrimonial",
+    "{{balance}} available": ""
   },
   "Txs": {
     "Send": "Enviar",
@@ -137,6 +144,7 @@
     "Transfer NFT": "Transferir NFT",
     "Earn": "Lucrar",
     "Leave enough coins to pay fee for subsequent transactions": "Deixar moedas suficientes para pagar a taxa para as transacções subsequentes",
+    "Check if this transaction requires a memo": "",
     "Balance after tx": "Equilíbrio após tx"
   },
   "Swap": {
@@ -152,10 +160,12 @@
   },
   "Stake": {
     "Delegations": "Delegações",
+    "My delegations": "",
     "Undelegations": "Delegações canceladas",
     "Delegated": "Delegado",
     "Undelegated": "Não delegado",
     "Staking rewards": "Recompensas sobre staking",
+    "My rewards": "",
     "Maximum 7 undelegations can be in progress at the same time": "Máximo de 7 subdelegações podem estar em curso ao mesmo tempo",
     "No rewards are distributed during the 21 day undelegation period": "Nenhuma recompensa é distribuída durante o período de não-elegação de 21 dias",
     "Quick stake selects validators that": "A aposta rápida selecciona validadores que",
@@ -164,19 +174,27 @@
     "Have not been slashed recently": "Não foram cortados recentemente",
     "Are in the active set": "Estão no conjunto activo",
     "staking": "piquetagem",
-    "staked Funds": "Fundos apostados",
-    "quick stake ": "aposta rápida",
-    "manual stake": "estaca manual"
+    "Staked funds": "Fundos apostados",
+    "Quick Stake": "aposta rápida",
+    "Manual Stake": "estaca manual",
+    "Select action": "",
+    "Withdraw all rewards": "",
+    "Show inactive validators": "",
+    "Search for validator...": ""
   },
   "Validator": {
     "Validators": "Validadores",
     "Voting power": "Poder de voto",
     "Self delegation": "Autodelegação",
     "Commission": "Comissão",
+    "Current": "",
+    "Max": "",
+    "Max daily change": "",
+    "Last changed": "",
     "Uptime": "Tempo ativo",
     "Validator details": "Detalhes sobre o validador",
     "Operator address": "Endereço do operador",
-    "Account address": "Endereço da conta",
+    "Wallet address": "Endereço da conta",
     "Jailed": "Preso"
   },
   "Governance": {
@@ -207,7 +225,8 @@
     "Pass threshold": "Limite para aprovação",
     "Veto threshold": "Limite para veto",
     "Proposal deposits will not be refunded if the proposal fails to reach the quorum or the result is NO_WITH_VETO": "Os depósitos de propostas não serão reembolsados se a proposta não atingir o quórum ou se o resultado for NO_WITH_VETO",
-    "Parameters cannot be changed by text proposals": "Os parâmetros não podem ser alterados por propostas de texto"
+    "Parameters cannot be changed by text proposals": "Os parâmetros não podem ser alterados por propostas de texto",
+    "No proposals in {{label}} period": ""
   },
   "Contract": {
     "Upload": "Enviar",

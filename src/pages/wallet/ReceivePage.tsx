@@ -18,13 +18,15 @@ const ReceivePage = () => {
   return (
     <section className={styles.receive}>
       <h1>{capitalize(t("receive"))}</h1>
-      <p>Chain</p>
+      <p>{t("Chain")}</p>
       <ChainSelector
         chainsList={Object.keys(networks)}
         onChange={(chainID) => setChain(chainID)}
       />
-      <p>Address</p>
-      <AddressBox address={addresses?.[chain] ?? "Connect wallet first"} />
+      <p>{t("Address")}</p>
+      <AddressBox
+        address={addresses?.[chain] ?? t("Connect wallet to see your address")}
+      />
     </section>
   )
 }

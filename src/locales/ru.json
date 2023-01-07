@@ -22,11 +22,14 @@
   "Form": {
     "Amount": "Количество",
     "Recipient": "Получатель",
+    "Asset": "",
+    "Source chain": "",
     "Name": "Имя",
     "optional": "необязательно",
     "Submit": "Отправить",
     "Confirm": "Подтвердить",
-    "Reset": "Сбросить"
+    "Reset": "Сбросить",
+    "All": ""
   },
   "Validate": {
     "{{label}} is required": "Требуется {{etiqueta}}",
@@ -58,7 +61,8 @@
     "Simulation failed": "Симуляция не удалась",
     "User denied": "Отклонено пользователем",
     "Failed to create tx": "Не удалось создать транзакцию",
-    "Tx failed": "Транзакция не удалась"
+    "Tx failed": "Транзакция не удалась",
+    "Connect wallet to see your address": ""
   },
   "Application": {
     "Go back": "Назад",
@@ -70,7 +74,9 @@
     "Inactive": "Неактивный",
     "Not found": "Не найдено",
     "setup": "настройка",
-    "documentation": "документация"
+    "documentation": "документация",
+    "Search for a chain...": "",
+    "Select theme": ""
   },
   "Units": { "year": "год", "day": "день", "{{d}} days": "{{d}} дней" },
   "Preferences": { "Language": "Язык", "Currency": "Валюта" },
@@ -120,7 +126,8 @@
     "Assets": "Активы",
     "receive": "получить",
     "select a coin": "выберите монету",
-    "asset value": "стоимость активов"
+    "asset value": "стоимость активов",
+    "{{balance}} available": ""
   },
   "Txs": {
     "Send": "Отправить",
@@ -137,6 +144,7 @@
     "Transfer NFT": "Отправить NFT",
     "Earn": "Заработать",
     "Leave enough coins to pay fee for subsequent transactions": "Оставьте достаточно монет, чтобы оплатить комиссию за последующие транзакции",
+    "Check if this transaction requires a memo": "",
     "Balance after tx": "Баланс после лечения"
   },
   "Swap": {
@@ -152,10 +160,12 @@
   },
   "Stake": {
     "Delegations": "Делегации",
+    "My delegations": "",
     "Undelegations": "Отмена Делегаций",
     "Delegated": "Делегированный",
     "Undelegated": "Неделегированный",
     "Staking rewards": "Стейкинговые награды",
+    "My rewards": "",
     "Maximum 7 undelegations can be in progress at the same time": "Одновременно может проводиться не более 7 неделегаций",
     "No rewards are distributed during the 21 day undelegation period": "Вознаграждения не распределяются в течение 21-дневного периода нераспределения",
     "Quick stake selects validators that": "Быстрая ставка выбирает валидаторы, которые",
@@ -164,19 +174,27 @@
     "Have not been slashed recently": "Не были сокращены в последнее время",
     "Are in the active set": "Находятся в активной группе",
     "staking": "ставка",
-    "staked Funds": "стабфонды",
-    "quick stake ": "быстрая ставка",
-    "manual stake": "ручная ставка"
+    "Staked funds": "стабфонды",
+    "Quick Stake": "быстрая ставка",
+    "Manual Stake": "ручная ставка",
+    "Select action": "",
+    "Withdraw all rewards": "",
+    "Show inactive validators": "",
+    "Search for validator...": ""
   },
   "Validator": {
     "Validators": "Валидаторы",
     "Voting power": "Сила голоса",
     "Self delegation": "Самоделегация",
     "Commission": "Комиссия",
+    "Current": "",
+    "Max": "",
+    "Max daily change": "",
+    "Last changed": "",
     "Uptime": "Время работы",
     "Validator details": "Детали валидатора",
     "Operator address": "Адрес оператора",
-    "Account address": "Адрес учетной записи",
+    "Wallet address": "Адрес учетной записи",
     "Jailed": "Заключен"
   },
   "Governance": {
@@ -207,7 +225,8 @@
     "Pass threshold": "Порог прохождения",
     "Veto threshold": "Порог вето",
     "Proposal deposits will not be refunded if the proposal fails to reach the quorum or the result is NO_WITH_VETO": "Задаток за предложение не возвращается, если предложение не набрало кворума или результат голосования НЕТ_ВООБЩЕ_ВЕТО",
-    "Parameters cannot be changed by text proposals": "Параметры не могут быть изменены с помощью текстовых предложений"
+    "Parameters cannot be changed by text proposals": "Параметры не могут быть изменены с помощью текстовых предложений",
+    "No proposals in {{label}} period": ""
   },
   "Contract": {
     "Upload": "Загрузить",

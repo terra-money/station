@@ -22,11 +22,14 @@
   "Form": {
     "Amount": "Množství",
     "Recipient": "Příjemce",
+    "Asset": "",
+    "Source chain": "",
     "Name": "Jméno",
     "optional": "volitelný",
     "Submit": "Odeslat",
     "Confirm": "Potvrdit",
-    "Reset": "Vynulovat"
+    "Reset": "Vynulovat",
+    "All": ""
   },
   "Validate": {
     "{{label}} is required": "{{label}} je povinný",
@@ -58,7 +61,8 @@
     "Simulation failed": "Simulace neúspěšná",
     "User denied": "Uživatel zamítnul",
     "Failed to create tx": "Nepodařilo se vytvořit transakci",
-    "Tx failed": "Zařazený do fronty"
+    "Tx failed": "Zařazený do fronty",
+    "Connect wallet to see your address": ""
   },
   "Application": {
     "Go back": "Zpět",
@@ -70,7 +74,9 @@
     "Inactive": "Neaktivní",
     "Not found": "Nenalezeno",
     "setup": "nastavení",
-    "documentation": "dokumentace"
+    "documentation": "dokumentace",
+    "Search for a chain...": "",
+    "Select theme": ""
   },
   "Units": { "year": "rok", "day": "den", "{{d}} days": "{{d}} dnů" },
   "Preferences": { "Language": "Jazyk", "Currency": "Měna" },
@@ -120,7 +126,8 @@
     "Assets": "Majetek",
     "receive": "přijímat",
     "select a coin": "vybrat minci",
-    "asset value": "hodnota majetku"
+    "asset value": "hodnota majetku",
+    "{{balance}} available": ""
   },
   "Txs": {
     "Send": "Odeslat",
@@ -137,6 +144,7 @@
     "Transfer NFT": "Převést NFT",
     "Earn": "Zisk",
     "Leave enough coins to pay fee for subsequent transactions": "Ponechte si dostatek mincí na zaplacení poplatku za následné transakce",
+    "Check if this transaction requires a memo": "",
     "Balance after tx": "Bilance po tx"
   },
   "Swap": {
@@ -152,10 +160,12 @@
   },
   "Stake": {
     "Delegations": "Delegace",
+    "My delegations": "",
     "Undelegations": "Zrušené delegace",
     "Delegated": "Delegováno",
     "Undelegated": "Nedelegováno",
     "Staking rewards": "Odmeny za staking",
+    "My rewards": "",
     "Maximum 7 undelegations can be in progress at the same time": "Současně může probíhat maximálně 7 nedelegací.",
     "No rewards are distributed during the 21 day undelegation period": "Během 21denní lhůty pro nedelegování se žádné odměny nerozdělují.",
     "Quick stake selects validators that": "Rychlá sázka vybírá validátory, které",
@@ -164,19 +174,27 @@
     "Have not been slashed recently": "Nebyly v poslední době sníženy",
     "Are in the active set": "Jsou v aktivní sadě",
     "staking": "sázky na",
-    "staked Funds": "sázkové fondy",
-    "quick stake ": "rychlý kolík",
-    "manual stake": "ruční kolík"
+    "Staked funds": "sázkové fondy",
+    "Quick Stake": "rychlý kolík",
+    "Manual Stake": "ruční kolík",
+    "Select action": "",
+    "Withdraw all rewards": "",
+    "Show inactive validators": "",
+    "Search for validator...": ""
   },
   "Validator": {
     "Validators": "Validátory",
     "Voting power": "Síla hlasu",
     "Self delegation": "Vlastní delegování",
     "Commission": "Poplatek",
+    "Current": "",
+    "Max": "",
+    "Max daily change": "",
+    "Last changed": "",
     "Uptime": "Doba provozuschopnosti",
     "Validator details": "Detail validátoru",
     "Operator address": "Adresa operátora",
-    "Account address": "Adresa účtu",
+    "Wallet address": "Adresa účtu",
     "Jailed": "Uvězněn"
   },
   "Governance": {
@@ -207,7 +225,8 @@
     "Pass threshold": "Potřeba k schválení",
     "Veto threshold": "Potřeba k veto",
     "Proposal deposits will not be refunded if the proposal fails to reach the quorum or the result is NO_WITH_VETO": "Vklady za návrh se nevracejí, pokud návrh není usnášeníschopný nebo pokud je výsledek hlasování NE_WITH_VETO.",
-    "Parameters cannot be changed by text proposals": "Parametry nelze měnit pomocí textových návrhů"
+    "Parameters cannot be changed by text proposals": "Parametry nelze měnit pomocí textových návrhů",
+    "No proposals in {{label}} period": ""
   },
   "Contract": {
     "Upload": "Nahrát",
