@@ -104,9 +104,6 @@ const HistoryItem = ({
             )
           })}
         </Dl>
-        <p className={styles.sign__mode}>
-          <GroupIcon /> Multisig tx: signed by {2}/{3} signers
-        </p>
         {"multi" in signer_infos[0]?.mode_info
           ? "public_keys" in signer_infos[0].public_key && (
               <p className={styles.sign__mode}>
