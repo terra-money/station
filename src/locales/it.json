@@ -144,7 +144,7 @@
     "Transfer NFT": "Trasferisci NFT",
     "Earn": "Guadagna",
     "Leave enough coins to pay fee for subsequent transactions": "Lasciate abbastanza monete per pagare le commissioni delle transazioni successive",
-    "Check if this transaction requires a memo": "Controlla se questa transazione richiede una memo",
+    "Check if this transaction requires a memo": "Controlla se questa transazione richiede il memo",
     "Balance after tx": "Saldo dopo la transazione"
   },
   "Swap": {
