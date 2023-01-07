@@ -7,12 +7,11 @@ import { useAddressBook } from "data/settings/AddressBook"
 import { useTnsAddress } from "data/external/tns"
 import { InlineFlex } from "components/layout"
 import { Form, FormItem, Submit, Input } from "components/form"
-import { Fetching, useModal } from "components/feedback"
+import { Fetching } from "components/feedback"
 import validate from "txs/validate"
 
-const AddAddressBookItem = () => {
+const AddAddressBookItem = ({ close }: { close: () => void }) => {
   const { t } = useTranslation()
-  const close = useModal()
   const { add, validateName } = useAddressBook()
 
   /* form */

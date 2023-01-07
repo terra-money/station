@@ -24,10 +24,13 @@ import validate from "../../txs/validate"
 import { useIBCChannels } from "data/queries/chains"
 import CheckIcon from "@mui/icons-material/Check"
 import ClearIcon from "@mui/icons-material/Clear"
+import ContactsIcon from "@mui/icons-material/Contacts"
 import { getChainIDFromAddress } from "utils/bech32"
 import { useNetwork } from "data/wallet"
 import { queryKey } from "data/query"
 import Tx from "txs/Tx"
+import AddressBookList from "txs/AddressBook/AddressBookList"
+import { ModalButton } from "components/feedback"
 
 interface TxValues {
   asset: string
@@ -141,8 +144,9 @@ const SendPage = () => {
     if (!destinationChain) return null
 
     if (
-      getIBCChannel({ from: chain, to: destinationChain }) &&
-      !AccAddress.validate(asset)
+      chain === destinationChain ||
+      (getIBCChannel({ from: chain, to: destinationChain }) &&
+        !AccAddress.validate(asset))
     ) {
       return (
         <span className={styles.destination}>
@@ -314,21 +318,38 @@ const SendPage = () => {
                 extra={renderDestinationChain()}
                 error={errors.recipient?.message ?? errors.address?.message}
               >
-                <Input
-                  {...register("recipient", {
-                    validate: {
-                      ...validate.recipient(),
-                      ...validate.ibc(
-                        networks,
-                        chain ?? "",
-                        asset,
-                        getIBCChannel
-                      ),
-                    },
-                  })}
-                  placeholder={SAMPLE_ADDRESS}
-                  autoFocus
-                />
+                <ModalButton
+                  title={t("Address book")}
+                  renderButton={(open) => (
+                    <Input
+                      {...register("recipient", {
+                        validate: {
+                          ...validate.recipient(),
+                          ...validate.ibc(
+                            networks,
+                            chain ?? "",
+                            asset,
+                            getIBCChannel
+                          ),
+                        },
+                      })}
+                      placeholder={SAMPLE_ADDRESS}
+                      actionButton={{
+                        icon: <ContactsIcon />,
+                        onClick: open,
+                      }}
+                      autoFocus
+                    />
+                  )}
+                >
+                  <AddressBookList
+                    onClick={async ({ recipient, memo }) => {
+                      setValue("recipient", recipient)
+                      memo && setValue("memo", memo)
+                      await trigger("recipient")
+                    }}
+                  />
+                </ModalButton>
 
                 <input {...register("address")} readOnly hidden />
               </FormItem>
