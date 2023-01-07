@@ -64,3 +64,15 @@
   margin: 0 calc(-1 * var(--card-padding));
   margin-top: var(--card-padding);
 }
+
+.sign__mode {
+  @include flex(flex-start);
+  margin-top: 4px;
+  color: var(--info);
+  gap: 4px;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}

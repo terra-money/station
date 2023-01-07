@@ -1,10 +1,8 @@
-import { Fragment, useCallback } from "react"
-import { useTranslation } from "react-i18next"
-import { useInfiniteQuery } from "react-query"
+import { Fragment } from "react"
+import { useQuery } from "react-query"
 import axios from "axios"
 import { queryKey } from "data/query"
 import { useNetwork } from "data/wallet"
-import { Button } from "components/general"
 import { Card, Col, Page } from "components/layout"
 import { Empty } from "components/feedback"
 import HistoryItem from "./HistoryItem"
@@ -15,83 +13,71 @@ interface Props {
 }
 
 const HistoryList = ({ chainID }: Props) => {
-  const { t } = useTranslation()
   const addresses = useInterchainAddresses()
   const address = addresses?.[chainID]
   const networks = useNetwork()
 
-  const LIMIT = 10
+  const LIMIT = 100
+  const EVENTS = [
+    // any tx signed by the user
+    "message.sender",
+    // any coin received
+    "transfer.recipient",
+    // any coin sent
+    "transfer.sender",
+  ]
 
   /* query */
-  const fetchAccountHistory = useCallback(
+  const { data: history, ...state } = useQuery(
+    [queryKey.History, networks, address, chainID],
     async ({ pageParam = 0 }) => {
-      const { data } = await axios.get<AccountHistory>(
-        `/cosmos/tx/v1beta1/txs?events=message.sender=%27${address}%27&pagination.reverse=true&order_by=ORDER_BY_DESC&pagination.limit=${LIMIT}`,
-        {
-          baseURL: networks[chainID].lcd,
-          params: { "pagination.offset": pageParam || undefined },
-        }
+      const result: any[] = []
+      const txhases: string[] = []
+
+      const requests = await Promise.all(
+        EVENTS.map((event) =>
+          axios.get<AccountHistory>(`/cosmos/tx/v1beta1/txs`, {
+            baseURL: networks[chainID].lcd,
+            params: {
+              events: `${event}='${address}'`,
+              order_by: "ORDER_BY_DESC",
+              "pagination.offset": pageParam || undefined,
+              "pagination.reverse": true,
+              "pagination.limit": LIMIT,
+            },
+          })
+        )
       )
 
-      return {
-        ...data,
-        next:
-          Number(data.pagination.total) > pageParam + LIMIT &&
-          pageParam + LIMIT,
+      for (const { data } of requests) {
+        data.tx_responses.forEach((tx) => {
+          if (!txhases.includes(tx.txhash)) {
+            result.push(tx)
+            txhases.push(tx.txhash)
+          }
+        })
       }
-    },
-    [address, networks, chainID]
-  )
 
-  const { data, error, fetchNextPage, ...state } = useInfiniteQuery(
-    [queryKey.TerraAPI, "history", networks, address, chainID],
-    fetchAccountHistory,
-    {
-      getNextPageParam: ({ next }) => next,
-      enabled: !!(address && networks[chainID]),
+      return result
+        .sort((a, b) => Number(b.height) - Number(a.height))
+        .slice(0, LIMIT)
     }
   )
 
-  const { hasNextPage, isFetchingNextPage } = state
-
-  const getPages = () => {
-    if (!data) return []
-    const { pages } = data
-    const [{ tx_responses }] = pages
-    return tx_responses.length ? pages : []
-  }
-
-  const pages = getPages()
-
   const render = () => {
-    if (address && !data) return null
+    if (address && !history) return null
 
-    return !pages.length ? (
+    return !history?.length ? (
       <Card>
         <Empty />
       </Card>
     ) : (
       <Col>
-        {pages.map(({ tx_responses }, i) => (
-          <Fragment key={i}>
-            {tx_responses.map((item) => (
-              <HistoryItem {...item} chain={chainID} key={item.txhash} />
-            ))}
-          </Fragment>
-        ))}
-
-        <Button
-          onClick={() => fetchNextPage()}
-          disabled={!hasNextPage || isFetchingNextPage}
-          loading={isFetchingNextPage}
-          block
-        >
-          {isFetchingNextPage
-            ? t("Loading more...")
-            : hasNextPage
-            ? t("Load more")
-            : t("Nothing more to load")}
-        </Button>
+        <Fragment>
+          {history.map((item) => (
+            <HistoryItem {...item} chain={chainID} key={item.txhash} />
+          ))}
+        </Fragment>
       </Col>
     )
   }
