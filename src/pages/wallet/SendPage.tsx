@@ -107,9 +107,17 @@ const SendPage = () => {
     asset,
   } = watch()
   const amount = toAmount(input, { decimals: decimals ?? 6 })
-  const availableChains = availableAssets.find(
-    ({ denom }) => denom === (asset ?? defaultAsset)
-  )?.chains
+  const availableChains = useMemo(
+    () =>
+      availableAssets
+        .find(({ denom }) => denom === (asset ?? defaultAsset))
+        ?.chains.sort((a, b) => {
+          if (a.startsWith("phoenix-") || a.startsWith("pisco-")) return -1
+          if (b.startsWith("phoenix-") || b.startsWith("pisco-")) return 1
+          return 0
+        }),
+    [asset, availableAssets, defaultAsset]
+  )
 
   /* resolve recipient */
   useEffect(() => {
