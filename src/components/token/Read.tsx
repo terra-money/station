@@ -48,7 +48,9 @@ const Read = forwardRef(
 
       return (
         <span className={cx({ small: !props.prefix })}>
-          {lessThanFixed ? `${lessThanFloor}` : decimal && `.${decimal}`}
+          {lessThanFixed
+            ? `.${lessThanFloor.toString().split(".")[1]}`
+            : decimal && `.${decimal}`}
         </span>
       )
     }
