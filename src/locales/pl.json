@@ -22,14 +22,14 @@
   "Form": {
     "Amount": "Ilość",
     "Recipient": "Odbiorca",
-    "Asset": "",
-    "Source chain": "",
+    "Asset": "Aktywo",
+    "Source chain": "źródło",
     "Name": "Nazwa",
     "optional": "opcjonalnie",
     "Submit": "Prześlij",
     "Confirm": "Potwierdź",
     "Reset": "Reset",
-    "All": ""
+    "All": "Wszystkie"
   },
   "Validate": {
     "{{label}} is required": "{{label}} jest wymagana",
@@ -62,7 +62,7 @@
     "User denied": "Anulowane przez użytkownika",
     "Failed to create tx": "Nie udało się utworzyć tx",
     "Tx failed": "Tx nie powiodło się",
-    "Connect wallet to see your address": ""
+    "Connect wallet to see your address": "Podłącz swój portfel aby zobaczyć adres"
   },
   "Application": {
     "Go back": "Wróć",
@@ -75,8 +75,8 @@
     "Not found": "Nie znaleziono",
     "setup": "ustawienia",
     "documentation": "dokumentacja",
-    "Search for a chain...": "",
-    "Select theme": ""
+    "Search for a chain...": "Szukaj łańcucha",
+    "Select theme": "Wybierz szablon"
   },
   "Units": { "year": "rok", "day": "dzień", "{{d}} days": "{{d}} dni" },
   "Preferences": { "Language": "Język", "Currency": "Waluta" },
@@ -124,10 +124,10 @@
     "Add tokens": "Dodaj tokeny",
     "Manage list": "Zarządzaj listą",
     "Assets": "Aktywa",
-    "receive": "odbierać",
+    "receive": "Odbierz",
     "select a coin": "Wybierz monetę",
     "asset value": "wartość aktywów",
-    "{{balance}} available": ""
+    "{{balance}} available": "dostępny"
   },
   "Txs": {
     "Send": "Wyślij",
@@ -144,7 +144,7 @@
     "Transfer NFT": "Transfer NFT",
     "Earn": "Zarabiaj",
     "Leave enough coins to pay fee for subsequent transactions": "Pozostaw wystarczającą ilości monet, aby uiścić opłatę za kolejne transakcje",
-    "Check if this transaction requires a memo": "",
+    "Check if this transaction requires a memo": "Sprawdź czy tranzakcja wymaga memo",
     "Balance after tx": "Saldo po tx"
   },
   "Swap": {
@@ -160,12 +160,12 @@
   },
   "Stake": {
     "Delegations": "Delegacje",
-    "My delegations": "",
+    "My delegations": "Moje delegacje",
     "Undelegations": "Oddelegowane",
     "Delegated": "Delegowane",
     "Undelegated": "Oddelegowane",
     "Staking rewards": "Nagrody za stakowanie",
-    "My rewards": "",
+    "My rewards": "Moje nagrody",
     "Maximum 7 undelegations can be in progress at the same time": "W tym samym czasie może być prowadzonych maksymalnie 7 procesów oddelegowania",
     "No rewards are distributed during the 21 day undelegation period": "W ciągu 21-dniowego okresu oddelegowania nie są wypłacane żadne nagrody.",
     "Quick stake selects validators that": "Szybka stawka wybiera walidatory, które",
@@ -177,20 +177,20 @@
     "Staked funds": "Fundusze zestakowane",
     "Quick Stake": "szybkie stakowanie",
     "Manual Stake": "ręczne stakowanie",
-    "Select action": "",
-    "Withdraw all rewards": "",
-    "Show inactive validators": "",
-    "Search for validator...": ""
+    "Select action": "Wybierz działanie",
+    "Withdraw all rewards": "Wypłać wszystkie nagrody",
+    "Show inactive validators": "Pokaż nieaktywnych walidatorów",
+    "Search for validator...": "Szukaj walidatora"
   },
   "Validator": {
     "Validators": "Walidatorzy",
     "Voting power": "Siła głosowania",
     "Self delegation": "Samodzielne przekazywanie uprawnień",
     "Commission": "Prowizja",
-    "Current": "",
-    "Max": "",
-    "Max daily change": "",
-    "Last changed": "",
+    "Current": "Obecny",
+    "Max": "Max",
+    "Max daily change": "Max dzienna zmiana",
+    "Last changed": "Ostatnia zmiana",
     "Uptime": "Czas działania",
     "Validator details": "Informacje o walidatorze",
     "Operator address": "Adres operatora",
@@ -226,7 +226,7 @@
     "Veto threshold": "Próg veto",
     "Proposal deposits will not be refunded if the proposal fails to reach the quorum or the result is NO_WITH_VETO": "Kaucja za propozycję nie podlega zwrotowi, jeśli propozycja nie osiągnie kworum lub wynik jest NIE_WITH_VETO",
     "Parameters cannot be changed by text proposals": "Parametry nie mogą być zmieniane przez propozycje tekstowe",
-    "No proposals in {{label}} period": ""
+    "No proposals in {{label}} period": "Brak propozycj w {{label}} okresie"
   },
   "Contract": {
     "Upload": "Prześlij",
