@@ -23,7 +23,7 @@ import { getErrorMessage } from "utils/error"
 import { getLocalSetting, SettingKey } from "utils/localStorage"
 import { useCurrency } from "data/settings/Currency"
 import { queryKey, RefetchOptions } from "data/query"
-import { useAddress, useChainID, useNetwork } from "data/wallet"
+import { useAddress, useNetwork } from "data/wallet"
 import { isBroadcastingState, latestTxState } from "data/queries/tx"
 import { useBankBalance, useIsWalletEmpty } from "data/queries/bank"
 
@@ -182,8 +182,8 @@ function Tx<TxValues>(props: Props<TxValues>) {
     : isDenom(token)
       ? getNativeMax()
       : balance
-  const chainID = useChainID()
-
+  // const chainID = useChainID()
+  const chainID = 'mainnet';
   /* (effect): Call the onChangeMax function whenever the max changes */
   useEffect(() => {
     if (max && isMax && onChangeMax) onChangeMax(toInput(max, decimals))
