@@ -30,10 +30,14 @@ const AssetChain = (props: Props) => {
         <h1 className={styles.name}>{name}</h1>
         <h1 className={styles.price}>
           {currency.unit}{" "}
-          {(
-            ((prices?.[token]?.price || 0) * parseInt(balance)) /
-            10 ** decimals
-          ).toFixed(2)}
+          <Read
+            {...props}
+            amount={(prices?.[token]?.price || 0) * parseInt(balance)}
+            decimals={decimals}
+            fixed={2}
+            denom=""
+            token=""
+          />
         </h1>
         <h2 className={styles.amount}>
           <WithFetching {...pricesState} height={1}>

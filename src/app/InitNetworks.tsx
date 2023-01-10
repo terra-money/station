@@ -33,6 +33,7 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
       const testBase = {
         ...networks.mainnet,
         ...networks.testnet,
+        ...networks.classic,
       }
 
       const result = await Promise.all(
