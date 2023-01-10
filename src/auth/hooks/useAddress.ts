@@ -16,7 +16,7 @@ export default useAddress
 
 export const isMisesWallet = ()=>{
   const provider = walletPrivider();
-  return provider.mode==="extension"
+  return provider?.mode==="extension" || false
 }
 export function useConnectWallet() {
   const [misesState, setmisesState] = useRecoilState(misesStateDefault)
