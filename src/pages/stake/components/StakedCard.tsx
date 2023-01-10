@@ -19,8 +19,8 @@ const StakedCard = (props: PropsWithChildren<Props>) => {
     <Card {...props} onClick={has(amount) ? props.onClick : undefined}>
       <Grid gap={2}>
         <span className={styles.amount}>
-          <Read amount={amount} decimals={0} fixed={2} />
           {currency.unit}
+          <Read amount={amount} decimals={0} fixed={2} />
           <span className={styles.small}>{children}</span>
         </span>
       </Grid>
