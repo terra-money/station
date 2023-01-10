@@ -40,7 +40,7 @@ const HistoryList = ({ chainID }: Props) => {
             baseURL: networks[chainID].lcd,
             params: {
               events: `${event}='${address}'`,
-              order_by: "ORDER_BY_DESC",
+              //order_by: "ORDER_BY_DESC",
               "pagination.offset": pageParam || undefined,
               "pagination.reverse": true,
               "pagination.limit": LIMIT,
