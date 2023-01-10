@@ -14,7 +14,7 @@ const SwapTx = () => {
   const { t } = useTranslation()
   const networkName = useNetworkName()
 
-  if (networkName === "testnet") {
+  if (networkName !== "mainnet") {
     return (
       <Page title={t("Swap")} small>
         <Card>

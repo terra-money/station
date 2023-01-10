@@ -3,6 +3,8 @@ import { readAmount, toAmount } from "@terra.kitchen/utils"
 import { Coin, Coins } from "@terra-money/feather.js"
 import { has } from "utils/num"
 import { FindDecimals } from "./IBCHelperContext"
+import { getShouldTax } from "data/queries/treasury"
+import { calcMinimumTaxAmount } from "./Tx"
 
 export const getPlaceholder = (decimals = 6) => "0.".padEnd(decimals + 2, "0")
 
@@ -25,5 +27,34 @@ export const getCoins = (coins: CoinInput[], findDecimals?: FindDecimals) => {
       })
       .filter(({ amount }) => has(amount))
       .map(({ amount, denom }) => new Coin(denom, amount))
+  )
+}
+
+export interface TaxParams {
+  taxRate?: string
+  taxCap?: string
+}
+
+export const calcTaxes = (
+  coins: CoinInput[],
+  { taxRate = "0", taxCap = "0" }: TaxParams,
+  isClassic: boolean
+) => {
+  return new Coins(
+    coins
+      .filter(({ input, denom, taxRequired }) => {
+        const amount = toAmount(input)
+        return getShouldTax(denom, isClassic) && has(amount) && taxRequired
+      })
+      .map(({ input, denom, taxRequired }) => {
+        const amount = toAmount(input)
+        const tax = calcMinimumTaxAmount(amount, {
+          rate: taxRequired ? taxRate : "0",
+          cap: taxCap,
+        })
+
+        if (!tax) throw new Error()
+        return new Coin(denom, tax)
+      })
   )
 }

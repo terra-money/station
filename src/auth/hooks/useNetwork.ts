@@ -34,7 +34,6 @@ export const useNetworkOptions = () => {
 
 export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
   const { networks, filterEnabledNetworks } = useNetworks()
-  console.log(networks)
   const [network, setNetwork] = useNetworkState()
   const wallet = useRecoilValue(walletState)
   const connectedWallet = useWallet()

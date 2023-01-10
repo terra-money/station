@@ -194,7 +194,11 @@ const useAuth = () => {
         sequence,
         signMode,
       }
-      return await key.signTx(unsignedTx, options)
+      return await key.signTx(
+        unsignedTx,
+        options,
+        networks[txOptions.chainID].isClassic
+      )
     } /*else if (is.preconfigured(wallet)) {
       const key = new MnemonicKey({ mnemonic: wallet.mnemonic })
       return await lcd.wallet(key).createAndSignTx(txOptions)
