@@ -1,7 +1,5 @@
 import { PropsWithChildren, ReactNode } from "react"
 import classNames from "classnames/bind"
-import { Link, useLocation, useNavigate } from "react-router-dom"
-import { ArrowBack } from "@mui/icons-material"
 import { ErrorBoundary, WithFetching } from "../feedback"
 import Container from "./Container"
 import Card from "./Card"
@@ -16,21 +14,10 @@ interface Props extends QueryState {
   small?: boolean
   sub?: boolean // used as a page in a page
   invisible?: boolean // used as a page in a page with no margin
-  backButton?: boolean
 }
 
 const Page = (props: PropsWithChildren<Props>) => {
-  const navigate = useNavigate()
-  const {
-    title,
-    extra,
-    children,
-    small,
-    sub,
-    invisible,
-    mainClassName,
-    backButton,
-  } = props
+  const { title, extra, children, small, sub, invisible, mainClassName } = props
 
   return (
     <WithFetching {...props}>
@@ -42,10 +29,7 @@ const Page = (props: PropsWithChildren<Props>) => {
             <Container className={styles.grid}>
               {title && (
                 <header className={styles.header}>
-                  <div className={styles.titleWrapper}>
-                    {backButton && <ArrowBack onClick={() => navigate(-1)} />}
-                    <h1 className={styles.title}>{title}</h1>
-                  </div>
+                  <h1 className={styles.title}>{title}</h1>
                   {extra}
                 </header>
               )}
