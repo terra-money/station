@@ -53,15 +53,19 @@ export const useExchangeRates = () => {
         ).join(",")}&vs_currencies=${currency.id}&include_24hr_change=true`
       )
 
-      return Object.keys(coingeckoIDs).reduce((acc, denom) => {
-        return {
-          ...acc,
-          [networkName === "classic" ? `${denom}:classic` : denom]: {
-            price: prices[coingeckoIDs[denom]][currency.id],
-            change: prices[coingeckoIDs[denom]][`${currency.id}_24h_change`],
-          },
-        }
-      }, {})
+      return Object.keys(coingeckoIDs)
+        .filter(
+          (denom) => networkName !== "classic" || denom.endsWith(":classic")
+        )
+        .reduce((acc, denom) => {
+          return {
+            ...acc,
+            [denom.replace(":classic", "")]: {
+              price: prices[coingeckoIDs[denom]][currency.id],
+              change: prices[coingeckoIDs[denom]][`${currency.id}_24h_change`],
+            },
+          }
+        }, {})
     },
     { ...RefetchOptions.DEFAULT }
   )
