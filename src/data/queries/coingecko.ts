@@ -4,6 +4,7 @@ import { queryKey, RefetchOptions } from "../query"
 import { ASSETS } from "config/constants"
 import axios from "axios"
 import { useCurrency } from "data/settings/Currency"
+import { useNetworkName } from "data/wallet"
 
 // TODO: remove/move somewhere else
 export const useActiveDenoms = () => {
@@ -35,6 +36,7 @@ export const useSupportedFiat = () => {
 
 export const useExchangeRates = () => {
   const currency = useCurrency()
+  const networkName = useNetworkName()
 
   return useQuery(
     [queryKey.coingecko.exchangeRates, currency],
@@ -54,7 +56,7 @@ export const useExchangeRates = () => {
       return Object.keys(coingeckoIDs).reduce((acc, denom) => {
         return {
           ...acc,
-          [denom]: {
+          [networkName === "classic" ? `${denom}:classic` : denom]: {
             price: prices[coingeckoIDs[denom]][currency.id],
             change: prices[coingeckoIDs[denom]][`${currency.id}_24h_change`],
           },

@@ -3,24 +3,43 @@ import createContext from "utils/createContext"
 
 type Whitelist = Record<
   string,
-  {
-    token: string
-    symbol: string
-    name: string
-    icon: string
-    chains: string[]
-    decimals: number
-  }
+  Record<
+    string,
+    {
+      token: string
+      symbol: string
+      name: string
+      icon: string
+      chains: string[]
+      decimals: number
+    }
+  >
 >
+
+type IBCDenoms = Record<
+  string,
+  Record<
+    string,
+    {
+      token: string
+      chain: string
+    }
+  >
+>
+
+export interface WhitelistData {
+  whitelist: Whitelist
+  ibcDenoms: IBCDenoms
+}
 
 // chains and token withelist are always required from the beginning.
 const [useFetchedData, WhitelistProvider] =
-  createContext<Whitelist>("useWhitelist")
+  createContext<WhitelistData>("useWhitelist")
 export { WhitelistProvider }
 
-export function useWhitelist(): Whitelist {
+export function useWhitelist(): WhitelistData {
   const data = useFetchedData()
-  if (!data) return {}
+  if (!data) return { whitelist: {}, ibcDenoms: {} }
   return data
 }
 
