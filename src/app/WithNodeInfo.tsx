@@ -19,6 +19,7 @@ const WithNodeInfo = ({ children }: PropsWithChildren<{}>) => {
   // FIXME: remove or make sure chainID is available
   useEffect(() => {
     ;(async () => {
+      if (chainID !== "localterra") return
       const { data } = await axios.get(
         "cosmos/base/tendermint/v1beta1/node_info",
         {

@@ -70,7 +70,7 @@ export const WithTokenItem = ({ token, children }: Props) => {
 export const getIcon = (path: string) => `${ASSETS}/icon/svg/${path}`
 
 export const useNativeDenoms = () => {
-  const { whitelist, ibcDenoms } = useWhitelist()
+  const { whitelist, ibcDenoms, legacyWhitelist } = useWhitelist()
   const { list: cw20 } = useCustomTokensCW20()
   const networkName = useNetworkName()
 
@@ -94,6 +94,7 @@ export const useNativeDenoms = () => {
     }
 
     return (
+      legacyWhitelist[denom] ??
       cw20.find(({ token }) => denom === token) ??
       // that's needed for axl tokens
       Object.values(whitelist[networkName]).find((t) => t.token === denom) ?? {

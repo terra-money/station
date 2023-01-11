@@ -3,17 +3,14 @@ import createContext from "utils/createContext"
 
 type Whitelist = Record<
   string,
-  Record<
-    string,
-    {
-      token: string
-      symbol: string
-      name: string
-      icon: string
-      chains: string[]
-      decimals: number
-    }
-  >
+  {
+    token: string
+    symbol: string
+    name: string
+    icon: string
+    chains: string[]
+    decimals: number
+  }
 >
 
 type IBCDenoms = Record<
@@ -28,8 +25,9 @@ type IBCDenoms = Record<
 >
 
 export interface WhitelistData {
-  whitelist: Whitelist
+  whitelist: Record<string, Whitelist>
   ibcDenoms: IBCDenoms
+  legacyWhitelist: Whitelist
 }
 
 // chains and token withelist are always required from the beginning.
@@ -39,7 +37,7 @@ export { WhitelistProvider }
 
 export function useWhitelist(): WhitelistData {
   const data = useFetchedData()
-  if (!data) return { whitelist: {}, ibcDenoms: {} }
+  if (!data) return { whitelist: {}, ibcDenoms: {}, legacyWhitelist: {} }
   return data
 }
 

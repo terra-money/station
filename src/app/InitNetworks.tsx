@@ -1,6 +1,6 @@
 import { PropsWithChildren, useEffect, useState } from "react"
 import axios from "axios"
-import { ASSETS } from "config/constants"
+import { STATION_ASSETS } from "config/constants"
 import createContext from "utils/createContext"
 import NetworkLoading from "./NetworkLoading"
 
@@ -16,9 +16,9 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
   useEffect(() => {
     const fetchChains = async () => {
       const { data: chains } = await axios.get<InterchainNetworks>(
-        "/station/chains.json",
+        "/chains.json",
         {
-          baseURL: ASSETS,
+          baseURL: STATION_ASSETS,
         }
       )
       setNetworks(chains)
@@ -47,7 +47,9 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
                 timeout: 5_000,
               }
             )
-            return data.default_node_info.network as string
+            return "default_node_info" in data
+              ? (data.default_node_info.network as string)
+              : (data.node_info.network as string)
           } catch (e) {
             return null
           }

@@ -54,8 +54,10 @@ export const useExchangeRates = () => {
       )
 
       return Object.keys(coingeckoIDs)
-        .filter(
-          (denom) => networkName !== "classic" || denom.endsWith(":classic")
+        .filter((denom) =>
+          networkName === "classic"
+            ? denom.endsWith(":classic")
+            : !denom.endsWith(":classic")
         )
         .reduce((acc, denom) => {
           return {
