@@ -34,6 +34,7 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
         ...networks.mainnet,
         ...networks.testnet,
         ...networks.classic,
+        //...networks.localterra,
       }
 
       const result = await Promise.all(
@@ -70,8 +71,9 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
         networks,
         filterEnabledNetworks: (networks) =>
           Object.fromEntries(
-            Object.entries(networks).filter(([chainID]) =>
-              enabledNetworks.includes(chainID)
+            Object.entries(networks).filter(
+              ([chainID]) =>
+                chainID === "localterra" || enabledNetworks.includes(chainID)
             )
           ),
       }}

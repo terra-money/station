@@ -1,6 +1,6 @@
 import { PropsWithChildren, ReactNode } from "react"
 import classNames from "classnames/bind"
-import { Link, useLocation, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { ArrowBack } from "@mui/icons-material"
 import { ErrorBoundary, WithFetching } from "../feedback"
 import Container from "./Container"
