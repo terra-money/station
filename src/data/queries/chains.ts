@@ -52,6 +52,17 @@ export function getChainNamefromID(
   )
 }
 
+export function getChainIdFromAddress(
+  address: string,
+  chains: Record<string, InterchainNetwork>
+) {
+  return (
+    Object.values(chains)
+      .find(({ prefix }) => address.includes(prefix))
+      ?.chainID.toLowerCase() ?? ""
+  )
+}
+
 export function useIBCChannels() {
   const networks = useNetwork()
 

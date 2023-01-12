@@ -14,45 +14,68 @@ import {
 } from "recharts"
 import {
   useInterchainDelegations,
-  useCalcInterchainDelegationsTotal,
+  useInterchainValidators,
+  useCalcDelegationsByValidator,
 } from "data/queries/staking"
 import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined"
 import { useThemeState } from "data/settings/Theme"
+import ProfileIcon from "./components/ProfileIcon"
 
 const StakedDonut = () => {
   const { t } = useTranslation()
   const [current] = useThemeState()
 
   const interchainDelegations = useInterchainDelegations()
-  const state = combineState(...interchainDelegations)
+  const interchainValidators = useInterchainValidators()
+  const state = combineState(...interchainDelegations, ...interchainValidators)
 
-  const { graphData } = useCalcInterchainDelegationsTotal(interchainDelegations)
+  const { graphData } = useCalcDelegationsByValidator(
+    interchainDelegations,
+    interchainValidators
+  )
 
-  const defaultColors = ["#4672ED", "#7893F5", "#FF7940", "#FF9F40", "#F4BE37"]
+  const defaultColors = ["#7893F5", "#7c1ae5", "#FF7940", "#FF9F40", "#acacac"]
   const COLORS = current?.donutColors || defaultColors
 
   const RenderLegend = (props: any) => {
-    const { payload } = props
+    const { payload, chainSelected } = props
 
     return (
       <ul className={styles.legend}>
-        {payload.map((entry: any, index: any) => (
-          <li key={`item-${index}`} className={styles.detailLine}>
-            <div
-              className={styles.circle}
-              style={{ backgroundColor: entry.color }}
-            ></div>
-            <img
-              className={styles.icon}
-              src={entry.payload.icon}
-              alt={entry.value}
-            />
-            <p className={styles.denom}>{entry.value}</p>
-            <p className={styles.percent}>
-              {Math.round(entry.payload.percent * 100)}%
-            </p>
-          </li>
-        ))}
+        {payload.map((entry: any, index: any) => {
+          const percentage = Math.round(entry.payload.percent * 100)
+          return (
+            <li key={`item-${index}`} className={styles.detailLine}>
+              <div
+                className={styles.circle}
+                style={{ backgroundColor: entry.color }}
+              ></div>
+              {chainSelected ? (
+                <>
+                  {entry.payload.identity !== "Other" && (
+                    <ProfileIcon src={entry.payload.identity} size={22} />
+                  )}
+                  <p className={styles.denom}>{entry.payload.moniker}</p>
+                  <p className={styles.percent}>
+                    {percentage < 1 ? `< ${percentage}` : percentage}%
+                  </p>
+                </>
+              ) : (
+                <>
+                  <img
+                    className={styles.icon}
+                    src={entry.payload.icon}
+                    alt={entry.value}
+                  />
+                  <p className={styles.denom}>{entry.value}</p>
+                  <p className={styles.percent}>
+                    {Math.round(entry.payload.percent * 100)}%
+                  </p>
+                </>
+              )}
+            </li>
+          )
+        })}
       </ul>
     )
   }
@@ -62,7 +85,7 @@ const StakedDonut = () => {
 
     return (
       <div className={styles.tooltip}>
-        <h6>{payload[0]?.name}</h6>
+        <h6>{payload[0]?.payload.name || payload[0]?.payload.moniker}</h6>
         <div className={styles.infoLine}>
           <p>Balance: </p>
           <p>{payload[0]?.payload.amount}</p>
@@ -93,10 +116,12 @@ const StakedDonut = () => {
                             layout="vertical"
                             verticalAlign="middle"
                             align="right"
-                            content={<RenderLegend />}
+                            content={<RenderLegend chainSelected={!!chain} />}
                             className="legend"
                           />
-                          <Tooltip content={<RenderTooltip />} />
+                          <Tooltip
+                            content={<RenderTooltip chainSelected={!!chain} />}
+                          />
                           <Pie
                             data={graphData[chain || "all"]}
                             cx={125}
