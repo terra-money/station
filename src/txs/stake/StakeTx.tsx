@@ -58,7 +58,7 @@ const StakeTx = () => {
   }
 
   return (
-    <Page {...state} title={t("Delegate")}>
+    <Page {...state} title={t("Delegate")} backButton>
       <Auto
         columns={[
           <Tabs
