@@ -11,20 +11,20 @@ const accordions = [
   {
     title: "From an Existing Station Wallet",
     content: [
-      'Open the extension and enter your seed phrase through the recovery process. You can find a guide <a href="https://61c51cef.docs-terra.pages.dev/learn/terra-station/migration" target="_blank" rel="noopener noreferrer">here</a>.',
+      'Open the extension and enter your seed phrase through the recovery process. You can find a guide <a href="https://docs.terra.money/learn/station/migration/" target="_blank" rel="noopener noreferrer">here</a>.',
       "If you choose not to re-add your wallet you will not be able to access non-Terra chains. However, you will still have access to the private key and funds associated with that wallet.",
     ],
   },
   {
     title: "From a Non-Station Wallet",
     content: [
-      `Use the  <span class=${styles.highlighted}>Recover Wallet</span>  flow in the extension to import your wallet. You can find a guide <a href="https://61c51cef.docs-terra.pages.dev/learn/terra-station/migration" target="_blank" rel="noopener noreferrer">here</a>.`,
+      `Use the  <span class=${styles.highlighted}>Recover Wallet</span> flow in the extension to import your wallet. You can find a guide <a href="https://docs.terra.money/learn/station/migration/" target="_blank" rel="noopener noreferrer">here</a>`,
     ],
   },
   {
     title: "From a Ledger",
     content: [
-      `Click  <span class=${styles.highlighted}>connect</span>  on the home page and select <span class=${styles.highlighted}>access with ledger</span>.`,
+      `Go to the <a href="https://station.terra.money/" target="_blank" rel="noopener noreferrer">Station Web App</a> home page and select <span class=${styles.highlighted}>access with ledger</span>.`,
     ],
   },
 ]
@@ -51,7 +51,7 @@ const WelcomeModal = () => {
       className={styles.modal}
       overlayClassName={styles.overlay}
     >
-      <h1 className={styles.title}>{t("Welcome to the Station WebApp")}</h1>
+      <h1 className={styles.title}>{t("Welcome to the Station Extension")}</h1>
       <h3 className={styles.subtitle}>
         To enable interchain features complete the following.
       </h3>

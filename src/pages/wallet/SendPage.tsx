@@ -118,7 +118,6 @@ const SendPage = () => {
         }),
     [asset, availableAssets, defaultAsset]
   )
-
   /* resolve recipient */
   useEffect(() => {
     if (!recipient) {
