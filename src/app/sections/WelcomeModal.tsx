@@ -41,7 +41,6 @@ const WelcomeModal = () => {
   }
 
   const submitButton = () => {
-    console.log("confirmed")
     localStorage.setItem("welcomeModal", "true")
     setForceClose(true)
   }

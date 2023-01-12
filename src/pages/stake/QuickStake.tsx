@@ -3,7 +3,6 @@ import ChainFilter from "components/layout/ChainFilter"
 import { useBalances } from "data/queries/bank"
 import { useTranslation } from "react-i18next"
 import QuickStakeForm from "txs/stake/QuickStakeForm"
-import TxContext from "txs/TxContext"
 import styles from "./QuickStake.module.scss"
 
 export enum QuickStakeAction {
@@ -39,9 +38,7 @@ const QuickStake = () => {
           <Card muted>
             <Page small invisible>
               <ChainFilter outside className={styles.filter}>
-                {(chainID) => (
-                  <TxContext>{renderQuickStakeForm(chainID, action)}</TxContext>
-                )}
+                {(chainID) => renderQuickStakeForm(chainID, action)}
               </ChainFilter>
             </Page>
           </Card>

@@ -1,10 +1,6 @@
 import { useTranslation } from "react-i18next"
-import { isDenomLuna } from "@terra.kitchen/utils"
-import { readPercent } from "@terra.kitchen/utils"
 import { toPrice } from "utils/num"
-import { useMarketParams } from "data/queries/market"
 import { Read } from "components/token"
-import { TooltipIcon } from "components/display"
 import { PayloadOnchain, PayloadTerraswap } from "../useSwapUtils"
 import { PayloadRouteswap } from "../useSwapUtils"
 import { SwapMode } from "../useSwapUtils"
@@ -28,9 +24,6 @@ const ExpectedPrice = ({ mode, input, ...props }: Props) => {
   const offerDecimals = findDecimals(offerAsset)
   const askDecimals = findDecimals(askAsset)
 
-  /* query: native */
-  const minSpread = useSwapSpread()
-
   /* render: expected price */
   const renderPrice = (price?: Price) => <Price {...props} price={price} />
 
@@ -44,38 +37,6 @@ const ExpectedPrice = ({ mode, input, ...props }: Props) => {
   }
 
   /* render: by mode */
-  const renderOnchain = () => {
-    const spread = payload as PayloadOnchain
-
-    const tooltip = (
-      <>
-        {[offerAsset, askAsset].some(isDenomLuna) && (
-          <p>
-            {t("Minimum Luna swap spread: {{minSpread}}", {
-              minSpread: readPercent(minSpread),
-            })}
-          </p>
-        )}
-      </>
-    )
-
-    return (
-      <>
-        <dt>{t("Oracle price")}</dt>
-        <dd>{renderPrice(rate)}</dd>
-        {renderExpectedPrice()}
-        <dt>
-          <TooltipIcon content={tooltip}>{t("Spread")}</TooltipIcon>
-        </dt>
-        <dd>
-          {!isLoading && (
-            <Read amount={spread} denom={askAsset} decimals={askDecimals} />
-          )}
-        </dd>
-      </>
-    )
-  }
-
   const renderTerraswap = () => {
     const fee = payload as PayloadTerraswap
 
@@ -109,7 +70,6 @@ const ExpectedPrice = ({ mode, input, ...props }: Props) => {
 
   const renderByMode = (mode: SwapMode) =>
     ({
-      [SwapMode.ONCHAIN]: renderOnchain,
       [SwapMode.TERRASWAP]: renderTerraswap,
       [SwapMode.ASTROPORT]: renderTerraswap,
       [SwapMode.ROUTESWAP]: renderRouteswap,
@@ -144,10 +104,3 @@ const ExpectedPrice = ({ mode, input, ...props }: Props) => {
 }
 
 export default ExpectedPrice
-
-/* hooks */
-const useSwapSpread = () => {
-  const { data: marketParams } = useMarketParams()
-  const minSpread = marketParams?.min_stability_spread
-  return minSpread?.toString()
-}

@@ -21,6 +21,8 @@ import { useMemoizedPrices } from "data/queries/coingecko"
 import { useNativeDenoms } from "data/token"
 import shuffle from "utils/shuffle"
 import { getIsBonded } from "pages/stake/ValidatorsList"
+import { getChainIdFromAddress } from "./chains"
+import { useNetwork } from "data/wallet"
 
 export const useInterchainValidators = () => {
   const addresses = useInterchainAddresses() || {}
@@ -29,7 +31,7 @@ export const useInterchainValidators = () => {
   return useQueries(
     Object.keys(addresses).map((chainID) => {
       return {
-        queryKey: [queryKey.staking.interchainValidators, addresses, chainID],
+        queryKey: [queryKey.interchain.staking.validators, addresses, chainID],
         queryFn: async () => {
           const result: Validator[] = []
           let key: string | null = ""
@@ -85,7 +87,7 @@ export const useInterchainDelegations = () => {
   return useQueries(
     Object.keys(addresses).map((chainID) => {
       return {
-        queryKey: [queryKey.staking.interchainDelegations, addresses, chainID],
+        queryKey: [queryKey.interchain.staking.delegations, addresses, chainID],
         queryFn: async () => {
           const [delegations] = await lcd.staking.delegations(
             addresses[chainID],
@@ -132,7 +134,7 @@ export const useDelegations = (chainID: string) => {
   const lcd = useInterchainLCDClient()
 
   return useQuery(
-    [queryKey.staking.delegations, addresses, chainID],
+    [queryKey.staking.delegations, addresses?.[chainID]],
     async () => {
       if (!addresses || !addresses[chainID]) return []
       // TODO: Pagination
@@ -183,7 +185,7 @@ export const useInterchainUnbondings = () => {
   return useQueries(
     Object.keys(addresses).map((chainID) => {
       return {
-        queryKey: [queryKey.staking.interchainUnbondings, addresses, chainID],
+        queryKey: [queryKey.interchain.staking.unbondings, addresses, chainID],
         queryFn: async () => {
           const [unbondings] = await lcd.staking.unbondingDelegations(
             addresses[chainID]
@@ -361,34 +363,159 @@ export const useCalcInterchainDelegationsTotal = (
   return { currencyTotal, graphData: { all: allData, ...tableDataByChain } }
 }
 
+export const useCalcDelegationsByValidator = (
+  delegationsQueryResults: UseQueryResult<{
+    delegation: Delegation[]
+    chainID: string
+  }>[],
+  interchainValidators: UseQueryResult<Validator[], unknown>[]
+) => {
+  const { data: prices } = useMemoizedPrices()
+  const readNativeDenom = useNativeDenoms()
+  const networks = useNetwork()
+
+  if (!delegationsQueryResults.length)
+    return { currencyTotal: 0, tableData: {} }
+
+  const delegationsPriceByDemon = {} as any
+  const delegationsAmountsByDemon = {} as any
+  const validatorByChain = {} as any
+  const allValidatorByChain = {} as any
+  let currencyTotal = 0
+
+  delegationsQueryResults.forEach((result) => {
+    if (result.status === "success") {
+      currencyTotal += result.data?.delegation?.length
+        ? BigNumber.sum(
+            ...result.data.delegation.map(({ balance, validator_address }) => {
+              const amount = BigNumber.sum(
+                delegationsAmountsByDemon[balance.denom] || 0,
+                balance.amount.toNumber()
+              ).toNumber()
+
+              const { token, decimals } = readNativeDenom(balance.denom)
+              const currecyPrice: any =
+                (amount * (prices?.[token]?.price || 0)) / 10 ** decimals
+
+              delegationsPriceByDemon[balance.denom] = currecyPrice
+              delegationsAmountsByDemon[balance.denom] = amount
+
+              if (!validatorByChain[result.data.chainID]) {
+                validatorByChain[result.data.chainID] = {}
+                validatorByChain[result.data.chainID][validator_address] = {
+                  value: 0,
+                  amount: 0,
+                }
+              }
+
+              const delegatorCurrecyPrice: any =
+                (balance.amount.toNumber() * (prices?.[token]?.price || 0)) /
+                10 ** decimals
+
+              validatorByChain[result.data.chainID][validator_address] = {
+                value: delegatorCurrecyPrice,
+                amount: balance.amount.toNumber(),
+              }
+
+              return currecyPrice
+            })
+          ).toNumber()
+        : 0
+    }
+  })
+
+  interchainValidators.map((response) => {
+    if (response.status === "success") {
+      const addressChainId =
+        getChainIdFromAddress(response.data[0]?.operator_address, networks) ||
+        ""
+      allValidatorByChain[addressChainId] = [...response.data]
+    }
+  })
+
+  const tableDataByChain = {} as any
+
+  Object.keys(validatorByChain).forEach((chainName) => {
+    const delegationsDataComplete = Object.keys(
+      validatorByChain[chainName]
+    ).map((validator) => {
+      if (!allValidatorByChain[chainName]) {
+        return {}
+      }
+      const { description } = getFindValidator(allValidatorByChain[chainName])(
+        validator
+      )
+      return {
+        address: validator,
+        moniker: description.moniker,
+        identity: description.identity,
+        value: validatorByChain[chainName][validator].value,
+        amount: readAmount(validatorByChain[chainName][validator].amount, {}),
+      }
+    })
+
+    const sortedValis = delegationsDataComplete.sort(
+      (a, b) => b.value - a.value
+    )
+    if (sortedValis.length <= 4) {
+      tableDataByChain[chainName] = sortedValis
+    } else {
+      const top4 = sortedValis.slice(0, 4)
+      const other = {
+        address: "Other",
+        moniker: "Other",
+        identity: "Other",
+        value: sortedValis.slice(4).reduce((acc, vali) => acc + vali.value, 0),
+        amount: sortedValis
+          .slice(4)
+          .reduce((acc, vali) => acc + Number(vali.amount), 0)
+          .toString(),
+      }
+
+      tableDataByChain[chainName] = [...top4, other]
+    }
+  })
+
+  const allData = Object.keys(delegationsPriceByDemon).map((demonName) => {
+    const { symbol, icon } = readNativeDenom(demonName)
+    return {
+      name: symbol,
+      value: delegationsPriceByDemon[demonName],
+      amount: readAmount(delegationsAmountsByDemon[demonName], {}),
+      icon,
+    }
+  })
+
+  return { currencyTotal, graphData: { all: allData, ...tableDataByChain } }
+}
+
 /* Quick stake helpers */
-export const getQuickStakeEligibleVals = (validators: Validator[]) => {
+export const getPriorityVals = (validators: Validator[]) => {
   const MAX_COMMISSION = 0.05
   const VOTE_POWER_INCLUDE = 0.65
 
   const totalStaked = getTotalStakedTokens(validators)
-  const vals = validators
-    .map((v) => ({ ...v, votingPower: Number(v.tokens) / totalStaked }))
-    .filter(
-      ({ commission, status }) =>
-        getIsBonded(status) &&
-        Number(commission.commission_rates.rate) <= MAX_COMMISSION
-    )
-    .sort((a, b) => a.votingPower - b.votingPower) // least to greatest
+  const getVotePower = (v: Validator) => Number(v.tokens) / totalStaked
+
+  return validators
+    .sort((a, b) => getVotePower(a) - getVotePower(b)) // least to greatest
     .reduce(
       (acc, cur) => {
-        acc.sumVotePower += cur.votingPower
-        if (acc.sumVotePower < VOTE_POWER_INCLUDE) {
-          acc.elgible.push(cur.operator_address)
-        }
+        acc.sumVotePower += getVotePower(cur)
+        if (acc.sumVotePower < VOTE_POWER_INCLUDE) acc.elgible.push(cur)
         return acc
       },
       {
         sumVotePower: 0,
-        elgible: [] as ValAddress[],
+        elgible: [] as Validator[],
       }
     )
-  return shuffle(vals.elgible)
+    .elgible.filter(
+      ({ commission, status }) =>
+        getIsBonded(status) &&
+        Number(commission.commission_rates.rate) <= MAX_COMMISSION
+    )
+    .map(({ operator_address }) => operator_address)
 }
 
 export const getTotalStakedTokens = (validators: Validator[]) => {

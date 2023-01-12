@@ -1,4 +1,5 @@
 import { useConnectedWallet } from "@terra-money/use-wallet"
+import { useNetworks } from "app/InitNetworks"
 import { addressFromWords } from "utils/bech32"
 import useAuth from "./useAuth"
 import { useChainID, useNetwork } from "./useNetwork"
@@ -18,11 +19,12 @@ const useAddress = () => {
 
 export const useInterchainAddresses = () => {
   const connected = useConnectedWallet()
+  const { filterEnabledNetworks } = useNetworks()
   const { wallet } = useAuth()
   const networks = useNetwork()
 
   if (connected?.addresses) {
-    return connected.addresses
+    return filterEnabledNetworks(connected.addresses)
   }
 
   const words = wallet?.words

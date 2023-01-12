@@ -1,19 +1,21 @@
 import { useQuery } from "react-query"
 import axios from "axios"
 import { queryKey, RefetchOptions } from "../query"
-import { useNetwork } from "data/wallet"
+import { useNetworks } from "app/InitNetworks"
 
-export const useNodeInfo = (chainID: string) => {
-  const networks = useNetwork()
-
+export const useLocalNodeInfo = (chainID: string) => {
+  const { networks } = useNetworks()
   return useQuery(
     [queryKey.tendermint.nodeInfo],
     async () => {
-      const { data } = await axios.get("node_info", {
-        baseURL: networks[chainID]?.lcd,
-      })
+      const { data } = await axios.get(
+        "cosmos/base/tendermint/v1beta1/node_info",
+        {
+          baseURL: networks[chainID][chainID].lcd,
+        }
+      )
       return data
     },
-    { ...RefetchOptions.INFINITY }
+    { ...RefetchOptions.INFINITY, enabled: chainID === "localterra" }
   )
 }

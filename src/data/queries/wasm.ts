@@ -1,13 +1,15 @@
 import { useQueries, useQuery } from "react-query"
 import axios from "axios"
-import { AccAddress } from "@terra-money/terra.js"
+import { AccAddress } from "@terra-money/feather.js"
 import { queryKey, RefetchOptions } from "../query"
-import { useAddress } from "../wallet"
-import { useLCDClient } from "./lcdClient"
+import { useNetwork } from "../wallet"
+import { useInterchainLCDClient } from "./lcdClient"
+import { useInterchainAddresses } from "auth/hooks/useAddress"
+import { getChainIDFromAddress } from "utils/bech32"
 
 /* contract info */
 export const useContractInfo = (address: TerraAddress) => {
-  const lcd = useLCDClient()
+  const lcd = useInterchainLCDClient()
   return useQuery(
     [queryKey.wasm.contractInfo, address],
     () => lcd.wasm.contractInfo(address),
@@ -16,7 +18,7 @@ export const useContractInfo = (address: TerraAddress) => {
 }
 
 export const useInitMsg = <T>(address: TerraAddress) => {
-  const lcd = useLCDClient()
+  const lcd = useInterchainLCDClient()
   return useQuery<T>(
     [queryKey.wasm.contractInfo, "initMsg", address],
     async () => {
@@ -29,7 +31,7 @@ export const useInitMsg = <T>(address: TerraAddress) => {
 
 /* contract query */
 export const useGetContractQuery = () => {
-  const lcd = useLCDClient()
+  const lcd = useInterchainLCDClient()
 
   return <T>(contract?: AccAddress, query?: object) => ({
     queryKey: [queryKey.wasm.contractQuery, contract, query],
@@ -57,7 +59,7 @@ export const useTokenInfoCW20 = (token: TerraAddress, enabled = true) => {
 }
 
 export const useTokenInfoCW721 = (contract: AccAddress, token_id: string) => {
-  const lcd = useLCDClient()
+  const lcd = useInterchainLCDClient()
 
   return useQuery(
     [queryKey.wasm.contractQuery, contract, token_id],
@@ -83,16 +85,18 @@ export const useTokenInfoCW721 = (contract: AccAddress, token_id: string) => {
 
 /* token balance */
 const useGetTokenBalanceQuery = () => {
-  const address = useAddress()
-  const lcd = useLCDClient()
+  const addresses = useInterchainAddresses()
+  const lcd = useInterchainLCDClient()
+  const network = useNetwork()
 
   return (token: AccAddress) => ({
-    queryKey: [queryKey.wasm.contractQuery, token, { balance: address }],
+    queryKey: [queryKey.wasm.contractQuery, token, { balance: addresses }],
     queryFn: async () => {
-      if (!address) return "0"
+      const chainID = getChainIDFromAddress(token, network)
+      if (!addresses || !addresses[chainID ?? ""]) return "0"
       const { balance } = await lcd.wasm.contractQuery<{ balance: Amount }>(
         token,
-        { balance: { address } }
+        { balance: { address: addresses[chainID ?? ""] } }
       )
 
       return balance
@@ -114,11 +118,14 @@ export const useTokenBalances = (tokens: AccAddress[]) => {
 }
 
 export const useCW721Tokens = (contract: AccAddress) => {
-  const address = useAddress()
+  const addresses = useInterchainAddresses()
   const getQuery = useGetContractQuery()
+  const chainID = getChainIDFromAddress(contract, useNetwork())
 
   return useQuery(
-    getQuery<{ tokens: string[] }>(contract, { tokens: { owner: address } })
+    getQuery<{ tokens: string[] }>(contract, {
+      tokens: { owner: addresses?.[chainID ?? ""] },
+    })
   )
 }
 

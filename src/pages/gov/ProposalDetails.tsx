@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { Proposal } from "@terra-money/terra.js"
+import { Proposal } from "@terra-money/feather.js"
 import { useProposal } from "data/queries/gov"
 import { Col, Row, Page, Card, Grid } from "components/layout"
 import { useGoBackOnError } from "app/routes"
@@ -71,6 +71,7 @@ const ProposalDetails = () => {
       {...state}
       title={t("Proposal details")}
       extra={proposal && <ProposalActions proposal={proposal} />}
+      backButton
     >
       {render()}
     </Page>

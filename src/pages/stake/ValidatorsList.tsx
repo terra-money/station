@@ -2,12 +2,12 @@ import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 import { readPercent } from "@terra.kitchen/utils"
-import { Validator } from "@terra-money/terra.js"
+import { Validator } from "@terra-money/feather.js"
 /* FIXME(terra.js): Import from terra.js */
 import { BondStatus } from "@terra-money/terra.proto/cosmos/staking/v1beta1/staking"
 import { bondStatusFromJSON } from "@terra-money/terra.proto/cosmos/staking/v1beta1/staking"
 import { combineState } from "data/query"
-import { useValidators } from "data/queries/staking"
+import { getPriorityVals, useValidators } from "data/queries/staking"
 import { useDelegations, useUnbondings } from "data/queries/staking"
 import { getCalcVotingPowerRate } from "data/Terra/TerraAPI"
 import { Table, Flex, Grid, Page } from "components/layout"
@@ -40,28 +40,22 @@ const ValidatorsList = ({
 
   const activeValidators = useMemo(() => {
     if (!validators) return null
-
+    const priorityVals = getPriorityVals(validators)
     const calcRate = getCalcVotingPowerRate(validators)
 
     return validators
       .filter(({ status }) => showAll || !getIsUnbonded(status))
       .map((validator) => {
         const { operator_address } = validator
-
-        const indexOfTerraValidator = validators.findIndex(
-          (validator) => validator.operator_address === operator_address
-        )
-
-        const rank = indexOfTerraValidator + 1
         const voting_power_rate = calcRate(operator_address)
-
         return {
           ...validator,
-          rank,
+          rank:
+            (priorityVals.includes(operator_address) ? 1 : 0) + Math.random(),
           voting_power_rate,
         }
       })
-      .sort(({ rank: a }, { rank: b }) => a - b)
+      .sort((a, b) => b.rank - a.rank)
   }, [validators, showAll])
 
   if (!activeValidators) return null
@@ -98,7 +92,6 @@ const ValidatorsList = ({
                 a.moniker.localeCompare(b.moniker),
               render: (moniker, validator) => {
                 const { operator_address, jailed, status } = validator
-                //const { contact } = validator
 
                 const delegated = delegations?.find(
                   ({ validator_address }) =>
@@ -124,14 +117,6 @@ const ValidatorsList = ({
                         >
                           {moniker}
                         </Link>
-
-                        {/*contact?.email && (
-                        <VerifiedIcon
-                          className="info"
-                          style={{ fontSize: 12 }}
-                        />
-                      )*/}
-
                         {jailed && <ValidatorJailed />}
                         {!jailed && getIsUnbonded(status) && (
                           <ValidatorUnbonded />

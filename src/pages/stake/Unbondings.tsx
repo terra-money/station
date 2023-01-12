@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { AccAddress, Dec } from "@terra-money/terra.js"
+import { AccAddress, Dec } from "@terra-money/feather.js"
 import { getMaxHeightStyle } from "utils/style"
 import { combineState } from "data/query"
 import { useMemoizedPrices } from "data/queries/coingecko"
@@ -64,7 +64,7 @@ const Unbondings = () => {
             title={
               <TooltipIcon
                 content={t(
-                  "Maximum 7 undelegations can be in progress at the same time"
+                  "A maximum 7 undelegations can be in progress at the same time"
                 )}
                 placement="bottom"
               >

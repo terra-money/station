@@ -60,11 +60,17 @@ const Asset = (props: Props) => {
           </h2>
           <h1 className={styles.price}>
             {currency.unit}{" "}
-            {(
-              ((props.price || prices?.[token]?.price || 0) *
-                parseInt(balance ?? "0")) /
-              10 ** decimals
-            ).toFixed(2)}
+            <Read
+              {...props}
+              amount={
+                (props.price || prices?.[token]?.price || 0) *
+                parseInt(balance ?? "0")
+              }
+              decimals={decimals}
+              fixed={2}
+              denom=""
+              token=""
+            />
           </h1>
           <h2 className={styles.amount}>
             <WithFetching {...combineState(state, pricesState)} height={1}>

@@ -2,7 +2,7 @@ import { ReactNode, useMemo } from "react"
 import { capitalize } from "@mui/material"
 import { isDenom, truncate } from "@terra.kitchen/utils"
 import { AccAddress, Coin, Coins, ValAddress } from "@terra-money/feather.js"
-import { useAddress, useChainID } from "data/wallet"
+import { useAddress, useNetwork } from "data/wallet"
 import { useValidators } from "data/queries/staking"
 import { WithTokenItem } from "data/token"
 import { useCW20Contracts, useCW20Whitelist } from "data/Terra/TerraAssets"
@@ -10,10 +10,12 @@ import { FinderLink } from "components/general"
 import { Read } from "components/token"
 import styles from "./TxMessage.module.scss"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
+import { getChainIDFromAddress } from "utils/bech32"
 
 const ValidatorAddress = ({ children: address }: { children: string }) => {
-  const chainID = useChainID()
-  const { data: validators } = useValidators(chainID)
+  const networks = useNetwork()
+  const chainID = getChainIDFromAddress(address, networks)
+  const { data: validators } = useValidators(chainID ?? "")
   const moniker = validators?.find(
     ({ operator_address }) => operator_address === address
   )?.description.moniker
@@ -53,9 +55,13 @@ const Tokens = ({ children: coins }: { children: string }) => {
         : list.map((coin) => {
             const data = coin.toData()
             const { denom } = data
+            // TODO: remove this when getCanonicalMsgs() is updated
+            if (denom !== "uluna" && denom.endsWith("uluna")) {
+              data.denom = denom.slice(0, -5)
+            }
 
             return (
-              <WithTokenItem token={denom} key={denom}>
+              <WithTokenItem token={data.denom} key={denom}>
                 {({ decimals }) => <Read {...data} decimals={decimals} />}
               </WithTokenItem>
             )

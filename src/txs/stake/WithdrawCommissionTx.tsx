@@ -4,7 +4,6 @@ import { useValidators } from "data/queries/staking"
 import { getConnectedMoniker } from "data/queries/distribution"
 import { Page, Card } from "components/layout"
 import { Wrong } from "components/feedback"
-import TxContext from "../TxContext"
 import WithdrawCommissionForm from "./WithdrawCommissionForm"
 
 const WithdrawCommissionTx = () => {
@@ -18,11 +17,7 @@ const WithdrawCommissionTx = () => {
     if (!validators) return null
     if (!moniker) return <Wrong>{t("Validator account not connected")}</Wrong>
 
-    return (
-      <TxContext>
-        <WithdrawCommissionForm />
-      </TxContext>
-    )
+    return <WithdrawCommissionForm />
   }
 
   return (

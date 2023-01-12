@@ -44,11 +44,11 @@ const Read = forwardRef(
     const [integer, decimal] = readAmount(amount, config).split(".")
 
     const renderDecimal = () => {
-      if (!(decimal || lessThanFixed)) return null
-
       return (
         <span className={cx({ small: !props.prefix })}>
-          {lessThanFixed ? `${lessThanFloor}` : decimal && `.${decimal}`}
+          {lessThanFixed
+            ? `.${lessThanFloor.toString().split(".")[1]}`
+            : `.${decimal || (0).toFixed(fixed || 2).split(".")[1]}`}
         </span>
       )
     }
@@ -73,7 +73,7 @@ const Read = forwardRef(
     return (
       <span className={className} ref={ref}>
         {approx && "≈ "}
-        {lessThanFixed && "< "}
+        {!!lessThanFixed && "< "}
         {integer}
         {renderDecimal()}
         {renderSymbol()}
@@ -100,7 +100,7 @@ export const ReadPercent = forwardRef(
 
     return (
       <span className={styles.component} ref={ref}>
-        {integer}
+        {integer.replace(/\B(?=(\d{3})+(?!\d))/g, "'")}
         {decimal && (
           <>
             <span className={cx({ small: Number(integer) })}>

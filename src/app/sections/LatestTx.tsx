@@ -7,7 +7,7 @@ import DoneAllIcon from "@mui/icons-material/DoneAll"
 import WarningAmberIcon from "@mui/icons-material/WarningAmber"
 import CloseIcon from "@mui/icons-material/Close"
 import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen"
-import { isTxError, TxInfo } from "@terra-money/terra.js"
+import { isTxError, TxInfo } from "@terra-money/feather.js"
 import * as ruleset from "@terra-money/log-finder-ruleset"
 import useInterval from "utils/hooks/useInterval"
 import { isBroadcastingState, latestTxState } from "data/queries/tx"
@@ -100,6 +100,7 @@ const TxIndicator = ({ txhash }: { txhash: string }) => {
   const ruleset = createActionRuleSet(networkName)
   const logMatcher = createLogMatcherForActions(ruleset)
   const getCanonicalMsgs = (txInfo: TxInfo) => {
+    // @ts-expect-error
     const matchedMsg = getTxCanonicalMsgs(txInfo, logMatcher)
     return matchedMsg
       ? matchedMsg
@@ -165,7 +166,6 @@ const TxIndicator = ({ txhash }: { txhash: string }) => {
         <ul className={styles.messages}>
           {
             // TODO: update getCanonicalMsgs() to support station.js types
-            // @ts-expect-error
             getCanonicalMsgs(data).map((msg, index) => {
               if (!msg) return null
               const { canonicalMsg } = msg

@@ -37,6 +37,7 @@
 
 .header {
   @include flex(space-between);
+  margin-right: 24px;
 
   @include desktop {
     --font-size-page-title: 36px;
@@ -45,6 +46,15 @@
   @include mobile {
     --font-size-page-title: 24px;
     padding: 0 var(--main-padding-horizontal);
+  }
+
+  .titleWrapper {
+    @include flex(center);
+    gap: 12px;
+
+    svg:hover {
+      cursor: pointer;
+    }
   }
 }
 

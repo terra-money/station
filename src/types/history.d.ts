@@ -6,6 +6,46 @@ interface AccountHistory {
   tx_responses: AccountHistoryItem[]
 }
 
+interface PubKey {
+  "@type": string
+  key: string
+}
+
+interface SignerInfo {
+  public_key: PubKey
+  mode_info: {
+    single: {
+      mode: string
+    }
+  }
+  sequence: string
+}
+
+interface MultiSignerInfo {
+  public_key: {
+    "@type": string
+    threshold: number
+    public_keys: PubKey[]
+  }
+  mode_info: {
+    multi: {
+      mode_infos: [
+        {
+          single: {
+            mode: string
+          }
+        },
+        {
+          single: {
+            mode: string
+          }
+        }
+      ]
+    }
+  }
+  sequence: string
+}
+
 interface AccountHistoryItem {
   txhash: string
   timestamp: any
@@ -20,6 +60,7 @@ interface AccountHistoryItem {
       fee: {
         amount: CoinData[]
       }
+      signer_infos: SignerInfo[] | MultiSignerInfo[]
     }
   }
   raw_log?: string

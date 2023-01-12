@@ -1,32 +1,40 @@
 import axios from "axios"
-import { ASSETS } from "config/constants"
-import { WhitelistProvider } from "data/queries/chains"
+import { ASSETS, STATION_ASSETS } from "config/constants"
+import { WhitelistProvider, WhitelistData } from "data/queries/chains"
 import { PropsWithChildren, useEffect, useState } from "react"
-
-type Whitelist = Record<
-  string,
-  {
-    token: string
-    symbol: string
-    name: string
-    icon: string
-    chains: string[]
-    decimals: number
-  }
->
+import NetworkLoading from "./NetworkLoading"
 
 const InitChains = ({ children }: PropsWithChildren<{}>) => {
-  const [data, setData] = useState<Whitelist>()
+  const [data, setData] = useState<WhitelistData>()
   useEffect(() => {
     ;(async () => {
-      const { data: whitelist } = await axios.get("/station/coins.json", {
-        baseURL: ASSETS,
-      })
-      setData(whitelist)
+      const [whitelist, ibcDenoms, legacyWhitelist] = await Promise.all([
+        (async () => {
+          const { data } = await axios.get("/coins.json", {
+            baseURL: STATION_ASSETS,
+          })
+          return data
+        })(),
+        (async () => {
+          const { data } = await axios.get("/ibc_denoms.json", {
+            baseURL: STATION_ASSETS,
+          })
+          return data
+        })(),
+        (async () => {
+          const { data } = await axios.get("/station/coins.json", {
+            baseURL: ASSETS,
+          })
+          return data
+        })(),
+      ])
+
+      setData({ whitelist, ibcDenoms, legacyWhitelist })
     })()
   }, [])
 
-  if (!data) return null
+  if (!data)
+    return <NetworkLoading title="Connecting to available networks..." />
 
   return <WhitelistProvider value={data}>{children}</WhitelistProvider>
 }

@@ -1,4 +1,5 @@
 import { Button } from "components/general"
+import { Read } from "components/token"
 import { useBankBalance } from "data/queries/bank"
 import { useMemoizedPrices } from "data/queries/coingecko"
 import { useCurrency } from "data/settings/Currency"
@@ -28,7 +29,8 @@ const NetWorth = () => {
     <article className={styles.networth}>
       <p>{capitalize(t("asset value"))}</p>
       <h1>
-        {currency.unit} {coinsValue.toFixed(2)}
+        {currency.unit}{" "}
+        <Read amount={coinsValue} decimals={0} fixed={2} denom="" token="" />
       </h1>
       <p>
         {t("{{balance}} available", {

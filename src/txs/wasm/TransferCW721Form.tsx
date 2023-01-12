@@ -2,19 +2,21 @@ import { useCallback, useEffect, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import PersonIcon from "@mui/icons-material/Person"
-import { AccAddress } from "@terra-money/terra.js"
-import { MsgExecuteContract } from "@terra-money/terra.js"
+import { AccAddress } from "@terra-money/feather.js"
+import { MsgExecuteContract } from "@terra-money/feather.js"
 import { truncate } from "@terra.kitchen/utils"
 import { SAMPLE_ADDRESS } from "config/constants"
 import { queryKey } from "data/query"
-import { useAddress } from "data/wallet"
+import { useNetwork } from "data/wallet"
 import { useTnsAddress } from "data/external/tns"
 import { Auto, Card, InlineFlex } from "components/layout"
 import { Form, FormItem, FormHelp, Input } from "components/form"
 import NFTAssetItem from "pages/nft/NFTAssetItem"
 import AddressBookList from "../AddressBook/AddressBookList"
 import validate from "../validate"
-import Tx, { getInitialGasDenom } from "../Tx"
+import Tx from "../Tx"
+import { getChainIDFromAddress } from "utils/bech32"
+import { useInterchainAddresses } from "auth/hooks/useAddress"
 
 interface TxValues {
   recipient?: string // AccAddress | TNS
@@ -29,10 +31,10 @@ interface Props {
 
 const TransferCW721Form = ({ contract, id }: Props) => {
   const { t } = useTranslation()
-  const connectedAddress = useAddress()
-
-  /* tx context */
-  const initialGasDenom = getInitialGasDenom()
+  const addresses = useInterchainAddresses()
+  const network = useNetwork()
+  const chainID = getChainIDFromAddress(contract, network) ?? ""
+  const connectedAddress = addresses?.[chainID]
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })
@@ -86,9 +88,9 @@ const TransferCW721Form = ({ contract, id }: Props) => {
         }),
       ]
 
-      return { msgs, memo }
+      return { msgs, memo, chainID }
     },
-    [connectedAddress, contract, id]
+    [connectedAddress, chainID, contract, id]
   )
 
   /* fee */
@@ -98,7 +100,6 @@ const TransferCW721Form = ({ contract, id }: Props) => {
   )
 
   const tx = {
-    initialGasDenom,
     estimationTxValues,
     createTx,
     disabled,
@@ -110,6 +111,7 @@ const TransferCW721Form = ({ contract, id }: Props) => {
         { tokens: { owner: connectedAddress } },
       ],
     ],
+    chain: chainID,
   }
 
   const renderResolvedAddress = () => {

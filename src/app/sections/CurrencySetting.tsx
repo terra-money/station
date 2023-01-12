@@ -1,27 +1,38 @@
 import { useSupportedFiat } from "data/queries/coingecko"
 import { useCurrencyState } from "data/settings/Currency"
 import { RadioGroup } from "components/form"
+import WithSearchInput from "pages/custom/WithSearchInput"
 
 const CurrencySetting = () => {
   const { data: fiatList = [] } = useSupportedFiat()
   const [currency, setCurrency] = useCurrencyState()
 
   return (
-    <RadioGroup
-      options={fiatList.map((fiat) => {
-        return { value: fiat.id, label: `${fiat.unit} - ${fiat.name}` }
-      })}
-      value={currency.id}
-      onChange={(value) => {
-        setCurrency(
-          fiatList.find((fiat) => fiat.id === value) as {
-            name: string
-            unit: string
-            id: string
-          }
-        )
-      }}
-    />
+    <WithSearchInput gap={8} small>
+      {(input) => (
+        <RadioGroup
+          options={fiatList
+            .filter(
+              (fiat) =>
+                fiat.name.toLowerCase().includes(input.toLowerCase()) ||
+                fiat.unit.toLowerCase().includes(input.toLowerCase())
+            )
+            .map((fiat) => {
+              return { value: fiat.id, label: `${fiat.unit} - ${fiat.name}` }
+            })}
+          value={currency.id}
+          onChange={(value) => {
+            setCurrency(
+              fiatList.find((fiat) => fiat.id === value) as {
+                name: string
+                unit: string
+                id: string
+              }
+            )
+          }}
+        />
+      )}
+    </WithSearchInput>
   )
 }
 

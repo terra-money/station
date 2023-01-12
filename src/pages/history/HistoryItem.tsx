@@ -7,6 +7,8 @@ import { ReadMultiple } from "components/token"
 import HistoryMessage from "./HistoryMessage"
 import styles from "./HistoryItem.module.scss"
 import DateRangeIcon from "@mui/icons-material/DateRange"
+import GppGoodIcon from "@mui/icons-material/GppGood"
+import GroupIcon from "@mui/icons-material/Group"
 import { useNetwork, useNetworkName } from "data/wallet"
 import {
   createActionRuleSet,
@@ -27,6 +29,7 @@ const HistoryItem = ({
       body: { memo },
       auth_info: {
         fee: { amount: fee },
+        signer_infos,
       },
     },
     raw_log,
@@ -101,6 +104,26 @@ const HistoryItem = ({
             )
           })}
         </Dl>
+        {"multi" in signer_infos[0]?.mode_info
+          ? "public_keys" in signer_infos[0].public_key && (
+              <p className={styles.sign__mode}>
+                <GroupIcon />{" "}
+                {t(
+                  "Multisig tx: signed by {{numSignatures}} out of {{numSigners}} signers",
+                  {
+                    numSignatures:
+                      signer_infos[0].mode_info.multi.mode_infos.length,
+                    numSigners: signer_infos[0].public_key.public_keys.length,
+                  }
+                )}
+              </p>
+            )
+          : signer_infos[0]?.mode_info?.single.mode ===
+              "SIGN_MODE_LEGACY_AMINO_JSON" && (
+              <p className={styles.sign__mode}>
+                <GppGoodIcon /> {t("Signed with a hardware wallet")}
+              </p>
+            )}
       </footer>
     </Card>
   )

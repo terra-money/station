@@ -1,21 +1,20 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
-import { MsgStoreCode } from "@terra-money/terra.js"
-import { useAddress } from "data/wallet"
+import { MsgStoreCode } from "@terra-money/feather.js"
+import { useAddress, useChainID } from "data/wallet"
 import { Form, FormItem, Upload } from "components/form"
-import Tx, { getInitialGasDenom } from "../Tx"
+import Tx from "../Tx"
 
 interface TxValues {
   code: string
 }
 
+// TODO: make this interchain
 const StoreCodeForm = () => {
   const { t } = useTranslation()
   const address = useAddress()
-
-  /* tx context */
-  const initialGasDenom = getInitialGasDenom()
+  const chainID = useChainID()
 
   /* form */
   const [file, setFile] = useState<File>()
@@ -36,19 +35,19 @@ const StoreCodeForm = () => {
     ({ code }: TxValues) => {
       if (!address || !code) return
       const msgs = [new MsgStoreCode(address, code)]
-      return { msgs }
+      return { msgs, chainID }
     },
-    [address]
+    [address, chainID]
   )
 
   /* fee */
   const estimationTxValues = useMemo(() => values, [values])
 
   const tx = {
-    initialGasDenom,
     estimationTxValues,
     createTx,
     onSuccess: { label: t("Instantiate"), path: "/contract/instantiate" },
+    chain: chainID,
   }
 
   return (

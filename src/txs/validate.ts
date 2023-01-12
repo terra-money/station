@@ -2,6 +2,8 @@ import { always } from "ramda"
 import BigNumber from "bignumber.js"
 import { AccAddress } from "@terra-money/feather.js"
 import { validateMsg } from "utils/data"
+import wordlist from "bip39/src/wordlists/english.json"
+import { getChainIDFromAddress } from "utils/bech32"
 
 const lessThan = (max: number, label = "Amount", optional = false) => {
   return (value = 0) => {
@@ -46,6 +48,30 @@ const recipient = () => {
   }
 }
 
+const ibc = (
+  networks: Record<string, InterchainNetwork>,
+  sourceChain: string,
+  token: string,
+  getIBCChannel: (chains: { from: string; to: string }) => string | undefined
+) => {
+  return {
+    ibc: (recipient = "") => {
+      const destinationChain = getChainIDFromAddress(recipient, networks)
+      if (!destinationChain) return "Invalid recipient"
+
+      if (sourceChain === destinationChain) return true
+
+      const channel = getIBCChannel({ from: sourceChain, to: destinationChain })
+      if (!channel)
+        return `Cannot find IBC channel from ${sourceChain} to ${destinationChain}`
+      if (AccAddress.validate(token))
+        return `IBC transfers are not yet available for CW20 tokens`
+
+      return true
+    },
+  }
+}
+
 const address = (label = "Recipient", optional = false) => {
   return (address?: string) => {
     if (!address) return optional || `${label} is required`
@@ -68,6 +94,15 @@ const memo = () => (value?: string) => {
   )
 }
 
+const isNotMnemonic = () => (value?: string) => {
+  if (!value) return
+  const seed = value.trim().split(" ")
+  if (seed.length === 12 || seed.length === 24) {
+    const isNotMnemonic = seed.find((word) => !wordlist.includes(word))
+    return isNotMnemonic || `You cannot enter a mnemonic in the memo field.`
+  }
+}
+
 const msg = () => {
   return (value?: string) => {
     if (!value) return `Msg is required`
@@ -80,9 +115,11 @@ const validate = {
   decimal,
   lessThan,
   recipient,
+  ibc,
   address,
   size,
   memo,
+  isNotMnemonic,
   msg,
 }
 

@@ -1,42 +1,23 @@
 import { useMemo } from "react"
-import { LCDClient } from "@terra-money/terra.js"
 import { LCDClient as InterchainLCDClient } from "@terra-money/feather.js"
-import { useNetworkName } from "data/wallet"
-import { useNetworks } from "app/InitNetworks"
+import { LCDClient } from "@terra-money/terra.js"
+import { useChainID, useNetwork } from "data/wallet"
 
-export const useLCDClient = () => {
-  const network = useNetworkName()
+export const useInterchainLCDClient = () => {
+  const network = useNetwork()
 
-  const lcdClient = useMemo(
-    () =>
-      new LCDClient(
-        network === "mainnet"
-          ? {
-              chainID: "phoenix-1",
-              URL: "https://phoenix-lcd.terra.dev",
-              gasAdjustment: 1.75,
-              gasPrices: { uluna: 0.015 },
-            }
-          : {
-              chainID: "pisco-1",
-              URL: "https://pisco-lcd.terra.dev",
-              gasAdjustment: 1.75,
-              gasPrices: { uluna: 0.015 },
-            }
-      ),
-    [network]
-  )
+  const lcdClient = useMemo(() => new InterchainLCDClient(network), [network])
 
   return lcdClient
 }
 
-export const useInterchainLCDClient = () => {
-  const network = useNetworkName()
-  const chains = useNetworks()
+export const useLCDClient = () => {
+  const network = useNetwork()
+  const chainID = useChainID()
 
   const lcdClient = useMemo(
-    () => new InterchainLCDClient(chains[network]),
-    [chains, network]
+    () => new LCDClient({ ...network[chainID], URL: network[chainID].lcd }),
+    [network, chainID]
   )
 
   return lcdClient

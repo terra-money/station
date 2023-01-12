@@ -1,24 +1,23 @@
 import { useCallback, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
-import { AccAddress, MsgUpdateContractAdmin } from "@terra-money/terra.js"
-import { useAddress } from "data/wallet"
+import { AccAddress, MsgUpdateContractAdmin } from "@terra-money/feather.js"
+import { useAddress, useChainID } from "data/wallet"
 import { Form, FormItem } from "components/form"
 import { Input } from "components/form"
 import validate from "../validate"
-import Tx, { getInitialGasDenom } from "../Tx"
+import Tx from "../Tx"
 
 interface TxValues {
   new_admin?: string
 }
 
+// TODO: make this interchain
 const UpdateAdminContractForm = ({ contract }: { contract: AccAddress }) => {
   const { t } = useTranslation()
 
   const address = useAddress()
-
-  /* tx context */
-  const initialGasDenom = getInitialGasDenom()
+  const chainID = useChainID()
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })
@@ -31,19 +30,19 @@ const UpdateAdminContractForm = ({ contract }: { contract: AccAddress }) => {
     ({ new_admin }: TxValues) => {
       if (!address || !new_admin) return
       const msgs = [new MsgUpdateContractAdmin(address, new_admin, contract)]
-      return { msgs }
+      return { msgs, chainID }
     },
-    [address, contract]
+    [address, chainID, contract]
   )
 
   /* fee */
   const estimationTxValues = useMemo(() => values, [values])
 
   const tx = {
-    initialGasDenom,
     estimationTxValues,
     createTx,
     onSuccess: { label: t("Contract"), path: "/contract" },
+    chain: chainID,
   }
 
   return (

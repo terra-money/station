@@ -3,7 +3,6 @@ import { useProposal } from "data/queries/gov"
 import { Auto, Page, Card } from "components/layout"
 import useProposalId from "pages/gov/useProposalId"
 import ProposalHeader from "pages/gov/ProposalHeader"
-import TxContext from "../TxContext"
 import DepositForm from "./DepositForm"
 
 const DepositTx = () => {
@@ -16,9 +15,7 @@ const DepositTx = () => {
       <Auto
         columns={[
           <Card>
-            <TxContext>
-              <DepositForm />
-            </TxContext>
+            <DepositForm />
           </Card>,
           <Card {...state}>
             {proposal && <ProposalHeader proposal={proposal} chain={chain} />}

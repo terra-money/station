@@ -1,4 +1,4 @@
-import { Coins } from "@terra-money/terra.js"
+import { Coins } from "@terra-money/feather.js"
 import { isDenom, isDenomIBC } from "@terra.kitchen/utils"
 
 /* coin */

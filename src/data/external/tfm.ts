@@ -64,7 +64,7 @@ interface TFMSwapFailed {
 }
 
 export const queryTFMSwap = async (params: TFMSwapParams) => {
-  const { data } = await axios.get<TFMSwapResult | TFMSwapFailed>("/", {
+  const { data } = await axios.get<TFMSwapResult | TFMSwapFailed>("/swap", {
     baseURL,
     params,
   })

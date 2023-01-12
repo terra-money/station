@@ -1,26 +1,17 @@
 import { useCallback, useMemo } from "react"
 import { useQuery } from "react-query"
-import { sortDenoms } from "utils/coin"
-import { queryKey, RefetchOptions, useIsClassic } from "../query"
-import { useLCDClient } from "./lcdClient"
+import { queryKey, RefetchOptions } from "../query"
 import { ASSETS } from "config/constants"
 import axios from "axios"
 import { useCurrency } from "data/settings/Currency"
+import { useNetworkName } from "data/wallet"
 
 // TODO: remove/move somewhere else
 export const useActiveDenoms = () => {
-  const lcd = useLCDClient()
-  const isClassic = useIsClassic()
-
   return useQuery(
-    [queryKey.coingecko.activeDenoms, isClassic],
+    [queryKey.coingecko.activeDenoms],
     async () => {
-      if (isClassic) {
-        const activeDenoms = await lcd.oracle.activeDenoms()
-        return sortDenoms(["uluna", ...activeDenoms])
-      } else {
-        return ["uluna"]
-      }
+      return ["uluna"]
     },
     { ...RefetchOptions.INFINITY }
   )
@@ -45,6 +36,7 @@ export const useSupportedFiat = () => {
 
 export const useExchangeRates = () => {
   const currency = useCurrency()
+  const networkName = useNetworkName()
 
   return useQuery(
     [queryKey.coingecko.exchangeRates, currency],
@@ -61,15 +53,21 @@ export const useExchangeRates = () => {
         ).join(",")}&vs_currencies=${currency.id}&include_24hr_change=true`
       )
 
-      return Object.keys(coingeckoIDs).reduce((acc, denom) => {
-        return {
-          ...acc,
-          [denom]: {
-            price: prices[coingeckoIDs[denom]][currency.id],
-            change: prices[coingeckoIDs[denom]][`${currency.id}_24h_change`],
-          },
-        }
-      }, {})
+      return Object.keys(coingeckoIDs)
+        .filter((denom) =>
+          networkName === "classic"
+            ? denom.endsWith(":classic")
+            : !denom.endsWith(":classic")
+        )
+        .reduce((acc, denom) => {
+          return {
+            ...acc,
+            [denom.replace(":classic", "")]: {
+              price: prices[coingeckoIDs[denom]][currency.id],
+              change: prices[coingeckoIDs[denom]][`${currency.id}_24h_change`],
+            },
+          }
+        }, {})
     },
     { ...RefetchOptions.DEFAULT }
   )

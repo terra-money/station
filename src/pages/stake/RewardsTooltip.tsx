@@ -14,7 +14,11 @@ const RewardsTooltip = () => {
         <li>{t("Mainnet upgrade")}</li>
       </ul>
 
-      <footer>{t("This will not be displayed in transaction history")}</footer>
+      <footer>
+        {t(
+          "This will not be displayed in your transaction history, but it will show in your account balance"
+        )}
+      </footer>
     </article>
   )
 }
