@@ -16,16 +16,20 @@
     "Buy": "구매",
     "Exchanges": "거래소",
     "Fiat": "",
-    "APY": "연간 수익률"
+    "APY": "연간 수익률",
+    "chain": ""
   },
   "Form": {
     "Amount": "금액",
     "Recipient": "받는 사람",
+    "Asset": "",
+    "Source chain": "",
     "Name": "이름",
     "optional": "선택",
     "Submit": "제출",
     "Confirm": "확인",
-    "Reset": "재설정"
+    "Reset": "재설정",
+    "All": ""
   },
   "Validate": {
     "{{label}} is required": "{{label}}이(가) 필요합니다",
@@ -51,15 +55,14 @@
     "Broadcasting transaction": "트랜잭션 보내는 중",
     "Queued": "대기 중"
   },
-  "Success": {
-    "Success!": "성공!"
-  },
+  "Success": { "Success!": "성공!" },
   "Failure": {
     "Failed": "실패",
     "Simulation failed": "시뮬레이션 실패",
     "User denied": "사용자가 거부함",
     "Failed to create tx": "트랜잭션 생성 실패",
-    "Tx failed": "트랜잭션 실패"
+    "Tx failed": "트랜잭션 실패",
+    "Connect wallet to see your address": ""
   },
   "Application": {
     "Go back": "돌아가기",
@@ -69,17 +72,14 @@
     "Copied": "복사함",
     "Active": "활성",
     "Inactive": "비활성",
-    "Not found": "찾을 수 없음"
+    "Not found": "찾을 수 없음",
+    "setup": "",
+    "documentation": "",
+    "Search for a chain...": "",
+    "Select theme": ""
   },
-  "Units": {
-    "year": "년",
-    "day": "일",
-    "{{d}} days": "{{d}}일"
-  },
-  "Preferences": {
-    "Language": "언어",
-    "Currency": "통화"
-  },
+  "Units": { "year": "년", "day": "일", "{{d}} days": "{{d}}일" },
+  "Preferences": { "Language": "언어", "Currency": "통화" },
   "Auth": {
     "Connect": "연결",
     "Disconnect": "연결 해제",
@@ -122,7 +122,12 @@
   },
   "Wallet": {
     "Add tokens": "토큰 추가",
-    "Manage list": "목록 관리"
+    "Manage list": "목록 관리",
+    "Assets": "",
+    "receive": "",
+    "select a coin": "",
+    "asset value": "",
+    "{{balance}} available": ""
   },
   "Txs": {
     "Send": "송금",
@@ -137,7 +142,10 @@
     "Deposit": "보증금",
     "Vote": "투표",
     "Transfer NFT": "NFT 전송",
-    "Earn": "이자 받기"
+    "Earn": "이자 받기",
+    "Leave enough coins to pay fee for subsequent transactions": "",
+    "Check if this transaction requires a memo": "",
+    "Balance after tx": ""
   },
   "Swap": {
     "From": "출발",
@@ -152,20 +160,41 @@
   },
   "Stake": {
     "Delegations": "위임",
+    "My delegations": "",
     "Undelegations": "위임 취소",
     "Delegated": "위임함",
     "Undelegated": "위임 취소함",
-    "Staking rewards": "위임 보상"
+    "Staking rewards": "위임 보상",
+    "My rewards": "",
+    "Maximum 7 undelegations can be in progress at the same time": "",
+    "No rewards are distributed during the 21 day undelegation period": "",
+    "Quick stake selects validators that": "",
+    "Are outside of top third by voting power": "",
+    "Charge 5% commission or less": "",
+    "Have not been slashed recently": "",
+    "Are in the active set": "",
+    "staking": "",
+    "Staked funds": "",
+    "Quick Stake": "",
+    "Manual Stake": "",
+    "Select action": "",
+    "Withdraw all rewards": "",
+    "Show inactive validators": "",
+    "Search for validator...": ""
   },
   "Validator": {
     "Validators": "검증인들",
     "Voting power": "투표권",
     "Self delegation": "자체 위임",
     "Commission": "수수료",
+    "Current": "",
+    "Max": "",
+    "Max daily change": "",
+    "Last changed": "",
     "Uptime": "가동 시간",
     "Validator details": "검증인 정보",
     "Operator address": "운영 주소",
-    "Account address": "계정 주소",
+    "Wallet address": "계정 주소",
     "Jailed": "수감됨"
   },
   "Governance": {
@@ -194,7 +223,10 @@
     "Tallying procedure": "계산 절차",
     "Quorum": "정족수",
     "Pass threshold": "통과 임계값",
-    "Veto threshold": "거부 임계값"
+    "Veto threshold": "거부 임계값",
+    "Proposal deposits will not be refunded if the proposal fails to reach the quorum or the result is NO_WITH_VETO": "",
+    "Parameters cannot be changed by text proposals": "",
+    "No proposals in {{label}} period": ""
   },
   "Contract": {
     "Upload": "업로드",
@@ -206,10 +238,7 @@
     "Size": "크기",
     "Instantiate a code": ""
   },
-  "NFT": {
-    "Marketplace": "시장",
-    "Collection": "컬렉션"
-  },
+  "NFT": { "Marketplace": "시장", "Collection": "컬렉션" },
   "Address book": {
     "Address book": "주소록",
     "Add a new address": "새 주소 추가"

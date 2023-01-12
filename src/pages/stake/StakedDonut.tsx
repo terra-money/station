@@ -105,7 +105,7 @@ const StakedDonut = () => {
       <Col span={2}>
         <div className={styles.forFetchingBar}>
           <Fetching {...state}>
-            <ChainFilter title={t("Staked Funds")} all {...state}>
+            <ChainFilter title={t("Staked funds")} all {...state}>
               {(chain) => (
                 <>
                   {graphData[chain || "all"] ? (

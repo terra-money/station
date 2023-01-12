@@ -6,8 +6,8 @@ import QuickStakeForm from "txs/stake/QuickStakeForm"
 import styles from "./QuickStake.module.scss"
 
 export enum QuickStakeAction {
-  DELEGATE = "delegate",
-  UNBOND = "undelegate",
+  DELEGATE = "Delegate",
+  UNBOND = "Undelegate",
 }
 
 const QuickStake = () => {

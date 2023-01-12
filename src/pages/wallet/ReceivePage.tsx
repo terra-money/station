@@ -5,6 +5,7 @@ import { useNetwork } from "data/wallet"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import styles from "./ReceivePage.module.scss"
+import { capitalize } from "@mui/material"
 
 const ReceivePage = () => {
   const networks = useNetwork()
@@ -16,14 +17,16 @@ const ReceivePage = () => {
   // TODO: handle wallet not connected
   return (
     <section className={styles.receive}>
-      <h1>{t("Receive")}</h1>
-      <p>Chain</p>
+      <h1>{capitalize(t("receive"))}</h1>
+      <p>{t("Chain")}</p>
       <ChainSelector
         chainsList={Object.keys(networks)}
         onChange={(chainID) => setChain(chainID)}
       />
-      <p>Address</p>
-      <AddressBox address={addresses?.[chain] ?? "Connect wallet first"} />
+      <p>{t("Address")}</p>
+      <AddressBox
+        address={addresses?.[chain] ?? t("Connect wallet to see your address")}
+      />
     </section>
   )
 }

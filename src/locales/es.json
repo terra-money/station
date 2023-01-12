@@ -7,7 +7,7 @@
     "Coins": "Monedas",
     "Tokens": "Tokens",
     "Balance": "Saldo",
-    "Tx hash": "Hash de Tx",
+    "Tx hash": "Hash de la transacción",
     "Gas": "Gas",
     "Tax": "Impuesto",
     "Fee": "Tasa",
@@ -16,38 +16,42 @@
     "Buy": "Compra",
     "Exchanges": "Exchanges",
     "Fiat": "Fiat",
-    "APY": "APY"
+    "APY": "APY",
+    "chain": "cadena"
   },
   "Form": {
     "Amount": "Cantidad",
     "Recipient": "Destinatario",
+    "Asset": "",
+    "Source chain": "",
     "Name": "Nombre",
     "optional": "opcional",
     "Submit": "Enviar",
     "Confirm": "Confirmar",
-    "Reset": "Resetear"
+    "Reset": "Resetear",
+    "All": ""
   },
   "Validate": {
     "{{label}} is required": "{{label}} es obligatorio",
-    "{{label}} is not defined": "{{label}} no definido",
-    "{{label}} is not available": "{{label}} no disponible",
-    "{{label}} is not supported": "{{label}} no soportado",
+    "{{label}} is not defined": "{{label}} no está definido",
+    "{{label}} is not available": "{{label}} no está disponible",
+    "{{label}} is not supported": "{{label}} no está soportado",
     "{{label}} is invalid": "{{label}} no es válido",
     "{{label}} already exists": "{{label}} ya existe",
     "{{label}} does not exist": "{{label}} no existe",
-    "{{label}} must be longer than {{length}} characters": "{{label}} debe ser más largo de {{length}} caracteres",
+    "{{label}} must be longer than {{length}} characters": "{{label}} debe tener mas de {{length}} caracteres",
     "Already exists": "Ya existe",
     "Invalid": "Inválido",
     "Invalid {{label}}": "{{label}} invalido"
   },
   "Loading": {
-    "Initializing app...": "Inicializando la aplicación...",
+    "Initializing app...": "Iniciando aplicación...",
     "Loading...": "Cargando...",
     "Load more": "Cargar más",
     "Loading more...": "Cargando más...",
     "Nothing more to load": "No hay más para cargar",
     "Simulating...": "Simulando...",
-    "Broadcasting a tx...": "Enviando la tx...",
+    "Broadcasting a tx...": "Enviando la transacción...",
     "Broadcasting transaction": "Enviando la transacción",
     "Queued": "En cola"
   },
@@ -56,20 +60,25 @@
   },
   "Failure": {
     "Failed": "Ha fallado",
-    "Simulation failed": "Simulación fallida",
-    "User denied": "Usuario denegado",
-    "Failed to create tx": "No se pudo crear la tx",
-    "Tx failed": "Tx fallida"
+    "Simulation failed": "Ha fallado la simulación",
+    "User denied": "Denegado por el usuario",
+    "Failed to create tx": "No se pudo crear la transacción",
+    "Tx failed": "Ha fallado la transacción",
+    "Connect wallet to see your address": ""
   },
   "Application": {
-    "Go back": "Volver",
+    "Go back": "Volver atras",
     "View": "Ver",
     "Show all": "Ver todo",
     "Copy": "Copiar",
     "Copied": "Copiado",
     "Active": "Activo",
     "Inactive": "Inactivo",
-    "Not found": "No se ha encontrado"
+    "Not found": "No se ha encontrado",
+    "setup": "configuración",
+    "documentation": "documentación",
+    "Search for a chain...": "",
+    "Select theme": ""
   },
   "Units": {
     "year": "año",
@@ -83,32 +92,32 @@
   "Auth": {
     "Connect": "Conexión",
     "Disconnect": "Desconectar",
-    "New wallet": "Cartera nueva",
+    "New wallet": "Generar nueva cartera",
     "Recover wallet": "Recuperar cartera",
     "Connect wallet": "Conectar cartera",
     "Password": "Contraseña",
-    "Confirm password": "Confirmar contraseña",
+    "Confirm password": "Confirmar la contraseña",
     "Password does not match": "La contraseña no coincide",
-    "Change password": "Cambiar contraseña",
+    "Change password": "Cambiar la contraseña",
     "Current password": "Contraseña actual",
     "New password": "Nueva contraseña",
-    "Confirm new password": "Confirmar nueva contraseña",
-    "Incorrect password": "Contraseña incorrecta",
-    "Export wallet": "Exportar cartera",
-    "Delete wallet": "Borra esta cartera",
-    "Install extension": "Instalar extensión"
+    "Confirm new password": "Confirmar la nueva contraseña",
+    "Incorrect password": "La contraseña es incorrecta",
+    "Export wallet": "Exportar la cartera",
+    "Delete wallet": "Borra la cartera",
+    "Install extension": "Instalar la extensión"
   },
   "Menu": {
-    "Dashboard": "Tablero de mandos",
+    "Dashboard": "Dashboard",
     "Wallet": "Cartera",
     "NFT": "NFT",
     "History": "Histórico",
     "Stake": "Stake",
-    "Governance": "Gobierna",
-    "Contract": "Contratos"
+    "Governance": "Gobernanza",
+    "Contract": "Contrato"
   },
   "Dashboard": {
-    "Luna price": "Precio Luna",
+    "Luna price": "Precio de Luna",
     "Tax rate": "Tasa de impuestos",
     "Issuance": "Emisión",
     "Community pool": "Fondo de la comunidad",
@@ -122,7 +131,12 @@
   },
   "Wallet": {
     "Add tokens": "Añadir tokens",
-    "Manage list": "Editar lista"
+    "Manage list": "Editar lista",
+    "Assets": "Activos",
+    "receive": "reciba",
+    "select a coin": "seleccione una moneda",
+    "asset value": "valor del activo",
+    "{{balance}} available": ""
   },
   "Txs": {
     "Send": "Enviar",
@@ -137,14 +151,17 @@
     "Deposit": "Depósitar",
     "Vote": "Vota",
     "Transfer NFT": "Transifere NFT",
-    "Earn": "Gain"
+    "Earn": "Gain",
+    "Leave enough coins to pay fee for subsequent transactions": "Deje suficientes monedas para pagar la comisión de las transacciones posteriores",
+    "Check if this transaction requires a memo": "",
+    "Balance after tx": "Saldo después de tx"
   },
   "Swap": {
     "From": "De",
     "To": "A",
     "Spread": "Spread",
     "Slippage tolerance": "Tolerancia de slippage",
-    "Oracle price": "Precio de oraculo",
+    "Oracle price": "Precio del oraculo",
     "Pair price": "Precio de la pareja",
     "Expected price": "Precio previsto",
     "Minimum received": "Mínimo recibido",
@@ -152,24 +169,45 @@
   },
   "Stake": {
     "Delegations": "Delegaciones",
+    "My delegations": "",
     "Undelegations": "Delegaciones canceladas",
     "Delegated": "Delegado",
     "Undelegated": "No delegado",
-    "Staking rewards": "Recompensas de staking"
+    "Staking rewards": "Recompensas por delegación",
+    "My rewards": "",
+    "Maximum 7 undelegations can be in progress at the same time": "Se puede tener un maximo de 7 delegaciónes canceladas al mismo tiempo.",
+    "No rewards are distributed during the 21 day undelegation period": "No se distribuyen recompensas durante el periodo de 21 días de retorno mientras la delegación se encuentra cancelada.",
+    "Quick stake selects validators that": "Delegación rapida selecciona los validadores que",
+    "Are outside of top third by voting power": "Están fuera del tercio superior por poder de voto",
+    "Charge 5% commission or less": "Tienen una comisión del 5% o menos",
+    "Have not been slashed recently": "No han recibido penalizaciónes recientemente",
+    "Are in the active set": "Están en el conjunto de validadores activos",
+    "staking": "delegando",
+    "Staked funds": "Fondos delegados",
+    "Quick Stake": "delegación rapida",
+    "Manual Stake": "delegación manual",
+    "Select action": "",
+    "Withdraw all rewards": "",
+    "Show inactive validators": "",
+    "Search for validator...": ""
   },
   "Validator": {
     "Validators": "Validadores",
     "Voting power": "Poder de voto",
-    "Self delegation": "Autodelegación",
+    "Self delegation": "Delegación del operador",
     "Commission": "Comisión",
+    "Current": "",
+    "Max": "",
+    "Max daily change": "",
+    "Last changed": "",
     "Uptime": "Tempo activo",
     "Validator details": "Información del validador",
     "Operator address": "Dirección del operador",
-    "Account address": "Dirección de la cuenta",
-    "Jailed": "Enjaulado"
+    "Wallet address": "Dirección de la cuenta",
+    "Jailed": "Encarcelado"
   },
   "Governance": {
-    "Voting": "Vota",
+    "Voting": "En curso de voto",
     "Votes": "Votos",
     "Initial deposit": "Depósito inicial",
     "Deposited": "Depositado",
@@ -194,13 +232,16 @@
     "Tallying procedure": "Procedimiento de recuento",
     "Quorum": "Quórum",
     "Pass threshold": "Umbral de aceptación",
-    "Veto threshold": "Umbral de veto"
+    "Veto threshold": "Umbral de veto",
+    "Proposal deposits will not be refunded if the proposal fails to reach the quorum or the result is NO_WITH_VETO": "Los depósitos de las propuestas no se reembolsarán si la propuesta no alcanza el quórum o el resultado es NO_WITH_VETO.",
+    "Parameters cannot be changed by text proposals": "Los parámetros no pueden modificarse mediante propuestas de texto",
+    "No proposals in {{label}} period": ""
   },
   "Contract": {
     "Upload": "Subir",
     "Instantiate": "Instanciar",
-    "Query": "Consulta",
-    "Execute": "Ejecuta",
+    "Query": "Consultar",
+    "Execute": "Ejecutar",
     "Upload a wasm file": "Subir archivo wasm",
     "File": "Archivo",
     "Size": "Tamaño",

@@ -7,6 +7,7 @@ import { useNativeDenoms } from "data/token"
 import { useTranslation } from "react-i18next"
 import styles from "./NetWorth.module.scss"
 import { useWalletRoute, Path } from "./Wallet"
+import { capitalize } from "@mui/material"
 
 const NetWorth = () => {
   const { t } = useTranslation()
@@ -26,15 +27,15 @@ const NetWorth = () => {
 
   return (
     <article className={styles.networth}>
-      <p>Asset Value</p>
+      <p>{capitalize(t("asset value"))}</p>
       <h1>
         {currency.unit}{" "}
         <Read amount={coinsValue} decimals={0} fixed={2} denom="" token="" />
       </h1>
       <p>
-        {currency.unit}{" "}
-        <Read amount={coinsValue} decimals={0} fixed={2} denom="" token="" />{" "}
-        available
+        {t("{{balance}} available", {
+          balance: `${currency.unit} ${coinsValue.toFixed(2)} `,
+        })}
       </p>
       <div className={styles.networth__buttons}>
         <Button
@@ -45,7 +46,7 @@ const NetWorth = () => {
             })
           }
         >
-          {t("Send")}
+          {capitalize(t("Send"))}
         </Button>
         <Button
           onClick={() =>
@@ -55,7 +56,7 @@ const NetWorth = () => {
             })
           }
         >
-          {t("Receive")}
+          {capitalize(t("receive"))}
         </Button>
       </div>
     </article>

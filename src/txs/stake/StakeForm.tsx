@@ -23,9 +23,9 @@ interface TxValues {
 }
 
 export enum StakeAction {
-  DELEGATE = "delegate",
-  REDELEGATE = "redelegate",
-  UNBOND = "undelegate",
+  DELEGATE = "Delegate",
+  REDELEGATE = "Redelegate",
+  UNBOND = "Undelegate",
 }
 
 interface Props {
@@ -169,7 +169,7 @@ const StakeForm = (props: Props) => {
                   </FormWarning>
                   <FormWarning>
                     {t(
-                      "No rewards are distributed during 21 days undelegation period"
+                      "No rewards are distributed during the 21 day undelegation period"
                     )}
                   </FormWarning>
                 </Grid>

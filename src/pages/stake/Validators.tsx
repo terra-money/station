@@ -6,11 +6,18 @@ import styles from "./Validators.module.scss"
 import ChainFilter from "components/layout/ChainFilter"
 import ValidatorsList from "./ValidatorsList"
 import { Page } from "components/layout"
+import { useTranslation } from "react-i18next"
 
 const Validators = () => {
+  const { t } = useTranslation()
+
   return (
     <Page sub>
-      <WithSearchInput gap={0} placeholder="Search for validator..." padding>
+      <WithSearchInput
+        gap={0}
+        placeholder={t("Search for validator...")}
+        padding
+      >
         {(keyword: string) => (
           <ChainFilter outside className={styles.filter}>
             {(chainID?: string) => (
