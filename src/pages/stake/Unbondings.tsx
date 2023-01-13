@@ -58,6 +58,7 @@ const Unbondings = () => {
     return (
       <ModalButton
         title={title}
+        fullWidth
         renderButton={(open) => (
           <StakedCard
             {...state}
