@@ -82,6 +82,7 @@ export const queryKey = mirror({
       unbondings: "",
     },
   },
+  treasury: { taxRate: "", taxCap: "", taxProceeds: "" },
   /* external */
   Anchor: { TotalDeposit: "", APY: "", MarketEpochState: "" },
   TNS: "",

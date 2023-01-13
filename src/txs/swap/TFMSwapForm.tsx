@@ -17,14 +17,14 @@ import { useAddress } from "data/wallet"
 import { queryTFMRoute, queryTFMSwap, TFM_ROUTER } from "data/external/tfm"
 
 /* components */
-import { Form, FormArrow, FormError } from "components/form"
+import { Form, FormArrow, FormError, FormWarning } from "components/form"
 import { Checkbox } from "components/form"
 import { Read } from "components/token"
 
 /* tx modules */
 import { getPlaceholder, toInput } from "../utils"
 import validate from "../validate"
-import { getInitialGasDenom } from "../Tx"
+import Tx from "../Tx"
 
 /* swap modules */
 import AssetFormItem from "./components/AssetFormItem"
@@ -36,7 +36,6 @@ import { SwapAssets, validateAssets } from "./useSwapUtils"
 import { validateParams } from "./useSwapUtils"
 import { calcMinimumReceive, SlippageParams } from "./SingleSwapContext"
 import { useTFMSwap, validateTFMSlippageParams } from "./TFMSwapContext"
-import InterchainTx from "txs/InterchainTx"
 
 interface TFMSwapParams extends SwapAssets {
   amount: string
@@ -54,7 +53,6 @@ const TFMSwapForm = ({ chainID }: { chainID: string }) => {
   const { options, findTokenItem, findDecimals } = useTFMSwap()
 
   const initialOfferAsset = (state as Token) ?? "uluna"
-  const initialGasDenom = getInitialGasDenom()
 
   /* options */
   const [showAll, setShowAll] = useState(false)
@@ -197,7 +195,6 @@ const TFMSwapForm = ({ chainID }: { chainID: string }) => {
     decimals,
     amount,
     balance,
-    initialGasDenom,
     estimationTxValues,
     createTx,
     queryKeys: [queryKey.bank.balances],
@@ -232,9 +229,12 @@ const TFMSwapForm = ({ chainID }: { chainID: string }) => {
   }, [simulationResults])
 
   return (
-    <InterchainTx {...tx} disabled={disabled}>
+    <Tx {...tx} disabled={disabled}>
       {({ max, fee, submit }) => (
         <Form onSubmit={handleSubmit(submit.fn)}>
+          <FormWarning>
+            {t("Leave coins to pay fees for subsequent transactions")}
+          </FormWarning>
           <AssetFormItem
             label={t("From")}
             extra={max.render(async (value) => {
@@ -325,7 +325,7 @@ const TFMSwapForm = ({ chainID }: { chainID: string }) => {
           {submit.button}
         </Form>
       )}
-    </InterchainTx>
+    </Tx>
   )
 }
 

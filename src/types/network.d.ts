@@ -19,6 +19,7 @@ interface InterchainNetwork {
     toTerra: string
     fromTerra: string
   }
+  isClassic?: boolean
 }
 
 interface TerraNetwork {

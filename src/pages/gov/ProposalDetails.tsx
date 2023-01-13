@@ -71,6 +71,7 @@ const ProposalDetails = () => {
       {...state}
       title={t("Proposal details")}
       extra={proposal && <ProposalActions proposal={proposal} />}
+      backButton
     >
       {render()}
     </Page>

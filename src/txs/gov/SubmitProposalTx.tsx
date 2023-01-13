@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next"
 import { Page } from "components/layout"
-import TxContext from "../TxContext"
 import SubmitProposalForm from "./SubmitProposalForm"
 import ChainFilter from "components/layout/ChainFilter"
 
@@ -14,9 +13,7 @@ const SubmitProposalTx = () => {
 
   return (
     <Page title={t("New proposal")} small>
-      <ChainFilter outside>
-        {(chain) => <TxContext>{render(chain)}</TxContext>}
-      </ChainFilter>
+      <ChainFilter outside>{(chain) => render(chain)}</ChainFilter>
     </Page>
   )
 }

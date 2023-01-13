@@ -8,6 +8,7 @@ import { useBankBalance } from "data/queries/bank"
 import AssetChain from "./AssetChain"
 import { Button } from "components/general"
 import { useTranslation } from "react-i18next"
+import { capitalize } from "@mui/material"
 
 const AssetPage = () => {
   const currency = useCurrency()

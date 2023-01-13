@@ -26,8 +26,10 @@ export const useNetworkState = () => {
 /* helpers */
 export const useNetworkOptions = () => {
   return [
-    { value: "mainnet", label: "mainnet" },
-    { value: "testnet", label: "testnet" },
+    { value: "mainnet", label: "Mainnet" },
+    { value: "testnet", label: "Testnet" },
+    { value: "classic", label: "Classic" },
+    { value: "localterra", label: "LocalTerra" },
   ]
 }
 
@@ -43,6 +45,16 @@ export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
       setNetwork("mainnet")
     } else if (network !== "testnet" && "pisco-1" in connectedWallet.network) {
       setNetwork("testnet")
+    } else if (
+      network !== "classic" &&
+      "columbus-5" in connectedWallet.network
+    ) {
+      setNetwork("classic")
+    } else if (
+      network !== "localterra" &&
+      "localterra" in connectedWallet.network
+    ) {
+      setNetwork("localterra")
     }
 
     return filterEnabledNetworks(
@@ -82,5 +94,16 @@ export const useNetworkName = () => {
 
 export const useChainID = () => {
   const network = useRecoilValue(networkState)
-  return network === "mainnet" ? "phoenix-1" : "pisco-1"
+  switch (network) {
+    case "mainnet":
+      return "phoenix-1"
+    case "testnet":
+      return "pisco-1"
+    case "classic":
+      return "columbus-5"
+    case "localterra":
+      return "localterra"
+  }
+
+  return ""
 }

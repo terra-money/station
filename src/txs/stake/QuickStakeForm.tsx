@@ -10,8 +10,7 @@ import { Grid, Page } from "components/layout"
 import { Form, FormItem, FormWarning, Input } from "components/form"
 import { getPlaceholder, toInput } from "../utils"
 import validate from "../validate"
-import InterchainTx from "txs/InterchainTx"
-import { getInitialGasDenom } from "../Tx"
+import Tx from "../Tx"
 import { useNativeDenoms } from "data/token"
 import { QuickStakeAction } from "pages/stake/QuickStake"
 import {
@@ -52,9 +51,6 @@ const QuickStakeForm = (props: Props) => {
 
   const { baseAsset } = network[chainID]
   // const daysToUnbond = getChainUnbondTime(stakeParams)
-
-  /* tx context */
-  const initialGasDenom = getInitialGasDenom()
 
   /* form */
   const form = useForm<TxValues>({
@@ -122,7 +118,6 @@ const QuickStakeForm = (props: Props) => {
     token,
     amount,
     balance,
-    initialGasDenom,
     estimationTxValues,
     createTx,
     onChangeMax,
@@ -136,7 +131,7 @@ const QuickStakeForm = (props: Props) => {
 
   return (
     <Page invisible {...state}>
-      <InterchainTx {...tx}>
+      <Tx {...tx}>
         {({ max, fee, submit }) => (
           <Form onSubmit={handleSubmit(submit.fn)}>
             {
@@ -152,12 +147,13 @@ const QuickStakeForm = (props: Props) => {
                   <Grid gap={4}>
                     <FormWarning>
                       {t(
-                        "Maximum 7 undelegations can be in progress at the same time"
+                        "A maximum 7 undelegations can be in progress at the same time"
                       )}
                     </FormWarning>
                     <FormWarning>
                       {t(
-                        `No rewards are distributed during ${daysToUnbond} days undelegation period`
+                        "Undelegating funds do not accrue rewards and are locked for {{daysToUnbond}} days",
+                        { daysToUnbond }
                       )}
                     </FormWarning>
                   </Grid>
@@ -186,7 +182,7 @@ const QuickStakeForm = (props: Props) => {
             {submit.button}
           </Form>
         )}
-      </InterchainTx>
+      </Tx>
     </Page>
   )
 }

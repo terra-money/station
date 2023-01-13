@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next"
 import { Page, Card } from "components/layout"
-import TxContext from "../TxContext"
 import StoreCodeForm from "./StoreCodeForm"
 
 const StoreCodeTx = () => {
@@ -9,9 +8,7 @@ const StoreCodeTx = () => {
   return (
     <Page title={t("Upload a wasm file")} small>
       <Card>
-        <TxContext>
-          <StoreCodeForm />
-        </TxContext>
+        <StoreCodeForm />
       </Card>
     </Page>
   )

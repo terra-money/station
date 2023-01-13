@@ -1,10 +1,11 @@
 import { useTranslation } from "react-i18next"
 import DescriptionIcon from "@mui/icons-material/Description"
 import BoltIcon from "@mui/icons-material/Bolt"
-import { TUTORIAL, SETUP } from "config/constants"
+import { DOCUMENTATION, SETUP } from "config/constants"
 import { ExternalLink } from "components/general"
 import { Contacts } from "components/layout"
 import styles from "./Links.module.scss"
+import { capitalize } from "@mui/material"
 
 const Links = () => {
   const { t } = useTranslation()
@@ -22,11 +23,11 @@ const Links = () => {
       <div className={styles.tutorial}>
         <ExternalLink href={SETUP} className={styles.link}>
           <BoltIcon style={{ fontSize: 18 }} />
-          {t("Setup")}
+          {capitalize(t("setup"))}
         </ExternalLink>
-        <ExternalLink href={TUTORIAL} className={styles.link}>
+        <ExternalLink href={DOCUMENTATION} className={styles.link}>
           <DescriptionIcon style={{ fontSize: 18 }} />
-          {t("Documentation")}
+          {capitalize(t("documentation"))}
         </ExternalLink>
       </div>
 

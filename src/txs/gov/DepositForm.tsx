@@ -9,8 +9,7 @@ import { Form, FormItem, Input } from "components/form"
 import useProposalId from "pages/gov/useProposalId"
 import { getPlaceholder, toInput } from "../utils"
 import validate from "../validate"
-import { getInitialGasDenom } from "../Tx"
-import InterchainTx from "../InterchainTx"
+import Tx from "../Tx"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { useNetwork } from "data/wallet"
 
@@ -28,9 +27,6 @@ const DepositForm = () => {
   const balance =
     bankBalance.find((b) => b.denom === networks[chain].baseAsset)?.amount ??
     "0"
-
-  /* tx context */
-  const initialGasDenom = getInitialGasDenom()
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })
@@ -74,7 +70,6 @@ const DepositForm = () => {
     token: networks[chain].baseAsset,
     amount,
     balance,
-    initialGasDenom,
     estimationTxValues,
     createTx,
     onChangeMax,
@@ -87,7 +82,7 @@ const DepositForm = () => {
   }
 
   return (
-    <InterchainTx {...tx}>
+    <Tx {...tx}>
       {({ max, fee, submit }) => (
         <Form onSubmit={handleSubmit(submit.fn)}>
           <FormItem
@@ -112,7 +107,7 @@ const DepositForm = () => {
           {submit.button}
         </Form>
       )}
-    </InterchainTx>
+    </Tx>
   )
 }
 

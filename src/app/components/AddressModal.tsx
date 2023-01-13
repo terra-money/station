@@ -65,9 +65,11 @@ const AddressModalTable = ({ keyword }: { keyword: string }) => {
 }
 
 const AddressModal = () => {
+  const { t } = useTranslation()
+
   return (
     <Page sub>
-      <WithSearchInput gap={10} placeholder="Search for a chain...">
+      <WithSearchInput gap={10} placeholder={t("Search for a chain...")}>
         {(keyword: string) => <AddressModalTable keyword={keyword} />}
       </WithSearchInput>
     </Page>

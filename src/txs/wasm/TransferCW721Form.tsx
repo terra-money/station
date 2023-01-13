@@ -14,7 +14,7 @@ import { Form, FormItem, FormHelp, Input } from "components/form"
 import NFTAssetItem from "pages/nft/NFTAssetItem"
 import AddressBookList from "../AddressBook/AddressBookList"
 import validate from "../validate"
-import Tx, { getInitialGasDenom } from "../Tx"
+import Tx from "../Tx"
 import { getChainIDFromAddress } from "utils/bech32"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 
@@ -35,9 +35,6 @@ const TransferCW721Form = ({ contract, id }: Props) => {
   const network = useNetwork()
   const chainID = getChainIDFromAddress(contract, network) ?? ""
   const connectedAddress = addresses?.[chainID]
-
-  /* tx context */
-  const initialGasDenom = getInitialGasDenom()
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })
@@ -103,7 +100,6 @@ const TransferCW721Form = ({ contract, id }: Props) => {
   )
 
   const tx = {
-    initialGasDenom,
     estimationTxValues,
     createTx,
     disabled,

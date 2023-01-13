@@ -14,7 +14,7 @@ import { Grid } from "components/layout"
 import { Form, FormItem, FormWarning, Input, Select } from "components/form"
 import { getPlaceholder, toInput } from "../utils"
 import validate from "../validate"
-import InterchainTx from "txs/InterchainTx"
+import Tx from "txs/Tx"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 
 interface TxValues {
@@ -23,9 +23,9 @@ interface TxValues {
 }
 
 export enum StakeAction {
-  DELEGATE = "delegate",
-  REDELEGATE = "redelegate",
-  UNBOND = "undelegate",
+  DELEGATE = "Delegate",
+  REDELEGATE = "Redelegate",
+  UNBOND = "Undelegate",
 }
 
 interface Props {
@@ -143,14 +143,14 @@ const StakeForm = (props: Props) => {
   }
 
   return (
-    <InterchainTx {...tx}>
+    <Tx {...tx}>
       {({ max, fee, submit }) => (
         <Form onSubmit={handleSubmit(submit.fn)}>
           {
             {
               [StakeAction.DELEGATE]: (
                 <FormWarning>
-                  {t("Leave coins to pay fee for subsequent transactions")}
+                  {t("Leave coins to pay fees for subsequent transactions")}
                 </FormWarning>
               ),
               [StakeAction.REDELEGATE]: (
@@ -164,12 +164,12 @@ const StakeForm = (props: Props) => {
                 <Grid gap={4}>
                   <FormWarning>
                     {t(
-                      "Maximum 7 undelegations can be in progress at the same time"
+                      "A maximum 7 undelegations can be in progress at the same time"
                     )}
                   </FormWarning>
                   <FormWarning>
                     {t(
-                      "No rewards are distributed during 21 days undelegation period"
+                      "No rewards are distributed during the 21 day undelegation period"
                     )}
                   </FormWarning>
                 </Grid>
@@ -222,7 +222,7 @@ const StakeForm = (props: Props) => {
           {submit.button}
         </Form>
       )}
-    </InterchainTx>
+    </Tx>
   )
 }
 

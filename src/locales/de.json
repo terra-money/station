@@ -16,16 +16,20 @@
     "Buy": "Kaufen",
     "Exchanges": "Handelsplätze",
     "Fiat": "Währung",
-    "APY": "APY"
+    "APY": "APY",
+    "chain": "Kette"
   },
   "Form": {
     "Amount": "Menge",
     "Recipient": "Empfänger",
+    "Asset": "",
+    "Source chain": "",
     "Name": "Name",
     "optional": "optional",
     "Submit": "Absenden",
     "Confirm": "Bestätigen",
-    "Reset": "Zurücksetzen"
+    "Reset": "Zurücksetzen",
+    "All": ""
   },
   "Validate": {
     "{{label}} is required": "{{label}} wird benötigt",
@@ -42,44 +46,40 @@
   },
   "Loading": {
     "Initializing app...": "Initialisiere App...",
-    "Loading...": "Lädt...",
+    "Loading...": "Am Laden...",
     "Load more": "Mehr laden",
-    "Loading more...": "Wird geladen...",
+    "Loading more...": "Es wird mehr geladen...",
     "Nothing more to load": "Nichts mehr zu laden",
     "Simulating...": "Simuliere...",
     "Broadcasting a tx...": "Senden der Transaktion...",
     "Broadcasting transaction": "Sende Transaktion",
     "Queued": "In Warteschlange"
   },
-  "Success": {
-    "Success!": "Erfolgreich!"
-  },
+  "Success": { "Success!": "Erfolgreich!" },
   "Failure": {
     "Failed": "Fehlgeschlagen",
     "Simulation failed": "Simulation fehlgeschlagen",
     "User denied": "Benutzer abgelehnt",
     "Failed to create tx": "Transaktion konnte nicht erstellt werden",
-    "Tx failed": "Transaktion fehlgeschlagen"
+    "Tx failed": "Transaktion fehlgeschlagen",
+    "Connect wallet to see your address": ""
   },
   "Application": {
     "Go back": "Zurück",
     "View": "Anzeigen",
-    "Show all": "Alle zeigen",
+    "Show all": "Alles anzeigen",
     "Copy": "Kopieren",
     "Copied": "Kopiert",
     "Active": "Aktiv",
     "Inactive": "Inaktiv",
-    "Not found": "Nicht gefunden"
+    "Not found": "Nicht gefunden",
+    "setup": "Einrichtung",
+    "documentation": "Dokumentation",
+    "Search for a chain...": "",
+    "Select theme": ""
   },
-  "Units": {
-    "year": "Jahr",
-    "day": "Tag",
-    "{{d}} days": "{{d}} Tage"
-  },
-  "Preferences": {
-    "Language": "Sprache",
-    "Currency": "Währung"
-  },
+  "Units": { "year": "Jahr", "day": "Tag", "{{d}} days": "{{d}} Tage" },
+  "Preferences": { "Language": "Sprache", "Currency": "Währung" },
   "Auth": {
     "Connect": "Verbinden",
     "Disconnect": "Trennen",
@@ -122,7 +122,12 @@
   },
   "Wallet": {
     "Add tokens": "Token hinzufügen",
-    "Manage list": "Liste verwalten"
+    "Manage list": "Liste verwalten",
+    "Assets": "Vermögenswerte",
+    "receive": "erhalten",
+    "select a coin": "eine Münze auswählen",
+    "asset value": "Anlagenwert",
+    "{{balance}} available": ""
   },
   "Txs": {
     "Send": "Senden",
@@ -137,7 +142,10 @@
     "Deposit": "Einzahlung",
     "Vote": "Abstimmen",
     "Transfer NFT": "NFT transferieren",
-    "Earn": "Verdienen"
+    "Earn": "Verdienen",
+    "Leave enough coins to pay fee for subsequent transactions": "Lassen Sie genügend Münzen übrig, um die Gebühren für nachfolgende Transaktionen zu bezahlen.",
+    "Check if this transaction requires a memo": "",
+    "Balance after tx": "Bilanz nach der Ausführung"
   },
   "Swap": {
     "From": "Von",
@@ -152,20 +160,41 @@
   },
   "Stake": {
     "Delegations": "Zuteilungen",
+    "My delegations": "",
     "Undelegations": "Entziehungen",
     "Delegated": "Zugeteilt",
     "Undelegated": "Entzogen",
-    "Staking rewards": "Staking Belohnungen"
+    "Staking rewards": "Staking Belohnungen",
+    "My rewards": "",
+    "Maximum 7 undelegations can be in progress at the same time": "Maximal 7 Ablehnungen können gleichzeitig bearbeitet werden",
+    "No rewards are distributed during the 21 day undelegation period": "Während der 21-tägigen Nichtweiterleitungsfrist werden keine Prämien ausgeschüttet.",
+    "Quick stake selects validators that": "Quick stake wählt Prüfer aus, die",
+    "Are outside of top third by voting power": "liegen außerhalb des oberen Drittels der Stimmkraft",
+    "Charge 5% commission or less": "5 % Provision oder weniger berechnen",
+    "Have not been slashed recently": "wurden in letzter Zeit nicht gekürzt",
+    "Are in the active set": "sind in der aktiven Gruppe",
+    "staking": "Abstecken",
+    "Staked funds": "eingesetzte Mittel",
+    "Quick Stake": "schneller Einsatz",
+    "Manual Stake": "manueller Einsatz",
+    "Select action": "",
+    "Withdraw all rewards": "",
+    "Show inactive validators": "",
+    "Search for validator...": ""
   },
   "Validator": {
     "Validators": "Validatoren",
     "Voting power": "Stimmgewicht",
     "Self delegation": "Selbstzuteilung",
     "Commission": "Gebühr",
+    "Current": "",
+    "Max": "",
+    "Max daily change": "",
+    "Last changed": "",
     "Uptime": "Betriebszeit",
     "Validator details": "Validator Details",
     "Operator address": "Betreiberadresse",
-    "Account address": "Kontoadresse",
+    "Wallet address": "Kontoadresse",
     "Jailed": "Gesperrt"
   },
   "Governance": {
@@ -194,7 +223,10 @@
     "Tallying procedure": "Abstimmungsverfahren",
     "Quorum": "Beschlussfähigkeit",
     "Pass threshold": "Erfolgs-Untergrenze",
-    "Veto threshold": "Veto-Untergrenze"
+    "Veto threshold": "Veto-Untergrenze",
+    "Proposal deposits will not be refunded if the proposal fails to reach the quorum or the result is NO_WITH_VETO": "Die Kaution für den Vorschlag wird nicht zurückerstattet, wenn der Vorschlag das Quorum nicht erreicht oder das Ergebnis NO_WITH_VETO lautet.",
+    "Parameters cannot be changed by text proposals": "Parameter können nicht durch Textvorschläge geändert werden",
+    "No proposals in {{label}} period": ""
   },
   "Contract": {
     "Upload": "Hochladen",
@@ -206,10 +238,7 @@
     "Size": "Größe",
     "Instantiate a code": "Code Instanziieren"
   },
-  "NFT": {
-    "Marketplace": "Marktplatz",
-    "Collection": "Sammlung"
-  },
+  "NFT": { "Marketplace": "Marktplatz", "Collection": "Sammlung" },
   "Address book": {
     "Address book": "Adressbuch",
     "Add a new address": "Neue Adresse hinzufügen"

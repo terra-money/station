@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form"
 import { MsgStoreCode } from "@terra-money/feather.js"
 import { useAddress, useChainID } from "data/wallet"
 import { Form, FormItem, Upload } from "components/form"
-import Tx, { getInitialGasDenom } from "../Tx"
+import Tx from "../Tx"
 
 interface TxValues {
   code: string
@@ -15,9 +15,6 @@ const StoreCodeForm = () => {
   const { t } = useTranslation()
   const address = useAddress()
   const chainID = useChainID()
-
-  /* tx context */
-  const initialGasDenom = getInitialGasDenom()
 
   /* form */
   const [file, setFile] = useState<File>()
@@ -47,7 +44,6 @@ const StoreCodeForm = () => {
   const estimationTxValues = useMemo(() => values, [values])
 
   const tx = {
-    initialGasDenom,
     estimationTxValues,
     createTx,
     onSuccess: { label: t("Instantiate"), path: "/contract/instantiate" },

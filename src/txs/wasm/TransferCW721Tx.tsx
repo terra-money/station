@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next"
 import { useSearchParams } from "react-router-dom"
 import { Page } from "components/layout"
-import TxContext from "../TxContext"
 import TransferCW721Form from "./TransferCW721Form"
 
 const TransferCW721Tx = () => {
@@ -14,9 +13,7 @@ const TransferCW721Tx = () => {
 
   return (
     <Page title={t("Transfer NFT")}>
-      <TxContext>
-        <TransferCW721Form contract={contract} id={id} />
-      </TxContext>
+      <TransferCW721Form contract={contract} id={id} />
     </Page>
   )
 }

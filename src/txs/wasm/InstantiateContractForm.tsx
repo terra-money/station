@@ -7,14 +7,14 @@ import { AccAddress } from "@terra-money/feather.js"
 import { MsgInstantiateContract } from "@terra-money/feather.js"
 import { SAMPLE_ADDRESS } from "config/constants"
 import { parseJSON, validateMsg } from "utils/data"
-import { useAddress, useChainID } from "data/wallet"
+import { useAddress, useChainID, useNetwork } from "data/wallet"
 import { useBankBalance } from "data/queries/bank"
 import { WithTokenItem } from "data/token"
 import { Form, FormGroup, FormItem } from "components/form"
 import { Input, EditorInput, Select } from "components/form"
 import { getCoins, getPlaceholder } from "../utils"
 import validate from "../validate"
-import Tx, { getInitialGasDenom } from "../Tx"
+import Tx from "../Tx"
 import { useIBCHelper } from "../IBCHelperContext"
 
 interface TxValues {
@@ -29,12 +29,12 @@ interface TxValues {
 const InstantiateContractForm = () => {
   const { t } = useTranslation()
   const address = useAddress()
+  const network = useNetwork()
   const bankBalance = useBankBalance()
   const chainID = useChainID()
 
   /* tx context */
-  const initialGasDenom = getInitialGasDenom()
-  const defaultItem = { denom: initialGasDenom }
+  const defaultItem = { denom: network[chainID].baseAsset }
   const { findDecimals } = useIBCHelper()
 
   /* form */
@@ -79,7 +79,6 @@ const InstantiateContractForm = () => {
   const estimationTxValues = useMemo(() => values, [values])
 
   const tx = {
-    initialGasDenom,
     estimationTxValues,
     coins,
     createTx,

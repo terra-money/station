@@ -6,9 +6,8 @@ import { MsgVote, Vote } from "@terra-money/feather.js"
 import { useGetVoteOptionItem } from "data/queries/gov"
 import { Form } from "components/form"
 import useProposalId from "pages/gov/useProposalId"
-import { getInitialGasDenom } from "../Tx"
+import Tx from "../Tx"
 import styles from "./VoteForm.module.scss"
-import InterchainTx from "txs/InterchainTx"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 
 const cx = classNames.bind(styles)
@@ -33,9 +32,6 @@ const VoteForm = () => {
 
   const addresses = useInterchainAddresses()
 
-  /* tx context */
-  const initialGasDenom = getInitialGasDenom()
-
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })
   const { register, watch, handleSubmit } = form
@@ -59,7 +55,6 @@ const VoteForm = () => {
   )
 
   const tx = {
-    initialGasDenom,
     estimationTxValues,
     createTx,
     onSuccess: {
@@ -70,7 +65,7 @@ const VoteForm = () => {
   }
 
   return (
-    <InterchainTx {...tx}>
+    <Tx {...tx}>
       {({ fee, submit }) => (
         <Form onSubmit={handleSubmit(submit.fn)}>
           <section className={styles.options}>
@@ -98,7 +93,7 @@ const VoteForm = () => {
           {submit.button}
         </Form>
       )}
-    </InterchainTx>
+    </Tx>
   )
 }
 

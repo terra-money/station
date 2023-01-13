@@ -6,7 +6,6 @@ import { combineState } from "data/query"
 import { useBalances } from "data/queries/bank"
 import { Auto, Page, Tabs, Card } from "components/layout"
 import ValidatorCompact from "pages/stake/ValidatorCompact"
-import TxContext from "../TxContext"
 import StakeForm, { StakeAction } from "./StakeForm"
 import { useNetwork } from "data/wallet"
 import { ValAddress } from "@terra-money/feather.js"
@@ -59,7 +58,7 @@ const StakeTx = () => {
   }
 
   return (
-    <Page {...state} title={t("Delegate")}>
+    <Page {...state} title={t("Delegate")} backButton>
       <Auto
         columns={[
           <Tabs
@@ -69,7 +68,7 @@ const StakeTx = () => {
                 tab: t(tab),
                 children: (
                   <Card muted className={styles.card}>
-                    <TxContext>{renderTab(tab)}</TxContext>
+                    {renderTab(tab)}
                   </Card>
                 ),
                 disabled: getDisabled(tab),

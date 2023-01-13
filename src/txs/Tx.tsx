@@ -21,7 +21,7 @@ import { Contents } from "types/components"
 import { has } from "utils/num"
 import { getErrorMessage } from "utils/error"
 import { getLocalSetting, SettingKey } from "utils/localStorage"
-import { RefetchOptions } from "data/query"
+import { combineState, RefetchOptions } from "data/query"
 import { queryKey } from "data/query"
 import { useNetwork } from "data/wallet"
 import { isBroadcastingState, latestTxState } from "data/queries/tx"
@@ -38,11 +38,11 @@ import useToPostMultisigTx from "pages/multisig/utils/useToPostMultisigTx"
 import { isWallet, useAuth } from "auth"
 import { PasswordError } from "auth/scripts/keystore"
 
-import { toInput, CoinInput } from "./utils"
-import { useTx } from "./TxContext"
+import { toInput, CoinInput, calcTaxes } from "./utils"
 import styles from "./Tx.module.scss"
 import { useInterchainLCDClient } from "data/queries/lcdClient"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
+import { getShouldTax, useTaxCap, useTaxRate } from "data/queries/treasury"
 
 interface Props<TxValues> {
   /* Only when the token is paid out of the balance held */
@@ -77,7 +77,7 @@ interface RenderProps<TxValues> {
   submit: { fn: (values: TxValues) => Promise<void>; button: ReactNode }
 }
 
-function InterchainTx<TxValues>(props: Props<TxValues>) {
+function Tx<TxValues>(props: Props<TxValues>) {
   const { token, decimals, amount, balance, chain } = props
   const { estimationTxValues, createTx } = props
   const { children, onChangeMax } = props
@@ -88,7 +88,6 @@ function InterchainTx<TxValues>(props: Props<TxValues>) {
 
   /* context */
   const { t } = useTranslation()
-  const network = useNetwork()
   const lcd = useInterchainLCDClient()
   const networks = useNetwork()
   const { post } = useWallet()
@@ -98,7 +97,20 @@ function InterchainTx<TxValues>(props: Props<TxValues>) {
   const isWalletEmpty = useIsWalletEmpty()
   const setLatestTx = useSetRecoilState(latestTxState)
   const isBroadcasting = useRecoilValue(isBroadcastingState)
-  const { gasPrices } = useTx()
+
+  /* taxes */
+  const isClassic = networks[chain]?.isClassic
+  const shouldTax = isClassic && getShouldTax(token, isClassic)
+  const { data: taxRate = "0", ...taxRateState } = useTaxRate(!shouldTax)
+  const { data: taxCap = "0", ...taxCapState } = useTaxCap(token)
+  const taxState = combineState(taxRateState, taxCapState)
+  const taxes = isClassic
+    ? calcTaxes(
+        props.coins ?? ([{ input: 0, denom: token }] as CoinInput[]),
+        { taxRate, taxCap },
+        !!isClassic
+      )
+    : undefined
 
   /* simulation: estimate gas */
   const simulationTx = estimationTxValues && createTx(estimationTxValues)
@@ -106,10 +118,9 @@ function InterchainTx<TxValues>(props: Props<TxValues>) {
   const gasAdjustment = getLocalSetting<number>(gasAdjustmentSetting)
   const key = {
     address: addresses?.[chain],
-    network,
-    gasPrices,
+    network: networks,
     gasAdjustment,
-    msgs: simulationTx?.msgs.map((msg) => msg.toData()),
+    msgs: simulationTx?.msgs.map((msg) => msg.toData(isClassic)),
   }
   const { data: estimatedGas, ...estimatedGasState } = useQuery(
     [queryKey.tx.create, key, isWalletEmpty],
@@ -171,18 +182,23 @@ function InterchainTx<TxValues>(props: Props<TxValues>) {
   }, [decimals, isMax, max, onChangeMax])
 
   /* tax */
-  const taxAmount = undefined
+  const taxAmount =
+    token && amount && shouldTax
+      ? calcMinimumTaxAmount(amount, { rate: taxRate, cap: taxCap })
+      : undefined
 
   /* (effect): Log error on console */
-  const failed = getErrorMessage(estimatedGasState.error)
+  const failed = getErrorMessage(taxState.error ?? estimatedGasState.error)
   useEffect(() => {
     if (process.env.NODE_ENV === "development" && failed) {
       console.groupCollapsed("Fee estimation failed")
-      console.info(simulationTx?.msgs.map((msg) => msg.toData()))
+      console.info(
+        simulationTx?.msgs.map((msg) => msg.toData(networks[chain].isClassic))
+      )
       console.info(failed)
       console.groupEnd()
     }
-  }, [failed, simulationTx])
+  }, [failed, simulationTx, networks, chain])
 
   /* submit */
   const passwordRequired = isWallet.single(wallet)
@@ -191,6 +207,10 @@ function InterchainTx<TxValues>(props: Props<TxValues>) {
 
   const disabled = estimatedGasState.isLoading
     ? t("Estimating fee...")
+    : taxState.isLoading
+    ? t("Loading tax data...")
+    : taxState.error
+    ? t("Failed to load tax data")
     : estimatedGasState.error
     ? t("Fee estimation failed")
     : isBroadcasting
@@ -209,7 +229,7 @@ function InterchainTx<TxValues>(props: Props<TxValues>) {
       if (disabled) throw new Error(disabled)
       if (
         !estimatedGas ||
-        (!has(gasAmount) && network[chain]?.gasPrices[gasDenom])
+        (!has(gasAmount) && networks[chain]?.gasPrices[gasDenom])
       )
         throw new Error("Fee is not estimated")
 
@@ -218,7 +238,10 @@ function InterchainTx<TxValues>(props: Props<TxValues>) {
       if (!tx) throw new Error("Tx is not defined")
 
       const gasCoins = new Coins([Coin.fromData(gasFee)])
-      const feeCoins = gasCoins
+      const taxCoin =
+        token && taxAmount && has(taxAmount) && new Coin(token, taxAmount)
+      const taxCoins = sanitizeTaxes(taxes) ?? taxCoin
+      const feeCoins = taxCoins ? gasCoins.add(taxCoins) : gasCoins
       const fee = new Fee(estimatedGas, feeCoins)
 
       if (isWallet.multisig(wallet)) {
@@ -444,14 +467,9 @@ function InterchainTx<TxValues>(props: Props<TxValues>) {
   )
 }
 
-export default InterchainTx
+export default Tx
 
 /* utils */
-// TODO: fetch for each chain
-export const getInitialGasDenom = () => {
-  return "uluna"
-}
-
 export const calcMinimumTaxAmount = (
   amount: BigNumber.Value,
   { rate, cap }: { rate: BigNumber.Value; cap: BigNumber.Value }
@@ -459,6 +477,12 @@ export const calcMinimumTaxAmount = (
   return BigNumber.min(new BigNumber(amount).times(rate), cap)
     .integerValue(BigNumber.ROUND_FLOOR)
     .toString()
+}
+
+const sanitizeTaxes = (taxes?: Coins) => {
+  return taxes?.toArray().filter((tax) => has(tax.amount.toString())).length
+    ? taxes
+    : undefined
 }
 
 /* hooks */

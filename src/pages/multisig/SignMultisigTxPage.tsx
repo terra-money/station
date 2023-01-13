@@ -2,7 +2,6 @@ import { useTranslation } from "react-i18next"
 import { Card, Page } from "components/layout"
 import { Wrong } from "components/feedback"
 import { isWallet, useAuth } from "auth"
-import TxContext from "../../txs/TxContext"
 import useDefaultValues from "./utils/useDefaultValues"
 import SignMultisigTxForm from "./SignMultisigTxForm"
 
@@ -19,11 +18,7 @@ const SignMultisigTxPage = () => {
         </Card>
       )
 
-    return (
-      <TxContext>
-        <SignMultisigTxForm defaultValues={defaultValues} />
-      </TxContext>
-    )
+    return <SignMultisigTxForm defaultValues={defaultValues} />
   }
 
   return <Page title={t("Sign a multisig tx")}>{render()}</Page>

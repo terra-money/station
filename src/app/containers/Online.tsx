@@ -3,11 +3,14 @@ import { useTranslation } from "react-i18next"
 import WifiOffIcon from "@mui/icons-material/WifiOff"
 import Overlay from "../components/Overlay"
 import styles from "./Online.module.scss"
+import { useNetworkName } from "data/wallet"
 
 const Online = () => {
   const { t } = useTranslation()
   const online = useOnlineStatus()
-  if (online) return null
+  const networkName = useNetworkName()
+
+  if (online || networkName === "localterra") return null
   return (
     <Overlay>
       <article>

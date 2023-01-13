@@ -5,7 +5,7 @@ const QuickStakeTooltip = () => {
 
   return (
     <article>
-      <h1>{t("Quick stake selects validators that")}</h1>
+      <h1>{t("Quick stake selects validators that")}:</h1>
       <ul>
         <li>{t("Are outside of top third by voting power")}</li>
         <li>{t("Charge 5% commission or less")}</li>

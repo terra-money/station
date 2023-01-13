@@ -14,7 +14,7 @@ import { Form, FormGroup, FormItem } from "components/form"
 import { Input, Select, EditorInput } from "components/form"
 import { getCoins, getPlaceholder } from "../utils"
 import validate from "../validate"
-import Tx, { getInitialGasDenom } from "../Tx"
+import Tx from "../Tx"
 import { useIBCHelper } from "../IBCHelperContext"
 import { getChainIDFromAddress } from "utils/bech32"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
@@ -37,8 +37,7 @@ const ExecuteContractForm = () => {
   const bankBalance = useBankBalance()
 
   /* tx context */
-  const initialGasDenom = getInitialGasDenom()
-  const defaultItem = { denom: initialGasDenom }
+  const defaultItem = { denom: network[chainID].baseAsset }
   const { findDecimals } = useIBCHelper()
 
   /* form */
@@ -72,7 +71,6 @@ const ExecuteContractForm = () => {
   /* fee */
   const estimationTxValues = useMemo(() => values, [values])
   const tx = {
-    initialGasDenom,
     estimationTxValues,
     coins,
     createTx,

@@ -4,8 +4,8 @@ import { WalletStatus } from "@terra-money/wallet-types"
 import { useWallet } from "@terra-money/use-wallet"
 import { useNetworkName } from "data/wallet"
 import { isWallet, useAuth } from "auth"
-import Splash from "auth/modules/Splash"
 import Online from "./containers/Online"
+import NetworkLoading from "./NetworkLoading"
 
 const InitWallet = ({ children }: PropsWithChildren<{}>) => {
   useOnNetworkChange()
@@ -14,7 +14,7 @@ const InitWallet = ({ children }: PropsWithChildren<{}>) => {
   const networkName = useNetworkName()
 
   return status === WalletStatus.INITIALIZING ? (
-    <Splash />
+    <NetworkLoading title="Initializing your wallet..." />
   ) : (
     <QueryClientProvider client={queryClient} key={networkName}>
       {children}

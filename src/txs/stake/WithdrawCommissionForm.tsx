@@ -12,7 +12,7 @@ import { useWithdrawAddress } from "data/queries/distribution"
 import { WithTokenItem } from "data/token"
 import { Form, FormArrow, Input } from "components/form"
 import { TokenCard, TokenCardGrid } from "components/token"
-import Tx, { getInitialGasDenom } from "../Tx"
+import Tx from "../Tx"
 
 // TODO: make this interchain
 const WithdrawCommissionForm = () => {
@@ -21,9 +21,6 @@ const WithdrawCommissionForm = () => {
   const address = useAddress()
   const chainID = useChainID()
   const calcValue = useMemoizedCalcValue()
-
-  /* tx context */
-  const initialGasDenom = getInitialGasDenom()
 
   /* form */
   const { handleSubmit } = useForm({ mode: "onChange" })
@@ -40,7 +37,6 @@ const WithdrawCommissionForm = () => {
   const estimationTxValues = useMemo(() => ({}), [])
 
   const tx = {
-    initialGasDenom,
     estimationTxValues,
     createTx,
     onSuccess: { label: t("Stake"), path: "/stake" },

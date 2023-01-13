@@ -7,7 +7,7 @@ import { useAddress, useChainID } from "data/wallet"
 import { Form, FormItem } from "components/form"
 import { Input, EditorInput } from "components/form"
 import validate from "../validate"
-import Tx, { getInitialGasDenom } from "../Tx"
+import Tx from "../Tx"
 
 interface TxValues {
   id?: number
@@ -20,9 +20,6 @@ const MigrateContractForm = ({ contract }: { contract: AccAddress }) => {
 
   const address = useAddress()
   const chainID = useChainID()
-
-  /* tx context */
-  const initialGasDenom = getInitialGasDenom()
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })
@@ -51,7 +48,6 @@ const MigrateContractForm = ({ contract }: { contract: AccAddress }) => {
   const estimationTxValues = useMemo(() => values, [values])
 
   const tx = {
-    initialGasDenom,
     estimationTxValues,
     createTx,
     onSuccess: { label: t("Contract"), path: "/contract" },

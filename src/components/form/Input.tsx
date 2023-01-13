@@ -10,11 +10,15 @@ const cx = classNames.bind(styles)
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
   token?: Token
   selectBefore?: ReactNode
+  actionButton?: {
+    icon: ReactNode
+    onClick: () => void
+  }
 }
 
 const Input = forwardRef(
   (
-    { selectBefore, token, ...attrs }: Props,
+    { selectBefore, token, actionButton, ...attrs }: Props,
     ref: ForwardedRef<HTMLInputElement>
   ) => {
     return (
@@ -23,7 +27,10 @@ const Input = forwardRef(
 
         <input
           {...attrs}
-          className={cx(styles.input, { before: token, after: selectBefore })}
+          className={cx(styles.input, {
+            before: token || actionButton,
+            after: selectBefore,
+          })}
           autoComplete="off"
           ref={ref}
         />
@@ -36,6 +43,15 @@ const Input = forwardRef(
               </Flex>
             )}
           </WithTokenItem>
+        )}
+
+        {actionButton && (
+          <button
+            className={classNames(styles.symbol, styles.after)}
+            onClick={actionButton.onClick}
+          >
+            {actionButton.icon}
+          </button>
         )}
       </div>
     )

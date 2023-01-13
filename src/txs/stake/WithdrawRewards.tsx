@@ -2,7 +2,6 @@ import { useTranslation } from "react-i18next"
 import { combineState } from "data/query"
 import { useInterchainDelegations } from "data/queries/staking"
 import { Page, ChainFilter } from "components/layout"
-import TxContext from "../TxContext"
 import { Delegation } from "@terra-money/feather.js"
 import DelegationsPromote from "app/containers/DelegationsPromote"
 import WithdrawRewardsTx from "./WithdrawRewardsTx"
@@ -26,11 +25,9 @@ const WithdrawRewards = () => {
     if (!hasDelegations) return <DelegationsPromote />
 
     return (
-      <TxContext>
-        <ChainFilter>
-          {(chain) => <WithdrawRewardsTx chain={chain ?? ""} />}
-        </ChainFilter>
-      </TxContext>
+      <ChainFilter>
+        {(chain) => <WithdrawRewardsTx chain={chain ?? ""} />}
+      </ChainFilter>
     )
   }
 

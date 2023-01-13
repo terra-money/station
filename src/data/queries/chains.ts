@@ -13,14 +13,31 @@ type Whitelist = Record<
   }
 >
 
+type IBCDenoms = Record<
+  string,
+  Record<
+    string,
+    {
+      token: string
+      chain: string
+    }
+  >
+>
+
+export interface WhitelistData {
+  whitelist: Record<string, Whitelist>
+  ibcDenoms: IBCDenoms
+  legacyWhitelist: Whitelist
+}
+
 // chains and token withelist are always required from the beginning.
 const [useFetchedData, WhitelistProvider] =
-  createContext<Whitelist>("useWhitelist")
+  createContext<WhitelistData>("useWhitelist")
 export { WhitelistProvider }
 
-export function useWhitelist(): Whitelist {
+export function useWhitelist(): WhitelistData {
   const data = useFetchedData()
-  if (!data) return {}
+  if (!data) return { whitelist: {}, ibcDenoms: {}, legacyWhitelist: {} }
   return data
 }
 
@@ -35,6 +52,17 @@ export function getChainNamefromID(
   )
 }
 
+export function getChainIdFromAddress(
+  address: string,
+  chains: Record<string, InterchainNetwork>
+) {
+  return (
+    Object.values(chains)
+      .find(({ prefix }) => address.includes(prefix))
+      ?.chainID.toLowerCase() ?? ""
+  )
+}
+
 export function useIBCChannels() {
   const networks = useNetwork()
 
@@ -44,14 +72,11 @@ export function useIBCChannels() {
   }: {
     from: string
     to: string
-  }): string {
+  }): string | undefined {
     if (networks[from].name === "Terra") {
       return networks[to].ibc?.fromTerra ?? ""
     } else if (networks[to].name === "Terra") {
       return networks[from].ibc?.toTerra ?? ""
-    } else {
-      // one of the 2 chains MUST be Terra
-      return ""
     }
   }
 }
