@@ -27,16 +27,16 @@
   @include desktop {
     padding: 40px;
     width: var(--modal-width);
+
+    &.fullWidth {
+      width: calc(100% - 200px);
+    }
   }
 
   @include mobile {
     padding: 48px 20px;
     width: calc(100% - 40px);
   }
-}
-
-.modal .fullWidth {
-  width: calc(100% - 40px);
 }
 
 .close {
