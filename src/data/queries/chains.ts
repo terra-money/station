@@ -66,17 +66,39 @@ export function getChainIdFromAddress(
 export function useIBCChannels() {
   const networks = useNetwork()
 
-  return function getIBCChannel({
-    from,
-    to,
-  }: {
-    from: string
-    to: string
-  }): string | undefined {
-    if (networks[from].name === "Terra") {
-      return networks[to].ibc?.fromTerra ?? ""
-    } else if (networks[to].name === "Terra") {
-      return networks[from].ibc?.toTerra ?? ""
-    }
+  return {
+    getIBCChannel: ({
+      from,
+      to,
+      ics,
+    }: {
+      from: string
+      to: string
+      ics?: boolean
+    }): string | undefined => {
+      if (networks[from].prefix === "terra") {
+        return ics
+          ? networks[to].ibc?.ics?.fromTerra
+          : networks[to].ibc?.fromTerra
+      } else if (networks[to].prefix === "terra") {
+        return ics
+          ? networks[from].ibc?.ics?.toTerra
+          : networks[from].ibc?.toTerra
+      }
+    },
+
+    getICSContract: ({
+      from,
+      to,
+    }: {
+      from: string
+      to: string
+    }): string | undefined => {
+      if (networks[from].prefix === "terra") {
+        return networks[to].ibc?.ics?.contract
+      } else if (networks[to].prefix === "terra") {
+        return networks[from].ibc?.ics?.contract
+      }
+    },
   }
 }

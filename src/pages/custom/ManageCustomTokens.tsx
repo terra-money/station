@@ -6,6 +6,8 @@ import { useTokenInfoCW20 } from "data/queries/wasm"
 import { Fetching } from "components/feedback"
 import WithSearchInput from "./WithSearchInput"
 import TokenList from "./TokenList"
+import { useWhitelist } from "data/queries/chains"
+import { useNetworkName } from "data/wallet"
 
 interface Props {
   whitelist: { cw20: CW20Whitelist }
@@ -95,15 +97,30 @@ const Component = ({ whitelist, keyword }: Props) => {
 }
 
 const ManageCustomTokens = () => {
-  //const { data: ibc, ...ibcWhitelistState } = useIBCWhitelist()
   const { data: cw20, ...cw20WhitelistState } = useCW20Whitelist()
+  const { whitelist } = useWhitelist()
+  const networkName = useNetworkName()
 
   const render = () => {
     if (!cw20) return null
 
     return (
       <WithSearchInput>
-        {(input) => <Component whitelist={{ cw20 }} keyword={input} />}
+        {(input) => (
+          <Component
+            whitelist={{
+              cw20: {
+                ...cw20,
+                ...Object.fromEntries(
+                  Object.entries(whitelist[networkName]).filter(([denom]) =>
+                    AccAddress.validate(denom)
+                  )
+                ),
+              },
+            }}
+            keyword={input}
+          />
+        )}
       </WithSearchInput>
     )
   }
