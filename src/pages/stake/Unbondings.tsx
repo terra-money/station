@@ -54,6 +54,7 @@ const Unbondings = () => {
     }, 0)
 
     const list = flattenUnbondings(unbondings)
+    console.log("list", list)
 
     return (
       <ModalButton

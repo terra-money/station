@@ -23,7 +23,6 @@
   outline: 0;
   position: relative;
   overflow: hidden;
-
   @include desktop {
     padding: 40px;
     width: var(--modal-width);
@@ -37,6 +36,10 @@
     padding: 48px 20px;
     width: calc(100% - 40px);
   }
+}
+
+.modal th {
+  background: var(--card-bg);
 }
 
 .close {
