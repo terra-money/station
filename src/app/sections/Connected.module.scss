@@ -14,5 +14,7 @@
 }
 
 .button__text {
-  display: none;
+  @media (max-width: 500px) {
+    display: none;
+  }
 }
