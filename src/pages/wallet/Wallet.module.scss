@@ -12,11 +12,17 @@
   transition: 400ms;
   background-color: var(--card-bg-muted);
 
-  @media (max-width: (1400px - 0.02)) {
+  @media (max-width: (1400px)) {
     position: absolute;
     right: 0;
     box-shadow: var(--wallet-shadow);
     clip-path: inset(0px 0px 0px -100px);
+  }
+
+  @media (max-width: (420px)) {
+    box-shadow: none;
+    left: 0;
+    width: 100vw;
   }
 }
 
@@ -54,11 +60,47 @@
     box-shadow: var(--wallet-shadow);
     clip-path: inset(-15px 0px -15px -15px);
   }
+
+  .close__icon__mobile {
+    display: none;
+  }
+
+  @media (max-width: (420px)) {
+    box-shadow: none;
+    transform: translate(0, 0);
+    top: 12px;
+    right: 10px;
+    left: unset;
+    width: fit-content;
+    border: 0;
+    background-color: #0000;
+
+    .close__icon__mobile {
+      display: block;
+    }
+    .close__icon {
+      display: none;
+    }
+  }
 }
 
 .wallet__closed {
   width: 0;
   transform: translate(100%, 0);
+  left: unset;
+
+  .close {
+    @media (max-width: (420px)) {
+      position: fixed;
+      top: 10px;
+      left: 100%;
+      transform: translate(-100%, 0);
+      padding: 10px 8px;
+      background-color: var(--card-bg);
+      border-radius: 10px 0 0 10px;
+      border: var(--border-width) solid var(--card-border);
+    }
+  }
 }
 
 .back {

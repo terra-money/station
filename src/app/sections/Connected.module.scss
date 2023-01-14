@@ -8,3 +8,13 @@
   font-weight: var(--bold);
   margin-bottom: 4px;
 }
+
+.button {
+  min-width: 0;
+}
+
+.button__text {
+  @media (max-width: 500px) {
+    display: none;
+  }
+}

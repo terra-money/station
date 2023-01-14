@@ -94,6 +94,12 @@
 
   --extension-bg: hsl(227 62% 11%);
   --extension-text: hsl(210 89% 61%);
+
+  @include mobile {
+    --menu-bg: var(--card-bg);
+    --menu-border: var(--card-border);
+    --menu-text: var(--text);
+  }
 }
 
 .dark {

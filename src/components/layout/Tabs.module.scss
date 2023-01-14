@@ -16,6 +16,9 @@
 
   @include mobile {
     display: flex;
+  }
+
+  @media (max-width: 600px) {
     border-left: 0;
     border-right: 0;
     border-radius: 0;
@@ -42,7 +45,7 @@
   border-right: var(--border-width) solid var(--card-border);
   color: var(--text-muted);
 
-  @include mobile {
+  @media (max-width: 600px) {
     &:last-child {
       border-right: 0;
     }
@@ -88,6 +91,9 @@
 
   @include mobile {
     display: flex;
+  }
+
+  @media (max-width: 600px) {
     border-left: 0;
     border-right: 0;
     border-radius: 0;
@@ -108,7 +114,7 @@
   border-right: var(--border-width) solid var(--card-border);
   color: var(--text-muted);
 
-  @include mobile {
+  @media (max-width: 600px) {
     &:last-child {
       border-right: 0;
     }
