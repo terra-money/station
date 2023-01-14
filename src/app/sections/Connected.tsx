@@ -102,8 +102,11 @@ const Connected = () => {
         }
         size="small"
         outline
+        className={styles.button}
       >
-        {isWallet.local(wallet) ? wallet.name : truncate(name ?? address)}
+        <span className={styles.button__text}>
+          {isWallet.local(wallet) ? wallet.name : truncate(name ?? address)}
+        </span>
       </Button>
     </Popover>
   )

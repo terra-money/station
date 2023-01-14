@@ -29,6 +29,7 @@ import DevTools from "./sections/DevTools"
 import InitBankBalance from "./InitBankBalance"
 import Wallet from "pages/wallet/Wallet"
 import WelcomeModal from "./sections/WelcomeModal"
+import NavButton from "./sections/NavButton"
 
 const App = () => {
   const { element: routes } = useNav()
@@ -58,6 +59,7 @@ const App = () => {
           </section>
           <ValidatorButton />
           <ConnectWallet />
+          <NavButton />
         </Actions>
         <LatestTx />
       </Header>

@@ -16,17 +16,20 @@ const Nav = () => {
   const { menu } = useNav()
   const icon = useThemeFavicon()
   const [isOpen, setIsOpen] = useRecoilState(mobileIsMenuOpenState)
-  const toggle = () => setIsOpen(!isOpen)
+  const close = () => setIsOpen(false)
 
   return (
     <nav>
       <header className={styles.header}>
         <div className={classNames(styles.item, styles.logo)}>
-          <img src={icon} alt="Station" /> <strong>Station</strong>
+          <img src={icon} alt="Station" />{" "}
+          <strong className={styles.title}>Station</strong>
         </div>
-        <button className={styles.toggle} onClick={toggle}>
-          {isOpen ? <CloseIcon /> : <MenuIcon />}
-        </button>
+        {isOpen && (
+          <button className={styles.toggle} onClick={close}>
+            <CloseIcon />
+          </button>
+        )}
       </header>
 
       {menu.map(({ path, title, icon }) => (

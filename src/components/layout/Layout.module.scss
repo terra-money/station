@@ -13,12 +13,11 @@
   }
 
   @include mobile {
-    grid-template-rows: auto repeat(2, var(--header-height)) 1fr;
+    grid-template-rows: auto var(--header-height) 1fr;
     grid-template-areas:
-      "banner"
-      "sidebar"
-      "header"
-      "main";
+      "banner banner"
+      "sidebar header"
+      "main main";
   }
 
   height: 100vh;
@@ -89,6 +88,10 @@
 
   button {
     -webkit-app-region: no-drag;
+  }
+
+  @include mobile {
+    padding: 0;
   }
 }
 
