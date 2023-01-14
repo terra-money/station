@@ -11,6 +11,7 @@ export enum SettingKey {
   GasAdjustment = "GasAdjustment", // Tx
   ClassicGasAdjustment = "ClassicGasAdjustment",
   AddressBook = "AddressBook", // Send
+  HideNonWhitelistTokens = "HideNonWhiteListTokens",
   CustomTokens = "CustomTokens", // Wallet
   MinimumValue = "MinimumValue", // Wallet (UST value to show on the list)
   WithdrawAs = "WithdrawAs", // Rewards (Preferred denom to withdraw rewards)
@@ -33,6 +34,7 @@ export const DefaultSettings = {
   [SettingKey.AddressBook]: [] as AddressBook[],
   [SettingKey.CustomTokens]: DefaultCustomTokens as CustomTokens,
   [SettingKey.MinimumValue]: 0,
+  [SettingKey.HideNonWhitelistTokens]: 0,
   [SettingKey.WithdrawAs]: "",
 }
 
