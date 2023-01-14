@@ -63,7 +63,5 @@ export const useFilterTokens = () => {
     setLocalSetting(key, !filterTokens)
     setFilterTokens(!filterTokens)
   }, [key, filterTokens])
-  console.log("filterTokens in func", filterTokens)
-  console.log("toggleFilterTokens in func", toggleFilterTokens)
   return { filterTokens, toggleFilterTokens }
 }
