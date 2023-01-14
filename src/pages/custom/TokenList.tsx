@@ -3,8 +3,7 @@ import { Fetching, Empty } from "components/feedback"
 import TokenItem, { TokenItemProps } from "./TokenItem"
 import styles from "./TokenList.module.scss"
 import { Checkbox } from "components/form"
-import { useFilterTokens, SettingKey } from "utils/localStorage"
-import { useState } from "react"
+import { useFilterTokens } from "utils/localStorage"
 import { useTranslation } from "react-i18next"
 
 interface Props<T> extends QueryState {
