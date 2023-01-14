@@ -5,7 +5,7 @@ import { useMemoizedPrices } from "data/queries/coingecko"
 import { useNativeDenoms } from "data/token"
 import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
-import AddTokens from "./AddTokens"
+import ManageTokens from "./ManageTokens"
 import Asset from "./Asset"
 import styles from "./AssetList.module.scss"
 
@@ -77,11 +77,11 @@ const AssetList = () => {
     <article className={styles.assetlist}>
       <div className={styles.assetlist__title}>
         <h3>Assets</h3>
-        <AddTokens>
+        <ManageTokens>
           {(open) => (
-            <InternalButton onClick={open}>{t("Add tokens")}</InternalButton>
+            <InternalButton onClick={open}>{t("Manage tokens")}</InternalButton>
           )}
-        </AddTokens>
+        </ManageTokens>
       </div>
       <div className={styles.assetlist__list}>{render()}</div>
     </article>
