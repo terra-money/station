@@ -52,7 +52,11 @@ const ibc = (
   networks: Record<string, InterchainNetwork>,
   sourceChain: string,
   token: string,
-  getIBCChannel: (chains: { from: string; to: string }) => string | undefined
+  getIBCChannel: (chains: {
+    from: string
+    to: string
+    ics?: boolean
+  }) => string | undefined
 ) => {
   return {
     ibc: (recipient = "") => {
@@ -61,11 +65,24 @@ const ibc = (
 
       if (sourceChain === destinationChain) return true
 
-      const channel = getIBCChannel({ from: sourceChain, to: destinationChain })
-      if (!channel)
-        return `Cannot find IBC channel from ${sourceChain} to ${destinationChain}`
-      if (AccAddress.validate(token))
-        return `IBC transfers are not yet available for CW20 tokens`
+      console.log(token)
+
+      if (!AccAddress.validate(token)) {
+        const channel = getIBCChannel({
+          from: sourceChain,
+          to: destinationChain,
+        })
+        if (!channel)
+          return `Cannot find IBC channel from ${sourceChain} to ${destinationChain}`
+      } else {
+        const channel = getIBCChannel({
+          from: sourceChain,
+          to: destinationChain,
+          ics: true,
+        })
+        if (!channel)
+          return `IBC transfers are not yet available for this CW20 token`
+      }
 
       return true
     },
