@@ -7,6 +7,7 @@ import { mobileIsMenuOpenState } from "components/layout"
 import { useNav } from "../routes"
 import styles from "./Nav.module.scss"
 import { useThemeFavicon } from "data/settings/Theme"
+import { isWalletBarOpen } from "pages/wallet/Wallet"
 
 const cx = classNames.bind(styles)
 
@@ -52,9 +53,14 @@ export default Nav
 /* hooks */
 const useCloseMenuOnNavigate = () => {
   const { pathname } = useLocation()
-  const setIsOpen = useSetRecoilState(mobileIsMenuOpenState)
+  const [isOpen, setIsOpen] = useRecoilState(mobileIsMenuOpenState)
+  const setIsWalletOpen = useSetRecoilState(isWalletBarOpen)
 
   useEffect(() => {
+    if (isOpen) {
+      // close wallet menu on mobile
+      setIsWalletOpen(false)
+    }
     setIsOpen(false)
-  }, [pathname, setIsOpen])
+  }, [pathname, setIsOpen, setIsWalletOpen]) // eslint-disable-line react-hooks/exhaustive-deps
 }

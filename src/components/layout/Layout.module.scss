@@ -43,12 +43,12 @@
   grid-template-columns: auto min-content;
   grid-template-areas: "main walletbar";
 
-  @media (max-width: var(--wallet-width)) {
+  /*@media (max-width: var(--wallet-width)) {
     grid-template-rows: auto repeat(2, var(--header-height)) 1fr;
     grid-template-areas:
       "walletbar"
       "page";
-  }
+  }*/
 
   height: calc(100vh - var(--header-height));
 }
