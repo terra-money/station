@@ -48,7 +48,11 @@ const Input = forwardRef(
         {actionButton && (
           <button
             className={classNames(styles.symbol, styles.after)}
-            onClick={actionButton.onClick}
+            onClick={(e) => {
+              actionButton.onClick()
+              e.stopPropagation()
+              e.preventDefault()
+            }}
           >
             {actionButton.icon}
           </button>

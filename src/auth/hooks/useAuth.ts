@@ -120,7 +120,11 @@ const useAuth = () => {
     const { name, words } = getConnectedWallet()
     const key = getKey(password)
     if (!key) throw new PasswordError("Key do not exist")
-    const data = { name, words, encrypted_key: encrypt(key["330"], password) }
+    const data = {
+      name,
+      address: addressFromWords(words["330"], "terra"),
+      encrypted_key: encrypt(key["330"], password),
+    }
     return encode(JSON.stringify(data))
   }
 

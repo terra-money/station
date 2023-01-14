@@ -17,6 +17,7 @@
     .pills {
       @include flex(flex-start);
       gap: 0.4rem;
+      flex-wrap: wrap;
     }
 
     button {

@@ -18,6 +18,11 @@ interface InterchainNetwork {
   ibc?: {
     toTerra: string
     fromTerra: string
+    ics?: {
+      contract: string
+      toTerra: string
+      fromTerra: string
+    }
   }
   isClassic?: boolean
 }

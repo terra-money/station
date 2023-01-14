@@ -9,6 +9,10 @@
   }
 
   @include mobile {
+    padding: 28px var(--main-padding-horizontal);
+  }
+
+  @media (max-width: 600px) {
     padding: 28px 0;
   }
 }
@@ -44,7 +48,10 @@
   }
 
   @include mobile {
-    --font-size-page-title: 24px;
+    --font-size-page-title: 28px;
+  }
+
+  @media (max-width: 600px) {
     padding: 0 var(--main-padding-horizontal);
   }
 

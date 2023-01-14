@@ -45,6 +45,12 @@
   }
 }
 
+.title {
+  @media (max-width: 500px) {
+    display: none;
+  }
+}
+
 .link {
   @include flex(flex-start);
 
@@ -63,7 +69,7 @@
   }
 
   @include mobile {
-    font-size: 36px;
+    font-size: 28px;
     padding: 6px 20px;
 
     svg {

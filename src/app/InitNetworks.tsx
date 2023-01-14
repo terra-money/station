@@ -39,6 +39,7 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
 
       const result = await Promise.all(
         Object.values(testBase).map(async (network) => {
+          if (network.prefix === "terra") return network.chainID
           try {
             const { data } = await axios.get(
               "cosmos/base/tendermint/v1beta1/node_info",

@@ -1,5 +1,6 @@
 import styles from "./Wallet.module.scss"
-import { ReactComponent as CloseIcon } from "styles/images/icons/WalletCloseArrow.svg"
+import { ReactComponent as WalletCloseIcon } from "styles/images/icons/WalletCloseArrow.svg"
+import CloseIcon from "@mui/icons-material/Close"
 import { ReactComponent as BackIcon } from "styles/images/icons/BackButton.svg"
 import { ReactComponent as WalletIcon } from "styles/images/menu/Wallet.svg"
 import NetWorth from "./NetWorth"
@@ -9,6 +10,7 @@ import createContext from "utils/createContext"
 import AssetPage from "./AssetPage"
 import ReceivePage from "./ReceivePage"
 import SendPage from "./SendPage"
+import { atom, useRecoilState } from "recoil"
 
 enum Path {
   wallet = "wallet",
@@ -44,8 +46,13 @@ const [useWalletRoute, WalletRouter] = createContext<{
 
 export { useWalletRoute, Path }
 
+export const isWalletBarOpen = atom({
+  key: "isWalletBarOpen",
+  default: true,
+})
+
 const Wallet = () => {
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useRecoilState(isWalletBarOpen)
   const [route, setRoute] = useState<Route>({ path: Path.wallet })
 
   function BackButton() {
@@ -103,7 +110,18 @@ const Wallet = () => {
         }}
       >
         {isOpen ? (
-          <CloseIcon width={18} height={18} />
+          <>
+            <WalletCloseIcon
+              width={18}
+              height={18}
+              className={styles.close__icon}
+            />
+            <CloseIcon
+              width={18}
+              height={18}
+              className={styles.close__icon__mobile}
+            />
+          </>
         ) : (
           <>
             <span>Wallet</span>

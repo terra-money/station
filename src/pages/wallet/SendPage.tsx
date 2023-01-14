@@ -21,12 +21,12 @@ import { CoinInput, getPlaceholder, toInput } from "txs/utils"
 import styles from "./SendPage.module.scss"
 import { useWalletRoute } from "./Wallet"
 import validate from "../../txs/validate"
-import { useIBCChannels } from "data/queries/chains"
+import { useIBCChannels, useWhitelist } from "data/queries/chains"
 import CheckIcon from "@mui/icons-material/Check"
 import ClearIcon from "@mui/icons-material/Clear"
 import ContactsIcon from "@mui/icons-material/Contacts"
 import { getChainIDFromAddress } from "utils/bech32"
-import { useNetwork } from "data/wallet"
+import { useNetwork, useNetworkName } from "data/wallet"
 import { queryKey } from "data/query"
 import Tx from "txs/Tx"
 import AddressBookList from "txs/AddressBook/AddressBookList"
@@ -54,7 +54,9 @@ interface AssetType {
 const SendPage = () => {
   const addresses = useInterchainAddresses()
   const networks = useNetwork()
-  const getIBCChannel = useIBCChannels()
+  const { getIBCChannel, getICSContract } = useIBCChannels()
+  const { ibcDenoms } = useWhitelist()
+  const networkName = useNetworkName()
   const { t } = useTranslation()
   const balances = useBankBalance()
   const { data: prices } = useMemoizedPrices()
@@ -119,6 +121,12 @@ const SendPage = () => {
     [asset, availableAssets, defaultAsset]
   )
 
+  const token = balances.find(
+    ({ denom, chain }) =>
+      chain === watch("chain") &&
+      readNativeDenom(denom).token === watch("asset")
+  )
+
   /* resolve recipient */
   useEffect(() => {
     if (!recipient) {
@@ -153,8 +161,11 @@ const SendPage = () => {
 
     if (
       chain === destinationChain ||
-      (getIBCChannel({ from: chain, to: destinationChain }) &&
-        !AccAddress.validate(asset))
+      getIBCChannel({
+        from: chain,
+        to: destinationChain,
+        ics: AccAddress.validate(token?.denom ?? ""),
+      })
     ) {
       return (
         <span className={styles.destination}>
@@ -186,12 +197,6 @@ const SendPage = () => {
       const amount = toAmount(input, { decimals })
       const execute_msg = { transfer: { recipient: address, amount } }
 
-      const token = balances.find(
-        ({ denom, chain }) =>
-          chain === watch("chain") &&
-          readNativeDenom(denom).token === watch("asset")
-      )
-
       const destinationChain = getChainIDFromAddress(address, networks)
 
       if (!chain || !destinationChain) return
@@ -215,11 +220,41 @@ const SendPage = () => {
 
         return { msgs, memo, chainID: chain }
       } else {
-        const channel = getIBCChannel({ from: chain, to: destinationChain })
+        const channel = getIBCChannel({
+          from: chain,
+          to: destinationChain,
+          ics:
+            AccAddress.validate(token?.denom ?? "") ||
+            ibcDenoms[networkName][token?.denom ?? ""]?.icsChannel ===
+              networks[destinationChain]?.ibc?.ics?.fromTerra ||
+            ibcDenoms[networkName][token?.denom ?? ""]?.icsChannel ===
+              networks[destinationChain]?.ibc?.ics?.toTerra,
+        })
         if (!channel) throw new Error("No IBC channel found")
 
-        const msgs = isDenom(token?.denom)
+        const msgs = AccAddress.validate(token?.denom ?? "")
           ? [
+              new MsgExecuteContract(
+                addresses[token?.chain ?? ""],
+                token?.denom ?? "",
+                {
+                  send: {
+                    contract: getICSContract({
+                      from: chain,
+                      to: destinationChain,
+                    }),
+                    amount: amount,
+                    msg: Buffer.from(
+                      JSON.stringify({
+                        channel,
+                        remote_address: address,
+                      })
+                    ).toString("base64"),
+                  },
+                }
+              ),
+            ]
+          : [
               new MsgTransfer(
                 "transfer",
                 channel,
@@ -230,19 +265,20 @@ const SendPage = () => {
                 (Date.now() + 120 * 1000) * 1e6
               ),
             ]
-          : [] // TODO: integrate ICS20
+
         return { msgs, memo, chainID: chain }
       }
     },
     [
       addresses,
       decimals,
-      balances,
       chain,
-      readNativeDenom,
-      watch,
       networks,
       getIBCChannel,
+      getICSContract,
+      ibcDenoms,
+      networkName,
+      token,
     ]
   )
 
@@ -264,22 +300,12 @@ const SendPage = () => {
   }, [addresses, decimals, chain])
 
   const tx = {
-    token:
-      balances.find(
-        ({ denom, chain }) =>
-          chain === watch("chain") &&
-          readNativeDenom(denom).token === watch("asset")
-      )?.denom ?? "",
+    token: token?.denom ?? "",
     decimals,
     amount,
     coins,
     chain,
-    balance:
-      balances.find(
-        ({ denom, chain }) =>
-          chain === watch("chain") &&
-          readNativeDenom(denom).token === watch("asset")
-      )?.amount ?? "0",
+    balance: token?.amount ?? "0",
     estimationTxValues,
     createTx,
     disabled: false,
@@ -336,7 +362,7 @@ const SendPage = () => {
                           ...validate.ibc(
                             networks,
                             chain ?? "",
-                            asset,
+                            token?.denom ?? "",
                             getIBCChannel
                           ),
                         },
