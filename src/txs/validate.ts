@@ -65,8 +65,6 @@ const ibc = (
 
       if (sourceChain === destinationChain) return true
 
-      console.log(token)
-
       if (!AccAddress.validate(token)) {
         const channel = getIBCChannel({
           from: sourceChain,
