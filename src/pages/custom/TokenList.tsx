@@ -3,12 +3,8 @@ import { Fetching, Empty } from "components/feedback"
 import TokenItem, { TokenItemProps } from "./TokenItem"
 import styles from "./TokenList.module.scss"
 import { Checkbox } from "components/form"
+import { useFilterTokens, SettingKey } from "utils/localStorage"
 import { useState } from "react"
-import {
-  getLocalSetting,
-  setLocalSetting,
-  SettingKey,
-} from "utils/localStorage"
 import { useTranslation } from "react-i18next"
 
 interface Props<T> extends QueryState {
@@ -24,9 +20,8 @@ interface Props<T> extends QueryState {
 
 function TokenList<T extends { symbol: string }>(props: Props<T>) {
   const { t } = useTranslation()
-  const [hide, setHide] = useState(
-    !!getLocalSetting(SettingKey.HideNonWhitelistTokens)
-  )
+  const { filterTokens, toggleFilterTokens } = useFilterTokens()
+
   const { list, getIsAdded, add, remove, ...rest } = props
   const { results, renderTokenItem, ...state } = rest
   const empty = !state.isLoading && !results.length
@@ -37,13 +32,7 @@ function TokenList<T extends { symbol: string }>(props: Props<T>) {
     </Flex>
   ) : (
     <Fetching {...state} height={2}>
-      <Checkbox
-        checked={!!hide}
-        onChange={() => {
-          setHide(!hide)
-          setLocalSetting(SettingKey.HideNonWhitelistTokens, !hide)
-        }}
-      >
+      <Checkbox onChange={toggleFilterTokens} checked={filterTokens}>
         {t("Hide non-whitelisted tokens")}
       </Checkbox>
       <ul className={styles.results}>

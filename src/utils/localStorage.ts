@@ -3,6 +3,7 @@ import {
   CLASSIC_DEFAULT_GAS_ADJUSTMENT,
 } from "config/constants"
 import themes from "styles/themes/themes"
+import { useState, useCallback } from "react"
 
 export enum SettingKey {
   Theme = "Theme",
@@ -53,4 +54,16 @@ export const getLocalSetting = <T>(key: SettingKey): T => {
 export const setLocalSetting = <T>(key: SettingKey, value: T) => {
   const item = typeof value === "string" ? value : JSON.stringify(value)
   localStorage.setItem(key, item)
+}
+
+export const useFilterTokens = () => {
+  const key = SettingKey.HideNonWhitelistTokens
+  const [filterTokens, setFilterTokens] = useState(!!getLocalSetting(key))
+  const toggleFilterTokens = useCallback(() => {
+    setLocalSetting(key, !filterTokens)
+    setFilterTokens(!filterTokens)
+  }, [key, filterTokens])
+  console.log("filterTokens in func", filterTokens)
+  console.log("toggleFilterTokens in func", toggleFilterTokens)
+  return { filterTokens, toggleFilterTokens }
 }
