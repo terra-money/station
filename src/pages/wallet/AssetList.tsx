@@ -3,15 +3,23 @@ import { InternalButton } from "components/general"
 import { useBankBalance, useIsWalletEmpty } from "data/queries/bank"
 import { useMemoizedPrices } from "data/queries/coingecko"
 import { useNativeDenoms } from "data/token"
+import { useNetworkName } from "data/wallet"
 import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import ManageTokens from "./ManageTokens"
 import Asset from "./Asset"
 import styles from "./AssetList.module.scss"
+import { getLocalSetting, SettingKey } from "utils/localStorage"
+import { useWhitelist } from "data/queries/chains"
 
 const AssetList = () => {
   const { t } = useTranslation()
   const isWalletEmpty = useIsWalletEmpty()
+  const filterNonWhiteList = !!getLocalSetting(
+    SettingKey.HideNonWhitelistTokens
+  )
+  const { whitelist } = useWhitelist()
+  const networkName = useNetworkName()
 
   const coins = useBankBalance()
   const { data: prices } = useMemoizedPrices()
@@ -45,11 +53,21 @@ const AssetList = () => {
             }
           }, {} as Record<string, any>)
         ),
-      ].sort(
-        (a, b) => b.price * parseInt(b.balance) - a.price * parseInt(a.balance)
-      ),
-    [coins, readNativeDenom, prices]
+      ]
+        .filter((a) =>
+          filterNonWhiteList
+            ? Object.values(whitelist[networkName]).some(
+                (b) => b.token === a.denom
+              )
+            : a
+        )
+        .sort(
+          (a, b) =>
+            b.price * parseInt(b.balance) - a.price * parseInt(a.balance)
+        ),
+    [coins, readNativeDenom, prices, filterNonWhiteList, networkName, whitelist]
   )
+  console.log("list", list)
 
   const render = () => {
     if (!coins) return
