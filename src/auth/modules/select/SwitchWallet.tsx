@@ -1,13 +1,14 @@
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
-import { truncate } from "@terra.kitchen/utils"
-import { Flex } from "components/layout"
-import { useAddress } from "data/wallet"
-import AuthButton from "../../components/AuthButton"
-import MultisigBadge from "../../components/MultisigBadge"
-import useAuth from "../../hooks/useAuth"
-import is from "../../scripts/is"
-import SelectPreconfigured from "./SelectPreconfigured"
-import styles from "./SwitchWallet.module.scss"
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+import { truncate } from '@terra.kitchen/utils'
+import { Flex } from 'components/layout'
+import { useAddress } from 'data/wallet'
+import { addressFromWords } from 'utils/bech32'
+import AuthButton from '../../components/AuthButton'
+import MultisigBadge from '../../components/MultisigBadge'
+import useAuth from '../../hooks/useAuth'
+import is from '../../scripts/is'
+import SelectPreconfigured from './SelectPreconfigured'
+import styles from './SwitchWallet.module.scss'
 
 const SwitchWallet = () => {
   const { wallet, wallets, connect, connectedWallet } = useAuth()
@@ -24,8 +25,10 @@ const SwitchWallet = () => {
           >
             <Flex gap={4}>
               {is.multisig(wallet) && <MultisigBadge />}
-              <strong>{"name" in wallet ? wallet.name : "Ledger"}</strong>
+              <strong>{'name' in wallet ? wallet.name : 'Ledger'}</strong>
             </Flex>
+
+            {truncate(address)}
           </AuthButton>
         </li>
       )}
@@ -42,9 +45,13 @@ const SwitchWallet = () => {
               </Flex>
 
               {lock ? (
-                <LockOutlinedIcon fontSize="inherit" className="muted" />
+                <LockOutlinedIcon fontSize='inherit' className='muted' />
               ) : (
-                truncate(address)
+                truncate(
+                  'address' in wallet
+                    ? wallet.address
+                    : addressFromWords(wallet.words['330']),
+                )
               )}
             </>
           )
