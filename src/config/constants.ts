@@ -18,6 +18,8 @@ export const EXTENSION =
 export const DOCUMENTATION =
   "https://docs.terra.money/learn/station/download/station-desktop.html"
 export const SETUP = "https://setup-station.terra.money/"
+export const MARS_TEST_EXPLORER = "https://testnet-explorer.marsprotocol.io"
+export const MARS_EXPLORER = "https://explorer.marsprotocol.io"
 
 /* website: stake */
 export const TERRA_VALIDATORS =
