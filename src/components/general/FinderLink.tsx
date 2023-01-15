@@ -2,7 +2,12 @@ import { ForwardedRef, HTMLAttributes, PropsWithChildren, useMemo } from "react"
 import { forwardRef } from "react"
 import classNames from "classnames"
 import { truncate } from "@terra.kitchen/utils"
-import { FINDER, MINTSCAN } from "config/constants"
+import {
+  FINDER,
+  MINTSCAN,
+  MARS_TEST_EXPLORER,
+  MARS_EXPLORER,
+} from "config/constants"
 import { useNetwork, useNetworkName } from "data/wallet"
 import { ExternalLink } from "./External"
 import { getChainIDFromAddress } from "utils/bech32"
@@ -43,6 +48,14 @@ const FinderLink = forwardRef(
       ? "validators"
       : "account"
 
+    const marsPath = tx
+      ? "transactions"
+      : block
+      ? "blocks"
+      : validator
+      ? "validators"
+      : "accounts"
+
     const finderPath = tx
       ? "tx"
       : block
@@ -52,7 +65,13 @@ const FinderLink = forwardRef(
       : "address"
 
     const link =
-      chainName !== "terra"
+      chainName === "mars"
+        ? [
+            networkName === "testnet" ? MARS_TEST_EXPLORER : MARS_EXPLORER,
+            marsPath,
+            value,
+          ].join("/")
+        : chainName !== "terra"
         ? [MINTSCAN, chainName, interchainPath, value].join("/")
         : [FINDER, networkName, finderPath, value].join("/")
 
