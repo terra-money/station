@@ -19,7 +19,7 @@ const isPreconfigured = (wallet?: Wallet): wallet is PreconfiguredWallet => {
 
 const isSingle = (wallet?: Wallet): wallet is SingleWallet => {
   if (!isLocal(wallet)) return false
-  return !isPreconfigured(wallet) && !isMultisig(wallet)
+  return !isPreconfigured(wallet) && !isMultisig(wallet) && !isLedger(wallet)
 }
 
 const isLedger = (

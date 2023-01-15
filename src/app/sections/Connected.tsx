@@ -33,6 +33,7 @@ const Connected = () => {
   const closePopover = () => setKey((key) => key + 1)
 
   if (!address) return null
+  console.log(wallet)
 
   const footer = wallet
     ? { to: "/auth", onClick: closePopover, children: t("Manage wallets") }
