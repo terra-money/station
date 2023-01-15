@@ -99,6 +99,7 @@ type AddWalletParams =
       key: { "330": Buffer; "118"?: Buffer }
       name: string
     }
+  | LedgerWallet
   | MultisigWallet
 
 export const addWallet = (params: AddWalletParams) => {
@@ -109,11 +110,11 @@ export const addWallet = (params: AddWalletParams) => {
 
   const next = wallets.filter((wallet) =>
     "words" in wallet
-      ? wallet.words !== params.words
+      ? wallet.words["330"] !== params.words["330"]
       : wallet.address !== addressFromWords(params.words["330"])
   )
 
-  if (is.multisig(params)) {
+  if (is.multisig(params) || is.ledger(params)) {
     storeWallets([...next, params])
   } else {
     const { name, password, words, key } = params

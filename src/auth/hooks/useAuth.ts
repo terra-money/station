@@ -1,25 +1,25 @@
-import { useCallback, useMemo } from 'react'
-import { atom, useRecoilState } from 'recoil'
-import { encode } from 'js-base64'
-import { CreateTxOptions, Tx, isTxError } from '@terra-money/feather.js'
-import { AccAddress, SignDoc } from '@terra-money/feather.js'
-import { RawKey, SignatureV2 } from '@terra-money/feather.js'
-import { LedgerKey } from '@terra-money/ledger-station-js'
-import { useInterchainLCDClient } from 'data/queries/lcdClient'
-import is from '../scripts/is'
-import { PasswordError } from '../scripts/keystore'
-import { getDecryptedKey, testPassword } from '../scripts/keystore'
-import { getWallet, storeWallet } from '../scripts/keystore'
-import { clearWallet, lockWallet } from '../scripts/keystore'
-import { getStoredWallet, getStoredWallets } from '../scripts/keystore'
-import encrypt from '../scripts/encrypt'
-import useAvailable from './useAvailable'
-import { addressFromWords, wordsFromAddress } from 'utils/bech32'
-import { useNetwork } from './useNetwork'
-import { createBleTransport } from 'utils/ledger'
+import { useCallback, useMemo } from "react"
+import { atom, useRecoilState } from "recoil"
+import { encode } from "js-base64"
+import { CreateTxOptions, Tx, isTxError } from "@terra-money/feather.js"
+import { AccAddress, SignDoc } from "@terra-money/feather.js"
+import { RawKey, SignatureV2 } from "@terra-money/feather.js"
+import { LedgerKey } from "@terra-money/ledger-station-js"
+import { useInterchainLCDClient } from "data/queries/lcdClient"
+import is from "../scripts/is"
+import { addWallet, PasswordError } from "../scripts/keystore"
+import { getDecryptedKey, testPassword } from "../scripts/keystore"
+import { getWallet, storeWallet } from "../scripts/keystore"
+import { clearWallet, lockWallet } from "../scripts/keystore"
+import { getStoredWallet, getStoredWallets } from "../scripts/keystore"
+import encrypt from "../scripts/encrypt"
+import useAvailable from "./useAvailable"
+import { addressFromWords, wordsFromAddress } from "utils/bech32"
+import { useNetwork } from "./useNetwork"
+import { createBleTransport } from "utils/ledger"
 
 export const walletState = atom({
-  key: 'interchain-wallet',
+  key: "interchain-wallet",
   default: getWallet(),
 })
 
@@ -35,13 +35,13 @@ const useAuth = () => {
   const connect = useCallback(
     (name: string) => {
       const storedWallet = getStoredWallet(name)
-      if ('address' in storedWallet) {
+      if ("address" in storedWallet) {
         const { address, lock } = storedWallet
         const words = {
-          '330': wordsFromAddress(address),
+          "330": wordsFromAddress(address),
         }
 
-        if (lock) throw new Error('Wallet is locked')
+        if (lock) throw new Error("Wallet is locked")
 
         const wallet = is.multisig(storedWallet)
           ? { name, words, multisig: true as true }
@@ -50,31 +50,36 @@ const useAuth = () => {
         storeWallet(wallet)
         setWallet(wallet as any)
       } else {
-        const { words, lock } = storedWallet
-        if (lock) throw new Error('Wallet is locked')
+        const { lock } = storedWallet
+        if (lock) throw new Error("Wallet is locked")
 
-        const wallet = is.multisig(storedWallet)
-          ? { name, words, multisig: true }
-          : { name, words }
-
-        storeWallet(wallet)
-        setWallet(wallet as any)
+        storeWallet(storedWallet)
+        setWallet(storedWallet as any)
       }
     },
-    [setWallet],
+    [setWallet]
   )
 
   const connectLedger = useCallback(
     (
-      words: { '330': string; '118'?: string },
+      words: { "330": string; "118"?: string },
       index = 0,
       bluetooth = false,
+      name = "Ledger"
     ) => {
-      const wallet = { words, ledger: true as const, index, bluetooth }
+      const wallet = {
+        words,
+        ledger: true as const,
+        index,
+        bluetooth,
+        lock: false as const,
+        name,
+      }
+      addWallet(wallet)
       storeWallet(wallet)
       setWallet(wallet as any)
     },
-    [setWallet],
+    [setWallet]
   )
 
   /* connected */
@@ -84,7 +89,7 @@ const useAuth = () => {
   }, [wallet])
 
   const getConnectedWallet = useCallback(() => {
-    if (!connectedWallet) throw new Error('Wallet is not defined')
+    if (!connectedWallet) throw new Error("Wallet is not defined")
     return connectedWallet
   }, [connectedWallet])
 
@@ -107,7 +112,7 @@ const useAuth = () => {
   }
 
   const getLedgerKey = async (coinType: string) => {
-    if (!is.ledger(wallet)) throw new Error('Ledger device is not connected')
+    if (!is.ledger(wallet)) throw new Error("Ledger device is not connected")
     const { index, bluetooth } = wallet
     const transport = bluetooth ? createBleTransport : undefined
 
@@ -119,11 +124,11 @@ const useAuth = () => {
   const encodeEncryptedWallet = (password: string) => {
     const { name, words } = getConnectedWallet()
     const key = getKey(password)
-    if (!key) throw new PasswordError('Key do not exist')
+    if (!key) throw new PasswordError("Key do not exist")
     const data = {
       name,
-      address: addressFromWords(words['330'], 'terra'),
-      encrypted_key: encrypt(key['330'], password),
+      address: addressFromWords(words["330"], "terra"),
+      encrypted_key: encrypt(key["330"], password),
     }
     return encode(JSON.stringify(data))
   }
@@ -134,17 +139,17 @@ const useAuth = () => {
       const { name } = getConnectedWallet()
       return testPassword({ name, password })
     } catch (error) {
-      return 'Incorrect password'
+      return "Incorrect password"
     }
   }
 
   /* tx */
   const create = async (txOptions: CreateTxOptions) => {
-    if (!wallet) throw new Error('Wallet is not defined')
+    if (!wallet) throw new Error("Wallet is not defined")
     const { words } = wallet
     const address = addressFromWords(
-      words[networks[txOptions.chainID].coinType] ?? '',
-      networks[txOptions.chainID].prefix,
+      words[networks[txOptions.chainID].coinType] ?? "",
+      networks[txOptions.chainID].prefix
     )
 
     return await lcd.tx.create([{ address }], txOptions)
@@ -154,9 +159,9 @@ const useAuth = () => {
     tx: Tx,
     chainID: string,
     address: AccAddress,
-    password = '',
+    password = ""
   ) => {
-    if (!wallet) throw new Error('Wallet is not defined')
+    if (!wallet) throw new Error("Wallet is not defined")
 
     const accountInfo = await lcd.auth.accountInfo(address)
 
@@ -165,7 +170,7 @@ const useAuth = () => {
       accountInfo.getAccountNumber(),
       accountInfo.getSequenceNumber(),
       tx.auth_info,
-      tx.body,
+      tx.body
     )
 
     if (is.ledger(wallet)) {
@@ -174,16 +179,16 @@ const useAuth = () => {
     } else {
       const pk = getKey(password)
       if (!pk || !pk[networks[chainID].coinType])
-        throw new PasswordError('Incorrect password')
+        throw new PasswordError("Incorrect password")
       const key = new RawKey(
-        Buffer.from(pk[networks[chainID].coinType] ?? '', 'hex'),
+        Buffer.from(pk[networks[chainID].coinType] ?? "", "hex")
       )
       return await key.createSignatureAmino(doc)
     }
   }
 
-  const sign = async (txOptions: CreateTxOptions, password = '') => {
-    if (!wallet) throw new Error('Wallet is not defined')
+  const sign = async (txOptions: CreateTxOptions, password = "") => {
+    if (!wallet) throw new Error("Wallet is not defined")
 
     if (is.ledger(wallet)) {
       const key = await getLedgerKey(networks[txOptions.chainID].coinType)
@@ -199,36 +204,36 @@ const useAuth = () => {
     }*/ else {
       const pk = getKey(password)
       if (!pk || !pk[networks[txOptions.chainID].coinType])
-        throw new PasswordError('Incorrect password')
+        throw new PasswordError("Incorrect password")
       const key = new RawKey(
-        Buffer.from(pk[networks[txOptions.chainID].coinType] ?? '', 'hex'),
+        Buffer.from(pk[networks[txOptions.chainID].coinType] ?? "", "hex")
       )
       const wallet = lcd.wallet(key)
       return await wallet.createAndSignTx(txOptions)
     }
   }
 
-  const signBytes = (bytes: Buffer, password = '') => {
-    if (!wallet) throw new Error('Wallet is not defined')
+  const signBytes = (bytes: Buffer, password = "") => {
+    if (!wallet) throw new Error("Wallet is not defined")
 
     if (is.ledger(wallet)) {
-      throw new Error('Ledger can not sign arbitrary data')
+      throw new Error("Ledger can not sign arbitrary data")
     } else {
       const pk = getKey(password)
-      if (!pk) throw new PasswordError('Incorrect password')
-      const key = new RawKey(Buffer.from(pk['330'], 'hex'))
+      if (!pk) throw new PasswordError("Incorrect password")
+      const key = new RawKey(Buffer.from(pk["330"], "hex"))
       const { signature, recid } = key.ecdsaSign(bytes)
-      if (!signature) throw new Error('Signature is undefined')
+      if (!signature) throw new Error("Signature is undefined")
       return {
         recid,
-        signature: Buffer.from(signature).toString('base64'),
+        signature: Buffer.from(signature).toString("base64"),
         public_key: key.publicKey?.toAmino().value as string,
       }
     }
   }
 
-  const post = async (txOptions: CreateTxOptions, password = '') => {
-    if (!wallet) throw new Error('Wallet is not defined')
+  const post = async (txOptions: CreateTxOptions, password = "") => {
+    if (!wallet) throw new Error("Wallet is not defined")
     const signedTx = await sign(txOptions, password)
     const result = await lcd.tx.broadcastSync(signedTx, txOptions.chainID)
     if (isTxError(result)) throw new Error(result.raw_log)
