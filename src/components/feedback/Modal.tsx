@@ -22,20 +22,19 @@ interface ModalProps {
 
   /* style */
   confirm?: boolean
-  fullWidth?: boolean
   maxHeight?: boolean | number
 }
 
 export interface Props extends ModalProps, ReactModal.Props {}
 
 const Modal = (props: PropsWithChildren<Props>) => {
-  const { title, children, footer, fullWidth } = props
+  const { title, children, footer } = props
   const { icon, closeIcon, onRequestClose, confirm, maxHeight } = props
 
   return (
     <ReactModal
       {...props}
-      className={cx(styles.modal, { fullWidth })}
+      className={cx(styles.modal)}
       overlayClassName={styles.overlay}
     >
       {onRequestClose && (
@@ -75,12 +74,11 @@ export const [useModal, ModalProvider] = createContext<() => void>("useModal")
 interface ModalButtonProps extends ModalProps {
   renderButton: RenderButton
   modalKey?: string
-  fullWidth?: boolean
 }
 
 export const ModalButton = (props: PropsWithChildren<ModalButtonProps>) => {
   const { pathname } = useLocation()
-  const { renderButton, modalKey = pathname, fullWidth, ...rest } = props
+  const { renderButton, modalKey = pathname, ...rest } = props
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const open = () => setIsModalOpen(true)
@@ -93,12 +91,7 @@ export const ModalButton = (props: PropsWithChildren<ModalButtonProps>) => {
   return (
     <ModalProvider value={close}>
       {renderButton(open)}
-      <Modal
-        {...rest}
-        isOpen={isModalOpen}
-        fullWidth={fullWidth}
-        onRequestClose={close}
-      />
+      <Modal {...rest} isOpen={isModalOpen} onRequestClose={close} />
     </ModalProvider>
   )
 }
