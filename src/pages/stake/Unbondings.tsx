@@ -16,6 +16,7 @@ import StakedCard from "./components/StakedCard"
 import { UnbondingDelegation } from "@terra-money/feather.js"
 import { useNetwork } from "data/wallet"
 import { useNativeDenoms } from "data/token"
+import { getDenomFromAddress } from "utils/coin"
 
 const Unbondings = () => {
   const { t } = useTranslation()
@@ -28,7 +29,6 @@ const Unbondings = () => {
     (acc, { data }) => (data ? [...data, ...acc] : acc),
     [] as UnbondingDelegation[]
   )
-
   const state = combineState(pricesState, ...interchainUnbondings)
 
   /* render */
@@ -37,19 +37,15 @@ const Unbondings = () => {
   const render = () => {
     if (!unbondings || !prices) return null
 
-    //const total = calcUnbondingsTotal(unbondings)
     const total = unbondings.reduce((acc, unbonding) => {
       let balance = 0
 
-      unbonding.entries.forEach((entry) => {
-        balance += entry.balance.toNumber()
-      })
-
-      const { token, decimals } = readNativeDenom(
-        Object.values(networks).find(
-          ({ prefix }) => prefix === unbonding.delegator_address
-        )?.baseAsset || "uluna"
+      unbonding.entries.forEach(
+        (entry) => (balance += entry.balance.toNumber())
       )
+
+      const denom = getDenomFromAddress(networks, unbonding.delegator_address)
+      const { token, decimals } = readNativeDenom(denom)
       return acc + (balance * (prices[token]?.price || 0)) / 10 ** decimals
     }, 0)
 
@@ -90,13 +86,16 @@ const Unbondings = () => {
             {
               title: t("Amount"),
               dataIndex: "initial_balance",
-              render: (amount: Dec) => (
-                <Read amount={amount.toString()} denom="uluna" />
+              render: (amount: Dec, { validator_address }) => (
+                <Read
+                  amount={amount.toString()}
+                  denom={getDenomFromAddress(networks, validator_address)}
+                />
               ),
               align: "right",
             },
             {
-              title: t("Release on"),
+              title: t("Release"),
               dataIndex: "completion_time",
               render: (date: Date) => <ToNow>{date}</ToNow>,
               align: "right",

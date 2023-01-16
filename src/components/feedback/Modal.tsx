@@ -80,7 +80,7 @@ interface ModalButtonProps extends ModalProps {
 
 export const ModalButton = (props: PropsWithChildren<ModalButtonProps>) => {
   const { pathname } = useLocation()
-  const { renderButton, modalKey = pathname, ...rest } = props
+  const { renderButton, modalKey = pathname, fullWidth, ...rest } = props
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const open = () => setIsModalOpen(true)
@@ -93,7 +93,12 @@ export const ModalButton = (props: PropsWithChildren<ModalButtonProps>) => {
   return (
     <ModalProvider value={close}>
       {renderButton(open)}
-      <Modal {...rest} isOpen={isModalOpen} fullWidth onRequestClose={close} />
+      <Modal
+        {...rest}
+        isOpen={isModalOpen}
+        fullWidth={fullWidth}
+        onRequestClose={close}
+      />
     </ModalProvider>
   )
 }

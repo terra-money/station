@@ -15,7 +15,6 @@ interface Props extends Partial<FormatConfig> {
   approx?: boolean
   block?: boolean
   className?: string
-
   auto?: boolean
 }
 
