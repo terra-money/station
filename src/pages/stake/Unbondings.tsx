@@ -17,7 +17,6 @@ import { UnbondingDelegation } from "@terra-money/feather.js"
 import { useNetwork } from "data/wallet"
 import { useNativeDenoms } from "data/token"
 import { getDenomFromAddress } from "utils/coin"
-import styles from "./Unbondings.module.scss"
 
 const Unbondings = () => {
   const { t } = useTranslation()
@@ -75,7 +74,6 @@ const Unbondings = () => {
       >
         <Table
           dataSource={list}
-          className={styles.table}
           columns={[
             {
               title: t("Validator"),
