@@ -26,10 +26,6 @@
   @include desktop {
     padding: 40px;
     width: var(--modal-width);
-
-    &.fullWidth {
-      width: calc(100% - 400px);
-    }
   }
 
   @include mobile {
