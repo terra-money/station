@@ -20,10 +20,13 @@ import {
 import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined"
 import { useThemeState } from "data/settings/Theme"
 import ProfileIcon from "./components/ProfileIcon"
+import { Read } from "components/token"
+import { useCurrency } from "data/settings/Currency"
 
 const StakedDonut = () => {
   const { t } = useTranslation()
   const [current] = useThemeState()
+  const currency = useCurrency()
 
   const interchainDelegations = useInterchainDelegations()
   const interchainValidators = useInterchainValidators()
@@ -88,11 +91,16 @@ const StakedDonut = () => {
         <h6>{payload[0]?.payload.name || payload[0]?.payload.moniker}</h6>
         <div className={styles.infoLine}>
           <p>Balance: </p>
-          <p>{payload[0]?.payload.amount}</p>
+          <p>
+            <Read amount={payload[0]?.payload.amount} fixed={2} decimals={0} />
+          </p>
         </div>
         <div className={styles.infoLine}>
           <p>Value: </p>
-          <p>{payload[0]?.payload.value.toFixed(5)}</p>
+          <p>
+            <Read amount={payload[0]?.payload.value} fixed={2} decimals={0} />{" "}
+            {currency.unit}
+          </p>
         </div>
       </div>
     )
