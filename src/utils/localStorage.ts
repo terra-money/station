@@ -3,7 +3,8 @@ import {
   CLASSIC_DEFAULT_GAS_ADJUSTMENT,
 } from "config/constants"
 import themes from "styles/themes/themes"
-import { useState, useCallback } from "react"
+import { useCallback } from "react"
+import { atom, useRecoilState } from "recoil"
 
 export enum SettingKey {
   Theme = "Theme",
@@ -13,6 +14,7 @@ export enum SettingKey {
   ClassicGasAdjustment = "ClassicGasAdjustment",
   AddressBook = "AddressBook", // Send
   HideNonWhitelistTokens = "HideNonWhiteListTokens",
+  HideLowBalTokens = "HideLowBalTokens",
   CustomTokens = "CustomTokens", // Wallet
   MinimumValue = "MinimumValue", // Wallet (UST value to show on the list)
   WithdrawAs = "WithdrawAs", // Rewards (Preferred denom to withdraw rewards)
@@ -35,7 +37,8 @@ export const DefaultSettings = {
   [SettingKey.AddressBook]: [] as AddressBook[],
   [SettingKey.CustomTokens]: DefaultCustomTokens as CustomTokens,
   [SettingKey.MinimumValue]: 0,
-  [SettingKey.HideNonWhitelistTokens]: 0,
+  [SettingKey.HideNonWhitelistTokens]: false,
+  [SettingKey.HideLowBalTokens]: false,
   [SettingKey.WithdrawAs]: "",
 }
 
@@ -56,12 +59,34 @@ export const setLocalSetting = <T>(key: SettingKey, value: T) => {
   localStorage.setItem(key, item)
 }
 
-export const useFilterTokens = () => {
-  const key = SettingKey.HideNonWhitelistTokens
-  const [filterTokens, setFilterTokens] = useState(!!getLocalSetting(key))
-  const toggleFilterTokens = useCallback(() => {
-    setLocalSetting(key, !filterTokens)
-    setFilterTokens(!filterTokens)
-  }, [key, filterTokens])
-  return { filterTokens, toggleFilterTokens }
+export const hideNoWhitelistState = atom({
+  key: "hideNoWhitelistState",
+  default: !!getLocalSetting(SettingKey.HideNonWhitelistTokens),
+})
+
+export const HideLowBalTokenState = atom({
+  key: "hideLowBalTokenState",
+  default: !!getLocalSetting(SettingKey.HideLowBalTokens),
+})
+
+export const useTokenFilters = () => {
+  const [hideNoWhitelist, setHideNoWhitelist] =
+    useRecoilState(hideNoWhitelistState)
+  const toggleHideNoWhitelist = useCallback(() => {
+    setLocalSetting(SettingKey.HideNonWhitelistTokens, !hideNoWhitelist)
+    setHideNoWhitelist(!hideNoWhitelist)
+  }, [hideNoWhitelist, setHideNoWhitelist])
+
+  const [hideLowBal, setHideLowBal] = useRecoilState(hideNoWhitelistState)
+  const toggleHideLowBal = useCallback(() => {
+    setLocalSetting(SettingKey.HideLowBalTokens, !hideLowBal)
+    setHideLowBal(!hideLowBal)
+  }, [hideLowBal, setHideLowBal])
+
+  return {
+    hideNoWhitelist,
+    toggleHideNoWhitelist,
+    toggleHideLowBal,
+    hideLowBal,
+  }
 }

@@ -2,9 +2,7 @@ import { Flex } from "components/layout"
 import { Fetching, Empty } from "components/feedback"
 import TokenItem, { TokenItemProps } from "./TokenItem"
 import styles from "./TokenList.module.scss"
-import { Checkbox } from "components/form"
-import { useFilterTokens } from "utils/localStorage"
-import { useTranslation } from "react-i18next"
+import TokenFilters from "./TokenFilters"
 
 interface Props<T> extends QueryState {
   results: T[]
@@ -18,9 +16,6 @@ interface Props<T> extends QueryState {
 }
 
 function TokenList<T extends { symbol: string }>(props: Props<T>) {
-  const { t } = useTranslation()
-  const { filterTokens, toggleFilterTokens } = useFilterTokens()
-
   const { list, getIsAdded, add, remove, ...rest } = props
   const { results, renderTokenItem, ...state } = rest
   const empty = !state.isLoading && !results.length
@@ -31,9 +26,7 @@ function TokenList<T extends { symbol: string }>(props: Props<T>) {
     </Flex>
   ) : (
     <Fetching {...state} height={2}>
-      <Checkbox onChange={toggleFilterTokens} checked={filterTokens}>
-        {t("Hide non-whitelisted tokens")}
-      </Checkbox>
+      <TokenFilters />
       <ul className={styles.results}>
         {results
           .sort((a, b) => Number(getIsAdded(b)) - Number(getIsAdded(a)))

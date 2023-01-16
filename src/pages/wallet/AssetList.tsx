@@ -9,13 +9,14 @@ import { useTranslation } from "react-i18next"
 import ManageTokens from "./ManageTokens"
 import Asset from "./Asset"
 import styles from "./AssetList.module.scss"
-import { useFilterTokens } from "utils/localStorage"
+import { useTokenFilters } from "utils/localStorage"
 import { useWhitelist } from "data/queries/chains"
 
 const AssetList = () => {
   const { t } = useTranslation()
   const isWalletEmpty = useIsWalletEmpty()
-  const { filterTokens } = useFilterTokens()
+  const { hideNoWhitelist } = useTokenFilters()
+
   const { whitelist } = useWhitelist()
   const networkName = useNetworkName()
 
@@ -53,7 +54,7 @@ const AssetList = () => {
         ),
       ]
         .filter((a) =>
-          filterTokens
+          hideNoWhitelist
             ? Object.values(whitelist[networkName]).some(
                 (b) => b.token === a.denom
               )
@@ -63,7 +64,7 @@ const AssetList = () => {
           (a, b) =>
             b.price * parseInt(b.balance) - a.price * parseInt(a.balance)
         ),
-    [coins, readNativeDenom, filterTokens, whitelist, networkName, prices]
+    [coins, readNativeDenom, hideNoWhitelist, whitelist, networkName, prices]
   )
 
   const render = () => {
