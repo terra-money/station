@@ -5,7 +5,7 @@ import BigNumber from "bignumber.js"
 import { OracleParams, ValAddress } from "@terra-money/terra.js"
 import { TerraValidator } from "types/validator"
 import { TerraProposalItem } from "types/proposal"
-import { useNetwork } from "data/wallet"
+import { useChainID, useNetwork } from "data/wallet"
 import { useOracleParams } from "data/queries/oracle"
 import { useNetworks } from "app/InitNetworks"
 import { queryKey, RefetchOptions } from "../query"
@@ -30,6 +30,19 @@ export const useTerraAPIURL = (mainnet?: true) => {
   const network = useNetwork()
   const networks = useNetworks()
   return mainnet ? networks["mainnet"].api : network.api
+}
+
+// TODO: fix this
+export const useFCDURL = () => {
+  const chainID = useChainID()
+  switch (chainID) {
+    case "columbus-5":
+      return "https://fcd.terra.dev"
+    case "pisco-1":
+      return "https://pisco-fcd.terra.com"
+    default:
+      return "https://phoenix-fcd.terra.com"
+  }
 }
 
 export const useIsTerraAPIAvailable = () => {
@@ -57,9 +70,7 @@ export const useTerraAPI = <T>(path: string, params?: object, fallback?: T) => {
 export type GasPrices = Record<Denom, Amount>
 
 export const useGasPrices = () => {
-  const current = useTerraAPIURL()
-  const mainnet = useTerraAPIURL(true)
-  const baseURL = current ?? mainnet
+  const baseURL = useFCDURL()
   const path = "/gas-prices"
 
   return useQuery(
