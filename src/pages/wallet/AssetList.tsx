@@ -3,22 +3,18 @@ import { InternalButton } from "components/general"
 import { useBankBalance, useIsWalletEmpty } from "data/queries/bank"
 import { useMemoizedPrices } from "data/queries/coingecko"
 import { useNativeDenoms } from "data/token"
-import { useNetworkName } from "data/wallet"
 import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import ManageTokens from "./ManageTokens"
 import Asset from "./Asset"
 import styles from "./AssetList.module.scss"
 import { useTokenFilters } from "utils/localStorage"
-import { useWhitelist } from "data/queries/chains"
+import { toInput } from "txs/utils"
 
 const AssetList = () => {
   const { t } = useTranslation()
   const isWalletEmpty = useIsWalletEmpty()
-  const { hideNoWhitelist } = useTokenFilters()
-
-  const { whitelist } = useWhitelist()
-  const networkName = useNetworkName()
+  const { hideNoWhitelist, hideLowBal } = useTokenFilters()
 
   const coins = useBankBalance()
   const { data: prices } = useMemoizedPrices()
@@ -53,20 +49,16 @@ const AssetList = () => {
           }, {} as Record<string, any>)
         ),
       ]
-        .filter((a) =>
-          hideNoWhitelist
-            ? Object.values(whitelist[networkName]).some(
-                (b) => b.token === a.denom
-              )
-            : a
+        .filter(
+          (a) => (hideNoWhitelist ? !a.symbol.endsWith("...") : a) // TODO: update and implement whitelist check
         )
+        .filter((a) => (hideLowBal ? a.price * toInput(a.balance) >= 1 : a))
         .sort(
           (a, b) =>
             b.price * parseInt(b.balance) - a.price * parseInt(a.balance)
         ),
-    [coins, readNativeDenom, hideNoWhitelist, whitelist, networkName, prices]
+    [coins, readNativeDenom, hideNoWhitelist, hideLowBal, prices]
   )
-
   const render = () => {
     if (!coins) return
 

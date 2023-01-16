@@ -64,7 +64,7 @@ export const hideNoWhitelistState = atom({
   default: !!getLocalSetting(SettingKey.HideNonWhitelistTokens),
 })
 
-export const HideLowBalTokenState = atom({
+export const hideLowBalTokenState = atom({
   key: "hideLowBalTokenState",
   default: !!getLocalSetting(SettingKey.HideLowBalTokens),
 })
@@ -77,7 +77,7 @@ export const useTokenFilters = () => {
     setHideNoWhitelist(!hideNoWhitelist)
   }, [hideNoWhitelist, setHideNoWhitelist])
 
-  const [hideLowBal, setHideLowBal] = useRecoilState(hideNoWhitelistState)
+  const [hideLowBal, setHideLowBal] = useRecoilState(hideLowBalTokenState)
   const toggleHideLowBal = useCallback(() => {
     setLocalSetting(SettingKey.HideLowBalTokens, !hideLowBal)
     setHideLowBal(!hideLowBal)

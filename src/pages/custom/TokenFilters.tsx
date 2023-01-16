@@ -6,9 +6,9 @@ import { Flex } from "components/layout"
 const TokenFilters = () => {
   const {
     hideNoWhitelist,
+    hideLowBal,
     toggleHideNoWhitelist,
     toggleHideLowBal,
-    hideLowBal,
   } = useTokenFilters()
   const { t } = useTranslation()
 
@@ -18,7 +18,7 @@ const TokenFilters = () => {
         {t("Hide non-whitelisted tokens")}
       </Checkbox>
       <Checkbox onChange={toggleHideLowBal} checked={hideLowBal}>
-        {t("Hide low balance tokens")}
+        {t("Hide low-balance tokens")}
       </Checkbox>
     </Flex>
   )
