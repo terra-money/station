@@ -34,7 +34,7 @@ const Modal = (props: PropsWithChildren<Props>) => {
   return (
     <ReactModal
       {...props}
-      className={cx(styles.modal)}
+      className={styles.modal}
       overlayClassName={styles.overlay}
     >
       {onRequestClose && (
