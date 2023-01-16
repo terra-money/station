@@ -39,9 +39,9 @@ export const useFCDURL = () => {
     case "columbus-5":
       return "https://fcd.terra.dev"
     case "pisco-1":
-      return "https://pisco-fcd.terra.com"
+      return "https://pisco-fcd.terra.dev"
     default:
-      return "https://phoenix-fcd.terra.com"
+      return "https://phoenix-fcd.terra.dev"
   }
 }
 
