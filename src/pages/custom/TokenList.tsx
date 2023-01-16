@@ -2,6 +2,7 @@ import { Flex } from "components/layout"
 import { Fetching, Empty } from "components/feedback"
 import TokenItem, { TokenItemProps } from "./TokenItem"
 import styles from "./TokenList.module.scss"
+import TokenFilters from "./TokenFilters"
 
 interface Props<T> extends QueryState {
   results: T[]
@@ -25,6 +26,7 @@ function TokenList<T extends { symbol: string }>(props: Props<T>) {
     </Flex>
   ) : (
     <Fetching {...state} height={2}>
+      <TokenFilters />
       <ul className={styles.results}>
         {results
           .sort((a, b) => Number(getIsAdded(b)) - Number(getIsAdded(a)))
