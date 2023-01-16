@@ -1,6 +1,6 @@
 import { ParsedVestingSchedule } from "data/queries/vesting"
 import { Table } from "components/layout"
-import { Read, ReadPercent } from "components/token"
+import { Read } from "components/token"
 
 const VestingScheduleTable = ({ type, schedule }: ParsedVestingSchedule) => {
   return (
@@ -27,13 +27,13 @@ const VestingScheduleTable = ({ type, schedule }: ParsedVestingSchedule) => {
           render: (value) => <Read amount={value} />,
           align: "right",
         },
-        {
-          title: "Ratio",
-          dataIndex: "ratio",
-          render: (value) => <ReadPercent>{value}</ReadPercent>,
-          align: "right",
-          hidden: type !== "Periodic",
-        },
+        // {
+        //   title: "Ratio",
+        //   dataIndex: "ratio",
+        //   render: (value) => <ReadPercent>{value}</ReadPercent>,
+        //   align: "right",
+        //   hidden: type !== "Periodic",
+        // },
       ]}
       dataSource={schedule}
       size="small"

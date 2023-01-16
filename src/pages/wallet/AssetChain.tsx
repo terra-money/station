@@ -25,7 +25,6 @@ const AssetChain = (props: Props) => {
   return (
     <article className={styles.chain} key={name}>
       <TokenIcon token={name} icon={icon} size={50} />
-
       <section className={styles.details}>
         <h1 className={styles.name}>{name}</h1>
         <h1 className={styles.price}>
@@ -51,7 +50,7 @@ const AssetChain = (props: Props) => {
                 )}
               </>
             )}
-          </WithFetching>{" "}
+          </WithFetching>
           {symbol}
         </h2>
       </section>

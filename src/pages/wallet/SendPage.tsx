@@ -26,6 +26,7 @@ import CheckIcon from "@mui/icons-material/Check"
 import ClearIcon from "@mui/icons-material/Clear"
 import ContactsIcon from "@mui/icons-material/Contacts"
 import { getChainIDFromAddress } from "utils/bech32"
+import { getIsTerraChain } from "utils/chain"
 import { useNetwork, useNetworkName } from "data/wallet"
 import { queryKey } from "data/query"
 import Tx from "txs/Tx"
@@ -114,8 +115,8 @@ const SendPage = () => {
       availableAssets
         .find(({ denom }) => denom === (asset ?? defaultAsset))
         ?.chains.sort((a, b) => {
-          if (a.startsWith("phoenix-") || a.startsWith("pisco-")) return -1
-          if (b.startsWith("phoenix-") || b.startsWith("pisco-")) return 1
+          if (getIsTerraChain(a)) return -1
+          if (getIsTerraChain(b)) return 1
           return 0
         }),
     [asset, availableAssets, defaultAsset]
