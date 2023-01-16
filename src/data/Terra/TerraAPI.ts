@@ -71,7 +71,7 @@ export type GasPrices = Record<Denom, Amount>
 
 export const useGasPrices = () => {
   const baseURL = useFCDURL()
-  const path = "/gas-prices"
+  const path = "/v1/txs/gas_prices"
 
   return useQuery(
     [queryKey.TerraAPI, baseURL, path],
