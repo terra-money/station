@@ -6,9 +6,11 @@ import { ExternalLink } from "components/general"
 import { Contacts } from "components/layout"
 import styles from "./Links.module.scss"
 import { capitalize } from "@mui/material"
+import { WalletStatus, useWallet } from "@terra-money/use-wallet"
 
 const Links = () => {
   const { t } = useTranslation()
+  const { status } = useWallet()
 
   const community = {
     medium: "https://medium.com/terra-money",
@@ -21,10 +23,12 @@ const Links = () => {
   return (
     <div className={styles.links}>
       <div className={styles.tutorial}>
-        <ExternalLink href={SETUP} className={styles.link}>
-          <BoltIcon style={{ fontSize: 18 }} />
-          {capitalize(t("setup"))}
-        </ExternalLink>
+        {status === WalletStatus.WALLET_NOT_CONNECTED && (
+          <ExternalLink href={SETUP} className={styles.link}>
+            <BoltIcon style={{ fontSize: 18 }} />
+            {capitalize(t("setup"))}
+          </ExternalLink>
+        )}
         <ExternalLink href={DOCUMENTATION} className={styles.link}>
           <DescriptionIcon style={{ fontSize: 18 }} />
           {capitalize(t("documentation"))}

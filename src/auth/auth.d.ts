@@ -8,6 +8,7 @@ type StoredWallet =
   | LegacySingleWallet
   | StoredWalletLegacy
   | MultisigWallet
+  | LedgerWallet
 type ResultStoredWallet = LegacyStoredWallet | MultisigWallet | StoredWallet
 
 // interchain types
@@ -20,6 +21,7 @@ interface SingleWallet {
   lock?: boolean
 }
 interface LedgerWallet {
+  name: string
   words: {
     "330": string
     "118"?: string
@@ -27,6 +29,7 @@ interface LedgerWallet {
   ledger: true
   index: number
   bluetooth: boolean
+  lock?: boolean
 }
 
 interface MultisigWallet extends SingleWallet {

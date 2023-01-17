@@ -66,7 +66,9 @@ export const useInitialBankBalance = () => {
       // Required when the number of results exceed 100
       const balances = await Promise.all(
         chains.map((chain) => {
-          return lcd.bank.balance(addresses[chain])
+          return ["phoenix-1", "pico-1"].includes(chain)
+            ? lcd.bank.spendableBalances(addresses[chain])
+            : lcd.bank.balance(addresses[chain])
         })
       )
 

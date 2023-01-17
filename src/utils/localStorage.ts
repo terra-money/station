@@ -3,6 +3,8 @@ import {
   CLASSIC_DEFAULT_GAS_ADJUSTMENT,
 } from "config/constants"
 import themes from "styles/themes/themes"
+import { useCallback } from "react"
+import { atom, useRecoilState } from "recoil"
 
 export enum SettingKey {
   Theme = "Theme",
@@ -11,6 +13,8 @@ export enum SettingKey {
   GasAdjustment = "GasAdjustment", // Tx
   ClassicGasAdjustment = "ClassicGasAdjustment",
   AddressBook = "AddressBook", // Send
+  HideNonWhitelistTokens = "HideNonWhiteListTokens",
+  HideLowBalTokens = "HideLowBalTokens",
   CustomTokens = "CustomTokens", // Wallet
   MinimumValue = "MinimumValue", // Wallet (UST value to show on the list)
   WithdrawAs = "WithdrawAs", // Rewards (Preferred denom to withdraw rewards)
@@ -33,6 +37,8 @@ export const DefaultSettings = {
   [SettingKey.AddressBook]: [] as AddressBook[],
   [SettingKey.CustomTokens]: DefaultCustomTokens as CustomTokens,
   [SettingKey.MinimumValue]: 0,
+  [SettingKey.HideNonWhitelistTokens]: false,
+  [SettingKey.HideLowBalTokens]: false,
   [SettingKey.WithdrawAs]: "",
 }
 
@@ -51,4 +57,36 @@ export const getLocalSetting = <T>(key: SettingKey): T => {
 export const setLocalSetting = <T>(key: SettingKey, value: T) => {
   const item = typeof value === "string" ? value : JSON.stringify(value)
   localStorage.setItem(key, item)
+}
+
+export const hideNoWhitelistState = atom({
+  key: "hideNoWhitelistState",
+  default: !!getLocalSetting(SettingKey.HideNonWhitelistTokens),
+})
+
+export const hideLowBalTokenState = atom({
+  key: "hideLowBalTokenState",
+  default: !!getLocalSetting(SettingKey.HideLowBalTokens),
+})
+
+export const useTokenFilters = () => {
+  const [hideNoWhitelist, setHideNoWhitelist] =
+    useRecoilState(hideNoWhitelistState)
+  const toggleHideNoWhitelist = useCallback(() => {
+    setLocalSetting(SettingKey.HideNonWhitelistTokens, !hideNoWhitelist)
+    setHideNoWhitelist(!hideNoWhitelist)
+  }, [hideNoWhitelist, setHideNoWhitelist])
+
+  const [hideLowBal, setHideLowBal] = useRecoilState(hideLowBalTokenState)
+  const toggleHideLowBal = useCallback(() => {
+    setLocalSetting(SettingKey.HideLowBalTokens, !hideLowBal)
+    setHideLowBal(!hideLowBal)
+  }, [hideLowBal, setHideLowBal])
+
+  return {
+    hideNoWhitelist,
+    toggleHideNoWhitelist,
+    toggleHideLowBal,
+    hideLowBal,
+  }
 }

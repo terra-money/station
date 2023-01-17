@@ -5,7 +5,13 @@ import { useForm } from "react-hook-form"
 import UsbIcon from "@mui/icons-material/Usb"
 import BluetoothIcon from "@mui/icons-material/Bluetooth"
 import { LedgerKey } from "@terra-money/ledger-station-js"
-import { Form, FormError, FormItem, FormWarning } from "components/form"
+import {
+  Form,
+  FormError,
+  FormHelp,
+  FormItem,
+  FormWarning,
+} from "components/form"
 import { Checkbox, Input, Submit } from "components/form"
 import validate from "../scripts/validate"
 import useAuth from "../hooks/useAuth"
@@ -15,14 +21,15 @@ import { wordsFromAddress } from "utils/bech32"
 import Lottie from "lottie-react"
 import connect from "./assets/connect.json"
 import openApp from "./assets/openApp.json"
-import complete from "./assets/complete.json"
 import { Button } from "components/general"
 
 import styles from "./AccessWithLedger.module.scss"
+import { FlexColumn } from "components/layout"
 
 interface Values {
   index: number
   bluetooth: boolean
+  name: string
 }
 
 enum Pages {
@@ -31,6 +38,7 @@ enum Pages {
   openTerra = "openTerra",
   askCosmos = "askCosmos",
   openCosmos = "openCosmos",
+  selectName = "selectName",
   complete = "complete",
 }
 
@@ -55,12 +63,13 @@ const AccessWithLedgerForm = () => {
   })
 
   const { register, watch, handleSubmit, formState } = form
-  const { errors } = formState
+  const { errors, isValid, isSubmitting } = formState
   const { index, bluetooth } = watch()
 
-  const submit = async ({ index, bluetooth }: Values) => {
+  const submit = async ({ index, bluetooth, name }: Values) => {
     setError(undefined)
-    connectLedger(words, index, bluetooth)
+
+    connectLedger(words, index, bluetooth, name)
     navigate("/", { replace: true })
   }
 
@@ -168,7 +177,9 @@ const AccessWithLedgerForm = () => {
             <>
               <section className="center">
                 <Lottie animationData={openApp} />
-                <p>{t("Open the Terra app")}</p>
+                <p>
+                  Open the <strong>Terra app</strong> on the Ledger device.
+                </p>
               </section>
             </>
           </>
@@ -179,8 +190,18 @@ const AccessWithLedgerForm = () => {
             <>
               <section className="center">
                 <p>{t("Do you want to import your Cosmos accounts?")}</p>
-
-                {error && <FormError>{error.message}</FormError>}
+                <FlexColumn gap={4} className={styles.warningContainer}>
+                  <FormHelp>
+                    {t(
+                      "You will need the Cosmos app installed on your Ledger."
+                    )}
+                    <br />
+                    {t(
+                      "The device will try to open the cosmos app automatically."
+                    )}
+                  </FormHelp>
+                  {error && <FormError>{error.message}, try again.</FormError>}
+                </FlexColumn>
 
                 <Button
                   className={styles.mainButton}
@@ -207,7 +228,9 @@ const AccessWithLedgerForm = () => {
             <>
               <section className="center">
                 <Lottie animationData={openApp} />
-                <p>{t("Open the Cosmos app")}</p>
+                <p>
+                  Open the <strong>Cosmos app</strong> on the Ledger device.
+                </p>
               </section>
             </>
           </>
@@ -217,12 +240,16 @@ const AccessWithLedgerForm = () => {
           <>
             <>
               <section className="center">
-                <Lottie
-                  animationData={complete}
-                  className={styles.completeAnimation}
-                />
-                <h1>{t("Done!")}</h1>
-                <Submit>{t("Start exploring")}</Submit>
+                <FormItem label={t("Wallet name")} error={errors.name?.message}>
+                  <Input
+                    {...register("name", { validate: validate.name })}
+                    placeholder="Ledger"
+                    autoFocus
+                  />
+                </FormItem>
+                <Submit disabled={!isValid} submitting={isSubmitting}>
+                  {t("Submit")}
+                </Submit>
               </section>
             </>
           </>

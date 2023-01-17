@@ -48,15 +48,7 @@ const accordions = [
     title: "From a Ledger",
     content: [
       [
-        "Go to the ",
-        <a
-          href="https://station.terra.money/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Station Web App
-        </a>,
-        " home page and select ",
+        "Click connect and then select ",
         <span className={styles.highlighted}>access with ledger</span>,
         ".",
       ],
@@ -86,7 +78,7 @@ const WelcomeModal = () => {
       className={styles.modal}
       overlayClassName={styles.overlay}
     >
-      <h1 className={styles.title}>{t("Welcome to the Station Extension")}</h1>
+      <h1 className={styles.title}>{t("Welcome to Station")}</h1>
       <h3 className={styles.subtitle}>
         To enable interchain features complete the following.
       </h3>
@@ -96,9 +88,8 @@ const WelcomeModal = () => {
           <section
             className={cx(styles.accordion, openAcc === i + 1 ? "opened" : "")}
             key={`accordion-${i + 1}`}
-            onClick={() => handleClick(i + 1)}
           >
-            <div className={styles.top}>
+            <div className={styles.top} onClick={() => handleClick(i + 1)}>
               <h5 className={styles.title}>{acc.title}</h5>
               <KeyboardArrowDownIcon className={styles.icon} />
             </div>

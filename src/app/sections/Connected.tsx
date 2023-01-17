@@ -4,6 +4,7 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import GroupsIcon from "@mui/icons-material/Groups"
 import QrCodeIcon from "@mui/icons-material/QrCode"
 import UsbIcon from "@mui/icons-material/Usb"
+import BluetoothIcon from "@mui/icons-material/Bluetooth"
 import { truncate } from "@terra.kitchen/utils"
 import { useWallet } from "@terra-money/wallet-provider"
 import { useAddress } from "data/wallet"
@@ -94,7 +95,13 @@ const Connected = () => {
     >
       <Button
         icon={
-          isWallet.multisig(wallet) ? (
+          isWallet.ledger(wallet) ? (
+            wallet.bluetooth ? (
+              <BluetoothIcon style={{ fontSize: 16 }} />
+            ) : (
+              <UsbIcon style={{ fontSize: 16 }} />
+            )
+          ) : isWallet.multisig(wallet) ? (
             <GroupsIcon style={{ fontSize: 16 }} />
           ) : (
             <AccountBalanceWalletIcon style={{ fontSize: 16 }} />

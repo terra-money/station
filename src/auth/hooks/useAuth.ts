@@ -7,7 +7,7 @@ import { RawKey, SignatureV2 } from "@terra-money/feather.js"
 import { LedgerKey } from "@terra-money/ledger-station-js"
 import { useInterchainLCDClient } from "data/queries/lcdClient"
 import is from "../scripts/is"
-import { PasswordError } from "../scripts/keystore"
+import { addWallet, PasswordError } from "../scripts/keystore"
 import { getDecryptedKey, testPassword } from "../scripts/keystore"
 import { getWallet, storeWallet } from "../scripts/keystore"
 import { clearWallet, lockWallet } from "../scripts/keystore"
@@ -50,15 +50,11 @@ const useAuth = () => {
         storeWallet(wallet)
         setWallet(wallet as any)
       } else {
-        const { words, lock } = storedWallet
+        const { lock } = storedWallet
         if (lock) throw new Error("Wallet is locked")
 
-        const wallet = is.multisig(storedWallet)
-          ? { name, words, multisig: true }
-          : { name, words }
-
-        storeWallet(wallet)
-        setWallet(wallet as any)
+        storeWallet(storedWallet)
+        setWallet(storedWallet as any)
       }
     },
     [setWallet]
@@ -68,9 +64,18 @@ const useAuth = () => {
     (
       words: { "330": string; "118"?: string },
       index = 0,
-      bluetooth = false
+      bluetooth = false,
+      name = "Ledger"
     ) => {
-      const wallet = { words, ledger: true as const, index, bluetooth }
+      const wallet = {
+        words,
+        ledger: true as const,
+        index,
+        bluetooth,
+        lock: false as const,
+        name,
+      }
+      addWallet(wallet)
       storeWallet(wallet)
       setWallet(wallet as any)
     },
@@ -188,21 +193,11 @@ const useAuth = () => {
     if (is.ledger(wallet)) {
       const key = await getLedgerKey(networks[txOptions.chainID].coinType)
       const wallet = lcd.wallet(key)
-      const { account_number: accountNumber, sequence } =
-        await wallet.accountNumberAndSequence(txOptions.chainID)
       const signMode = SignatureV2.SignMode.SIGN_MODE_LEGACY_AMINO_JSON
-      const unsignedTx = await create(txOptions)
-      const options = {
-        chainID: txOptions.chainID,
-        accountNumber,
-        sequence,
+      return await wallet.createAndSignTx({
+        ...txOptions,
         signMode,
-      }
-      return await key.signTx(
-        unsignedTx,
-        options,
-        networks[txOptions.chainID].isClassic
-      )
+      })
     } /*else if (is.preconfigured(wallet)) {
       const key = new MnemonicKey({ mnemonic: wallet.mnemonic })
       return await lcd.wallet(key).createAndSignTx(txOptions)

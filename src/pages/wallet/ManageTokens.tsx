@@ -7,14 +7,14 @@ interface Props {
   children: RenderButton
 }
 
-const AddTokens = ({ children: renderButton }: Props) => {
+const ManageTokens = ({ children: renderButton }: Props) => {
   const { t } = useTranslation()
 
   return (
-    <ModalButton title={t("Manage list")} renderButton={renderButton}>
+    <ModalButton title={t("Manage tokens")} renderButton={renderButton}>
       <ManageCustomTokens />
     </ModalButton>
   )
 }
 
-export default AddTokens
+export default ManageTokens

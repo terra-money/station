@@ -4,10 +4,14 @@ import wordlist from "bip39/src/wordlists/english.json"
 const validate = {
   name: {
     alphanumeric: (name: string) =>
-      /^[a-z0-9-_]+$/.test(name) || "Enter lowercase alphanumeric characters",
-    length: (name: string) =>
-      (name.length >= 3 && name.length <= 20) ||
-      "Enter 3-20 lowercase alphanumeric characters",
+      /^[a-zA-Z0-9-_\s]+$/.test(name) ||
+      "A name can only contain alphanumeric characters, spaces and those symbols (-, _).",
+    length: (name: string) => {
+      if (name.length < 3) return "The name must be at least 3 characters long."
+      if (name.length > 20)
+        return "The name cannot be longer than 20 characters."
+      return true
+    },
     exists: (name: string) => {
       try {
         getStoredWallet(name)
