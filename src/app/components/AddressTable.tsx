@@ -42,6 +42,7 @@ const AddressTable = (props: Props) => {
         <Table
           className={className}
           size="small"
+          bordered
           dataSource={addressData}
           filter={({ chainName }) => {
             if (!keyword) return true
