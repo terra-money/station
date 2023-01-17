@@ -27,7 +27,12 @@ const AddressTable = (props: Props) => {
   const networks = useAllNetworks()
   const { t } = useTranslation()
 
-  if (!addresses) return <p>{t("Connect a wallet to see your addresses")}</p>
+  if (!addresses)
+    return (
+      <p className={styles.connect}>
+        {t("Connect a wallet to see your addresses")}
+      </p>
+    )
 
   const addressData = Object.keys(addresses).map((key) => ({
     address: addresses?.[key],
@@ -39,7 +44,6 @@ const AddressTable = (props: Props) => {
     <WithSearchInput gap={10} placeholder={t("Search for a chain...")}>
       {(keyword: string) => (
         <Table
-          bordered
           className={cx(styles.table, className)}
           size="small"
           dataSource={addressData}

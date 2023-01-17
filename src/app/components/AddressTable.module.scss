@@ -8,6 +8,10 @@
   @include flex(space-between);
 }
 
+.connect {
+  padding: 10px;
+}
+
 .chain {
   text-transform: capitalize;
   @include flex(align-items);
