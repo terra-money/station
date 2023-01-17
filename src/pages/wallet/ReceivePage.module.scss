@@ -23,7 +23,6 @@
 .chain__selector {
   @include flex(flex-start);
   gap: 10px;
-  z-index: 999;
 
   button {
     font-weight: var(--normal);
