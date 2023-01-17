@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from "react"
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useFieldArray, useForm } from "react-hook-form"
 import AddIcon from "@mui/icons-material/Add"
@@ -32,6 +32,7 @@ import { useDepositParams } from "data/queries/gov"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { useNetwork } from "data/wallet"
 import { useNativeDenoms } from "data/token"
+import { isExempted, isWhitelisted, URL_REGEX } from "utils/gov"
 
 enum ProposalType {
   TEXT = "Text proposal",
@@ -111,6 +112,8 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
   const amount = toAmount(input)
   const { fields, append, remove } = useFieldArray({ control, name: "changes" })
   const coinsFieldArray = useFieldArray({ control, name: "coins" })
+  const [hasExternalLink, setHasExternalLink] = useState(false)
+  const [externalLinks, setExternalLinks] = useState("")
 
   /* update input */
   useEffect(() => {
@@ -206,6 +209,27 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
     queryKeys: [queryKey.gov.proposals],
     chain: chain ?? "",
     gasAdjustment: 1.5,
+  }
+
+  const validateDescription = (event: ChangeEvent<HTMLInputElement>) => {
+    const parts = event.target.value.split(URL_REGEX)
+
+    setHasExternalLink(
+      !!parts.filter(
+        (part) =>
+          part.match(URL_REGEX) && !isWhitelisted(part) && !isExempted(part)
+      ).length
+    )
+
+    setExternalLinks(
+      parts
+        .filter(
+          (part) =>
+            part.match(URL_REGEX) && !isWhitelisted(part) && !isExempted(part)
+        )
+        .map((part) => part.replace(/\s/g, ""))
+        .join(", ")
+    )
   }
 
   const render = () => {
@@ -439,9 +463,17 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
               label={t("Description")}
               error={errors.description?.message}
             >
+              {hasExternalLink && (
+                <FormWarning>
+                  {t(
+                    `A potential reference to a website outside Station was detected. These reference(s) will not be displayed in the proposal description when viewed on Station: ${externalLinks}`
+                  )}
+                </FormWarning>
+              )}
               <TextArea
                 {...register("description", {
                   required: "Description is required",
+                  onChange: validateDescription,
                 })}
                 placeholder={t(
                   `We're proposing to spend 100,000 ${
