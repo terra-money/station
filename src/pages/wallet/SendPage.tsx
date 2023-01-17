@@ -225,10 +225,11 @@ const SendPage = () => {
           to: destinationChain,
           ics:
             AccAddress.validate(token?.denom ?? "") ||
-            ibcDenoms[networkName][token?.denom ?? ""]?.icsChannel ===
-              networks[destinationChain]?.ibc?.ics?.fromTerra ||
-            ibcDenoms[networkName][token?.denom ?? ""]?.icsChannel ===
-              networks[destinationChain]?.ibc?.ics?.toTerra,
+            (!!ibcDenoms[networkName][token?.denom ?? ""]?.icsChannel &&
+              (ibcDenoms[networkName][token?.denom ?? ""]?.icsChannel ===
+                networks[destinationChain]?.ibc?.ics?.fromTerra ||
+                ibcDenoms[networkName][token?.denom ?? ""]?.icsChannel ===
+                  networks[destinationChain]?.ibc?.ics?.toTerra)),
         })
         if (!channel) throw new Error("No IBC channel found")
 
