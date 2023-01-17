@@ -14,7 +14,6 @@ import AddressBox from "components/form/AddressBox"
 
 interface Props {
   finderLink?: boolean // either display finder link if true or AddressBox comp
-  noTitle?: boolean
   className?: string
 }
 
