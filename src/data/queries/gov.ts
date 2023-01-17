@@ -52,6 +52,7 @@ export const useProposals = (status: Proposal.Status) => {
         chainList.map((chainID) =>
           lcd.gov.proposals(chainID, {
             proposal_status: status,
+            "pagination.reverse": "true",
             ...Pagination,
           })
         )
