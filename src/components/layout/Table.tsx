@@ -125,46 +125,48 @@ function Table<T>({ dataSource, filter, rowKey, ...props }: Props<T>) {
       style={style}
     >
       <table className={cx(styles.table, size)}>
-        <thead>
-          <tr>
-            {columns.map((column, index) => {
-              const { title, tooltip, sorter, defaultSortOrder } = column
+        {columns.some((col) => !!col.title) && (
+          <thead>
+            <tr>
+              {columns.map((column, index) => {
+                const { title, tooltip, sorter, defaultSortOrder } = column
 
-              const getCaretAttrs = (key: SortOrder) => {
-                const active = sorterIndex === index && sortOrder === key
-                return {
-                  className: cx(styles.caret, { active }),
-                  width: 6,
-                  height: 3,
+                const getCaretAttrs = (key: SortOrder) => {
+                  const active = sorterIndex === index && sortOrder === key
+                  return {
+                    className: cx(styles.caret, { active }),
+                    width: 6,
+                    height: 3,
+                  }
                 }
-              }
 
-              return (
-                <th className={getClassName(column)} key={getKey(column)}>
-                  {sorter && defaultSortOrder ? (
-                    <button
-                      className={styles.sorter}
-                      onClick={() => sort(index)}
-                    >
-                      {tooltip ? (
-                        <TooltipIcon content={tooltip}>{title}</TooltipIcon>
-                      ) : (
-                        title
-                      )}
+                return (
+                  <th className={getClassName(column)} key={getKey(column)}>
+                    {sorter && defaultSortOrder ? (
+                      <button
+                        className={styles.sorter}
+                        onClick={() => sort(index)}
+                      >
+                        {tooltip ? (
+                          <TooltipIcon content={tooltip}>{title}</TooltipIcon>
+                        ) : (
+                          title
+                        )}
 
-                      <Grid gap={4}>
-                        <DropUpIcon {...getCaretAttrs("asc")} />
-                        <DropDownIcon {...getCaretAttrs("desc")} />
-                      </Grid>
-                    </button>
-                  ) : (
-                    title
-                  )}
-                </th>
-              )
-            })}
-          </tr>
-        </thead>
+                        <Grid gap={4}>
+                          <DropUpIcon {...getCaretAttrs("asc")} />
+                          <DropDownIcon {...getCaretAttrs("desc")} />
+                        </Grid>
+                      </button>
+                    ) : (
+                      title
+                    )}
+                  </th>
+                )
+              })}
+            </tr>
+          </thead>
+        )}
 
         <tbody>
           {dataSource

@@ -1,11 +1,11 @@
 @import "mixins";
 
-.table {
-  padding-top: 10px;
-}
-
 .address {
   @include flex(space-between);
+}
+
+.connect {
+  padding: 10px;
 }
 
 .chain {

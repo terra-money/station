@@ -33,8 +33,8 @@ export const useNetworkOptions = () => {
   ]
 }
 
-export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
-  const { networks, filterEnabledNetworks } = useNetworks()
+export const useAllNetworks = (): Record<ChainID, InterchainNetwork> => {
+  const { networks } = useNetworks()
   const [network, setNetwork] = useNetworkState()
   const wallet = useRecoilValue(walletState)
   const connectedWallet = useWallet()
@@ -57,9 +57,7 @@ export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
       setNetwork("localterra")
     }
 
-    return filterEnabledNetworks(
-      connectedWallet.network as Record<ChainID, InterchainNetwork>
-    )
+    return connectedWallet.network as Record<ChainID, InterchainNetwork>
   }
 
   // multisig wallet are supported only on terra
@@ -68,23 +66,26 @@ export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
       networks[network as NetworkName] as Record<ChainID, InterchainNetwork>
     ).find(({ prefix }) => prefix === "terra")
     if (!terra) return {}
-    return filterEnabledNetworks({ [terra.chainID]: terra })
+    return { [terra.chainID]: terra }
   }
 
   if (wallet && !wallet?.words?.["118"]) {
     const chains330 = Object.values(
       networks[network as NetworkName] as Record<ChainID, InterchainNetwork>
     ).filter(({ coinType }) => coinType === "330")
-
-    return filterEnabledNetworks(
-      chains330.reduce((acc, chain) => {
-        acc[chain.chainID] = chain
-        return acc
-      }, {} as Record<ChainID, InterchainNetwork>)
-    )
+    chains330.reduce((acc, chain) => {
+      acc[chain.chainID] = chain
+      return acc
+    }, {} as Record<ChainID, InterchainNetwork>)
   }
 
-  return filterEnabledNetworks(networks[network as NetworkName])
+  return networks[network as NetworkName]
+}
+
+export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
+  const networks = useAllNetworks()
+  const { filterEnabledNetworks } = useNetworks()
+  return filterEnabledNetworks(networks)
 }
 
 export const useNetworkName = () => {
