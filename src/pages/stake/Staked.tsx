@@ -8,6 +8,7 @@ import Delegations from "./Delegations"
 import Unbondings from "./Unbondings"
 import Rewards from "./Rewards"
 import { useChainID } from "data/wallet"
+import styles from "./Staked.module.scss"
 
 const Staked = () => {
   const chainID = useChainID()
@@ -25,11 +26,11 @@ const Staked = () => {
     if (!staked) return <DelegationsPromote horizontal />
 
     return (
-      <Col>
+      <section className={styles.staked__container}>
         <Delegations />
         <Unbondings />
         <Rewards />
-      </Col>
+      </section>
     )
   }
 

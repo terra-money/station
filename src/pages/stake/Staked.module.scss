@@ -1,0 +1,17 @@
+@import "mixins";
+
+.staked__container {
+  display: grid;
+  grid-gap: var(--grid-gap);
+  gap: var(--grid-gap);
+  min-width: 260px;
+
+  @include mobile {
+    grid-auto-flow: column;
+    min-width: unset;
+  }
+
+  @media (max-width: 500px) {
+    grid-auto-flow: row;
+  }
+}
