@@ -36,13 +36,22 @@
 }
 
 /* color */
-@mixin variant($bg-h, $bg-s, $bg-l, $color) {
+@mixin variant($bg-h, $bg-s, $bg-l, $color, $type) {
   background: hsl($bg-h, $bg-s, $bg-l);
   color: $color;
   transition: background var(--transition);
 
-  &:hover:not(:disabled) {
-    background: hsl($bg-h, $bg-s, calc($bg-l - 5%));
+  @if $type != default {
+    &:hover:not(:disabled) {
+      background: hsl($bg-h, $bg-s, calc($bg-l - 5%));
+    }
+  } @else {
+    &:hover:not(:disabled) {
+      background: var(
+        --dark-button-hover-only,
+        hsl($bg-h, $bg-s, calc($bg-l - 5%))
+      );
+    }
   }
 }
 
@@ -73,7 +82,8 @@ $colors: (
       map-get($value, bg-h),
       map-get($value, bg-s),
       map-get($value, bg-l),
-      map-get($value, color)
+      map-get($value, color),
+      $type: $color
     );
   }
 }
