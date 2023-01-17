@@ -21,7 +21,7 @@ import { useMemoizedPrices } from "data/queries/coingecko"
 import { useNativeDenoms } from "data/token"
 import shuffle from "utils/shuffle"
 import { getIsBonded } from "pages/stake/ValidatorsList"
-import { getChainIdFromAddress } from "./chains"
+import { getChainIDFromAddress } from "utils/bech32"
 import { useNetwork } from "data/wallet"
 
 export const useInterchainValidators = () => {
@@ -447,9 +447,9 @@ export const useCalcDelegationsByValidator = (
   interchainValidators.forEach((response) => {
     if (response.status === "success") {
       const addressChainId =
-        getChainIdFromAddress(response.data[0]?.operator_address, networks) ||
+        getChainIDFromAddress(response.data[0]?.operator_address, networks) ||
         ""
-      allValidatorByChain[addressChainId] = response.data
+      allValidatorByChain[addressChainId] = [...response.data]
     }
   })
 
