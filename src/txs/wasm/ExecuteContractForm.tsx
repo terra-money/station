@@ -127,13 +127,15 @@ const ExecuteContractForm = () => {
                     placeholder={getPlaceholder(decimals)}
                     selectBefore={
                       <Select {...register(`coins.${index}.denom`)} before>
-                        {bankBalance.map(({ denom }) => (
-                          <WithTokenItem token={denom} key={denom}>
-                            {({ symbol }) => (
-                              <option value={denom}>{symbol}</option>
-                            )}
-                          </WithTokenItem>
-                        ))}
+                        {bankBalance
+                          .filter(({ chain }) => chain === chainID)
+                          .map(({ denom }) => (
+                            <WithTokenItem token={denom} key={denom}>
+                              {({ symbol }) => (
+                                <option value={denom}>{symbol}</option>
+                              )}
+                            </WithTokenItem>
+                          ))}
                       </Select>
                     }
                   />

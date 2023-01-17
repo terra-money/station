@@ -9,6 +9,7 @@ import { Fetching, State, Empty } from "components/feedback"
 import { SearchInput } from "components/form"
 import ContractActions from "./ContractActions"
 import ContractItem from "./ContractItem"
+import styles from "./Contract.module.scss"
 
 export const [useContract, ContractProvider] =
   createContext<ContractInfo>("useContract")
@@ -23,30 +24,34 @@ const Contract = () => {
   return (
     <Page title={t("Contract")} extra={<ContractActions />}>
       <Grid gap={20}>
-        <SearchInput
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-        />
+        <main className={styles.contract__main}>
+          <section className={styles.contract__search}>
+            <SearchInput
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+            />
+          </section>
 
-        {state.error ? (
-          <Card>
-            <Empty />
-          </Card>
-        ) : !AccAddress.validate(address) ? (
-          <Card>
-            <State icon={<ManageSearchIcon fontSize="inherit" />}>
-              {t("Search by contract address")}
-            </State>
-          </Card>
-        ) : (
-          <Fetching {...state}>
-            {result && (
-              <ContractProvider value={result}>
-                <ContractItem {...result} />
-              </ContractProvider>
+          <section className={styles.contract__body}>
+            {state.error ? (
+              <Empty />
+            ) : !AccAddress.validate(address) ? (
+              <Card>
+                <State icon={<ManageSearchIcon fontSize="inherit" />}>
+                  {t("Search by contract address")}
+                </State>
+              </Card>
+            ) : (
+              <Fetching {...state}>
+                {result && (
+                  <ContractProvider value={result}>
+                    <ContractItem {...result} />
+                  </ContractProvider>
+                )}
+              </Fetching>
             )}
-          </Fetching>
-        )}
+          </section>
+        </main>
       </Grid>
     </Page>
   )

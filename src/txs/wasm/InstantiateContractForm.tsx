@@ -7,7 +7,7 @@ import { AccAddress } from "@terra-money/feather.js"
 import { MsgInstantiateContract } from "@terra-money/feather.js"
 import { SAMPLE_ADDRESS } from "config/constants"
 import { parseJSON, validateMsg } from "utils/data"
-import { useAddress, useChainID, useNetwork } from "data/wallet"
+import { useNetwork } from "data/wallet"
 import { useBankBalance } from "data/queries/bank"
 import { WithTokenItem } from "data/token"
 import { Form, FormGroup, FormItem } from "components/form"
@@ -16,6 +16,7 @@ import { getCoins, getPlaceholder } from "../utils"
 import validate from "../validate"
 import Tx from "../Tx"
 import { useIBCHelper } from "../IBCHelperContext"
+import { useInterchainAddresses } from "auth/hooks/useAddress"
 
 interface TxValues {
   admin?: AccAddress
@@ -26,12 +27,12 @@ interface TxValues {
 }
 
 // TODO: make this interchain
-const InstantiateContractForm = () => {
+const InstantiateContractForm = ({ chainID }: { chainID: string }) => {
   const { t } = useTranslation()
-  const address = useAddress()
+  const addresses = useInterchainAddresses()
+  const address = addresses && addresses[chainID]
   const network = useNetwork()
   const bankBalance = useBankBalance()
-  const chainID = useChainID()
 
   /* tx context */
   const defaultItem = { denom: network[chainID].baseAsset }
@@ -159,13 +160,15 @@ const InstantiateContractForm = () => {
                     placeholder={getPlaceholder(decimals)}
                     selectBefore={
                       <Select {...register(`coins.${index}.denom`)} before>
-                        {bankBalance.map(({ denom }) => (
-                          <WithTokenItem token={denom} key={denom}>
-                            {({ symbol }) => (
-                              <option value={denom}>{symbol}</option>
-                            )}
-                          </WithTokenItem>
-                        ))}
+                        {bankBalance
+                          .filter(({ chain }) => chain === chainID)
+                          .map(({ denom }) => (
+                            <WithTokenItem token={denom} key={denom}>
+                              {({ symbol }) => (
+                                <option value={denom}>{symbol}</option>
+                              )}
+                            </WithTokenItem>
+                          ))}
                       </Select>
                     }
                   />
