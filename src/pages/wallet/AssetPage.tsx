@@ -10,7 +10,7 @@ import { Button } from "components/general"
 import { useTranslation } from "react-i18next"
 import { capitalize } from "@mui/material"
 import Vesting from "./Vesting"
-import { getIsTerraChain } from "utils/chain"
+import { isTerraChain } from "utils/chain"
 
 const AssetPage = () => {
   const currency = useCurrency()
@@ -45,7 +45,7 @@ const AssetPage = () => {
           />
         </h1>
         <p>
-          <Read decimals={decimals} amount={totalBalance} token={symbol} />{" "}
+          <Read decimals={decimals} amount={totalBalance} token={symbol} />
           {symbol}
         </p>
       </section>
@@ -64,7 +64,7 @@ const AssetPage = () => {
                   token={token}
                   decimals={decimals}
                 />
-                {token === "uluna" && getIsTerraChain(b.chain) && <Vesting />}
+                {token === "uluna" && isTerraChain(b.chain) && <Vesting />}
               </>
             ))}
         </div>

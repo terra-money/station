@@ -27,13 +27,6 @@ const VestingScheduleTable = ({ type, schedule }: ParsedVestingSchedule) => {
           render: (value) => <Read amount={value} />,
           align: "right",
         },
-        // {
-        //   title: "Ratio",
-        //   dataIndex: "ratio",
-        //   render: (value) => <ReadPercent>{value}</ReadPercent>,
-        //   align: "right",
-        //   hidden: type !== "Periodic",
-        // },
       ]}
       dataSource={schedule}
       size="small"

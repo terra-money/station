@@ -97,8 +97,6 @@ export const ReadPercent = forwardRef(
     const [integer, decimal] = value
       ? formatPercent(value, config).split(".")
       : []
-    console.log("value", value)
-    console.log("decimal", decimal)
 
     return (
       <span className={styles.component} ref={ref}>
