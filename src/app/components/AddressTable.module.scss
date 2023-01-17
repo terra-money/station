@@ -1,9 +1,5 @@
 @import "mixins";
 
-.table {
-  min-height: max-content;
-}
-
 .address {
   @include flex(space-between);
 }

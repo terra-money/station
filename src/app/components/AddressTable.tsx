@@ -11,15 +11,12 @@ import styles from "./AddressTable.module.scss"
 import { useTranslation } from "react-i18next"
 import WithSearchInput from "pages/custom/WithSearchInput"
 import AddressBox from "components/form/AddressBox"
-import classNames from "classnames/bind"
 
 interface Props {
   finderLink?: boolean // either display finder link if true or AddressBox comp
   noTitle?: boolean
   className?: string
 }
-
-const cx = classNames.bind(styles)
 
 const AddressTable = (props: Props) => {
   const { finderLink, className } = props
@@ -44,7 +41,7 @@ const AddressTable = (props: Props) => {
     <WithSearchInput gap={10} placeholder={t("Search for a chain...")}>
       {(keyword: string) => (
         <Table
-          className={cx(styles.table, className)}
+          className={className}
           size="small"
           dataSource={addressData}
           filter={({ chainName }) => {
