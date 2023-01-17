@@ -9,6 +9,8 @@ import AssetChain from "./AssetChain"
 import { Button } from "components/general"
 import { useTranslation } from "react-i18next"
 import { capitalize } from "@mui/material"
+import Vesting from "./Vesting"
+import { isTerraChain } from "utils/chain"
 
 const AssetPage = () => {
   const currency = useCurrency()
@@ -43,7 +45,7 @@ const AssetPage = () => {
           />
         </h1>
         <p>
-          <Read decimals={decimals} amount={totalBalance} token={symbol} />{" "}
+          <Read decimals={decimals} amount={totalBalance} token={symbol} />
           {symbol}
         </p>
       </section>
@@ -53,14 +55,17 @@ const AssetPage = () => {
           {filteredBalances
             .sort((a, b) => parseInt(b.amount) - parseInt(a.amount))
             .map((b) => (
-              <AssetChain
-                key={b.chain}
-                symbol={symbol}
-                balance={b.amount}
-                chain={b.chain}
-                token={token}
-                decimals={decimals}
-              />
+              <>
+                <AssetChain
+                  key={b.chain}
+                  symbol={symbol}
+                  balance={b.amount}
+                  chain={b.chain}
+                  token={token}
+                  decimals={decimals}
+                />
+                {token === "uluna" && isTerraChain(b.chain) && <Vesting />}
+              </>
             ))}
         </div>
       </section>
