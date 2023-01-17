@@ -37,6 +37,14 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
         //...networks.localterra,
       }
 
+      const stored = localStorage.getItem("enabledNetworks")
+      const cached = stored && JSON.parse(stored)
+
+      if (cached && cached.time > Date.now() - 10 * 60 * 1000) {
+        setEnabledNetworks(cached.networks)
+        return
+      }
+
       const result = await Promise.all(
         Object.values(testBase).map(async (network) => {
           if (network.prefix === "terra") return network.chainID
@@ -57,6 +65,13 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
         })
       )
 
+      localStorage.setItem(
+        "enabledNetworks",
+        JSON.stringify({
+          time: Date.now(),
+          networks: result.filter((r) => typeof r === "string") as string[],
+        })
+      )
       setEnabledNetworks(
         result.filter((r) => typeof r === "string") as string[]
       )
