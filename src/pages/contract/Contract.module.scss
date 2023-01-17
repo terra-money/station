@@ -1,0 +1,16 @@
+.contract__main {
+  background-color: var(--card-bg);
+  border: var(--border-width) solid var(--card-border);
+  border-radius: var(--border-radius);
+}
+
+.contract__search {
+  padding: 20px var(--main-padding-horizontal);
+}
+
+.contract__body {
+  background-color: var(--card-bg-muted);
+  padding: 20px var(--main-padding-horizontal);
+  border-top: var(--border-width) solid var(--card-border);
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
+}

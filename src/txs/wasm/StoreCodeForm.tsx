@@ -2,19 +2,19 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import { MsgStoreCode } from "@terra-money/feather.js"
-import { useAddress, useChainID } from "data/wallet"
 import { Form, FormItem, Upload } from "components/form"
 import Tx from "../Tx"
+import { useInterchainAddresses } from "auth/hooks/useAddress"
 
 interface TxValues {
   code: string
 }
 
 // TODO: make this interchain
-const StoreCodeForm = () => {
+const StoreCodeForm = ({ chainID }: { chainID: string }) => {
   const { t } = useTranslation()
-  const address = useAddress()
-  const chainID = useChainID()
+  const addresses = useInterchainAddresses()
+  const address = addresses && addresses[chainID]
 
   /* form */
   const [file, setFile] = useState<File>()
