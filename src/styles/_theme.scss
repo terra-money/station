@@ -122,6 +122,12 @@
   );
   --button-default-text: hsl(0 0% 87%);
 
+  --dark-button-hover-only: hsl(
+    var(--button-default-bg-h),
+    var(--button-default-bg-s),
+    calc(var(--button-default-bg-l) - 2%)
+  );
+
   --menu-bg: hsl(240, 6%, 17%);
   --menu-border: hsl(240, 5%, 22%);
   --menu-text: hsl(0, 0%, 91%);
