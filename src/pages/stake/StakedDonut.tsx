@@ -40,7 +40,7 @@ const StakedDonut = () => {
   const defaultColors = ["#7893F5", "#7c1ae5", "#FF7940", "#FF9F40", "#acacac"]
   const COLORS = current?.donutColors || defaultColors
 
-  const RenderLegend = (props: any) => {
+  const RenderLegend = (props: { chainSelected: boolean; payload?: any }) => {
     const { payload, chainSelected } = props
 
     return (
@@ -83,7 +83,7 @@ const StakedDonut = () => {
     )
   }
 
-  const RenderTooltip = (props: any) => {
+  const RenderTooltip = (props: { chainSelected: boolean; payload?: any }) => {
     const { payload } = props
 
     return (
@@ -92,7 +92,11 @@ const StakedDonut = () => {
         <div className={styles.infoLine}>
           <p>Balance: </p>
           <p>
-            <Read amount={payload[0]?.payload.amount} fixed={2} decimals={0} />
+            <Read
+              amount={payload[0]?.payload.amount}
+              fixed={2}
+              token={payload[0]?.payload.denom}
+            />
           </p>
         </div>
         <div className={styles.infoLine}>
@@ -116,7 +120,7 @@ const StakedDonut = () => {
             <ChainFilter title={t("Staked funds")} all {...state}>
               {(chain) => (
                 <>
-                  {graphData[chain || "all"] ? (
+                  {graphData && graphData[chain || "all"] ? (
                     <section className={styles.graphContainer}>
                       <ResponsiveContainer>
                         <PieChart>
@@ -139,15 +143,13 @@ const StakedDonut = () => {
                             paddingAngle={0}
                             dataKey="value"
                           >
-                            {graphData[chain || "all"].map(
-                              (entry: any, index: any) => (
-                                <Cell
-                                  key={`cell-${index}`}
-                                  fill={COLORS[index % COLORS.length]}
-                                  stroke="none"
-                                />
-                              )
-                            )}
+                            {graphData[chain || "all"].map((_, index) => (
+                              <Cell
+                                key={`cell-${index}`}
+                                fill={COLORS[index % COLORS.length]}
+                                stroke="none"
+                              />
+                            ))}
                           </Pie>
                         </PieChart>
                       </ResponsiveContainer>
