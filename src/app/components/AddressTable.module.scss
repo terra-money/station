@@ -1,7 +1,7 @@
 @import "mixins";
 
 .table {
-  padding-top: 10px;
+  min-height: max-content;
 }
 
 .address {
