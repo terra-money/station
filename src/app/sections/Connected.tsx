@@ -19,7 +19,7 @@ import PopoverNone from "../components/PopoverNone"
 import WalletQR from "./WalletQR"
 import styles from "./Connected.module.scss"
 import { ModalButton } from "components/feedback"
-import AddressModal from "app/components/AddressModal"
+import InterchainAddressTable from "app/components/InterchainAddressTable"
 
 const Connected = () => {
   const { t } = useTranslation()
@@ -55,7 +55,7 @@ const Connected = () => {
                     </Tooltip>
                   )}
                 >
-                  <AddressModal />
+                  <InterchainAddressTable />
                 </ModalButton>
               </section>
               <Flex gap={4} start>

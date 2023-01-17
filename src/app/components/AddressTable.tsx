@@ -1,22 +1,21 @@
-import WithSearchInput from "pages/custom/WithSearchInput"
-import styles from "./AddressModal.module.scss"
-import { Page } from "components/layout"
-import { useInterchainAddresses } from "auth/hooks/useAddress"
-import { Table } from "components/layout"
-import { useTranslation } from "react-i18next"
 import { getMaxHeightStyle } from "utils/style"
 import { AccAddress } from "@terra-money/feather.js"
 import { FinderLink } from "components/general"
 import { getChainNamefromID } from "data/queries/chains"
-import { useNetwork } from "data/wallet"
+import { useAllNetworks } from "data/wallet"
 import { truncate } from "@terra.kitchen/utils"
 import { CopyIcon } from "components/general"
 import { TokenIcon } from "components/token"
+import { useAllInterchainAddresses } from "auth/hooks/useAddress"
+import { Table } from "components/layout"
+import styles from "./AddressTable.module.scss"
+import { useTranslation } from "react-i18next"
 
-const AddressModalTable = ({ keyword }: { keyword: string }) => {
-  const addresses = useInterchainAddresses() as { [key: string]: AccAddress }
-  const networks = useNetwork()
+const AddressTable = ({ keyword }: { keyword: string }) => {
+  const addresses = useAllInterchainAddresses() as { [key: string]: AccAddress }
+  const networks = useAllNetworks()
   const { t } = useTranslation()
+
   const addressData = Object.keys(addresses).map((key) => ({
     address: addresses?.[key],
     chainName: getChainNamefromID(key, networks) ?? key,
@@ -64,16 +63,4 @@ const AddressModalTable = ({ keyword }: { keyword: string }) => {
   )
 }
 
-const AddressModal = () => {
-  const { t } = useTranslation()
-
-  return (
-    <Page sub>
-      <WithSearchInput gap={10} placeholder={t("Search for a chain...")}>
-        {(keyword: string) => <AddressModalTable keyword={keyword} />}
-      </WithSearchInput>
-    </Page>
-  )
-}
-
-export default AddressModal
+export default AddressTable
