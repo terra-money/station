@@ -4,7 +4,7 @@ import { queryKey, RefetchOptions } from "../query"
 import { useInterchainLCDClient } from "./lcdClient"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { useCustomTokensCW20 } from "data/settings/CustomTokens"
-import { useNetwork } from "data/wallet"
+import { useNetwork, useNetworkName } from "data/wallet"
 
 export const useInitialTokenBalance = () => {
   const addresses = useInterchainAddresses()
@@ -52,21 +52,25 @@ export const [useBankBalance, BankBalanceProvider] =
 export const useInitialBankBalance = () => {
   const lcd = useInterchainLCDClient()
   const addresses = useInterchainAddresses()
+  const network = useNetworkName()
+
+  const defaultRes = {
+    denom: "uluna",
+    amount: "0",
+    chain: network === "classic" ? "columbus-5" : "phoenix-1",
+  }
 
   return useQuery(
     [queryKey.bank.balances, addresses],
     async () => {
-      if (!addresses)
-        return [
-          { denom: "uluna", amount: "0", chain: "phoenix-1" },
-        ] as CoinBalance[]
+      if (!addresses) return [defaultRes] as CoinBalance[]
       const chains = Object.keys(addresses)
 
       // TODO: Pagination
       // Required when the number of results exceed 100
       const balances = await Promise.all(
         chains.map((chain) => {
-          return ["phoenix-1", "pico-1"].includes(chain)
+          return ["phoenix-1", "pisco-1"].includes(chain)
             ? lcd.bank.spendableBalances(addresses[chain])
             : lcd.bank.balance(addresses[chain])
         })
@@ -84,7 +88,7 @@ export const useInitialBankBalance = () => {
       })
 
       if (!result.find(({ denom }) => denom === "uluna")) {
-        result.push({ denom: "uluna", amount: "0", chain: "phoenix-1" })
+        result.push(defaultRes)
       }
 
       return result
