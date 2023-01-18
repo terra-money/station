@@ -6,7 +6,6 @@ import { useNetworkName } from "data/wallet"
 import { isWallet, useAuth } from "auth"
 import Online from "./containers/Online"
 import NetworkLoading from "./NetworkLoading"
-import { sandbox } from "auth/scripts/env"
 
 const InitWallet = ({ children }: PropsWithChildren<{}>) => {
   useOnNetworkChange()
@@ -14,7 +13,7 @@ const InitWallet = ({ children }: PropsWithChildren<{}>) => {
   const queryClient = useQueryClient()
   const networkName = useNetworkName()
 
-  return status === WalletStatus.INITIALIZING && !sandbox ? (
+  return status === WalletStatus.INITIALIZING ? (
     <NetworkLoading title="Initializing your wallet..." />
   ) : (
     <QueryClientProvider client={queryClient} key={networkName}>
