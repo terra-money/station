@@ -98,6 +98,7 @@ const Validators = () => {
     if(getCacheQuery !== JSON.stringify(query)){
       localStorage.setItem('stakeQuery', JSON.stringify(query))
     }
+    // eslint-disable-next-line 
   }, [query])
 
   const getDefaultSortOrder = useCallback(()=>{
