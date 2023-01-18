@@ -1,7 +1,7 @@
 import { AccAddress } from "@terra-money/feather.js"
 import { FinderLink } from "components/general"
 import { getChainNamefromID } from "data/queries/chains"
-import { useNetwork } from "data/wallet"
+import { useNetwork, useAddress } from "data/wallet"
 import { truncate } from "@terra.kitchen/utils"
 import { CopyIcon } from "components/general"
 import { TokenIcon } from "components/token"
@@ -20,10 +20,11 @@ interface Props {
 const AddressTable = (props: Props) => {
   const { finderLink, className } = props
   const addresses = useInterchainAddresses() as { [key: string]: AccAddress }
+  const isConnected = useAddress()
   const networks = useNetwork()
   const { t } = useTranslation()
 
-  if (!addresses)
+  if (!isConnected)
     return (
       <p className={styles.connect}>
         {t("Connect a wallet to see your addresses")}
