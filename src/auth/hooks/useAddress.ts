@@ -3,7 +3,7 @@ import { useNetworks } from "app/InitNetworks"
 import { addressFromWords } from "utils/bech32"
 import useAuth from "./useAuth"
 import { useChainID } from "./useNetwork"
-import { useAllNetworks } from "data/wallet"
+import { useNetwork } from "data/wallet"
 
 /* auth | walle-provider */
 const useAddress = () => {
@@ -23,12 +23,14 @@ export const useAllInterchainAddresses = () => {
 }
 
 export const useInterchainAddresses = () => {
-  const interchainAddresses = useAllInterchainAddresses()
+  const connected = useConnectedWallet()
   const { filterEnabledNetworks } = useNetworks()
-  const networks = useAllNetworks()
   const { wallet } = useAuth()
+  const networks = useNetwork()
 
-  if (interchainAddresses) return filterEnabledNetworks(interchainAddresses)
+  if (connected?.addresses) {
+    return filterEnabledNetworks(connected.addresses)
+  }
 
   const words = wallet?.words
   if (!words) return
