@@ -23,6 +23,11 @@ interface InterchainNetwork {
       toTerra: string
       fromTerra: string
     }
+    icsFromTerra?: {
+      contract: string
+      toTerra: string
+      fromTerra: string
+    }
   }
   isClassic?: boolean
 }

@@ -51,6 +51,7 @@ interface Props<TxValues> {
   amount?: Amount
   coins?: CoinInput[]
   balance?: Amount
+  gasAdjustment?: number
 
   /* tx simulation */
   estimationTxValues?: TxValues
@@ -79,7 +80,7 @@ interface RenderProps<TxValues> {
 
 function Tx<TxValues>(props: Props<TxValues>) {
   const { token, decimals, amount, balance, chain } = props
-  const { estimationTxValues, createTx } = props
+  const { estimationTxValues, createTx, gasAdjustment: txGasAdjustment } = props
   const { children, onChangeMax } = props
   const { onPost, redirectAfterTx, queryKeys } = props
 
@@ -121,7 +122,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const key = {
     address: addresses?.[chain],
     network: networks,
-    gasAdjustment,
+    gasAdjustment: gasAdjustment * (txGasAdjustment ?? 1),
     msgs: simulationTx?.msgs.map((msg) => msg.toData(isClassic)),
   }
   const { data: estimatedGas, ...estimatedGasState } = useQuery(
