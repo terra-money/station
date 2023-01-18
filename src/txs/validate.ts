@@ -55,7 +55,8 @@ const ibc = (
   getIBCChannel: (chains: {
     from: string
     to: string
-    ics?: boolean
+    tokenAddress: AccAddress
+    icsChannel?: string
   }) => string | undefined
 ) => {
   return {
@@ -69,6 +70,7 @@ const ibc = (
         const channel = getIBCChannel({
           from: sourceChain,
           to: destinationChain,
+          tokenAddress: token,
         })
         if (!channel)
           return `Cannot find IBC channel from ${sourceChain} to ${destinationChain}`
@@ -76,7 +78,8 @@ const ibc = (
         const channel = getIBCChannel({
           from: sourceChain,
           to: destinationChain,
-          ics: true,
+          tokenAddress: token,
+          // TODO: pass the ICS chennel if needed (should be as it is for validation)
         })
         if (!channel)
           return `IBC transfers are not yet available for this CW20 token`
