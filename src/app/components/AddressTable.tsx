@@ -5,7 +5,7 @@ import { useAllNetworks } from "data/wallet"
 import { truncate } from "@terra.kitchen/utils"
 import { CopyIcon } from "components/general"
 import { TokenIcon } from "components/token"
-import { useAllInterchainAddresses } from "auth/hooks/useAddress"
+import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { Table } from "components/layout"
 import styles from "./AddressTable.module.scss"
 import { useTranslation } from "react-i18next"
@@ -19,7 +19,7 @@ interface Props {
 
 const AddressTable = (props: Props) => {
   const { finderLink, className } = props
-  const addresses = useAllInterchainAddresses() as { [key: string]: AccAddress }
+  const addresses = useInterchainAddresses() as { [key: string]: AccAddress }
   const networks = useAllNetworks()
   const { t } = useTranslation()
 
