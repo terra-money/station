@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import VerifiedIcon from "@mui/icons-material/Verified"
@@ -21,6 +21,7 @@ import ProfileIcon from "./components/ProfileIcon"
 import Uptime from "./components/Uptime"
 import { ValidatorJailed } from "./components/ValidatorTag"
 import styles from "./Validators.module.scss"
+import { SortOrder } from "components/layout/Table"
 
 const Validators = () => {
   const { t } = useTranslation()
@@ -46,7 +47,10 @@ const Validators = () => {
     const calcRate = getCalcVotingPowerRate(TerraValidators)
 
     return validators
-      .filter(({ status }) => !getIsUnbonded(status))
+      .filter((val) => {
+        const max20 = val.commission.commission_rates.max_rate.comparedTo(0.2);
+        return !getIsUnbonded(val.status) && max20 === 0
+      })
       .map((validator) => {
         const { operator_address } = validator
 
@@ -76,10 +80,33 @@ const Validators = () => {
     return t("{{count}} active validators", { count })
   }
 
-  const [byRank, setByRank] = useState(true)
+  const getCacheQuery = localStorage.getItem('stakeQuery');
+  const [byRank, setByRank] = useState(!getCacheQuery)
   const history = useNavigate()
+
+  const defaultQuery = {
+    key: 'rewords',
+    next: 'desc'
+  };
+
+  const [query, setquery] = useState<{
+    key: string | undefined,
+    next: SortOrder | undefined
+  }>(getCacheQuery ? JSON.parse(getCacheQuery) : defaultQuery)
+
+  useEffect(() => {
+    if(getCacheQuery !== JSON.stringify(query)){
+      localStorage.setItem('stakeQuery', JSON.stringify(query))
+    }
+  }, [query])
+
+  const getDefaultSortOrder = useCallback(()=>{
+    return query.next
+  },[query.next])
+  
   const render = (keyword: string) => {
-    if (!activeValidators) return null
+    if (!activeValidators) return null;
+
     return (
       <>
         <section>
@@ -116,8 +143,11 @@ const Validators = () => {
 
         <Table
           key={Number(byRank)}
-          onSort={() => setByRank(false)}
-          initialSorterKey={byRank ? undefined : "rewards"}
+          onSort={(params: {key: string | undefined, next: SortOrder | undefined}) => {
+            setquery({ ...query, ...params })
+            setByRank(false)
+          }}
+          initialSorterKey={byRank ? undefined : query.key}
           dataSource={activeValidators}
           filter={({ description: { moniker }, operator_address }) => {
             if (!keyword) return true
@@ -189,7 +219,7 @@ const Validators = () => {
               title: "APR",
               tooltip: t("Estimated yearly rewards in APR"),
               dataIndex: "rewards_30d",
-              defaultSortOrder: "desc",
+              defaultSortOrder: getDefaultSortOrder(),
               key: "rewards",
               sorter: ({ rewards_30d: a = "0" }, { rewards_30d: b = "0" }) =>
                 Number(a) - Number(b),
@@ -199,7 +229,8 @@ const Validators = () => {
             {
               title: "Bonded MIS",
               dataIndex: "bondedMIS",
-              defaultSortOrder: "desc",
+              defaultSortOrder: getDefaultSortOrder(),
+              key: "bondedMIS",
               sorter: ({ bondedMIS: a = 0 }, { bondedMIS: b = 0 }) => a - b,
               render: (value = 0) => `${value}MIS`,
               align: "right",
@@ -207,7 +238,8 @@ const Validators = () => {
             {
               title: t("Commission"),
               dataIndex: ["commission", "commission_rates"],
-              defaultSortOrder: "asc",
+              defaultSortOrder: getDefaultSortOrder(),
+              key: "commission",
               sorter: (
                 { commission: { commission_rates: a } },
                 { commission: { commission_rates: b } }
@@ -219,11 +251,12 @@ const Validators = () => {
             {
               title: t("Voting power"),
               dataIndex: "voting_power_rate",
-              defaultSortOrder: "desc",
+              defaultSortOrder: getDefaultSortOrder(),
               sorter: (
                 { voting_power_rate: a = 0 },
                 { voting_power_rate: b = 0 }
               ) => a - b,
+              key: "votingPowerRate",
               render: (value = 0) => readPercent(value),
               align: "right",
             },
@@ -231,7 +264,7 @@ const Validators = () => {
               title: t("Uptime"),
               tooltip: t("90 days uptime EMA"),
               dataIndex: "time_weighted_uptime",
-              defaultSortOrder: "desc",
+              defaultSortOrder: getDefaultSortOrder(),
               key: "uptime",
               sorter: (
                 { time_weighted_uptime: a = 0 },

@@ -41,6 +41,10 @@ const App = () => {
   const goBack = () => {
     navigator(-1)
   }
+  if(pathname!=='/stake' && pathname.indexOf('/validator') === -1){
+    console.log(pathname.indexOf('/validator'))
+    localStorage.removeItem('stakeQuery')
+  }
   return (
     <Layout>
       {!isShowHeader ? (
