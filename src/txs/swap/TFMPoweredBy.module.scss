@@ -5,5 +5,14 @@
 }
 
 .link {
-  color: inherit;
+  color: var(--menu-text);
+  font-size: var(--font-size-small);
+  line-height: 1;
+  opacity: 0.75;
+  padding: var(--gutter) 0;
+  transition: opacity var(--transition);
+
+  &:hover {
+    opacity: 1;
+  }
 }
