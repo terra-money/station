@@ -7,6 +7,7 @@ import NetworkLoading from "./NetworkLoading"
 export const [useNetworks, NetworksProvider] = createContext<{
   networks: InterchainNetworks
   filterEnabledNetworks: <T>(network: Record<string, T>) => Record<string, T>
+  filterDisabledNetworks: <T>(network: Record<string, T>) => Record<string, T>
 }>("useNetworks")
 
 const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
@@ -92,6 +93,12 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
             Object.entries(networks).filter(
               ([chainID]) =>
                 chainID === "localterra" || enabledNetworks.includes(chainID)
+            )
+          ),
+        filterDisabledNetworks: (networks) =>
+          Object.fromEntries(
+            Object.entries(networks).filter(
+              ([chainID]) => !enabledNetworks.includes(chainID)
             )
           ),
       }}

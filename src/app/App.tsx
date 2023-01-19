@@ -30,6 +30,7 @@ import InitBankBalance from "./InitBankBalance"
 import Wallet from "pages/wallet/Wallet"
 import WelcomeModal from "./sections/WelcomeModal"
 import NavButton from "./sections/NavButton"
+import NetworkStatus from "components/display/NetworkStatus"
 
 const App = () => {
   const { element: routes } = useNav()
@@ -56,6 +57,7 @@ const App = () => {
             <Refresh />
             <Preferences />
             <SelectTheme />
+            <NetworkStatus />
           </section>
           <ValidatorButton />
           <ConnectWallet />
