@@ -68,11 +68,11 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
             ) : (
               <>
                 <section className={styles.list}>
-                  {filtered.map(({ prop, chain }) => (
+                  {filtered.map(({ prop, chain }, i) => (
                     <Card
                       to={`/proposal/${chain}/${prop.id}`}
                       className={styles.link}
-                      key={prop.id}
+                      key={i}
                     >
                       <ProposalItem
                         proposal={prop}

@@ -50,7 +50,7 @@ const AssetChain = (props: Props) => {
                 )}
               </>
             )}
-          </WithFetching>
+          </WithFetching>{" "}
           {symbol}
         </h2>
       </section>

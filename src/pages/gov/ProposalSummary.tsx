@@ -5,7 +5,9 @@ import { Read } from "components/token"
 import DataList from "./components/DataList"
 
 const ProposalSummary = ({ proposal }: { proposal: Proposal }) => {
+  if (!proposal.content) return null
   const contentData = proposal.content.toData()
+
   const details = Object.entries(contentData)
     .filter(([key]) => !["@type", "title", "description"].includes(key))
     .map(([key, content]) => ({

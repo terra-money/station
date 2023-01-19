@@ -14,12 +14,12 @@ const ProposalHeader = ({
   chain: string
 }) => {
   const { id, content, status, submit_time } = proposal
-  const { title } = content
-
   const networks = useNetwork()
   const { t } = useTranslation()
   const type = useParseProposalType(content)
   const { color, label } = useProposalStatusItem(status)
+  if (!content) return null
+  const { title } = content
 
   return (
     <header className={styles.header}>

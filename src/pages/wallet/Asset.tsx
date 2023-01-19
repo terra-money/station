@@ -86,7 +86,7 @@ const Asset = (props: Props) => {
                   )}
                 </>
               )}
-            </WithFetching>
+            </WithFetching>{" "}
             {symbol}
           </h2>
         </div>
