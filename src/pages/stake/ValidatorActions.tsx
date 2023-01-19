@@ -121,7 +121,7 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
 
     return (
       <ExtraActions align="stretch">
-        <LinkButton to="/rewards" disabled={disabled} block>
+        <LinkButton to={`/rewards?destination=${destination}`} disabled={disabled} block>
           {t("Withdraw rewards")}
         </LinkButton>
       </ExtraActions>
