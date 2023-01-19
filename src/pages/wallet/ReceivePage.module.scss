@@ -7,6 +7,7 @@
   grid-area: list;
   max-width: var(--wallet-width);
   box-sizing: border-box;
+  overflow-y: auto;
 
   h1 {
     font-size: 18pt;
