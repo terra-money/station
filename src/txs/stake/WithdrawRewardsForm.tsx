@@ -216,7 +216,7 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
           <Grid gap={12}>
             <section className={styles.target}>
               <InlineFlex gap={4}>
-                {reinvest ? "reinvest all rewards" : "withdraw all rewards"}
+                {reinvest ? "reinvest all rewards" : destination ? "withdraw rewards" : "withdraw all rewards"}
               </InlineFlex>
             </section>
 
