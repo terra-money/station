@@ -49,7 +49,7 @@ export const useExchangeRates = () => {
         Record<string, Record<string, number>>
       >(`https://price.api.tfm.com/tokens/?limit=1500`)
 
-      return Object.keys(TFM_IDs)
+      const filteredPrices = Object.keys(TFM_IDs)
         .filter((denom) =>
           networkName === "classic"
             ? denom.endsWith(":classic")
@@ -64,6 +64,8 @@ export const useExchangeRates = () => {
             },
           }
         }, {})
+
+      return { exchangeRates: filteredPrices, allPrices: prices }
     },
     { ...RefetchOptions.DEFAULT }
   )
@@ -71,12 +73,25 @@ export const useExchangeRates = () => {
 
 /* helpers */
 type Prices = Record<Denom, { price: Price; change: number }>
+
 export const useMemoizedPrices = () => {
-  const { data: exchangeRates, ...state } = useExchangeRates()
+  const { data, ...state } = useExchangeRates()
+  const exchangeRates = data?.exchangeRates
 
   const prices = useMemo((): Prices | undefined => {
     return exchangeRates
   }, [exchangeRates])
+
+  return { data: prices, ...state }
+}
+
+export const useAllMemoizedPrices = () => {
+  const { data, ...state } = useExchangeRates()
+  const allPrices = data?.allPrices
+
+  const prices = useMemo(() => {
+    return allPrices
+  }, [allPrices])
 
   return { data: prices, ...state }
 }
