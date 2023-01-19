@@ -86,7 +86,7 @@ const Validators = () => {
 
   const defaultQuery = {
     key: 'rewords',
-    next: 'desc'
+    next: ''
   };
 
   const [query, setquery] = useState<{
@@ -166,7 +166,8 @@ const Validators = () => {
             {
               title: t("Moniker"),
               dataIndex: ["description", "moniker"],
-              defaultSortOrder: "asc",
+              defaultSortOrder: getDefaultSortOrder() || 'asc',
+              key: "moniker",
               sorter: ({ description: a }, { description: b }) =>
                 a.moniker.localeCompare(b.moniker),
               render: (moniker, validator) => {
@@ -220,7 +221,7 @@ const Validators = () => {
               title: "APR",
               tooltip: t("Estimated yearly rewards in APR"),
               dataIndex: "rewards_30d",
-              defaultSortOrder: getDefaultSortOrder(),
+              defaultSortOrder: getDefaultSortOrder() || 'desc',
               key: "rewards",
               sorter: ({ rewards_30d: a = "0" }, { rewards_30d: b = "0" }) =>
                 Number(a) - Number(b),
@@ -230,7 +231,7 @@ const Validators = () => {
             {
               title: "Bonded MIS",
               dataIndex: "bondedMIS",
-              defaultSortOrder: getDefaultSortOrder(),
+              defaultSortOrder: getDefaultSortOrder() || 'desc',
               key: "bondedMIS",
               sorter: ({ bondedMIS: a = 0 }, { bondedMIS: b = 0 }) => a - b,
               render: (value = 0) => `${value}MIS`,
@@ -239,7 +240,7 @@ const Validators = () => {
             {
               title: t("Commission"),
               dataIndex: ["commission", "commission_rates"],
-              defaultSortOrder: getDefaultSortOrder(),
+              defaultSortOrder: getDefaultSortOrder() || 'desc',
               key: "commission",
               sorter: (
                 { commission: { commission_rates: a } },
@@ -252,7 +253,7 @@ const Validators = () => {
             {
               title: t("Voting power"),
               dataIndex: "voting_power_rate",
-              defaultSortOrder: getDefaultSortOrder(),
+              defaultSortOrder: getDefaultSortOrder() || 'desc',
               sorter: (
                 { voting_power_rate: a = 0 },
                 { voting_power_rate: b = 0 }
@@ -265,7 +266,7 @@ const Validators = () => {
               title: t("Uptime"),
               tooltip: t("90 days uptime EMA"),
               dataIndex: "time_weighted_uptime",
-              defaultSortOrder: getDefaultSortOrder(),
+              defaultSortOrder: getDefaultSortOrder() || 'desc',
               key: "uptime",
               sorter: (
                 { time_weighted_uptime: a = 0 },
