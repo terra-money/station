@@ -27,6 +27,7 @@ import { Card, Flex, Grid, InlineFlex } from "components/layout"
 import { Read, TokenCard, TokenCardGrid } from "components/token"
 import Tx, { getInitialGasDenom } from "../Tx"
 import styles from "./WithdrawRewardsForm.module.scss"
+import { useLocation } from "react-router-dom"
 
 interface Props {
   activeDenoms: Denom[]
@@ -45,7 +46,15 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
   const calcValue = useMemoizedCalcValue()
   const findMoniker = getFindMoniker(validators)
   const { byValidator } = calcRewardsValues(rewards, currency, calcValue)
+  const location = useLocation();
 
+  const search = new URLSearchParams(location.search)
+  const destination = search.get('destination')
+
+  const byValidatorFilter = ()=>{
+    if(!destination) return byValidator;
+    return byValidator.filter(val=>val.address === destination);
+  }
   /* tx context */
   const initialGasDenom = getInitialGasDenom(bankBalance)
 
@@ -59,10 +68,10 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
 
   /* select validators */
   const init = (value = false) =>
-    byValidator.reduce((acc, { address }) => ({ ...acc, [address]: value }), {})
+    byValidatorFilter().reduce((acc, { address }) => ({ ...acc, [address]: value }), {})
 
   const [state, setState] = useState<Record<ValAddress, boolean>>(init(true))
-  const selectable = byValidator.length > 1
+  const selectable = byValidatorFilter().length > 1
   const selected = useMemo(
     () => Object.keys(state).filter((address) => state[address]),
     [state]
@@ -74,7 +83,7 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
   /* calc */
   const selectedTotal = selected.reduce<Record<Denom, Amount>>(
     (prev, address) => {
-      const item = byValidator.find((item) => item.address === address)
+      const item = byValidatorFilter().find((item) => item.address === address)
 
       if (!item) throw new Error()
 
@@ -152,7 +161,7 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
 
     if (reinvest) {
       const delegateMsgs = selected.map((operatorAddress) => {
-        const item = byValidator.find(
+        const item = byValidatorFilter().find(
           (item) => item.address === operatorAddress
         )
         if (!item) throw new Error()
@@ -207,7 +216,7 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
           <Grid gap={12}>
             <section className={styles.target}>
               <InlineFlex gap={4}>
-                {reinvest ? "reinvest all rewards" : "withdraw all rewards"}
+                {reinvest ? "reinvest all rewards" : destination ? "withdraw rewards" : "withdraw all rewards"}
               </InlineFlex>
             </section>
 
@@ -252,7 +261,7 @@ const WithdrawRewardsForm = ({ rewards, validators, ...props }: Props) => {
                 </Flex>
 
                 <section className={styles.validators}>
-                  {byValidator.map(({ address, sum }) => {
+                  {byValidatorFilter().map(({ address, sum }) => {
                     const checked = state[address]
 
                     return (

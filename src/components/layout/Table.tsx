@@ -10,7 +10,7 @@ import styles from "./Table.module.scss"
 
 const cx = classNames.bind(styles)
 
-type SortOrder = "desc" | "asc"
+export type SortOrder = "desc" | "asc"
 type Sorter<T> = (a: T, b: T) => number
 
 interface Column<T> {
@@ -32,7 +32,7 @@ interface Props<T> {
   sorter?: (a: T, b: T) => number
   rowKey?: (record: T) => string
   initialSorterKey?: string
-  onSort?: () => void
+  onSort?: (params: {key: string | undefined, next: SortOrder | undefined}) => void
   rowClick?: (record: T) => void
 
   size?: "default" | "small"
@@ -110,7 +110,7 @@ function Table<T>({
   }, [columns, sortOrder, sorterIndex])
 
   const sort = (index: number) => {
-    const { defaultSortOrder } = columns[index]
+    const { defaultSortOrder, key } = columns[index]
     const opposite = { asc: "desc" as const, desc: "asc" as const }
     const next =
       sorterIndex === index && sortOrder
@@ -119,7 +119,10 @@ function Table<T>({
 
     setSorterIndex(index)
     setSortOrder(next)
-    props.onSort?.()
+
+    props.onSort?.({
+      key,next
+    })
   }
 
   return (

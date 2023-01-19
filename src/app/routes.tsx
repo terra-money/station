@@ -24,16 +24,17 @@ import Settings from "pages/Settings"
 /* 404 */
 import NotFound from "pages/NotFound"
 import FAQ from "pages/faq"
+import { withCache } from "./withCache"
 
 const ICON_SIZE = { width: 20, height: 20 }
 
 export const useNav = () => {
-  const { t } = useTranslation()
-
+  const { t } = useTranslation();
+  const SeedlingListPage = withCache(Stake);
   const menu = [
     {
       path: "/stake",
-      element: <Stake />,
+      element: <SeedlingListPage />,
       title: t("Stake"),
       icon: <StakeIcon {...ICON_SIZE} />,
     },
