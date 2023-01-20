@@ -131,13 +131,17 @@ function Tx<TxValues>(props: Props<TxValues>) {
       if (!key.address || isWalletEmpty) return 0
       if (!(wallet || connectedWallet?.availablePost)) return 0
       if (!simulationTx || !simulationTx.msgs.length) return 0
+      try {
+        const unsignedTx = await lcd.tx.create([{ address: key.address }], {
+          ...simulationTx,
+          feeDenoms: [gasDenom],
+        })
 
-      const unsignedTx = await lcd.tx.create([{ address: key.address }], {
-        ...simulationTx,
-        feeDenoms: [gasDenom],
-      })
-
-      return unsignedTx.auth_info.fee.gas_limit
+        return unsignedTx.auth_info.fee.gas_limit
+      } catch (error) {
+        console.error(error)
+        return 200_000
+      }
     },
     {
       ...RefetchOptions.INFINITY,
