@@ -1,0 +1,53 @@
+@import "mixins";
+
+.address__button {
+  @include flex(space-between);
+  background: var(--card-bg);
+  border: var(--border-width) solid var(--card-border);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  padding: 12px;
+  font-weight: 400;
+
+  &:hover {
+    background: var(--card-bg-muted);
+  }
+
+  span {
+    @include flex(flex-start);
+    gap: 10px;
+    font-weight: 500;
+    img {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+.address__table {
+  max-height: min(80vh, 300px);
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    background-color: var(--card-bg);
+    width: 12px;
+    display: block;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: var(--card-bg);
+  }
+  &::-webkit-scrollbar-thumb {
+    border-left: 4px solid var(--card-bg);
+
+    background-color: var(--card-bg-muted);
+    border-radius: 4px;
+
+    &:hover {
+      background-color: var(--bg);
+      cursor: pointer;
+    }
+  }
+  &::-webkit-scrollbar-button {
+    display: none;
+  }
+}
