@@ -9,11 +9,11 @@ import { Checkbox, FormHelp, FormWarning } from "components/form"
 import { Grid } from "components/layout"
 
 const ProposalDescription = ({ proposal }: { proposal: ProposalResult }) => {
-  if (!proposal.content) return null
-  const { description } = proposal.content
-
   const { t } = useTranslation()
   const [showOriginal, setShowOriginal] = useState(false)
+
+  if (!proposal.content) return null
+  const { description } = proposal.content
 
   const parts = description.split(URL_REGEX)
 
