@@ -41,19 +41,15 @@ export const useExchangeRates = () => {
   return useQuery(
     [queryKey.coingecko.exchangeRates, currency],
     async () => {
-      const { data: coingeckoIDs } = await axios.get<Record<string, string>>(
-        "station/coingecko.json",
+      const { data: TFM_IDs } = await axios.get<Record<string, string>>(
+        "station/tfm.json",
         { baseURL: ASSETS }
       )
       const { data: prices } = await axios.get<
         Record<string, Record<string, number>>
-      >(
-        `https://api.coingecko.com/api/v3/simple/price?ids=${Object.values(
-          coingeckoIDs
-        ).join(",")}&vs_currencies=${currency.id}&include_24hr_change=true`
-      )
+      >(`https://price.api.tfm.com/tokens/?limit=1500`)
 
-      return Object.keys(coingeckoIDs)
+      const filteredPrices = Object.keys(TFM_IDs)
         .filter((denom) =>
           networkName === "classic"
             ? denom.endsWith(":classic")
@@ -63,11 +59,13 @@ export const useExchangeRates = () => {
           return {
             ...acc,
             [denom.replace(":classic", "")]: {
-              price: prices[coingeckoIDs[denom]][currency.id],
-              change: prices[coingeckoIDs[denom]][`${currency.id}_24h_change`],
+              price: prices[TFM_IDs[denom]][currency.id],
+              change: prices[TFM_IDs[denom]].change24h,
             },
           }
         }, {})
+
+      return { exchangeRates: filteredPrices, allPrices: prices }
     },
     { ...RefetchOptions.DEFAULT }
   )
@@ -75,12 +73,25 @@ export const useExchangeRates = () => {
 
 /* helpers */
 type Prices = Record<Denom, { price: Price; change: number }>
+
 export const useMemoizedPrices = () => {
-  const { data: exchangeRates, ...state } = useExchangeRates()
+  const { data, ...state } = useExchangeRates()
+  const exchangeRates = data?.exchangeRates
 
   const prices = useMemo((): Prices | undefined => {
     return exchangeRates
   }, [exchangeRates])
+
+  return { data: prices, ...state }
+}
+
+export const useAllMemoizedPrices = () => {
+  const { data, ...state } = useExchangeRates()
+  const allPrices = data?.allPrices
+
+  const prices = useMemo(() => {
+    return allPrices
+  }, [allPrices])
 
   return { data: prices, ...state }
 }

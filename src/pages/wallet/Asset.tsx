@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next"
 import { WithFetching } from "components/feedback"
 import { Read, TokenIcon } from "components/token"
-import { useMemoizedPrices } from "data/queries/coingecko"
+import { useMemoizedPrices, useAllMemoizedPrices } from "data/queries/coingecko"
 import { combineState } from "data/query"
 import { useCurrency } from "data/settings/Currency"
 
@@ -28,9 +28,17 @@ const Asset = (props: Props) => {
   const chains = props.chains.filter((chain) => !!network[chain])
 
   const { data: prices, ...pricesState } = useMemoizedPrices()
+  const { data: pricesFromAll, ...pricesFromAllState } = useAllMemoizedPrices()
   const { route, setRoute } = useWalletRoute()
 
-  const change = props.change || prices?.[token]?.change || 0
+  const coinPrice =
+    props.price || prices?.[token]?.price || pricesFromAll?.[denom]?.usd || 0
+  const change =
+    props.change ||
+    prices?.[token]?.change ||
+    pricesFromAll?.[denom]?.change24h ||
+    0
+  const walletPrice = coinPrice * parseInt(balance ?? "0")
 
   return (
     <article
@@ -59,13 +67,13 @@ const Asset = (props: Props) => {
             {change >= 0 ? <PriceUp /> : <PriceDown />} {change.toFixed(2)}%
           </h2>
           <h1 className={styles.price}>
+            {walletPrice / 10 ** decimals < 0.01 &&
+              parseInt(balance ?? "0") > 0 &&
+              "<"}
             {currency.unit}{" "}
             <Read
               {...props}
-              amount={
-                (props.price || prices?.[token]?.price || 0) *
-                parseInt(balance ?? "0")
-              }
+              amount={walletPrice}
               decimals={decimals}
               fixed={2}
               denom=""
@@ -73,7 +81,10 @@ const Asset = (props: Props) => {
             />
           </h1>
           <h2 className={styles.amount}>
-            <WithFetching {...combineState(state, pricesState)} height={1}>
+            <WithFetching
+              {...combineState(state, pricesState, pricesFromAllState)}
+              height={1}
+            >
               {(progress, wrong) => (
                 <>
                   {progress}
