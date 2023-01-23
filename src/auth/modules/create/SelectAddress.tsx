@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next"
 import { useQuery } from "react-query"
 import { useForm } from "react-hook-form"
-import { readAmount, readDenom } from "@terra.kitchen/utils"
+import { readAmount } from "@terra.kitchen/utils"
 import { MnemonicKey, AccAddress } from "@terra-money/feather.js"
 import { Coins, Delegation, UnbondingDelegation } from "@terra-money/feather.js"
 import { sortCoins } from "utils/coin"
@@ -14,11 +14,13 @@ import { Tag } from "components/display"
 import AuthButton from "../../components/AuthButton"
 import { useCreateWallet } from "./CreateWalletWizard"
 import styles from "./SelectAddress.module.scss"
+import { useNativeDenoms } from "data/token"
 
 const SelectAddress = () => {
   const { t } = useTranslation()
   const currency = useCurrency()
   const lcd = useInterchainLCDClient()
+  const readNativeDenom = useNativeDenoms()
   const { values, createWallet } = useCreateWallet()
   const { mnemonic, index } = values
 
@@ -116,7 +118,10 @@ const SelectAddress = () => {
           {coins
             .slice(0, 3)
             .map((coin) =>
-              [readAmount(coin.amount), readDenom(coin.denom)].join(" ")
+              [
+                readAmount(coin.amount),
+                readNativeDenom(coin.denom).symbol,
+              ].join(" ")
             )
             .join(", ")}
 

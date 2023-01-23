@@ -11,7 +11,7 @@ import {
 import { ParameterChangeProposal, ParamChange } from "@terra-money/feather.js"
 import { ExecuteContractProposal } from "@terra-money/feather.js/dist/core/wasm/proposals"
 import { isDenomTerraNative } from "@terra.kitchen/utils"
-import { readAmount, readDenom, toAmount } from "@terra.kitchen/utils"
+import { readAmount, toAmount } from "@terra.kitchen/utils"
 import { SAMPLE_ADDRESS } from "config/constants"
 import { getAmount } from "utils/coin"
 import { has } from "utils/num"
@@ -244,7 +244,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
                 <Select {...register("spend.denom")} before>
                   {[networks[chain].baseAsset].map((denom) => (
                     <option value={denom} key={denom}>
-                      {readDenom(denom)}
+                      {readNetiveDenom(denom).symbol}
                     </option>
                   ))}
                 </Select>
@@ -376,7 +376,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
                         .filter(({ denom }) => isDenomTerraNative(denom))
                         .map(({ denom }) => (
                           <option value={denom} key={denom}>
-                            {readDenom(denom)}
+                            {readNetiveDenom(denom).symbol}
                           </option>
                         ))}
                     </Select>
