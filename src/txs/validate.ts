@@ -57,7 +57,8 @@ const ibc = (
     to: string
     tokenAddress: AccAddress
     icsChannel?: string
-  }) => string | undefined
+  }) => string | undefined,
+  isAxelar?: boolean
 ) => {
   return {
     ibc: (recipient = "") => {
@@ -65,6 +66,9 @@ const ibc = (
       if (!destinationChain) return "Invalid recipient"
 
       if (sourceChain === destinationChain) return true
+
+      if (isAxelar)
+        return "Axelar tokens cannot be transferred with Station yet."
 
       if (!AccAddress.validate(token)) {
         const channel = getIBCChannel({

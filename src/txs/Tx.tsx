@@ -10,7 +10,7 @@ import { isNil } from "ramda"
 
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline"
-import { isDenom, readDenom } from "@terra.kitchen/utils"
+import { isDenom } from "@terra.kitchen/utils"
 import { Coin, Coins, CreateTxOptions } from "@terra-money/feather.js"
 import { Fee } from "@terra-money/feather.js"
 import { ConnectType, UserDenied } from "@terra-money/wallet-types"
@@ -43,6 +43,7 @@ import styles from "./Tx.module.scss"
 import { useInterchainLCDClient } from "data/queries/lcdClient"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { getShouldTax, useTaxCap, useTaxRate } from "data/queries/treasury"
+import { useNativeDenoms } from "data/token"
 
 interface Props<TxValues> {
   /* Only when the token is paid out of the balance held */
@@ -98,6 +99,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const isWalletEmpty = useIsWalletEmpty()
   const setLatestTx = useSetRecoilState(latestTxState)
   const isBroadcasting = useRecoilValue(isBroadcastingState)
+  const readNativeDenom = useNativeDenoms()
 
   /* taxes */
   const isClassic = networks[chain]?.isClassic
@@ -301,6 +303,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const availableGasDenoms = useMemo(() => {
     return Object.keys(networks[chain]?.gasPrices || {})
   }, [chain, networks])
+  console.log(networks[chain])
 
   useEffect(() => {
     if (availableGasDenoms.includes(gasDenom)) return
@@ -353,7 +356,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
               >
                 {availableGasDenoms.map((denom) => (
                   <option value={denom} key={denom}>
-                    {readDenom(denom)}
+                    {readNativeDenom(denom).symbol}
                   </option>
                 ))}
               </Select>

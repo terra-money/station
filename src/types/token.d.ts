@@ -29,11 +29,12 @@ interface AssetInfoCW20Token {
 
 /* token item */
 interface TokenItem {
-  token: TerraAddress
+  token: string
   decimals: number
   symbol: string
   name?: string
   icon?: string
+  isAxelar?: boolean
 }
 
 interface TokenItemWithBalance extends TokenItem {

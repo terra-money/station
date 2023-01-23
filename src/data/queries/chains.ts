@@ -11,6 +11,7 @@ type Whitelist = Record<
     icon: string
     chains: string[]
     decimals: number
+    isAxelar?: boolean
   }
 >
 
