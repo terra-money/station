@@ -5,6 +5,7 @@ import { Wrong } from "components/feedback"
 import TFMSwapContext from "./TFMSwapContext"
 import TFMSwapForm from "./TFMSwapForm"
 import TFMPoweredBy from "./TFMPoweredBy"
+import { ExternalLink } from "components/general"
 
 // The sequence below is required before rendering the Swap form:
 // 1. `SwapContext` - Complete the network request related to swap.
@@ -18,7 +19,19 @@ const SwapTx = () => {
     return (
       <Page title={t("Swap")} small>
         <Card>
-          <Wrong>{t("Not supported")}</Wrong>
+          <Wrong>
+            {networkName === "classic" ? (
+              <p>
+                Swaps are not supported for classic, please use the{" "}
+                <ExternalLink href="https://tfm.com/terraclassic/trade/swap">
+                  TFM webapp
+                </ExternalLink>{" "}
+                instead.
+              </p>
+            ) : (
+              t("Not supported")
+            )}
+          </Wrong>
         </Card>
       </Page>
     )
