@@ -25,6 +25,7 @@ import { Button } from "components/general"
 
 import styles from "./AccessWithLedger.module.scss"
 import { FlexColumn } from "components/layout"
+import { TooltipIcon } from "components/display"
 
 interface Values {
   index: number
@@ -137,6 +138,11 @@ const AccessWithLedgerForm = () => {
             <FormItem /* do not translate this */
               label="Index"
               error={errors.index?.message}
+              extra={
+                <TooltipIcon
+                  content={t("BIP 44 index number. For advanced users only")}
+                />
+              }
             >
               <Input
                 {...register("index", {
