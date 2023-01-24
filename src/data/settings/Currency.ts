@@ -4,7 +4,7 @@ import { getLocalSetting, setLocalSetting } from "utils/localStorage"
 
 interface Currency {
   id: string
-  unit: string
+  symbol: string
   name: string
 }
 

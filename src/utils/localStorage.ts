@@ -8,7 +8,7 @@ import { atom, useRecoilState } from "recoil"
 
 export enum SettingKey {
   Theme = "Theme",
-  Currency = "Currency",
+  Currency = "FiatCurrency",
   CustomNetworks = "CustomNetworks",
   GasAdjustment = "GasAdjustment", // Tx
   ClassicGasAdjustment = "ClassicGasAdjustment",
@@ -30,7 +30,11 @@ const DefaultCustomTokens = { mainnet: DefaultCustomTokensItem }
 
 export const DefaultSettings = {
   [SettingKey.Theme]: DefaultTheme,
-  [SettingKey.Currency]: { id: "usd", unit: "$", name: "US Dollar" },
+  [SettingKey.Currency]: {
+    id: "USD",
+    name: "United States Dollar",
+    symbol: "$",
+  },
   [SettingKey.CustomNetworks]: [] as CustomNetwork[],
   [SettingKey.GasAdjustment]: DEFAULT_GAS_ADJUSTMENT,
   [SettingKey.ClassicGasAdjustment]: CLASSIC_DEFAULT_GAS_ADJUSTMENT,
