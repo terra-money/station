@@ -344,15 +344,10 @@ const SendPage = () => {
               </FormItem>
               {availableChains && (
                 <FormItem label={t("Source chain")}>
-                  <Controller
-                    control={control}
-                    name="chain"
-                    render={({ field: { onChange } }) => (
-                      <ChainSelector
-                        chainsList={availableChains}
-                        onChange={onChange}
-                      />
-                    )}
+                  <ChainSelector
+                    value={chain ?? ""}
+                    chainsList={availableChains}
+                    onChange={(chain) => setValue("chain", chain)}
                   />
                 </FormItem>
               )}

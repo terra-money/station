@@ -118,13 +118,13 @@ const TransferPage = () => {
   const availableDestinations = useMemo(
     () =>
       Object.keys(networks)
-        .filter((chainID) => chainID !== availableChains?.[0])
+        .filter((chainID) => chainID !== chain)
         .sort((a, b) => {
           if (networks[a].prefix === "terra") return -1
           if (networks[b].prefix === "terra") return 1
           return 0
         }),
-    [networks, availableChains]
+    [networks, availableChains, chain]
   )
 
   const token = balances.find(
@@ -156,15 +156,20 @@ const TransferPage = () => {
       }
       form.setFocus("input")
     }
-  }, [destinationChain, asset]) // eslint-disable-line
+  }, [destinationChain, asset, chain]) // eslint-disable-line
 
   /* resolve source chain */
   useEffect(() => {
-    if (availableChains?.length && availableDestinations?.length) {
+    if (availableChains?.length) {
       setValue("chain", availableChains[0])
-      setValue("destinationChain", availableDestinations[0])
     }
   }, [asset]) // eslint-disable-line
+
+  useEffect(() => {
+    if (availableDestinations?.length) {
+      setValue("destinationChain", availableDestinations[0])
+    }
+  }, [chain])
 
   /* render detected destination chain */
   function renderDestinationChain() {
@@ -362,37 +367,41 @@ const TransferPage = () => {
               {availableChains && (
                 <FormItem label={t("Source chain")}>
                   <ChainSelector
+                    value={chain ?? ""}
                     chainsList={availableChains}
                     onChange={(chain) => setValue("chain", chain)}
                   />
                 </FormItem>
               )}
-              <FormItem
-                label={t("Destination chain")}
-                extra={renderDestinationChain()}
-                error={errors.address?.message}
-              >
-                <ChainSelector
-                  chainsList={availableDestinations}
-                  onChange={(chain) => setValue("destinationChain", chain)}
-                />
+              {destinationChain && (
+                <FormItem
+                  label={t("Destination chain")}
+                  extra={renderDestinationChain()}
+                  error={errors.address?.message}
+                >
+                  <ChainSelector
+                    value={destinationChain ?? ""}
+                    chainsList={availableDestinations}
+                    onChange={(chain) => setValue("destinationChain", chain)}
+                  />
 
-                <input
-                  {...register("address", {
-                    validate: {
-                      ...validate.ibc(
-                        networks,
-                        chain ?? "",
-                        token?.denom ?? "",
-                        getIBCChannel,
-                        readNativeDenom(token?.denom ?? "").isAxelar
-                      ),
-                    },
-                  })}
-                  readOnly
-                  hidden
-                />
-              </FormItem>
+                  <input
+                    {...register("address", {
+                      validate: {
+                        ...validate.ibc(
+                          networks,
+                          chain ?? "",
+                          token?.denom ?? "",
+                          getIBCChannel,
+                          readNativeDenom(token?.denom ?? "").isAxelar
+                        ),
+                      },
+                    })}
+                    readOnly
+                    hidden
+                  />
+                </FormItem>
+              )}
 
               <FormItem
                 label={t("Amount")}
