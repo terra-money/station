@@ -33,12 +33,12 @@ const NetWorth = () => {
     <article className={styles.networth}>
       <p>{capitalize(t("asset value"))}</p>
       <h1>
-        {currency.unit}{" "}
+        {currency.symbol}{" "}
         <Read amount={coinsValue} decimals={0} fixed={2} denom="" token="" />
       </h1>
       <p>
         {t("{{balance}} available", {
-          balance: `${currency.unit} ${coinsValue.toFixed(2)} `,
+          balance: `${currency.symbol} ${coinsValue.toFixed(2)} `,
         })}
       </p>
       <div className={styles.networth__buttons}>

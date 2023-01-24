@@ -28,7 +28,7 @@ const AssetChain = (props: Props) => {
       <section className={styles.details}>
         <h1 className={styles.name}>{name}</h1>
         <h1 className={styles.price}>
-          {currency.unit}{" "}
+          {currency.symbol}{" "}
           <Read
             {...props}
             amount={(prices?.[token]?.price || 0) * parseInt(balance)}

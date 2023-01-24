@@ -33,6 +33,7 @@ const Asset = (props: Props) => {
 
   const coinPrice =
     props.price || prices?.[token]?.price || pricesFromAll?.[denom]?.usd || 0
+  console.log(symbol, coinPrice)
   const change =
     props.change ||
     prices?.[token]?.change ||
@@ -67,18 +68,19 @@ const Asset = (props: Props) => {
             {change >= 0 ? <PriceUp /> : <PriceDown />} {change.toFixed(2)}%
           </h2>
           <h1 className={styles.price}>
-            {walletPrice / 10 ** decimals < 0.01 &&
-              parseInt(balance ?? "0") > 0 &&
-              "<"}
-            {currency.unit}{" "}
-            <Read
-              {...props}
-              amount={walletPrice}
-              decimals={decimals}
-              fixed={2}
-              denom=""
-              token=""
-            />
+            {currency.symbol}{" "}
+            {coinPrice ? (
+              <Read
+                {...props}
+                amount={walletPrice}
+                decimals={decimals}
+                fixed={2}
+                denom=""
+                token=""
+              />
+            ) : (
+              "-"
+            )}
           </h1>
           <h2 className={styles.amount}>
             <WithFetching

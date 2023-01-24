@@ -3,7 +3,7 @@ import axios from "axios"
 import { STATION_ASSETS } from "config/constants"
 import createContext from "utils/createContext"
 import NetworkLoading from "./NetworkLoading"
-import { addressFromWords } from "utils/bech32"
+import { randomAddress } from "utils/bech32"
 
 export const [useNetworks, NetworksProvider] = createContext<{
   networks: InterchainNetworks
@@ -52,17 +52,15 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
           if (network.prefix === "terra") return network.chainID
           try {
             const { data } = await axios.get(
-              `/cosmos/bank/v1beta1/balances/${addressFromWords(
-                "0000000000000000000000000000000000000000000000000000000000000000",
-                network.prefix
-              )}`,
+              `/cosmos/bank/v1beta1/balances/${randomAddress(network.prefix)}`,
               {
                 baseURL: network.lcd,
-                timeout: 5_000,
+                timeout: 3_000,
               }
             )
             return Array.isArray(data.balances) && network.chainID
           } catch (e) {
+            console.error(e)
             return null
           }
         })
