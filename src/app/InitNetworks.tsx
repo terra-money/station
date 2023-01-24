@@ -3,7 +3,6 @@ import axios from "axios"
 import { STATION_ASSETS } from "config/constants"
 import createContext from "utils/createContext"
 import NetworkLoading from "./NetworkLoading"
-import { useAllInterchainAddresses } from "auth/hooks/useAddress"
 import { addressFromWords } from "utils/bech32"
 
 export const [useNetworks, NetworksProvider] = createContext<{

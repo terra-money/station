@@ -40,7 +40,11 @@ const SwapTx = () => {
   return (
     <Page title={t("Swap")} small extra={<TFMPoweredBy />}>
       <TFMSwapContext>
-        <ChainFilter outside title={"Select a chain to perform swaps on"} swap>
+        <ChainFilter
+          outside
+          title={"Select a chain to perform swaps on"}
+          terraOnly
+        >
           {(chainID) => <TFMSwapForm chainID={chainID ?? ""} />}
         </ChainFilter>
       </TFMSwapContext>
