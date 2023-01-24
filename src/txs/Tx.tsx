@@ -152,7 +152,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
       retryDelay: 1000,
       // Because the focus occurs once when posting back from the extension
       refetchOnWindowFocus: false,
-      notifyOnChangeProps: ["data"],
       enabled: !isBroadcasting,
     }
   )
