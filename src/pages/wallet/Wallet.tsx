@@ -11,12 +11,14 @@ import AssetPage from "./AssetPage"
 import ReceivePage from "./ReceivePage"
 import SendPage from "./SendPage"
 import { atom, useRecoilState } from "recoil"
+import TransferPage from "./TransferPage"
 
 enum Path {
   wallet = "wallet",
   coin = "coin",
   receive = "receive",
   send = "send",
+  transfer = "transfer",
 }
 
 type Route =
@@ -34,6 +36,11 @@ type Route =
     }
   | {
       path: Path.send
+      denom?: string
+      previusPage: Route
+    }
+  | {
+      path: Path.transfer
       denom?: string
       previusPage: Route
     }
@@ -96,6 +103,13 @@ const Wallet = () => {
           <>
             <BackButton />
             <SendPage />
+          </>
+        )
+      case Path.transfer:
+        return (
+          <>
+            <BackButton />
+            <TransferPage />
           </>
         )
     }

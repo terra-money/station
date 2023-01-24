@@ -43,6 +43,7 @@ const NetWorth = () => {
       </p>
       <div className={styles.networth__buttons}>
         <Button
+          color="primary"
           onClick={() =>
             setRoute({
               path: Path.send,
@@ -51,6 +52,16 @@ const NetWorth = () => {
           }
         >
           {capitalize(t("Send"))}
+        </Button>
+        <Button
+          onClick={() =>
+            setRoute({
+              path: Path.transfer,
+              previusPage: route,
+            })
+          }
+        >
+          {capitalize(t("transfer"))}
         </Button>
         <Button
           onClick={() =>
