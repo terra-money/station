@@ -24,7 +24,6 @@ import { useIBCChannels, useWhitelist } from "data/queries/chains"
 import CheckIcon from "@mui/icons-material/Check"
 import ClearIcon from "@mui/icons-material/Clear"
 import { getChainIDFromAddress } from "utils/bech32"
-import { isTerraChain } from "utils/chain"
 import { useNetwork, useNetworkName } from "data/wallet"
 import { queryKey } from "data/query"
 import Tx from "txs/Tx"
@@ -109,11 +108,23 @@ const TransferPage = () => {
       availableAssets
         .find(({ denom }) => denom === (asset ?? defaultAsset))
         ?.chains.sort((a, b) => {
-          if (isTerraChain(a)) return -1
-          if (isTerraChain(b)) return 1
+          if (networks[a].prefix === "terra") return -1
+          if (networks[b].prefix === "terra") return 1
           return 0
         }),
-    [asset, availableAssets, defaultAsset]
+    [asset, availableAssets, defaultAsset, networks]
+  )
+
+  const availableDestinations = useMemo(
+    () =>
+      Object.keys(networks)
+        .filter((chainID) => chainID !== availableChains?.[0])
+        .sort((a, b) => {
+          if (networks[a].prefix === "terra") return -1
+          if (networks[b].prefix === "terra") return 1
+          return 0
+        }),
+    [networks, availableChains]
   )
 
   const token = balances.find(
@@ -145,12 +156,13 @@ const TransferPage = () => {
       }
       form.setFocus("input")
     }
-  }, [form, destinationChain, addresses, ibcValidation, setValue])
+  }, [destinationChain, asset]) // eslint-disable-line
 
   /* resolve source chain */
   useEffect(() => {
-    if (availableChains?.length) {
+    if (availableChains?.length && availableDestinations?.length) {
       setValue("chain", availableChains[0])
+      setValue("destinationChain", availableDestinations[0])
     }
   }, [asset]) // eslint-disable-line
 
@@ -361,9 +373,7 @@ const TransferPage = () => {
                 error={errors.address?.message}
               >
                 <ChainSelector
-                  chainsList={Object.keys(networks).filter(
-                    (chainID) => chainID !== chain
-                  )}
+                  chainsList={availableDestinations}
                   onChange={(chain) => setValue("destinationChain", chain)}
                 />
 

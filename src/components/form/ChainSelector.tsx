@@ -15,8 +15,8 @@ const ChainSelector = ({ chainsList, onChange }: Props) => {
       Object.values(networks)
         .filter((c) => chainsList.includes(c.chainID))
         .sort((a, b) => {
-          if (a.name === "Terra") return -1
-          if (b.name === "Terra") return 1
+          if (a.prefix === "terra") return -1
+          if (b.prefix === "terra") return 1
           return 0
         }),
     [networks, chainsList]

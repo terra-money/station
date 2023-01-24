@@ -15,7 +15,7 @@ import { useBankBalance } from "data/queries/bank"
 import { useMemoizedPrices } from "data/queries/coingecko"
 import { useNativeDenoms } from "data/token"
 import { useCallback, useEffect, useMemo } from "react"
-import { useForm } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import { CoinInput, getPlaceholder, toInput } from "txs/utils"
 import styles from "./SendPage.module.scss"
@@ -26,7 +26,6 @@ import CheckIcon from "@mui/icons-material/Check"
 import ClearIcon from "@mui/icons-material/Clear"
 import ContactsIcon from "@mui/icons-material/Contacts"
 import { getChainIDFromAddress } from "utils/bech32"
-import { isTerraChain } from "utils/chain"
 import { useNetwork, useNetworkName } from "data/wallet"
 import { queryKey } from "data/query"
 import Tx from "txs/Tx"
@@ -97,7 +96,7 @@ const SendPage = () => {
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })
-  const { register, trigger, watch, setValue, handleSubmit } = form
+  const { register, trigger, watch, setValue, handleSubmit, control } = form
   const { formState } = form
   const { errors } = formState
   const {
@@ -115,11 +114,11 @@ const SendPage = () => {
       availableAssets
         .find(({ denom }) => denom === (asset ?? defaultAsset))
         ?.chains.sort((a, b) => {
-          if (isTerraChain(a)) return -1
-          if (isTerraChain(b)) return 1
+          if (networks[a].prefix === "terra") return -1
+          if (networks[b].prefix === "terra") return 1
           return 0
         }),
-    [asset, availableAssets, defaultAsset]
+    [asset, availableAssets, defaultAsset, networks]
   )
 
   const token = balances.find(
@@ -345,9 +344,15 @@ const SendPage = () => {
               </FormItem>
               {availableChains && (
                 <FormItem label={t("Source chain")}>
-                  <ChainSelector
-                    chainsList={availableChains}
-                    onChange={(chain) => setValue("chain", chain)}
+                  <Controller
+                    control={control}
+                    name="chain"
+                    render={({ field: { onChange } }) => (
+                      <ChainSelector
+                        chainsList={availableChains}
+                        onChange={onChange}
+                      />
+                    )}
                   />
                 </FormItem>
               )}
