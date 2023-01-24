@@ -34,13 +34,11 @@ const ConnectWallet = ({ renderButton }: Props) => {
   )
 
   const list = [
-    ...availableConnections
-      .filter(({ type }) => type !== "READONLY")
-      .map(({ type, identifier, name, icon }) => ({
-        src: icon,
-        children: name,
-        onClick: () => connect(type, identifier),
-      })),
+    ...availableConnections.map(({ type, identifier, name, icon }) => ({
+      src: icon,
+      children: name,
+      onClick: () => connect(type, identifier),
+    })),
     {
       icon: <UsbIcon />,
       to: "/auth/ledger",
