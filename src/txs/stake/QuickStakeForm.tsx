@@ -25,6 +25,7 @@ import {
 } from "data/queries/staking"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import shuffle from "utils/shuffle"
+import { memo } from "react"
 
 interface TxValues {
   input?: number
@@ -50,7 +51,6 @@ const QuickStakeForm = (props: Props) => {
   const state = combineState(validatorState, delegationsState, stakeState)
 
   const { baseAsset } = network[chainID]
-  // const daysToUnbond = getChainUnbondTime(stakeParams)
 
   /* form */
   const form = useForm<TxValues>({
@@ -187,4 +187,4 @@ const QuickStakeForm = (props: Props) => {
   )
 }
 
-export default QuickStakeForm
+export default memo(QuickStakeForm)
