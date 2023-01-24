@@ -37,7 +37,7 @@ const AssetPage = () => {
       <section className={styles.details}>
         <TokenIcon token={token} icon={icon} size={50} />
         <h1>
-          {currency.unit}{" "}
+          {currency.symbol}{" "}
           <Read
             decimals={decimals}
             amount={totalBalance * price}

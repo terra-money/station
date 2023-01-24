@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react"
 import { useQuery } from "react-query"
 import { queryKey, RefetchOptions } from "../query"
-import { ASSETS } from "config/constants"
+import { ASSETS, CURRENCY_KEY, STATION_ASSETS } from "config/constants"
 import axios from "axios"
 import { useCurrency } from "data/settings/Currency"
 import { useNetworkName } from "data/wallet"
@@ -21,14 +21,10 @@ export const useSupportedFiat = () => {
   return useQuery(
     [queryKey.coingecko.supportedFiat],
     async () => {
-      const { data } = await axios.get(
-        "https://api.coingecko.com/api/v3/exchange_rates"
-      )
-      const result: { name: string; unit: string; id: string }[] = []
-      Object.keys(data.rates).forEach((id) => {
-        data.rates[id].type === "fiat" && result.push({ id, ...data.rates[id] })
+      const { data } = await axios.get("currencies.json", {
+        baseURL: STATION_ASSETS,
       })
-      return result
+      return data as { name: string; symbol: string; id: string }[]
     },
     { ...RefetchOptions.INFINITY }
   )
@@ -41,13 +37,26 @@ export const useExchangeRates = () => {
   return useQuery(
     [queryKey.coingecko.exchangeRates, currency],
     async () => {
-      const { data: TFM_IDs } = await axios.get<Record<string, string>>(
-        "station/tfm.json",
-        { baseURL: ASSETS }
-      )
-      const { data: prices } = await axios.get<
-        Record<string, Record<string, number>>
-      >(`https://price.api.tfm.com/tokens/?limit=1500`)
+      const [{ data: TFM_IDs }, { data: prices }, fiatPrice] =
+        await Promise.all([
+          axios.get<Record<string, string>>("station/tfm.json", {
+            baseURL: ASSETS,
+          }),
+          await axios.get<Record<string, Record<string, number>>>(
+            `https://price.api.tfm.com/tokens/?limit=1500`
+          ),
+          (async () => {
+            if (currency.id === "USD") return 1
+
+            const { data } = await axios.get<{
+              quotes: Record<string, number>
+            }>(
+              `https://apilayer.net/api/live?source=USD&currencies=${currency.id}&access_key=${CURRENCY_KEY}`
+            )
+
+            return data?.quotes?.[`USD${currency.id}`] ?? 1
+          })(),
+        ])
 
       const filteredPrices = Object.keys(TFM_IDs)
         .filter((denom) =>
@@ -59,7 +68,7 @@ export const useExchangeRates = () => {
           return {
             ...acc,
             [denom.replace(":classic", "")]: {
-              price: prices[TFM_IDs[denom]][currency.id],
+              price: prices[TFM_IDs[denom]].usd * fiatPrice,
               change: prices[TFM_IDs[denom]].change24h,
             },
           }
