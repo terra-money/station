@@ -124,7 +124,7 @@ const TransferPage = () => {
           if (networks[b].prefix === "terra") return 1
           return 0
         }),
-    [networks, availableChains, chain]
+    [networks, availableChains, chain] // eslint-disable-line
   )
 
   const token = balances.find(
@@ -169,7 +169,7 @@ const TransferPage = () => {
     if (availableDestinations?.length) {
       setValue("destinationChain", availableDestinations[0])
     }
-  }, [chain])
+  }, [chain]) // eslint-disable-line
 
   /* render detected destination chain */
   function renderDestinationChain() {

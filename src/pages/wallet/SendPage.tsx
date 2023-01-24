@@ -15,7 +15,7 @@ import { useBankBalance } from "data/queries/bank"
 import { useMemoizedPrices } from "data/queries/coingecko"
 import { useNativeDenoms } from "data/token"
 import { useCallback, useEffect, useMemo } from "react"
-import { Controller, useForm } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import { CoinInput, getPlaceholder, toInput } from "txs/utils"
 import styles from "./SendPage.module.scss"
@@ -96,7 +96,7 @@ const SendPage = () => {
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })
-  const { register, trigger, watch, setValue, handleSubmit, control } = form
+  const { register, trigger, watch, setValue, handleSubmit } = form
   const { formState } = form
   const { errors } = formState
   const {

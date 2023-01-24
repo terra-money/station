@@ -1,5 +1,5 @@
 import { useNetwork } from "data/wallet"
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import styles from "./ChainSelector.module.scss"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 
