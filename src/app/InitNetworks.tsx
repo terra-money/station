@@ -5,10 +5,12 @@ import createContext from "utils/createContext"
 import NetworkLoading from "./NetworkLoading"
 import { randomAddress } from "utils/bech32"
 
+type TokenFilter = <T>(network: Record<string, T>) => Record<string, T>
+
 export const [useNetworks, NetworksProvider] = createContext<{
   networks: InterchainNetworks
-  filterEnabledNetworks: <T>(network: Record<string, T>) => Record<string, T>
-  filterDisabledNetworks: <T>(network: Record<string, T>) => Record<string, T>
+  filterEnabledNetworks: TokenFilter
+  filterDisabledNetworks: TokenFilter
 }>("useNetworks")
 
 const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
