@@ -139,15 +139,20 @@ export const useProposals = (status: ProposalStatus) => {
             return (proposals as ProposalResult46[]).map((prop) => ({
               ...prop,
               proposal_id: prop.id,
-              content:
-                prop.messages[0]["@type"] ===
-                "/cosmos.gov.v1.MsgExecLegacyContent"
+              content: prop.messages.length
+                ? prop.messages[0]["@type"] ===
+                  "/cosmos.gov.v1.MsgExecLegacyContent"
                   ? prop.messages[0].content
                   : {
                       ...prop.messages[0],
                       title: JSON.parse(prop.metadata).title,
                       description: JSON.parse(prop.metadata).summary,
-                    },
+                    }
+                : {
+                    "@type": "/cosmos.gov.v1.TextProposal",
+                    title: JSON.parse(prop.metadata).title,
+                    description: JSON.parse(prop.metadata).summary,
+                  },
               final_tally_result: {
                 yes: prop.final_tally_result.yes_count,
                 abstain: prop.final_tally_result.abstain_count,
@@ -245,15 +250,20 @@ export const useProposal = (id: string, chain: string) => {
         return {
           ...proposal,
           proposal_id: proposal.id,
-          content:
-            proposal.messages[0]["@type"] ===
-            "/cosmos.gov.v1.MsgExecLegacyContent"
+          content: proposal.messages.length
+            ? proposal.messages[0]["@type"] ===
+              "/cosmos.gov.v1.MsgExecLegacyContent"
               ? proposal.messages[0].content
               : {
                   ...proposal.messages[0],
                   title: JSON.parse(proposal.metadata).title,
                   description: JSON.parse(proposal.metadata).summary,
-                },
+                }
+            : {
+                "@type": "/cosmos.gov.v1.TextProposal",
+                title: JSON.parse(proposal.metadata).title,
+                description: JSON.parse(proposal.metadata).summary,
+              },
           final_tally_result: {
             yes: proposal.final_tally_result.yes_count,
             abstain: proposal.final_tally_result.abstain_count,
