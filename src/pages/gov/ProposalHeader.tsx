@@ -16,7 +16,6 @@ const ProposalHeader = ({
   const networks = useNetwork()
   const { t } = useTranslation()
   const type = useParseProposalType(content)
-  console.log(proposal)
   const { color, label } = useProposalStatusItem(status)
   if (!content) return null
   const { title } = content
