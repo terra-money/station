@@ -33,7 +33,6 @@ const Asset = (props: Props) => {
 
   const coinPrice =
     props.price || prices?.[token]?.price || pricesFromAll?.[denom]?.usd || 0
-  console.log(symbol, coinPrice)
   const change =
     props.change ||
     prices?.[token]?.change ||

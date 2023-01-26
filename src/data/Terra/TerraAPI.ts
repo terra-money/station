@@ -114,7 +114,7 @@ export const useTerraValidator = (address: ValAddress) => {
   return useTerraAPI<TerraValidator>(`validators/${address}`)
 }
 
-export const useTerraProposal = (id: number) => {
+export const useTerraProposal = (id: string) => {
   return useTerraAPI<TerraProposalItem[]>(`proposals/${id}`)
 }
 

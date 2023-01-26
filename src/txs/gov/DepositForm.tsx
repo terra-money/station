@@ -42,7 +42,7 @@ const DepositForm = () => {
       const amount = toAmount(input)
       const msgs = [
         new MsgDeposit(
-          id,
+          Number(id),
           addresses[chain],
           amount + networks[chain].baseAsset
         ),

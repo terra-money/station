@@ -29,6 +29,7 @@ interface InterchainNetwork {
       fromTerra: string
     }
   }
+  version?: string
   isClassic?: boolean
 }
 
