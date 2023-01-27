@@ -32,6 +32,11 @@
     padding: 48px 20px;
     width: calc(100% - 40px);
   }
+
+  &.minimal {
+    width: fit-content !important;
+    padding: 0 !important;
+  }
 }
 
 .modal th {

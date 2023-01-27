@@ -4,7 +4,7 @@ import { useTheme } from "data/settings/Theme"
 import Overlay from "./components/Overlay"
 
 interface Props {
-  title: string
+  title?: string
 }
 
 const NetworkLoading = ({ title }: Props) => {

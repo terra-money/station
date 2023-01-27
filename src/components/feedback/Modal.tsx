@@ -22,6 +22,7 @@ interface ModalProps {
 
   /* style */
   confirm?: boolean
+  minimal?: boolean
   maxHeight?: boolean | number
 }
 
@@ -29,15 +30,15 @@ export interface Props extends ModalProps, ReactModal.Props {}
 
 const Modal = (props: PropsWithChildren<Props>) => {
   const { title, children, footer } = props
-  const { icon, closeIcon, onRequestClose, confirm, maxHeight } = props
+  const { icon, closeIcon, onRequestClose, confirm, maxHeight, minimal } = props
 
   return (
     <ReactModal
       {...props}
-      className={styles.modal}
+      className={cx(styles.modal, { minimal })}
       overlayClassName={styles.overlay}
     >
-      {onRequestClose && (
+      {onRequestClose && !minimal && (
         <button type="button" className={styles.close} onClick={onRequestClose}>
           {closeIcon ?? <CloseIcon fontSize="inherit" />}
         </button>
@@ -74,6 +75,7 @@ export const [useModal, ModalProvider] = createContext<() => void>("useModal")
 interface ModalButtonProps extends ModalProps {
   renderButton: RenderButton
   modalKey?: string
+  minimal?: boolean
 }
 
 export const ModalButton = (props: PropsWithChildren<ModalButtonProps>) => {

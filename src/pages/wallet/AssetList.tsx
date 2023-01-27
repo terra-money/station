@@ -1,5 +1,5 @@
 import { FormError } from "components/form"
-import { InternalButton } from "components/general"
+import { InternalButton, Button } from "components/general"
 import { useBankBalance, useIsWalletEmpty } from "data/queries/bank"
 import { useMemoizedPrices } from "data/queries/coingecko"
 import { useNativeDenoms } from "data/token"
@@ -10,6 +10,9 @@ import Asset from "./Asset"
 import styles from "./AssetList.module.scss"
 import { useTokenFilters } from "utils/localStorage"
 import { toInput } from "txs/utils"
+import { ModalButton } from "components/feedback"
+import AddIcon from "@mui/icons-material/Add"
+import FiatRampModal from "./FiatRampModal"
 
 const AssetList = () => {
   const { t } = useTranslation()
@@ -85,13 +88,24 @@ const AssetList = () => {
     <article className={styles.assetlist}>
       <div className={styles.assetlist__title}>
         <h3>Assets</h3>
-        <ManageTokens>
-          {(open) => (
-            <InternalButton onClick={open}>{t("Manage tokens")}</InternalButton>
+        <ModalButton
+          minimal
+          renderButton={(open) => (
+            <InternalButton onClick={open}>{t("Buy tokens")}</InternalButton>
           )}
-        </ManageTokens>
+        >
+          <FiatRampModal />
+        </ModalButton>
       </div>
       <div className={styles.assetlist__list}>{render()}</div>
+      <ManageTokens>
+        {(open) => (
+          <Button onClick={open}>
+            <AddIcon />
+            {t("Manage tokens")}
+          </Button>
+        )}
+      </ManageTokens>
     </article>
   )
 }

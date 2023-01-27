@@ -27,6 +27,10 @@ export const TERRA_VALIDATORS =
 
 export const STAKE_ID = "https://stake.id/#/validator/"
 
+/* website: fiat ramp */
+export const FIAT_RAMP = "https://app.kado.money/"
+export const KADO_API_KEY = "c22391a1-594f-4354-a742-187adb1b91bf"
+
 /* ledger */
 export const LEDGER_TRANSPORT_TIMEOUT = 180000
 

@@ -3,9 +3,9 @@
 .details {
   @include flex(center);
   flex-direction: column;
+  width: 100%;
 
-  padding: 1.8rem 1rem;
-  padding-top: 2.6rem;
+  padding: 1.6rem;
   height: fit-content;
   background-color: var(--card-bg);
   grid-area: details;
@@ -48,8 +48,9 @@
 .actions {
   @include flex(space-between);
   background-color: var(--card-bg);
-  padding: 1rem;
+  padding-top: 0.6rem;
   gap: 0.6rem;
+  width: 100%;
 
   button {
     min-width: 0;
