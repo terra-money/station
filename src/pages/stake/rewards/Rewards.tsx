@@ -63,6 +63,8 @@ const Rewards = () => {
 
     const list = total.list
 
+    const showTokens = totalToDisplay === -1 || sameDenom
+
     return (
       <ModalButton
         title={title}
@@ -74,12 +76,13 @@ const Rewards = () => {
                 <TooltipIcon content={<RewardsTooltip />} placement="bottom">
                   {title}
                 </TooltipIcon>
-                {totalToDisplay !== -1 && sameDenom && (
+                {showTokens && (
                   <span className={styles.view_more}>View More</span>
                 )}
               </div>
             }
             value={totalToDisplay?.toString() || "-1"}
+            showTokens={showTokens}
             onClick={open}
             cardName="rewards"
           ></StakedCard>

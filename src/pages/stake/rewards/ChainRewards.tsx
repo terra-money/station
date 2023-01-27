@@ -101,7 +101,6 @@ const ChainRewards = ({ chain }: { chain: string }) => {
             }
             value={totalToDisplay?.toString() || "-1"}
             amount={amountToDisplay}
-            sameDenom={sameDenom}
             denom={networks[chain]?.baseAsset || ""}
             onClick={open}
             cardName="rewards"
