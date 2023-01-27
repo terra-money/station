@@ -72,7 +72,7 @@ const Read = forwardRef(
     return (
       <span className={className} ref={ref}>
         {approx && "≈ "}
-        {!!lessThanFixed && "< "}
+        {!!lessThanFixed && "<"}
         {integer}
         {renderDecimal()}
         {renderSymbol()}

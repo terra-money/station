@@ -3,13 +3,16 @@ import { useDelegations, useUnbondings } from "data/queries/staking"
 import { useRewards } from "data/queries/distribution"
 import { Fetching } from "components/feedback"
 import DelegationsPromote from "app/containers/DelegationsPromote"
-import Delegations from "./Delegations"
-import Unbondings from "./Unbondings"
-import Rewards from "./Rewards"
+import Delegations from "./delegations/Delegations"
+import ChainDelegations from "./delegations/ChainDelegations"
+import Unbondings from "./unbondings/Unbondings"
+import Rewards from "./rewards/Rewards"
 import { useChainID } from "data/wallet"
 import styles from "./Staked.module.scss"
+import ChainUnbondings from "./unbondings/ChainUnbondings"
+import ChainRewards from "./rewards/ChainRewards"
 
-const Staked = () => {
+const Staked = ({ chain }: { chain: string }) => {
   const chainID = useChainID()
   const { data: delegations, ...delegationsState } = useDelegations(chainID)
   const { data: unbondings, ...unbondingsState } = useUnbondings(chainID)
@@ -26,9 +29,19 @@ const Staked = () => {
 
     return (
       <section className={styles.staked__container}>
-        <Delegations />
-        <Unbondings />
-        <Rewards />
+        {chain !== "all" ? (
+          <>
+            <ChainDelegations chain={chain} />
+            <ChainUnbondings chain={chain} />
+            <ChainRewards chain={chain} />
+          </>
+        ) : (
+          <>
+            <Delegations />
+            <Unbondings />
+            <Rewards />
+          </>
+        )}
       </section>
     )
   }

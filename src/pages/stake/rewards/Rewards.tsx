@@ -8,18 +8,20 @@ import { useNativeDenoms, WithTokenItem } from "data/token"
 import { ModalButton } from "components/feedback"
 import { TokenCard, TokenCardGrid } from "components/token"
 import { TooltipIcon } from "components/display"
-import StakedCard from "./components/StakedCard"
-import RewardsTooltip from "./RewardsTooltip"
+import StakedCard from "../components/StakedCard"
+import RewardsTooltip from "../RewardsTooltip"
+import styles from "../CardModal.module.scss"
 
 const Rewards = () => {
   const { t } = useTranslation()
   const currency = useCurrency()
   const calcValue = useMemoizedCalcValue()
   const readNativeDenom = useNativeDenoms()
-  const { data: prices, ...pricesState } = useMemoizedPrices()
 
+  const { data: prices, ...pricesState } = useMemoizedPrices()
   const { data: rewards, ...rewardsState } = useRewards()
   const { data: exchangeRates, ...exchangeRatesState } = useExchangeRates()
+
   const state = combineState(rewardsState, exchangeRatesState, pricesState)
 
   /* render */
@@ -27,18 +29,39 @@ const Rewards = () => {
   const render = () => {
     if (!rewards || !prices) return null
 
+    let sameDenom = true
     const coinsValue = rewards.total
       .toData()
       ?.reduce((acc, { amount, denom }) => {
         const { token, decimals } = readNativeDenom(denom)
+        if (denom !== rewards?.total.toData()[0].denom) {
+          sameDenom = false
+        }
         return (
           acc +
           (parseInt(amount) * (prices?.[token]?.price || 0)) / 10 ** decimals
         )
       }, 0)
 
+    const totalToDisplay = coinsValue
+
     const { total } = calcRewardsValues(rewards, currency.id, calcValue)
-    const { list } = total
+    if (!sameDenom) {
+      total.list.reduce((acc: any, item, index) => {
+        if (acc && index === total.list.length - 1) {
+          sameDenom = true
+          return true
+        }
+
+        if (item.denom === total.list[0].denom) {
+          return true
+        } else {
+          return false
+        }
+      }, true)
+    }
+
+    const list = total.list
 
     return (
       <ModalButton
@@ -47,17 +70,23 @@ const Rewards = () => {
           <StakedCard
             {...state}
             title={
-              <TooltipIcon content={<RewardsTooltip />} placement="bottom">
-                {title}
-              </TooltipIcon>
+              <div className={styles.header_wrapper}>
+                <TooltipIcon content={<RewardsTooltip />} placement="bottom">
+                  {title}
+                </TooltipIcon>
+                {totalToDisplay !== -1 && sameDenom && (
+                  <span className={styles.view_more}>View More</span>
+                )}
+              </div>
             }
-            amount={coinsValue.toString()}
+            value={totalToDisplay?.toString() || "-1"}
             onClick={open}
+            cardName="rewards"
           ></StakedCard>
         )}
       >
         <TokenCardGrid maxHeight>
-          {list.map(({ amount, denom }) => (
+          {list?.map(({ amount, denom }) => (
             <WithTokenItem token={denom} key={denom}>
               {(item) => (
                 <TokenCard
