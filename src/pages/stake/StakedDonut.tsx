@@ -101,7 +101,7 @@ const StakedDonut = ({ chain }: { chain: string }) => {
           <p>Value: </p>
           <p>
             <Read amount={payload[0]?.payload.value} fixed={2} decimals={0} />{" "}
-            {currency.unit}
+            {currency.symbol}
           </p>
         </div>
       </div>

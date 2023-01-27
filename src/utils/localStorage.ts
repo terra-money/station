@@ -8,12 +8,13 @@ import { atom, useRecoilState } from "recoil"
 
 export enum SettingKey {
   Theme = "Theme",
-  Currency = "Currency",
+  Currency = "FiatCurrency",
   CustomNetworks = "CustomNetworks",
   GasAdjustment = "GasAdjustment", // Tx
   ClassicGasAdjustment = "ClassicGasAdjustment",
   AddressBook = "AddressBook", // Send
   HideNonWhitelistTokens = "HideNonWhiteListTokens",
+  Network = "Network",
   HideLowBalTokens = "HideLowBalTokens",
   CustomTokens = "CustomTokens", // Wallet
   MinimumValue = "MinimumValue", // Wallet (UST value to show on the list)
@@ -30,7 +31,11 @@ const DefaultCustomTokens = { mainnet: DefaultCustomTokensItem }
 
 export const DefaultSettings = {
   [SettingKey.Theme]: DefaultTheme,
-  [SettingKey.Currency]: { id: "usd", unit: "$", name: "US Dollar" },
+  [SettingKey.Currency]: {
+    id: "USD",
+    name: "United States Dollar",
+    symbol: "$",
+  },
   [SettingKey.CustomNetworks]: [] as CustomNetwork[],
   [SettingKey.GasAdjustment]: DEFAULT_GAS_ADJUSTMENT,
   [SettingKey.ClassicGasAdjustment]: CLASSIC_DEFAULT_GAS_ADJUSTMENT,
@@ -40,6 +45,7 @@ export const DefaultSettings = {
   [SettingKey.HideNonWhitelistTokens]: false,
   [SettingKey.HideLowBalTokens]: false,
   [SettingKey.WithdrawAs]: "",
+  [SettingKey.Network]: "",
 }
 
 export const getLocalSetting = <T>(key: SettingKey): T => {
@@ -68,6 +74,23 @@ export const hideLowBalTokenState = atom({
   key: "hideLowBalTokenState",
   default: !!getLocalSetting(SettingKey.HideLowBalTokens),
 })
+
+export const savedNetworkState = atom({
+  key: "savedNetwork",
+  default: getLocalSetting(SettingKey.Network) as string | undefined,
+})
+
+export const useSavedNetwork = () => {
+  const [savedNetwork, setSavedNetwork] = useRecoilState(savedNetworkState)
+  const changeSavedNetwork = useCallback(
+    (newNetwork: string | undefined) => {
+      setLocalSetting(SettingKey.Network, newNetwork)
+      setSavedNetwork(newNetwork)
+    },
+    [setSavedNetwork]
+  )
+  return { savedNetwork, changeSavedNetwork }
+}
 
 export const useTokenFilters = () => {
   const [hideNoWhitelist, setHideNoWhitelist] =

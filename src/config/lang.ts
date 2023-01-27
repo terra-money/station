@@ -24,8 +24,6 @@ const flatten = (obj: object, initial = {}): Dictionary<string> => {
   }, initial)
 }
 
-console.log(pl)
-
 export const Languages = {
   //cs: { value: "cs", label: "Čeština", translation: flatten(cs) },
   de: { value: "de", label: "Deutsch", translation: flatten(de) },

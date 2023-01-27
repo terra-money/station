@@ -303,7 +303,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const availableGasDenoms = useMemo(() => {
     return Object.keys(networks[chain]?.gasPrices || {})
   }, [chain, networks])
-  console.log(networks[chain])
 
   useEffect(() => {
     if (availableGasDenoms.includes(gasDenom)) return

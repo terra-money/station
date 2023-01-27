@@ -48,7 +48,7 @@ const StakedCard = (props: PropsWithChildren<Props>) => {
           style={{ justifyContent: "space-between", alignItems: "flex-end" }}
         >
           <span className={styles.value}>
-            {currency.unit}
+            {currency.symbol}
             <Read amount={value} decimals={0} fixed={2} />
             <span className={styles.small}>{children}</span>
           </span>
