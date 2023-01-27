@@ -1,8 +1,11 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Proposal } from "@terra-money/feather.js"
 import { combineState } from "data/query"
-import { useProposals, useProposalStatusItem } from "data/queries/gov"
+import {
+  ProposalStatus,
+  useProposals,
+  useProposalStatusItem,
+} from "data/queries/gov"
 import { useTerraAssets } from "data/Terra/TerraAssets"
 import { Col, Card } from "components/layout"
 import { Fetching, Empty } from "components/feedback"
@@ -13,7 +16,7 @@ import styles from "./ProposalsByStatus.module.scss"
 import { useNetworkName } from "data/wallet"
 import ChainFilter from "components/layout/ChainFilter"
 
-const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
+const ProposalsByStatus = ({ status }: { status: ProposalStatus }) => {
   const { t } = useTranslation()
   const networkName = useNetworkName()
 
@@ -34,17 +37,18 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
     if (!(data && whitelistData)) return null
 
     const proposals =
-      status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && !showAll
+      status === ProposalStatus.PROPOSAL_STATUS_VOTING_PERIOD && !showAll
         ? data.filter(
             ({ prop, chain }) =>
-              chain !== "phoenix-1" || whitelist?.includes(prop.id)
+              chain !== "phoenix-1" ||
+              whitelist?.includes(Number(prop.proposal_id))
           )
         : data
 
     proposals.sort(
       (a, b) =>
-        (b.prop.voting_start_time || b.prop.submit_time).getTime() -
-        (a.prop.voting_start_time || a.prop.submit_time).getTime()
+        new Date(b.prop.voting_start_time || b.prop.submit_time).getTime() -
+        new Date(a.prop.voting_start_time || a.prop.submit_time).getTime()
     )
 
     return (
@@ -70,7 +74,7 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
                 <section className={styles.list}>
                   {filtered.map(({ prop, chain }, i) => (
                     <Card
-                      to={`/proposal/${chain}/${prop.id}`}
+                      to={`/proposal/${chain}/${prop.proposal_id}`}
                       className={styles.link}
                       key={i}
                     >
@@ -79,7 +83,7 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
                         chain={chain}
                         showVotes={
                           status ===
-                          Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD
+                          ProposalStatus.PROPOSAL_STATUS_VOTING_PERIOD
                         }
                       />
                     </Card>
@@ -98,7 +102,7 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
     <Fetching {...state}>
       <Col>
         {!!whitelist &&
-          status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && (
+          status === ProposalStatus.PROPOSAL_STATUS_VOTING_PERIOD && (
             <section>
               <Toggle checked={showAll} onChange={toggle}>
                 {t("Show all")}

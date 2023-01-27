@@ -8,7 +8,7 @@ import { useNetwork } from "data/wallet"
 
 // FIXME: Pagination (Client)
 
-const ProposalDepositors = ({ id, chain }: { id: number; chain: string }) => {
+const ProposalDepositors = ({ id, chain }: { id: string; chain: string }) => {
   const { t } = useTranslation()
   const networks = useNetwork()
   const { data: deposits, ...state } = useDeposits(id, chain)

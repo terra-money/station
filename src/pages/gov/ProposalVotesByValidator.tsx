@@ -22,7 +22,7 @@ import { useChainID } from "data/wallet"
 
 const cx = classNames.bind(styles)
 
-const ProposalVotesByValidator = ({ id }: { id: number }) => {
+const ProposalVotesByValidator = ({ id }: { id: string }) => {
   const { t } = useTranslation()
   const chainID = useChainID()
 

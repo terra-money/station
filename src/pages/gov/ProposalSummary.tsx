@@ -1,12 +1,12 @@
-import { Proposal } from "@terra-money/feather.js"
 import { FinderLink } from "components/general"
 import { Col, Card } from "components/layout"
 import { Read } from "components/token"
+import { ProposalResult } from "data/queries/gov"
 import DataList from "./components/DataList"
 
-const ProposalSummary = ({ proposal }: { proposal: Proposal }) => {
+const ProposalSummary = ({ proposal }: { proposal: ProposalResult }) => {
   if (!proposal.content) return null
-  const contentData = proposal.content.toData()
+  const contentData = proposal.content
 
   const details = Object.entries(contentData)
     .filter(([key]) => !["@type", "title", "description"].includes(key))
