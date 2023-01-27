@@ -2,7 +2,6 @@
 
 .assetlist {
   background-color: var(--card-bg-muted);
-  padding-top: 1.6rem;
   padding-inline: 10px;
   grid-area: list;
   display: grid;
@@ -14,7 +13,7 @@
 .assetlist__title {
   @include flex(space-between);
   padding-inline: 10px;
-  margin-bottom: 10px;
+  margin: 10px;
   grid-area: title;
 }
 
@@ -22,4 +21,19 @@
   overflow-y: auto;
   grid-area: list;
   padding-bottom: 1.6rem;
+}
+
+.btn__container {
+  @include flex(center);
+  box-shadow: var(--box-shadow-btn);
+  background-color: var(--card-bg);
+  border-top: var(--border-width) solid var(--card-border);
+  align-self: flex-end;
+  margin: 0 -10px;
+  width: calc(100% + 20px);
+}
+
+.btn {
+  margin: 16px 0px;
+  width: calc(100% - 40px);
 }
