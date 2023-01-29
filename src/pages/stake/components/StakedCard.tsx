@@ -18,7 +18,7 @@ const StakedCard = (props: PropsWithChildren<Props>) => {
   const { value, amount, denom, cardName, showTokens, children } = props
   const currency = useCurrency()
 
-  if (!showTokens && cardName === "rewards") {
+  if (showTokens && cardName === "rewards") {
     return (
       <Card
         {...props}
@@ -48,15 +48,14 @@ const StakedCard = (props: PropsWithChildren<Props>) => {
           style={{ justifyContent: "space-between", alignItems: "flex-end" }}
         >
           <span className={styles.value}>
-            {currency.symbol}
-            <Read amount={value} decimals={0} fixed={2} />
+            {currency.symbol} <Read amount={value} decimals={0} fixed={2} />
             <span className={styles.small}>{children}</span>
           </span>
           {new BigNumber(amount || -1).gt(0.0) && (
             <Read
               amount={amount}
               decimals={0}
-              fixed={5}
+              fixed={2}
               denom={denom}
               className={styles.amount}
             />

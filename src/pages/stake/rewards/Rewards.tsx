@@ -11,6 +11,7 @@ import { TooltipIcon } from "components/display"
 import StakedCard from "../components/StakedCard"
 import RewardsTooltip from "../RewardsTooltip"
 import styles from "../CardModal.module.scss"
+import { Coin } from "@terra-money/feather.js"
 
 const Rewards = () => {
   const { t } = useTranslation()
@@ -27,43 +28,33 @@ const Rewards = () => {
   /* render */
   const title = t("Staking rewards")
   const render = () => {
-    if (!rewards || !prices) return null
-
-    let sameDenom = true
-    const coinsValue = rewards.total
-      .toData()
-      ?.reduce((acc, { amount, denom }) => {
-        const { token, decimals } = readNativeDenom(denom)
-        if (denom !== rewards?.total.toData()[0].denom) {
-          sameDenom = false
-        }
-        return (
-          acc +
-          (parseInt(amount) * (prices?.[token]?.price || 0)) / 10 ** decimals
-        )
-      }, 0)
+    let sameDenom: boolean = true
+    const coinsValue =
+      !rewards || !prices
+        ? 0
+        : rewards.total.toData()?.reduce((acc, { amount, denom }) => {
+            const { token, decimals } = readNativeDenom(denom)
+            if (denom !== rewards?.total.toData()[0].denom) {
+              sameDenom = false
+            }
+            return (
+              acc +
+              (parseInt(amount) * (prices?.[token]?.price || 0)) /
+                10 ** decimals
+            )
+          }, 0)
 
     const totalToDisplay = coinsValue
 
-    const { total } = calcRewardsValues(rewards, currency.id, calcValue)
-    if (!sameDenom) {
-      total.list.reduce((acc: any, item, index) => {
-        if (acc && index === total.list.length - 1) {
-          sameDenom = true
-          return true
-        }
-
-        if (item.denom === total.list[0].denom) {
-          return true
-        } else {
-          return false
-        }
-      }, true)
+    let list: Coin.Data[] = []
+    if (rewards) {
+      const { total } = calcRewardsValues(rewards, currency.id, calcValue)
+      list = total.list
     }
 
-    const list = total.list
-
     const showTokens = totalToDisplay === -1 || sameDenom
+
+    console.log({ totalToDisplay, sameDenom, showTokens })
 
     return (
       <ModalButton
@@ -76,7 +67,7 @@ const Rewards = () => {
                 <TooltipIcon content={<RewardsTooltip />} placement="bottom">
                   {title}
                 </TooltipIcon>
-                {showTokens && (
+                {!showTokens && (
                   <span className={styles.view_more}>View More</span>
                 )}
               </div>

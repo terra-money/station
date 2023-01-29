@@ -147,7 +147,7 @@ const StakedDonut = ({ chain }: { chain: string }) => {
             </ResponsiveContainer>
           </section>
         ) : (
-          <Card className={styles.noDelegationsCard}>
+          <Card className={styles.noDelegationsCard} {...state}>
             <article className={styles.vertical}>
               <Flex>
                 <PaymentsOutlinedIcon style={{ fontSize: 56 }} />
