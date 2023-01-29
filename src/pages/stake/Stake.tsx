@@ -1,4 +1,6 @@
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
+import { combineState } from "data/query"
 import { LinkButton } from "components/general"
 import { Col, Page, Row, Tabs } from "components/layout"
 import Staked from "./Staked"
@@ -6,17 +8,28 @@ import Validators from "./Validators"
 import StakedDonut from "./StakedDonut"
 import {
   useInterchainDelegations,
-  useCalcInterchainDelegationsTotal,
+  useCalcDelegationsByValidator,
+  useInterchainValidators,
 } from "data/queries/staking"
 import QuickStake from "./QuickStake"
 import { TooltipIcon } from "components/display"
 import QuickStakeTooltip from "./QuickStakeTooltip"
+import { Fetching } from "components/feedback"
+import styles from "./StakedDonut.module.scss"
+import ChainFilter from "components/layout/ChainFilter"
 
 const Stake = () => {
   const { t } = useTranslation()
+  const [chainSelected, setChainSelected] = useState("all")
 
   const interchainDelegations = useInterchainDelegations()
-  const { graphData } = useCalcInterchainDelegationsTotal(interchainDelegations)
+  const interchainValidators = useInterchainValidators()
+  const state = combineState(...interchainDelegations, ...interchainValidators)
+
+  const { graphData } = useCalcDelegationsByValidator(
+    interchainDelegations,
+    interchainValidators
+  )
 
   const tabs = [
     {
@@ -44,11 +57,22 @@ const Stake = () => {
       <Col>
         {graphData?.all.length ? (
           <Row>
-            <StakedDonut />
-            <Staked />
+            <Col span={2}>
+              <div className={styles.forFetchingBar}>
+                <Fetching {...state}>
+                  <ChainFilter title={t("Staked funds")} all {...state}>
+                    {(chain) => {
+                      setChainSelected(chain || "all")
+                      return <StakedDonut chain={chain || "all"} />
+                    }}
+                  </ChainFilter>
+                </Fetching>
+              </div>
+            </Col>
+            <Staked chain={chainSelected} />
           </Row>
         ) : (
-          <Staked />
+          <Staked chain={chainSelected} />
         )}
 
         <Tabs tabs={tabs} type="page" />

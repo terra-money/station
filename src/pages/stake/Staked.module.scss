@@ -4,7 +4,8 @@
   display: grid;
   grid-gap: var(--grid-gap);
   gap: var(--grid-gap);
-  min-width: 260px;
+  min-width: 275px;
+  flex: 1 1 0%;
 
   @include mobile {
     grid-auto-flow: column;
