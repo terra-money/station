@@ -13,6 +13,7 @@ import { ExternalLink } from "./External"
 import { getChainIDFromAddress } from "utils/bech32"
 import styles from "./FinderLink.module.scss"
 import { getChainNamefromID } from "data/queries/chains"
+import { useLnsName } from "data/external/lns"
 
 interface Props extends HTMLAttributes<HTMLAnchorElement> {
   value?: string
@@ -33,7 +34,10 @@ const FinderLink = forwardRef(
     const { block, tx, validator, chainID, ...attrs } = rest
     const networkName = useNetworkName() // mainnet or testnet for Terra
     const networks = useNetwork()
-    const value = rest.value ?? children
+    const value =
+      rest.value ?? (typeof children === "string" ? children : undefined) ?? ""
+
+    const { data: lnsName } = useLnsName(value)
 
     const chainName = useMemo(() => {
       const targetChainId = chainID || getChainIDFromAddress(value, networks)
@@ -79,7 +83,9 @@ const FinderLink = forwardRef(
 
     return (
       <ExternalLink {...attrs} href={link} className={className} ref={ref} icon>
-        {short && typeof children === "string" ? truncate(children) : children}
+        {short && typeof children === "string"
+          ? truncate(lnsName ?? children)
+          : lnsName ?? children}
       </ExternalLink>
     )
   }

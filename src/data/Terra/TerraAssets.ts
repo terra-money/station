@@ -64,6 +64,7 @@ export type ContractNames =
   | "routeswap"
   | "tnsRegistry"
   | "tnsReverseRecord"
+  | "lns"
 
 export type TerraContracts = Record<ContractNames, AccAddress>
 export const useTerraContracts = () => {

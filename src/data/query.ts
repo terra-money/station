@@ -85,5 +85,5 @@ export const queryKey = mirror({
   treasury: { taxRate: "", taxCap: "", taxProceeds: "" },
   /* external */
   Anchor: { TotalDeposit: "", APY: "", MarketEpochState: "" },
-  TNS: "",
+  LNS: "",
 })

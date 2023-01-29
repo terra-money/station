@@ -7,8 +7,7 @@ import { MsgExecuteContract } from "@terra-money/feather.js"
 import { truncate } from "@terra.kitchen/utils"
 import { SAMPLE_ADDRESS } from "config/constants"
 import { queryKey } from "data/query"
-import { useNetwork } from "data/wallet"
-import { useTnsAddress } from "data/external/tns"
+import { useNetwork, useNetworkName } from "data/wallet"
 import { Auto, Card, InlineFlex } from "components/layout"
 import { Form, FormItem, FormHelp, Input } from "components/form"
 import NFTAssetItem from "pages/nft/NFTAssetItem"
@@ -17,9 +16,10 @@ import validate from "../validate"
 import Tx from "../Tx"
 import { getChainIDFromAddress } from "utils/bech32"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
+import { useLnsAddress } from "data/external/lns"
 
 interface TxValues {
-  recipient?: string // AccAddress | TNS
+  recipient?: string // AccAddress | LNS
   address?: AccAddress // hidden input
   memo?: string
 }
@@ -33,6 +33,7 @@ const TransferCW721Form = ({ contract, id }: Props) => {
   const { t } = useTranslation()
   const addresses = useInterchainAddresses()
   const network = useNetwork()
+  const networkName = useNetworkName()
   const chainID = getChainIDFromAddress(contract, network) ?? ""
   const connectedAddress = addresses?.[chainID]
 
@@ -50,27 +51,31 @@ const TransferCW721Form = ({ contract, id }: Props) => {
   }
 
   /* resolve recipient */
-  const { data: resolvedAddress, ...tnsState } = useTnsAddress(recipient ?? "")
+  const { data: lnsAddress, ...lnsState } = useLnsAddress(recipient ?? "")
   useEffect(() => {
     if (!recipient) {
       setValue("address", undefined)
     } else if (AccAddress.validate(recipient)) {
       setValue("address", recipient)
-    } else if (resolvedAddress) {
-      setValue("address", resolvedAddress)
+    } else if (lnsAddress) {
+      setValue("address", lnsAddress)
     } else {
       setValue("address", recipient)
     }
-  }, [form, recipient, resolvedAddress, setValue])
+  }, [form, recipient, lnsAddress, setValue])
 
-  // validate(tns): not found
+  // validate(lns): not found
   const invalid =
-    recipient?.endsWith(".ust") && !tnsState.isLoading && !resolvedAddress
+    (networkName === "classic"
+      ? recipient?.endsWith(".lunc")
+      : recipient?.endsWith(".luna")) &&
+    !lnsState.isLoading &&
+    !lnsAddress
       ? t("Address not found")
       : ""
 
   const disabled =
-    invalid || (tnsState.isLoading && t("Searching for address..."))
+    invalid || (lnsState.isLoading && t("Searching for address..."))
 
   useEffect(() => {
     if (invalid) setError("recipient", { type: "invalid", message: invalid })
@@ -115,11 +120,11 @@ const TransferCW721Form = ({ contract, id }: Props) => {
   }
 
   const renderResolvedAddress = () => {
-    if (!resolvedAddress) return null
+    if (!lnsAddress) return null
     return (
       <InlineFlex gap={4} className="success">
         <PersonIcon fontSize="inherit" />
-        {truncate(resolvedAddress)}
+        {truncate(lnsAddress)}
       </InlineFlex>
     )
   }
@@ -127,7 +132,7 @@ const TransferCW721Form = ({ contract, id }: Props) => {
   return (
     <Auto
       columns={[
-        <Card isFetching={tnsState.isLoading}>
+        <Card isFetching={lnsState.isLoading}>
           <NFTAssetItem contract={contract} id={id} />
 
           <Tx {...tx}>

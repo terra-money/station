@@ -54,8 +54,6 @@ const Rewards = () => {
 
     const showTokens = totalToDisplay === -1 || sameDenom
 
-    console.log({ totalToDisplay, sameDenom, showTokens })
-
     return (
       <ModalButton
         title={title}

@@ -8,7 +8,6 @@ import BluetoothIcon from "@mui/icons-material/Bluetooth"
 import { truncate } from "@terra.kitchen/utils"
 import { useWallet } from "@terra-money/wallet-provider"
 import { useAddress } from "data/wallet"
-import { useTnsName } from "data/external/tns"
 import { Button, Copy } from "components/general"
 import CopyStyles from "components/general/Copy.module.scss"
 import { Flex, Grid } from "components/layout"
@@ -20,13 +19,14 @@ import WalletQR from "./WalletQR"
 import styles from "./Connected.module.scss"
 import { ModalButton } from "components/feedback"
 import AddressTable from "app/components/AddressTable"
+import { useLnsName } from "data/external/lns"
 
 const Connected = () => {
   const { t } = useTranslation()
   const { disconnect } = useWallet()
   const address = useAddress()
+  const { data: lnsName } = useLnsName(address ?? "")
   const { wallet, getLedgerKey } = useAuth()
-  const { data: name } = useTnsName(address ?? "")
 
   /* hack to close popover */
   const [key, setKey] = useState(0)
@@ -112,7 +112,7 @@ const Connected = () => {
         className={styles.button}
       >
         <span className={styles.button__text}>
-          {isWallet.local(wallet) ? wallet.name : truncate(name ?? address)}
+          {isWallet.local(wallet) ? wallet.name : lnsName ?? truncate(address)}
         </span>
       </Button>
     </Popover>

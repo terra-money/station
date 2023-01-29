@@ -25,18 +25,20 @@ const SwitchWallet = () => {
             className={styles.wallet}
             active={true}
           >
-            <Flex gap={4}>
-              {is.multisig(wallet) && <MultisigBadge />}
-              {is.ledger(wallet) &&
-                (wallet.bluetooth ? (
-                  <BluetoothIcon style={{ fontSize: 14 }} />
-                ) : (
-                  <UsbIcon style={{ fontSize: 14 }} />
-                ))}
-              <strong>{"name" in wallet ? wallet.name : "Ledger"}</strong>
-            </Flex>
+            <Flex gap={6}>
+              <Flex gap={4}>
+                {is.multisig(wallet) && <MultisigBadge />}
+                {is.ledger(wallet) &&
+                  (wallet.bluetooth ? (
+                    <BluetoothIcon style={{ fontSize: 14 }} />
+                  ) : (
+                    <UsbIcon style={{ fontSize: 14 }} />
+                  ))}
+                <strong>{"name" in wallet ? wallet.name : "Ledger"}</strong>
+              </Flex>
 
-            {truncate(address)}
+              {truncate(address)}
+            </Flex>
           </AuthButton>
         </li>
       )}
@@ -46,7 +48,7 @@ const SwitchWallet = () => {
           const { name, lock } = wallet
           const active = name === connectedWallet?.name
           const children = (
-            <>
+            <Flex gap={6}>
               <Flex gap={4}>
                 {is.multisig(wallet) && <MultisigBadge />}
                 {is.ledger(wallet) &&
@@ -67,7 +69,7 @@ const SwitchWallet = () => {
                     : addressFromWords(wallet.words["330"])
                 )
               )}
-            </>
+            </Flex>
           )
 
           const attrs = { className: styles.wallet, active, children }

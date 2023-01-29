@@ -5,7 +5,7 @@ import {
   MsgSend,
   MsgTransfer,
 } from "@terra-money/feather.js"
-import { isDenom, toAmount } from "@terra.kitchen/utils"
+import { isDenom, toAmount, truncate } from "@terra.kitchen/utils"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { Form, FormItem, FormWarning, Input, Select } from "components/form"
 import ChainSelector from "components/form/ChainSelector"
@@ -22,6 +22,7 @@ import styles from "./SendPage.module.scss"
 import { useWalletRoute } from "./Wallet"
 import validate from "../../txs/validate"
 import { useIBCChannels, useWhitelist } from "data/queries/chains"
+import PersonIcon from "@mui/icons-material/Person"
 import CheckIcon from "@mui/icons-material/Check"
 import ClearIcon from "@mui/icons-material/Clear"
 import ContactsIcon from "@mui/icons-material/Contacts"
@@ -31,11 +32,12 @@ import { queryKey } from "data/query"
 import Tx from "txs/Tx"
 import AddressBookList from "txs/AddressBook/AddressBookList"
 import { ModalButton } from "components/feedback"
+import { useLnsAddress } from "data/external/lns"
 
 interface TxValues {
   asset: string
   chain?: string
-  recipient?: string // AccAddress | TNS
+  recipient?: string // AccAddress | LNS
   address?: AccAddress // hidden input
   input?: number
   memo?: string
@@ -127,6 +129,8 @@ const SendPage = () => {
       readNativeDenom(denom).token === watch("asset")
   )
 
+  const { data: lnsAddress, ...lnsState } = useLnsAddress(recipient ?? "")
+
   /* resolve recipient */
   useEffect(() => {
     if (!recipient) {
@@ -134,10 +138,25 @@ const SendPage = () => {
     } else if (AccAddress.validate(recipient)) {
       setValue("address", recipient)
       form.setFocus("input")
+    } else if (lnsAddress) {
+      setValue("address", lnsAddress)
+      form.setFocus("input")
     } else {
       setValue("address", recipient)
     }
-  }, [form, recipient, setValue])
+  }, [form, recipient, lnsAddress, networkName, setValue])
+
+  const invalid =
+    (networkName === "classic"
+      ? recipient?.endsWith(".lunc")
+      : recipient?.endsWith(".luna")) &&
+    !lnsState.isLoading &&
+    !lnsAddress
+      ? t("Address not found")
+      : ""
+
+  const disabled =
+    invalid || (lnsState.isLoading && t("Searching for address..."))
 
   /* resolve source chain */
   useEffect(() => {
@@ -148,6 +167,23 @@ const SendPage = () => {
 
   /* render detected destination chain */
   function renderDestinationChain() {
+    if (
+      recipient &&
+      lnsAddress &&
+      (networkName === "classic"
+        ? recipient.endsWith(".lunc")
+        : recipient.endsWith(".luna"))
+    ) {
+      return (
+        <span className={styles.destination}>
+          <Flex gap={4} start>
+            <PersonIcon fontSize="inherit" className={styles.icon} />
+            LNS address: <strong>{truncate(lnsAddress)}</strong>
+          </Flex>
+        </span>
+      )
+    }
+
     if (
       !chain ||
       !destinationAddress ||
@@ -306,7 +342,7 @@ const SendPage = () => {
     balance: token?.amount ?? "0",
     estimationTxValues,
     createTx,
-    disabled: false,
+    disabled,
     onChangeMax,
     onSuccess: { label: t("Wallet"), path: "/wallet" },
     taxRequired: true,
@@ -363,13 +399,6 @@ const SendPage = () => {
                       {...register("recipient", {
                         validate: {
                           ...validate.recipient(),
-                          ...validate.ibc(
-                            networks,
-                            chain ?? "",
-                            token?.denom ?? "",
-                            getIBCChannel,
-                            readNativeDenom(token?.denom ?? "").isAxelar
-                          ),
                         },
                       })}
                       placeholder={SAMPLE_ADDRESS}
@@ -390,7 +419,21 @@ const SendPage = () => {
                   />
                 </ModalButton>
 
-                <input {...register("address")} readOnly hidden />
+                <input
+                  {...register("address", {
+                    validate: {
+                      ...validate.ibc(
+                        networks,
+                        chain ?? "",
+                        token?.denom ?? "",
+                        getIBCChannel,
+                        readNativeDenom(token?.denom ?? "").isAxelar
+                      ),
+                    },
+                  })}
+                  readOnly
+                  hidden
+                />
               </FormItem>
 
               <FormItem

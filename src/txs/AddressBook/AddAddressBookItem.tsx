@@ -4,11 +4,11 @@ import { useForm } from "react-hook-form"
 import PersonIcon from "@mui/icons-material/Person"
 import { truncate } from "@terra.kitchen/utils"
 import { useAddressBook } from "data/settings/AddressBook"
-import { useTnsAddress } from "data/external/tns"
 import { InlineFlex } from "components/layout"
 import { Form, FormItem, Submit, Input } from "components/form"
 import { Fetching } from "components/feedback"
 import validate from "txs/validate"
+import { useLnsAddress } from "data/external/lns"
 
 const AddAddressBookItem = ({ close }: { close: () => void }) => {
   const { t } = useTranslation()
@@ -26,16 +26,18 @@ const AddAddressBookItem = ({ close }: { close: () => void }) => {
   }
 
   /* resolve recipient */
-  const { data: resolvedAddress, ...tnsState } = useTnsAddress(recipient ?? "")
+  const { data: resolvedAddress, ...lnsState } = useLnsAddress(recipient ?? "")
 
-  // validate(tns): not found
+  // validate(lns): not found
   const invalid =
-    recipient?.endsWith(".ust") && !tnsState.isLoading && !resolvedAddress
+    (recipient?.endsWith(".luna") || recipient?.endsWith(".lunc")) &&
+    !lnsState.isLoading &&
+    !resolvedAddress
       ? t("Address not found")
       : ""
 
   const disabled =
-    invalid || (tnsState.isLoading && t("Searching for address..."))
+    invalid || (lnsState.isLoading && t("Searching for address..."))
 
   useEffect(() => {
     if (invalid) setError("recipient", { type: "invalid", message: invalid })
@@ -52,7 +54,7 @@ const AddAddressBookItem = ({ close }: { close: () => void }) => {
   }
 
   return (
-    <Fetching isFetching={tnsState.isLoading}>
+    <Fetching isFetching={lnsState.isLoading}>
       <Form onSubmit={handleSubmit(submit)}>
         <FormItem label={t("Name")} error={errors.name?.message}>
           <Input

@@ -2,7 +2,7 @@ import { AccAddress } from "@terra-money/feather.js"
 import { bech32 } from "bech32"
 
 export function getChainIDFromAddress(
-  address: any,
+  address: string | undefined,
   chains: Record<
     string,
     {
@@ -11,8 +11,8 @@ export function getChainIDFromAddress(
     }
   >
 ) {
-  if (!AccAddress.validate(address)) return undefined
-  const addPrefix = AccAddress.getPrefix(address)
+  if (!AccAddress.validate(address ?? "")) return undefined
+  const addPrefix = AccAddress.getPrefix(address ?? "")
   return Object.values(chains).find(
     ({ prefix }) => prefix === addPrefix || `${prefix}valoper` === addPrefix
   )?.chainID

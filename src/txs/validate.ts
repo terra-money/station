@@ -147,6 +147,8 @@ const validate = {
 
 export default validate
 
-/* tns */
+/* AccAddress or LNS domain */
 export const validateRecipient = (address: string) =>
-  AccAddress.validate(address) || address.endsWith(".ust")
+  AccAddress.validate(address) ||
+  address.endsWith(".luna") ||
+  address.endsWith(".lunc")
