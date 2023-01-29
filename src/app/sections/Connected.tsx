@@ -34,9 +34,11 @@ const Connected = () => {
 
   if (!address) return null
 
-  const footer = wallet
-    ? { to: "/auth", onClick: closePopover, children: t("Manage wallets") }
-    : { onClick: disconnect, children: t("Disconnect") }
+  const footer = {
+    to: "/auth",
+    onClick: closePopover,
+    children: t("Manage wallets"),
+  }
 
   return (
     <Popover
@@ -49,7 +51,13 @@ const Connected = () => {
                 <ModalButton
                   renderButton={(open) => (
                     <Tooltip content={t("View Interchain Addresses")}>
-                      <button className={styles.modal} onClick={open}>
+                      <button
+                        className={styles.modal}
+                        onClick={() => {
+                          open()
+                          closePopover()
+                        }}
+                      >
                         {truncate(address)}
                       </button>
                     </Tooltip>
