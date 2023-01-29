@@ -15,7 +15,16 @@ const InitWallet = ({ children }: PropsWithChildren<{}>) => {
   const networkName = useNetworkName()
 
   return status === WalletStatus.INITIALIZING && !sandbox ? (
-    <NetworkLoading title="Initializing your wallet..." />
+    <NetworkLoading
+      title="Initializing your wallet..."
+      timeout={{
+        time: 3000,
+        fallback: () => {
+          localStorage.removeItem("__terra_extension_router_session__")
+          window.location.reload()
+        },
+      }}
+    />
   ) : (
     <QueryClientProvider client={queryClient} key={networkName}>
       {children}
