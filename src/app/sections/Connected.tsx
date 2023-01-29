@@ -6,7 +6,6 @@ import QrCodeIcon from "@mui/icons-material/QrCode"
 import UsbIcon from "@mui/icons-material/Usb"
 import BluetoothIcon from "@mui/icons-material/Bluetooth"
 import { truncate } from "@terra.kitchen/utils"
-import { useWallet } from "@terra-money/wallet-provider"
 import { useAddress } from "data/wallet"
 import { useTnsName } from "data/external/tns"
 import { Button, Copy } from "components/general"
@@ -23,7 +22,6 @@ import AddressTable from "app/components/AddressTable"
 
 const Connected = () => {
   const { t } = useTranslation()
-  const { disconnect } = useWallet()
   const address = useAddress()
   const { wallet, getLedgerKey } = useAuth()
   const { data: name } = useTnsName(address ?? "")
