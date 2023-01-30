@@ -81,6 +81,8 @@ const ChainRewards = ({ chain }: { chain: string }) => {
       }, true)
     }
 
+    const showTokens = totalToDisplay === -1 || sameDenom
+
     const list = totalChainRewards
 
     return (
@@ -102,6 +104,7 @@ const ChainRewards = ({ chain }: { chain: string }) => {
             value={totalToDisplay?.toString() || "-1"}
             amount={amountToDisplay}
             denom={networks[chain]?.baseAsset || ""}
+            showTokens={showTokens}
             onClick={open}
             cardName="rewards"
           ></StakedCard>

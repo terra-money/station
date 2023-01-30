@@ -18,7 +18,7 @@ const StakedCard = (props: PropsWithChildren<Props>) => {
   const { value, amount, denom, cardName, showTokens, children } = props
   const currency = useCurrency()
 
-  if (showTokens && cardName === "rewards") {
+  if (!showTokens && cardName === "rewards") {
     return (
       <Card
         {...props}
