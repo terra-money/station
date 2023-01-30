@@ -42,8 +42,8 @@ export const DefaultSettings = {
   [SettingKey.AddressBook]: [] as AddressBook[],
   [SettingKey.CustomTokens]: DefaultCustomTokens as CustomTokens,
   [SettingKey.MinimumValue]: 0,
-  [SettingKey.HideNonWhitelistTokens]: false,
-  [SettingKey.HideLowBalTokens]: false,
+  [SettingKey.HideNonWhitelistTokens]: true,
+  [SettingKey.HideLowBalTokens]: true,
   [SettingKey.WithdrawAs]: "",
   [SettingKey.Network]: "",
 }
