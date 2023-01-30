@@ -6,29 +6,9 @@ import styles from "./WelcomeModal.module.scss"
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown"
 
 const cx = classNames.bind(styles)
-
 const accordions = [
   {
-    title: "From an Existing Station Wallet",
-    content: [
-      [
-        "Open the extension and enter your seed phrase through the recovery process. You can find a guide ",
-        <a
-          href="https://docs.terra.money/learn/station/migration/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          here
-        </a>,
-        ".",
-      ],
-      [
-        "If you choose not to re-add your wallet you will not be able to access non-Terra chains. However, you will still have access to the private key and funds associated with that wallet.",
-      ],
-    ],
-  },
-  {
-    title: "From a Non-Station Wallet",
+    title: "Existing Wallet",
     content: [
       [
         "Use the ",
@@ -42,13 +22,43 @@ const accordions = [
           here
         </a>,
       ],
+      [
+        "If you choose not to re-add your wallet you will not be able to access non-Terra chains. However, you will still have access to the private key and funds associated with that wallet.",
+      ],
     ],
   },
   {
-    title: "From a Ledger",
+    title: "New Wallet",
     content: [
       [
-        "Click connect and then select ",
+        "Use the ",
+        <span className={styles.highlighted}>New Wallet</span>,
+        " flow in the Station extension or desktop application. You can find a guide ",
+        <a
+          href="https://docs.terra.money/learn/station/wallet#create-a-wallet"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          here
+        </a>,
+      ],
+    ],
+  },
+  {
+    title: "Ledger",
+    content: [
+      [
+        "Go to ",
+        <span className={styles.highlighted}>Add Wallet</span>,
+        " menu in the extension or the ",
+        <a
+          href="https://station.terra.money/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Station Web App
+        </a>,
+        " home page and select ",
         <span className={styles.highlighted}>access with ledger</span>,
         ".",
       ],

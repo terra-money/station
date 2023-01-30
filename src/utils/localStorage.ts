@@ -5,6 +5,7 @@ import {
 import themes from "styles/themes/themes"
 import { useCallback } from "react"
 import { atom, useRecoilState } from "recoil"
+import { WalletStatus, useWallet } from "@terra-money/use-wallet"
 
 export enum SettingKey {
   Theme = "Theme",
@@ -42,8 +43,8 @@ export const DefaultSettings = {
   [SettingKey.AddressBook]: [] as AddressBook[],
   [SettingKey.CustomTokens]: DefaultCustomTokens as CustomTokens,
   [SettingKey.MinimumValue]: 0,
-  [SettingKey.HideNonWhitelistTokens]: false,
-  [SettingKey.HideLowBalTokens]: false,
+  [SettingKey.HideNonWhitelistTokens]: true,
+  [SettingKey.HideLowBalTokens]: true,
   [SettingKey.WithdrawAs]: "",
   [SettingKey.Network]: "",
 }
@@ -79,6 +80,13 @@ export const savedNetworkState = atom({
   key: "savedNetwork",
   default: getLocalSetting(SettingKey.Network) as string | undefined,
 })
+export const useShowWelcomeModal = () => {
+  const { status } = useWallet()
+  return (
+    localStorage.getItem("welcomeModal") === null &&
+    status !== WalletStatus.WALLET_CONNECTED
+  )
+}
 
 export const useSavedNetwork = () => {
   const [savedNetwork, setSavedNetwork] = useRecoilState(savedNetworkState)
