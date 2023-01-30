@@ -24,6 +24,7 @@ import ConnectWallet from "./sections/ConnectWallet"
 import LatestTx from "./sections/LatestTx"
 import ValidatorButton from "./sections/ValidatorButton"
 import DevTools from "./sections/DevTools"
+import { useShowWelcomeModal } from "utils/localStorage"
 
 /* init */
 import InitBankBalance from "./InitBankBalance"
@@ -34,8 +35,7 @@ import NetworkStatus from "components/display/NetworkStatus"
 
 const App = () => {
   const { element: routes } = useNav()
-
-  const showWelcomeModal = localStorage.getItem("welcomeModal") === null
+  const showModal = useShowWelcomeModal()
 
   return (
     <Layout>
@@ -72,7 +72,7 @@ const App = () => {
             <MainContainer>
               {routes}
               <Wallet />
-              {showWelcomeModal && <WelcomeModal />}
+              {showModal && <WelcomeModal />}
             </MainContainer>
           </InitBankBalance>
         </ErrorBoundary>
