@@ -13,7 +13,7 @@ import styles from "./ProposalDeposits.module.scss"
 import { useNetwork } from "data/wallet"
 
 interface Props {
-  id: number
+  id: string
   chain: string
   card?: boolean
 }
@@ -55,7 +55,7 @@ const ProposalDeposits = ({ id, chain, card }: Props) => {
       },
       {
         title: t("Deposit end time"),
-        content: <ToNow>{deposit_end_time}</ToNow>,
+        content: <ToNow>{new Date(deposit_end_time)}</ToNow>,
       },
     ]
 

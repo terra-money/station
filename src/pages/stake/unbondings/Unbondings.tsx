@@ -12,11 +12,12 @@ import { ModalButton } from "components/feedback"
 import { Table } from "components/layout"
 import { Read } from "components/token"
 import { ToNow, TooltipIcon } from "components/display"
-import StakedCard from "./components/StakedCard"
+import StakedCard from "../components/StakedCard"
 import { UnbondingDelegation } from "@terra-money/feather.js"
 import { useNetwork } from "data/wallet"
 import { useNativeDenoms } from "data/token"
 import { getDenomFromAddress } from "utils/coin"
+import styles from "../CardModal.module.scss"
 
 const Unbondings = () => {
   const { t } = useTranslation()
@@ -58,17 +59,23 @@ const Unbondings = () => {
           <StakedCard
             {...state}
             title={
-              <TooltipIcon
-                content={t(
-                  "A maximum 7 undelegations can be in progress at the same time"
+              <div className={styles.header_wrapper}>
+                <TooltipIcon
+                  content={t(
+                    "A maximum 7 undelegations can be in progress at the same time"
+                  )}
+                  placement="bottom"
+                >
+                  {title}
+                </TooltipIcon>
+                {total !== -1 && (
+                  <span className={styles.view_more}>View More</span>
                 )}
-                placement="bottom"
-              >
-                {title}
-              </TooltipIcon>
+              </div>
             }
-            amount={total.toString()}
+            value={total.toString()}
             onClick={open}
+            cardName={"undelegations"}
           />
         )}
       >

@@ -12,7 +12,7 @@
   transition: 400ms;
   background-color: var(--card-bg-muted);
 
-  @media (max-width: (1400px)) {
+  @media (max-width: (1420px)) {
     position: absolute;
     right: 0;
     box-shadow: var(--wallet-shadow);
@@ -56,7 +56,7 @@
     font-size: 10pt;
   }
 
-  @media (max-width: (1400px - 0.02)) {
+  @media (max-width: (1420px - 0.02)) {
     box-shadow: var(--wallet-shadow);
     clip-path: inset(-15px 0px -15px -15px);
   }

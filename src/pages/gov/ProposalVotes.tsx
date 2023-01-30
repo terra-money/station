@@ -27,7 +27,7 @@ const ProposalVotes = ({
   chain,
   card,
 }: {
-  id: number
+  id: string
   chain: string
   card?: boolean
 }) => {
@@ -120,8 +120,8 @@ const ProposalVotes = ({
           )}
 
           <p className={styles.end}>
-            {voting_end_time > new Date() ? t("Ends") : t("Ended")}{" "}
-            <ToNow>{voting_end_time}</ToNow>
+            {new Date(voting_end_time) > new Date() ? t("Ends") : t("Ended")}{" "}
+            <ToNow>{new Date(voting_end_time)}</ToNow>
           </p>
         </Grid>
       </Grid>

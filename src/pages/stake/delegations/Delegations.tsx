@@ -8,8 +8,9 @@ import { ValidatorLink } from "components/general"
 import { ModalButton } from "components/feedback"
 import { Table } from "components/layout"
 import { Read } from "components/token"
-import StakedCard from "./components/StakedCard"
+import StakedCard from "../components/StakedCard"
 import { useNativeDenoms } from "data/token"
+import styles from "../CardModal.module.scss"
 
 const Delegations = () => {
   const { t } = useTranslation()
@@ -45,9 +46,17 @@ const Delegations = () => {
         renderButton={(open) => (
           <StakedCard
             {...state}
-            title={title}
-            amount={total.toString()}
+            title={
+              <div className={styles.header_wrapper}>
+                {title}
+                {total !== -1 && (
+                  <span className={styles.view_more}>View More</span>
+                )}
+              </div>
+            }
+            value={total?.toString() || "0"}
             onClick={open}
+            cardName={"delegations"}
           />
         )}
       >

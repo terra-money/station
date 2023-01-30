@@ -11,8 +11,10 @@ import useAuth from "../../hooks/useAuth"
 import is from "../../scripts/is"
 import SelectPreconfigured from "./SelectPreconfigured"
 import styles from "./SwitchWallet.module.scss"
+import { useWallet } from "@terra-money/use-wallet"
 
 const SwitchWallet = () => {
+  const { disconnect } = useWallet()
   const { wallet, wallets, connect, connectedWallet } = useAuth()
   const address = useAddress()
 
@@ -77,7 +79,13 @@ const SwitchWallet = () => {
               {lock ? (
                 <AuthButton {...attrs} to={`/auth/unlock/${name}`} />
               ) : (
-                <AuthButton {...attrs} onClick={() => connect(name)} />
+                <AuthButton
+                  {...attrs}
+                  onClick={() => {
+                    disconnect()
+                    connect(name)
+                  }}
+                />
               )}
             </li>
           )

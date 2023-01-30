@@ -499,16 +499,18 @@ export const useCalcDelegationsByValidator = (
     }
   })
 
-  const allData = Object.keys(delegationsPriceByDenom).map((denom) => {
-    const { symbol, icon } = readNativeDenom(denom)
-    return {
-      name: symbol,
-      value: delegationsPriceByDenom[denom],
-      amount: delegationsAmountsByDenom[denom],
-      denom,
-      icon,
-    }
-  })
+  const allData = Object.keys(delegationsPriceByDenom)
+    .map((denom) => {
+      const { symbol, icon } = readNativeDenom(denom)
+      return {
+        name: symbol,
+        value: delegationsPriceByDenom[denom],
+        amount: delegationsAmountsByDenom[denom],
+        denom,
+        icon,
+      }
+    })
+    .sort((a, b) => (b?.value ?? 0) - (a?.value ?? 0))
 
   return { currencyTotal, graphData: { all: allData, ...tableDataByChain } }
 }

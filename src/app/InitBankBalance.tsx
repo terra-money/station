@@ -10,7 +10,19 @@ const InitBankBalance = ({ children }: PropsWithChildren<{}>) => {
   const { data: bankBalance } = useInitialBankBalance()
   const { data: tokenBalance } = useInitialTokenBalance()
   // If the balance doesn't exist, nothing is worth rendering.
-  if (!bankBalance) return <NetworkLoading title="Fetching balances..." />
+  if (!bankBalance)
+    return (
+      <NetworkLoading
+        title="Fetching balances..."
+        timeout={{
+          time: 5000,
+          fallback: () => {
+            localStorage.removeItem("enabledNetworks")
+            window.location.reload()
+          },
+        }}
+      />
+    )
   return (
     <BankBalanceProvider value={[...bankBalance, ...(tokenBalance ?? [])]}>
       {children}

@@ -205,6 +205,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
     onSuccess: { label: t("Gov"), path: "/gov" },
     queryKeys: [queryKey.gov.proposals],
     chain: chain ?? "",
+    gasAdjustment: 1.5,
   }
 
   const render = () => {

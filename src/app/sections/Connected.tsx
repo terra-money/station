@@ -6,7 +6,6 @@ import QrCodeIcon from "@mui/icons-material/QrCode"
 import UsbIcon from "@mui/icons-material/Usb"
 import BluetoothIcon from "@mui/icons-material/Bluetooth"
 import { truncate } from "@terra.kitchen/utils"
-import { useWallet } from "@terra-money/wallet-provider"
 import { useAddress } from "data/wallet"
 import { useTnsName } from "data/external/tns"
 import { Button, Copy } from "components/general"
@@ -23,7 +22,6 @@ import AddressTable from "app/components/AddressTable"
 
 const Connected = () => {
   const { t } = useTranslation()
-  const { disconnect } = useWallet()
   const address = useAddress()
   const { wallet, getLedgerKey } = useAuth()
   const { data: name } = useTnsName(address ?? "")
@@ -34,9 +32,11 @@ const Connected = () => {
 
   if (!address) return null
 
-  const footer = wallet
-    ? { to: "/auth", onClick: closePopover, children: t("Manage wallets") }
-    : { onClick: disconnect, children: t("Disconnect") }
+  const footer = {
+    to: "/auth",
+    onClick: closePopover,
+    children: t("Manage wallets"),
+  }
 
   return (
     <Popover
@@ -49,7 +49,13 @@ const Connected = () => {
                 <ModalButton
                   renderButton={(open) => (
                     <Tooltip content={t("View Interchain Addresses")}>
-                      <button className={styles.modal} onClick={open}>
+                      <button
+                        className={styles.modal}
+                        onClick={() => {
+                          open()
+                          closePopover()
+                        }}
+                      >
                         {truncate(address)}
                       </button>
                     </Tooltip>
