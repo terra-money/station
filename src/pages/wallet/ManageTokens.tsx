@@ -11,7 +11,7 @@ const ManageTokens = ({ children: renderButton }: Props) => {
   const { t } = useTranslation()
 
   return (
-    <ModalButton title={t("Manage tokens")} renderButton={renderButton}>
+    <ModalButton title={t("Add assets")} renderButton={renderButton}>
       <ManageCustomTokens />
     </ModalButton>
   )

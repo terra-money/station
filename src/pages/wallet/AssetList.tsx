@@ -10,6 +10,7 @@ import Asset from "./Asset"
 import styles from "./AssetList.module.scss"
 import { useTokenFilters } from "utils/localStorage"
 import { toInput } from "txs/utils"
+import { TooltipIcon } from "components/display"
 
 const AssetList = () => {
   const { t } = useTranslation()
@@ -87,7 +88,13 @@ const AssetList = () => {
         <h3>Assets</h3>
         <ManageTokens>
           {(open) => (
-            <InternalButton onClick={open}>{t("Manage tokens")}</InternalButton>
+            <TooltipIcon
+              content={t(
+                "Native tokens with non-zero balances added by default"
+              )}
+            >
+              <InternalButton onClick={open}>{t("Add assets")}</InternalButton>
+            </TooltipIcon>
           )}
         </ManageTokens>
       </div>
