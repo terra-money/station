@@ -1,10 +1,10 @@
-import { useQuery } from "react-query"
+import { useQueries, useQuery } from "react-query"
 import createContext from "utils/createContext"
 import { queryKey, RefetchOptions } from "../query"
 import { useInterchainLCDClient } from "./lcdClient"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { useCustomTokensCW20 } from "data/settings/CustomTokens"
-import { useNetwork, useNetworkName } from "data/wallet"
+import { useNetwork } from "data/wallet"
 
 export const useInitialTokenBalance = () => {
   const addresses = useInterchainAddresses()
@@ -52,52 +52,29 @@ export const [useBankBalance, BankBalanceProvider] =
 export const useInitialBankBalance = () => {
   const lcd = useInterchainLCDClient()
   const addresses = useInterchainAddresses()
-  const network = useNetworkName()
 
-  const defaultRes = {
-    denom: "uluna",
-    amount: "0",
-    chain: network === "classic" ? "columbus-5" : "phoenix-1",
-  }
+  return useQueries(
+    Object.entries(addresses ?? {}).map(([chainID, address]) => {
+      return {
+        queryKey: [queryKey.bank.balances, address],
+        queryFn: async () => {
+          const bal = ["phoenix-1", "pisco-1"].includes(chainID)
+            ? await lcd.bank.spendableBalances(address)
+            : await lcd.bank.balance(address)
 
-  return useQuery(
-    [queryKey.bank.balances, addresses],
-    async () => {
-      if (!addresses) return [defaultRes] as CoinBalance[]
-      const chains = Object.keys(addresses)
-
-      // TODO: Pagination
-      // Required when the number of results exceed 100
-      const balances = await Promise.all(
-        chains.map((chain) => {
-          return ["phoenix-1", "pisco-1"].includes(chain)
-            ? lcd.bank.spendableBalances(addresses[chain])
-            : lcd.bank.balance(addresses[chain])
-        })
-      )
-
-      const result = [] as CoinBalance[]
-      chains.forEach((chain, i) => {
-        balances[i][0].toArray().forEach(({ denom, amount }) =>
-          result.push({
+          return bal[0].toArray().map(({ denom, amount }) => ({
             denom,
             amount: amount.toString(),
-            chain,
-          })
-        )
-      })
-
-      if (!result.find(({ denom }) => denom === "uluna")) {
-        result.push(defaultRes)
+            chain: chainID,
+          })) as CoinBalance[]
+        },
+        ...RefetchOptions.DEFAULT,
       }
-
-      return result
-    },
-    { ...RefetchOptions.DEFAULT }
+    })
   )
 }
 
-interface CoinBalance {
+export interface CoinBalance {
   amount: string
   denom: string
   chain: string
