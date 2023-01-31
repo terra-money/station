@@ -36,11 +36,6 @@ const NetWorth = () => {
         {currency.symbol}{" "}
         <Read amount={coinsValue} decimals={0} fixed={2} denom="" token="" />
       </h1>
-      <p>
-        {t("{{balance}} available", {
-          balance: `${currency.symbol} ${coinsValue.toFixed(2)} `,
-        })}
-      </p>
       <div className={styles.networth__buttons}>
         <Button
           color="primary"
