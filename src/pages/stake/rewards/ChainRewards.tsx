@@ -42,8 +42,8 @@ const ChainRewards = ({ chain }: { chain: string }) => {
           sameDenom = false
         }
 
-        let newPriceHolder = amountTotal
-        let newAmountHolder = priceTotal
+        let newPriceHolder = priceTotal
+        let newAmountHolder = amountTotal
         if (index === 0) {
           newPriceHolder = 0
           newAmountHolder = 0

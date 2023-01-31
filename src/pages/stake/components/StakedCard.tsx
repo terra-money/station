@@ -18,23 +18,6 @@ const StakedCard = (props: PropsWithChildren<Props>) => {
   const { value, amount, denom, cardName, showTokens, children } = props
   const currency = useCurrency()
 
-  if (!showTokens && cardName === "rewards") {
-    return (
-      <Card
-        {...props}
-        className={styles.card_helper}
-        onClick={new BigNumber(value).gt(0.0) ? props.onClick : undefined}
-      >
-        <Grid
-          className={styles.click_to_view}
-          style={{ alignItems: "end", height: "100%" }}
-        >
-          Click to view rewards.
-        </Grid>
-      </Card>
-    )
-  }
-
   return (
     <Card
       {...props}
@@ -51,15 +34,17 @@ const StakedCard = (props: PropsWithChildren<Props>) => {
             {currency.symbol} <Read amount={value} decimals={0} fixed={2} />
             <span className={styles.small}>{children}</span>
           </span>
-          {new BigNumber(amount || -1).gt(0.0) && (
-            <Read
-              amount={amount}
-              decimals={0}
-              fixed={2}
-              denom={denom}
-              className={styles.amount}
-            />
-          )}
+          {new BigNumber(amount || -1).gt(0.0) &&
+            showTokens &&
+            cardName === "rewards" && (
+              <Read
+                amount={amount}
+                decimals={0}
+                fixed={2}
+                denom={denom}
+                className={styles.amount}
+              />
+            )}
         </Flex>
       ) : (
         <Grid style={{ alignItems: "end", height: "100%" }}>

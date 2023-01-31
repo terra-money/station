@@ -21,11 +21,10 @@ const ChainUnbondings = ({ chain }: { chain: string }) => {
   const networks = useNetwork()
   const readNativeDenom = useNativeDenoms()
   const { data: prices, ...pricesState } = useMemoizedPrices()
-
-  const state = combineState(pricesState)
-
-  const { data } = useUnbondings(chain)
+  const { data, ...unbondingsState } = useUnbondings(chain)
   const chainUnbondings: UnbondingDelegation[] = data || []
+
+  const state = combineState(pricesState, unbondingsState)
 
   /* render */
   const title = t("Undelegations")
