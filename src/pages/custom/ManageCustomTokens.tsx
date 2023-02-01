@@ -14,6 +14,9 @@ interface Props {
   keyword: string
 }
 
+const isCW20 = ({ token }: CustomTokenCW20 | CustomTokenNative) =>
+  AccAddress.validate(token)
+
 const Component = ({ whitelist, keyword }: Props) => {
   const cw20 = useCustomTokensCW20()
   const native = useCustomTokensNative()
@@ -33,9 +36,9 @@ const Component = ({ whitelist, keyword }: Props) => {
 
   const merged = {
     ...whitelist.native,
+    ...whitelist.cw20,
     ...added.native,
     ...added.cw20,
-    ...whitelist.cw20,
   }
 
   // if listed
@@ -65,16 +68,16 @@ const Component = ({ whitelist, keyword }: Props) => {
   const manage = {
     list: [...cw20.list, ...native.list],
     getIsAdded: (item: CustomTokenCW20 | CustomTokenNative) => {
-      // TODO: distinguish native and cw20
-      return cw20.getIsAdded(item)
+      if (isCW20(item)) return cw20.getIsAdded(item)
+      return native.getIsAdded(item as CustomTokenNative)
     },
     add: (item: CustomTokenCW20 | CustomTokenNative) => {
-      // TODO: distinguish native and cw20
-      return cw20.add(item)
+      if (isCW20(item)) return cw20.add(item)
+      return native.add(item as CustomTokenNative)
     },
     remove: (item: CustomTokenCW20 | CustomTokenNative) => {
-      // TODO: distinguish native and cw20
-      return cw20.remove(item)
+      if (isCW20(item)) return cw20.remove(item)
+      return native.remove(item as CustomTokenNative)
     },
   }
 
