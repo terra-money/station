@@ -11,7 +11,7 @@ const customTokensState = atom({
 })
 
 interface Params<T> {
-  type: "ibc" | "cw20" | "cw721"
+  type: "ibc" | "cw20" | "cw721" | "native"
   key: keyof T
 }
 
@@ -48,6 +48,10 @@ export const useCustomTokensIBC = () => {
 
 export const useCustomTokensCW20 = () => {
   return useCustomTokens<CustomTokenCW20>({ type: "cw20", key: "token" })
+}
+
+export const useCustomTokensNative = () => {
+  return useCustomTokens<CustomTokenNative>({ type: "native", key: "token" })
 }
 
 export const useCustomTokensCW721 = () => {
