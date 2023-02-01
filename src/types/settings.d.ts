@@ -8,10 +8,14 @@ interface AddressBook {
 /* Tokens */
 type CustomTokens = Record<NetworkName, CustomTokensByNetwork>
 
+interface NativeTokenBasicInfo {
+  denom: CoinDenom
+}
+
 interface CustomTokensByNetwork {
   cw20: CW20TokenInfoResponse[]
   cw721: CW721ContractInfoResponse[]
-  native: NativeTokenItem[]
+  native: NativeTokenBasicInfo[]
 }
 
 type CustomToken = CustomTokenCW20 | CustomTokenCW721 | CustomTokenNative
