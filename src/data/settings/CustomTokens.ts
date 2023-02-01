@@ -11,7 +11,7 @@ const customTokensState = atom({
 })
 
 interface Params<T> {
-  type: "ibc" | "cw20" | "cw721" | "native"
+  type: "cw20" | "cw721" | "native"
   key: keyof T
 }
 
@@ -39,11 +39,6 @@ const useCustomTokens = <T extends CustomToken>({ type, key }: Params<T>) => {
     updateList(list.filter((item) => item[key] !== oldItem[key]))
 
   return { list, getIsAdded, update: updateList, add, remove }
-}
-
-export const useCustomTokensIBC = () => {
-  const ibc = useCustomTokens<CustomTokenIBC>({ type: "ibc", key: "denom" })
-  return ibc
 }
 
 export const useCustomTokensCW20 = () => {

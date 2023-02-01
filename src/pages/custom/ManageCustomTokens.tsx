@@ -1,8 +1,5 @@
 import { AccAddress } from "@terra-money/feather.js"
-import {
-  useCustomTokensIBC,
-  useCustomTokensNative,
-} from "data/settings/CustomTokens"
+import { useCustomTokensNative } from "data/settings/CustomTokens"
 import { useCustomTokensCW20 } from "data/settings/CustomTokens"
 import { useCW20Whitelist } from "data/Terra/TerraAssets"
 import { useTokenInfoCW20 } from "data/queries/wasm"
@@ -18,18 +15,12 @@ interface Props {
 }
 
 const Component = ({ whitelist, keyword }: Props) => {
-  const ibc = useCustomTokensIBC()
   const cw20 = useCustomTokensCW20()
   const native = useCustomTokensNative()
 
-  type AddedIBC = Record<string, CustomTokenIBC>
   type AddedCW20 = Record<TerraAddress, CustomTokenCW20>
   type AddedNative = Record<CoinDenom, CustomTokenNative>
   const added = {
-    ibc: ibc.list.reduce<AddedIBC>(
-      (acc, item) => ({ ...acc, [item.denom.replace("ibc/", "")]: item }),
-      {}
-    ),
     cw20: cw20.list.reduce<AddedCW20>(
       (acc, item) => ({ ...acc, [item.token]: item }),
       {}
@@ -72,29 +63,25 @@ const Component = ({ whitelist, keyword }: Props) => {
       })
 
   const manage = {
-    list: [...ibc.list, ...cw20.list, ...native.list],
-    getIsAdded: (item: CustomTokenIBC | CustomTokenCW20) => {
-      if ("base_denom" in item) return ibc.getIsAdded(item)
-      else return cw20.getIsAdded(item)
+    list: [...cw20.list, ...native.list],
+    getIsAdded: (item: CustomTokenCW20 | CustomTokenNative) => {
+      // TODO: distinguish native and cw20
+      return cw20.getIsAdded(item)
     },
-    add: (item: CustomTokenIBC | CustomTokenCW20) => {
-      if ("base_denom" in item) return ibc.add(item)
-      else return cw20.add(item)
+    add: (item: CustomTokenCW20 | CustomTokenNative) => {
+      // TODO: distinguish native and cw20
+      return cw20.add(item)
     },
-    remove: (item: CustomTokenIBC | CustomTokenCW20) => {
-      if ("base_denom" in item) return ibc.remove(item)
-      else return cw20.remove(item)
+    remove: (item: CustomTokenCW20 | CustomTokenNative) => {
+      // TODO: distinguish native and cw20
+      return cw20.remove(item)
     },
   }
 
-  const renderTokenItem = (item: CustomTokenIBC | CustomTokenCW20) => {
-    if ("base_denom" in item) {
-      const { symbol, denom, ...rest } = item
-      return { ...rest, token: denom, title: symbol, key: denom }
-    } else {
-      const { token, symbol, ...rest } = item
-      return { ...rest, token, title: symbol, contract: token, key: token }
-    }
+  const renderTokenItem = (item: CustomTokenCW20 | CustomTokenNative) => {
+    // TODO: distinguish native and cw20
+    const { token, symbol, ...rest } = item
+    return { ...rest, token, title: symbol, contract: token, key: token }
   }
 
   return (

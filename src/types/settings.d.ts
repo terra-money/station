@@ -9,20 +9,12 @@ interface AddressBook {
 type CustomTokens = Record<NetworkName, CustomTokensByNetwork>
 
 interface CustomTokensByNetwork {
-  ibc: IBCTokenInfoResponse[]
   cw20: CW20TokenInfoResponse[]
   cw721: CW721ContractInfoResponse[]
   native: NativeTokenItem[]
 }
 
-type CustomToken =
-  | CustomTokenCW20
-  | CustomTokenCW721
-  | CustomTokenIBC
-  | CustomTokenNative
-interface CustomTokenIBC extends IBCTokenItem {
-  denom: IBCDenom
-}
+type CustomToken = CustomTokenCW20 | CustomTokenCW721 | CustomTokenNative
 
 interface CustomTokenCW20 extends CW20TokenInfoResponse {
   token: TerraAddress
