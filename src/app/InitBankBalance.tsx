@@ -11,7 +11,7 @@ import { WithFetching } from "components/feedback"
 
 const InitBankBalance = ({ children }: PropsWithChildren<{}>) => {
   const balances = useInitialBankBalance()
-  const { data: tokenBalance } = useInitialTokenBalance()
+  const tokenBalancesQuery = useInitialTokenBalance()
   const chainID = useChainID()
 
   const DEFAULT_COIN = {
@@ -20,9 +20,13 @@ const InitBankBalance = ({ children }: PropsWithChildren<{}>) => {
     chain: chainID,
   }
 
-  const state = combineState(...balances)
+  const state = combineState(...balances, ...tokenBalancesQuery)
   const bankBalance = balances.reduce(
     (acc, { data }) => (data ? [...acc, ...data] : acc),
+    [] as CoinBalance[]
+  )
+  const tokenBalance: CoinBalance[] = tokenBalancesQuery.reduce(
+    (acc, { data }) => (data ? [...acc, data] : acc),
     [] as CoinBalance[]
   )
 
@@ -31,7 +35,7 @@ const InitBankBalance = ({ children }: PropsWithChildren<{}>) => {
   }
 
   return (
-    <BankBalanceProvider value={[...bankBalance, ...(tokenBalance ?? [])]}>
+    <BankBalanceProvider value={[...bankBalance, ...tokenBalance]}>
       <WithFetching {...state}>
         {(progress) => (
           <>

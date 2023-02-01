@@ -5,6 +5,7 @@ import { useInterchainLCDClient } from "./lcdClient"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { useCustomTokensCW20 } from "data/settings/CustomTokens"
 import { useNetwork } from "data/wallet"
+import { getChainIDFromAddress } from "utils/bech32"
 
 export const useInitialTokenBalance = () => {
   const addresses = useInterchainAddresses()
@@ -12,36 +13,34 @@ export const useInitialTokenBalance = () => {
   const lcd = useInterchainLCDClient()
   const { list: cw20 } = useCustomTokensCW20()
 
-  return useQuery(
-    [queryKey.bank.balances, addresses, cw20, networks],
-    async () => {
-      return (await Promise.all(
-        cw20.map(async ({ token }) => {
-          const chainID =
-            Object.values(networks).find(({ prefix }) =>
-              token.startsWith(prefix)
-            )?.chainID ?? ""
-
-          const address = addresses?.[chainID]
+  return useQueries(
+    cw20.map(({ token }) => {
+      const chainID = getChainIDFromAddress(token, networks)
+      const address = chainID && addresses?.[chainID]
+      return {
+        queryKey: [queryKey.bank.balances, token, chainID, address],
+        queryFn: async () => {
           if (!address)
             return {
               amount: "0",
               denom: token,
               chain: chainID,
-            }
+            } as CoinBalance
+
           const { balance } = await lcd.wasm.contractQuery<{ balance: Amount }>(
             token,
             { balance: { address } }
           )
+
           return {
             amount: balance,
             denom: token,
             chain: chainID,
-          }
-        })
-      )) as CoinBalance[]
-    },
-    { ...RefetchOptions.DEFAULT }
+          } as CoinBalance
+        },
+        ...RefetchOptions.DEFAULT,
+      }
+    })
   )
 }
 
@@ -56,7 +55,7 @@ export const useInitialBankBalance = () => {
   return useQueries(
     Object.entries(addresses ?? {}).map(([chainID, address]) => {
       return {
-        queryKey: [queryKey.bank.balances, address],
+        queryKey: [queryKey.bank.balances, address, chainID],
         queryFn: async () => {
           const bal = ["phoenix-1", "pisco-1"].includes(chainID)
             ? await lcd.bank.spendableBalances(address)
@@ -68,6 +67,7 @@ export const useInitialBankBalance = () => {
             chain: chainID,
           })) as CoinBalance[]
         },
+        disabled: !address,
         ...RefetchOptions.DEFAULT,
       }
     })

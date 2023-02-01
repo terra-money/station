@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next"
 import { useCurrency } from "data/settings/Currency"
 import { combineState } from "data/query"
 import { calcRewardsValues, useRewards } from "data/queries/distribution"
-import { useExchangeRates, useMemoizedPrices } from "data/queries/coingecko"
+import { useExchangeRates } from "data/queries/coingecko"
 import { useMemoizedCalcValue } from "data/queries/coingecko"
 import { useNativeDenoms, WithTokenItem } from "data/token"
 import { ModalButton } from "components/feedback"
@@ -19,18 +19,17 @@ const Rewards = () => {
   const calcValue = useMemoizedCalcValue()
   const readNativeDenom = useNativeDenoms()
 
-  const { data: prices, ...pricesState } = useMemoizedPrices()
   const { data: rewards, ...rewardsState } = useRewards()
   const { data: exchangeRates, ...exchangeRatesState } = useExchangeRates()
 
-  const state = combineState(rewardsState, exchangeRatesState, pricesState)
+  const state = combineState(rewardsState, exchangeRatesState)
 
   /* render */
   const title = t("Staking rewards")
   const render = () => {
     let sameDenom: boolean = true
     const coinsValue =
-      !rewards || !prices
+      !rewards || !exchangeRates
         ? 0
         : rewards.total.toData()?.reduce((acc, { amount, denom }) => {
             const { token, decimals } = readNativeDenom(denom)
@@ -39,7 +38,7 @@ const Rewards = () => {
             }
             return (
               acc +
-              (parseInt(amount) * (prices?.[token]?.price || 0)) /
+              (parseInt(amount) * (exchangeRates?.[token]?.price || 0)) /
                 10 ** decimals
             )
           }, 0)
@@ -53,8 +52,6 @@ const Rewards = () => {
     }
 
     const showTokens = totalToDisplay === -1 || sameDenom
-
-    console.log({ totalToDisplay, sameDenom, showTokens })
 
     return (
       <ModalButton

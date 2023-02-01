@@ -1,7 +1,7 @@
 import { Button } from "components/general"
 import { Read } from "components/token"
 import { useBankBalance } from "data/queries/bank"
-import { useAllMemoizedPrices, useMemoizedPrices } from "data/queries/coingecko"
+import { useExchangeRates } from "data/queries/coingecko"
 import { useCurrency } from "data/settings/Currency"
 import { useNativeDenoms } from "data/token"
 import { useTranslation } from "react-i18next"
@@ -13,18 +13,17 @@ const NetWorth = () => {
   const { t } = useTranslation()
   const currency = useCurrency()
   const coins = useBankBalance()
-  const { data: prices } = useMemoizedPrices()
-  const { data: pricesFromAll } = useAllMemoizedPrices()
+  const { data: prices } = useExchangeRates()
   const readNativeDenom = useNativeDenoms()
   const { setRoute, route } = useWalletRoute()
 
   // TODO: show CW20 balances and staked tokens
   const coinsValue = coins?.reduce((acc, { amount, denom }) => {
-    const { token, decimals } = readNativeDenom(denom)
+    const { token, decimals, symbol } = readNativeDenom(denom)
     return (
       acc +
       (parseInt(amount) *
-        (prices?.[token]?.price || pricesFromAll?.[denom]?.usd || 0)) /
+        (symbol.endsWith("...") ? 0 : prices?.[token]?.price ?? 0)) /
         10 ** decimals
     )
   }, 0)

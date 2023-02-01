@@ -11,7 +11,7 @@ import { Form, FormItem, Input, Select } from "components/form"
 import ChainSelector from "components/form/ChainSelector"
 import { Flex } from "components/layout"
 import { useBankBalance } from "data/queries/bank"
-import { useMemoizedPrices } from "data/queries/coingecko"
+import { useExchangeRates } from "data/queries/coingecko"
 import { useNativeDenoms } from "data/token"
 import { useCallback, useEffect, useMemo } from "react"
 import { useForm } from "react-hook-form"
@@ -54,7 +54,7 @@ const TransferPage = () => {
   const networkName = useNetworkName()
   const { t } = useTranslation()
   const balances = useBankBalance()
-  const { data: prices } = useMemoizedPrices()
+  const { data: prices } = useExchangeRates()
   const readNativeDenom = useNativeDenoms()
   const { route } = useWalletRoute() as unknown as { route: { denom?: string } }
   const availableAssets = useMemo(

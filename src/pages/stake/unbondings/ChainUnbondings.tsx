@@ -3,7 +3,7 @@ import { UnbondingDelegation } from "@terra-money/feather.js"
 import { AccAddress, Dec } from "@terra-money/feather.js"
 import { useNetwork } from "data/wallet"
 import { useNativeDenoms } from "data/token"
-import { useMemoizedPrices } from "data/queries/coingecko"
+import { useExchangeRates } from "data/queries/coingecko"
 import { combineState } from "data/query"
 import { flattenUnbondings, useUnbondings } from "data/queries/staking"
 import { getDenomFromAddress } from "utils/coin"
@@ -20,7 +20,7 @@ const ChainUnbondings = ({ chain }: { chain: string }) => {
   const { t } = useTranslation()
   const networks = useNetwork()
   const readNativeDenom = useNativeDenoms()
-  const { data: prices, ...pricesState } = useMemoizedPrices()
+  const { data: prices, ...pricesState } = useExchangeRates()
 
   const state = combineState(pricesState)
 

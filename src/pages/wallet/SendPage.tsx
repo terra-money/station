@@ -12,7 +12,7 @@ import ChainSelector from "components/form/ChainSelector"
 import { Flex, Grid } from "components/layout"
 import { SAMPLE_ADDRESS } from "config/constants"
 import { useBankBalance } from "data/queries/bank"
-import { useMemoizedPrices } from "data/queries/coingecko"
+import { useExchangeRates } from "data/queries/coingecko"
 import { useNativeDenoms } from "data/token"
 import { useCallback, useEffect, useMemo } from "react"
 import { useForm } from "react-hook-form"
@@ -59,7 +59,7 @@ const SendPage = () => {
   const networkName = useNetworkName()
   const { t } = useTranslation()
   const balances = useBankBalance()
-  const { data: prices } = useMemoizedPrices()
+  const { data: prices } = useExchangeRates()
   const readNativeDenom = useNativeDenoms()
   const { route } = useWalletRoute() as unknown as { route: { denom?: string } }
   const availableAssets = useMemo(
@@ -337,8 +337,10 @@ const SendPage = () => {
                   })}
                   autoFocus
                 >
-                  {availableAssets.map(({ denom, symbol }) => (
-                    <option value={denom}>{symbol}</option>
+                  {availableAssets.map(({ denom, symbol }, i) => (
+                    <option value={denom} key={i}>
+                      {symbol}
+                    </option>
                   ))}
                 </Select>
               </FormItem>

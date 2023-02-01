@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next"
 import { WithFetching } from "components/feedback"
 import { Read, TokenIcon } from "components/token"
-import { useMemoizedPrices, useAllMemoizedPrices } from "data/queries/coingecko"
+import { useExchangeRates } from "data/queries/coingecko"
 import { combineState } from "data/query"
 import { useCurrency } from "data/settings/Currency"
 
@@ -27,17 +27,12 @@ const Asset = (props: Props) => {
   const network = useNetwork()
   const chains = props.chains.filter((chain) => !!network[chain])
 
-  const { data: prices, ...pricesState } = useMemoizedPrices()
-  const { data: pricesFromAll, ...pricesFromAllState } = useAllMemoizedPrices()
+  const { data: prices, ...pricesState } = useExchangeRates()
   const { route, setRoute } = useWalletRoute()
 
-  const coinPrice =
-    props.price || prices?.[token]?.price || pricesFromAll?.[denom]?.usd || 0
-  const change =
-    props.change ||
-    prices?.[token]?.change ||
-    pricesFromAll?.[denom]?.change24h ||
-    0
+  const coinPrice = props.price ?? 0
+  const change = props.change ?? 0
+
   const walletPrice = coinPrice * parseInt(balance ?? "0")
 
   return (
@@ -82,10 +77,7 @@ const Asset = (props: Props) => {
             )}
           </h1>
           <h2 className={styles.amount}>
-            <WithFetching
-              {...combineState(state, pricesState, pricesFromAllState)}
-              height={1}
-            >
+            <WithFetching {...combineState(state, pricesState)} height={1}>
               {(progress, wrong) => (
                 <>
                   {progress}

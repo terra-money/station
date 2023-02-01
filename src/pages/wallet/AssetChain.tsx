@@ -1,6 +1,6 @@
 import { WithFetching } from "components/feedback"
 import { Read, TokenIcon } from "components/token"
-import { useMemoizedPrices } from "data/queries/coingecko"
+import { useExchangeRates } from "data/queries/coingecko"
 import { useCurrency } from "data/settings/Currency"
 import { useNetwork } from "data/wallet"
 import { useTranslation } from "react-i18next"
@@ -18,7 +18,7 @@ const AssetChain = (props: Props) => {
   const { chain, symbol, balance, decimals, token } = props
   const currency = useCurrency()
   const network = useNetwork()
-  const { data: prices, ...pricesState } = useMemoizedPrices()
+  const { data: prices, ...pricesState } = useExchangeRates()
   const { t } = useTranslation()
 
   const { icon, name } = network[chain]
