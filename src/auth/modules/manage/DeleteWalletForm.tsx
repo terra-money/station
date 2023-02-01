@@ -62,7 +62,7 @@ const DeleteWalletForm = () => {
 
           <FormWarning>
             {t(
-              "This action cannot be undone. Mnemonic is required to recover a deleted wallet."
+              "This action cannot be undone. A mnemonic is required to recover a deleted wallet."
             )}
           </FormWarning>
 

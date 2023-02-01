@@ -15,8 +15,8 @@
 
 .modal {
   @include flex-column;
-  min-height: 740px;
-  max-height: 90%;
+  min-height: 670px;
+  max-height: 80vh;
 
   background: var(--card-bg-muted);
   border-radius: var(--border-radius);
@@ -64,7 +64,7 @@
 .accordions {
   @include flex-column(flex-start, center);
   gap: 12px;
-  min-height: 450px;
+  min-height: 300px;
   overflow: scroll;
 
   .accordion,
