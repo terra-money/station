@@ -33,8 +33,7 @@ const InitChains = ({ children }: PropsWithChildren<{}>) => {
     })()
   }, [])
 
-  if (!data)
-    return <NetworkLoading title="Connecting to available networks..." />
+  if (!data) return <NetworkLoading />
 
   return <WhitelistProvider value={data}>{children}</WhitelistProvider>
 }
