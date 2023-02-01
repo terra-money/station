@@ -11,11 +11,11 @@ const accordions = [
     title: "Existing Wallet",
     content: [
       [
-        "Use the ",
+        "If you have a seed phrase from Station or another wallet use the ",
         <span className={styles.highlighted}>Import from seed phrase</span>,
-        " or the ",
+        " flow in the extesnion. If you have a private key from a previous Station wallet use the ",
         <span className={styles.highlighted}>Import from private key</span>,
-        " flow in the extension. This private key is exported from a previous Station wallet. You can find a guide ",
+        " flow. You can find a guide ",
         <a
           href="https://docs.terra.money/learn/station/migration/"
           target="_blank"
@@ -38,7 +38,7 @@ const accordions = [
           target="_blank"
           rel="noopener noreferrer"
         >
-          here
+          here.
         </a>,
       ],
     ],
@@ -47,8 +47,8 @@ const accordions = [
     title: "Ledger",
     content: [
       [
-        "Go to ",
-        <span className={styles.highlighted}>Add Wallet</span>,
+        "Go to the",
+        <span className={styles.highlighted}>Add wallet</span>,
         " menu in the extension or the ",
         <a
           href="https://station.terra.money/"
@@ -58,8 +58,7 @@ const accordions = [
           Station Web App
         </a>,
         " home page and select ",
-        <span className={styles.highlighted}>access with ledger</span>,
-        ".",
+        <span className={styles.highlighted}>Access with ledger.</span>,
       ],
     ],
   },
@@ -105,7 +104,7 @@ const WelcomeModal = () => {
             <div className={styles.content}>
               <ul>
                 {acc.content.map((content, i) => (
-                  <li>{content}</li>
+                  <li className={styles.accContent}>{content}</li>
                 ))}
               </ul>
             </div>

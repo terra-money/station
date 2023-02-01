@@ -67,6 +67,10 @@
   min-height: 450px;
   overflow: scroll;
 
+  .accContent {
+    line-height: 1.8;
+  }
+
   .accordion,
   .lessImportantAccordion {
     @include flex-column(center, normal);
