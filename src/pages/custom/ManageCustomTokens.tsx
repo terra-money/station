@@ -72,7 +72,7 @@ const Component = ({ whitelist, keyword }: Props) => {
       })
 
   const manage = {
-    list: [...ibc.list, ...cw20.list],
+    list: [...ibc.list, ...cw20.list, ...native.list],
     getIsAdded: (item: CustomTokenIBC | CustomTokenCW20) => {
       if ("base_denom" in item) return ibc.getIsAdded(item)
       else return cw20.getIsAdded(item)
