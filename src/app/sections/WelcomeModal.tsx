@@ -31,7 +31,7 @@ const accordions = [
     content: [
       [
         "Use the ",
-        <span className={styles.highlighted}>New Wallet</span>,
+        <span className={styles.highlighted}>New wallet</span>,
         " flow in the Station extension or desktop application. You can find a guide ",
         <a
           href="https://docs.terra.money/learn/station/wallet#create-a-wallet"
