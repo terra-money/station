@@ -9,6 +9,24 @@ import { ExternalLink } from "components/general"
 const cx = classNames.bind(styles)
 const accordions = [
   {
+    title: "New Wallet",
+    content: [
+      [
+        "Use the ",
+        <span className={styles.highlighted}>New wallet</span>,
+        " flow in the Station extension or desktop application. You can find a guide ",
+        <ExternalLink
+          href="https://docs.terra.money/learn/station/wallet#create-a-wallet"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          here
+        </ExternalLink>,
+        ".",
+      ],
+    ],
+  },
+  {
     title: "Existing Wallet",
     content: [
       [
@@ -22,24 +40,6 @@ const accordions = [
         "You can find a guide ",
         <ExternalLink
           href="https://docs.terra.money/learn/station/migration/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          here
-        </ExternalLink>,
-        ".",
-      ],
-    ],
-  },
-  {
-    title: "New Wallet",
-    content: [
-      [
-        "Use the ",
-        <span className={styles.highlighted}>New wallet</span>,
-        " flow in the Station extension or desktop application. You can find a guide ",
-        <ExternalLink
-          href="https://docs.terra.money/learn/station/wallet#create-a-wallet"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -93,7 +93,7 @@ const WelcomeModal = () => {
     >
       <h1 className={styles.title}>{t("Get Started with Station")}</h1>
       <h3 className={styles.subtitle}>
-        Crypto wallet for the interchain and beyond
+        The crypto wallet for the interchain and beyond
       </h3>
 
       <div className={styles.accordions}>
