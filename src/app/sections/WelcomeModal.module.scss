@@ -15,9 +15,7 @@
 
 .modal {
   @include flex-column;
-  min-height: 670px;
   max-height: 80vh;
-
   background: var(--card-bg-muted);
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);

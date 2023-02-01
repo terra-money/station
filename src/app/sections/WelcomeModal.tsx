@@ -156,9 +156,9 @@ const WelcomeModal = () => {
       className={styles.modal}
       overlayClassName={styles.overlay}
     >
-      <h1 className={styles.title}>{t("Get Started with Station")}</h1>
+      <h1 className={styles.title}>{t("Get started with Station")}</h1>
       <h3 className={styles.subtitle}>
-        The crypto wallet for the interchain and beyond
+        Your crypto wallet for the interchain and beyond
       </h3>
 
       <div className={styles.accordions}>
