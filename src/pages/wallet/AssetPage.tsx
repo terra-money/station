@@ -86,17 +86,6 @@ const AssetPage = () => {
         <Button
           onClick={() =>
             setRoute({
-              path: Path.transfer,
-              denom,
-              previusPage: route,
-            })
-          }
-        >
-          {capitalize(t("transfer"))}
-        </Button>
-        <Button
-          onClick={() =>
-            setRoute({
               path: Path.receive,
               previusPage: route,
             })

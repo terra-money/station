@@ -56,16 +56,6 @@ const NetWorth = () => {
         <Button
           onClick={() =>
             setRoute({
-              path: Path.transfer,
-              previusPage: route,
-            })
-          }
-        >
-          {capitalize(t("transfer"))}
-        </Button>
-        <Button
-          onClick={() =>
-            setRoute({
               path: Path.receive,
               previusPage: route,
             })
