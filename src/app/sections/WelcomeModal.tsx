@@ -87,9 +87,9 @@ const WelcomeModal = () => {
       className={styles.modal}
       overlayClassName={styles.overlay}
     >
-      <h1 className={styles.title}>{t("Welcome to Station")}</h1>
+      <h1 className={styles.title}>{t("Get Started with Station")}</h1>
       <h3 className={styles.subtitle}>
-        To enable interchain features complete the following.
+        Crypto wallet for the interchain and beyond
       </h3>
 
       <div className={styles.accordions}>
