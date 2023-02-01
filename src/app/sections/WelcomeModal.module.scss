@@ -67,10 +67,6 @@
   min-height: 450px;
   overflow: scroll;
 
-  .accContent {
-    line-height: 1.8;
-  }
-
   .accordion,
   .lessImportantAccordion {
     @include flex-column(center, normal);
@@ -123,6 +119,7 @@
         margin-left: 15px;
 
         li {
+          line-height: 1.8;
           .highlighted {
             background-color: var(--input-border);
             border-radius: 3px;
