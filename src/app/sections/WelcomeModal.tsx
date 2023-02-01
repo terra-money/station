@@ -11,11 +11,14 @@ const accordions = [
     title: "Existing Wallet",
     content: [
       [
-        "If you have a seed phrase from Station or another wallet use the ",
+        "Use the ",
         <span className={styles.highlighted}>Import from seed phrase</span>,
-        " flow in the extesnion. If you have a private key from a previous Station wallet use the ",
+        " flow in the Station extension. Or use the ",
         <span className={styles.highlighted}>Import from private key</span>,
-        " flow. You can find a guide ",
+        " flow if you have a private key from a previous Station wallet.",
+      ],
+      [
+        "You can find a guide ",
         <a
           href="https://docs.terra.money/learn/station/migration/"
           target="_blank"
@@ -47,9 +50,9 @@ const accordions = [
     title: "Ledger",
     content: [
       [
-        "Go to the",
-        <span className={styles.highlighted}>Add wallet</span>,
-        " menu in the extension or the ",
+        "Select ",
+        <span className={styles.highlighted}>Access with ledger</span>,
+        " in the extension or the ",
         <a
           href="https://station.terra.money/"
           target="_blank"
@@ -57,8 +60,7 @@ const accordions = [
         >
           Station Web App
         </a>,
-        " home page and select ",
-        <span className={styles.highlighted}>Access with ledger.</span>,
+        ".",
       ],
     ],
   },
