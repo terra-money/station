@@ -55,13 +55,13 @@ const accordions = [
       [
         "Select ",
         <span className={styles.highlighted}>Access with ledger</span>,
-        " in the extension or the ",
+        " in the Station extension or ",
         <ExternalLink
           href="https://station.terra.money/"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Station Web App
+          web app
         </ExternalLink>,
         ".",
       ],
