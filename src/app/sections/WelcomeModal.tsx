@@ -116,7 +116,11 @@ const WelcomeModal = () => {
           </section>
         ))}
       </div>
-      <button className={styles.confirm} onClick={submitButton}>
+      <button
+        className={styles.confirm}
+        data-id="welcome-confirm"
+        onClick={submitButton}
+      >
         Confirm
       </button>
     </ReactModal>

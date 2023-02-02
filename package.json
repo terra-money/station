@@ -11,7 +11,9 @@
     "test": "react-scripts test",
     "prepare": "husky install",
     "pre-commit": "lint-staged",
-    "analyze": "source-map-explorer 'build/static/js/*.js'"
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "cypress:open": "concurrently -k \"npm run start\" \"wait-on https://localhost:3000 && cypress open\"",
+    "cypress:test": "concurrently -k \"npm run start\" \"wait-on https://localhost:3000 && cypress run\""
   },
   "dependencies": {
     "@anchor-protocol/anchor.js": "^5.1.1",
@@ -78,12 +80,14 @@
     "@types/react-router-dom": "^5.3.3",
     "@types/secp256k1": "^4.0.3",
     "@types/semver": "^7.3.9",
+    "cypress": "^12.5.1",
     "husky": "^8.0.1",
     "lint-staged": "^12.4.1",
     "react-error-overlay": "6.0.9",
     "react-scripts": "^4.0.3",
     "source-map-explorer": "^2.5.2",
-    "typescript": "^4.6.4"
+    "typescript": "^4.6.4",
+    "wait-on": "^7.0.1"
   },
   "resolutions": {
     "react-error-overlay": "6.0.9"
