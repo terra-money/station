@@ -25,10 +25,14 @@ const AssetList = () => {
   const readNativeDenom = useNativeDenoms()
   const native = useCustomTokensNative()
   const cw20 = useCustomTokensCW20()
-  const alwaysVisibleDenoms = new Set([
-    ...cw20.list.map((a) => a.token),
-    ...native.list.map((a) => a.denom),
-  ])
+  const alwaysVisibleDenoms = useMemo(
+    () =>
+      new Set([
+        ...cw20.list.map((a) => a.token),
+        ...native.list.map((a) => a.denom),
+      ]),
+    [cw20.list, native.list]
+  )
 
   const list = useMemo(
     () =>
