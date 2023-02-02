@@ -73,7 +73,7 @@ export const useExchangeRates = () => {
           })(),
         ])
 
-      const holder = Object.fromEntries(
+      const priceObject = Object.fromEntries(
         Object.entries(prices).map(([denom, { usd, change24h }]) => {
           // if token is LUNA and network is classic, use LUNC price
           if (denom === "uluna" && isClassic) {
@@ -97,14 +97,14 @@ export const useExchangeRates = () => {
       )
 
       Object.entries(TFM_IDs).forEach(([key, value]) => {
-        if (!holder[key] && holder[value]) {
-          holder[key] = {
-            ...holder[value],
+        if (!priceObject[key] && priceObject[value]) {
+          priceObject[key] = {
+            ...priceObject[value],
           }
         }
       })
 
-      return holder
+      return priceObject
     },
     { ...RefetchOptions.DEFAULT }
   )
