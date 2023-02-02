@@ -21,7 +21,11 @@ const SignMultisigTxPage = () => {
     return <SignMultisigTxForm defaultValues={defaultValues} />
   }
 
-  return <Page title={t("Sign a multisig tx")}>{render()}</Page>
+  return (
+    <Page backButton title={t("Sign a multisig tx")}>
+      {render()}
+    </Page>
+  )
 }
 
 export default SignMultisigTxPage

@@ -6,7 +6,7 @@ const NewWalletPage = () => {
   const { t } = useTranslation()
 
   return (
-    <Page title={t("New wallet")} small>
+    <Page backButton title={t("New wallet")} small>
       <Card>
         <NewWalletForm />
       </Card>

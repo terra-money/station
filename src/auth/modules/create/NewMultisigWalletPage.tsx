@@ -6,7 +6,7 @@ const NewMultisigWalletPage = () => {
   const { t } = useTranslation()
 
   return (
-    <Page title={t("New multisig wallet")} small>
+    <Page backButton title={t("New multisig wallet")} small>
       <Card>
         <NewMultisigWalletForm />
       </Card>
