@@ -49,13 +49,7 @@ const Connected = () => {
                 <ModalButton
                   renderButton={(open) => (
                     <Tooltip content={t("View Interchain Addresses")}>
-                      <button
-                        className={styles.modal}
-                        onClick={() => {
-                          open()
-                          closePopover()
-                        }}
-                      >
+                      <button className={styles.modal} onClick={open}>
                         {truncate(address)}
                       </button>
                     </Tooltip>
