@@ -1,5 +1,6 @@
 import { Button } from "components/general"
 import { Read } from "components/token"
+import { TooltipIcon } from "components/display"
 import { useBankBalance } from "data/queries/bank"
 import { useExchangeRates } from "data/queries/coingecko"
 import { useCurrency } from "data/settings/Currency"
@@ -8,6 +9,7 @@ import { useTranslation } from "react-i18next"
 import styles from "./NetWorth.module.scss"
 import { useWalletRoute, Path } from "./Wallet"
 import { capitalize } from "@mui/material"
+import NetWorthTooltip from "./NetWorthTooltip"
 
 const NetWorth = () => {
   const { t } = useTranslation()
@@ -30,7 +32,9 @@ const NetWorth = () => {
 
   return (
     <article className={styles.networth}>
-      <p>{capitalize(t("asset value"))}</p>
+      <TooltipIcon content={<NetWorthTooltip />} placement="bottom">
+        <p>{capitalize(t("portfolio value"))}</p>
+      </TooltipIcon>
       <h1>
         {currency.symbol}{" "}
         <Read amount={coinsValue} decimals={0} fixed={2} denom="" token="" />
