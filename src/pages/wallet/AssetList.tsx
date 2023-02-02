@@ -74,7 +74,14 @@ const AssetList = () => {
           (a, b) =>
             b.price * parseInt(b.balance) - a.price * parseInt(a.balance)
         ),
-    [coins, readNativeDenom, hideNoWhitelist, hideLowBal, prices]
+    [
+      coins,
+      readNativeDenom,
+      prices,
+      hideNoWhitelist,
+      hideLowBal,
+      alwaysVisibleDenoms,
+    ]
   )
 
   const render = () => {
