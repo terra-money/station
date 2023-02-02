@@ -2,8 +2,8 @@
 
 .receive {
   background-color: var(--card-bg-muted);
-  padding-inline: 20px;
-  padding-top: 4rem;
+  padding: 20px;
+  padding-top: 1.5rem;
   grid-area: list;
   max-width: var(--wallet-width);
   box-sizing: border-box;
@@ -12,6 +12,7 @@
   h1 {
     font-size: 18pt;
     margin-bottom: 1rem;
+    margin-left: 2rem;
   }
 
   p {
