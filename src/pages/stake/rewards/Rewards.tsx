@@ -64,7 +64,7 @@ const Rewards = () => {
                 <TooltipIcon content={<RewardsTooltip />} placement="bottom">
                   {title}
                 </TooltipIcon>
-                {!showTokens && (
+                {showTokens && (
                   <span className={styles.view_more}>View More</span>
                 )}
               </div>
