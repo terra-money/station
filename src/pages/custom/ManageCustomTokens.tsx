@@ -14,7 +14,7 @@ interface Props {
   keyword: string
 }
 
-const isCW20 = ({ token }: CustomTokenCW20 | CustomTokenNative) =>
+const isCW20 = ({ token }: CustomTokenCW20 | NativeTokenItem) =>
   AccAddress.validate(token)
 
 const Component = ({ whitelist, keyword }: Props) => {
@@ -22,16 +22,21 @@ const Component = ({ whitelist, keyword }: Props) => {
   const native = useCustomTokensNative()
 
   type AddedCW20 = Record<TerraAddress, CustomTokenCW20>
-  type AddedNative = Record<CoinDenom, CustomTokenNative>
+  type AddedNative = Record<CoinDenom, NativeTokenItem>
+
   const added = {
     cw20: cw20.list.reduce<AddedCW20>(
       (acc, item) => ({ ...acc, [item.token]: item }),
       {}
     ),
-    native: native.list.reduce<AddedNative>(
-      (acc, item) => ({ ...acc, [item.token]: item }),
-      {}
-    ),
+    native: native.list.reduce<AddedNative>((acc, item) => {
+      const token = whitelist.native[item.denom]
+      if (token) {
+        acc[item.denom] = whitelist.native[item.denom]
+      }
+
+      return acc
+    }, {}),
   }
 
   const merged = {
@@ -67,21 +72,21 @@ const Component = ({ whitelist, keyword }: Props) => {
 
   const manage = {
     list: [...cw20.list, ...native.list],
-    getIsAdded: (item: CustomTokenCW20 | CustomTokenNative) => {
+    getIsAdded: (item: CustomTokenCW20 | NativeTokenItem) => {
       if (isCW20(item)) return cw20.getIsAdded(item)
-      return native.getIsAdded(item as CustomTokenNative)
+      return native.getIsAdded({ denom: item.token })
     },
-    add: (item: CustomTokenCW20 | CustomTokenNative) => {
+    add: (item: CustomTokenCW20 | NativeTokenItem) => {
       if (isCW20(item)) return cw20.add(item)
-      return native.add(item as CustomTokenNative)
+      return native.add({ denom: item.token })
     },
-    remove: (item: CustomTokenCW20 | CustomTokenNative) => {
+    remove: (item: CustomTokenCW20 | NativeTokenItem) => {
       if (isCW20(item)) return cw20.remove(item)
-      return native.remove(item as CustomTokenNative)
+      return native.remove({ denom: item.token })
     },
   }
 
-  const renderTokenItem = (item: CustomTokenCW20 | CustomTokenNative) => {
+  const renderTokenItem = (item: CustomTokenCW20 | NativeTokenItem) => {
     // TODO: distinguish native and cw20
     const { token, symbol, ...rest } = item
     return { ...rest, token, title: symbol, contract: token, key: token }

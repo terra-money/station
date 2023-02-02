@@ -5,20 +5,19 @@ import {
   useInitialTokenBalance,
 } from "data/queries/bank"
 import { BankBalanceProvider } from "data/queries/bank"
-import { useChainID } from "data/wallet"
+import { useNetworkName } from "data/wallet"
 import { combineState } from "data/query"
 import { WithFetching } from "components/feedback"
+import { useCustomTokensNative } from "data/settings/CustomTokens"
+import { useWhitelist } from "data/queries/chains"
 
 const InitBankBalance = ({ children }: PropsWithChildren<{}>) => {
   const balances = useInitialBankBalance()
   const tokenBalancesQuery = useInitialTokenBalance()
-  const chainID = useChainID()
+  const native = useCustomTokensNative()
+  const { whitelist } = useWhitelist()
 
-  const DEFAULT_COIN = {
-    denom: "uluna",
-    amount: "0",
-    chain: chainID,
-  }
+  const networkName = useNetworkName()
 
   const state = combineState(...balances, ...tokenBalancesQuery)
   const bankBalance = balances.reduce(
@@ -30,9 +29,16 @@ const InitBankBalance = ({ children }: PropsWithChildren<{}>) => {
     [] as CoinBalance[]
   )
 
-  if (!bankBalance.find(({ denom }) => denom === "uluna")) {
-    bankBalance.push(DEFAULT_COIN)
-  }
+  native.list.forEach(({ denom }) => {
+    if (!bankBalance.find((balance) => balance.denom === denom)) {
+      const token = whitelist[networkName][denom]
+      bankBalance.push({
+        denom,
+        amount: "0",
+        chain: token.chains[0],
+      })
+    }
+  })
 
   return (
     <BankBalanceProvider value={[...bankBalance, ...tokenBalance]}>

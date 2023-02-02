@@ -9,14 +9,13 @@ interface Props<T> extends QueryState {
   renderTokenItem: (item: T) => TokenItemProps
 
   /* manage tokens */
-  list: T[]
   getIsAdded: (item: T) => boolean
   add: (item: T) => void
   remove: (item: T) => void
 }
 
 function TokenList<T extends { symbol: string }>(props: Props<T>) {
-  const { list, getIsAdded, add, remove, ...rest } = props
+  const { getIsAdded, add, remove, ...rest } = props
   const { results, renderTokenItem, ...state } = rest
   const empty = !state.isLoading && !results.length
 

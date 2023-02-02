@@ -18,7 +18,7 @@ interface CustomTokensByNetwork {
   native: NativeTokenBasicInfo[]
 }
 
-type CustomToken = CustomTokenCW20 | CustomTokenCW721 | CustomTokenNative
+type CustomToken = CustomTokenCW20 | CustomTokenCW721 | NativeTokenBasicInfo
 
 interface CustomTokenCW20 extends CW20TokenInfoResponse {
   token: TerraAddress
@@ -27,5 +27,3 @@ interface CustomTokenCW20 extends CW20TokenInfoResponse {
 interface CustomTokenCW721 extends CW721ContractInfoResponse {
   contract: TerraAddress
 }
-
-interface CustomTokenNative extends NativeTokenItem {}

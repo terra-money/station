@@ -10,6 +10,10 @@ import Asset from "./Asset"
 import styles from "./AssetList.module.scss"
 import { useTokenFilters } from "utils/localStorage"
 import { toInput } from "txs/utils"
+import {
+  useCustomTokensCW20,
+  useCustomTokensNative,
+} from "data/settings/CustomTokens"
 
 const AssetList = () => {
   const { t } = useTranslation()
@@ -19,6 +23,12 @@ const AssetList = () => {
   const coins = useBankBalance()
   const { data: prices } = useExchangeRates()
   const readNativeDenom = useNativeDenoms()
+  const native = useCustomTokensNative()
+  const cw20 = useCustomTokensCW20()
+  const alwaysVisibleDenoms = new Set([
+    ...cw20.list.map((a) => a.token),
+    ...native.list.map((a) => a.denom),
+  ])
 
   const list = useMemo(
     () =>
@@ -53,7 +63,13 @@ const AssetList = () => {
         .filter(
           (a) => (hideNoWhitelist ? !a.symbol.endsWith("...") : a) // TODO: update and implement whitelist check
         )
-        .filter((a) => (hideLowBal ? a.price * toInput(a.balance) >= 1 : a))
+        .filter((asset) => {
+          if (!hideLowBal) return true
+
+          if (alwaysVisibleDenoms.has(asset.denom)) return true
+
+          return hideLowBal ? asset.price * toInput(asset.balance) >= 1 : asset
+        })
         .sort(
           (a, b) =>
             b.price * parseInt(b.balance) - a.price * parseInt(a.balance)

@@ -25,7 +25,6 @@ const Asset = (props: Props) => {
   const { t } = useTranslation()
   const currency = useCurrency()
   const network = useNetwork()
-
   const chains = props.chains.filter((chain) => !!network[chain])
 
   const { data: prices, ...pricesState } = useExchangeRates()

@@ -46,7 +46,7 @@ export const useCustomTokensCW20 = () => {
 }
 
 export const useCustomTokensNative = () => {
-  return useCustomTokens<CustomTokenNative>({ type: "native", key: "token" })
+  return useCustomTokens<NativeTokenBasicInfo>({ type: "native", key: "denom" })
 }
 
 export const useCustomTokensCW721 = () => {
