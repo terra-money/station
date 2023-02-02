@@ -1,7 +1,6 @@
 import { ButtonFilter, Card, Page } from "components/layout"
 import ChainFilter from "components/layout/ChainFilter"
 import { useBalances } from "data/queries/bank"
-import { useTranslation } from "react-i18next"
 import QuickStakeForm from "txs/stake/QuickStakeForm"
 import styles from "./QuickStake.module.scss"
 
@@ -11,8 +10,6 @@ export enum QuickStakeAction {
 }
 
 const QuickStake = () => {
-  const { t } = useTranslation()
-
   const renderQuickStakeForm = (
     chainID: string | undefined,
     action: string | undefined
@@ -31,7 +28,6 @@ const QuickStake = () => {
   return (
     <Page>
       <ButtonFilter
-        title={t("Select action")}
         actions={[QuickStakeAction.DELEGATE, QuickStakeAction.UNBOND]}
       >
         {(action) => (
