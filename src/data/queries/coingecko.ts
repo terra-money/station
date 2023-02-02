@@ -1,7 +1,7 @@
 import { useCallback } from "react"
 import { useQuery } from "react-query"
 import { queryKey, RefetchOptions } from "../query"
-import { CURRENCY_KEY, STATION_ASSETS } from "config/constants"
+import { CURRENCY_KEY, STATION_ASSETS, ASSETS } from "config/constants"
 import axios from "axios"
 import { useCurrency } from "data/settings/Currency"
 import { useNetworkName } from "data/wallet"
@@ -52,24 +52,28 @@ export const useExchangeRates = () => {
   return useQuery(
     [queryKey.coingecko.exchangeRates, currency, isClassic],
     async () => {
-      const [{ data: prices }, fiatPrice] = await Promise.all([
-        axios.get<Record<string, TFMPrice>>(
-          `https://price.api.tfm.com/tokens/?limit=1500`
-        ),
-        (async () => {
-          if (currency.id === "USD") return 1
+      const [{ data: TFM_IDs }, { data: prices }, fiatPrice] =
+        await Promise.all([
+          axios.get<Record<string, string>>("station/tfm.json", {
+            baseURL: ASSETS,
+          }),
+          axios.get<Record<string, TFMPrice>>(
+            `https://price.api.tfm.com/tokens/?limit=1500`
+          ),
+          (async () => {
+            if (currency.id === "USD") return 1
 
-          const { data } = await axios.get<{
-            quotes: Record<string, number>
-          }>(
-            `https://apilayer.net/api/live?source=USD&currencies=${currency.id}&access_key=${CURRENCY_KEY}`
-          )
+            const { data } = await axios.get<{
+              quotes: Record<string, number>
+            }>(
+              `https://apilayer.net/api/live?source=USD&currencies=${currency.id}&access_key=${CURRENCY_KEY}`
+            )
 
-          return data?.quotes?.[`USD${currency.id}`] ?? 1
-        })(),
-      ])
+            return data?.quotes?.[`USD${currency.id}`] ?? 1
+          })(),
+        ])
 
-      return Object.fromEntries(
+      const priceObject = Object.fromEntries(
         Object.entries(prices).map(([denom, { usd, change24h }]) => {
           // if token is LUNA and network is classic, use LUNC price
           if (denom === "uluna" && isClassic) {
@@ -91,6 +95,16 @@ export const useExchangeRates = () => {
           ]
         })
       )
+
+      Object.entries(TFM_IDs).forEach(([key, value]) => {
+        if (!priceObject[key] && priceObject[value]) {
+          priceObject[key] = {
+            ...priceObject[value],
+          }
+        }
+      })
+
+      return priceObject
     },
     { ...RefetchOptions.DEFAULT }
   )
