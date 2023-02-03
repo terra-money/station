@@ -1,0 +1,77 @@
+@import "mixins";
+
+.wrapper {
+  max-height: min(85vh, 500px);
+  width: 100%;
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    background-color: var(--card-bg-muted);
+    width: 10px;
+    display: block;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: var(--card-bg-muted);
+  }
+  &::-webkit-scrollbar-thumb {
+    border-left: 4px solid var(--card-bg-muted);
+
+    background-color: var(--bg-muted);
+    border-radius: 4px;
+
+    &:hover {
+      background-color: var(--card-border);
+      cursor: pointer;
+    }
+  }
+  &::-webkit-scrollbar-button {
+    display: none;
+  }
+}
+
+.selector {
+  background: var(--card-bg);
+  border: var(--border-width) solid var(--card-border);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.item {
+  @include flex(space-between);
+
+  color: var(--text);
+  font-size: 11pt;
+  padding: 14px 16px;
+  font-weight: var(--normal);
+  width: 100%;
+
+  &:not(:first-child) {
+    border-top: var(--border-width) solid var(--card-border);
+  }
+
+  &:hover {
+    background: var(--bg-muted);
+    text-decoration: none;
+  }
+}
+
+/* indicator */
+.track {
+  border: solid 1px var(--input-border);
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+}
+
+.indicator {
+  border-radius: 50%;
+  width: 8px;
+  height: 8px;
+}
+
+.indicator__checked {
+  background: var(--text);
+  border-radius: 50%;
+  width: 8px;
+  height: 8px;
+}

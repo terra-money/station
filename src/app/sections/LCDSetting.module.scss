@@ -1,0 +1,33 @@
+.button__padding {
+  margin-bottom: 80px;
+}
+
+.button__conainer {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  margin-top: 0;
+  padding: 30px;
+  background-color: var(--card-bg);
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  border-bottom-left-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+}
+
+.loading {
+  color: var(--info);
+}
+
+.error {
+  color: var(--danger);
+}
+
+.success {
+  color: var(--success);
+}
+
+.icon {
+  font-size: 16px;
+}

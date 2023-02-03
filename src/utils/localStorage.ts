@@ -16,6 +16,7 @@ export enum SettingKey {
   AddressBook = "AddressBook", // Send
   HideNonWhitelistTokens = "HideNonWhiteListTokens",
   Network = "Network",
+  CustomLCD = "CustomLCD",
   HideLowBalTokens = "HideLowBalTokens",
   CustomTokens = "CustomTokens", // Wallet
   MinimumValue = "MinimumValue", // Wallet (UST value to show on the list)
@@ -47,6 +48,7 @@ export const DefaultSettings = {
   [SettingKey.HideLowBalTokens]: true,
   [SettingKey.WithdrawAs]: "",
   [SettingKey.Network]: "",
+  [SettingKey.CustomLCD]: {},
 }
 
 export const getLocalSetting = <T>(key: SettingKey): T => {
@@ -80,6 +82,14 @@ export const savedNetworkState = atom({
   key: "savedNetwork",
   default: getLocalSetting(SettingKey.Network) as string | undefined,
 })
+
+export const customLCDState = atom({
+  key: "customLCD",
+  default: getLocalSetting<Record<string, string | undefined>>(
+    SettingKey.CustomLCD
+  ),
+})
+
 export const useShowWelcomeModal = () => {
   const { status } = useWallet()
   return (
@@ -98,6 +108,16 @@ export const useSavedNetwork = () => {
     [setSavedNetwork]
   )
   return { savedNetwork, changeSavedNetwork }
+}
+
+export const useCustomLCDs = () => {
+  const [customLCDs, setCustomLCDs] = useRecoilState(customLCDState)
+  function changeCustomLCDs(chainID: string, lcd: string | undefined) {
+    const newLCDs = { ...customLCDs, [chainID]: lcd }
+    setLocalSetting(SettingKey.CustomLCD, newLCDs)
+    setCustomLCDs(newLCDs)
+  }
+  return { customLCDs, changeCustomLCDs }
 }
 
 export const useTokenFilters = () => {
