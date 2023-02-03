@@ -62,6 +62,7 @@ const LCDSetting = () => {
     chainID,
     customLCDs[chainID] !== lcd
   )
+  console.log("🚀 ~ file: LCDSetting.tsx:173 ~ LCDSetting ~ lcd", lcd)
 
   const isDisabled = !!errorMessage || isLoading
   const isSaved = (!customLCDs[chainID] && !lcd) || customLCDs[chainID] === lcd
@@ -160,7 +161,7 @@ const LCDSetting = () => {
             <>
               <LoadingCircular size={18} /> Loading...
             </>
-          ) : isSaved ? (
+          ) : isSaved && customLCDs[chainID] ? (
             <>Saved</>
           ) : (
             <>Save</>
