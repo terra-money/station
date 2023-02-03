@@ -2,31 +2,38 @@ import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import GroupsIcon from "@mui/icons-material/Groups"
-import QrCodeIcon from "@mui/icons-material/QrCode"
 import UsbIcon from "@mui/icons-material/Usb"
 import BluetoothIcon from "@mui/icons-material/Bluetooth"
 import { truncate } from "@terra.kitchen/utils"
 import { useAddress } from "data/wallet"
 import { useTnsName } from "data/external/tns"
-import { Button, Copy } from "components/general"
+import { Button } from "components/general"
 import CopyStyles from "components/general/Copy.module.scss"
 import { Flex, Grid } from "components/layout"
 import { Tooltip, Popover } from "components/display"
 import { isWallet, useAuth } from "auth"
 import SwitchWallet from "auth/modules/select/SwitchWallet"
 import PopoverNone from "../components/PopoverNone"
-import WalletQR from "./WalletQR"
 import styles from "./Connected.module.scss"
+import { useWalletRoute, Path, isWalletBarOpen } from "pages/wallet/Wallet"
+import { useRecoilState } from "recoil"
 
 const Connected = () => {
   const { t } = useTranslation()
   const address = useAddress()
   const { wallet, getLedgerKey } = useAuth()
   const { data: name } = useTnsName(address ?? "")
+  const { setRoute, route } = useWalletRoute()
+  const [, setIsOpen] = useRecoilState(isWalletBarOpen)
 
   /* hack to close popover */
   const [key, setKey] = useState(0)
   const closePopover = () => setKey((key) => key + 1)
+
+  const handleReceivePageRoute = () => {
+    setIsOpen(true)
+    setRoute({ path: Path.receive, previusPage: route })
+  }
 
   if (!address) return null
 
@@ -43,32 +50,14 @@ const Connected = () => {
         <PopoverNone className={styles.popover} footer={footer}>
           <Grid gap={16}>
             <Grid gap={4}>
-              <section>
-                {truncate(address)}
-
-                {/* <ModalButton
-                  renderButton={(open) => (
-                    <Tooltip content={t("View Interchain Addresses")}>
-                      <button className={styles.modal} onClick={open}>
-                      </button>
-                    </Tooltip>
-                  )}
-                >
-                  <AddressTable finderLink />
-                </ModalButton> */}
-              </section>
               <Flex gap={4} start>
-                <Copy text={address} />
-                <WalletQR
-                  renderButton={(open) => (
-                    <Tooltip content={t("Show address as QR code")}>
-                      <button className={CopyStyles.button} onClick={open}>
-                        <QrCodeIcon fontSize="inherit" />
-                      </button>
-                    </Tooltip>
-                  )}
-                />
-
+                <Button
+                  outline
+                  className={styles.button}
+                  onClick={handleReceivePageRoute}
+                >
+                  View addresses
+                </Button>
                 {isWallet.ledger(wallet) && (
                   <Tooltip content={t("Show address in Ledger device")}>
                     <button
@@ -84,7 +73,6 @@ const Connected = () => {
                 )}
               </Flex>
             </Grid>
-
             <SwitchWallet />
           </Grid>
         </PopoverNone>

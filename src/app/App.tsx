@@ -70,8 +70,8 @@ const App = () => {
         <ErrorBoundary fallback={fallback}>
           <InitBankBalance>
             <MainContainer>
-              {routes}
               <Wallet />
+              {routes}
               {showModal && <WelcomeModal />}
             </MainContainer>
           </InitBankBalance>
