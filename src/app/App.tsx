@@ -17,7 +17,6 @@ import Aside from "./sections/Aside"
 import NetworkHeader from "./sections/NetworkHeader"
 import Refresh from "./sections/Refresh"
 import Preferences from "./sections/Preferences"
-import SelectTheme from "./sections/SelectTheme"
 import ConnectWallet from "./sections/ConnectWallet"
 
 /* extra */
@@ -56,7 +55,6 @@ const App = () => {
           <section>
             <Refresh />
             <Preferences />
-            <SelectTheme />
             <NetworkStatus />
           </section>
           <ValidatorButton />

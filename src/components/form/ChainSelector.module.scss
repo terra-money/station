@@ -33,7 +33,7 @@
   border-radius: var(--border-radius);
   border: var(--border-width) solid var(--card-border);
   border-top: 0;
-  z-index: 1;
+  z-index: 10;
 
   button {
     padding: 6px 12px;

@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next"
 import classNames from "classnames/bind"
-import PaletteOutlinedIcon from "@mui/icons-material/PaletteOutlined"
 import LockIcon from "@mui/icons-material/Lock"
 import InfoIcon from "@mui/icons-material/Info"
 import { capitalize } from "@mui/material"
@@ -10,8 +9,6 @@ import { useAddress } from "data/wallet"
 import { useThemeState, useValidateTheme } from "data/settings/Theme"
 import { Flex, FlexColumn, Grid } from "components/layout"
 import { Radio } from "components/form"
-import { ModalButton } from "components/feedback"
-import HeaderIconButton from "../components/HeaderIconButton"
 import styles from "./SelectTheme.module.scss"
 
 const cx = classNames.bind(styles)
@@ -64,25 +61,16 @@ const SelectTheme = () => {
   const validate = useValidateTheme()
 
   return (
-    <ModalButton
-      title={t("Select theme")}
-      renderButton={(open) => (
-        <HeaderIconButton onClick={open}>
-          <PaletteOutlinedIcon style={{ fontSize: 18 }} />
-        </HeaderIconButton>
-      )}
-    >
-      <Grid gap={20}>
-        <Selector />
+    <Grid gap={20}>
+      <Selector />
 
-        {address && themes.some((theme) => !validate?.(theme)) && (
-          <Flex gap={4} className={styles.info}>
-            <InfoIcon style={{ fontSize: 18 }} />
-            {t("Preview is available if wallet is disconnected")}
-          </Flex>
-        )}
-      </Grid>
-    </ModalButton>
+      {address && themes.some((theme) => !validate?.(theme)) && (
+        <Flex gap={4} className={styles.info}>
+          <InfoIcon style={{ fontSize: 18 }} />
+          {t("Preview is available if wallet is disconnected")}
+        </Flex>
+      )}
+    </Grid>
   )
 }
 

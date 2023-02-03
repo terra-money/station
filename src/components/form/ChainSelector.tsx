@@ -1,7 +1,7 @@
-import { useNetwork } from "data/wallet"
 import { useMemo, useState } from "react"
 import styles from "./ChainSelector.module.scss"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
+import { useNetworks } from "app/InitNetworks"
 
 interface Props {
   chainsList: string[]
@@ -10,10 +10,20 @@ interface Props {
 }
 
 const ChainSelector = ({ chainsList, onChange, value }: Props) => {
-  const networks = useNetwork()
+  const { networks } = useNetworks()
+  const allNetworks = useMemo(
+    () => ({
+      ...networks.localterra,
+      ...networks.classic,
+      ...networks.testnet,
+      ...networks.mainnet,
+    }),
+    [networks]
+  )
+
   const list = useMemo(
-    () => chainsList.map((chainID) => networks[chainID]),
-    [networks, chainsList]
+    () => chainsList.map((chainID) => allNetworks[chainID]),
+    [allNetworks, chainsList]
   )
   const [open, setOpen] = useState(false)
 
@@ -28,8 +38,8 @@ const ChainSelector = ({ chainsList, onChange, value }: Props) => {
         }}
       >
         <span>
-          <img src={networks[value]?.icon} alt={networks[value]?.name} />{" "}
-          {networks[value]?.name}
+          <img src={allNetworks[value]?.icon} alt={allNetworks[value]?.name} />{" "}
+          {allNetworks[value]?.name}
         </span>{" "}
         <ArrowDropDownIcon style={{ fontSize: 20 }} className={styles.caret} />
       </button>
