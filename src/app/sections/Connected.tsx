@@ -17,8 +17,6 @@ import SwitchWallet from "auth/modules/select/SwitchWallet"
 import PopoverNone from "../components/PopoverNone"
 import WalletQR from "./WalletQR"
 import styles from "./Connected.module.scss"
-import { ModalButton } from "components/feedback"
-import AddressTable from "app/components/AddressTable"
 
 const Connected = () => {
   const { t } = useTranslation()
@@ -46,17 +44,18 @@ const Connected = () => {
           <Grid gap={16}>
             <Grid gap={4}>
               <section>
-                <ModalButton
+                {truncate(address)}
+
+                {/* <ModalButton
                   renderButton={(open) => (
                     <Tooltip content={t("View Interchain Addresses")}>
                       <button className={styles.modal} onClick={open}>
-                        {truncate(address)}
                       </button>
                     </Tooltip>
                   )}
                 >
                   <AddressTable finderLink />
-                </ModalButton>
+                </ModalButton> */}
               </section>
               <Flex gap={4} start>
                 <Copy text={address} />

@@ -37,7 +37,7 @@ const NetworkLoading = ({ title, timeout }: Props) => {
             </h1>
             {timeout && showTimeout && (
               <FlexColumn gap={10}>
-                <p>Oops, something went wrong, this is taking too much time.</p>
+                <p>Something went wrong</p>
                 <Button color="primary" onClick={timeout.fallback}>
                   <ReplayIcon /> Reload Station
                 </Button>
