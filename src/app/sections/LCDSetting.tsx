@@ -133,6 +133,7 @@ const LCDSetting = () => {
           chainsList={networksList}
           value={chainID}
           onChange={(chainID) => setValue("chainID", chainID)}
+          small
         />
       </FormItem>
 
@@ -144,10 +145,14 @@ const LCDSetting = () => {
         <Input
           type="text"
           placeholder={networks[network]?.[chainID]?.lcd}
-          actionButton={{
-            icon: <span className={styles.loading}>Reset</span>,
-            onClick: () => reset(chainID),
-          }}
+          actionButton={
+            lcd || !isSaved
+              ? {
+                  icon: <span className={styles.loading}>Reset</span>,
+                  onClick: () => reset(chainID),
+                }
+              : undefined
+          }
           {...register("lcd", {
             value: customLCDs[chainID] ?? "",
           })}
@@ -160,8 +165,6 @@ const LCDSetting = () => {
             <>
               <LoadingCircular size={18} /> Loading...
             </>
-          ) : isSaved ? (
-            <>Saved</>
           ) : (
             <>Save</>
           )}

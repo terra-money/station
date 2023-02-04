@@ -25,15 +25,24 @@
 
 .options {
   position: absolute;
+  transform: translate(0, 4px);
   width: 100%;
-  @include flex(flex-start, flex-start);
-  flex-direction: column;
+
   padding: 4px 0;
   background-color: var(--card-bg);
   border-radius: var(--border-radius);
   border: var(--border-width) solid var(--card-border);
-  border-top: 0;
   z-index: 10;
+
+  .options__container {
+    margin: 0 6px;
+    max-height: 200px;
+    overflow-y: scroll;
+  }
+
+  .options__container__small {
+    max-height: 120px;
+  }
 
   button {
     padding: 6px 12px;
