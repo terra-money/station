@@ -2,6 +2,10 @@
   position: absolute;
   left: 40px;
   transform: translate(0, 50%);
+
+  svg path {
+    fill: var(--text);
+  }
 }
 
 .button__container {
