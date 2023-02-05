@@ -25,19 +25,34 @@
 
 .options {
   position: absolute;
-  transform: translate(0, 4px);
   width: 100%;
-
   padding: 4px 0;
   background-color: var(--card-bg);
   border-radius: var(--border-radius);
   border: var(--border-width) solid var(--card-border);
   z-index: 10;
+  height: 180px;
+  box-shadow: 0px 5px 7px 0px var(--wallet-shadow-color);
 
   .options__container {
-    margin: 0 6px;
-    max-height: 200px;
+    margin-left: 6px;
+    height: 100%;
     overflow-y: scroll;
+
+    &::-webkit-scrollbar {
+      width: 12px;
+      display: block;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 16px;
+      background-color: var(--button-default-bg);
+      border: 2px solid var(--card-bg);
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
   }
 
   .options__container__small {
