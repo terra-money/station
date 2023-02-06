@@ -6,6 +6,7 @@ import themes from "styles/themes/themes"
 import { useCallback } from "react"
 import { atom, useRecoilState } from "recoil"
 import { WalletStatus, useWallet } from "@terra-money/use-wallet"
+import { sandbox } from "auth/scripts/env"
 
 export enum SettingKey {
   Theme = "Theme",
@@ -101,6 +102,7 @@ export const customLCDState = atom({
 export const useShowWelcomeModal = () => {
   const { status } = useWallet()
   return (
+    !sandbox &&
     localStorage.getItem("welcomeModal") === null &&
     status !== WalletStatus.WALLET_CONNECTED
   )

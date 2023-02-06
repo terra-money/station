@@ -51,6 +51,11 @@ export const isWalletBarOpen = atom({
   default: true,
 })
 
+export const walletBarRoute = atom({
+  key: "isWalletBarOpen",
+  default: true,
+})
+
 const Wallet = () => {
   const [isOpen, setIsOpen] = useRecoilState(isWalletBarOpen)
   const [route, setRoute] = useState<Route>({ path: Path.wallet })
