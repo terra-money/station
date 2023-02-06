@@ -142,16 +142,16 @@
   --bg: hsl(0, 0%, 12%);
   --bg-muted: hsl(240 5% 22%);
   --card-bg: hsl(239, 6%, 17%);
-  --card-bg-muted: #232327;
+  --card-bg-muted: hsl(240, 5%, 15%);
   --card-border: hsl(240 5% 22%);
   --input-bg: var(--card-bg);
   --input-border: hsl(0 0% 30%);
 
   --wallet-shadow: 0 0 15px 3px #000000c7;
 
-  --extension-bg: hsl(240 1% 15%);
-  --extension-text: hsl(210 100% 77%);
-
+  --extension-bg: var(--card-bg);
+  --extension-text: var(--text);
+  
   --wallet-shadow-color: #0000009c;
 }
 
