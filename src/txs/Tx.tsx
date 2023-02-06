@@ -440,6 +440,13 @@ function Tx<TxValues>(props: Props<TxValues>) {
     </>
   )
 
+  console.log("🚀 ~ file: Tx.tsx:444 ~ error", error)
+  console.log(
+    "🚀 ~ file: Tx.tsx:462 ~ error instanceof UserDenied",
+    error instanceof UserDenied
+  )
+  console.log("🚀 ~ file: Tx.tsx:445 ~ UserDenied", UserDenied)
+
   const modal = !error
     ? undefined
     : {
@@ -454,7 +461,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
         children:
           error instanceof UserDenied ? null : (
             <Pre height={120} normal break>
-              {error.message}
+              {error?.message}
             </Pre>
           ),
       }
