@@ -202,7 +202,6 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
     estimationTxValues,
     createTx,
     onChangeMax,
-    onSuccess: { label: t("Gov"), path: "/gov" },
     queryKeys: [queryKey.gov.proposals],
     chain: chain ?? "",
     gasAdjustment: 1.5,

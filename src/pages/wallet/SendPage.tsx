@@ -62,6 +62,7 @@ const SendPage = () => {
   const { data: prices } = useExchangeRates()
   const readNativeDenom = useNativeDenoms()
   const { route } = useWalletRoute() as unknown as { route: { denom?: string } }
+
   const availableAssets = useMemo(
     () =>
       Object.values(
@@ -96,7 +97,7 @@ const SendPage = () => {
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })
-  const { register, trigger, watch, setValue, handleSubmit } = form
+  const { register, trigger, watch, setValue, handleSubmit, reset } = form
   const { formState } = form
   const { errors } = formState
   const {
@@ -308,7 +309,7 @@ const SendPage = () => {
     createTx,
     disabled: false,
     onChangeMax,
-    onSuccess: { label: t("Wallet"), path: "/wallet" },
+    onSuccess: () => reset(),
     taxRequired: true,
     queryKeys: [queryKey.bank.balances, queryKey.bank.balance],
     gasAdjustment:
@@ -326,7 +327,6 @@ const SendPage = () => {
           <section className={styles.send}>
             <div className={styles.form__container}>
               <h1>{t("Send")}</h1>
-
               <FormItem
                 label={t("Asset")}
                 error={errors.asset?.message ?? errors.address?.message}

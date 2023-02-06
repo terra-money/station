@@ -8,6 +8,7 @@ interface LatestTx {
   chainID: string
   redirectAfterTx?: { label: string; path: string }
   queryKeys?: QueryKey[]
+  onSuccess?: () => void
 }
 
 export const latestTxState = atom<LatestTx>({

@@ -333,7 +333,6 @@ const TransferPage = () => {
     createTx,
     disabled: false,
     onChangeMax,
-    onSuccess: { label: t("Wallet"), path: "/wallet" },
     taxRequired: true,
     queryKeys: [queryKey.bank.balances, queryKey.bank.balance],
     gasAdjustment:
