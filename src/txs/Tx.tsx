@@ -68,6 +68,7 @@ interface Props<TxValues> {
 
   /* on tx success */
   onPost?: () => void
+  onSuccess?: () => void
   redirectAfterTx?: { label: string; path: string }
   queryKeys?: QueryKey[]
 }
@@ -83,7 +84,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const { token, decimals, amount, balance, chain } = props
   const { estimationTxValues, createTx, gasAdjustment: txGasAdjustment } = props
   const { children, onChangeMax } = props
-  const { onPost, redirectAfterTx, queryKeys } = props
+  const { onPost, redirectAfterTx, queryKeys, onSuccess } = props
 
   const [isMax, setIsMax] = useState(false)
   const [gasDenom, setGasDenom] = useState<string>("")
@@ -264,6 +265,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
           queryKeys,
           redirectAfterTx,
           chainID: chain,
+          onSuccess,
         })
       } else {
         const { result } = await post({ ...tx, fee })
@@ -272,6 +274,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
           queryKeys,
           redirectAfterTx,
           chainID: chain,
+          onSuccess,
         })
       }
 

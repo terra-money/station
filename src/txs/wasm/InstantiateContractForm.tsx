@@ -83,7 +83,6 @@ const InstantiateContractForm = ({ chainID }: { chainID: string }) => {
     estimationTxValues,
     coins,
     createTx,
-    onSuccess: { label: t("Contract"), path: "/contract" },
     taxRequired: true,
     chain: chainID,
   }

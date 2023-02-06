@@ -130,10 +130,6 @@ const StakeForm = (props: Props) => {
     estimationTxValues,
     createTx,
     onChangeMax,
-    onSuccess: {
-      label: findMoniker(destination),
-      path: `/validator/${destination}`,
-    },
     queryKeys: [
       queryKey.staking.delegations,
       queryKey.staking.unbondings,
