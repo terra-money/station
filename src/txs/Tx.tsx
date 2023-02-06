@@ -437,11 +437,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
     </>
   )
 
-  console.log("🚀 ~ file: Tx.tsx:441 ~ error", error)
-  console.log(
-    "🚀 ~ file: Tx.tsx:459 ~ error instanceof UserDenied",
-    error instanceof UserDenied
-  )
   const modal = !error
     ? undefined
     : {
