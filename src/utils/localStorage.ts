@@ -5,7 +5,6 @@ import {
 import themes from "styles/themes/themes"
 import { useCallback } from "react"
 import { atom, useRecoilState } from "recoil"
-import { WalletStatus, useWallet } from "@terra-money/use-wallet"
 
 export enum SettingKey {
   Theme = "Theme",
@@ -97,14 +96,6 @@ export const customLCDState = atom({
     SettingKey.CustomLCD
   ),
 })
-
-export const useShowWelcomeModal = () => {
-  const { status } = useWallet()
-  return (
-    localStorage.getItem("welcomeModal") === null &&
-    status !== WalletStatus.WALLET_CONNECTED
-  )
-}
 
 export const useSavedNetwork = () => {
   const [savedNetwork, setSavedNetwork] = useRecoilState(savedNetworkState)
