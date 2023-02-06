@@ -30,28 +30,106 @@
 }
 
 .selector {
-  background: var(--card-bg);
   border: var(--border-width) solid var(--card-border);
   border-radius: var(--border-radius);
   overflow: hidden;
+
+  img {
+    height: 1rem;
+  }
 }
 
-.item {
-  @include flex(space-between);
+.accordion {
+  @include flex-column(center, normal);
+  width: var(--accordion-width);
 
-  color: var(--text);
-  font-size: 11pt;
-  padding: 14px 16px;
-  font-weight: var(--normal);
-  width: 100%;
-
-  &:not(:first-child) {
-    border-top: var(--border-width) solid var(--card-border);
+  &:not(:last-child) {
+    border-bottom: var(--border-width) solid var(--card-border);
   }
 
-  &:hover {
-    background: var(--bg-muted);
-    text-decoration: none;
+  .icon {
+    outline: none;
+    height: 0.8em;
+    width: 0.8em;
+  }
+
+  .content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0 20px;
+    overflow-y: auto;
+    max-height: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease-in, max-height 0.4s ease-in,
+      padding-top 0.3s ease-in 0.05s, padding-bottom 0.4s ease 0.2s;
+  }
+
+  &.opened {
+    .content {
+      opacity: 1;
+      max-height: 150px;
+      border-top: var(--border-width) solid var(--card-border);
+      padding: 10px 20px;
+
+      &::-webkit-scrollbar {
+        width: 12px;
+        display: block;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        border-radius: 16px;
+        background-color: var(--button-default-bg);
+        border: 2px solid var(--card-bg-muted);
+      }
+
+      &::-webkit-scrollbar-track {
+        background-color: transparent;
+      }
+    }
+
+    .icon {
+      transform: rotate(180deg);
+    }
+  }
+
+  .item {
+    @include flex(space-between);
+    background: var(--card-bg);
+    color: var(--text);
+    font-size: 11pt;
+    padding: 14px 16px;
+    font-weight: var(--normal);
+    width: 100%;
+
+    .icons_container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    &:not(:first-child) {
+      border-top: var(--border-width) solid var(--card-border);
+    }
+
+    &:hover {
+      background: var(--bg-muted);
+      text-decoration: none;
+    }
+  }
+
+  .network {
+    @include flex(center);
+    gap: 0.5rem;
+    min-width: 4rem;
+    border: var(--border-width) solid var(--card-border);
+    border-radius: 1rem;
+    padding: 4px 8px;
+    color: var(--text);
+    box-shadow: inset 0px 0px 0 0.5px var(--card-border);
+    background-color: var(--bg-muted);
+    font-size: 12px;
+    font-weight: 500;
   }
 }
 
