@@ -5,7 +5,6 @@ import classNames from "classnames/bind"
 import styles from "./WelcomeModal.module.scss"
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown"
 import { ExternalLink } from "components/general"
-import { sandbox as isDesktop } from "auth/scripts/env"
 
 const cx = classNames.bind(styles)
 
