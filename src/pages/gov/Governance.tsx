@@ -9,6 +9,7 @@ const Governance = () => {
   return (
     <Page
       title="Governance"
+      backButton
       extra={
         <LinkButton to="/proposal/new" color="primary" size="small">
           {t("New proposal")}

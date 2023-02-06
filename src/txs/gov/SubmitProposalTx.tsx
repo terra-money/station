@@ -12,7 +12,7 @@ const SubmitProposalTx = () => {
   }
 
   return (
-    <Page title={t("New proposal")} small>
+    <Page backButton title={t("New proposal")} small>
       <ChainFilter outside>{(chain) => render(chain)}</ChainFilter>
     </Page>
   )
