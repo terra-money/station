@@ -10,9 +10,14 @@ const ContractItem = (props: ContractInfo) => {
 
   return (
     <Card
-      title={<FinderLink className={styles.link}>{address}</FinderLink>}
+      title={
+        <FinderLink className={styles.link} short>
+          {address}
+        </FinderLink>
+      }
       extra={<ContractItemActions />}
       mainClassName={styles.main}
+      className={styles.card}
       bordered
     >
       <ContractDetails {...props} />
