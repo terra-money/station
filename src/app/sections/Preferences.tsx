@@ -18,6 +18,7 @@ import { useState } from "react"
 import styles from "./Preferences.module.scss"
 import SelectTheme from "./SelectTheme"
 import LCDSetting from "./LCDSetting"
+import { useTheme } from "data/settings/Theme"
 
 type Routes = "network" | "lang" | "currency" | "theme" | "lcd"
 interface SettingsPage {
@@ -35,6 +36,7 @@ const Preferences = () => {
   const { i18n } = useTranslation()
   const { id: currencyId } = useCurrency()
   const networkName = useNetworkName()
+  const { name } = useTheme()
 
   const routes: Record<Routes, SettingsPage> = {
     network: {
@@ -61,7 +63,7 @@ const Preferences = () => {
     theme: {
       key: "theme",
       tab: t("Theme"),
-      value: "Dark",
+      value: capitalize(name),
       disabled: false,
     },
     lcd: {
