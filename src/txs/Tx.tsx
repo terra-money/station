@@ -446,7 +446,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
         title:
           error instanceof UserDenied ||
           error?.toString().includes("UserDenied")
-            ? t("Transaction was denied by user.")
+            ? t("Transaction was denied by user")
             : error instanceof CreateTxFailed
             ? t("Failed to create tx")
             : error instanceof TxFailed
