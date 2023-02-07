@@ -19,3 +19,51 @@ export const useLocalNodeInfo = (chainID: string) => {
     { ...RefetchOptions.INFINITY, enabled: chainID === "localterra" }
   )
 }
+
+export const useValidateLCD = (
+  lcd?: string,
+  chainID?: string,
+  enabled?: boolean
+) => {
+  return useQuery(
+    [lcd, chainID],
+    async () => {
+      if (!lcd || !chainID) return
+
+      // basic URL validation
+      try {
+        const url = new URL(lcd)
+        if (url.protocol !== "http:" && url.protocol !== "https:") {
+          return "The LCD must be an HTTP or HTTPS URL"
+        }
+      } catch (_) {
+        return "Invalid URL provided"
+      }
+
+      // node_info validation
+      try {
+        const { data } = await axios.get(
+          "/cosmos/base/tendermint/v1beta1/node_info",
+          {
+            baseURL: lcd,
+            timeout: 3_000,
+          }
+        )
+
+        const nodeChain =
+          "default_node_info" in data
+            ? (data.default_node_info.network as string)
+            : (data.node_info.network as string)
+
+        if (nodeChain !== chainID) {
+          return `Invalid chain. Expected ${chainID}, got ${nodeChain}.`
+        }
+      } catch (e) {
+        return "Unable to connect to the LCD"
+      }
+
+      // valid
+    },
+    { ...RefetchOptions.INFINITY, enabled }
+  )
+}

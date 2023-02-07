@@ -58,7 +58,7 @@ const CreateWalletForm = () => {
         />
       </FormItem>
 
-      <FormItem label={t("Mnemonic")} error={errors.mnemonic?.message}>
+      <FormItem label={t("Mnemonic seed")} error={errors.mnemonic?.message}>
         {generated ? (
           <Value>{mnemonic}</Value>
         ) : (

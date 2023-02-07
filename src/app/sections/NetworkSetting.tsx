@@ -1,5 +1,5 @@
 import { useNetworkOptions, useNetworkState } from "data/wallet"
-import { RadioGroup } from "components/form"
+import SettingsSelector from "components/layout/SettingsSelector"
 
 const NetworkSetting = () => {
   const [network, setNetwork] = useNetworkState()
@@ -8,7 +8,7 @@ const NetworkSetting = () => {
   if (!networkOptions) return null
 
   return (
-    <RadioGroup
+    <SettingsSelector
       options={networkOptions}
       value={network}
       onChange={setNetwork}

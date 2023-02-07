@@ -16,7 +16,6 @@ const InitWallet = ({ children }: PropsWithChildren<{}>) => {
 
   return status === WalletStatus.INITIALIZING && !sandbox ? (
     <NetworkLoading
-      title="Initializing your wallet..."
       timeout={{
         time: 3000,
         fallback: () => {

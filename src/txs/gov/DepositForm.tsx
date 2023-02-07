@@ -73,10 +73,6 @@ const DepositForm = () => {
     estimationTxValues,
     createTx,
     onChangeMax,
-    onSuccess: {
-      label: [t("Proposal"), id].join(" "),
-      path: `/proposal/${id}`,
-    },
     queryKeys: [[queryKey.gov.deposits, id]],
     chain,
   }

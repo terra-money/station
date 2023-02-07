@@ -4,6 +4,7 @@ import { getStoredNetwork, storeNetwork } from "../scripts/network"
 import { useWallet, WalletStatus } from "@terra-money/wallet-provider"
 import { walletState } from "./useAuth"
 import is from "../scripts/is"
+import { useCustomLCDs } from "utils/localStorage"
 
 const networkState = atom({
   key: "network",
@@ -26,9 +27,9 @@ export const useNetworkState = () => {
 /* helpers */
 export const useNetworkOptions = () => {
   return [
-    { value: "mainnet", label: "Mainnet" },
-    { value: "testnet", label: "Testnet" },
-    { value: "classic", label: "Classic" },
+    { value: "mainnet", label: "Mainnets" },
+    { value: "testnet", label: "Testnets" },
+    { value: "classic", label: "Terra Classic" },
     { value: "localterra", label: "LocalTerra" },
   ]
 }
@@ -38,6 +39,16 @@ export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
   const [network, setNetwork] = useNetworkState()
   const wallet = useRecoilValue(walletState)
   const connectedWallet = useWallet()
+  const { customLCDs } = useCustomLCDs()
+
+  function withCustomLCDs(networks: Record<ChainID, InterchainNetwork>) {
+    return Object.fromEntries(
+      Object.entries(networks).map(([key, val]) => [
+        key,
+        { ...val, lcd: customLCDs[val.chainID] || val.lcd },
+      ])
+    )
+  }
 
   // check connected wallet
   if (connectedWallet.status === WalletStatus.WALLET_CONNECTED) {
@@ -65,7 +76,9 @@ export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
   // multisig wallet are supported only on terra
   if (is.multisig(wallet)) {
     const terra = Object.values(
-      networks[network as NetworkName] as Record<ChainID, InterchainNetwork>
+      withCustomLCDs(
+        networks[network as NetworkName] as Record<ChainID, InterchainNetwork>
+      )
     ).find(({ prefix }) => prefix === "terra")
     if (!terra) return {}
     return filterEnabledNetworks({ [terra.chainID]: terra })
@@ -73,7 +86,9 @@ export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
 
   if (wallet && !wallet?.words?.["118"]) {
     const chains330 = Object.values(
-      networks[network as NetworkName] as Record<ChainID, InterchainNetwork>
+      withCustomLCDs(
+        networks[network as NetworkName] as Record<ChainID, InterchainNetwork>
+      )
     ).filter(({ coinType }) => coinType === "330")
 
     return filterEnabledNetworks(
@@ -84,7 +99,7 @@ export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
     )
   }
 
-  return filterEnabledNetworks(networks[network as NetworkName])
+  return filterEnabledNetworks(withCustomLCDs(networks[network as NetworkName]))
 }
 
 export const useNetworkName = () => {

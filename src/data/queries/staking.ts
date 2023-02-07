@@ -17,7 +17,7 @@ import { queryKey, Pagination, RefetchOptions } from "../query"
 import { useInterchainLCDClient } from "./lcdClient"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { readAmount, toAmount } from "@terra.kitchen/utils"
-import { useMemoizedPrices } from "data/queries/coingecko"
+import { useExchangeRates } from "data/queries/coingecko"
 import { useNativeDenoms } from "data/token"
 import shuffle from "utils/shuffle"
 import { getIsBonded } from "pages/stake/ValidatorsList"
@@ -277,7 +277,7 @@ export const useCalcInterchainDelegationsTotal = (
     chainID: string
   }>[]
 ) => {
-  const { data: prices } = useMemoizedPrices()
+  const { data: prices } = useExchangeRates()
   const readNativeDenom = useNativeDenoms()
 
   if (!delegationsQueryResults.length)
@@ -384,7 +384,7 @@ export const useCalcDelegationsByValidator = (
   }>[],
   interchainValidators: UseQueryResult<Validator[], unknown>[]
 ): DelegationsResult => {
-  const { data: prices } = useMemoizedPrices()
+  const { data: prices } = useExchangeRates()
   const readNativeDenom = useNativeDenoms()
   const networks = useNetwork()
 

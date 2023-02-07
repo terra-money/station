@@ -1,7 +1,7 @@
 import { useSupportedFiat } from "data/queries/coingecko"
 import { useCurrencyState } from "data/settings/Currency"
-import { RadioGroup } from "components/form"
 import WithSearchInput from "pages/custom/WithSearchInput"
+import SettingsSelector from "components/layout/SettingsSelector"
 
 const CurrencySetting = () => {
   const { data: fiatList = [] } = useSupportedFiat()
@@ -10,7 +10,7 @@ const CurrencySetting = () => {
   return (
     <WithSearchInput gap={8} small>
       {(input) => (
-        <RadioGroup
+        <SettingsSelector
           options={fiatList
             .filter(
               (fiat) =>

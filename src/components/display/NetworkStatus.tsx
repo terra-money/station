@@ -20,7 +20,7 @@ const NetworkStatus = () => {
         <h1>{t("Temporarily disabled networks")}</h1>
         <ul>
           {disabled.map(({ name }) => (
-            <li>{name}</li>
+            <li key={name}>{name}</li>
           ))}
         </ul>
       </article>

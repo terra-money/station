@@ -14,28 +14,25 @@
 }
 
 .modal {
+  max-height: calc(100% - 40px);
   display: grid;
   gap: 32px;
 
-  background: var(--card-bg);
+  background: var(--card-bg-muted);
   border-radius: var(--border-radius);
+  border: var(--border-width) solid var(--card-border);
   box-shadow: var(--box-shadow);
   outline: 0;
   position: relative;
-  overflow: hidden;
-  @include desktop {
-    padding: 40px;
-    width: var(--modal-width);
-  }
+  //overflow: hidden;
 
-  @include mobile {
+  padding: 40px 30px;
+  width: var(--modal-width);
+
+  @media (max-width: 600px) {
     padding: 48px 20px;
     width: calc(100% - 40px);
   }
-}
-
-.modal th {
-  background: var(--card-bg);
 }
 
 .close {
@@ -61,10 +58,6 @@
 
 .confirm {
   font-size: inherit;
-}
-
-.main {
-  overflow: hidden; // Sub components declare their own max-height and overflow-y
 }
 
 .footer {

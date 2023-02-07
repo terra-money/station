@@ -15,6 +15,7 @@ export enum SettingKey {
   AddressBook = "AddressBook", // Send
   HideNonWhitelistTokens = "HideNonWhiteListTokens",
   Network = "Network",
+  CustomLCD = "CustomLCD",
   HideLowBalTokens = "HideLowBalTokens",
   CustomTokens = "CustomTokens", // Wallet
   MinimumValue = "MinimumValue", // Wallet (UST value to show on the list)
@@ -26,7 +27,15 @@ const isSystemDarkMode =
 
 export const DefaultTheme = themes[Number(isSystemDarkMode)]
 
-export const DefaultCustomTokensItem = { ibc: [], cw20: [], cw721: [] }
+export const DefaultCustomTokensItem = {
+  cw20: [],
+  cw721: [],
+  native: [
+    {
+      denom: "uluna",
+    },
+  ],
+}
 const DefaultCustomTokens = { mainnet: DefaultCustomTokensItem }
 
 export const DefaultSettings = {
@@ -42,10 +51,11 @@ export const DefaultSettings = {
   [SettingKey.AddressBook]: [] as AddressBook[],
   [SettingKey.CustomTokens]: DefaultCustomTokens as CustomTokens,
   [SettingKey.MinimumValue]: 0,
-  [SettingKey.HideNonWhitelistTokens]: false,
-  [SettingKey.HideLowBalTokens]: false,
+  [SettingKey.HideNonWhitelistTokens]: true,
+  [SettingKey.HideLowBalTokens]: true,
   [SettingKey.WithdrawAs]: "",
   [SettingKey.Network]: "",
+  [SettingKey.CustomLCD]: {},
 }
 
 export const getLocalSetting = <T>(key: SettingKey): T => {
@@ -80,6 +90,13 @@ export const savedNetworkState = atom({
   default: getLocalSetting(SettingKey.Network) as string | undefined,
 })
 
+export const customLCDState = atom({
+  key: "customLCD",
+  default: getLocalSetting<Record<string, string | undefined>>(
+    SettingKey.CustomLCD
+  ),
+})
+
 export const useSavedNetwork = () => {
   const [savedNetwork, setSavedNetwork] = useRecoilState(savedNetworkState)
   const changeSavedNetwork = useCallback(
@@ -90,6 +107,16 @@ export const useSavedNetwork = () => {
     [setSavedNetwork]
   )
   return { savedNetwork, changeSavedNetwork }
+}
+
+export const useCustomLCDs = () => {
+  const [customLCDs, setCustomLCDs] = useRecoilState(customLCDState)
+  function changeCustomLCDs(chainID: string, lcd: string | undefined) {
+    const newLCDs = { ...customLCDs, [chainID]: lcd }
+    setLocalSetting(SettingKey.CustomLCD, newLCDs)
+    setCustomLCDs(newLCDs)
+  }
+  return { customLCDs, changeCustomLCDs }
 }
 
 export const useTokenFilters = () => {

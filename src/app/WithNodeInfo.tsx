@@ -44,7 +44,7 @@ const WithNodeInfo = ({ children }: PropsWithChildren<{}>) => {
         </Overlay>
       )
     case Status.loading:
-      return <NetworkLoading title="Checking if LocalTerra is running..." />
+      return <NetworkLoading />
 
     case Status.success:
       return <>{children}</>

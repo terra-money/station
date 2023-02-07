@@ -75,7 +75,7 @@ const Stake = () => {
           <Staked chain={chainSelected} />
         )}
 
-        <Tabs tabs={tabs} type="page" />
+        <Tabs tabs={tabs} type="page" state />
       </Col>
     </Page>
   )

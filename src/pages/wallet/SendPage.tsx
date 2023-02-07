@@ -12,7 +12,7 @@ import ChainSelector from "components/form/ChainSelector"
 import { Flex, Grid } from "components/layout"
 import { SAMPLE_ADDRESS } from "config/constants"
 import { useBankBalance } from "data/queries/bank"
-import { useMemoizedPrices } from "data/queries/coingecko"
+import { useExchangeRates } from "data/queries/coingecko"
 import { useNativeDenoms } from "data/token"
 import { useCallback, useEffect, useMemo } from "react"
 import { useForm } from "react-hook-form"
@@ -59,9 +59,10 @@ const SendPage = () => {
   const networkName = useNetworkName()
   const { t } = useTranslation()
   const balances = useBankBalance()
-  const { data: prices } = useMemoizedPrices()
+  const { data: prices } = useExchangeRates()
   const readNativeDenom = useNativeDenoms()
   const { route } = useWalletRoute() as unknown as { route: { denom?: string } }
+
   const availableAssets = useMemo(
     () =>
       Object.values(
@@ -96,7 +97,7 @@ const SendPage = () => {
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })
-  const { register, trigger, watch, setValue, handleSubmit } = form
+  const { register, trigger, watch, setValue, handleSubmit, reset } = form
   const { formState } = form
   const { errors } = formState
   const {
@@ -308,7 +309,7 @@ const SendPage = () => {
     createTx,
     disabled: false,
     onChangeMax,
-    onSuccess: { label: t("Wallet"), path: "/wallet" },
+    onSuccess: () => reset(),
     taxRequired: true,
     queryKeys: [queryKey.bank.balances, queryKey.bank.balance],
     gasAdjustment:
@@ -326,7 +327,6 @@ const SendPage = () => {
           <section className={styles.send}>
             <div className={styles.form__container}>
               <h1>{t("Send")}</h1>
-
               <FormItem
                 label={t("Asset")}
                 error={errors.asset?.message ?? errors.address?.message}
@@ -337,8 +337,10 @@ const SendPage = () => {
                   })}
                   autoFocus
                 >
-                  {availableAssets.map(({ denom, symbol }) => (
-                    <option value={denom}>{symbol}</option>
+                  {availableAssets.map(({ denom, symbol }, i) => (
+                    <option value={denom} key={i}>
+                      {symbol}
+                    </option>
                   ))}
                 </Select>
               </FormItem>

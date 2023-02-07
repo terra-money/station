@@ -50,7 +50,6 @@ const MigrateContractForm = ({ contract }: { contract: AccAddress }) => {
   const tx = {
     estimationTxValues,
     createTx,
-    onSuccess: { label: t("Contract"), path: "/contract" },
     chain: chainID,
   }
 

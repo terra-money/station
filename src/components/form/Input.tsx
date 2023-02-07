@@ -70,6 +70,7 @@ export const SearchInput = forwardRef(
     attrs: InputHTMLAttributes<HTMLInputElement> & {
       padding?: boolean
       small?: boolean
+      inline?: boolean
     },
     ref: ForwardedRef<HTMLInputElement>
   ) => {
@@ -78,7 +79,8 @@ export const SearchInput = forwardRef(
         className={classNames(
           styles.wrapper,
           styles.search,
-          attrs.small && styles.search__small
+          attrs.small && styles.search__small,
+          attrs.inline && styles.search__inline
         )}
         style={attrs.padding ? {} : { margin: 0 }}
       >
