@@ -46,7 +46,7 @@ const SettingsSelector = ({ value, options, onChange, withSearch }: Props) => {
                 onClick={() => onChange(value)}
               >
                 <div className={styles.icons_container}>
-                  {label}
+                  <div>{label}</div>
                   {Object.keys(networksOnSelection).length > 1 && (
                     <Tooltip content={t("View active chains")}>
                       <KeyboardArrowDownIcon

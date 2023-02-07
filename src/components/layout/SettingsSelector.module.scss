@@ -1,31 +1,23 @@
 @import "mixins";
 
 .wrapper {
-  max-height: min(85vh, 500px);
+  max-height: min(60vh, 500px);
   width: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   &::-webkit-scrollbar {
-    background-color: var(--card-bg-muted);
-    width: 10px;
+    width: 12px;
     display: block;
   }
-  &::-webkit-scrollbar-track {
-    background-color: var(--card-bg-muted);
-  }
+
   &::-webkit-scrollbar-thumb {
-    border-left: 4px solid var(--card-bg-muted);
-
-    background-color: var(--bg-muted);
-    border-radius: 4px;
-
-    &:hover {
-      background-color: var(--card-border);
-      cursor: pointer;
-    }
+    border-radius: 16px;
+    background-color: var(--button-default-bg);
+    border: 2px solid var(--card-bg-muted);
   }
-  &::-webkit-scrollbar-button {
-    display: none;
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
   }
 }
 
@@ -106,6 +98,13 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      max-width: 90%;
+
+      div {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
 
     &:not(:first-child) {
