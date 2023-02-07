@@ -440,25 +440,13 @@ function Tx<TxValues>(props: Props<TxValues>) {
     </>
   )
 
-  console.log(
-    "error?.toString().includes('User denied'): ",
-    error?.toString().includes("UserDenied")
-  )
-  console.log("🚀 ~ file: Tx.tsx:444 ~ error?.toString()", error?.toString())
-  console.log("🚀 ~ file: Tx.tsx:444 ~ error", error)
-  console.log(
-    "🚀 ~ file: Tx.tsx:462 ~ error instanceof UserDenied",
-    error instanceof UserDenied
-  )
-  console.log("🚀 ~ file: Tx.tsx:445 ~ UserDenied", UserDenied)
-
   const modal = !error
     ? undefined
     : {
         title:
           error instanceof UserDenied ||
           error?.toString().includes("UserDenied")
-            ? t("User denied")
+            ? t("Transaction was denied by user.")
             : error instanceof CreateTxFailed
             ? t("Failed to create tx")
             : error instanceof TxFailed
