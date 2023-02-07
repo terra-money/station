@@ -444,17 +444,19 @@ function Tx<TxValues>(props: Props<TxValues>) {
     ? undefined
     : {
         title:
-          error instanceof UserDenied
-            ? t("User denied")
+          error instanceof UserDenied ||
+          error?.toString().includes("UserDenied")
+            ? t("Transaction was denied by user")
             : error instanceof CreateTxFailed
             ? t("Failed to create tx")
             : error instanceof TxFailed
             ? t("Tx failed")
             : t("Error"),
         children:
-          error instanceof UserDenied ? null : (
+          error instanceof UserDenied ||
+          error?.toString().includes("UserDenied") ? null : (
             <Pre height={120} normal break>
-              {error.message}
+              {error?.message}
             </Pre>
           ),
       }
