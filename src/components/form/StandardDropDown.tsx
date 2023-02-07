@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 import classNames from "classnames"
-import styles from "./StandardDropDown.module.scss"
+import styles from "./ChainSelector.module.scss"
 
 interface StandardDropdownProps {
   onChange: (chain: string) => void

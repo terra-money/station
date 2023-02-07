@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react"
-import styles from "./StandardDropDown.module.scss"
+import styles from "./ChainSelector.module.scss"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 import { useNetworks } from "app/InitNetworks"
 import WithSearchInput from "pages/custom/WithSearchInput"
