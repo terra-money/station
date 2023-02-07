@@ -4,7 +4,7 @@ import { Form, FormItem, Input, Select } from "components/form"
 import { useTranslation } from "react-i18next"
 import { useNetworks } from "app/InitNetworks"
 import ChainSelector from "components/form/ChainSelector"
-import { useEffect, useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Button } from "components/general"
 import styles from "./LCDSetting.module.scss"
 import { useValidateLCD } from "data/queries/tendermint"
@@ -13,6 +13,7 @@ import ClearIcon from "@mui/icons-material/Clear"
 import CheckIcon from "@mui/icons-material/Check"
 import { Flex } from "components/layout"
 import { useCustomLCDs } from "utils/localStorage"
+import StandardDropdown from "components/form/StandardDropDown"
 
 interface FormValues {
   network: string
@@ -26,6 +27,8 @@ const LCDSetting = () => {
   const { networks } = useNetworks()
   const { t } = useTranslation()
   const { customLCDs, changeCustomLCDs } = useCustomLCDs()
+
+  const [networkIndex, setNetworkIndex] = useState(0)
 
   const form = useForm<FormValues>({ mode: "onChange" })
   const {
@@ -48,6 +51,21 @@ const LCDSetting = () => {
         .map(({ chainID }) => chainID),
     [networks, network]
   )
+
+  useEffect(() => {
+    if (network === undefined) {
+      if (networkName === "testnet") {
+        setNetworkIndex(1)
+        setValue("network", networkOptions[1].value)
+      } else if (networkName === "classic") {
+        setNetworkIndex(2)
+        setValue("network", networkOptions[2].value)
+      } else {
+        setNetworkIndex(0)
+        setValue("network", networkOptions[0].value)
+      }
+    }
+  }, [networkOptions, setValue, network, networkIndex, networkName])
 
   useEffect(() => {
     setValue("chainID", networksList[0])
@@ -114,18 +132,13 @@ const LCDSetting = () => {
   return (
     <Form onSubmit={handleSubmit(submit)}>
       <FormItem label={t("Network")} error={errors.network?.message}>
-        <Select
-          {...register("network", {
-            value: networkName,
-          })}
-          autoFocus
-        >
-          {networkOptions.map(({ value, label }) => (
-            <option value={value} key={value}>
-              {label}
-            </option>
-          ))}
-        </Select>
+        <StandardDropdown
+          networkOptions={networkOptions}
+          value={network}
+          networkIndex={networkIndex}
+          onChange={(network) => setValue("network", network)}
+          setNetworkIndex={setNetworkIndex}
+        />
       </FormItem>
 
       <FormItem label={t("Chain")} error={errors.chainID?.message}>
