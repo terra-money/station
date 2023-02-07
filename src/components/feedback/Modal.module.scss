@@ -14,6 +14,7 @@
 }
 
 .modal {
+  max-height: calc(100% - 40px);
   display: grid;
   gap: 32px;
 
@@ -57,10 +58,6 @@
 
 .confirm {
   font-size: inherit;
-}
-
-.main {
-  overflow: hidden; // Sub components declare their own max-height and overflow-y
 }
 
 .footer {
