@@ -61,7 +61,7 @@ const ProposalDescription = ({ proposal }: { proposal: ProposalResult }) => {
                 <TooltipIcon
                   content={t(`This link has been hidden for security reasons.`)}
                 >
-                  <i>{t("hidden link")}</i>
+                  <i>{t("Hidden link")}</i>
                 </TooltipIcon>
               )
             )
