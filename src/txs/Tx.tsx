@@ -440,6 +440,11 @@ function Tx<TxValues>(props: Props<TxValues>) {
     </>
   )
 
+  console.log(
+    "error?.toString().includes('User denied'): ",
+    error?.toString().includes("UserDenied")
+  )
+  console.log("🚀 ~ file: Tx.tsx:444 ~ error?.toString()", error?.toString())
   console.log("🚀 ~ file: Tx.tsx:444 ~ error", error)
   console.log(
     "🚀 ~ file: Tx.tsx:462 ~ error instanceof UserDenied",
@@ -451,7 +456,8 @@ function Tx<TxValues>(props: Props<TxValues>) {
     ? undefined
     : {
         title:
-          error instanceof UserDenied
+          error instanceof UserDenied ||
+          error?.toString().includes("UserDenied")
             ? t("User denied")
             : error instanceof CreateTxFailed
             ? t("Failed to create tx")
@@ -459,7 +465,8 @@ function Tx<TxValues>(props: Props<TxValues>) {
             ? t("Tx failed")
             : t("Error"),
         children:
-          error instanceof UserDenied ? null : (
+          error instanceof UserDenied ||
+          error?.toString().includes("UserDenied") ? null : (
             <Pre height={120} normal break>
               {error?.message}
             </Pre>
