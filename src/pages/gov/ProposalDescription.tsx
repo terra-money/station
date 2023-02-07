@@ -25,17 +25,16 @@ const ProposalDescription = ({ proposal }: { proposal: ProposalResult }) => {
         result.push(<h2 key={i}>{line.replace("## ", "")}</h2>)
       } else if (line.startsWith("### ")) {
         result.push(<h3 key={i}>{line.replace("### ", "")}</h3>)
-      } else if (line.startsWith("- ")) {
-        result.push(<li key={i}>{line.replace("- ", "")}</li>)
       } else {
         const lineResult: (React.ReactNode | string)[] = []
         const pattern =
           /\*\*(.*?)\*\*|`(.*?)`|(https?:\/\/[^\s]+)|\[(.*?)\]\((https?:\/\/[^\s]+)\)/g
-        let match = pattern.exec(line)
+        const fixedLine = line.startsWith("- ") ? line.replace("- ", "") : line
+        let match = pattern.exec(fixedLine)
         let lastIndex = 0
 
         while (match) {
-          lineResult.push(line.slice(lastIndex, match.index))
+          lineResult.push(fixedLine.slice(lastIndex, match.index))
           if (match[1]) {
             // bold text
             lineResult.push(<b key={`${i}-${lineResult.length}`}>{match[1]}</b>)
@@ -68,22 +67,36 @@ const ProposalDescription = ({ proposal }: { proposal: ProposalResult }) => {
             )
           } else if (match[4] && match[5]) {
             result.push(
-              <ExternalLink
-                href={match[5]}
-                icon
-                key={`${i}-${lineResult.length}`}
-              >
-                {match[4]}
-              </ExternalLink>
+              showLinks || isLinkSafe(match[3]) ? (
+                <ExternalLink
+                  href={match[5]}
+                  icon
+                  key={`${i}-${lineResult.length}`}
+                  style={{
+                    color: isLinkSafe(match[5]) ? undefined : "var(--danger)",
+                  }}
+                >
+                  {match[4]}
+                </ExternalLink>
+              ) : (
+                <TooltipIcon
+                  content={t(`This link has been hidden for security reasons.`)}
+                >
+                  <i>{t("hidden link")}</i>
+                </TooltipIcon>
+              )
             )
           }
           lastIndex = pattern.lastIndex
-          match = pattern.exec(line)
+          match = pattern.exec(fixedLine)
         }
-        lineResult.push(line.slice(lastIndex))
+        lineResult.push(fixedLine.slice(lastIndex))
 
-        result.push(<p key={i}>{lineResult}</p>)
-        result.push(<br key={`${i}-br`} />)
+        if (line.startsWith("- ")) {
+          result.push(<li key={i}>{lineResult}</li>)
+        } else {
+          result.push(<p key={i}>{lineResult}</p>)
+        }
       }
     })
 
@@ -105,6 +118,7 @@ const ProposalDescription = ({ proposal }: { proposal: ProposalResult }) => {
 export default ProposalDescription
 
 function isLinkSafe(url: string) {
+  console.log(url)
   try {
     const { protocol, hostname } = new URL(url)
     return (
