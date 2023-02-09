@@ -12,7 +12,6 @@ import { useTranslation } from "react-i18next"
 import WithSearchInput from "pages/custom/WithSearchInput"
 import AddressBox from "components/form/AddressBox"
 import { useBankBalance } from "data/queries/bank"
-import { useMemo } from "react"
 
 interface Props {
   finderLink?: boolean // either display finder link if true or AddressBox comp
@@ -27,24 +26,21 @@ const AddressTable = (props: Props) => {
   const { t } = useTranslation()
   const coins = useBankBalance()
 
-  const addressData = useMemo(
-    () =>
-      Object.keys(addresses)
-        .map((key) => ({
-          address: addresses?.[key],
-          chainName: getChainNamefromID(key, networks) ?? key,
-          id: key,
-        }))
-        .sort((a) => (coins.some(({ chain }) => chain === a.id) ? -1 : 1)),
-    [addresses, coins, networks]
+  const NotConnected = () => (
+    <p className={styles.connect}>
+      {t("Connect a wallet to see your addresses")}
+    </p>
   )
 
-  if (!isConnected)
-    return (
-      <p className={styles.connect}>
-        {t("Connect a wallet to see your addresses")}
-      </p>
-    )
+  if (!isConnected) return <NotConnected />
+
+  const addressData = Object.keys(addresses)
+    .map((key) => ({
+      address: addresses?.[key],
+      chainName: getChainNamefromID(key, networks) ?? key,
+      id: key,
+    }))
+    .sort((a) => (coins.some(({ chain }) => chain === a.id) ? -1 : 1))
 
   return (
     <WithSearchInput gap={10} placeholder={t("Search for a chain...")}>
