@@ -37,11 +37,11 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
   useEffect(() => {
     const testChains = () => {
       if (!networks) return
-      const testBase = {
+      const testBase = Object.values({
         ...networks.mainnet,
         ...networks.testnet,
         ...networks.classic,
-      }
+      })
 
       // const stored = localStorage.getItem(SettingKey.NetworkCacheTime)
       // const cached = stored && JSON.parse(stored)
@@ -51,28 +51,29 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
       //   return
       // }
 
-      for (const network of Object.values(testBase)) {
-        try {
-          axios
-            .get(
-              `/cosmos/bank/v1beta1/balances/${randomAddress(network.prefix)}`,
-              {
-                baseURL: customLCDs[network.chainID] || network.lcd,
-                timeout: 5_000,
-              }
-            )
-            .then(({ data }) => {
-              if (Array.isArray(data.balances)) {
-                setEnabledNetworks((prev) => [...prev, network.chainID])
-              }
-            })
-        } catch (e) {
-          console.error(e)
-          return null
-        }
-      }
-      console.log(enabledNetworks)
-      // setLocalSetting(SettingKey.EnabledNetworks, enabledNetworks)
+      const networkRequests = Object.values(testBase).map((network) =>
+        axios
+          .get(
+            `/cosmos/bank/v1beta1/balances/${randomAddress(network.prefix)}`,
+            {
+              baseURL: customLCDs[network.chainID] || network.lcd,
+              timeout: 5_000,
+            }
+          )
+          .then(({ data }) => {
+            if (Array.isArray(data.balances)) {
+              return network.chainID
+            }
+          })
+          .catch((e) => {
+            console.error(e)
+            return null
+          })
+      )
+
+      axios.all(networkRequests).then((results) => {
+        setEnabledNetworks(results.filter((r) => r !== null) as string[])
+      })
     }
 
     testChains()
