@@ -1,6 +1,6 @@
 import { useNetworkName, useNetworkOptions } from "data/wallet"
 import { useForm } from "react-hook-form"
-import { Form, FormItem, Input, Select } from "components/form"
+import { Form, FormItem, Input } from "components/form"
 import { useTranslation } from "react-i18next"
 import { useNetworks } from "app/InitNetworks"
 import ChainSelector from "components/form/ChainSelector"
