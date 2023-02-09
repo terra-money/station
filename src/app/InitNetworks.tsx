@@ -16,8 +16,16 @@ export const [useNetworks, NetworksProvider] = createContext<{
 
 const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
   const [networks, setNetworks] = useState<InterchainNetworks>()
-  const [enabledNetworks, setEnabledNetworks] = useState<string[]>([])
+  const [enabledNetworks, setEnabledNetworks] = useState<string[]>([
+    "phoenix-1",
+  ])
   const { customLCDs } = useCustomLCDs()
+  const pushToEnabledNetworks = (chainID: string) => {
+    setEnabledNetworks((prevEnabledNetworks) => [
+      ...prevEnabledNetworks,
+      chainID,
+    ])
+  }
 
   useEffect(() => {
     const fetchChains = async () => {
@@ -41,7 +49,6 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
         ...networks.mainnet,
         ...networks.testnet,
         ...networks.classic,
-        //...networks.localterra,
       }
 
       const stored = localStorage.getItem("enabledNetworks")
@@ -52,40 +59,42 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
         return
       }
 
-      const result = await Promise.all(
-        Object.values(testBase).map(async (network) => {
-          if (network.prefix === "terra") return network.chainID
-          try {
-            const { data } = await axios.get(
-              `/cosmos/bank/v1beta1/balances/${randomAddress(network.prefix)}`,
-              {
-                baseURL: customLCDs[network.chainID] || network.lcd,
-                timeout: 3_000,
-              }
-            )
-            return Array.isArray(data.balances) && network.chainID
-          } catch (e) {
-            console.error(e)
-            return null
+      for (const network of Object.values(testBase)) {
+        if (network.prefix === "terra") {
+          pushToEnabledNetworks(network.chainID)
+          continue
+        }
+
+        try {
+          const { data } = await axios.get(
+            `/cosmos/bank/v1beta1/balances/${randomAddress(network.prefix)}`,
+            {
+              baseURL: customLCDs[network.chainID] || network.lcd,
+              timeout: 4_000,
+            }
+          )
+          if (Array.isArray(data.balances)) {
+            pushToEnabledNetworks(network.chainID)
           }
-        })
-      )
+        } catch (e) {
+          console.error(e)
+          return null
+        }
+      }
 
       localStorage.setItem(
         "enabledNetworks",
         JSON.stringify({
           time: Date.now(),
-          networks: result.filter((r) => typeof r === "string") as string[],
+          networks: enabledNetworks,
         })
-      )
-      setEnabledNetworks(
-        result.filter((r) => typeof r === "string") as string[]
       )
     }
 
     testChains()
-  }, [networks]) // eslint-disable-line
+  }, [networks, customLCDs])
 
+  console.log("LENGTH", enabledNetworks.length)
   if (!networks || !enabledNetworks.length) return <NetworkLoading />
 
   return (
