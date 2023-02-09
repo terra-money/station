@@ -56,17 +56,17 @@ const theme = createTheme({
   },
 })
 
-const firebaseConfig = {
-  apiKey: "AIzaSyA15UjL8TFIHLWUk-S83KeuLRC_D7hvwUU",
-  authDomain: "mises-official-site.firebaseapp.com",
-  projectId: "mises-official-site",
-  storageBucket: "mises-official-site.appspot.com",
-  messagingSenderId: "235777024442",
-  appId: "1:235777024442:web:da94196c84a941fab07d83",
-  measurementId: "G-Y5Y02HDCC8",
-};
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+// const firebaseConfig = {
+//   apiKey: "AIzaSyA15UjL8TFIHLWUk-S83KeuLRC_D7hvwUU",
+//   authDomain: "mises-official-site.firebaseapp.com",
+//   projectId: "mises-official-site",
+//   storageBucket: "mises-official-site.appspot.com",
+//   messagingSenderId: "235777024442",
+//   appId: "1:235777024442:web:da94196c84a941fab07d83",
+//   measurementId: "G-Y5Y02HDCC8",
+// };
+// const app = initializeApp(firebaseConfig);
+// const analytics = getAnalytics(app);
 
 Sentry.init({
   enabled: process.env.REACT_APP_NODE_ENV==='production',
@@ -79,17 +79,17 @@ Sentry.init({
   // We recommend adjusting this value in production
   tracesSampleRate: 1.0,
   ignoreErrors:['UnhandledRejection'],
-  beforeSend: (event, hint) => {
-    if (hint.originalException?.toString() === "Error: Failed to fetch") {
-      logEvent(analytics, "portal_error", {
-        error_message: hint.originalException?.toString(),
-      });
+  // beforeSend: (event, hint) => {
+  //   if (hint.originalException?.toString() === "Error: Failed to fetch") {
+  //     logEvent(analytics, "staking_error", {
+  //       error_message: hint.originalException?.toString(),
+  //     });
 
-      return null;
-    }
-    console.log(event);
-    return event;
-  },
+  //     return null;
+  //   }
+  //   console.log(event);
+  //   return event;
+  // },
 });
 
 root.render(
