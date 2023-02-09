@@ -25,6 +25,10 @@ import InitWallet from "app/InitWallet"
 // import ElectronVersion from "app/ElectronVersion"
 import App from "app/App"
 import { ThemeProvider, createTheme } from "@mui/material/styles"
+
+import * as Sentry from "@sentry/react";
+import { BrowserTracing } from "@sentry/tracing";
+
 const connectorOpts = { bridge: BRIDGE }
 
 const root = createRoot(document.getElementById("station") as HTMLElement)
@@ -49,6 +53,17 @@ const theme = createTheme({
     borderRadius: 50,
   },
 })
+if(process.env.REACT_APP_NODE_ENV==='production'){
+  Sentry.init({
+    dsn: "https://904bbe6a902b44279a758d334465d116@o1162849.ingest.sentry.io/4504648930295808",
+    integrations: [new BrowserTracing()],
+    // Set tracesSampleRate to 1.0 to capture 100%
+    // of transactions for performance monitoring.
+    // We recommend adjusting this value in production
+    tracesSampleRate: 1.0,
+    ignoreErrors:['UnhandledRejection']
+  });
+}
 root.render(
   <StrictMode>
     <RecoilRoot>
