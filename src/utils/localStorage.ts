@@ -20,6 +20,8 @@ export enum SettingKey {
   CustomTokens = "CustomTokens", // Wallet
   MinimumValue = "MinimumValue", // Wallet (UST value to show on the list)
   WithdrawAs = "WithdrawAs", // Rewards (Preferred denom to withdraw rewards)
+  EnabledNetworks = "EnabledNetworks",
+  NetworkCacheTime = "NetworkCacheTime",
 }
 
 const isSystemDarkMode =
@@ -51,10 +53,12 @@ export const DefaultSettings = {
   [SettingKey.AddressBook]: [] as AddressBook[],
   [SettingKey.CustomTokens]: DefaultCustomTokens as CustomTokens,
   [SettingKey.MinimumValue]: 0,
+  [SettingKey.NetworkCacheTime]: 0,
   [SettingKey.HideNonWhitelistTokens]: true,
   [SettingKey.HideLowBalTokens]: true,
   [SettingKey.WithdrawAs]: "",
   [SettingKey.Network]: "",
+  [SettingKey.EnabledNetworks]: [] as string[],
   [SettingKey.CustomLCD]: {},
 }
 
@@ -73,6 +77,13 @@ export const getLocalSetting = <T>(key: SettingKey): T => {
 export const setLocalSetting = <T>(key: SettingKey, value: T) => {
   const item = typeof value === "string" ? value : JSON.stringify(value)
   localStorage.setItem(key, item)
+}
+
+export const pushToLocalSetting = <T>(key: SettingKey, value: T) => {
+  console.log("pushToLocalSetting", key, value)
+  const localItem =
+    localStorage.getItem(key) || (DefaultSettings[key] as string)
+  setLocalSetting(key, [...JSON.parse(localItem), value])
 }
 
 export const hideNoWhitelistState = atom({

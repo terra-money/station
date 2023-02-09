@@ -4,7 +4,12 @@ import { STATION_ASSETS } from "config/constants"
 import createContext from "utils/createContext"
 import NetworkLoading from "./NetworkLoading"
 import { randomAddress } from "utils/bech32"
-import { useCustomLCDs } from "utils/localStorage"
+import {
+  useCustomLCDs,
+  SettingKey,
+  setLocalSetting,
+  pushToLocalSetting,
+} from "utils/localStorage"
 
 type TokenFilter = <T>(network: Record<string, T>) => Record<string, T>
 
@@ -51,8 +56,9 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
         ...networks.classic,
       }
 
-      const stored = localStorage.getItem("enabledNetworks")
+      const stored = localStorage.getItem(SettingKey.NetworkCacheTime)
       const cached = stored && JSON.parse(stored)
+      console.log("here", cached)
 
       if (cached && cached.time > Date.now() - 10 * 60 * 1000) {
         setEnabledNetworks(cached.networks)
@@ -70,32 +76,25 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
             `/cosmos/bank/v1beta1/balances/${randomAddress(network.prefix)}`,
             {
               baseURL: customLCDs[network.chainID] || network.lcd,
-              timeout: 4_000,
+              timeout: 10_000,
             }
           )
           if (Array.isArray(data.balances)) {
             pushToEnabledNetworks(network.chainID)
+            setLocalSetting(SettingKey.EnabledNetworks, enabledNetworks)
           }
         } catch (e) {
           console.error(e)
           return null
         }
       }
-
-      localStorage.setItem(
-        "enabledNetworks",
-        JSON.stringify({
-          time: Date.now(),
-          networks: enabledNetworks,
-        })
-      )
     }
 
     testChains()
   }, [networks, customLCDs])
 
   console.log("LENGTH", enabledNetworks.length)
-  if (!networks || !enabledNetworks.length) return <NetworkLoading />
+  if (!networks) return null
 
   return (
     <NetworksProvider
