@@ -79,17 +79,17 @@ Sentry.init({
   // We recommend adjusting this value in production
   tracesSampleRate: 1.0,
   ignoreErrors:['UnhandledRejection'],
-  beforeSend: (event, hint) => {
-    if (hint.originalException?.toString() === "Error: Failed to fetch") {
-      logEvent(analytics, "portal_error", {
-        error_message: hint.originalException?.toString(),
-      });
+  // beforeSend: (event, hint) => {
+  //   if (hint.originalException?.toString() === "Error: Failed to fetch") {
+  //     logEvent(analytics, "staking_error", {
+  //       error_message: hint.originalException?.toString(),
+  //     });
 
-      return null;
-    }
-    console.log(event);
-    return event;
-  },
+  //     return null;
+  //   }
+  //   console.log(event);
+  //   return event;
+  // },
 });
 
 root.render(
