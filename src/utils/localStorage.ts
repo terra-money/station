@@ -75,15 +75,11 @@ export const getLocalSetting = <T>(key: SettingKey): T => {
 }
 
 export const setLocalSetting = <T>(key: SettingKey, value: T) => {
+  if (key === SettingKey.EnabledNetworks) {
+    console.log(value)
+  }
   const item = typeof value === "string" ? value : JSON.stringify(value)
   localStorage.setItem(key, item)
-}
-
-export const pushToLocalSetting = <T>(key: SettingKey, value: T) => {
-  console.log("pushToLocalSetting", key, value)
-  const localItem =
-    localStorage.getItem(key) || (DefaultSettings[key] as string)
-  setLocalSetting(key, [...JSON.parse(localItem), value])
 }
 
 export const hideNoWhitelistState = atom({

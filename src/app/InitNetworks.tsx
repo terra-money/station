@@ -2,14 +2,9 @@ import { PropsWithChildren, useEffect, useState } from "react"
 import axios from "axios"
 import { STATION_ASSETS } from "config/constants"
 import createContext from "utils/createContext"
-import NetworkLoading from "./NetworkLoading"
 import { randomAddress } from "utils/bech32"
-import {
-  useCustomLCDs,
-  SettingKey,
-  setLocalSetting,
-  pushToLocalSetting,
-} from "utils/localStorage"
+import { useCustomLCDs, SettingKey, setLocalSetting } from "utils/localStorage"
+import { useNetworkName } from "data/wallet"
 
 type TokenFilter = <T>(network: Record<string, T>) => Record<string, T>
 
@@ -21,16 +16,9 @@ export const [useNetworks, NetworksProvider] = createContext<{
 
 const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
   const [networks, setNetworks] = useState<InterchainNetworks>()
-  const [enabledNetworks, setEnabledNetworks] = useState<string[]>([
-    "phoenix-1",
-  ])
+  const [enabledNetworks, setEnabledNetworks] = useState<string[]>([])
   const { customLCDs } = useCustomLCDs()
-  const pushToEnabledNetworks = (chainID: string) => {
-    setEnabledNetworks((prevEnabledNetworks) => [
-      ...prevEnabledNetworks,
-      chainID,
-    ])
-  }
+  const name = useNetworkName()
 
   useEffect(() => {
     const fetchChains = async () => {
@@ -40,15 +28,14 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
           baseURL: STATION_ASSETS,
         }
       )
-
       setNetworks(chains)
     }
 
     fetchChains()
-  }, [])
+  }, [name])
 
   useEffect(() => {
-    const testChains = async () => {
+    const testChains = () => {
       if (!networks) return
       const testBase = {
         ...networks.mainnet,
@@ -56,44 +43,41 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
         ...networks.classic,
       }
 
-      const stored = localStorage.getItem(SettingKey.NetworkCacheTime)
-      const cached = stored && JSON.parse(stored)
-      console.log("here", cached)
+      // const stored = localStorage.getItem(SettingKey.NetworkCacheTime)
+      // const cached = stored && JSON.parse(stored)
 
-      if (cached && cached.time > Date.now() - 10 * 60 * 1000) {
-        setEnabledNetworks(cached.networks)
-        return
-      }
+      // if (cached && cached.time > Date.now() - 10 * 60 * 1000) {
+      //   setEnabledNetworks(cached.networks)
+      //   return
+      // }
 
       for (const network of Object.values(testBase)) {
-        if (network.prefix === "terra") {
-          pushToEnabledNetworks(network.chainID)
-          continue
-        }
-
         try {
-          const { data } = await axios.get(
-            `/cosmos/bank/v1beta1/balances/${randomAddress(network.prefix)}`,
-            {
-              baseURL: customLCDs[network.chainID] || network.lcd,
-              timeout: 10_000,
-            }
-          )
-          if (Array.isArray(data.balances)) {
-            pushToEnabledNetworks(network.chainID)
-            setLocalSetting(SettingKey.EnabledNetworks, enabledNetworks)
-          }
+          axios
+            .get(
+              `/cosmos/bank/v1beta1/balances/${randomAddress(network.prefix)}`,
+              {
+                baseURL: customLCDs[network.chainID] || network.lcd,
+                timeout: 5_000,
+              }
+            )
+            .then(({ data }) => {
+              if (Array.isArray(data.balances)) {
+                setEnabledNetworks((prev) => [...prev, network.chainID])
+              }
+            })
         } catch (e) {
           console.error(e)
           return null
         }
       }
+      console.log(enabledNetworks)
+      // setLocalSetting(SettingKey.EnabledNetworks, enabledNetworks)
     }
 
     testChains()
   }, [networks, customLCDs])
 
-  console.log("LENGTH", enabledNetworks.length)
   if (!networks) return null
 
   return (
