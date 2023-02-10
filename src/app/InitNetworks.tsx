@@ -3,8 +3,7 @@ import axios from "axios"
 import { STATION_ASSETS } from "config/constants"
 import createContext from "utils/createContext"
 import { randomAddress } from "utils/bech32"
-import { useCustomLCDs, SettingKey, setLocalSetting } from "utils/localStorage"
-import { useNetworkName } from "data/wallet"
+import { useCustomLCDs, SettingKey } from "utils/localStorage"
 import NetworkLoading from "./NetworkLoading"
 import { isTerraChain } from "utils/chain"
 
@@ -52,27 +51,19 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
         ...networks.classic,
       })
 
-      const reqs = testBase.map(({ chainID, prefix, lcd }) => {
+      for (const { chainID, prefix, lcd } of testBase) {
         if (isTerraChain(chainID)) return chainID
-        return axios
+        axios
           .get(`/cosmos/bank/v1beta1/balances/${randomAddress(prefix)}`, {
             baseURL: customLCDs[chainID] || lcd,
             timeout: 2_000,
           })
-          .then(({ data }) => Array.isArray(data.balances) && chainID)
-          .catch((e) => null)
-      })
-
-      axios.all(reqs).then((networks) => {
-        setEnabledNetworks(networks.filter((r) => r !== null) as string[])
-        setLocalSetting(
-          SettingKey.EnabledNetworks,
-          JSON.stringify({
-            time: Date.now(),
-            networks,
+          .then(({ data }) => {
+            Array.isArray(data.balances) &&
+              setEnabledNetworks((prev) => [...prev, chainID])
           })
-        )
-      })
+          .catch((e) => null)
+      }
     }
 
     testChains()
