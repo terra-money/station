@@ -68,11 +68,8 @@ const ibc = (
 
       if (sourceChain === destinationChain) return true
 
-      if (
-        isAxelar &&
-        !(isAxelarChain(sourceChain) || isAxelarChain(destinationChain))
-      )
-        return "Tokens that originate on Axelar cannot be transferred at this time."
+      if (isAxelar && ![sourceChain, destinationChain].some(isAxelarChain))
+        return "Axelar tokens cannot be transferred to chains outside of Axelar at this time"
 
       if (!AccAddress.validate(token)) {
         const channel = getIBCChannel({
@@ -81,7 +78,7 @@ const ibc = (
           tokenAddress: token,
         })
         if (!channel)
-          return `Cannot find IBC channel from ${sourceChain} to ${destinationChain}`
+          return `No IBC channel from ${sourceChain} to ${destinationChain} was found`
       } else {
         const channel = getIBCChannel({
           from: sourceChain,
@@ -90,7 +87,7 @@ const ibc = (
           // TODO: pass the ICS chennel if needed (should be as it is for validation)
         })
         if (!channel)
-          return `IBC transfers are not yet available for this CW20 token`
+          return `Cross-chain transfers aren't currently enabled for this token`
       }
 
       return true
@@ -125,7 +122,7 @@ const isNotMnemonic = () => (value?: string) => {
   const seed = value.trim().split(" ")
   if (seed.length === 12 || seed.length === 24) {
     const isNotMnemonic = seed.find((word) => !wordlist.includes(word))
-    return isNotMnemonic || `You cannot enter a mnemonic in the memo field.`
+    return isNotMnemonic || `You cannot enter a mnemonic in the memo field`
   }
 }
 

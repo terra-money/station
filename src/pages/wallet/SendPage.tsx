@@ -162,13 +162,12 @@ const SendPage = () => {
 
     if (
       chain === destinationChain ||
-      (getIBCChannel({
+      getIBCChannel({
         from: chain,
         to: destinationChain,
         tokenAddress: token.denom,
         icsChannel: ibcDenoms[networkName][token.denom]?.icsChannel,
-      }) &&
-        !readNativeDenom(token.denom).isAxelar)
+      })
     ) {
       return (
         <span className={styles.destination}>
@@ -315,8 +314,8 @@ const SendPage = () => {
     gasAdjustment:
       getChainIDFromAddress(addresses?.[chain ?? ""], networks) !== chain &&
       AccAddress.validate(token?.denom ?? "")
-        ? 1.5
-        : 1,
+        ? 10
+        : 5,
   }
 
   return (
@@ -446,7 +445,7 @@ const SendPage = () => {
                   {!memo && (
                     <FormWarning>
                       {t(
-                        "Do not use this cross-chain transaction to send tokens to exchanges as a loss of funds could occur."
+                        "Do not use this cross-chain transaction to send tokens to exchanges as a loss of funds could occur"
                       )}
                     </FormWarning>
                   )}
