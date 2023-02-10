@@ -184,11 +184,10 @@ export const getAvailableStakeActions = (
   validators: Validator[]
 ) => {
   const validator = getFindValidator(validators)(destination)
-
   return {
     [StakeAction.DELEGATE]: !validator.jailed,
-    [StakeAction.REDELEGATE]: !!delegations.filter(
-          ({ validator_address }) => validator_address !== destination
+    [StakeAction.REDELEGATE]: !!validators.filter(
+          ({ operator_address }) => operator_address !== destination
         ).length,
     [StakeAction.UNBOND]: !!delegations.filter(
       ({ validator_address }) => validator_address === destination
