@@ -4,6 +4,7 @@ import { AccAddress } from "@terra-money/feather.js"
 import { validateMsg } from "utils/data"
 import wordlist from "bip39/src/wordlists/english.json"
 import { getChainIDFromAddress } from "utils/bech32"
+import { isAxelarChain } from "utils/chain"
 
 const lessThan = (max: number, label = "Amount", optional = false) => {
   return (value = 0) => {
@@ -67,7 +68,10 @@ const ibc = (
 
       if (sourceChain === destinationChain) return true
 
-      if (isAxelar)
+      if (
+        isAxelar &&
+        !(isAxelarChain(sourceChain) || isAxelarChain(destinationChain))
+      )
         return "Axelar tokens cannot be transferred with Station yet."
 
       if (!AccAddress.validate(token)) {

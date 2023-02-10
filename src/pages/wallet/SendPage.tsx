@@ -446,7 +446,7 @@ const SendPage = () => {
                   {!memo && (
                     <FormWarning>
                       {t(
-                        "This is a cross-chain transaction. Don't send tokens to exchanges with this tx."
+                        "Do not use this cross-chain transaction to send tokens to exchanges as a loss of funds could occur."
                       )}
                     </FormWarning>
                   )}
