@@ -51,7 +51,7 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
       //   return
       // }
 
-      const networkRequests = Object.values(testBase).map((network) =>
+      const reqs = Object.values(testBase).map((network) =>
         axios
           .get(
             `/cosmos/bank/v1beta1/balances/${randomAddress(network.prefix)}`,
@@ -60,18 +60,11 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
               timeout: 5_000,
             }
           )
-          .then(({ data }) => {
-            if (Array.isArray(data.balances)) {
-              return network.chainID
-            }
-          })
-          .catch((e) => {
-            console.error(e)
-            return null
-          })
+          .then(({ data }) => Array.isArray(data.balances) && network.chainID)
+          .catch((e) => null)
       )
 
-      axios.all(networkRequests).then((results) => {
+      axios.all(reqs).then((results) => {
         setEnabledNetworks(results.filter((r) => r !== null) as string[])
       })
     }
