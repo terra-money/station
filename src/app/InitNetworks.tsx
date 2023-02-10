@@ -36,15 +36,20 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
 
   useEffect(() => {
     const testChains = () => {
-      const stored = localStorage.getItem(SettingKey.EnabledNetworks)
-      const cached = stored && JSON.parse(stored)
+      console.log("testChains")
+      // const stored = localStorage.getItem(SettingKey.EnabledNetworks)
+      // const cached = stored && JSON.parse(stored)
 
-      if (cached && cached.time > Date.now() - 10 * 60 * 1000) {
-        setEnabledNetworks(cached.networks)
-        return
-      }
+      // if (cached && cached.time > Date.now() - 10 * 60 * 1000) {
+      //   setEnabledNetworks(cached.networks)
+      //   return
+      // }
 
       if (!networks) return
+      console.log(
+        "🚀 ~ file: InitNetworks.tsx:49 ~ testChains ~ networks",
+        networks
+      )
       const testBase = Object.values({
         ...networks.mainnet,
         ...networks.testnet,
@@ -52,7 +57,9 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
       })
 
       for (const { chainID, prefix, lcd } of testBase) {
-        if (isTerraChain(chainID)) return chainID
+        if (isTerraChain(chainID))
+          setEnabledNetworks((prev) => [...prev, chainID])
+
         axios
           .get(`/cosmos/bank/v1beta1/balances/${randomAddress(prefix)}`, {
             baseURL: customLCDs[chainID] || lcd,
