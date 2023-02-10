@@ -58,7 +58,7 @@ export const DefaultSettings = {
   [SettingKey.HideLowBalTokens]: true,
   [SettingKey.WithdrawAs]: "",
   [SettingKey.Network]: "",
-  [SettingKey.EnabledNetworks]: [] as string[],
+  [SettingKey.EnabledNetworks]: { time: 0, networks: [] as string[] },
   [SettingKey.CustomLCD]: {},
 }
 
@@ -75,9 +75,6 @@ export const getLocalSetting = <T>(key: SettingKey): T => {
 }
 
 export const setLocalSetting = <T>(key: SettingKey, value: T) => {
-  if (key === SettingKey.EnabledNetworks) {
-    console.log(value)
-  }
   const item = typeof value === "string" ? value : JSON.stringify(value)
   localStorage.setItem(key, item)
 }
