@@ -28,8 +28,8 @@ import { ThemeProvider, createTheme } from "@mui/material/styles"
 
 import * as Sentry from "@sentry/react";
 import { BrowserTracing } from "@sentry/tracing";
-import { getAnalytics, logEvent } from "firebase/analytics"
-import { initializeApp } from "firebase/app"
+// import { getAnalytics, logEvent } from "firebase/analytics"
+// import { initializeApp } from "firebase/app"
 
 const connectorOpts = { bridge: BRIDGE }
 
