@@ -57,9 +57,10 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
       })
 
       for (const { chainID, prefix, lcd } of testBase) {
-        if (isTerraChain(chainID))
+        if (isTerraChain(chainID)) {
           setEnabledNetworks((prev) => [...prev, chainID])
-
+          continue
+        }
         axios
           .get(`/cosmos/bank/v1beta1/balances/${randomAddress(prefix)}`, {
             baseURL: customLCDs[chainID] || lcd,
