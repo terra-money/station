@@ -3,7 +3,7 @@ import axios from "axios"
 import { STATION_ASSETS } from "config/constants"
 import createContext from "utils/createContext"
 import { randomAddress } from "utils/bech32"
-import { useCustomLCDs, SettingKey } from "utils/localStorage"
+import { useCustomLCDs, SettingKey, setLocalSetting } from "utils/localStorage"
 import NetworkLoading from "./NetworkLoading"
 import { isTerraChain } from "utils/chain"
 
@@ -14,6 +14,8 @@ export const [useNetworks, NetworksProvider] = createContext<{
   filterEnabledNetworks: TokenFilter
   filterDisabledNetworks: TokenFilter
 }>("useNetworks")
+
+const CACHE_TIME = 3_000
 
 const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
   const [networks, setNetworks] = useState<InterchainNetworks>()
@@ -36,7 +38,6 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
 
   useEffect(() => {
     const testChains = () => {
-      console.log("testChains")
       // const stored = localStorage.getItem(SettingKey.EnabledNetworks)
       // const cached = stored && JSON.parse(stored)
 
@@ -46,10 +47,7 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
       // }
 
       if (!networks) return
-      console.log(
-        "🚀 ~ file: InitNetworks.tsx:49 ~ testChains ~ networks",
-        networks
-      )
+
       const testBase = Object.values({
         ...networks.mainnet,
         ...networks.testnet,
@@ -64,7 +62,7 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
         axios
           .get(`/cosmos/bank/v1beta1/balances/${randomAddress(prefix)}`, {
             baseURL: customLCDs[chainID] || lcd,
-            timeout: 2_000,
+            timeout: CACHE_TIME,
           })
           .then(({ data }) => {
             Array.isArray(data.balances) &&
