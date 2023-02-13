@@ -67,9 +67,8 @@ const theme = createTheme({
 // };
 // const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);
-
 Sentry.init({
-  enabled: process.env.REACT_APP_NODE_ENV==='production',
+  enabled: process.env.NODE_ENV==='production',
   dsn:
     "https://904bbe6a902b44279a758d334465d116@o1162849.ingest.sentry.io/4504648930295808",
   integrations: [new BrowserTracing()],
