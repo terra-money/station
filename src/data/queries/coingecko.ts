@@ -44,6 +44,12 @@ const AXELAR_TOKENS: Record<string, string> = {
   "ibc/CBF67A2BCF6CAE343FDF251E510C8E18C361FC02B23430C121116E0811835DEF":
     "uusdt",
 }
+const STAKED_TOKENS: Record<string, string> = {
+  terra1jltsv4zjps5veugu6xc0gkurrjx33klhyxse80hy8pszzvhslx0s2n7jkk: "sORD",
+  terra1lertn5hx2gpw940a0sspds6kydja3c07x0mfg0xu66gvu9p4l30q7ttd2p: "sCOR",
+  terra15rqy5xh7sclu3yltuz8ndl8lzudcqcv3laldxxsxaph085v6mdpqdjrucv: "sATR",
+  terra14y9aa87v4mjvpf0vu8xm7nvldvjvk4h3wly2240u0586j4l6qm2q7ngp7t: "sHAR",
+}
 
 export const useExchangeRates = () => {
   const currency = useCurrency()
@@ -100,6 +106,16 @@ export const useExchangeRates = () => {
         if (!priceObject[key] && priceObject[value]) {
           priceObject[key] = {
             ...priceObject[value],
+          }
+        }
+      })
+
+      // add staked tokens and set price to 100
+      Object.entries(STAKED_TOKENS).forEach(([key]) => {
+        if (!priceObject[key]) {
+          priceObject[key] = {
+            price: 100,
+            change: 0,
           }
         }
       })
