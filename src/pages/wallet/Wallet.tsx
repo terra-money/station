@@ -55,6 +55,7 @@ const Wallet = () => {
   const [isOpen, setIsOpen] = useRecoilState(isWalletBarOpen)
   console.log("🚀 ~ file: Wallet.tsx:56 ~ Wal ~ isOpen", isOpen)
   const [route, setRoute] = useState<Route>({ path: Path.wallet })
+  console.log("🚀 ~ file: Wallet.tsx:58 ~ Wal ~ route", route)
 
   function BackButton() {
     if (route.path === Path.wallet) return null
