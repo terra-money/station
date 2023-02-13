@@ -52,7 +52,7 @@ const ConnectWallet = ({ renderButton }: Props) => {
       }
     })()
     
-    if(!isMisesWallet()){
+    if(!isMisesWallet() && provider){
       provider.on("accountsChanged", async (res: string[]) => {
         const metamask = JSON.parse(localStorage.getItem("isConnected") || "false")
         if (res.length && metamask) {
