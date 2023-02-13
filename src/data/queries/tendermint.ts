@@ -1,7 +1,9 @@
-import { useQuery } from "react-query"
+import { useQueries, useQuery } from "react-query"
 import axios from "axios"
 import { queryKey, RefetchOptions } from "../query"
 import { useNetworks } from "app/InitNetworks"
+import { VALIDATION_TIMEOUT } from "config/constants"
+import { randomAddress } from "utils/bech32"
 
 export const useLocalNodeInfo = (chainID: string) => {
   const { networks } = useNetworks()
@@ -65,5 +67,35 @@ export const useValidateLCD = (
       // valid
     },
     { ...RefetchOptions.INFINITY, enabled }
+  )
+}
+
+interface Network {
+  chainID: string
+  prefix: string
+  lcd: string
+}
+
+export const useValidNetworks = (networks: Network[]) => {
+  return useQueries(
+    networks.map(({ chainID, prefix, lcd }) => {
+      return {
+        queryKey: [queryKey.tendermint.nodeInfo, lcd],
+        queryFn: async () => {
+          if (prefix === "terra") return chainID
+
+          const { data } = await axios.get(
+            `/cosmos/bank/v1beta1/balances/${randomAddress(prefix)}`,
+            {
+              baseURL: lcd, // TODO: pass custom lcd to the function
+              timeout: VALIDATION_TIMEOUT,
+            }
+          )
+
+          if (Array.isArray(data.balances)) return chainID
+        },
+        ...RefetchOptions.INFINITY,
+      }
+    })
   )
 }

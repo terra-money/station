@@ -42,3 +42,5 @@ export const TERRASWAP_COMMISSION_RATE = 0.003
 export const SAMPLE_ADDRESS = "terra1x46rqay4d3cssq8gxxvqz8xt6nwlz4td20k38v"
 
 export const CURRENCY_KEY = "e484bb7eb1a1cb1471fd5ee925e9b1bc"
+
+export const VALIDATION_TIMEOUT = 3_000
