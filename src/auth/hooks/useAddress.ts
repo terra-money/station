@@ -54,7 +54,7 @@ export function useConnectWallet() {
     }
   }
   const isUnlocked = ()=>{
-    return provider ? (!isMisesWallet() ? provider._metamask.isUnlocked() : provider.isUnlocked()) : Promise.resolve(false);
+    return provider ? (!isMisesWallet() ? provider._metamask?.isUnlocked() : provider?.isUnlocked()) : Promise.resolve(false);
   }
   return {
     getAddress,
