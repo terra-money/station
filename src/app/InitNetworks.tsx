@@ -4,6 +4,8 @@ import { STATION_ASSETS } from "config/constants"
 import createContext from "utils/createContext"
 import { useCustomLCDs } from "utils/localStorage"
 import { useValidNetworks } from "data/queries/tendermint"
+import { WithFetching } from "components/feedback"
+import { combineState } from "data/query"
 
 type TokenFilter = <T>(network: Record<string, T>) => Record<string, T>
 
@@ -48,30 +50,36 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
     (acc, { data }) => (data ? [...acc, data] : acc),
     [] as string[]
   )
+  const validationState = combineState(...validationResult)
 
   if (!networks) return null
 
   return (
-    <NetworksProvider
-      value={{
-        networks,
-        filterEnabledNetworks: (networks) =>
-          Object.fromEntries(
-            Object.entries(networks).filter(
-              ([chainID]) =>
-                chainID === "localterra" || validNetworks.includes(chainID)
-            )
-          ),
-        filterDisabledNetworks: (networks) =>
-          Object.fromEntries(
-            Object.entries(networks).filter(
-              ([chainID]) => !validNetworks.includes(chainID)
-            )
-          ),
-      }}
-    >
-      {children}
-    </NetworksProvider>
+    <WithFetching {...validationState} height={2}>
+      {(progress) => (
+        <NetworksProvider
+          value={{
+            networks,
+            filterEnabledNetworks: (networks) =>
+              Object.fromEntries(
+                Object.entries(networks).filter(
+                  ([chainID]) =>
+                    chainID === "localterra" || validNetworks.includes(chainID)
+                )
+              ),
+            filterDisabledNetworks: (networks) =>
+              Object.fromEntries(
+                Object.entries(networks).filter(
+                  ([chainID]) => !validNetworks.includes(chainID)
+                )
+              ),
+          }}
+        >
+          {progress}
+          {children}
+        </NetworksProvider>
+      )}
+    </WithFetching>
   )
 }
 
