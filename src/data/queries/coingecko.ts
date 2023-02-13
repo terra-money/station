@@ -46,6 +46,7 @@ const AXELAR_TOKENS: Record<string, string> = {
 }
 
 console.log("🚀 ~ file: coingecko.ts:42 ~ AXELAR_TOKENS", AXELAR_TOKENS)
+console.log("🚀 ~ file: coingecko.ts:42 ~ AXELAR_TOKENS 1", AXELAR_TOKENS)
 
 export const useExchangeRates = () => {
   const currency = useCurrency()
