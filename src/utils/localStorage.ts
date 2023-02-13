@@ -20,6 +20,8 @@ export enum SettingKey {
   CustomTokens = "CustomTokens", // Wallet
   MinimumValue = "MinimumValue", // Wallet (UST value to show on the list)
   WithdrawAs = "WithdrawAs", // Rewards (Preferred denom to withdraw rewards)
+  EnabledNetworks = "EnabledNetworks",
+  NetworkCacheTime = "NetworkCacheTime",
 }
 
 const isSystemDarkMode =
@@ -51,10 +53,12 @@ export const DefaultSettings = {
   [SettingKey.AddressBook]: [] as AddressBook[],
   [SettingKey.CustomTokens]: DefaultCustomTokens as CustomTokens,
   [SettingKey.MinimumValue]: 0,
+  [SettingKey.NetworkCacheTime]: 0,
   [SettingKey.HideNonWhitelistTokens]: true,
   [SettingKey.HideLowBalTokens]: true,
   [SettingKey.WithdrawAs]: "",
   [SettingKey.Network]: "",
+  [SettingKey.EnabledNetworks]: { time: 0, networks: [] as string[] },
   [SettingKey.CustomLCD]: {},
 }
 
