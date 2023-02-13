@@ -2,10 +2,8 @@ import { PropsWithChildren, useEffect, useState } from "react"
 import axios from "axios"
 import { STATION_ASSETS } from "config/constants"
 import createContext from "utils/createContext"
-import { randomAddress } from "utils/bech32"
-import { useCustomLCDs, SettingKey, setLocalSetting } from "utils/localStorage"
-import NetworkLoading from "./NetworkLoading"
-import { isTerraChain } from "utils/chain"
+import { useCustomLCDs } from "utils/localStorage"
+import { useValidNetworks } from "data/queries/tendermint"
 
 type TokenFilter = <T>(network: Record<string, T>) => Record<string, T>
 
@@ -15,11 +13,8 @@ export const [useNetworks, NetworksProvider] = createContext<{
   filterDisabledNetworks: TokenFilter
 }>("useNetworks")
 
-const CACHE_TIME = 3_000
-
 const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
   const [networks, setNetworks] = useState<InterchainNetworks>()
-  const [enabledNetworks, setEnabledNetworks] = useState<string[]>([])
   const { customLCDs } = useCustomLCDs()
 
   useEffect(() => {
@@ -36,47 +31,25 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
     fetchChains()
   }, [])
 
-  useEffect(() => {
-    const testChains = () => {
-      // const stored = localStorage.getItem(SettingKey.EnabledNetworks)
-      // const cached = stored && JSON.parse(stored)
-
-      // if (cached && cached.time > Date.now() - 10 * 60 * 1000) {
-      //   setEnabledNetworks(cached.networks)
-      //   return
-      // }
-
-      if (!networks) return
-
-      const testBase = Object.values({
+  const testBase = networks
+    ? Object.values({
         ...networks.mainnet,
         ...networks.testnet,
         ...networks.classic,
+      }).map((chain) => {
+        const lcd = customLCDs[chain.chainID] ?? chain.lcd
+        return { ...chain, lcd }
       })
+    : []
 
-      for (const { chainID, prefix, lcd } of testBase) {
-        if (isTerraChain(chainID)) {
-          setEnabledNetworks((prev) => [...prev, chainID])
-          continue
-        }
-        axios
-          .get(`/cosmos/bank/v1beta1/balances/${randomAddress(prefix)}`, {
-            baseURL: customLCDs[chainID] || lcd,
-            timeout: CACHE_TIME,
-          })
-          .then(({ data }) => {
-            Array.isArray(data.balances) &&
-              setEnabledNetworks((prev) => [...prev, chainID])
-          })
-          .catch((e) => null)
-      }
-    }
+  const validationResult = useValidNetworks(testBase)
 
-    testChains()
-  }, [networks, customLCDs])
+  const validNetworks = validationResult.reduce(
+    (acc, { data }) => (data ? [...acc, data] : acc),
+    [] as string[]
+  )
 
-  if (!(networks && enabledNetworks.some(isTerraChain)))
-    return <NetworkLoading />
+  if (!networks) return null
 
   return (
     <NetworksProvider
@@ -86,13 +59,13 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
           Object.fromEntries(
             Object.entries(networks).filter(
               ([chainID]) =>
-                chainID === "localterra" || enabledNetworks.includes(chainID)
+                chainID === "localterra" || validNetworks.includes(chainID)
             )
           ),
         filterDisabledNetworks: (networks) =>
           Object.fromEntries(
             Object.entries(networks).filter(
-              ([chainID]) => !enabledNetworks.includes(chainID)
+              ([chainID]) => !validNetworks.includes(chainID)
             )
           ),
       }}
