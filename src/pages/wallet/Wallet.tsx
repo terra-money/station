@@ -57,7 +57,6 @@ const Wallet = () => {
   const [route, setRoute] = useState<Route>({ path: Path.wallet })
   console.log("🚀 ~ file: Wallet.tsx:58 ~ Wal ~ route", route)
   console.log("🚀 ~ file: Wallet.tsx:58 ~ Wal ~ route", route)
-  console.log("🚀 ~ file: Wallet.tsx:58 ~ Wal ~ route", route)
 
   function BackButton() {
     if (route.path === Path.wallet) return null
