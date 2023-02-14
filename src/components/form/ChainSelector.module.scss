@@ -14,11 +14,11 @@
 
   span {
     @include flex(flex-start);
+    gap: 8px;
 
-    img {
+    :first-child {
       width: 18px;
       height: 18px;
-      margin-right: 8px;
     }
   }
 }
@@ -67,10 +67,11 @@
     @include flex(flex-start);
     border-radius: var(--border-radius);
 
-    img {
+    gap: 8px;
+
+    :first-child {
       width: 18px;
       height: 18px;
-      margin-right: 8px;
     }
 
     &:hover {

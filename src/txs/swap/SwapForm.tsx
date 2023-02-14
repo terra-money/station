@@ -8,7 +8,8 @@ import AssetFormItem, {
 } from "./components/AssetFormItem"
 import SelectToken from "./components/SelectToken"
 import { Checkbox } from "components/form"
-import { SelectChain } from "./components/SelectChain"
+import { useMultichainSwap } from "./MultichainSwapContext"
+import ChainInput, { ChainOption } from "components/form/ChainInput"
 
 interface SwapFormAsset {
   chain: string
@@ -25,6 +26,8 @@ interface SwapFormShape {
 /*
 TODO:
 - [ ] what chains to display?useTFMChains.ts
+- [ ] include chain icon to to chain input
+- [ ] reuse ChainInput and ChainSelector
 
 TODO from TFMSwapForm:
 - [ ] placeholder for offer input
@@ -77,6 +80,11 @@ export const SwapForm = () => {
 
   const [showAll, setShowAll] = useState(false)
 
+  const { chains } = useMultichainSwap()
+  const chainOptions: ChainOption[] = chains.map((chain) => ({
+    id: chain.chain_id,
+    name: chain.name,
+  }))
   // const { options, findDecimals } = useTFMSwap()
 
   // const offerDecimals = offerAsset.asset ? findDecimals(offerAsset.asset) : undefined
@@ -118,7 +126,11 @@ export const SwapForm = () => {
         name="offerAsset.chain"
         control={form.control}
         render={({ field: { value, onChange } }) => (
-          <SelectChain value={value} onChange={onChange} />
+          <ChainInput
+            options={chainOptions}
+            value={value}
+            onChange={onChange}
+          />
         )}
       />
 
@@ -158,7 +170,11 @@ export const SwapForm = () => {
         name="askAsset.chain"
         control={form.control}
         render={({ field: { value, onChange } }) => (
-          <SelectChain value={value} onChange={onChange} />
+          <ChainInput
+            options={chainOptions}
+            value={value}
+            onChange={onChange}
+          />
         )}
       />
 

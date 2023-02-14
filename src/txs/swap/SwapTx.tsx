@@ -39,9 +39,11 @@ const SwapTx = () => {
 
   return (
     <Page title={t("Swap")} small extra={<TFMPoweredBy />}>
-      <MultichainSwapContext>
-        <SwapForm />
-      </MultichainSwapContext>
+      <Card>
+        <MultichainSwapContext>
+          <SwapForm />
+        </MultichainSwapContext>
+      </Card>
     </Page>
   )
 }
