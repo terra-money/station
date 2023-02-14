@@ -122,14 +122,12 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const gasAdjustment =
     networks[chain]?.gasAdjustment ??
     getLocalSetting<number>(gasAdjustmentSetting)
-  console.log("🚀 ~ file: Tx.tsx:130 ~ txGasAdjustment", txGasAdjustment)
   const key = {
     address: addresses?.[chain],
     network: networks,
     gasAdjustment: gasAdjustment * (txGasAdjustment ?? 1),
     msgs: simulationTx?.msgs.map((msg) => msg.toData(isClassic)),
   }
-  console.log("🚀 ~ file: Tx.tsx:132 ~ key", key)
 
   const { data: estimatedGas, ...estimatedGasState } = useQuery(
     [queryKey.tx.create, key, isWalletEmpty],
