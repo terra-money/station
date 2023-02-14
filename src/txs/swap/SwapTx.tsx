@@ -2,10 +2,10 @@ import { useTranslation } from "react-i18next"
 import { useNetworkName } from "data/wallet"
 import { Card, Page } from "components/layout"
 import { Wrong } from "components/feedback"
-import TFMSwapContext from "./TFMSwapContext"
-import TFMSwapForm from "./TFMSwapForm"
 import TFMPoweredBy from "./TFMPoweredBy"
 import { ExternalLink } from "components/general"
+import { SwapForm } from "./SwapForm"
+import { MultichainSwapContext } from "./MultichainSwapContext"
 
 // The sequence below is required before rendering the Swap form:
 // 1. `SwapContext` - Complete the network request related to swap.
@@ -39,9 +39,9 @@ const SwapTx = () => {
 
   return (
     <Page title={t("Swap")} small extra={<TFMPoweredBy />}>
-      <TFMSwapContext>
-        <TFMSwapForm chainID="phoenix-1" />
-      </TFMSwapContext>
+      <MultichainSwapContext>
+        <SwapForm />
+      </MultichainSwapContext>
     </Page>
   )
 }
