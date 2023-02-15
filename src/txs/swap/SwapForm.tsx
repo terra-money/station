@@ -1,6 +1,6 @@
 import { Form, FormArrow, FormWarning } from "components/form"
 import { useState } from "react"
-import { Controller, useForm } from "react-hook-form"
+import { Controller } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import AssetFormItem, {
   AssetInput,
@@ -10,18 +10,8 @@ import SelectToken from "./components/SelectToken"
 import { Checkbox } from "components/form"
 import { useMultichainSwap } from "./MultichainSwapContext"
 import ChainInput, { ChainOption } from "components/form/ChainInput"
-
-interface SwapFormAsset {
-  chain: string
-  asset: string
-}
-
-interface SwapFormShape {
-  slippage: number
-  offerAsset: SwapFormAsset
-  askAsset: SwapFormAsset
-  amount?: number
-}
+import { useSwapForm } from "./hooks/useSwapForm"
+import { useSwapSimulation } from "./hooks/useSwapSimulation"
 
 /*
 TODO:
@@ -33,6 +23,8 @@ TODO for SelectToken:
 - [ ] group tokens into "Coins" and "Tokens"
 - [ ] show loader when fetching tokens
 - [ ] show icon for token
+- [ ] show token name
+- [ ] show token balance
 
 TODO for ChainInput:
 - [ ] close on click outside
@@ -50,27 +42,20 @@ TODO from TFMSwapForm:
 - [ ] simulate value
 */
 
-const defaultFormValues: Partial<SwapFormShape> = {
-  slippage: 1,
-  offerAsset: {
-    chain: "phoenix-1",
-    asset: "uluna",
-  },
-  askAsset: {
-    chain: "phoenix-1",
-    asset: "uluna",
-  },
-}
-
 export const SwapForm = () => {
   const { t } = useTranslation()
 
-  const form = useForm<SwapFormShape>({
-    mode: "onChange",
-    defaultValues: defaultFormValues,
-  })
+  const form = useSwapForm()
 
-  const { handleSubmit, formState, watch, setValue, register, trigger } = form
+  const {
+    handleSubmit,
+    formState,
+    watch,
+    setValue,
+    resetField,
+    register,
+    trigger,
+  } = form
   const { errors } = formState
   const values = watch()
   const { offerAsset, askAsset } = values
@@ -99,9 +84,12 @@ export const SwapForm = () => {
   const swapAssets = () => {
     setValue("offerAsset", askAsset)
     setValue("askAsset", offerAsset)
-    setValue("amount", undefined)
+    resetField("amount")
     trigger("amount")
   }
+
+  const { data: simulation } = useSwapSimulation(form)
+  console.log(simulation)
 
   return (
     <Form
@@ -138,6 +126,7 @@ export const SwapForm = () => {
           addonAfter={
             <AssetInput
               {...register("amount", {
+                required: true,
                 valueAsNumber: true,
                 // validate: validate.input(
                 //   toInput(max.amount, offerDecimals),
