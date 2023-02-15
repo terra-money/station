@@ -6,6 +6,7 @@ export interface TFMChain {
   chain_id: string
   type: string
   name: string
+  image_url: string
   id: 2
 }
 
@@ -19,7 +20,9 @@ export interface TFMToken {
 const baseURL = "https://multichain.api.tfm.com/"
 
 export const queryTFMChains = async () => {
-  const { data } = await axios.get<TFMChain[]>("/chains", { baseURL })
+  const { data } = await axios.get<TFMChain[]>("/chains?network_type=mainnet", {
+    baseURL,
+  })
   return data
 }
 

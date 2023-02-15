@@ -1,6 +1,5 @@
 import { InputHTMLAttributes, PropsWithChildren, ReactNode } from "react"
 import { ForwardedRef, forwardRef } from "react"
-import { Grid } from "components/layout"
 import styles from "./AssetFormItem.module.scss"
 
 interface Props {

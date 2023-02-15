@@ -93,6 +93,7 @@ export const SwapForm = () => {
   const chainOptions: ChainOption[] = chains.map((chain) => ({
     id: chain.chain_id,
     name: chain.name,
+    icon: chain.image_url,
   }))
 
   const swapAssets = () => {
