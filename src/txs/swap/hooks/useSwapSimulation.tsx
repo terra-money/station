@@ -2,12 +2,11 @@ import {
   queryTFMRoute,
   queryTFMSwap,
   TFMRouteParams,
-  useTFMTokens,
 } from "data/external/multichainTfm"
 import { useQuery } from "react-query"
 import { SwapFormState } from "./useSwapForm"
 import BigNumber from "bignumber.js"
-import getRecord from "utils/getRecord"
+import { toAmount } from "@terra.kitchen/utils"
 
 const toTFMAmount = (amount: number, decimals: number) => {
   return new BigNumber(amount)
@@ -25,29 +24,37 @@ export const useSwapSimulation = ({
 }: SwapFormState) => {
   const values = watch()
 
-  const { offerAsset, askAsset, amount, slippage } = values
-
-  const { data: tokens = [] } = useTFMTokens(offerAsset.chain)
+  const {
+    offerAsset,
+    askAsset,
+    sourceChain,
+    destinationChain,
+    amount,
+    slippage,
+  } = values
 
   return useQuery(
     ["TFM.simulate.swap", values],
     async () => {
-      const tokensRecord = getRecord(tokens, (t) => t.contract_addr)
-      const { decimals } = tokensRecord[offerAsset.asset]
       const routeParams: TFMRouteParams = {
-        chain0: offerAsset.chain,
-        chain1: askAsset.chain,
-        token0: offerAsset.asset,
-        token1: askAsset.asset,
-        amount: toTFMAmount(amount, decimals),
+        chain0: sourceChain,
+        chain1: destinationChain,
+        token0: offerAsset.contract_addr,
+        token1: askAsset.contract_addr,
+        amount: toTFMAmount(amount, offerAsset.decimals),
       }
       const route = await queryTFMRoute(routeParams)
       const swap = await queryTFMSwap({
         ...routeParams,
         slippage: toTFMSlippage(slippage),
       })
-      return { route, swap } as const
+
+      const simulatedAmount = toAmount(route.return_amount, {
+        decimals: askAsset.decimals,
+      })
+
+      return { route, swap, simulatedAmount } as const
     },
-    { enabled: isValid && tokens.length > 0 }
+    { enabled: !!(isValid && askAsset && offerAsset) }
   )
 }

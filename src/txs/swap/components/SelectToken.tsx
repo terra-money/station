@@ -1,60 +1,29 @@
-import { ReactNode, useState } from "react"
+import { ReactNode, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import classNames from "classnames/bind"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 import SearchIcon from "@mui/icons-material/Search"
-import createContext from "utils/createContext"
 import { Flex } from "components/layout"
 import { TokenCard, TokenIcon } from "components/token"
 import styles from "./SelectToken.module.scss"
-import { useTFMTokens } from "data/external/multichainTfm"
-import getRecord from "utils/getRecord"
+import { TFMToken, useTFMTokens } from "data/external/multichainTfm"
 import { Empty } from "components/feedback"
+import getRecord from "utils/getRecord"
 
 const cx = classNames.bind(styles)
 
-interface ItemProps extends TokenItem {
-  balance?: string
-  value: string
-  muted?: boolean
-  hidden?: boolean
-}
-
-const SelectTokenItem = (props: ItemProps) => {
-  const { value, balance, muted, hidden } = props
-  const { hideBalance, selectToken } = useSelectToken()
-
-  return hidden ? null : (
-    <button
-      type="button"
-      className={cx(styles.button, { muted })}
-      onClick={() => selectToken(value)}
-    >
-      <TokenCard
-        {...props}
-        className={styles.item}
-        balance={hideBalance ? undefined : balance}
-        name={props.name}
-      />
-    </button>
-  )
-}
-
 interface Props {
-  value?: string
-  onChange: (value: string) => void
+  value?: TFMToken
+  onChange: (value: TFMToken) => void
   addonAfter: ReactNode // input
   checkbox?: ReactNode
   chainId: string
 }
 
-interface Value {
-  hideBalance: boolean
-  selectToken: Props["onChange"]
+const chainDefaultAsset: Record<string, string> = {
+  "phoenix-1": "uluna",
+  "osmosis-1": "uosmo",
 }
-
-const [useSelectToken, SelectTokenProvider] =
-  createContext<Value>("useSelectToken")
 
 const SelectToken = ({ value: selected, onChange, ...props }: Props) => {
   const { addonAfter, checkbox, chainId } = props
@@ -64,10 +33,6 @@ const SelectToken = ({ value: selected, onChange, ...props }: Props) => {
 
   const [isOpen, setIsOpen] = useState(false)
   const toggle = () => setIsOpen(!isOpen)
-  const selectToken = (value: string) => {
-    if (value !== selected) onChange(value)
-    toggle()
-  }
 
   const [keyword, setKeyword] = useState("")
 
@@ -78,6 +43,16 @@ const SelectToken = ({ value: selected, onChange, ...props }: Props) => {
       k.toLowerCase().includes(keyword.toLowerCase())
     )
   })
+
+  useEffect(() => {
+    if (!selected && tokens) {
+      const tokensRecord = getRecord(tokens, (t) => t.contract_addr)
+      const token = tokensRecord[chainDefaultAsset[chainId]]
+      if (token) {
+        onChange(token)
+      }
+    }
+  }, [chainId, onChange, selected, tokens])
 
   const renderList = () => {
     if (keyword && !filteredTokens.length) {
@@ -90,14 +65,18 @@ const SelectToken = ({ value: selected, onChange, ...props }: Props) => {
           <section className={cx(styles.checkbox)}>{checkbox}</section>
         )}
         <div className={styles.tokens}>
-          {filteredTokens.map(({ contract_addr, decimals, symbol }) => (
-            <SelectTokenItem
-              key={contract_addr}
-              value={contract_addr}
-              token={contract_addr}
-              decimals={decimals}
-              symbol={symbol}
-            />
+          {filteredTokens.map((token) => (
+            <button
+              key={token.contract_addr}
+              type="button"
+              onClick={() => onChange(token)}
+            >
+              <TokenCard
+                token={token.contract_addr}
+                className={styles.item}
+                name={token.name}
+              />
+            </button>
           ))}
         </div>
       </>
@@ -107,20 +86,18 @@ const SelectToken = ({ value: selected, onChange, ...props }: Props) => {
   const renderSelectedToken = () => {
     if (!selected) return t("Select a coin")
 
-    const tokensRecord = getRecord(tokens, (token) => token.contract_addr)
-    const token = tokensRecord[selected]
-    if (!token) return null
-
     return (
       <>
-        <TokenIcon token={token.contract_addr} />
-        {token.symbol}
+        <TokenIcon token={selected.contract_addr} />
+        {selected.symbol}
       </>
     )
   }
 
+  // const hideBalance = !checkbox
+
   return (
-    <SelectTokenProvider value={{ hideBalance: !checkbox, selectToken }}>
+    <>
       <Flex>
         <button type="button" className={styles.toggle} onClick={toggle}>
           {renderSelectedToken()}
@@ -147,7 +124,7 @@ const SelectToken = ({ value: selected, onChange, ...props }: Props) => {
           <div className={styles.content}>{renderList()}</div>
         </section>
       )}
-    </SelectTokenProvider>
+    </>
   )
 }
 

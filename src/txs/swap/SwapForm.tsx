@@ -12,12 +12,15 @@ import { useMultichainSwap } from "./MultichainSwapContext"
 import ChainInput, { ChainOption } from "components/form/ChainInput"
 import { useSwapForm } from "./hooks/useSwapForm"
 import { useSwapSimulation } from "./hooks/useSwapSimulation"
+import { TFMToken } from "data/external/multichainTfm"
+import { Read } from "components/token"
 
 /*
 TODO:
 - [ ] what chains to display?useTFMChains.ts
 - [ ] include chain icon to to chain input
 - [ ] reuse ChainInput and ChainSelector
+- [ ] isValid only when ask and offer assets
 
 TODO for SelectToken:
 - [ ] group tokens into "Coins" and "Tokens"
@@ -58,17 +61,17 @@ export const SwapForm = () => {
   } = form
   const { errors } = formState
   const values = watch()
-  const { offerAsset, askAsset } = values
+  const { offerAsset, askAsset, sourceChain, destinationChain } = values
 
   const onSelectAsset = (key: "offerAsset" | "askAsset") => {
-    return async (asset: Token) => {
+    return async (asset: TFMToken) => {
       // focus on input if select offer asset
       if (key === "offerAsset") {
         form.resetField("amount")
         form.setFocus("amount")
       }
 
-      setValue(`${key}.asset`, asset)
+      setValue(key, asset)
     }
   }
 
@@ -88,8 +91,8 @@ export const SwapForm = () => {
     trigger("amount")
   }
 
-  const { data: simulation } = useSwapSimulation(form)
-  console.log(simulation)
+  const { data: simulation, isFetching: isFetchingSimulation } =
+    useSwapSimulation(form)
 
   return (
     <Form
@@ -102,7 +105,7 @@ export const SwapForm = () => {
       </FormWarning>
 
       <Controller
-        name="offerAsset.chain"
+        name="sourceChain"
         control={form.control}
         render={({ field: { value, onChange } }) => (
           <ChainInput
@@ -115,8 +118,8 @@ export const SwapForm = () => {
 
       <AssetFormItem label={t("From")} error={errors.amount?.message}>
         <SelectToken
-          chainId={offerAsset.chain}
-          value={offerAsset.asset}
+          chainId={sourceChain}
+          value={offerAsset}
           onChange={onSelectAsset("offerAsset")}
           checkbox={
             <Checkbox checked={showAll} onChange={() => setShowAll(!showAll)}>
@@ -145,7 +148,7 @@ export const SwapForm = () => {
       <FormArrow onClick={swapAssets} />
 
       <Controller
-        name="askAsset.chain"
+        name="destinationChain"
         control={form.control}
         render={({ field: { value, onChange } }) => (
           <ChainInput
@@ -158,22 +161,22 @@ export const SwapForm = () => {
 
       <AssetFormItem label={t("To")}>
         <SelectToken
-          chainId={askAsset.chain}
-          value={askAsset.asset}
+          chainId={destinationChain}
+          value={askAsset}
           onChange={onSelectAsset("askAsset")}
           addonAfter={
             <AssetReadOnly>
-              {/* {simulatedValue ? (
+              {simulation ? (
                 <Read
-                  amount={simulatedValue}
-                  decimals={askDecimals}
+                  amount={simulation.simulatedAmount}
+                  decimals={askAsset.decimals}
                   approx
                 />
               ) : (
                 <p className="muted">
-                  {isFetching ? t("Simulating...") : "0"}
+                  {isFetchingSimulation ? t("Simulating...") : "0"}
                 </p>
-              )} */}
+              )}
             </AssetReadOnly>
           }
         />
