@@ -14,9 +14,11 @@ import { useSwapForm } from "./hooks/useSwapForm"
 import { useSwapSimulation } from "./hooks/useSwapSimulation"
 import { TFMToken } from "data/external/multichainTfm"
 import { Read } from "components/token"
+import { getPlaceholder } from "txs/utils"
 
 /*
 TODO:
+- [ ] check if testnet works
 - [ ] what chains to display?useTFMChains.ts
 - [ ] include chain icon to to chain input
 - [ ] reuse ChainInput and ChainSelector
@@ -43,6 +45,9 @@ TODO from TFMSwapForm:
 - [ ] validate amount against max and offerDecimals
 - [ ] max reset on focus
 - [ ] simulate value
+
+Notes:
+1. Use [floating-ui](https://github.com/floating-ui/floating-ui) for popovers and click outside
 */
 
 export const SwapForm = () => {
@@ -111,7 +116,10 @@ export const SwapForm = () => {
           <ChainInput
             options={chainOptions}
             value={value}
-            onChange={onChange}
+            onChange={(chain) => {
+              onChange(chain)
+              resetField("offerAsset")
+            }}
           />
         )}
       />
@@ -137,7 +145,9 @@ export const SwapForm = () => {
                 // ),
               })}
               inputMode="decimal"
-              // placeholder={getPlaceholder(offerDecimals)}
+              placeholder={
+                offerAsset ? getPlaceholder(offerAsset.decimals) : undefined
+              }
               // onFocus={max.reset}
               autoFocus
             />
@@ -154,7 +164,10 @@ export const SwapForm = () => {
           <ChainInput
             options={chainOptions}
             value={value}
-            onChange={onChange}
+            onChange={(chain) => {
+              onChange(chain)
+              resetField("askAsset")
+            }}
           />
         )}
       />
