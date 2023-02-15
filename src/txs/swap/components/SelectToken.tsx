@@ -1,46 +1,27 @@
 import { ReactNode, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { flatten } from "ramda"
 import classNames from "classnames/bind"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 import SearchIcon from "@mui/icons-material/Search"
 import createContext from "utils/createContext"
-import { Flex, Grid } from "components/layout"
-import { Empty } from "components/feedback"
-import { TokenCard, TokenCardGrid, TokenIcon } from "components/token"
+import { Flex } from "components/layout"
+import { TokenCard, TokenIcon, TokenCardGrid } from "components/token"
 import styles from "./SelectToken.module.scss"
+import { useTFMTokens } from "data/external/multichainTfm"
+import getRecord from "utils/getRecord"
+import { Empty } from "components/feedback"
 
 const cx = classNames.bind(styles)
-
-interface GroupProps {
-  title: string
-  children: ItemProps[]
-  showName?: boolean
-}
-
-const SelectTokenGroup = ({ title, children, showName }: GroupProps) => {
-  return !children.filter(({ hidden }) => !hidden).length ? null : (
-    <article>
-      <h1 className={styles.title}>{title}</h1>
-      <TokenCardGrid singleColumn={showName}>
-        {children.map((item) => (
-          <SelectTokenItem {...item} showName={showName} key={item.value} />
-        ))}
-      </TokenCardGrid>
-    </article>
-  )
-}
 
 interface ItemProps extends TokenItem {
   balance?: string
   value: string
   muted?: boolean
   hidden?: boolean
-  showName?: boolean
 }
 
 const SelectTokenItem = (props: ItemProps) => {
-  const { value, balance, muted, hidden, showName } = props
+  const { value, balance, muted, hidden } = props
   const { hideBalance, selectToken } = useSelectToken()
 
   return hidden ? null : (
@@ -53,8 +34,7 @@ const SelectTokenItem = (props: ItemProps) => {
         {...props}
         className={styles.item}
         balance={hideBalance ? undefined : balance}
-        name={showName ? props.name : undefined /* Hide name */}
-        value={undefined /* To avoid put the `option` value */}
+        name={props.name}
       />
     </button>
   )
@@ -63,10 +43,9 @@ const SelectTokenItem = (props: ItemProps) => {
 interface Props {
   value?: string
   onChange: (value: string) => void
-  options: GroupProps[]
   addonAfter: ReactNode // input
   checkbox?: ReactNode
-  showName?: boolean
+  chainId: string
 }
 
 interface Value {
@@ -78,8 +57,10 @@ const [useSelectToken, SelectTokenProvider] =
   createContext<Value>("useSelectToken")
 
 const SelectToken = ({ value: selected, onChange, ...props }: Props) => {
-  const { options, addonAfter, checkbox, showName } = props
+  const { addonAfter, checkbox, chainId } = props
   const { t } = useTranslation()
+
+  const { data: tokens = [] } = useTFMTokens(chainId)
 
   const [isOpen, setIsOpen] = useState(false)
   const toggle = () => setIsOpen(!isOpen)
@@ -90,85 +71,82 @@ const SelectToken = ({ value: selected, onChange, ...props }: Props) => {
 
   const [keyword, setKeyword] = useState("")
 
-  const items = flatten(Object.values(options.map(({ children }) => children)))
-  const current = items.find((item) => item.value === selected)
-  const byKeyword = items.filter((item) =>
-    [item.value, item.symbol].some((k) =>
+  const filteredTokens = tokens.filter(({ contract_addr, symbol, name }) => {
+    if (!keyword) return true
+
+    return [contract_addr, symbol, name].some((k) =>
       k.toLowerCase().includes(keyword.toLowerCase())
     )
-  )
+  })
 
-  const empty = !byKeyword.length
+  const renderList = () => {
+    if (keyword && !filteredTokens.length) {
+      return <Empty />
+    }
+
+    return (
+      <>
+        {checkbox && !keyword && (
+          <section className={cx(styles.checkbox)}>{checkbox}</section>
+        )}
+        <div className={styles.tokens}>
+          {filteredTokens.map(({ contract_addr, decimals, symbol }) => (
+            <SelectTokenItem
+              key={contract_addr}
+              value={contract_addr}
+              token={contract_addr}
+              decimals={decimals}
+              symbol={symbol}
+            />
+          ))}
+        </div>
+      </>
+    )
+  }
+
+  const renderSelectedToken = () => {
+    if (!selected) return t("Select a coin")
+
+    const tokensRecord = getRecord(tokens, (token) => token.contract_addr)
+    const token = tokensRecord[selected]
+    if (!token) return null
+
+    return (
+      <>
+        <TokenIcon token={token.contract_addr} />
+        {token.symbol}
+      </>
+    )
+  }
 
   return (
     <SelectTokenProvider value={{ hideBalance: !checkbox, selectToken }}>
-      <div className={styles.component}>
-        <Flex>
-          <button type="button" className={styles.toggle} onClick={toggle}>
-            {current ? (
-              <>
-                <TokenIcon token={current.token} icon={current.icon} />
-                {current.symbol}
-              </>
-            ) : (
-              t("Select a coin")
-            )}
+      <Flex>
+        <button type="button" className={styles.toggle} onClick={toggle}>
+          {renderSelectedToken()}
 
-            <ArrowDropDownIcon style={{ fontSize: 18 }} />
-          </button>
+          <ArrowDropDownIcon style={{ fontSize: 18 }} />
+        </button>
 
-          {addonAfter}
-        </Flex>
+        {addonAfter}
+      </Flex>
 
-        {isOpen && (
-          <section>
-            <Flex className={styles.search}>
-              <SearchIcon />
-              <input
-                value={keyword}
-                onChange={(e) => setKeyword(e.target.value)}
-                placeholder=""
-                autoComplete="off"
-                autoFocus
-              />
-            </Flex>
+      {isOpen && (
+        <section>
+          <Flex className={styles.search}>
+            <SearchIcon />
+            <input
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              placeholder=""
+              autoComplete="off"
+              autoFocus
+            />
+          </Flex>
 
-            <Grid gap={20} className={cx(styles.list, { empty })}>
-              {keyword ? (
-                empty ? (
-                  <Empty />
-                ) : (
-                  <TokenCardGrid singleColumn={showName}>
-                    {byKeyword.map((item) => (
-                      <SelectTokenItem
-                        {...item}
-                        showName={showName}
-                        key={item.value}
-                      />
-                    ))}
-                  </TokenCardGrid>
-                )
-              ) : (
-                <>
-                  {checkbox && (
-                    <section className={cx(styles.checkbox)}>
-                      {checkbox}
-                    </section>
-                  )}
-
-                  {options.map((option) => (
-                    <SelectTokenGroup
-                      {...option}
-                      showName={showName}
-                      key={option.title}
-                    />
-                  ))}
-                </>
-              )}
-            </Grid>
-          </section>
-        )}
-      </div>
+          <div className={styles.content}>{renderList()}</div>
+        </section>
+      )}
     </SelectTokenProvider>
   )
 }

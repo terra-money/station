@@ -13,17 +13,17 @@ const AssetFormItem = (props: PropsWithChildren<Props>) => {
   const { label, extra, error, children } = props
 
   return (
-    <Grid gap={3}>
-      <Grid gap={5} className={styles.border}>
+    <div className={styles.container}>
+      <div className={styles.content}>
         <header className={styles.header}>
           <label className={styles.label}>{label}</label>
           {extra && <aside className={styles.extra}>{extra}</aside>}
         </header>
 
         {children}
-      </Grid>
+      </div>
       <p className={styles.error}>{error}</p>
-    </Grid>
+    </div>
   )
 }
 

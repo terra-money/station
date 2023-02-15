@@ -29,6 +29,15 @@ TODO:
 - [ ] include chain icon to to chain input
 - [ ] reuse ChainInput and ChainSelector
 
+TODO for SelectToken:
+- [ ] group tokens into "Coins" and "Tokens"
+- [ ] show loader when fetching tokens
+- [ ] show icon for token
+
+TODO for ChainInput:
+- [ ] close on click outside
+- [ ] second chain input has small height
+
 TODO from TFMSwapForm:
 - [ ] placeholder for offer input
 - [ ] options for offer input
@@ -44,11 +53,11 @@ TODO from TFMSwapForm:
 const defaultFormValues: Partial<SwapFormShape> = {
   slippage: 1,
   offerAsset: {
-    chain: "terra",
+    chain: "phoenix-1",
     asset: "uluna",
   },
   askAsset: {
-    chain: "terra",
+    chain: "phoenix-1",
     asset: "uluna",
   },
 }
@@ -85,25 +94,6 @@ export const SwapForm = () => {
     id: chain.chain_id,
     name: chain.name,
   }))
-  // const { options, findDecimals } = useTFMSwap()
-
-  // const offerDecimals = offerAsset.asset ? findDecimals(offerAsset.asset) : undefined
-
-  // const getOptions = (key: "offerAsset" | "askAsset") => {
-  //   const { coins, tokens } = options
-
-  //   const getOptionList = (list: TokenItemWithBalance[]) =>
-  //     list.map((item) => {
-  //       const { token: value, balance } = item
-  //       const hidden = key === "offerAsset" && !showAll && !has(balance)
-  //       return { ...item, value, hidden }
-  //     })
-
-  //   return [
-  //     { title: t("Coins"), children: getOptionList(coins) },
-  //     { title: t("Tokens"), children: getOptionList(tokens) },
-  //   ]
-  // }
 
   const swapAssets = () => {
     setValue("offerAsset", askAsset)
@@ -136,10 +126,9 @@ export const SwapForm = () => {
 
       <AssetFormItem label={t("From")} error={errors.amount?.message}>
         <SelectToken
+          chainId={offerAsset.chain}
           value={offerAsset.asset}
           onChange={onSelectAsset("offerAsset")}
-          // options={getOptions("offerAsset")}
-          options={[]}
           checkbox={
             <Checkbox checked={showAll} onChange={() => setShowAll(!showAll)}>
               {t("Show all")}
@@ -160,7 +149,6 @@ export const SwapForm = () => {
               autoFocus
             />
           }
-          showName
         />
       </AssetFormItem>
 
@@ -180,10 +168,9 @@ export const SwapForm = () => {
 
       <AssetFormItem label={t("To")}>
         <SelectToken
+          chainId={askAsset.chain}
           value={askAsset.asset}
           onChange={onSelectAsset("askAsset")}
-          // options={getOptions("askAsset")}
-          options={[]}
           addonAfter={
             <AssetReadOnly>
               {/* {simulatedValue ? (
@@ -199,7 +186,6 @@ export const SwapForm = () => {
               )} */}
             </AssetReadOnly>
           }
-          showName
         />
       </AssetFormItem>
     </Form>
