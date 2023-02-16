@@ -1,9 +1,6 @@
-import { useMemo, useState } from "react"
-import styles from "./ChainSelector.module.scss"
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
+import { useMemo } from "react"
 import { useNetworks } from "app/InitNetworks"
-import WithSearchInput from "pages/custom/WithSearchInput"
-import classNames from "classnames"
+import ChainInput from "./ChainInput"
 
 interface Props {
   chainsList: string[]
@@ -28,61 +25,18 @@ const ChainSelector = ({ chainsList, onChange, value, small }: Props) => {
     () => chainsList.map((chainID) => allNetworks[chainID]),
     [allNetworks, chainsList]
   )
-  const [open, setOpen] = useState(false)
 
   return (
-    <div className={styles.container}>
-      <button
-        className={styles.selector}
-        onClick={(e) => {
-          e.preventDefault()
-          e.stopPropagation()
-          setOpen((o) => !o)
-        }}
-      >
-        <span>
-          <img src={allNetworks[value]?.icon} alt={allNetworks[value]?.name} />{" "}
-          {allNetworks[value]?.name}
-        </span>{" "}
-        <ArrowDropDownIcon style={{ fontSize: 20 }} className={styles.caret} />
-      </button>
-      {open && (
-        <div className={styles.options}>
-          <WithSearchInput inline gap={4}>
-            {(search) => (
-              <div
-                className={classNames(
-                  styles.options__container,
-                  small && styles.options__container__small
-                )}
-              >
-                {list
-                  .filter(
-                    ({ chainID, name }) =>
-                      chainID.toLowerCase().includes(search.toLowerCase()) ||
-                      name.toLowerCase().includes(search.toLowerCase())
-                  )
-                  .map(({ chainID, name, icon }) => (
-                    <button
-                      className={chainID === value ? styles.active : ""}
-                      key={chainID}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        e.stopPropagation()
-                        onChange(chainID)
-                        setOpen(false)
-                      }}
-                    >
-                      <img src={icon} alt={name} />
-                      {name}
-                    </button>
-                  ))}
-              </div>
-            )}
-          </WithSearchInput>
-        </div>
-      )}
-    </div>
+    <ChainInput
+      options={list.map((network) => ({
+        id: network.chainID,
+        name: network.name,
+        icon: network.icon,
+      }))}
+      value={value}
+      onChange={onChange}
+      small={small}
+    />
   )
 }
 

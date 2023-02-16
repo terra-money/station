@@ -23,6 +23,7 @@ export const queryTFMChains = async () => {
   const { data } = await axios.get<TFMChain[]>("/chains?network_type=mainnet", {
     baseURL,
   })
+  console.log(data)
   return data
 }
 

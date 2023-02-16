@@ -4,8 +4,8 @@ import { SwapFormFields } from "./SwapFormFields"
 
 /*
 TODO:
-- [ ] reuse ChainInput and ChainSelector
 - [ ] isValid only when ask and offer assets
+- [ ] limit chains to those coming from useNetworks
 
 TODO for SelectToken:
 - [ ] group tokens into "Coins" and "Tokens"

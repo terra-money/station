@@ -1,5 +1,5 @@
 import { useState } from "react"
-import styles from "./ChainSelector.module.scss"
+import styles from "./ChainInput.module.scss"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 import WithSearchInput from "pages/custom/WithSearchInput"
 import classNames from "classnames"
