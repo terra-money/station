@@ -81,7 +81,8 @@ Sentry.init({
   beforeSend: (event, hint) => {
     console.log(event, hint);
     if(hint.originalException){
-      const otherSiteError = hint.originalException?.stack.indexOf('chrome-extension://') > -1;
+      const excaption = hint.originalException as Error;
+      const otherSiteError = excaption.stack && excaption.stack.indexOf('chrome-extension://') > -1;
       if (["Error: Request rejected", "Error: Failed to fetch", "Error: No error message"].includes(hint.originalException?.toString()) || hint.originalException?.toString().indexOf('The method "mises_') > -1 || otherSiteError) {
         logEvent(analytics, "staking_error", {
           error_message: hint.originalException?.toString(),
