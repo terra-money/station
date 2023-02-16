@@ -79,12 +79,15 @@ Sentry.init({
   tracesSampleRate: 1.0,
   ignoreErrors:['UnhandledRejection'],
   beforeSend: (event, hint) => {
-    const whiteList = ["Error: Failed to fetch", 'Error: Request rejected', `Error: Cannot assign to read only property 'keplr' of object '#<Window>'`, `Cannot read property 'disconnect' of null`];
-    if (hint.originalException && whiteList.includes(hint.originalException?.toString())) {
-      logEvent(analytics, "staking_error", {
-        error_message: hint.originalException?.toString(),
-      });
-      return null;
+    console.log(event, hint);
+    if(hint.originalException){
+      const otherSiteError = hint.originalException?.stack.indexOf('chrome-extension://') > -1;
+      if (["Error: Request rejected", "Error: Failed to fetch", "Error: No error message"].includes(hint.originalException?.toString()) || hint.originalException?.toString().indexOf('The method "mises_') > -1 || otherSiteError) {
+        logEvent(analytics, "staking_error", {
+          error_message: hint.originalException?.toString(),
+        });
+        return null;
+      }
     }
     console.log(event);
     return event;
