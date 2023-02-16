@@ -1,5 +1,5 @@
 import { Form, FormArrow, FormWarning } from "components/form"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Controller } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import AssetFormItem, {
@@ -12,15 +12,11 @@ import { useMultichainSwap } from "./MultichainSwapContext"
 import ChainInput, { ChainOption } from "components/form/ChainInput"
 import { useSwapForm } from "./hooks/useSwapForm"
 import { useSwapSimulation } from "./hooks/useSwapSimulation"
-import { TFMToken } from "data/external/multichainTfm"
 import { Read } from "components/token"
 import { getPlaceholder } from "txs/utils"
 
 /*
 TODO:
-- [ ] check if testnet works
-- [ ] what chains to display?useTFMChains.ts
-- [ ] include chain icon to to chain input
 - [ ] reuse ChainInput and ChainSelector
 - [ ] isValid only when ask and offer assets
 
@@ -30,10 +26,12 @@ TODO for SelectToken:
 - [ ] show icon for token
 - [ ] show token name
 - [ ] show token balance
+- [ ] refactor
 
 TODO for ChainInput:
 - [ ] close on click outside
 - [ ] second chain input has small height
+- [ ] show balance of offer token
 
 TODO from TFMSwapForm:
 - [ ] placeholder for offer input
@@ -45,6 +43,9 @@ TODO from TFMSwapForm:
 - [ ] validate amount against max and offerDecimals
 - [ ] max reset on focus
 - [ ] simulate value
+
+TODO from Tx component:
+
 
 Notes:
 1. Use [floating-ui](https://github.com/floating-ui/floating-ui) for popovers and click outside
@@ -63,22 +64,16 @@ export const SwapForm = () => {
     resetField,
     register,
     trigger,
+    setFocus,
   } = form
   const { errors } = formState
   const values = watch()
   const { offerAsset, askAsset, sourceChain, destinationChain } = values
 
-  const onSelectAsset = (key: "offerAsset" | "askAsset") => {
-    return async (asset: TFMToken) => {
-      // focus on input if select offer asset
-      if (key === "offerAsset") {
-        form.resetField("amount")
-        form.setFocus("amount")
-      }
-
-      setValue(key, asset)
-    }
-  }
+  useEffect(() => {
+    resetField("amount")
+    setFocus("amount")
+  }, [resetField, setFocus, offerAsset])
 
   const [showAll, setShowAll] = useState(false)
 
@@ -125,33 +120,43 @@ export const SwapForm = () => {
       />
 
       <AssetFormItem label={t("From")} error={errors.amount?.message}>
-        <SelectToken
-          chainId={sourceChain}
-          value={offerAsset}
-          onChange={onSelectAsset("offerAsset")}
-          checkbox={
-            <Checkbox checked={showAll} onChange={() => setShowAll(!showAll)}>
-              {t("Show all")}
-            </Checkbox>
-          }
-          addonAfter={
-            <AssetInput
-              {...register("amount", {
-                required: true,
-                valueAsNumber: true,
-                // validate: validate.input(
-                //   toInput(max.amount, offerDecimals),
-                //   offerDecimals
-                // ),
-              })}
-              inputMode="decimal"
-              placeholder={
-                offerAsset ? getPlaceholder(offerAsset.decimals) : undefined
+        <Controller
+          name="offerAsset"
+          control={form.control}
+          rules={{ required: true }}
+          render={({ field: { value, onChange } }) => (
+            <SelectToken
+              chainId={sourceChain}
+              value={value}
+              onChange={onChange}
+              checkbox={
+                <Checkbox
+                  checked={showAll}
+                  onChange={() => setShowAll(!showAll)}
+                >
+                  {t("Show all")}
+                </Checkbox>
               }
-              // onFocus={max.reset}
-              autoFocus
+              addonAfter={
+                <AssetInput
+                  {...register("amount", {
+                    required: true,
+                    valueAsNumber: true,
+                    // validate: validate.input(
+                    //   toInput(max.amount, offerDecimals),
+                    //   offerDecimals
+                    // ),
+                  })}
+                  inputMode="decimal"
+                  placeholder={
+                    offerAsset ? getPlaceholder(offerAsset.decimals) : undefined
+                  }
+                  // onFocus={max.reset}
+                  autoFocus
+                />
+              }
             />
-          }
+          )}
         />
       </AssetFormItem>
 
@@ -173,25 +178,32 @@ export const SwapForm = () => {
       />
 
       <AssetFormItem label={t("To")}>
-        <SelectToken
-          chainId={destinationChain}
-          value={askAsset}
-          onChange={onSelectAsset("askAsset")}
-          addonAfter={
-            <AssetReadOnly>
-              {simulation ? (
-                <Read
-                  amount={simulation.simulatedAmount}
-                  decimals={askAsset.decimals}
-                  approx
-                />
-              ) : (
-                <p className="muted">
-                  {isFetchingSimulation ? t("Simulating...") : "0"}
-                </p>
-              )}
-            </AssetReadOnly>
-          }
+        <Controller
+          name="askAsset"
+          control={form.control}
+          rules={{ required: true }}
+          render={({ field: { value, onChange } }) => (
+            <SelectToken
+              chainId={destinationChain}
+              value={value}
+              onChange={onChange}
+              addonAfter={
+                <AssetReadOnly>
+                  {simulation ? (
+                    <Read
+                      amount={simulation.simulatedAmount}
+                      decimals={askAsset.decimals}
+                      approx
+                    />
+                  ) : (
+                    <p className="muted">
+                      {isFetchingSimulation ? t("Simulating...") : "0"}
+                    </p>
+                  )}
+                </AssetReadOnly>
+              }
+            />
+          )}
         />
       </AssetFormItem>
     </Form>

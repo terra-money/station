@@ -7,7 +7,7 @@ export interface TFMChain {
   type: string
   name: string
   image_url: string
-  id: 2
+  id: number
 }
 
 export interface TFMToken {
@@ -27,9 +27,11 @@ export const queryTFMChains = async () => {
 }
 
 export const useTFMChains = () => {
-  return useQuery("Multichain TFM chains", queryTFMChains, {
-    ...RefetchOptions.INFINITY,
-  })
+  return useQuery(
+    "Multichain TFM chains",
+    queryTFMChains,
+    RefetchOptions.INFINITY
+  )
 }
 
 export const useTFMTokens = (chainId: string) => {
@@ -42,9 +44,7 @@ export const useTFMTokens = (chainId: string) => {
       )
       return data
     },
-    {
-      ...RefetchOptions.INFINITY,
-    }
+    RefetchOptions.INFINITY
   )
 }
 
