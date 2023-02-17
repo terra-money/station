@@ -104,7 +104,7 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
       })
 
   /* form */
-  const { handleSubmit } = useForm({ mode: "onChange" })
+  const { handleSubmit, reset } = useForm({ mode: "onChange" })
 
   /* tx */
   const createTx = useCallback(() => {
@@ -126,6 +126,10 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
     createTx,
     querykeys: [queryKey.distribution.rewards],
     chain,
+    onSuccess: () => {
+      console.log("success is called")
+      reset()
+    },
   }
 
   return (
