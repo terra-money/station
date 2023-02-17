@@ -71,7 +71,7 @@ const FinderLink = forwardRef(
             marsPath,
             value,
           ].join("/")
-        : chainName === "terra" || chainName === "classic"
+        : chainName === "terra" || chainName === "terra classic"
         ? [FINDER, networkName, finderPath, value].join("/")
         : [MINTSCAN, chainName, interchainPath, value].join("/")
 
