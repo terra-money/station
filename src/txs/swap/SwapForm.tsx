@@ -6,8 +6,12 @@ import { SwapFormFields } from "./SwapFormFields"
 TODO:
 - [ ] isValid only when ask and offer assets
 - [ ] limit chains to those coming from useNetworks
+- [ ] handle TFM transactions
+  - [ ] swap
+  - [ ] ibc transfer
 
 TODO for SelectToken:
+- [ ] display only whitelisted & "custom" tokens (from the "Manage tokens" modal)
 - [ ] group tokens into "Coins" and "Tokens"
 - [ ] show loader when fetching tokens
 - [ ] show icon for token
@@ -17,6 +21,7 @@ TODO for SelectToken:
 
 TODO for ChainInput:
 - [ ] close on click outside
+- [ ] display only supported chains
 - [ ] second chain input has small height
 - [ ] show balance of offer token
 
