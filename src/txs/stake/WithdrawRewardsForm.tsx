@@ -126,10 +126,7 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
     createTx,
     querykeys: [queryKey.distribution.rewards],
     chain,
-    onSuccess: () => {
-      console.log("success is called")
-      reset()
-    },
+    onSuccess: () => reset(),
   }
 
   return (

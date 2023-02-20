@@ -52,9 +52,6 @@ const TxIndicator = ({ txhash }: { txhash: string }) => {
     ? Status.FAILURE
     : Status.SUCCESS
 
-  console.log("🚀 ~ file: LatestTx.tsx:50 ~ TxIndicator ~ status", status)
-  console.log("func", onSuccess)
-
   useEffect(() => {
     status === Status.SUCCESS && onSuccess?.()
   }, [status, onSuccess])
