@@ -51,7 +51,7 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
     (acc, { data }) => (data ? [...acc, data] : acc),
     [] as string[]
   )
-
+  
   const validationState = combineState(...validationResult)
 
   if (!networks) return null
