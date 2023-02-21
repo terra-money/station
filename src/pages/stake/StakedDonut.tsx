@@ -58,7 +58,7 @@ const StakedDonut = ({ chain }: { chain: string }) => {
                   )}
                   <p className={styles.denom}>{entry.payload.moniker}</p>
                   <p className={styles.percent}>
-                    {percentage < 1 ? `< ${percentage}` : percentage}%
+                    {percentage < 1 ? `< 1` : percentage}%
                   </p>
                 </>
               ) : (
@@ -70,7 +70,7 @@ const StakedDonut = ({ chain }: { chain: string }) => {
                   />
                   <p className={styles.denom}>{entry.value}</p>
                   <p className={styles.percent}>
-                    {Math.round(entry.payload.percent * 100)}%
+                    {percentage < 1 ? `< 1` : percentage}%
                   </p>
                 </>
               )}
@@ -133,7 +133,7 @@ const StakedDonut = ({ chain }: { chain: string }) => {
                   outerRadius={100}
                   fill="#8884d8"
                   paddingAngle={0}
-                  dataKey="value"
+                  dataKey={chain !== "all" ? "amount" : "value"}
                 >
                   {graphData[chain || "all"].map((_, index) => (
                     <Cell
