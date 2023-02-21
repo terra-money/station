@@ -25,7 +25,7 @@ const NetWorth = () => {
     return (
       acc +
       (parseInt(amount) *
-        (symbol.endsWith("...") ? 0 : prices?.[token]?.price ?? 0)) /
+        (symbol?.endsWith("...") ? 0 : prices?.[token]?.price ?? 0)) /
         10 ** decimals
     )
   }, 0)

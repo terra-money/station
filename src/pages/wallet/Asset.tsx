@@ -73,7 +73,7 @@ const Asset = (props: Props) => {
                 token=""
               />
             ) : (
-              "-"
+              "—"
             )}
           </h1>
           <h2 className={styles.amount}>
