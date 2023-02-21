@@ -1,10 +1,10 @@
-import classNames from "classnames"
-import { useNetwork } from "data/wallet"
-import { useState } from "react"
-import { useTranslation } from "react-i18next"
-import styles from "./ChainFilter.module.scss"
-import { useSavedNetwork } from "utils/localStorage"
-import { isTerraChain } from "utils/chain"
+import classNames from 'classnames'
+import { useNetwork } from 'data/wallet'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import styles from './ChainFilter.module.scss'
+import { useSavedNetwork } from 'utils/localStorage'
+import { isTerraChain } from 'utils/chain'
 
 const ChainFilter = ({
   children,
@@ -13,6 +13,7 @@ const ChainFilter = ({
   title,
   className,
   terraOnly,
+  limitTo,
 }: {
   children: (chain?: string) => React.ReactNode
   all?: boolean
@@ -20,13 +21,15 @@ const ChainFilter = ({
   title?: string
   className?: string
   terraOnly?: boolean
+  limitTo?: string[]
 }) => {
   const { t } = useTranslation()
   const { savedNetwork, changeSavedNetwork } = useSavedNetwork()
 
   const networks = Object.values(useNetwork())
-    .sort((a, b) => (a.name === "Terra" ? -1 : b.name === "Terra" ? 1 : 0))
+    .sort((a, b) => (a.name === 'Terra' ? -1 : b.name === 'Terra' ? 1 : 0))
     .filter((n) => (terraOnly ? isTerraChain(n.chainID) : true))
+    .filter(({ chainID }) => (limitTo ? limitTo.includes(chainID) : true))
 
   const initNetwork =
     networks.find((n) => n.chainID === savedNetwork) ?? networks[0]
@@ -47,7 +50,7 @@ const ChainFilter = ({
         className={classNames(
           className,
           styles.header,
-          terraOnly ? styles.swap : ""
+          terraOnly ? styles.swap : ''
         )}
       >
         {title && <h1>{title}</h1>}
@@ -57,7 +60,7 @@ const ChainFilter = ({
               onClick={() => handleSetChain(undefined)}
               className={`${styles.all} ${selectedChain ?? styles.active}`}
             >
-              {t("All")}
+              {t('All')}
             </button>
           )}
           {networks.map((chain) => (

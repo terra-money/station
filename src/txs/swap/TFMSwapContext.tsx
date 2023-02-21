@@ -1,19 +1,17 @@
-import { PropsWithChildren, useMemo } from "react"
-import { zipObj } from "ramda"
-import { isDenomIBC } from "@terra.kitchen/utils"
-import { AccAddress } from "@terra-money/feather.js"
-import { getAmount } from "utils/coin"
-import createContext from "utils/createContext"
-import { combineState } from "data/query"
-import { useBankBalance } from "data/queries/bank"
-import { useTokenBalances } from "data/queries/wasm"
-import { readIBCDenom, useNativeDenoms } from "data/token"
-import { useIBCWhitelist } from "data/Terra/TerraAssets"
-import { useCW20Whitelist } from "data/Terra/TerraAssets"
-import { useCustomTokensCW20 } from "data/settings/CustomTokens"
-import { useTFMTokens } from "data/external/tfm"
-import { Card } from "components/layout"
-import { SwapAssets, validateAssets } from "./useSwapUtils"
+import { PropsWithChildren, useMemo } from 'react'
+import { zipObj } from 'ramda'
+import { isDenomIBC } from '@terra.kitchen/utils'
+import { AccAddress } from '@terra-money/feather.js'
+import { getAmount } from 'utils/coin'
+import createContext from 'utils/createContext'
+import { useBankBalance } from 'data/queries/bank'
+import { useTokenBalances } from 'data/queries/wasm'
+import { readIBCDenom, useNativeDenoms } from 'data/token'
+import { useIBCWhitelist } from 'data/Terra/TerraAssets'
+import { useCW20Whitelist } from 'data/Terra/TerraAssets'
+import { useCustomTokensCW20 } from 'data/settings/CustomTokens'
+import { useTFMTokens } from 'data/external/tfm'
+import { SwapAssets, validateAssets } from './useSwapUtils'
 
 export interface SlippageParams extends SwapAssets {
   input: number
@@ -38,7 +36,7 @@ interface TFMSwap {
 }
 
 export const [useTFMSwap, TFMSwapProvider] =
-  createContext<TFMSwap>("useTFMSwap")
+  createContext<TFMSwap>('useTFMSwap')
 
 const TFMSwapContext = ({ children }: PropsWithChildren<{}>) => {
   const bankBalance = useBankBalance()
@@ -61,7 +59,7 @@ const TFMSwapContext = ({ children }: PropsWithChildren<{}>) => {
 
     const ibc = tokens
       .filter(isDenomIBC)
-      .filter((denom) => ibcWhitelist[denom.replace("ibc/", "")])
+      .filter((denom) => ibcWhitelist[denom.replace('ibc/', '')])
 
     const cw20 = tokens
       .filter((addr) => AccAddress.validate(addr))
@@ -95,19 +93,19 @@ const TFMSwapContext = ({ children }: PropsWithChildren<{}>) => {
 
     const coins = [
       {
-        ...readNativeDenom("uluna"),
-        balance: getAmount(bankBalance, "uluna"),
+        ...readNativeDenom('uluna'),
+        balance: getAmount(bankBalance, 'uluna'),
       },
     ]
 
     const ibc = availableList.ibc.map((denom) => {
-      const item = ibcWhitelist[denom.replace("ibc/", "")]
+      const item = ibcWhitelist[denom.replace('ibc/', '')]
       const balance = getAmount(bankBalance, denom)
       return { ...readIBCDenom(item), balance }
     })
 
     const cw20 = availableList.cw20.map((token) => {
-      const balance = cw20TokensBalances[token] ?? "0"
+      const balance = cw20TokensBalances[token] ?? '0'
       return { ...cw20Whitelist[token], balance }
     })
 
@@ -115,7 +113,7 @@ const TFMSwapContext = ({ children }: PropsWithChildren<{}>) => {
 
     const findTokenItem = (token: Token) => {
       const key =
-        AccAddress.validate(token) || isDenomIBC(token) ? "tokens" : "coins"
+        AccAddress.validate(token) || isDenomIBC(token) ? 'tokens' : 'coins'
 
       const option = options[key].find((item) => item.token === token)
       if (!option) throw new Error()
@@ -134,19 +132,8 @@ const TFMSwapContext = ({ children }: PropsWithChildren<{}>) => {
     readNativeDenom,
   ])
 
-  const state = combineState(
-    ibcWhitelistState,
-    cw20WhitelistState,
-    TFMTokensState,
-    ...cw20TokensBalancesState
-  )
-
-  const render = () => {
-    if (!context) return null
-    return <TFMSwapProvider value={context}>{children}</TFMSwapProvider>
-  }
-
-  return <Card {...state}>{render()}</Card>
+  if (!context) return null
+  return <TFMSwapProvider value={context}>{children}</TFMSwapProvider>
 }
 
 export default TFMSwapContext
