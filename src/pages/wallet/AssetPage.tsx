@@ -29,7 +29,7 @@ const AssetPage = () => {
     (acc, b) => acc + parseInt(b.amount),
     0
   )
-  const price = symbol.endsWith("...") ? 0 : prices?.[token]?.price ?? 0
+  const price = symbol?.endsWith("...") ? 0 : prices?.[token]?.price ?? 0
 
   return (
     <>
