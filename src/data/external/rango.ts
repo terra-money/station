@@ -1,6 +1,6 @@
 import { RefetchOptions } from "data/query"
 import { useQuery } from "react-query"
-import { QuoteRequest, RangoClient } from "rango-sdk-basic"
+import { QuoteRequest, RangoClient, SwapRequest } from "rango-sdk-basic"
 import { assertDefined } from "utils/assertDefined"
 
 // TODO: get api key from env var
@@ -33,6 +33,16 @@ export const useRangoQuote = (quoteRequest?: QuoteRequest) => {
     () => rangoClient.quote(assertDefined(quoteRequest)),
     {
       enabled: !!quoteRequest,
+    }
+  )
+}
+
+export const useRangoSwap = (swapRequest?: SwapRequest) => {
+  return useQuery(
+    ["Rango swap", swapRequest],
+    () => rangoClient.swap(assertDefined(swapRequest)),
+    {
+      enabled: !!swapRequest,
     }
   )
 }
