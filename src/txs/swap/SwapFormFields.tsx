@@ -1,5 +1,5 @@
 import { FormArrow, FormWarning } from "components/form"
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 import { Controller } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import AssetFormItem, {
@@ -10,6 +10,9 @@ import { SwapFormState } from "./hooks/useSwapForm"
 import { getPlaceholder } from "txs/utils"
 import { TokenInput } from "./components/TokenInput"
 import { useCurrentChainTokens } from "./CurrentChainTokensContext"
+import { useRangoQuote } from "data/external/rango"
+import { microfy } from "utils/microfy"
+import { Read } from "components/token"
 
 interface SwapFormFieldsProps {
   form: SwapFormState
@@ -29,9 +32,9 @@ export const SwapFormFields = ({ form }: SwapFormFieldsProps) => {
     trigger,
     setFocus,
   } = form
-  const { errors } = formState
+  const { errors, isValid } = formState
   const values = watch()
-  const { offerAsset, askAsset } = values
+  const { offerAsset, askAsset, amount } = values
 
   useEffect(() => {
     resetField("amount")
@@ -44,6 +47,20 @@ export const SwapFormFields = ({ form }: SwapFormFieldsProps) => {
     resetField("amount")
     trigger("amount")
   }
+
+  const { data: quote, isFetching: isFetchingQuote } = useRangoQuote(
+    useMemo(() => {
+      if (!isValid) return
+
+      const from = tokensRecord[offerAsset]
+      const to = tokensRecord[askAsset]
+      return {
+        from,
+        to,
+        amount: microfy(amount, from.decimals),
+      }
+    }, [amount, askAsset, isValid, offerAsset, tokensRecord])
+  )
 
   return (
     <>
@@ -98,7 +115,22 @@ export const SwapFormFields = ({ form }: SwapFormFieldsProps) => {
               value={value}
               onChange={onChange}
               options={tokens}
-              addonAfter={<AssetReadOnly>coming soon!</AssetReadOnly>}
+              addonAfter={
+                <AssetReadOnly>
+                  {" "}
+                  {quote ? (
+                    <Read
+                      amount={quote.route?.outputAmount}
+                      decimals={tokensRecord[askAsset].decimals}
+                      approx
+                    />
+                  ) : (
+                    <p className="muted">
+                      {isFetchingQuote ? t("Simulating...") : "0"}
+                    </p>
+                  )}
+                </AssetReadOnly>
+              }
             />
           )}
         />
