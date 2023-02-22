@@ -1,11 +1,14 @@
-import { useCurrentChainTokens } from "./CurrentChainTokensContext"
+import { Form } from "components/form"
+import { useSwapForm } from "./hooks/useSwapForm"
+import { SwapFormFields } from "./SwapFormFields"
 
 export const RangoSwapForm = () => {
-  const { tokensRecord } = useCurrentChainTokens()
+  const form = useSwapForm()
+  const { handleSubmit } = form
 
   return (
-    <>
-      <p>Tokens: {JSON.stringify(tokensRecord, null, 2)}</p>
-    </>
+    <Form onSubmit={handleSubmit(console.log)}>
+      <SwapFormFields form={form} />
+    </Form>
   )
 }

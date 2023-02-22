@@ -5,12 +5,14 @@ import createContext from "utils/createContext"
 import getRecord from "utils/getRecord"
 import { useCurrentChain } from "./CurrentChainProvider"
 
+export type SwapToken = Token
+
 interface SwapChains {
-  tokens: Token[]
-  tokensRecord: Record<string, Token>
+  tokens: SwapToken[]
+  tokensRecord: Record<string, SwapToken>
 }
 
-export const getTokenId = (token: Token) => token.address || token.symbol
+export const getTokenId = (token: SwapToken) => token.address || token.symbol
 
 export const [useCurrentChainTokens, CurrentChainsTokensProvider] =
   createContext<SwapChains>("useCurrentChainTokens")
