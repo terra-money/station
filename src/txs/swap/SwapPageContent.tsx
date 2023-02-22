@@ -28,7 +28,7 @@ export const SwapPageContent = () => {
                   </TFMSwapContext>
                 )}
                 rango={() => (
-                  <CurrentChainTokensContext>
+                  <CurrentChainTokensContext key={chainID}>
                     <RangoSwapForm />
                   </CurrentChainTokensContext>
                 )}

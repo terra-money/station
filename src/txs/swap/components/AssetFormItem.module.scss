@@ -1,6 +1,18 @@
 @import "mixins";
 
-.border {
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
   border: solid 1px var(--input-border);
   border-radius: var(--border-radius);
   overflow: hidden;

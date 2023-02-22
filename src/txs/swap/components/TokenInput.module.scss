@@ -1,0 +1,65 @@
+@import "mixins";
+
+// toggle
+.toggle {
+  font-size: 18px;
+  font-weight: var(--bold);
+  gap: 12px;
+  line-height: 1;
+  padding: 20px;
+}
+
+.search {
+  background-color: var(--bg-muted);
+
+  input {
+    flex: 1;
+    background: transparent;
+    padding: 16px 20px;
+  }
+
+  ::placeholder {
+    color: var(--text-muted);
+  }
+
+  svg {
+    margin: 16px 0;
+    margin-left: 20px;
+  }
+}
+
+.content {
+  max-height: 320px;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.tokens {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 12px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: start;
+}
+
+/* group */
+.title {
+  font-size: var(--font-size-small);
+  font-weight: var(--bold);
+  padding-bottom: 8px;
+}
+
+/* item */
+.item:hover {
+  background: var(--bg);
+}
+
+.muted {
+  opacity: 0.5;
+}
