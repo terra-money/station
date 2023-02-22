@@ -1,8 +1,10 @@
-import { ConditionalRender } from 'components/ConditionalRender'
-import { Card, ChainFilter } from 'components/layout'
-import { useSwapChains } from './SwapChainsContext'
-import TFMSwapContext from './TFMSwapContext'
-import TFMSwapForm from './TFMSwapForm'
+import { ConditionalRender } from "components/ConditionalRender"
+import { Card, ChainFilter } from "components/layout"
+import { RangoSwapForm } from "./RangoSwapForm"
+import { useSwapChains } from "./SwapChainsContext"
+import TFMSwapContext from "../TFMSwapContext"
+import TFMSwapForm from "./TFMSwapForm"
+import { CurrentChainProvider } from "./CurrentChainProvider"
 
 export const SwapPageContent = () => {
   const { swapProvider } = useSwapChains()
@@ -11,20 +13,22 @@ export const SwapPageContent = () => {
     <Card>
       <ChainFilter
         outside
-        title={'Select a chain to perform swaps on'}
+        title={"Select a chain to perform swaps on"}
         limitTo={Object.keys(swapProvider)}
       >
         {(chainID) =>
           chainID && (
-            <ConditionalRender
-              value={swapProvider[chainID]}
-              tfm={() => (
-                <TFMSwapContext>
-                  <TFMSwapForm chainID={chainID ?? ''} />
-                </TFMSwapContext>
-              )}
-              rango={() => <p>Coming soon!</p>}
-            />
+            <CurrentChainProvider value={chainID}>
+              <ConditionalRender
+                value={swapProvider[chainID]}
+                tfm={() => (
+                  <TFMSwapContext>
+                    <TFMSwapForm />
+                  </TFMSwapContext>
+                )}
+                rango={() => <RangoSwapForm />}
+              />
+            </CurrentChainProvider>
           )
         }
       </ChainFilter>

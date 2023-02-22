@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next"
 import { Read, ReadPercent } from "components/token"
 import { SwapAssets } from "./useSwapUtils"
 import { SwapSpread } from "./SingleSwapContext"
-import { useTFMSwap } from "./TFMSwapContext"
+import { useTFMSwap } from "../TFMSwapContext"
 import Price from "./components/Price"
 
 interface Props extends SwapAssets, Partial<SwapSpread> {

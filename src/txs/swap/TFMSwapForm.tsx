@@ -35,7 +35,8 @@ import TFMExpectedPrice from "./TFMExpectedPrice"
 import { SwapAssets, validateAssets } from "./useSwapUtils"
 import { validateParams } from "./useSwapUtils"
 import { calcMinimumReceive, SlippageParams } from "./SingleSwapContext"
-import { useTFMSwap, validateTFMSlippageParams } from "./TFMSwapContext"
+import { useTFMSwap, validateTFMSlippageParams } from "../TFMSwapContext"
+import { useCurrentChain } from "./CurrentChainProvider"
 
 interface TFMSwapParams extends SwapAssets {
   amount: string
@@ -44,7 +45,8 @@ interface TFMSwapParams extends SwapAssets {
 
 interface TxValues extends Partial<SlippageParams> {}
 
-const TFMSwapForm = ({ chainID }: { chainID: string }) => {
+const TFMSwapForm = () => {
+  const chainID = useCurrentChain()
   const { t } = useTranslation()
   const address = useAddress()
   const { state } = useLocation()

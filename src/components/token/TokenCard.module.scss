@@ -50,3 +50,13 @@
     grid-template-columns: repeat(1, 1fr);
   }
 }
+
+.detail {
+  overflow: hidden;
+
+  h1 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
