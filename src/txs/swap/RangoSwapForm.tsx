@@ -1,6 +1,11 @@
-import { useCurrentChain } from "./CurrentChainProvider"
+import { useCurrentChainTokens } from "./CurrentChainTokensContext"
 
 export const RangoSwapForm = () => {
-  const chainID = useCurrentChain()
-  return <p>Rango swap on {chainID} will be here</p>
+  const { tokensRecord } = useCurrentChainTokens()
+
+  return (
+    <>
+      <p>Tokens: {JSON.stringify(tokensRecord, null, 2)}</p>
+    </>
+  )
 }

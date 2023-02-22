@@ -5,6 +5,7 @@ import { useSwapChains } from "./SwapChainsContext"
 import TFMSwapContext from "../TFMSwapContext"
 import TFMSwapForm from "./TFMSwapForm"
 import { CurrentChainProvider } from "./CurrentChainProvider"
+import { CurrentChainTokensContext } from "./CurrentChainTokensContext"
 
 export const SwapPageContent = () => {
   const { swapProvider } = useSwapChains()
@@ -26,7 +27,11 @@ export const SwapPageContent = () => {
                     <TFMSwapForm />
                   </TFMSwapContext>
                 )}
-                rango={() => <RangoSwapForm />}
+                rango={() => (
+                  <CurrentChainTokensContext>
+                    <RangoSwapForm />
+                  </CurrentChainTokensContext>
+                )}
               />
             </CurrentChainProvider>
           )
