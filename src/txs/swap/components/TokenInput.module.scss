@@ -63,3 +63,10 @@
 .muted {
   opacity: 0.5;
 }
+
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}

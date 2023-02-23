@@ -28,17 +28,21 @@ export const TokenInput = ({
   const [isOpen, { toggle, unset: close }] = useBoolean(false)
 
   const [keyword, setKeyword] = useState("")
-  const filteredOptions = options.filter(({ address, symbol, name }) => {
+  const filteredOptions = options.filter(({ symbol, name }) => {
     if (!keyword) return true
 
-    return [address, symbol, name].some(
+    return [symbol, name].some(
       (k) => k && k.toLowerCase().includes(keyword.toLowerCase())
     )
   })
 
   const renderList = () => {
     if (keyword && !filteredOptions.length) {
-      return <Empty />
+      return (
+        <div className={styles.empty}>
+          <Empty />
+        </div>
+      )
     }
 
     return (
