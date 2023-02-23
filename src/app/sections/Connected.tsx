@@ -9,18 +9,23 @@ import { useAddress } from "data/wallet"
 import { useTnsName } from "data/external/tns"
 import { Button, Copy } from "components/general"
 import CopyStyles from "components/general/Copy.module.scss"
-import { Flex, Grid } from "components/layout"
-import { Tooltip, Popover } from "components/display"
+import { FlexColumn, Grid } from "components/layout"
+import { Tooltip, Popover, List } from "components/display"
 import { isWallet, useAuth } from "auth"
 import SwitchWallet from "auth/modules/select/SwitchWallet"
 import PopoverNone from "../components/PopoverNone"
 import styles from "./Connected.module.scss"
+import { sandbox } from "auth/scripts/env"
+import { useRecoilState } from "recoil"
+import { isWalletBarOpen, walletBarRoute, Path } from "pages/wallet/Wallet"
 
 const Connected = () => {
   const { t } = useTranslation()
   const address = useAddress()
   const { wallet, getLedgerKey } = useAuth()
   const { data: name } = useTnsName(address ?? "")
+  const [, setWalletIsOpen] = useRecoilState(isWalletBarOpen)
+  const [, setWalletRoute] = useRecoilState(walletBarRoute)
 
   /* hack to close popover */
   const [key, setKey] = useState(0)
@@ -28,11 +33,27 @@ const Connected = () => {
 
   if (!address) return null
 
-  const footer = {
-    to: "/auth",
-    onClick: closePopover,
-    children: t("Manage wallets"),
+  const footer = sandbox
+    ? {
+        to: "/auth",
+        onClick: closePopover,
+        children: t("Manage wallets"),
+      }
+    : undefined
+
+  const handleRouteToAddresses = () => {
+    setWalletIsOpen(true)
+    setWalletRoute({ path: Path.receive, previousPage: { path: Path.wallet } })
+    closePopover()
   }
+
+  const list = [
+    {
+      onClick: handleRouteToAddresses,
+      children: t("View wallet Addresses"),
+      icon: <AccountBalanceWalletIcon />,
+    },
+  ]
 
   return (
     <Popover
@@ -41,24 +62,20 @@ const Connected = () => {
         <PopoverNone className={styles.popover} footer={footer}>
           <Grid gap={16}>
             <Grid gap={4}>
-              <section>{truncate(address)}</section>
-              <Flex gap={4} start>
-                <Copy text={address} />
-
-                {isWallet.ledger(wallet) && (
-                  <Tooltip content={t("Show address in Ledger device")}>
-                    <button
-                      className={CopyStyles.button}
-                      onClick={async () => {
-                        const lk = await getLedgerKey("330")
-                        lk.showAddressAndPubKey("terra")
-                      }}
-                    >
-                      <UsbIcon fontSize="inherit" />
-                    </button>
-                  </Tooltip>
-                )}
-              </Flex>
+              <List list={list} />
+              {isWallet.ledger(wallet) && (
+                <Tooltip content={t("Show address in Ledger device")}>
+                  <button
+                    className={CopyStyles.button}
+                    onClick={async () => {
+                      const lk = await getLedgerKey("330")
+                      lk.showAddressAndPubKey("terra")
+                    }}
+                  >
+                    <UsbIcon fontSize="inherit" />
+                  </button>
+                </Tooltip>
+              )}
             </Grid>
 
             <SwitchWallet />

@@ -40,7 +40,7 @@ const Asset = (props: Props) => {
       className={styles.asset}
       key={token}
       onClick={() =>
-        setRoute({ path: Path.coin, denom: token, previusPage: route })
+        setRoute({ path: Path.coin, denom: token, previousPage: route })
       }
     >
       <section className={styles.details}>

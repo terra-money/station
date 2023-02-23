@@ -23,6 +23,7 @@ interface ButtonItem {
   children: string
   onClick: () => void
   disabled?: boolean
+  icon?: ReactNode
 }
 
 type ListProps = (InternalLinkItem | ExternalLinkItem | ButtonItem)[]
@@ -53,6 +54,7 @@ const List = ({ list }: { list: ListProps }) => {
           >
             {children}
             {item.src && <img src={item.src} alt="" width={24} height={24} />}
+            {item.icon}
           </button>
         )
       })}
