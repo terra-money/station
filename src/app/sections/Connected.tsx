@@ -2,7 +2,6 @@ import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import GroupsIcon from "@mui/icons-material/Groups"
-import QrCodeIcon from "@mui/icons-material/QrCode"
 import UsbIcon from "@mui/icons-material/Usb"
 import BluetoothIcon from "@mui/icons-material/Bluetooth"
 import { truncate } from "@terra.kitchen/utils"
@@ -15,13 +14,14 @@ import { Tooltip, Popover } from "components/display"
 import { isWallet, useAuth } from "auth"
 import SwitchWallet from "auth/modules/select/SwitchWallet"
 import PopoverNone from "../components/PopoverNone"
-import WalletQR from "./WalletQR"
 import styles from "./Connected.module.scss"
+import ManageWallets from "auth/modules/manage/ManageWallets"
 
 const Connected = () => {
   const { t } = useTranslation()
   const address = useAddress()
   const { wallet, getLedgerKey } = useAuth()
+  // const providerList = useWalletProvider()
   const { data: name } = useTnsName(address ?? "")
 
   /* hack to close popover */
@@ -40,36 +40,27 @@ const Connected = () => {
     <Popover
       key={key}
       content={
-        <PopoverNone className={styles.popover} footer={footer}>
+        <PopoverNone className={styles.popover}>
           <Grid gap={16}>
             <Grid gap={4}>
-              <section>{truncate(address)}</section>
-              <Flex gap={4} start>
-                <Copy text={address} />
-                <WalletQR
-                  renderButton={(open) => (
-                    <Tooltip content={t("Show address as QR code")}>
-                      <button className={CopyStyles.button} onClick={open}>
-                        <QrCodeIcon fontSize="inherit" />
-                      </button>
-                    </Tooltip>
-                  )}
-                />
-
-                {isWallet.ledger(wallet) && (
-                  <Tooltip content={t("Show address in Ledger device")}>
-                    <button
-                      className={CopyStyles.button}
-                      onClick={async () => {
-                        const lk = await getLedgerKey("330")
-                        lk.showAddressAndPubKey("terra")
-                      }}
-                    >
-                      <UsbIcon fontSize="inherit" />
-                    </button>
-                  </Tooltip>
-                )}
-              </Flex>
+              {/* {list && <AuthList list={list} />} */}
+              <ManageWallets />
+              {/* <Flex gap={4} start>
+                <Copy text={address} /> */}
+              {isWallet.ledger(wallet) && (
+                <Tooltip content={t("Show address in Ledger device")}>
+                  <button
+                    className={CopyStyles.button}
+                    onClick={async () => {
+                      const lk = await getLedgerKey("330")
+                      lk.showAddressAndPubKey("terra")
+                    }}
+                  >
+                    <UsbIcon fontSize="inherit" />
+                  </button>
+                </Tooltip>
+              )}
+              {/* </Flex> */}
             </Grid>
 
             <SwitchWallet />

@@ -101,15 +101,11 @@ const ManageWallets = () => {
   const providerList = useWalletProvider()
 
   return (
-    <Page title={t("Manage wallets")}>
-      <Col>
-        <ConnectedWallet>
-          {list && <AuthList list={list} />}
-          {!!available.length && <AuthList list={available} />}
-          {providerList && <AuthList list={providerList} />}
-        </ConnectedWallet>
-      </Col>
-    </Page>
+    <Col>
+      {list && <AuthList list={list} />}
+      {!!available.length && <AuthList list={available} />}
+      {providerList && <AuthList list={providerList} />}
+    </Col>
   )
 }
 export default ManageWallets

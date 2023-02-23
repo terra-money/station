@@ -1,17 +1,20 @@
 import { AccAddress } from "@terra-money/feather.js"
-import { FinderLink } from "components/general"
+import { FinderLink, CopyIcon } from "components/general"
 import { getChainNamefromID } from "data/queries/chains"
 import { useNetwork, useAddress } from "data/wallet"
 import { truncate } from "@terra.kitchen/utils"
-import { CopyIcon } from "components/general"
 import { TokenIcon } from "components/token"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { Table } from "components/layout"
+import { Tooltip } from "components/display"
 import styles from "./AddressTable.module.scss"
 import { useTranslation } from "react-i18next"
 import WithSearchInput from "pages/custom/WithSearchInput"
 import AddressBox from "components/form/AddressBox"
 import { useBankBalance } from "data/queries/bank"
+import QrCodeIcon from "@mui/icons-material/QrCode"
+import WalletQR from "./WalletQR"
+import CopyStyles from "components/general/Copy.module.scss"
 
 interface Props {
   finderLink?: boolean // either display finder link if true or AddressBox comp
@@ -77,6 +80,15 @@ const AddressTable = (props: Props) => {
                 <div className={styles.address}>
                   <FinderLink value={address}>{truncate(address)}</FinderLink>
                   <CopyIcon text={address} />
+                  <WalletQR
+                    renderButton={(open) => (
+                      <Tooltip content={t("Show address as QR code")}>
+                        <button className={CopyStyles.button} onClick={open}>
+                          <QrCodeIcon fontSize="inherit" />
+                        </button>
+                      </Tooltip>
+                    )}
+                  />
                 </div>
               ),
             },
