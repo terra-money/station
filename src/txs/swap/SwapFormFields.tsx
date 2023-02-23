@@ -10,11 +10,11 @@ import { SwapFormState } from "./hooks/useSwapForm"
 import { getPlaceholder } from "txs/utils"
 import { TokenInput } from "./components/TokenInput"
 import { useCurrentChainTokens } from "./CurrentChainTokensContext"
-import { useRangoQuote, useRangoSwap } from "data/external/rango"
+import { useRangoQuote } from "data/external/rango"
 import { microfy } from "utils/microfy"
 import { Read } from "components/token"
-import { useInterchainAddresses } from "auth/hooks/useAddress"
-import { useCurrentChain } from "./CurrentChainProvider"
+import SlippageControl from "./components/SlippageControl"
+import validate from "txs/validate"
 
 interface SwapFormFieldsProps {
   form: SwapFormState
@@ -24,10 +24,6 @@ export const SwapFormFields = ({ form }: SwapFormFieldsProps) => {
   const { t } = useTranslation()
 
   const { tokens, tokensRecord } = useCurrentChainTokens()
-
-  const chainId = useCurrentChain()
-
-  const interchainAddresses = useInterchainAddresses()
 
   const {
     formState,
@@ -67,43 +63,6 @@ export const SwapFormFields = ({ form }: SwapFormFieldsProps) => {
       }
     }, [amount, askAsset, isValid, offerAsset, tokensRecord])
   )
-
-  const { data: swap } = useRangoSwap(
-    useMemo(() => {
-      if (!isValid) return
-
-      if (!interchainAddresses) return
-
-      const address = interchainAddresses[chainId]
-
-      const from = tokensRecord[offerAsset]
-      const to = tokensRecord[askAsset]
-      return {
-        from,
-        to,
-        amount: microfy(amount, from.decimals),
-        fromAddress: address,
-        toAddress: address,
-        referrerAddress: null,
-        referrerFee: null,
-        disableEstimate: false,
-        // TODO; enable estimate
-        // disableEstimate: true,
-        slippage: slippage.toString(),
-      }
-    }, [
-      amount,
-      askAsset,
-      chainId,
-      interchainAddresses,
-      isValid,
-      offerAsset,
-      slippage,
-      tokensRecord,
-    ])
-  )
-
-  console.log(swap)
 
   return (
     <>
@@ -178,6 +137,17 @@ export const SwapFormFields = ({ form }: SwapFormFieldsProps) => {
           )}
         />
       </AssetFormItem>
+
+      <SlippageControl
+        {...register("slippage", {
+          valueAsNumber: true,
+          validate: validate.input(50, 2, "Slippage tolerance"),
+        })}
+        input={slippage}
+        inputMode="decimal"
+        placeholder={getPlaceholder(2)}
+        error={errors.slippage?.message}
+      />
     </>
   )
 }
