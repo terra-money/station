@@ -2,7 +2,6 @@ import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import GroupsIcon from "@mui/icons-material/Groups"
-import QrCodeIcon from "@mui/icons-material/QrCode"
 import UsbIcon from "@mui/icons-material/Usb"
 import BluetoothIcon from "@mui/icons-material/Bluetooth"
 import { truncate } from "@terra.kitchen/utils"
@@ -15,7 +14,6 @@ import { Tooltip, Popover } from "components/display"
 import { isWallet, useAuth } from "auth"
 import SwitchWallet from "auth/modules/select/SwitchWallet"
 import PopoverNone from "../components/PopoverNone"
-import WalletQR from "./WalletQR"
 import styles from "./Connected.module.scss"
 
 const Connected = () => {
@@ -46,15 +44,6 @@ const Connected = () => {
               <section>{truncate(address)}</section>
               <Flex gap={4} start>
                 <Copy text={address} />
-                <WalletQR
-                  renderButton={(open) => (
-                    <Tooltip content={t("Show address as QR code")}>
-                      <button className={CopyStyles.button} onClick={open}>
-                        <QrCodeIcon fontSize="inherit" />
-                      </button>
-                    </Tooltip>
-                  )}
-                />
 
                 {isWallet.ledger(wallet) && (
                   <Tooltip content={t("Show address in Ledger device")}>
