@@ -23,3 +23,24 @@ export const queryTFMChains = async () => {
 export const useTFMChains = () => {
   return useQuery("TFM chains", queryTFMChains, RefetchOptions.INFINITY)
 }
+
+export interface TFMToken {
+  name: string
+  symbol: string
+  contract_addr: string
+  decimals: number
+}
+
+export const useTFMTokens = (chainId: string) => {
+  return useQuery(
+    `Multichain TFM tokens for ${chainId}`,
+    async () => {
+      const { data } = await axios.get<TFMToken[]>(
+        `/tokens?chain_id=${chainId}`,
+        { baseURL }
+      )
+      return data
+    },
+    RefetchOptions.INFINITY
+  )
+}

@@ -1,6 +1,9 @@
 import { useMemo } from "react"
 import { useForm, UseFormReturn } from "react-hook-form"
-import { getTokenId, useCurrentChainTokens } from "../CurrentChainTokensContext"
+import {
+  getTokenId,
+  useCurrentChainTokens,
+} from "../CurrentChainTokensProvider"
 
 export interface SwapFormShape {
   slippage: number

@@ -148,9 +148,11 @@ export const useTokenBalance = (params: TokenBalanceParams | undefined) => {
 
       if (!balances) return
 
-      return balances.find(
+      const balance = balances.find(
         (balance) => balance.chain === chain && balance.denom === denom
       )
+
+      return balance?.amount
     },
     {
       enabled: !!params,

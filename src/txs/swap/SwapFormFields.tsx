@@ -9,7 +9,7 @@ import AssetFormItem, {
 import { SwapFormState } from "./hooks/useSwapForm"
 import { getPlaceholder, toInput } from "txs/utils"
 import { TokenInput } from "./components/TokenInput"
-import { useCurrentChainTokens } from "./CurrentChainTokensContext"
+import { useCurrentChainTokens } from "./CurrentChainTokensProvider"
 import { useRangoQuote } from "data/external/rango"
 import { microfy } from "utils/microfy"
 import { Read } from "components/token"
@@ -17,6 +17,7 @@ import SlippageControl from "./components/SlippageControl"
 import validate from "txs/validate"
 import { RenderMax } from "txs/Tx"
 import BigNumber from "bignumber.js"
+import { useCurrentChain } from "./CurrentChainProvider"
 
 interface SwapFormFieldsProps {
   form: SwapFormState
@@ -33,6 +34,8 @@ export const SwapFormFields = ({
   resetMax,
 }: SwapFormFieldsProps) => {
   const { t } = useTranslation()
+
+  const chainId = useCurrentChain()
 
   const { tokens, tokensRecord } = useCurrentChainTokens()
 
@@ -68,11 +71,19 @@ export const SwapFormFields = ({
       const from = tokensRecord[offerAsset]
       const to = tokensRecord[askAsset]
       return {
-        from,
-        to,
+        from: {
+          blockchain: chainId,
+          address: from.address,
+          symbol: from.symbol,
+        },
+        to: {
+          blockchain: chainId,
+          address: to.address,
+          symbol: to.symbol,
+        },
         amount: microfy(amount, from.decimals),
       }
-    }, [amount, askAsset, isValid, offerAsset, tokensRecord])
+    }, [amount, askAsset, chainId, isValid, offerAsset, tokensRecord])
   )
 
   // if failed to get the balance and max amount resulted in zero - no need to validate

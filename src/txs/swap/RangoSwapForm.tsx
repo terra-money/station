@@ -9,7 +9,7 @@ import { useCallback, useMemo } from "react"
 import Tx from "txs/Tx"
 import { microfy } from "utils/microfy"
 import { useCurrentChain } from "./CurrentChainProvider"
-import { useCurrentChainTokens } from "./CurrentChainTokensContext"
+import { useCurrentChainTokens } from "./CurrentChainTokensProvider"
 import { useSwapForm } from "./hooks/useSwapForm"
 import { SwapFormFields } from "./SwapFormFields"
 
@@ -40,8 +40,16 @@ export const RangoSwapForm = () => {
       const from = tokensRecord[offerAsset]
       const to = tokensRecord[askAsset]
       return {
-        from,
-        to,
+        from: {
+          blockchain: chainId,
+          address: from.address,
+          symbol: from.symbol,
+        },
+        to: {
+          blockchain: chainId,
+          address: to.address,
+          symbol: to.symbol,
+        },
         amount: microfy(amount, from.decimals),
         fromAddress: address,
         toAddress: address,

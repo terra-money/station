@@ -5,7 +5,7 @@ import { ReactNode, useState } from "react"
 import { useTranslation } from "react-i18next"
 import getRecord from "utils/getRecord"
 import useBoolean from "utils/hooks/useBoolean"
-import { getTokenId, SwapToken } from "../CurrentChainTokensContext"
+import { getTokenId, SwapToken } from "../CurrentChainTokensProvider"
 import styles from "./TokenInput.module.scss"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 import SearchIcon from "@mui/icons-material/Search"
@@ -60,7 +60,7 @@ export const TokenInput = ({
               token={getTokenId(token)}
               className={styles.item}
               name={token.name}
-              icon={token.image}
+              icon={token.icon}
               decimals={token.decimals}
               symbol={token.symbol}
             />
@@ -78,7 +78,7 @@ export const TokenInput = ({
 
     return (
       <>
-        <TokenIcon token={value} icon={token.image} />
+        <TokenIcon token={value} icon={token.icon} />
         {token.symbol}
       </>
     )

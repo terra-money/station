@@ -5,7 +5,10 @@ import { useSwapChains } from "./SwapChainsContext"
 import TFMSwapContext from "../TFMSwapContext"
 import LegacyTFMSwapForm from "./LegacyTFMSwapForm"
 import { CurrentChainProvider } from "./CurrentChainProvider"
-import { CurrentChainTokensContext } from "./CurrentChainTokensContext"
+import {
+  RangoCurrentChainTokensProvider,
+  TFMCurrentChainTokensProvider,
+} from "./CurrentChainTokensProvider"
 import { TFMSwapForm } from "./TFMSwapForm"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 
@@ -33,11 +36,15 @@ export const SwapPageContent = () => {
                   </TFMSwapContext>
                 )}
                 rango={() => (
-                  <CurrentChainTokensContext key={chainID}>
+                  <RangoCurrentChainTokensProvider key={chainID}>
                     <RangoSwapForm />
-                  </CurrentChainTokensContext>
+                  </RangoCurrentChainTokensProvider>
                 )}
-                tfm={() => <TFMSwapForm />}
+                tfm={() => (
+                  <TFMCurrentChainTokensProvider key={chainID}>
+                    <TFMSwapForm />
+                  </TFMCurrentChainTokensProvider>
+                )}
               />
             </CurrentChainProvider>
           )
