@@ -1,3 +1,5 @@
+import { Coin, Coins, MsgExecuteContract } from "@terra-money/feather.js"
+import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { Form } from "components/form"
 import {
   TFMRouteParams,
@@ -24,6 +26,8 @@ export const TFMSwapForm = () => {
   const chainId = useCurrentChain()
 
   const { tokensRecord } = useCurrentChainTokens()
+
+  const interchainAddresses = useInterchainAddresses()
 
   const values = watch()
   const { offerAsset, askAsset, amount, slippage } = values
@@ -56,15 +60,34 @@ export const TFMSwapForm = () => {
     }, [slippage, tfmRouteParams])
   )
 
-  console.log(swap)
-
   const { data: balance } = useTokenBalance(
     offerAsset ? { denom: offerAsset, chain: chainId } : undefined
   )
 
   const createTx = useCallback(() => {
-    return undefined
-  }, [])
+    if (!swap) return
+
+    const address = interchainAddresses?.[chainId]
+    if (!address) return
+
+    const { typeUrl, value } = swap
+
+    if (typeUrl !== "/cosmwasm.wasm.v1.MsgExecuteContract") return
+
+    return {
+      msgs: [
+        new MsgExecuteContract(
+          address,
+          value.contract,
+          value.execute_msg,
+          new Coins(
+            value.coins.map((coin) => new Coin(coin.denom, coin.amount))
+          )
+        ),
+      ],
+      chainID: chainId,
+    }
+  }, [chainId, interchainAddresses, swap])
 
   return (
     <Tx

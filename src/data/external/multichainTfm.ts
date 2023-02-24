@@ -89,20 +89,24 @@ export interface TFMSwapParams extends TFMRouteParams {
   slippage?: string
 }
 
-interface TFMSwapResult {
-  type: string
-  chainID: string
-  chainName: string
-  msg: any[]
+interface TFMSwapCoin {
+  denom: string
+  amount: string
 }
 
-interface TFMSwapFailed {
-  message: string
-  success: false
+type TFMSwapTypeUrl = "/cosmwasm.wasm.v1.MsgExecuteContract"
+
+interface TFMSwapResult {
+  typeUrl: TFMSwapTypeUrl
+  value: {
+    coins: TFMSwapCoin[]
+    contract: string
+    execute_msg: any
+  }
 }
 
 export const queryTFMSwap = async (params: TFMSwapParams) => {
-  const { data } = await axios.get<TFMSwapResult[] | TFMSwapFailed>("/swap", {
+  const { data } = await axios.get<TFMSwapResult>("/swap", {
     baseURL,
     params,
   })
@@ -112,7 +116,7 @@ export const queryTFMSwap = async (params: TFMSwapParams) => {
 
 export const useTFMSwap = (params?: TFMSwapParams) => {
   return useQuery(
-    ["Rango swap", params],
+    ["TFM swap", params],
     () => queryTFMSwap(assertDefined(params)),
     {
       enabled: !!params,
