@@ -3,12 +3,17 @@ import { Card, ChainFilter } from "components/layout"
 import { RangoSwapForm } from "./RangoSwapForm"
 import { useSwapChains } from "./SwapChainsContext"
 import TFMSwapContext from "../TFMSwapContext"
-import TFMSwapForm from "./TFMSwapForm"
+import LegacyTFMSwapForm from "./LegacyTFMSwapForm"
 import { CurrentChainProvider } from "./CurrentChainProvider"
 import { CurrentChainTokensContext } from "./CurrentChainTokensContext"
+import { TFMSwapForm } from "./TFMSwapForm"
+import { useInterchainAddresses } from "auth/hooks/useAddress"
 
 export const SwapPageContent = () => {
   const { swapProvider } = useSwapChains()
+
+  const addr = useInterchainAddresses()
+  console.log(addr)
 
   return (
     <Card>
@@ -22,9 +27,9 @@ export const SwapPageContent = () => {
             <CurrentChainProvider value={chainID}>
               <ConditionalRender
                 value={swapProvider[chainID]}
-                tfm={() => (
+                legacyTfm={() => (
                   <TFMSwapContext>
-                    <TFMSwapForm />
+                    <LegacyTFMSwapForm />
                   </TFMSwapContext>
                 )}
                 rango={() => (
@@ -32,6 +37,7 @@ export const SwapPageContent = () => {
                     <RangoSwapForm />
                   </CurrentChainTokensContext>
                 )}
+                tfm={() => <TFMSwapForm />}
               />
             </CurrentChainProvider>
           )

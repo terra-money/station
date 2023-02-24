@@ -48,8 +48,6 @@ export const RangoSwapForm = () => {
         referrerAddress: null,
         referrerFee: null,
         disableEstimate: false,
-        // TODO; enable estimate
-        // disableEstimate: true,
         slippage: slippage.toString(),
       }
     }, [

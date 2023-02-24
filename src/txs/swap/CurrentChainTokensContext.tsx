@@ -1,6 +1,6 @@
-import { useRangoMeta } from "data/external/rango"
+import { getChainTokens, useRangoMeta } from "data/external/rango"
 import { Token } from "rango-sdk-basic"
-import { PropsWithChildren, useMemo } from "react"
+import { PropsWithChildren } from "react"
 import createContext from "utils/createContext"
 import getRecord from "utils/getRecord"
 import { useCurrentChain } from "./CurrentChainProvider"
@@ -23,13 +23,7 @@ export const CurrentChainTokensContext = ({
   const chainID = useCurrentChain()
   const { data: rangoMeta } = useRangoMeta()
 
-  const tokens = useMemo(
-    () =>
-      (rangoMeta ? rangoMeta.tokens : []).filter(
-        (token) => token.chainId === chainID
-      ),
-    [chainID, rangoMeta]
-  )
+  const tokens = rangoMeta ? getChainTokens(rangoMeta, chainID) : []
   const tokensRecord = getRecord(tokens, getTokenId)
 
   return (

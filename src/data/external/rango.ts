@@ -1,6 +1,11 @@
 import { RefetchOptions } from "data/query"
 import { useQuery } from "react-query"
-import { QuoteRequest, RangoClient, SwapRequest } from "rango-sdk-basic"
+import {
+  MetaResponse,
+  QuoteRequest,
+  RangoClient,
+  SwapRequest,
+} from "rango-sdk-basic"
 import { assertDefined } from "utils/assertDefined"
 
 // TODO: get api key from env var
@@ -66,3 +71,6 @@ export interface RangoMsg {
   __type: RangoMsgType
   value: RangoMsgExecuteContract
 }
+
+export const getChainTokens = ({ tokens }: MetaResponse, chain: string) =>
+  tokens.filter((token) => token.chainId === chain)
