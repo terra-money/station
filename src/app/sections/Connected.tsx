@@ -7,9 +7,9 @@ import BluetoothIcon from "@mui/icons-material/Bluetooth"
 import { truncate } from "@terra.kitchen/utils"
 import { useAddress } from "data/wallet"
 import { useTnsName } from "data/external/tns"
-import { Button, Copy } from "components/general"
+import { Button } from "components/general"
 import CopyStyles from "components/general/Copy.module.scss"
-import { FlexColumn, Grid } from "components/layout"
+import { Grid } from "components/layout"
 import { Tooltip, Popover, List } from "components/display"
 import { isWallet, useAuth } from "auth"
 import SwitchWallet from "auth/modules/select/SwitchWallet"
@@ -18,11 +18,17 @@ import styles from "./Connected.module.scss"
 import { sandbox } from "auth/scripts/env"
 import { useRecoilState } from "recoil"
 import { isWalletBarOpen, walletBarRoute, Path } from "pages/wallet/Wallet"
+import { useNavigate } from "react-router-dom"
+import {
+  Contacts as ContactsIcon,
+  Logout as LogoutIcon,
+} from "@mui/icons-material"
 
 const Connected = () => {
   const { t } = useTranslation()
   const address = useAddress()
-  const { wallet, getLedgerKey } = useAuth()
+  const navigate = useNavigate()
+  const { wallet, getLedgerKey, disconnect } = useAuth()
   const { data: name } = useTnsName(address ?? "")
   const [, setWalletIsOpen] = useRecoilState(isWalletBarOpen)
   const [, setWalletRoute] = useRecoilState(walletBarRoute)
@@ -33,25 +39,32 @@ const Connected = () => {
 
   if (!address) return null
 
-  const footer = sandbox
-    ? {
-        to: "/auth",
-        onClick: closePopover,
-        children: t("Manage wallets"),
-      }
-    : undefined
-
-  const handleRouteToAddresses = () => {
-    setWalletIsOpen(true)
-    setWalletRoute({ path: Path.receive, previousPage: { path: Path.wallet } })
-    closePopover()
+  const footer = {
+    to: "/auth",
+    onClick: closePopover,
+    children: t("Manage wallets"),
   }
 
   const list = [
     {
-      onClick: handleRouteToAddresses,
-      children: t("View wallet Addresses"),
-      icon: <AccountBalanceWalletIcon />,
+      onClick: () => {
+        disconnect()
+        navigate("/", { replace: true })
+      },
+      children: t("Disconnect"),
+      icon: <LogoutIcon style={{ fontSize: 16 }} />,
+    },
+    {
+      onClick: () => {
+        setWalletIsOpen(true)
+        setWalletRoute({
+          path: Path.receive,
+          previousPage: { path: Path.wallet },
+        })
+        closePopover()
+      },
+      children: t("View wallet addresses"),
+      icon: <ContactsIcon style={{ fontSize: 16 }} />,
     },
   ]
 
@@ -59,9 +72,13 @@ const Connected = () => {
     <Popover
       key={key}
       content={
-        <PopoverNone className={styles.popover} footer={footer}>
+        <PopoverNone
+          className={styles.popover}
+          footer={sandbox ? footer : undefined}
+        >
           <Grid gap={16}>
-            <Grid gap={4}>
+            <Grid gap={16}>
+              <SwitchWallet />
               <List list={list} />
               {isWallet.ledger(wallet) && (
                 <Tooltip content={t("Show address in Ledger device")}>
@@ -77,8 +94,6 @@ const Connected = () => {
                 </Tooltip>
               )}
             </Grid>
-
-            <SwitchWallet />
           </Grid>
         </PopoverNone>
       }

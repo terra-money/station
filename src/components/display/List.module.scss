@@ -13,6 +13,14 @@
     padding: 12px 10px;
   }
 
+  &.icon {
+    border-radius: var(--border-radius);
+    margin: 10px 0;
+    padding: 12px;
+    border: 1px solid var(--card-border);
+    background: var(--card-bg);
+  }
+
   &:hover {
     background: var(--bg-muted);
     text-decoration: none;

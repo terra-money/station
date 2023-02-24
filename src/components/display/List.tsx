@@ -2,6 +2,7 @@ import { ReactNode } from "react"
 import { Link, To } from "react-router-dom"
 import { ExternalLink } from "../general"
 import styles from "./List.module.scss"
+import classNames from "classnames"
 
 interface InternalLinkItem {
   icon: ReactNode
@@ -25,15 +26,28 @@ interface ButtonItem {
   disabled?: boolean
   icon?: ReactNode
 }
+interface ButtonIconItem {
+  children: string
+  onClick: () => void
+  icon: ReactNode
+  disabled?: boolean
+  className?: string
+}
 
-type ListProps = (InternalLinkItem | ExternalLinkItem | ButtonItem)[]
+type ListProps = (
+  | InternalLinkItem
+  | ExternalLinkItem
+  | ButtonItem
+  | ButtonIconItem
+)[]
+
+const cx = classNames.bind(styles)
 
 const List = ({ list }: { list: ListProps }) => {
   return (
     <section>
       {list.map(({ children, disabled, ...item }) => {
         if (disabled) return null
-
         return "to" in item ? (
           <Link to={item.to} className={styles.item} key={children}>
             {children}
@@ -45,6 +59,16 @@ const List = ({ list }: { list: ListProps }) => {
             {item.icon}
             {item.src && <img src={item.src} alt="" width={24} height={24} />}
           </ExternalLink>
+        ) : "icon" in item ? (
+          <button
+            type="button"
+            className={cx(styles.item, styles.icon)}
+            onClick={item.onClick}
+            key={children}
+          >
+            {children}
+            {item.icon}
+          </button>
         ) : (
           <button
             type="button"
@@ -54,7 +78,6 @@ const List = ({ list }: { list: ListProps }) => {
           >
             {children}
             {item.src && <img src={item.src} alt="" width={24} height={24} />}
-            {item.icon}
           </button>
         )
       })}

@@ -19,7 +19,7 @@ const AddressBox = ({
           address={address}
           renderButton={(open) => (
             <button>
-              <QrCodeIcon onClick={open} />
+              <QrCodeIcon style={{ fontSize: 16 }} onClick={open} />
             </button>
           )}
         />
