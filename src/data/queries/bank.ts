@@ -7,35 +7,7 @@ import { useCustomTokensCW20 } from "data/settings/CustomTokens"
 import { useNetwork } from "data/wallet"
 import { getChainIDFromAddress } from "utils/bech32"
 import { assertDefined } from "utils/assertDefined"
-
-interface TokenBalanceParams {
-  chain: string
-  denom: string
-}
-
-export const useTokenBalance = (params: TokenBalanceParams | undefined) => {
-  const addresses = useInterchainAddresses()
-  const lcd = useInterchainLCDClient()
-
-  return useQuery(
-    ["Token balance", params],
-    async () => {
-      const { chain, denom } = assertDefined(params)
-      const address = addresses?.[chain]
-      if (!address) return
-
-      const { balance } = await lcd.wasm.contractQuery<{ balance: Amount }>(
-        denom,
-        { balance: { address } }
-      )
-
-      return balance
-    },
-    {
-      enabled: !!params,
-    }
-  )
-}
+import { AccAddress } from "@terra-money/feather.js"
 
 export const useInitialTokenBalance = () => {
   const addresses = useInterchainAddresses()
@@ -145,4 +117,43 @@ export const useBalances = () => {
 export const useIsWalletEmpty = () => {
   const bankBalance = useBankBalance()
   return !bankBalance.length
+}
+
+interface TokenBalanceParams {
+  chain: string
+  denom: string
+}
+
+export const useTokenBalance = (params: TokenBalanceParams | undefined) => {
+  const addresses = useInterchainAddresses()
+  const lcd = useInterchainLCDClient()
+
+  const { data: balances } = useBalances()
+
+  return useQuery(
+    ["Token balance", params],
+    async () => {
+      const { chain, denom } = assertDefined(params)
+      const address = addresses?.[chain]
+      if (!address) return
+
+      if (AccAddress.validate(denom)) {
+        const { balance } = await lcd.wasm.contractQuery<{ balance: Amount }>(
+          denom,
+          { balance: { address } }
+        )
+
+        return balance
+      }
+
+      if (!balances) return
+
+      return balances.find(
+        (balance) => balance.chain === chain && balance.denom === denom
+      )
+    },
+    {
+      enabled: !!params,
+    }
+  )
 }
