@@ -1,10 +1,10 @@
 import { Coin, Coins, MsgExecuteContract } from "@terra-money/feather.js"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { Form } from "components/form"
-import { RangoMsg, useRangoSwap } from "data/external/rango"
+import { RangoMsg, useRangoQuote, useRangoSwap } from "data/external/rango"
 import { useTokenBalance } from "data/queries/bank"
 import { fromBase64 } from "js-base64"
-import { CosmosTransaction } from "rango-sdk-basic"
+import { CosmosTransaction, QuoteRequest } from "rango-sdk-basic"
 import { useCallback, useMemo } from "react"
 import Tx from "txs/Tx"
 import { microfy } from "utils/microfy"
@@ -29,28 +29,41 @@ export const RangoSwapForm = () => {
   const values = watch()
   const { offerAsset, askAsset, amount, slippage } = values
 
+  const rangoQuoteParams = useMemo(() => {
+    if (!isValid) return
+
+    const from = tokensRecord[offerAsset]
+    const to = tokensRecord[askAsset]
+    const params: QuoteRequest = {
+      from: {
+        blockchain: chainId,
+        address: from.address,
+        symbol: from.symbol,
+      },
+      to: {
+        blockchain: chainId,
+        address: to.address,
+        symbol: to.symbol,
+      },
+      amount: microfy(amount, from.decimals),
+    }
+
+    return params
+  }, [amount, askAsset, chainId, isValid, offerAsset, tokensRecord])
+
+  const { data: quote, isFetching: isFetchingQuote } =
+    useRangoQuote(rangoQuoteParams)
+
   const { data: swap } = useRangoSwap(
     useMemo(() => {
-      if (!isValid) return
+      if (!rangoQuoteParams) return
 
       if (!interchainAddresses) return
 
       const address = interchainAddresses[chainId]
 
-      const from = tokensRecord[offerAsset]
-      const to = tokensRecord[askAsset]
       return {
-        from: {
-          blockchain: chainId,
-          address: from.address,
-          symbol: from.symbol,
-        },
-        to: {
-          blockchain: chainId,
-          address: to.address,
-          symbol: to.symbol,
-        },
-        amount: microfy(amount, from.decimals),
+        ...rangoQuoteParams,
         fromAddress: address,
         toAddress: address,
         referrerAddress: null,
@@ -58,16 +71,7 @@ export const RangoSwapForm = () => {
         disableEstimate: false,
         slippage: slippage.toString(),
       }
-    }, [
-      amount,
-      askAsset,
-      chainId,
-      interchainAddresses,
-      isValid,
-      offerAsset,
-      slippage,
-      tokensRecord,
-    ])
+    }, [chainId, interchainAddresses, rangoQuoteParams, slippage])
   )
 
   const tx = swap?.tx
@@ -116,6 +120,8 @@ export const RangoSwapForm = () => {
         <Form onSubmit={handleSubmit(submit.fn)}>
           <SwapFormFields
             form={form}
+            outputAmount={quote?.route?.outputAmount}
+            isFetchingOutputAmount={isFetchingQuote}
             maxAmount={max.amount}
             renderMax={max.render}
             resetMax={max.reset}

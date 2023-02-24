@@ -1,5 +1,5 @@
 import { FormArrow, FormWarning } from "components/form"
-import { useEffect, useMemo } from "react"
+import { useEffect } from "react"
 import { Controller } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import AssetFormItem, {
@@ -10,17 +10,17 @@ import { SwapFormState } from "./hooks/useSwapForm"
 import { getPlaceholder, toInput } from "txs/utils"
 import { TokenInput } from "./components/TokenInput"
 import { useCurrentChainTokens } from "./CurrentChainTokensProvider"
-import { useRangoQuote } from "data/external/rango"
-import { microfy } from "utils/microfy"
 import { Read } from "components/token"
 import SlippageControl from "./components/SlippageControl"
 import validate from "txs/validate"
 import { RenderMax } from "txs/Tx"
 import BigNumber from "bignumber.js"
-import { useCurrentChain } from "./CurrentChainProvider"
 
 interface SwapFormFieldsProps {
   form: SwapFormState
+
+  outputAmount?: string
+  isFetchingOutputAmount: boolean
 
   maxAmount: string
   renderMax: RenderMax
@@ -29,13 +29,15 @@ interface SwapFormFieldsProps {
 
 export const SwapFormFields = ({
   form,
+
+  outputAmount,
+  isFetchingOutputAmount,
+
   maxAmount,
   renderMax,
   resetMax,
 }: SwapFormFieldsProps) => {
   const { t } = useTranslation()
-
-  const chainId = useCurrentChain()
 
   const { tokens, tokensRecord } = useCurrentChainTokens()
 
@@ -63,28 +65,6 @@ export const SwapFormFields = ({
     resetField("amount")
     trigger("amount")
   }
-
-  const { data: quote, isFetching: isFetchingQuote } = useRangoQuote(
-    useMemo(() => {
-      if (!isValid) return
-
-      const from = tokensRecord[offerAsset]
-      const to = tokensRecord[askAsset]
-      return {
-        from: {
-          blockchain: chainId,
-          address: from.address,
-          symbol: from.symbol,
-        },
-        to: {
-          blockchain: chainId,
-          address: to.address,
-          symbol: to.symbol,
-        },
-        amount: microfy(amount, from.decimals),
-      }
-    }, [amount, askAsset, chainId, isValid, offerAsset, tokensRecord])
-  )
 
   // if failed to get the balance and max amount resulted in zero - no need to validate
   // TO-DO: return undefined instead of 0 when failed to get the balance
@@ -161,16 +141,15 @@ export const SwapFormFields = ({
               options={tokens}
               addonAfter={
                 <AssetReadOnly>
-                  {" "}
-                  {quote ? (
+                  {outputAmount ? (
                     <Read
-                      amount={quote.route?.outputAmount}
+                      amount={outputAmount}
                       decimals={tokensRecord[askAsset].decimals}
                       approx
                     />
                   ) : (
                     <p className="muted">
-                      {isFetchingQuote ? t("Simulating...") : "0"}
+                      {isFetchingOutputAmount ? t("Simulating...") : "0"}
                     </p>
                   )}
                 </AssetReadOnly>
