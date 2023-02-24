@@ -8,9 +8,8 @@ import { truncate } from "@terra.kitchen/utils"
 import { useAddress } from "data/wallet"
 import { useTnsName } from "data/external/tns"
 import { Button } from "components/general"
-import CopyStyles from "components/general/Copy.module.scss"
 import { Grid } from "components/layout"
-import { Tooltip, Popover, List } from "components/display"
+import { Popover, List } from "components/display"
 import { isWallet, useAuth } from "auth"
 import SwitchWallet from "auth/modules/select/SwitchWallet"
 import PopoverNone from "../components/PopoverNone"
@@ -68,6 +67,17 @@ const Connected = () => {
     },
   ]
 
+  if (isWallet.ledger(wallet)) {
+    list.push({
+      onClick: async () => {
+        const lk = await getLedgerKey("330")
+        lk.showAddressAndPubKey("terra")
+      },
+      children: t("Show address in Ledger"),
+      icon: <UsbIcon style={{ fontSize: 16 }} />,
+    })
+  }
+
   return (
     <Popover
       key={key}
@@ -77,23 +87,8 @@ const Connected = () => {
           footer={sandbox ? footer : undefined}
         >
           <Grid gap={16}>
-            <Grid gap={16}>
-              <SwitchWallet />
-              <List list={list} />
-              {isWallet.ledger(wallet) && (
-                <Tooltip content={t("Show address in Ledger device")}>
-                  <button
-                    className={CopyStyles.button}
-                    onClick={async () => {
-                      const lk = await getLedgerKey("330")
-                      lk.showAddressAndPubKey("terra")
-                    }}
-                  >
-                    <UsbIcon fontSize="inherit" />
-                  </button>
-                </Tooltip>
-              )}
-            </Grid>
+            <SwitchWallet />
+            <List list={list} />
           </Grid>
         </PopoverNone>
       }
