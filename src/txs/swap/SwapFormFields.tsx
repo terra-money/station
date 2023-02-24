@@ -7,7 +7,7 @@ import AssetFormItem, {
   AssetReadOnly,
 } from "./components/AssetFormItem"
 import { SwapFormState } from "./hooks/useSwapForm"
-import { getPlaceholder } from "txs/utils"
+import { getPlaceholder, toInput } from "txs/utils"
 import { TokenInput } from "./components/TokenInput"
 import { useCurrentChainTokens } from "./CurrentChainTokensContext"
 import { useRangoQuote } from "data/external/rango"
@@ -15,12 +15,23 @@ import { microfy } from "utils/microfy"
 import { Read } from "components/token"
 import SlippageControl from "./components/SlippageControl"
 import validate from "txs/validate"
+import { RenderMax } from "txs/Tx"
+import BigNumber from "bignumber.js"
 
 interface SwapFormFieldsProps {
   form: SwapFormState
+
+  maxAmount: string
+  renderMax: RenderMax
+  resetMax: () => void
 }
 
-export const SwapFormFields = ({ form }: SwapFormFieldsProps) => {
+export const SwapFormFields = ({
+  form,
+  maxAmount,
+  renderMax,
+  resetMax,
+}: SwapFormFieldsProps) => {
   const { t } = useTranslation()
 
   const { tokens, tokensRecord } = useCurrentChainTokens()
@@ -64,13 +75,36 @@ export const SwapFormFields = ({ form }: SwapFormFieldsProps) => {
     }, [amount, askAsset, isValid, offerAsset, tokensRecord])
   )
 
+  // if failed to get the balance and max amount resulted in zero - no need to validate
+  // TO-DO: return undefined instead of 0 when failed to get the balance
+  const validateAmount = new BigNumber(maxAmount).gt(0)
+    ? validate.input(
+        toInput(maxAmount, tokensRecord[offerAsset].decimals),
+        tokensRecord[offerAsset].decimals
+      )
+    : undefined
+
   return (
     <>
       <FormWarning>
         {t("Leave coins to pay fees for subsequent transactions")}
       </FormWarning>
 
-      <AssetFormItem label={t("From")} error={errors.amount?.message}>
+      <AssetFormItem
+        extra={renderMax(async (value) => {
+          // Do not use automatic max here
+          // Confusion arises as the amount changes and simulates again
+          if (offerAsset) {
+            setValue(
+              "amount",
+              toInput(value, tokensRecord[offerAsset].decimals)
+            )
+            await trigger("amount")
+          }
+        })}
+        label={t("From")}
+        error={errors.amount?.message}
+      >
         <Controller
           name="offerAsset"
           control={form.control}
@@ -85,18 +119,15 @@ export const SwapFormFields = ({ form }: SwapFormFieldsProps) => {
                   {...register("amount", {
                     required: true,
                     valueAsNumber: true,
-                    // validate: validate.input(
-                    //   toInput(max.amount, offerDecimals),
-                    //   offerDecimals
-                    // ),
+                    validate: validateAmount,
                   })}
                   inputMode="decimal"
+                  onFocus={resetMax}
                   placeholder={
                     offerAsset
                       ? getPlaceholder(tokensRecord[offerAsset].decimals)
                       : undefined
                   }
-                  // onFocus={max.reset}
                   autoFocus
                 />
               }

@@ -2,6 +2,7 @@ import { Coin, Coins, MsgExecuteContract } from "@terra-money/feather.js"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { Form } from "components/form"
 import { RangoMsg, useRangoSwap } from "data/external/rango"
+import { useTokenBalance } from "data/queries/bank"
 import { fromBase64 } from "js-base64"
 import { CosmosTransaction } from "rango-sdk-basic"
 import { useCallback, useMemo } from "react"
@@ -89,6 +90,10 @@ export const RangoSwapForm = () => {
     }
   }, [chainId, tx])
 
+  const { data: balance } = useTokenBalance(
+    offerAsset ? { denom: offerAsset, chain: chainId } : undefined
+  )
+
   return (
     <Tx
       token={offerAsset}
@@ -98,12 +103,20 @@ export const RangoSwapForm = () => {
       disabled={swap?.error || undefined}
       createTx={createTx}
       estimationTxValues={values}
-      // TODO: balance
+      balance={balance}
       // TODO: queryKeys (refetch balance)
     >
       {({ max, fee, submit }) => (
         <Form onSubmit={handleSubmit(submit.fn)}>
-          <SwapFormFields form={form} />
+          <SwapFormFields
+            form={form}
+            maxAmount={max.amount}
+            renderMax={max.render}
+            resetMax={max.reset}
+          />
+
+          {fee.render()}
+
           {submit.button}
         </Form>
       )}

@@ -6,6 +6,36 @@ import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { useCustomTokensCW20 } from "data/settings/CustomTokens"
 import { useNetwork } from "data/wallet"
 import { getChainIDFromAddress } from "utils/bech32"
+import { assertDefined } from "utils/assertDefined"
+
+interface TokenBalanceParams {
+  chain: string
+  denom: string
+}
+
+export const useTokenBalance = (params: TokenBalanceParams | undefined) => {
+  const addresses = useInterchainAddresses()
+  const lcd = useInterchainLCDClient()
+
+  return useQuery(
+    ["Token balance", params],
+    async () => {
+      const { chain, denom } = assertDefined(params)
+      const address = addresses?.[chain]
+      if (!address) return
+
+      const { balance } = await lcd.wasm.contractQuery<{ balance: Amount }>(
+        denom,
+        { balance: { address } }
+      )
+
+      return balance
+    },
+    {
+      enabled: !!params,
+    }
+  )
+}
 
 export const useInitialTokenBalance = () => {
   const addresses = useInterchainAddresses()

@@ -73,7 +73,7 @@ interface Props<TxValues> {
   queryKeys?: QueryKey[]
 }
 
-type RenderMax = (onClick?: (max: Amount) => void) => ReactNode
+export type RenderMax = (onClick?: (max: Amount) => void) => ReactNode
 interface RenderProps<TxValues> {
   max: { amount: Amount; render: RenderMax; reset: () => void }
   fee: { render: (descriptions?: Contents) => ReactNode }
