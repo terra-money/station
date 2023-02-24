@@ -10,13 +10,9 @@ import {
   TFMCurrentChainTokensProvider,
 } from "./CurrentChainTokensProvider"
 import { TFMSwapForm } from "./TFMSwapForm"
-import { useInterchainAddresses } from "auth/hooks/useAddress"
 
 export const SwapPageContent = () => {
   const { swapProvider } = useSwapChains()
-
-  const addr = useInterchainAddresses()
-  console.log(addr)
 
   return (
     <Card>

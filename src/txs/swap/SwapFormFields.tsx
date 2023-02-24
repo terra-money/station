@@ -50,9 +50,9 @@ export const SwapFormFields = ({
     trigger,
     setFocus,
   } = form
-  const { errors, isValid } = formState
+  const { errors } = formState
   const values = watch()
-  const { offerAsset, askAsset, amount, slippage } = values
+  const { offerAsset, askAsset, slippage } = values
 
   useEffect(() => {
     resetField("amount")

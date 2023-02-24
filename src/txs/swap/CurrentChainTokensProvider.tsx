@@ -62,6 +62,8 @@ export const TFMCurrentChainTokensProvider = ({
     : []
   const tokensRecord = getRecord(tokens, getTokenId)
 
+  if (!tokens.length) return null
+
   return (
     <CurrentChainsTokensProvider value={{ tokens, tokensRecord }}>
       {children}
