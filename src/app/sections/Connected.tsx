@@ -10,14 +10,15 @@ import { useTnsName } from "data/external/tns"
 import { Button } from "components/general"
 import { Grid } from "components/layout"
 import { Popover, List } from "components/display"
-import { isWallet, useAuth } from "auth"
+import { isWallet } from "auth"
+import useAuth from "auth/hooks/useAuth"
 import SwitchWallet from "auth/modules/select/SwitchWallet"
 import PopoverNone from "../components/PopoverNone"
 import styles from "./Connected.module.scss"
-import { sandbox } from "auth/scripts/env"
 import { useRecoilState } from "recoil"
 import { isWalletBarOpen, walletBarRoute, Path } from "pages/wallet/Wallet"
 import { useNavigate } from "react-router-dom"
+import { useWallet } from "@terra-money/use-wallet"
 import {
   Contacts as ContactsIcon,
   Logout as LogoutIcon,
@@ -27,7 +28,8 @@ const Connected = () => {
   const { t } = useTranslation()
   const address = useAddress()
   const navigate = useNavigate()
-  const { wallet, getLedgerKey, disconnect } = useAuth()
+  const { wallet, getLedgerKey } = useAuth()
+  const { disconnect } = useWallet()
   const { data: name } = useTnsName(address ?? "")
   const [, setWalletIsOpen] = useRecoilState(isWalletBarOpen)
   const [, setWalletRoute] = useRecoilState(walletBarRoute)
@@ -49,6 +51,7 @@ const Connected = () => {
       onClick: () => {
         disconnect()
         navigate("/", { replace: true })
+        closePopover()
       },
       children: t("Disconnect"),
       icon: <LogoutIcon style={{ fontSize: 16 }} />,
@@ -84,9 +87,9 @@ const Connected = () => {
       content={
         <PopoverNone
           className={styles.popover}
-          footer={sandbox ? footer : undefined}
+          footer={isWallet.local(wallet) ? footer : undefined}
         >
-          <Grid gap={16}>
+          <Grid gap={40}>
             <SwitchWallet />
             <List list={list} />
           </Grid>

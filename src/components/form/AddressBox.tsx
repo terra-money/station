@@ -13,17 +13,19 @@ const AddressBox = ({
   return (
     <div className={styles.wrapper}>
       <div className={styles.address}>{truncate(address)}</div>
-      <CopyIcon text={address} />
-      {withQR && (
-        <WalletQR
-          address={address}
-          renderButton={(open) => (
-            <button>
-              <QrCodeIcon style={{ fontSize: 16 }} onClick={open} />
-            </button>
-          )}
-        />
-      )}
+      <div className={styles.btnWrapper}>
+        <CopyIcon text={address} />
+        {withQR && (
+          <WalletQR
+            address={address}
+            renderButton={(open) => (
+              <button>
+                <QrCodeIcon style={{ fontSize: 18 }} onClick={open} />
+              </button>
+            )}
+          />
+        )}
+      </div>
     </div>
   )
 }

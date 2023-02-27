@@ -45,7 +45,7 @@ const cx = classNames.bind(styles)
 
 const List = ({ list }: { list: ListProps }) => {
   return (
-    <section>
+    <section className={cx(styles.wrapper)}>
       {list.map(({ children, disabled, ...item }) => {
         if (disabled) return null
         return "to" in item ? (

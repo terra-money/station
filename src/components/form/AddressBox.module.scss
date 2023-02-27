@@ -5,6 +5,11 @@
   @include border;
   @include size;
   max-width: 100%;
-  @include flex(space-around);
+  @include flex(space-between);
+  gap: 8px;
+}
+
+.btnWrapper {
+  @include flex;
   gap: 8px;
 }

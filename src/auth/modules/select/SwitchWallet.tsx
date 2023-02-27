@@ -19,8 +19,8 @@ const SwitchWallet = () => {
   const address = useAddress()
 
   const localWallets = !!(wallets.length || wallet) && (
-    <>
-      <strong>Wallets</strong>
+    <div>
+      <h1 className={styles.header}>Wallets</h1>
       <ul className={styles.list}>
         {wallet && (
           <li className={styles.listItem}>
@@ -96,7 +96,7 @@ const SwitchWallet = () => {
             )
           })}
       </ul>
-    </>
+    </div>
   )
 
   return (

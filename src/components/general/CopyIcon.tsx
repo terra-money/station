@@ -19,9 +19,9 @@ const CopyIcon = ({ text, className }: Props) => {
       }}
     >
       {copied ? (
-        <Check style={{ fontSize: 16 }} />
+        <Check style={{ fontSize: 18 }} />
       ) : (
-        <ContentCopy style={{ fontSize: 16 }} />
+        <ContentCopy style={{ fontSize: 18 }} />
       )}
     </button>
   )

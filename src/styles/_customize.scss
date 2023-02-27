@@ -5,7 +5,7 @@
 /* tooltip:default */
 .tippy-box {
   background-color: var(--text);
-  border-radius: 4px;
+  border-radius: var(--border-radius);
   color: var(--card-bg);
   font-size: var(--font-size-small);
 
