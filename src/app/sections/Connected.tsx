@@ -28,7 +28,7 @@ const Connected = () => {
   const { t } = useTranslation()
   const address = useAddress()
   const navigate = useNavigate()
-  const { wallet, getLedgerKey } = useAuth()
+  const { wallet, getLedgerKey, disconnect: disconnectLedger } = useAuth()
   const { disconnect } = useWallet()
   const { data: name } = useTnsName(address ?? "")
   const [, setWalletIsOpen] = useRecoilState(isWalletBarOpen)
@@ -49,7 +49,7 @@ const Connected = () => {
   const list = [
     {
       onClick: () => {
-        disconnect()
+        isWallet.ledger(wallet) ? disconnectLedger() : disconnect()
         navigate("/", { replace: true })
         closePopover()
       },
