@@ -94,7 +94,9 @@ interface TFMSwapCoin {
   amount: string
 }
 
-type TFMSwapTypeUrl = "/cosmwasm.wasm.v1.MsgExecuteContract"
+type TFMSwapTypeUrl =
+  | "/cosmwasm.wasm.v1.MsgExecuteContract"
+  | "/osmosis.gamm.v1beta1.MsgSwapExactAmountIn"
 
 interface TFMSwapResult {
   typeUrl: TFMSwapTypeUrl
