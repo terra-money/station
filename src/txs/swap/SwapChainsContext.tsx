@@ -13,6 +13,8 @@ interface SwapChains {
 export const [useSwapChains, SwapChainsProvider] =
   createContext<SwapChains>("useSwapChains")
 
+const unsupportedChains = ["osmosis-1"]
+
 export const SwapChainsContext = ({ children }: PropsWithChildren<{}>) => {
   const { data: rangoMeta } = useRangoMeta()
   const { data: tfmChains } = useTFMChains()
@@ -46,6 +48,10 @@ export const SwapChainsContext = ({ children }: PropsWithChildren<{}>) => {
 
     // to make sure exchange on Terra is stable
     result["phoenix-1"] = "legacyTfm"
+
+    unsupportedChains.forEach((chainId) => {
+      delete result[chainId]
+    })
 
     return result
   }, [networks, rangoMeta, tfmChains])
