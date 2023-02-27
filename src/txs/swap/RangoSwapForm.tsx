@@ -1,7 +1,12 @@
 import { Coin, Coins, MsgExecuteContract } from "@terra-money/feather.js"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { Form } from "components/form"
-import { RangoMsg, useRangoQuote, useRangoSwap } from "data/external/rango"
+import {
+  RangoMsg,
+  useRangoMeta,
+  useRangoQuote,
+  useRangoSwap,
+} from "data/external/rango"
 import { useTokenBalance } from "data/queries/bank"
 import { fromBase64 } from "js-base64"
 import { CosmosTransaction, QuoteRequest } from "rango-sdk-basic"
@@ -24,6 +29,8 @@ export const RangoSwapForm = () => {
   const chainId = useCurrentChain()
   const interchainAddresses = useInterchainAddresses()
 
+  const { data: meta } = useRangoMeta()
+
   const { tokensRecord } = useCurrentChainTokens()
 
   const values = watch()
@@ -31,17 +38,22 @@ export const RangoSwapForm = () => {
 
   const rangoQuoteParams = useMemo(() => {
     if (!isValid) return
+    if (!meta) return
+
+    const blockchain =
+      meta.blockchains.find((c) => c.chainId === chainId)?.name || chainId
 
     const from = tokensRecord[offerAsset]
     const to = tokensRecord[askAsset]
+
     const params: QuoteRequest = {
       from: {
-        blockchain: chainId,
+        blockchain,
         address: from.address,
         symbol: from.symbol,
       },
       to: {
-        blockchain: chainId,
+        blockchain,
         address: to.address,
         symbol: to.symbol,
       },
@@ -49,7 +61,7 @@ export const RangoSwapForm = () => {
     }
 
     return params
-  }, [amount, askAsset, chainId, isValid, offerAsset, tokensRecord])
+  }, [amount, askAsset, chainId, isValid, meta, offerAsset, tokensRecord])
 
   const { data: quote, isFetching: isFetchingQuote } =
     useRangoQuote(rangoQuoteParams)
