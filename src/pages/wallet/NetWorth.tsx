@@ -45,7 +45,7 @@ const NetWorth = () => {
           onClick={() =>
             setRoute({
               path: Path.send,
-              previusPage: route,
+              previousPage: route,
             })
           }
         >
@@ -55,7 +55,7 @@ const NetWorth = () => {
           onClick={() =>
             setRoute({
               path: Path.receive,
-              previusPage: route,
+              previousPage: route,
             })
           }
         >

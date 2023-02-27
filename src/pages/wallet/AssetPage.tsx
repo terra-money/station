@@ -75,7 +75,7 @@ const AssetPage = () => {
             setRoute({
               path: Path.send,
               denom,
-              previusPage: route,
+              previousPage: route,
             })
           }
         >
@@ -85,7 +85,7 @@ const AssetPage = () => {
           onClick={() =>
             setRoute({
               path: Path.receive,
-              previusPage: route,
+              previousPage: route,
             })
           }
         >
