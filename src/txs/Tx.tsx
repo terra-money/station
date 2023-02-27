@@ -390,7 +390,8 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const walletError =
     connectedWallet?.connectType === ConnectType.READONLY
       ? t("Wallet is connected as read-only mode")
-      : !availableGasDenoms.length
+      : // TODO: incorrect logic, availableGasDenoms is not related to wallet balance
+      !availableGasDenoms.length
       ? t("Insufficient balance to pay transaction fee")
       : isWalletEmpty
       ? t("Coins required to post transactions")
