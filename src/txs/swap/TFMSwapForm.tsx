@@ -1,5 +1,6 @@
 import { Coin, Coins, MsgExecuteContract } from "@terra-money/feather.js"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
+import BigNumber from "bignumber.js"
 import { Form } from "components/form"
 import {
   TFMRouteParams,
@@ -55,7 +56,7 @@ export const TFMSwapForm = () => {
 
       return {
         ...tfmRouteParams,
-        slippage: slippage.toString(),
+        slippage: new BigNumber(slippage).div(100).toString(),
       }
     }, [slippage, tfmRouteParams])
   )

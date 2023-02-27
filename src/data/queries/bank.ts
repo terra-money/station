@@ -7,7 +7,7 @@ import { useCustomTokensCW20 } from "data/settings/CustomTokens"
 import { useNetwork } from "data/wallet"
 import { getChainIDFromAddress } from "utils/bech32"
 import { assertDefined } from "utils/assertDefined"
-import { AccAddress } from "@terra-money/feather.js"
+import { AccAddress, LCDClient } from "@terra-money/feather.js"
 
 export const useInitialTokenBalance = () => {
   const addresses = useInterchainAddresses()
@@ -124,6 +124,41 @@ interface TokenBalanceParams {
   denom: string
 }
 
+interface QueryTokenBalanceParams {
+  token: TokenBalanceParams
+  addresses: Record<string, string> | undefined
+  balances: CoinBalance[] | undefined
+  lcd: LCDClient
+}
+
+const queryTokenBalance = async ({
+  token,
+  addresses,
+  balances,
+  lcd,
+}: QueryTokenBalanceParams) => {
+  const { chain, denom } = token
+  const address = addresses?.[chain]
+  if (!address) return
+
+  if (AccAddress.validate(denom)) {
+    const { balance } = await lcd.wasm.contractQuery<{ balance: Amount }>(
+      denom,
+      { balance: { address } }
+    )
+
+    return balance
+  }
+
+  if (!balances) return
+
+  const balance = balances.find(
+    (balance) => balance.chain === chain && balance.denom === denom
+  )
+
+  return balance?.amount
+}
+
 export const useTokenBalance = (params: TokenBalanceParams | undefined) => {
   const addresses = useInterchainAddresses()
   const lcd = useInterchainLCDClient()
@@ -132,30 +167,49 @@ export const useTokenBalance = (params: TokenBalanceParams | undefined) => {
 
   return useQuery(
     ["Token balance", params],
-    async () => {
-      const { chain, denom } = assertDefined(params)
-      const address = addresses?.[chain]
-      if (!address) return
-
-      if (AccAddress.validate(denom)) {
-        const { balance } = await lcd.wasm.contractQuery<{ balance: Amount }>(
-          denom,
-          { balance: { address } }
-        )
-
-        return balance
-      }
-
-      if (!balances) return
-
-      const balance = balances.find(
-        (balance) => balance.chain === chain && balance.denom === denom
-      )
-
-      return balance?.amount
-    },
+    async () =>
+      queryTokenBalance({
+        token: assertDefined(params),
+        addresses,
+        balances,
+        lcd,
+      }),
     {
       enabled: !!params,
+    }
+  )
+}
+
+export function useTokensBalance<T extends {}>(
+  tokens: T[] | undefined,
+  getParams: (token: T) => TokenBalanceParams
+) {
+  const addresses = useInterchainAddresses()
+  const lcd = useInterchainLCDClient()
+
+  const { data: balances } = useBalances()
+
+  return useQuery(
+    ["Tokens balance", tokens],
+    async () => {
+      return Promise.all(
+        assertDefined(tokens).map(async (token) => {
+          const balance = await queryTokenBalance({
+            token: getParams(token),
+            addresses,
+            balances,
+            lcd,
+          })
+
+          return {
+            ...token,
+            balance,
+          }
+        })
+      )
+    },
+    {
+      enabled: !!tokens,
     }
   )
 }

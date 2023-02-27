@@ -25,7 +25,7 @@ import { combineState, RefetchOptions } from "data/query"
 import { queryKey } from "data/query"
 import { useNetwork } from "data/wallet"
 import { isBroadcastingState, latestTxState } from "data/queries/tx"
-import { useIsWalletEmpty } from "data/queries/bank"
+import { useIsWalletEmpty, useTokensBalance } from "data/queries/bank"
 
 import { Pre } from "components/general"
 import { Flex, Grid } from "components/layout"
@@ -301,14 +301,27 @@ function Tx<TxValues>(props: Props<TxValues>) {
     ? new BigNumber(balanceAfterTx).lt(0)
     : false
 
-  const availableGasDenoms = useMemo(() => {
-    return Object.keys(networks[chain]?.gasPrices || {})
-  }, [chain, networks])
+  const { data: gasOptions } = useTokensBalance(
+    Object.keys(networks[chain].gasPrices).map((denom) => ({ denom })),
+    ({ denom }) => ({
+      denom,
+      chain,
+    })
+  )
 
   useEffect(() => {
-    if (availableGasDenoms.includes(gasDenom)) return
-    setGasDenom(availableGasDenoms[0])
-  }, [availableGasDenoms, gasDenom])
+    if (!gasOptions) return
+
+    if (!gasOptions.length) return
+
+    if (gasOptions.find((option) => option.denom === gasDenom)) return
+
+    const option =
+      gasOptions.find(({ balance }) => new BigNumber(balance || 0).gt(0)) ||
+      gasOptions[0]
+
+    setGasDenom(option.denom)
+  }, [gasDenom, gasOptions])
 
   /* element */
   const resetMax = () => setIsMax(false)
@@ -335,6 +348,8 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const renderFee = (descriptions?: Contents) => {
     if (!estimatedGas) return null
 
+    if (!gasOptions) return null
+
     return (
       <Details>
         <dl>
@@ -347,14 +362,14 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
           <dt className={styles.gas}>
             {t("Fee")}
-            {availableGasDenoms.length > 1 && (
+            {gasOptions.length > 1 && (
               <Select
                 value={gasDenom}
                 onChange={(e) => setGasDenom(e.target.value)}
                 className={styles.select}
                 small
               >
-                {availableGasDenoms.map((denom) => (
+                {gasOptions.map(({ denom }) => (
                   <option value={denom} key={denom}>
                     {readNativeDenom(denom).symbol}
                   </option>
@@ -387,15 +402,32 @@ function Tx<TxValues>(props: Props<TxValues>) {
     )
   }
 
-  const walletError =
-    connectedWallet?.connectType === ConnectType.READONLY
-      ? t("Wallet is connected as read-only mode")
-      : // TODO: incorrect logic, availableGasDenoms is not related to wallet balance
-      !availableGasDenoms.length
-      ? t("Insufficient balance to pay transaction fee")
-      : isWalletEmpty
-      ? t("Coins required to post transactions")
-      : ""
+  const walletError = useMemo(() => {
+    if (connectedWallet?.connectType === ConnectType.READONLY) {
+      return t("Wallet is connected as read-only mode")
+    }
+
+    if (isWalletEmpty) {
+      return t("Coins required to post transactions")
+    }
+
+    if (estimatedGas && gasOptions) {
+      const gasOption = gasOptions.find(({ denom }) => denom === gasDenom)
+      const gasBalance = new BigNumber(gasOption?.balance || 0)
+      if (gasBalance.lt(estimatedGas)) {
+        return t("Insufficient balance to pay transaction fee")
+      }
+    }
+
+    return ""
+  }, [
+    connectedWallet?.connectType,
+    estimatedGas,
+    gasDenom,
+    gasOptions,
+    isWalletEmpty,
+    t,
+  ])
 
   const submitButton = (
     <>
