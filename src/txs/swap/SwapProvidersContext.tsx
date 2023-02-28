@@ -6,22 +6,29 @@ import createContext from "utils/createContext"
 
 type SwapProvider = "rango" | "tfm"
 
-interface SwapChains {
-  swapProvider: Record<string, SwapProvider>
+interface SwapProviders {
+  providers: Record<string, SwapProvider[]>
 }
 
-export const [useSwapChains, SwapChainsProvider] =
-  createContext<SwapChains>("useSwapChains")
+export const [useSwapProviders, SwapProvidersProvider] =
+  createContext<SwapProviders>("useSwapProviders")
 
 const unsupportedChains = ["osmosis-1"]
 
-export const SwapChainsContext = ({ children }: PropsWithChildren<{}>) => {
+export const SwapProvidersContext = ({ children }: PropsWithChildren<{}>) => {
   const { data: rangoMeta } = useRangoMeta()
   const { data: tfmChains } = useTFMChains()
   const networks = useNetwork()
 
-  const swapProvider = useMemo(() => {
-    const result: Record<string, SwapProvider> = {}
+  const providers = useMemo(() => {
+    const result: Record<string, SwapProvider[]> = {}
+    const pushProvider = (chain: string, provider: SwapProvider) => {
+      if (!result[chain]) {
+        result[chain] = []
+      }
+
+      result[chain].push(provider)
+    }
 
     const stationChains = new Set(Object.keys(networks))
 
@@ -34,14 +41,14 @@ export const SwapChainsContext = ({ children }: PropsWithChildren<{}>) => {
         const tokens = getChainTokens(rangoMeta, chainId)
         if (tokens.length < 2) return
 
-        result[chainId] = "rango"
+        pushProvider(chainId, "rango")
       })
     }
 
     if (tfmChains) {
       tfmChains.forEach(({ chain_id }) => {
         if (stationChains.has(chain_id)) {
-          result[chain_id] = "tfm"
+          pushProvider(chain_id, "tfm")
         }
       })
     }
@@ -54,6 +61,8 @@ export const SwapChainsContext = ({ children }: PropsWithChildren<{}>) => {
   }, [networks, rangoMeta, tfmChains])
 
   return (
-    <SwapChainsProvider value={{ swapProvider }}>{children}</SwapChainsProvider>
+    <SwapProvidersProvider value={{ providers }}>
+      {children}
+    </SwapProvidersProvider>
   )
 }
