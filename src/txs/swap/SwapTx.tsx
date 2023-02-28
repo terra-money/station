@@ -1,9 +1,6 @@
 import { useTranslation } from "react-i18next"
-import { useNetworkName } from "data/wallet"
-import { Card, Page } from "components/layout"
-import { Wrong } from "components/feedback"
+import { Page } from "components/layout"
 import TFMPoweredBy from "./TFMPoweredBy"
-import { ExternalLink } from "components/general"
 import { SwapChainsContext } from "./SwapChainsContext"
 import { SwapPageContent } from "./SwapPageContent"
 
@@ -13,29 +10,6 @@ import { SwapPageContent } from "./SwapPageContent"
 
 const SwapTx = () => {
   const { t } = useTranslation()
-  const networkName = useNetworkName()
-
-  if (networkName !== "mainnet") {
-    return (
-      <Page title={t("Swap")} small>
-        <Card>
-          <Wrong>
-            {networkName === "classic" ? (
-              <p>
-                Swaps are not supported for classic, please use the{" "}
-                <ExternalLink href="https://tfm.com/terraclassic/trade/swap">
-                  TFM webapp
-                </ExternalLink>{" "}
-                instead.
-              </p>
-            ) : (
-              t("Not supported")
-            )}
-          </Wrong>
-        </Card>
-      </Page>
-    )
-  }
 
   return (
     <Page title={t("Swap")} small extra={<TFMPoweredBy />}>
