@@ -5,6 +5,7 @@ import { FlexColumn } from "components/layout"
 import { sandbox } from "auth/scripts/env"
 import HeaderIconButton from "../components/HeaderIconButton"
 import NetworkSetting from "./NetworkSetting"
+import DisplayChainsSetting from "./DisplayChainsSetting"
 import LanguageSetting from "./LanguageSetting"
 import CurrencySetting from "./CurrencySetting"
 import { useWallet, WalletStatus } from "@terra-money/wallet-provider"
@@ -19,8 +20,15 @@ import styles from "./Preferences.module.scss"
 import SelectTheme from "./SelectTheme"
 import LCDSetting from "./LCDSetting"
 import { useTheme } from "data/settings/Theme"
+import { useDisplayChains, DEFAULT_DISPLAY_CHAINS } from "utils/localStorage"
 
-type Routes = "network" | "lang" | "currency" | "theme" | "lcd"
+type Routes =
+  | "network"
+  | "lang"
+  | "currency"
+  | "theme"
+  | "lcd"
+  | "displayChains"
 interface SettingsPage {
   key: Routes
   tab: string
@@ -37,6 +45,8 @@ const Preferences = () => {
   const { id: currencyId } = useCurrency()
   const networkName = useNetworkName()
   const { name } = useTheme()
+  const { displayChains } = useDisplayChains()
+  console.log("displayChains", displayChains)
 
   const routes: Record<Routes, SettingsPage> = {
     network: {
@@ -66,11 +76,19 @@ const Preferences = () => {
       value: capitalize(name),
       disabled: false,
     },
+    displayChains: {
+      key: "displayChains",
+      tab: t("Display chains"),
+      value:
+        displayChains === DEFAULT_DISPLAY_CHAINS
+          ? "Default"
+          : displayChains.join(", "),
+      disabled: false,
+    },
     lcd: {
       key: "lcd",
       tab: t("Custom LCD"),
-      // hide button on the main settings page
-      disabled: true,
+      disabled: true, // hide button on the main settings page
     },
   }
 
@@ -96,6 +114,8 @@ const Preferences = () => {
         return <SelectTheme />
       case "lcd":
         return <LCDSetting />
+      case "displayChains":
+        return <DisplayChainsSetting />
       default:
         return (
           <FlexColumn gap={8}>

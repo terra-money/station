@@ -4,6 +4,9 @@ export const LAZY_LIMIT = 999
 /* connection */
 export const BRIDGE = "https://walletconnect.terra.dev"
 
+/* chains */
+export const DEFAULT_DISPLAY_CHAINS = ["osmo", "terra"]
+
 /* api */
 export const ASSETS = "https://assets.terra.money"
 export const STATION_ASSETS = "https://station-assets.terra.money"

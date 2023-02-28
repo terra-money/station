@@ -1,6 +1,7 @@
 import {
   DEFAULT_GAS_ADJUSTMENT,
   CLASSIC_DEFAULT_GAS_ADJUSTMENT,
+  DEFAULT_DISPLAY_CHAINS,
 } from "config/constants"
 import themes from "styles/themes/themes"
 import { useCallback } from "react"
@@ -22,6 +23,7 @@ export enum SettingKey {
   WithdrawAs = "WithdrawAs", // Rewards (Preferred denom to withdraw rewards)
   EnabledNetworks = "EnabledNetworks",
   NetworkCacheTime = "NetworkCacheTime",
+  DisplayChains = "DisplayChains",
 }
 
 const isSystemDarkMode =
@@ -60,6 +62,7 @@ export const DefaultSettings = {
   [SettingKey.Chain]: "",
   [SettingKey.EnabledNetworks]: { time: 0, networks: [] as string[] },
   [SettingKey.CustomLCD]: {},
+  [SettingKey.DisplayChains]: DEFAULT_DISPLAY_CHAINS,
 }
 
 export const getLocalSetting = <T>(key: SettingKey): T => {
@@ -100,6 +103,10 @@ export const customLCDState = atom({
     SettingKey.CustomLCD
   ),
 })
+export const displayChainsState = atom({
+  key: "displayChains",
+  default: getLocalSetting(SettingKey.DisplayChains) as string[],
+})
 
 export const useSavedChain = () => {
   const [savedChain, setSavedChain] = useRecoilState(savedChainState)
@@ -111,6 +118,18 @@ export const useSavedChain = () => {
     [setSavedChain]
   )
   return { savedChain, changeSavedChain }
+}
+
+export const useDisplayChains = () => {
+  const [displayChains, setDisplayChains] = useRecoilState(displayChainsState)
+  const changeDisplayChains = useCallback(
+    (newDisplayChains: string[]) => {
+      setLocalSetting(SettingKey.Chain, newDisplayChains)
+      setDisplayChains(newDisplayChains)
+    },
+    [setDisplayChains]
+  )
+  return { displayChains, changeDisplayChains }
 }
 
 export const useCustomLCDs = () => {
