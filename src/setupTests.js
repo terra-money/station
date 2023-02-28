@@ -25,8 +25,11 @@ jest.mock('@terra-money/use-wallet', () => ({
   },
 }));
 
+<<<<<<< HEAD
 jest.mock();
 
+=======
+>>>>>>> 465480951b99a3bf2598abf70f7825e72a9795be
 jest.mock('react-i18next', () => ({
   // this mock makes sure any components using the translate hook can use it without a warning being shown
   useTranslation: () => {
