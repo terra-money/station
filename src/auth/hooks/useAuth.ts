@@ -149,7 +149,7 @@ const useAuth = () => {
     const { words } = wallet
     const address = addressFromWords(
       words[networks[txOptions.chainID].coinType] ?? "",
-      networks[txOptions.chainID].prefix
+      networks[txOptions.chainID]?.prefix
     )
 
     return await lcd.tx.create([{ address }], txOptions)

@@ -3,7 +3,7 @@ import { useNetwork } from "data/wallet"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import styles from "./ChainFilter.module.scss"
-import { useSavedNetwork } from "utils/localStorage"
+import { useSavedChain } from "utils/localStorage"
 import { isTerraChain } from "utils/chain"
 
 const ChainFilter = ({
@@ -22,14 +22,14 @@ const ChainFilter = ({
   terraOnly?: boolean
 }) => {
   const { t } = useTranslation()
-  const { savedNetwork, changeSavedNetwork } = useSavedNetwork()
+  const { savedChain, changeSavedChain } = useSavedChain()
 
   const networks = Object.values(useNetwork())
     .sort((a, b) => (a.name === "Terra" ? -1 : b.name === "Terra" ? 1 : 0))
     .filter((n) => (terraOnly ? isTerraChain(n.chainID) : true))
 
   const initNetwork =
-    networks.find((n) => n.chainID === savedNetwork) ?? networks[0]
+    networks.find((n) => n.chainID === savedChain) ?? networks[0]
 
   const [selectedChain, setChain] = useState<string | undefined>(
     all ? undefined : initNetwork?.chainID
@@ -38,7 +38,7 @@ const ChainFilter = ({
   const handleSetChain = (chain: string | undefined) => {
     setChain(chain)
     if (terraOnly) return
-    changeSavedNetwork(chain)
+    changeSavedChain(chain)
   }
 
   return (

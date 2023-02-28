@@ -44,8 +44,8 @@ const LCDSetting = () => {
     () =>
       Object.values(networks[network] ?? {})
         .sort((a, b) => {
-          if (a.prefix === "terra") return -1
-          if (b.prefix === "terra") return 1
+          if (a?.prefix === "terra") return -1
+          if (b?.prefix === "terra") return 1
           return 0
         })
         .map(({ chainID }) => chainID),
