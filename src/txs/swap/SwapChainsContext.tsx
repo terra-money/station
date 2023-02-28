@@ -4,7 +4,7 @@ import { useNetwork } from "data/wallet"
 import { PropsWithChildren, useMemo } from "react"
 import createContext from "utils/createContext"
 
-type SwapProvider = "legacyTfm" | "rango" | "tfm"
+type SwapProvider = "rango" | "tfm"
 
 interface SwapChains {
   swapProvider: Record<string, SwapProvider>
@@ -45,9 +45,6 @@ export const SwapChainsContext = ({ children }: PropsWithChildren<{}>) => {
         }
       })
     }
-
-    // to make sure exchange on Terra is stable
-    result["phoenix-1"] = "legacyTfm"
 
     unsupportedChains.forEach((chainId) => {
       delete result[chainId]

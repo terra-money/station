@@ -2,8 +2,6 @@ import { ConditionalRender } from "components/ConditionalRender"
 import { Card, ChainFilter } from "components/layout"
 import { RangoSwapForm } from "./RangoSwapForm"
 import { useSwapChains } from "./SwapChainsContext"
-import TFMSwapContext from "../TFMSwapContext"
-import LegacyTFMSwapForm from "./LegacyTFMSwapForm"
 import { CurrentChainProvider } from "./CurrentChainProvider"
 import {
   RangoCurrentChainTokensProvider,
@@ -26,11 +24,6 @@ export const SwapPageContent = () => {
             <CurrentChainProvider value={chainID}>
               <ConditionalRender
                 value={swapProvider[chainID]}
-                legacyTfm={() => (
-                  <TFMSwapContext>
-                    <LegacyTFMSwapForm />
-                  </TFMSwapContext>
-                )}
                 rango={() => (
                   <RangoCurrentChainTokensProvider key={chainID}>
                     <RangoSwapForm />

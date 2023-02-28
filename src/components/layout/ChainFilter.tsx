@@ -1,10 +1,10 @@
-import classNames from 'classnames'
-import { useNetwork } from 'data/wallet'
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import styles from './ChainFilter.module.scss'
-import { useSavedNetwork } from 'utils/localStorage'
-import { isTerraChain } from 'utils/chain'
+import classNames from "classnames"
+import { useNetwork } from "data/wallet"
+import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
+import styles from "./ChainFilter.module.scss"
+import { useSavedNetwork } from "utils/localStorage"
+import { isTerraChain } from "utils/chain"
 
 const ChainFilter = ({
   children,
@@ -27,16 +27,28 @@ const ChainFilter = ({
   const { savedNetwork, changeSavedNetwork } = useSavedNetwork()
 
   const networks = Object.values(useNetwork())
-    .sort((a, b) => (a.name === 'Terra' ? -1 : b.name === 'Terra' ? 1 : 0))
+    .sort((a, b) => (a.name === "Terra" ? -1 : b.name === "Terra" ? 1 : 0))
     .filter((n) => (terraOnly ? isTerraChain(n.chainID) : true))
     .filter(({ chainID }) => (limitTo ? limitTo.includes(chainID) : true))
 
-  const initNetwork =
-    networks.find((n) => n.chainID === savedNetwork) ?? networks[0]
+  const defaultSelectedChain = all
+    ? undefined
+    : (networks.find((n) => n.chainID === savedNetwork) ?? networks[0])?.chainID
 
   const [selectedChain, setChain] = useState<string | undefined>(
-    all ? undefined : initNetwork?.chainID
+    defaultSelectedChain
   )
+
+  const isSelectedNetworkValid =
+    (all && selectedChain === undefined) ||
+    networks.some((n) => n.chainID === selectedChain) ||
+    (!networks.length && selectedChain === undefined)
+
+  useEffect(() => {
+    if (!isSelectedNetworkValid) {
+      setChain(defaultSelectedChain)
+    }
+  }, [defaultSelectedChain, isSelectedNetworkValid])
 
   const handleSetChain = (chain: string | undefined) => {
     setChain(chain)
@@ -50,7 +62,7 @@ const ChainFilter = ({
         className={classNames(
           className,
           styles.header,
-          terraOnly ? styles.swap : ''
+          terraOnly ? styles.swap : ""
         )}
       >
         {title && <h1>{title}</h1>}
@@ -60,7 +72,7 @@ const ChainFilter = ({
               onClick={() => handleSetChain(undefined)}
               className={`${styles.all} ${selectedChain ?? styles.active}`}
             >
-              {t('All')}
+              {t("All")}
             </button>
           )}
           {networks.map((chain) => (
@@ -77,7 +89,9 @@ const ChainFilter = ({
           ))}
         </div>
       </div>
-      <div className={styles.content}>{children(selectedChain)}</div>
+      <div className={styles.content}>
+        {isSelectedNetworkValid && children(selectedChain)}
+      </div>
     </div>
   )
 }
