@@ -67,6 +67,22 @@
   }
 }
 
+.search__inline {
+  font-size: small;
+  width: calc(100% - 12px);
+  margin: 4px 6px !important;
+
+  .icon {
+    width: 18px;
+    left: 10px;
+  }
+
+  .input {
+    padding-left: 36px;
+    height: 35px;
+  }
+}
+
 .input__small {
   height: 38px;
 }

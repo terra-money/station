@@ -66,6 +66,7 @@ interface IBCTokenItem extends IBCTokenInfoResponse {
 /* cw20 */
 type CW20Contracts = Record<TerraAddress, CW20ContractItem>
 type CW20Whitelist = Record<TerraAddress, CW20TokenItem>
+type NativeWhitelist = Record<CoinDenom, NativeTokenItem>
 
 interface CW20ContractItem {
   protocol: string
@@ -83,6 +84,15 @@ interface CW20TokenItem extends CW20TokenInfoResponse {
   token: TerraAddress
   protocol?: string
   icon?: string
+}
+
+interface NativeTokenItem {
+  chains: string[]
+  decimals: number
+  icon: string
+  name: string
+  symbol: string
+  token: CoinDenom
 }
 
 /* cw20: pair */

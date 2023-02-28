@@ -5,6 +5,7 @@ import { SearchInput } from "components/form"
 interface Props {
   gap?: number
   placeholder?: string
+  inline?: boolean
   padding?: boolean
   small?: boolean
   children: (input: string) => ReactNode
@@ -16,6 +17,7 @@ const WithSearchInput = ({
   placeholder,
   padding,
   small,
+  inline,
 }: Props) => {
   const [input, setInput] = useState("")
 
@@ -24,6 +26,7 @@ const WithSearchInput = ({
       <SearchInput
         value={input}
         small={small}
+        inline={inline}
         placeholder={placeholder}
         onChange={(e) => setInput(e.target.value)}
         autoFocus

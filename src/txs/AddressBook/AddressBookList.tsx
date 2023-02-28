@@ -92,7 +92,7 @@ const AddressBookList = ({ onClick }: Props) => {
         </Button>
         <Button onClick={() => setOpenMy(true)}>
           <AccountBalanceWalletIcon fontSize="inherit" />
-          {t("Use one of your addresses")}
+          {t("Select from your addresses")}
         </Button>
       </Grid>
     </section>

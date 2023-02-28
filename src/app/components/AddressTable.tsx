@@ -11,6 +11,7 @@ import styles from "./AddressTable.module.scss"
 import { useTranslation } from "react-i18next"
 import WithSearchInput from "pages/custom/WithSearchInput"
 import AddressBox from "components/form/AddressBox"
+import { useBankBalance } from "data/queries/bank"
 
 interface Props {
   finderLink?: boolean // either display finder link if true or AddressBox comp
@@ -23,19 +24,23 @@ const AddressTable = (props: Props) => {
   const isConnected = useAddress()
   const networks = useNetwork()
   const { t } = useTranslation()
+  const coins = useBankBalance()
 
-  if (!isConnected)
-    return (
-      <p className={styles.connect}>
-        {t("Connect a wallet to see your addresses")}
-      </p>
-    )
+  const NotConnected = () => (
+    <p className={styles.connect}>
+      {t("Connect a wallet to see your addresses")}
+    </p>
+  )
 
-  const addressData = Object.keys(addresses).map((key) => ({
-    address: addresses?.[key],
-    chainName: getChainNamefromID(key, networks) ?? key,
-    id: key,
-  }))
+  if (!isConnected) return <NotConnected />
+
+  const addressData = Object.keys(addresses)
+    .map((key) => ({
+      address: addresses?.[key],
+      chainName: getChainNamefromID(key, networks) ?? key,
+      id: key,
+    }))
+    .sort((a) => (coins.some(({ chain }) => chain === a.id) ? -1 : 1))
 
   return (
     <WithSearchInput gap={10} placeholder={t("Search for a chain...")}>

@@ -14,8 +14,8 @@
   grid-area: sendlist;
   background-color: var(--card-bg-muted);
   padding: 20px;
+  margin-top: 0.2rem;
   padding-bottom: 40px;
-  margin-top: 3rem;
   max-width: var(--wallet-width);
   box-sizing: border-box;
   overflow-y: auto;
@@ -49,6 +49,9 @@
 .form__container {
   div + div {
     margin-top: 1.2rem;
+  }
+  h1 {
+    margin-left: 2rem;
   }
 }
 
