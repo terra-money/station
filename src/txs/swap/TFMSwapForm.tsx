@@ -73,27 +73,23 @@ export const TFMSwapForm = () => {
 
     const { typeUrl, value } = swap
 
-    if (typeUrl === "/cosmwasm.wasm.v1.MsgExecuteContract") {
-      return {
-        msgs: [
-          new MsgExecuteContract(
-            address,
-            value.contract,
-            value.execute_msg,
-            new Coins(
-              value.coins.map((coin) => new Coin(coin.denom, coin.amount))
-            )
-          ),
-        ],
-        chainID: chainId,
-      }
-    }
-
     if (typeUrl === "/osmosis.gamm.v1beta1.MsgSwapExactAmountIn") {
       throw new Error("Not implemented yet")
     }
 
-    throw new Error(`Unknown typeUrl: ${typeUrl}`)
+    return {
+      msgs: [
+        new MsgExecuteContract(
+          address,
+          value.contract,
+          value.execute_msg,
+          new Coins(
+            value.coins.map((coin) => new Coin(coin.denom, coin.amount))
+          )
+        ),
+      ],
+      chainID: chainId,
+    }
   }, [chainId, interchainAddresses, swap])
 
   return (
