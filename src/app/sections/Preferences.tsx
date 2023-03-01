@@ -20,7 +20,8 @@ import styles from "./Preferences.module.scss"
 import SelectTheme from "./SelectTheme"
 import LCDSetting from "./LCDSetting"
 import { useTheme } from "data/settings/Theme"
-import { useDisplayChains, DEFAULT_DISPLAY_CHAINS } from "utils/localStorage"
+import { DEFAULT_DISPLAY_CHAINS } from "config/constants"
+import { useDisplayChains } from "utils/localStorage"
 
 type Routes =
   | "network"
@@ -46,7 +47,6 @@ const Preferences = () => {
   const networkName = useNetworkName()
   const { name } = useTheme()
   const { displayChains } = useDisplayChains()
-  console.log("displayChains", displayChains)
 
   const routes: Record<Routes, SettingsPage> = {
     network: {

@@ -1,40 +1,37 @@
-import { useSupportedFiat } from "data/queries/coingecko"
-import { useCurrencyState } from "data/settings/Currency"
 import WithSearchInput from "pages/custom/WithSearchInput"
-import { useNetworks } from "app/InitNetworks"
 import { useDisplayChains } from "utils/localStorage"
-import SettingsSelector from "components/layout/SettingsSelector"
+import SettingsSelectorToggle from "components/form/SettingsSelectorToggle"
+import { useNetwork } from "data/wallet"
 
 const DisplayChainsSetting = () => {
-  const { data: fiatList = [] } = useSupportedFiat()
-  const [currency, setCurrency] = useCurrencyState()
   const { displayChains, changeDisplayChains } = useDisplayChains()
-  const { networks } = useNetworks()
+  const network = useNetwork()
+
+  const onChange = (value: string) => {
+    const newDisplayChains = displayChains.includes(value)
+      ? displayChains.filter((chainID) => chainID !== value)
+      : [...displayChains, value]
+    changeDisplayChains(newDisplayChains)
+  }
 
   return (
-    <WithSearchInput gap={8} small>
+    <WithSearchInput gap={8}>
       {(input) => (
-        <SettingsSelector
-          options={fiatList
+        <SettingsSelectorToggle
+          onChange={onChange}
+          options={Object.keys(network)
             .filter(
-              (fiat) =>
-                fiat.name.toLowerCase().includes(input.toLowerCase()) ||
-                fiat.id.toLowerCase().includes(input.toLowerCase()) ||
-                fiat.symbol.toLowerCase().includes(input.toLowerCase())
+              (chainID) =>
+                network[chainID].name
+                  .toLowerCase()
+                  .includes(input.toLowerCase()) ||
+                chainID.toLowerCase().includes(input.toLowerCase())
             )
-            .map((fiat) => {
-              return { value: fiat.id, label: `${fiat.symbol} - ${fiat.name}` }
-            })}
-          value={currency.id}
-          onChange={(value) => {
-            setCurrency(
-              fiatList.find((fiat) => fiat.id === value) as {
-                name: string
-                symbol: string
-                id: string
-              }
-            )
-          }}
+            .map((chainID) => ({
+              value: chainID,
+              selected: displayChains.includes(chainID),
+              label: network[chainID].name,
+            }))}
         />
       )}
     </WithSearchInput>

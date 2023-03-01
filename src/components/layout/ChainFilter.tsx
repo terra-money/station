@@ -1,6 +1,6 @@
 import classNames from "classnames"
 import { useNetwork } from "data/wallet"
-import { useState } from "react"
+import { useState, memo } from "react"
 import { useTranslation } from "react-i18next"
 import styles from "./ChainFilter.module.scss"
 import { useSavedChain } from "utils/localStorage"
@@ -79,4 +79,4 @@ const ChainFilter = ({
   )
 }
 
-export default ChainFilter
+export default memo(ChainFilter)
