@@ -98,13 +98,18 @@ type TFMSwapTypeUrl =
   | "/cosmwasm.wasm.v1.MsgExecuteContract"
   | "/osmosis.gamm.v1beta1.MsgSwapExactAmountIn"
 
-interface TFMSwapResult {
+export interface TFMSwapExecuteContract {
+  coins: TFMSwapCoin[]
+  contract: string
+  execute_msg: any
+}
+
+// TODO: add proper type
+export type TFMSwapOsmosis = any
+
+export interface TFMSwapResult {
   typeUrl: TFMSwapTypeUrl
-  value: {
-    coins: TFMSwapCoin[]
-    contract: string
-    execute_msg: any
-  }
+  value: TFMSwapExecuteContract | TFMSwapOsmosis
 }
 
 export const queryTFMSwap = async (params: TFMSwapParams) => {

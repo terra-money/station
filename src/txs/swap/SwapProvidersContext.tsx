@@ -14,7 +14,7 @@ export const [useSwapProviders, SwapProvidersProvider] =
   createContext<SwapProviders>("useSwapProviders")
 
 const supportedChainsByNetwork: Record<string, string[]> = {
-  mainnet: ["juno-1", "phoenix-1", "kaiyo-1"],
+  mainnet: ["juno-1", "phoenix-1", "kaiyo-1", "osmosis-1"],
   classic: ["columbus-5"],
 }
 
@@ -43,6 +43,14 @@ export const SwapProvidersContext = ({ children }: PropsWithChildren<{}>) => {
 
     const stationChains = new Set(supportedChains)
 
+    if (tfmChains) {
+      tfmChains.forEach(({ chain_id }) => {
+        if (stationChains.has(chain_id)) {
+          pushProvider(chain_id, "tfm")
+        }
+      })
+    }
+
     if (rangoMeta) {
       rangoMeta.blockchains.forEach(({ chainId }) => {
         if (!chainId) return
@@ -53,14 +61,6 @@ export const SwapProvidersContext = ({ children }: PropsWithChildren<{}>) => {
         if (tokens.length < 2) return
 
         pushProvider(chainId, "rango")
-      })
-    }
-
-    if (tfmChains) {
-      tfmChains.forEach(({ chain_id }) => {
-        if (stationChains.has(chain_id)) {
-          pushProvider(chain_id, "tfm")
-        }
       })
     }
 

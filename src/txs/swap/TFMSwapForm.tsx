@@ -1,9 +1,16 @@
-import { Coin, Coins, MsgExecuteContract } from "@terra-money/feather.js"
+import {
+  Coin,
+  Coins,
+  MsgAminoCustom,
+  MsgExecuteContract,
+} from "@terra-money/feather.js"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import BigNumber from "bignumber.js"
 import { Form } from "components/form"
 import {
   TFMRouteParams,
+  TFMSwapExecuteContract,
+  TFMSwapResult,
   useTFMRoute,
   useTFMSwap,
 } from "data/external/multichainTfm"
@@ -15,6 +22,34 @@ import { useCurrentChain } from "./CurrentChainProvider"
 import { useCurrentChainTokens } from "./CurrentChainTokensProvider"
 import { useSwapForm } from "./hooks/useSwapForm"
 import { SwapFormFields } from "./SwapFormFields"
+
+const getMsgsFromTFMSwapResponse = (
+  { typeUrl, value }: TFMSwapResult,
+  sender: string
+) => {
+  if (typeUrl === "/osmosis.gamm.v1beta1.MsgSwapExactAmountIn") {
+    return [
+      new MsgAminoCustom({
+        type: "osmosis/gamm/swap-exact-amount-in",
+        value: {
+          ...value,
+          sender,
+        },
+      }),
+    ]
+  }
+
+  const { contract, execute_msg, coins } = value as TFMSwapExecuteContract
+
+  return [
+    new MsgExecuteContract(
+      sender,
+      contract,
+      execute_msg,
+      new Coins(coins.map((coin) => new Coin(coin.denom, coin.amount)))
+    ),
+  ]
+}
 
 export const TFMSwapForm = () => {
   const form = useSwapForm()
@@ -71,26 +106,13 @@ export const TFMSwapForm = () => {
     const address = interchainAddresses?.[chainId]
     if (!address) return
 
-    const { typeUrl, value } = swap
-
-    if (typeUrl === "/osmosis.gamm.v1beta1.MsgSwapExactAmountIn") {
-      throw new Error("Not implemented yet")
-    }
-
     return {
-      msgs: [
-        new MsgExecuteContract(
-          address,
-          value.contract,
-          value.execute_msg,
-          new Coins(
-            value.coins.map((coin) => new Coin(coin.denom, coin.amount))
-          )
-        ),
-      ],
+      msgs: getMsgsFromTFMSwapResponse(swap, address),
       chainID: chainId,
     }
   }, [chainId, interchainAddresses, swap])
+
+  console.log(swap)
 
   return (
     <Tx
