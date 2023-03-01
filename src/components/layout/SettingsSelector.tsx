@@ -26,7 +26,7 @@ const SettingsSelector = ({ value, options, onChange, withSearch }: Props) => {
     setOpenAcc(index === openAcc ? 0 : index)
   }
 
-  const { networks }: { networks: any } = useNetworks()
+  const { networks } = useNetworks()
 
   return (
     <div className={styles.wrapper}>
