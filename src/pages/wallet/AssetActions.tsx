@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next"
-import { flatten, uniq } from "ramda"
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined"
 import ShortcutOutlinedIcon from "@mui/icons-material/ShortcutOutlined"
 import RestartAltIcon from "@mui/icons-material/RestartAlt"
@@ -8,7 +7,6 @@ import { isDenomTerraNative } from "@terra.kitchen/utils"
 import { has } from "utils/num"
 import { useNetworkName } from "data/wallet"
 import { useIsWalletEmpty } from "data/queries/bank"
-import { useCW20Pairs } from "data/Terra/TerraAssets"
 import { useTFMTokens } from "data/external/tfm"
 import {
   InternalButton,
