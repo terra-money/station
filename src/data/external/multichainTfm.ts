@@ -3,6 +3,7 @@ import { RefetchOptions } from "data/query"
 import { useQuery } from "react-query"
 import { assertDefined } from "utils/assertDefined"
 
+// docs: https://multichain.api.tfm.com/docs
 const baseURL = "https://multichain.api.tfm.com/"
 
 export interface TFMChain {
