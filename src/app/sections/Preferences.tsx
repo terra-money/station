@@ -11,7 +11,7 @@ import CurrencySetting from "./CurrencySetting"
 import { useWallet, WalletStatus } from "@terra-money/wallet-provider"
 import { ModalButton } from "components/feedback"
 import SettingsButton from "components/layout/SettingsButton"
-import { useNetworkName } from "data/wallet"
+import { useNetwork, useNetworkName } from "data/wallet"
 import { useCurrency } from "data/settings/Currency"
 import { Languages } from "config/lang"
 import { capitalize } from "@mui/material"
@@ -20,8 +20,8 @@ import styles from "./Preferences.module.scss"
 import SelectTheme from "./SelectTheme"
 import LCDSetting from "./LCDSetting"
 import { useTheme } from "data/settings/Theme"
-import { DEFAULT_DISPLAY_CHAINS } from "config/constants"
 import { useDisplayChains } from "utils/localStorage"
+import { getDisplayChainsSettingLabel } from "data/queries/chains"
 
 type Routes =
   | "network"
@@ -30,6 +30,7 @@ type Routes =
   | "theme"
   | "lcd"
   | "displayChains"
+
 interface SettingsPage {
   key: Routes
   tab: string
@@ -45,6 +46,7 @@ const Preferences = () => {
   const { i18n } = useTranslation()
   const { id: currencyId } = useCurrency()
   const networkName = useNetworkName()
+  const network = useNetwork()
   const { name } = useTheme()
   const { displayChains } = useDisplayChains()
 
@@ -79,10 +81,7 @@ const Preferences = () => {
     displayChains: {
       key: "displayChains",
       tab: t("Display chains"),
-      value:
-        displayChains === DEFAULT_DISPLAY_CHAINS
-          ? "Default"
-          : displayChains.join(", "),
+      value: getDisplayChainsSettingLabel(displayChains, network),
       disabled: false,
     },
     lcd: {
