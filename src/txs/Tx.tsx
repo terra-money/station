@@ -126,7 +126,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
     address: addresses?.[chain],
     network: networks,
     gasAdjustment: gasAdjustment * (txGasAdjustment ?? 1),
-    msgs: simulationTx?.msgs.map((msg) => msg.toData(isClassic)),
+    msgs: simulationTx?.msgs.map((msg) => msg.toAmino(isClassic)),
   }
   const { data: estimatedGas, ...estimatedGasState } = useQuery(
     [queryKey.tx.create, key, isWalletEmpty],
