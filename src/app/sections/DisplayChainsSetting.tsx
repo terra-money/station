@@ -1,6 +1,6 @@
 import WithSearchInput from "pages/custom/WithSearchInput"
 import { useDisplayChains } from "utils/localStorage"
-import SettingsSelectorToggle from "components/form/SettingsSelectorToggle"
+import SettingsSelectorToggle from "components/layout/SettingsSelectorToggle"
 import { useNetwork } from "data/wallet"
 
 const DisplayChainsSetting = () => {
@@ -12,10 +12,11 @@ const DisplayChainsSetting = () => {
       ? displayChains.filter((chainID) => chainID !== value)
       : [...displayChains, value]
     changeDisplayChains(newDisplayChains)
+    console.log("newDisplayChains", newDisplayChains)
   }
 
   return (
-    <WithSearchInput gap={8}>
+    <WithSearchInput placeholder="Search for chains..." gap={8}>
       {(input) => (
         <SettingsSelectorToggle
           onChange={onChange}

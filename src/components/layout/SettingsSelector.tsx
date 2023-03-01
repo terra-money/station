@@ -65,11 +65,9 @@ const SettingsSelector = ({
               </div>
               <Flex className={styles.track}>
                 <span
-                  className={
-                    selected === value
-                      ? styles.indicator__checked
-                      : styles.indicator
-                  }
+                  className={cx(styles.indicator, {
+                    checked: selected === value,
+                  })}
                 />
               </Flex>
             </button>
