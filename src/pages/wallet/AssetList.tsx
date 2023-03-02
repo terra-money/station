@@ -65,12 +65,14 @@ const AssetList = () => {
         ),
       ]
         .filter(
-          (a) => (hideNoWhitelist ? !a.symbol.endsWith("...") : true) // TODO: update and implement whitelist check
+          (a) => (hideNoWhitelist ? !a.symbol.endsWith("...") : a) // TODO: update and implement whitelist check
         )
-        .filter((a) => {
-          if (!hideLowBal || a.price === 0 || alwaysVisibleDenoms.has(a.denom))
-            return true
-          return a.price * toInput(a.balance) >= 1
+        .filter((asset) => {
+          if (!hideLowBal) return true
+
+          if (alwaysVisibleDenoms.has(asset.denom)) return true
+
+          return hideLowBal ? asset.price * toInput(asset.balance) >= 1 : asset
         })
         .sort(
           (a, b) =>

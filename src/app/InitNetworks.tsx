@@ -13,7 +13,6 @@ export const [useNetworks, NetworksProvider] = createContext<{
   networks: InterchainNetworks
   filterEnabledNetworks: TokenFilter
   filterDisabledNetworks: TokenFilter
-  networksLoading: boolean
 }>("useNetworks")
 
 const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
@@ -51,7 +50,6 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
     (acc, { data }) => (data ? [...acc, data] : acc),
     [] as string[]
   )
-  
   const validationState = combineState(...validationResult)
 
   if (!networks) return null
@@ -62,7 +60,6 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
         <NetworksProvider
           value={{
             networks,
-            networksLoading: validationState.isLoading,
             filterEnabledNetworks: (networks) =>
               Object.fromEntries(
                 Object.entries(networks).filter(

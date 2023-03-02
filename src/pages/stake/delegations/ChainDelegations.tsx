@@ -49,7 +49,6 @@ const ChainDelegations = ({ chain }: { chain: string }) => {
     )
 
     const totalToDisplay = chainTotalPriceAndAmount?.price
-    const showTokens = chainTotalPriceAndAmount?.amount !== -1
 
     const list = chainDelegations || []
 
@@ -72,7 +71,6 @@ const ChainDelegations = ({ chain }: { chain: string }) => {
             denom={chainDenom}
             onClick={open}
             cardName={"delegations"}
-            showTokens={showTokens}
           />
         )}
       >

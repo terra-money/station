@@ -102,7 +102,7 @@ const ChainRewards = ({ chain }: { chain: string }) => {
               </div>
             }
             value={totalToDisplay?.toString() || "-1"}
-            amount={amountToDisplay.toString()}
+            amount={amountToDisplay}
             denom={networks[chain]?.baseAsset || ""}
             showTokens={showTokens}
             onClick={open}
