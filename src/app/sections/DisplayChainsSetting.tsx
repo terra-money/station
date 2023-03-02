@@ -2,6 +2,7 @@ import WithSearchInput from "pages/custom/WithSearchInput"
 import { useDisplayChains } from "utils/localStorage"
 import SettingsSelectorToggle from "components/layout/SettingsSelectorToggle"
 import { useNetwork } from "data/wallet"
+import { isTerraChain } from "utils/chain"
 
 const DisplayChainsSetting = () => {
   const { displayChains, changeDisplayChains } = useDisplayChains()
@@ -12,7 +13,6 @@ const DisplayChainsSetting = () => {
       ? displayChains.filter((chainID) => chainID !== value)
       : [...displayChains, value]
     changeDisplayChains(newDisplayChains)
-    console.log("newDisplayChains", newDisplayChains)
   }
 
   return (
@@ -32,7 +32,13 @@ const DisplayChainsSetting = () => {
               value: chainID,
               selected: displayChains.includes(chainID),
               label: network[chainID].name,
-            }))}
+            }))
+            .sort((a, b) => {
+              if (isTerraChain(a.value) !== isTerraChain(b.value))
+                return isTerraChain(a.value) ? -1 : 1
+              if (a.selected !== b.selected) return a.selected ? -1 : 1
+              return 0
+            })}
         />
       )}
     </WithSearchInput>

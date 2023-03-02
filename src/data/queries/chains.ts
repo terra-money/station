@@ -1,7 +1,7 @@
 import { AccAddress } from "@terra-money/feather.js"
 import { useNetwork } from "data/wallet"
 import createContext from "utils/createContext"
-import { DEFAULT_DISPLAY_CHAINS } from "config/constants"
+import { DefaultDisplayChains } from "utils/localStorage"
 
 type Whitelist = Record<
   string,
@@ -69,7 +69,9 @@ export const getDisplayChainsSettingLabel = (
   chains: Record<string, InterchainNetwork>
 ) => {
   const { toShow, rest } = getTruncateChainList(displayChains)
-  return displayChains === DEFAULT_DISPLAY_CHAINS
+  return Object.values(DefaultDisplayChains).some(
+    (arr) => JSON.stringify(arr) === JSON.stringify(displayChains)
+  )
     ? "Default"
     : toShow.map((chainID) => getChainNamefromID(chainID, chains)).join(", ") +
         (rest.length > 0

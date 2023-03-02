@@ -1,11 +1,11 @@
 import {
   DEFAULT_GAS_ADJUSTMENT,
   CLASSIC_DEFAULT_GAS_ADJUSTMENT,
-  DEFAULT_DISPLAY_CHAINS,
 } from "config/constants"
 import themes from "styles/themes/themes"
 import { useCallback } from "react"
 import { atom, useRecoilState } from "recoil"
+import { useNetworkName } from "data/wallet"
 
 export enum SettingKey {
   Theme = "Theme",
@@ -40,7 +40,13 @@ export const DefaultCustomTokensItem = {
     },
   ],
 }
-const DefaultCustomTokens = { mainnet: DefaultCustomTokensItem }
+export const DefaultDisplayChains = {
+  mainnet: ["osmosis-1", "phoenix-1"],
+  testnet: ["pisco-1"],
+  classic: ["columbus-5"],
+}
+
+export const DefaultCustomTokens = { mainnet: DefaultCustomTokensItem }
 
 export const DefaultSettings = {
   [SettingKey.Theme]: DefaultTheme,
@@ -62,7 +68,7 @@ export const DefaultSettings = {
   [SettingKey.Chain]: "",
   [SettingKey.EnabledNetworks]: { time: 0, networks: [] as string[] },
   [SettingKey.CustomLCD]: {},
-  [SettingKey.DisplayChains]: DEFAULT_DISPLAY_CHAINS,
+  [SettingKey.DisplayChains]: DefaultDisplayChains,
 }
 
 export const getLocalSetting = <T>(key: SettingKey): T => {
@@ -105,7 +111,10 @@ export const customLCDState = atom({
 })
 export const displayChainsState = atom({
   key: "displayChains",
-  default: getLocalSetting(SettingKey.DisplayChains) as string[],
+  default: getLocalSetting(SettingKey.DisplayChains) as Record<
+    string,
+    string[]
+  >,
 })
 
 export const useSavedChain = () => {
@@ -121,15 +130,21 @@ export const useSavedChain = () => {
 }
 
 export const useDisplayChains = () => {
+  const networkName = useNetworkName()
   const [displayChains, setDisplayChains] = useRecoilState(displayChainsState)
   const changeDisplayChains = useCallback(
-    (newDisplayChains: string[]) => {
-      setLocalSetting(SettingKey.Chain, newDisplayChains)
+    (newChains: string[]) => {
+      const newDisplayChains = { ...displayChains, [networkName]: newChains }
+      setLocalSetting(SettingKey.DisplayChains, newDisplayChains)
       setDisplayChains(newDisplayChains)
     },
-    [setDisplayChains]
+    [setDisplayChains, networkName, displayChains]
   )
-  return { displayChains, changeDisplayChains }
+  return {
+    displayChains: displayChains[networkName],
+    all: displayChains,
+    changeDisplayChains,
+  }
 }
 
 export const useCustomLCDs = () => {

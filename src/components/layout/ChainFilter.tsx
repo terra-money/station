@@ -3,7 +3,7 @@ import { useNetwork } from "data/wallet"
 import { useState, memo } from "react"
 import { useTranslation } from "react-i18next"
 import styles from "./ChainFilter.module.scss"
-import { useSavedChain } from "utils/localStorage"
+import { useSavedChain, useDisplayChains } from "utils/localStorage"
 import { isTerraChain } from "utils/chain"
 
 const ChainFilter = ({
@@ -23,10 +23,13 @@ const ChainFilter = ({
 }) => {
   const { t } = useTranslation()
   const { savedChain, changeSavedChain } = useSavedChain()
+  const network = useNetwork()
+  const { displayChains } = useDisplayChains()
 
-  const networks = Object.values(useNetwork())
+  const networks = Object.values(network)
     .sort((a, b) => (a.name === "Terra" ? -1 : b.name === "Terra" ? 1 : 0))
-    .filter((n) => (terraOnly ? isTerraChain(n.chainID) : true))
+    .filter((n) => (terraOnly ? isTerraChain(n.prefix) : true))
+    .filter((n) => displayChains.includes(n.chainID))
 
   const initNetwork =
     networks.find((n) => n.chainID === savedChain) ?? networks[0]
@@ -60,18 +63,23 @@ const ChainFilter = ({
               {t("All")}
             </button>
           )}
-          {networks.map((chain) => (
+          {networks.map((c) => (
             <button
-              key={chain.chainID}
-              onClick={() => handleSetChain(chain.chainID)}
+              key={c.chainID}
+              onClick={() => handleSetChain(c.chainID)}
               className={
-                selectedChain === chain.chainID ? styles.active : undefined
+                selectedChain === c.chainID ? styles.active : undefined
               }
             >
-              <img src={chain.icon} alt={chain.name} />
-              {chain.name}
+              <img src={c.icon} alt={c.name} />
+              {c.name}
             </button>
           ))}
+          {networks.length > displayChains.length && (
+            <button className={styles.active}>
+              {networks.length - displayChains.length}
+            </button>
+          )}
         </div>
       </div>
       <div className={styles.content}>{children(selectedChain)}</div>
