@@ -1,11 +1,13 @@
 .back {
   position: absolute;
   left: 40px;
-  transform: translate(0, 50%);
 
-  svg path {
-    fill: var(--text);
-  }
+  top: 40px;
+}
+.extra {
+  position: absolute;
+  right: 40px;
+  top: 40px;
 }
 
 .button__container {

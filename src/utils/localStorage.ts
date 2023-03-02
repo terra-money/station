@@ -41,7 +41,7 @@ export const DefaultCustomTokensItem = {
   ],
 }
 export const DefaultDisplayChains = {
-  mainnet: ["osmosis-1", "phoenix-1"],
+  mainnet: ["phoenix-1", "osmosis-1"],
   testnet: ["pisco-1"],
   classic: ["columbus-5"],
 }
@@ -142,7 +142,6 @@ export const useDisplayChains = () => {
   )
   return {
     displayChains: displayChains[networkName],
-    all: displayChains,
     changeDisplayChains,
   }
 }

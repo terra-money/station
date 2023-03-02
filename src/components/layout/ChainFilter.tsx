@@ -5,7 +5,16 @@ import { useTranslation } from "react-i18next"
 import styles from "./ChainFilter.module.scss"
 import { useSavedChain, useDisplayChains } from "utils/localStorage"
 import { isTerraChain } from "utils/chain"
+import { OtherChainsButton } from "components/layout"
 
+type Props = {
+  children: (chain?: string) => React.ReactNode
+  all?: boolean
+  outside?: boolean
+  title?: string
+  className?: string
+  terraOnly?: boolean
+}
 const ChainFilter = ({
   children,
   all,
@@ -13,14 +22,7 @@ const ChainFilter = ({
   title,
   className,
   terraOnly,
-}: {
-  children: (chain?: string) => React.ReactNode
-  all?: boolean
-  outside?: boolean
-  title?: string
-  className?: string
-  terraOnly?: boolean
-}) => {
+}: Props) => {
   const { t } = useTranslation()
   const { savedChain, changeSavedChain } = useSavedChain()
   const network = useNetwork()
@@ -75,11 +77,7 @@ const ChainFilter = ({
               {c.name}
             </button>
           ))}
-          {networks.length > displayChains.length && (
-            <button className={styles.active}>
-              {networks.length - displayChains.length}
-            </button>
-          )}
+          {!terraOnly && <OtherChainsButton />}
         </div>
       </div>
       <div className={styles.content}>{children(selectedChain)}</div>

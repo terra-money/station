@@ -1,7 +1,8 @@
 import { useTranslation } from "react-i18next"
 import SettingsIcon from "@mui/icons-material/Settings"
 import { ReactComponent as BackIcon } from "styles/images/icons/BackButton.svg"
-import { FlexColumn } from "components/layout"
+import ReplayIcon from "@mui/icons-material/Replay"
+import { Flex, FlexColumn } from "components/layout"
 import { sandbox } from "auth/scripts/env"
 import HeaderIconButton from "../components/HeaderIconButton"
 import NetworkSetting from "./NetworkSetting"
@@ -15,7 +16,7 @@ import { useNetwork, useNetworkName } from "data/wallet"
 import { useCurrency } from "data/settings/Currency"
 import { Languages } from "config/lang"
 import { capitalize } from "@mui/material"
-import { useState } from "react"
+import { ReactNode, useState } from "react"
 import styles from "./Preferences.module.scss"
 import SelectTheme from "./SelectTheme"
 import LCDSetting from "./LCDSetting"
@@ -36,6 +37,7 @@ interface SettingsPage {
   tab: string
   value?: string
   disabled?: boolean
+  extra?: ReactNode
 }
 
 const Preferences = () => {
@@ -82,6 +84,7 @@ const Preferences = () => {
       key: "displayChains",
       tab: t("Display chains"),
       value: getDisplayChainsSettingLabel(displayChains, network),
+      extra: <ReplayIcon width={18} height={18} />,
       disabled: false,
     },
     lcd: {
@@ -137,7 +140,7 @@ const Preferences = () => {
     <ModalButton
       title={
         page ? (
-          <div>
+          <>
             <button
               className={styles.back}
               onClick={() =>
@@ -147,7 +150,9 @@ const Preferences = () => {
               <BackIcon width={18} height={18} />
             </button>
             {routes[page].tab}
-          </div>
+            <button className={styles.extra}>{routes[page].extra}</button>
+            <div className={styles.extra}></div>
+          </>
         ) : (
           t("Settings")
         )

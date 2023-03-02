@@ -8,6 +8,7 @@ interface Props {
   inline?: boolean
   padding?: boolean
   small?: boolean
+  disabled?: boolean
   children: (input: string) => ReactNode
 }
 
@@ -18,8 +19,10 @@ const WithSearchInput = ({
   padding,
   small,
   inline,
+  disabled,
 }: Props) => {
   const [input, setInput] = useState("")
+  if (disabled) return <>{children("")}</>
 
   return (
     <Grid gap={gap ?? 20}>

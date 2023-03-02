@@ -1,0 +1,22 @@
+@import "mixins";
+
+.container {
+  overflow-y: scroll;
+
+  button {
+    padding: 6px 12px;
+    width: 100%;
+    @include flex(flex-start);
+    border-radius: var(--border-radius);
+
+    img {
+      width: 18px;
+      height: 18px;
+      margin-right: 8px;
+    }
+
+    &:hover {
+      background-color: var(--card-bg-muted);
+    }
+  }
+}
