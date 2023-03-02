@@ -26,16 +26,16 @@ type Route =
   | {
       path: Path.coin
       denom: string
-      previousPage: Route
+      previusPage: Route
     }
   | {
       path: Path.receive
-      previousPage: Route
+      previusPage: Route
     }
   | {
       path: Path.send
       denom?: string
-      previousPage: Route
+      previusPage: Route
     }
 
 // Handle routing inside Wallet
@@ -51,29 +51,24 @@ export const isWalletBarOpen = atom({
   default: true,
 })
 
-export const walletBarRoute = atom({
-  key: "walletBarRoute",
-  default: { path: Path.wallet } as Route,
-})
-
 const Wallet = () => {
   const [isOpen, setIsOpen] = useRecoilState(isWalletBarOpen)
-  const [route, setRoute] = useRecoilState(walletBarRoute)
+  const [route, setRoute] = useState<Route>({ path: Path.wallet })
 
-  const BackButton = () => {
+  function BackButton() {
     if (route.path === Path.wallet) return null
 
     return (
       <button
         className={styles.back}
-        onClick={() => setRoute(route.previousPage)}
+        onClick={() => setRoute(route.previusPage)}
       >
         <BackIcon width={18} height={18} />
       </button>
     )
   }
 
-  const render = () => {
+  function render() {
     switch (route.path) {
       case Path.wallet:
         return (

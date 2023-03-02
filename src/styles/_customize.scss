@@ -5,7 +5,7 @@
 /* tooltip:default */
 .tippy-box {
   background-color: var(--text);
-  border-radius: var(--border-radius);
+  border-radius: 4px;
   color: var(--card-bg);
   font-size: var(--font-size-small);
 
@@ -15,7 +15,7 @@
 
   ul {
     list-style: initial;
-    padding-left: 24px;
+    padding-left: 12px;
   }
 }
 

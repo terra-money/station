@@ -19,16 +19,36 @@ const SwitchWallet = () => {
   const address = useAddress()
 
   const localWallets = !!(wallets.length || wallet) && (
-    <div>
-      <h1 className={styles.header}>Wallets</h1>
-      <ul className={styles.list}>
-        {wallet && (
-          <li className={styles.listItem}>
-            <AuthButton
-              onClick={() => {}}
-              className={styles.wallet}
-              active={true}
-            >
+    <ul className={styles.list}>
+      {wallet && (
+        <li>
+          <AuthButton
+            onClick={() => {}}
+            className={styles.wallet}
+            active={true}
+          >
+            <Flex gap={4}>
+              {is.multisig(wallet) && <MultisigBadge />}
+              {is.ledger(wallet) &&
+                (wallet.bluetooth ? (
+                  <BluetoothIcon style={{ fontSize: 14 }} />
+                ) : (
+                  <UsbIcon style={{ fontSize: 14 }} />
+                ))}
+              <strong>{"name" in wallet ? wallet.name : "Ledger"}</strong>
+            </Flex>
+
+            {truncate(address)}
+          </AuthButton>
+        </li>
+      )}
+      {wallets
+        .filter((wallet) => wallet.name !== connectedWallet?.name)
+        .map((wallet) => {
+          const { name, lock } = wallet
+          const active = name === connectedWallet?.name
+          const children = (
+            <>
               <Flex gap={4}>
                 {is.multisig(wallet) && <MultisigBadge />}
                 {is.ledger(wallet) &&
@@ -37,66 +57,40 @@ const SwitchWallet = () => {
                   ) : (
                     <UsbIcon style={{ fontSize: 14 }} />
                   ))}
-                <strong>{"name" in wallet ? wallet.name : "Ledger"}</strong>
+                <strong>{name}</strong>
               </Flex>
 
-              {truncate(address)}
-            </AuthButton>
-          </li>
-        )}
-        {wallets
-          .filter((wallet) => wallet.name !== connectedWallet?.name)
-          .map((wallet) => {
-            const { name, lock } = wallet
-            const active = name === connectedWallet?.name
-            const children = (
-              <>
-                <Flex gap={4}>
-                  {is.multisig(wallet) && <MultisigBadge />}
-                  {is.ledger(wallet) &&
-                    (wallet.bluetooth ? (
-                      <BluetoothIcon style={{ fontSize: 14 }} />
-                    ) : (
-                      <UsbIcon style={{ fontSize: 14 }} />
-                    ))}
-                  <strong>{name}</strong>
-                </Flex>
+              {lock ? (
+                <LockOutlinedIcon style={{ fontSize: 14 }} className="muted" />
+              ) : (
+                truncate(
+                  "address" in wallet
+                    ? wallet.address
+                    : addressFromWords(wallet.words["330"])
+                )
+              )}
+            </>
+          )
 
-                {lock ? (
-                  <LockOutlinedIcon
-                    style={{ fontSize: 14 }}
-                    className="muted"
-                  />
-                ) : (
-                  truncate(
-                    "address" in wallet
-                      ? wallet.address
-                      : addressFromWords(wallet.words["330"])
-                  )
-                )}
-              </>
-            )
+          const attrs = { className: styles.wallet, active, children }
 
-            const attrs = { className: styles.wallet, active, children }
-
-            return (
-              <li key={name}>
-                {lock ? (
-                  <AuthButton {...attrs} to={`/auth/unlock/${name}`} />
-                ) : (
-                  <AuthButton
-                    {...attrs}
-                    onClick={() => {
-                      disconnect()
-                      connect(name)
-                    }}
-                  />
-                )}
-              </li>
-            )
-          })}
-      </ul>
-    </div>
+          return (
+            <li key={name}>
+              {lock ? (
+                <AuthButton {...attrs} to={`/auth/unlock/${name}`} />
+              ) : (
+                <AuthButton
+                  {...attrs}
+                  onClick={() => {
+                    disconnect()
+                    connect(name)
+                  }}
+                />
+              )}
+            </li>
+          )
+        })}
+    </ul>
   )
 
   return (

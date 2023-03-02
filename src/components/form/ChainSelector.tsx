@@ -35,8 +35,9 @@ const ChainSelector = ({ chainsList, onChange, value, small }: Props) => {
       <button
         className={styles.selector}
         onClick={(e) => {
+          e.preventDefault()
           e.stopPropagation()
-          if (e.screenX && e.screenY) setOpen((o) => !o) // negate onClick triggered by enter key press
+          setOpen((o) => !o)
         }}
       >
         <span>

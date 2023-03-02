@@ -18,11 +18,7 @@ const CopyIcon = ({ text, className }: Props) => {
         setTimeout(() => setCopied(false), 1500)
       }}
     >
-      {copied ? (
-        <Check style={{ fontSize: 18 }} />
-      ) : (
-        <ContentCopy style={{ fontSize: 18 }} />
-      )}
+      {copied ? <Check fontSize="small" /> : <ContentCopy fontSize="small" />}
     </button>
   )
 }
