@@ -37,10 +37,7 @@ const Read = forwardRef(
 
     const lessThanFloor = fixed && Math.pow(10, -fixed)
     const lessThanFixed =
-      amount &&
-      lessThanFloor &&
-      Number(amount) > 0 &&
-      Number(amount) < lessThanFloor
+      amount && lessThanFloor && amount > 0 && amount < lessThanFloor
 
     const config = { ...props, comma, fixed }
     const [integer, decimal] = readAmount(amount, config).split(".")

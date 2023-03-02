@@ -3,19 +3,12 @@
 .list {
   display: grid;
   gap: 8px;
-  list-style: none !important;
-  padding: 0 !important;
 }
 
 .wallet {
   @include flex(space-between);
   width: 100%;
   padding: 12px 16px;
-}
-
-.header {
-  margin-bottom: 8px;
-  font-size: var(--font-size);
 }
 
 .active {
