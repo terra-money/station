@@ -40,6 +40,7 @@
     "i18next": "^21.8.14",
     "i18next-browser-languagedetector": "^6.1.4",
     "immutability-helper": "^3.1.1",
+    "jest": "^26.6.0",
     "js-base64": "^3.7.2",
     "keccak256": "^1.0.6",
     "lottie-react": "^2.3.1",

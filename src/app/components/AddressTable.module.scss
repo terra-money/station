@@ -15,4 +15,7 @@
 
 .chain .name {
   margin-left: 10px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 80px;
 }

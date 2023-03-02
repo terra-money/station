@@ -115,8 +115,8 @@ const SendPage = () => {
       availableAssets
         .find(({ denom }) => denom === (asset ?? defaultAsset))
         ?.chains.sort((a, b) => {
-          if (networks[a].prefix === "terra") return -1
-          if (networks[b].prefix === "terra") return 1
+          if (networks[a]?.prefix === "terra") return -1
+          if (networks[b]?.prefix === "terra") return 1
           return 0
         }),
     [asset, availableAssets, defaultAsset, networks]

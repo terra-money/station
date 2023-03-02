@@ -15,10 +15,10 @@ const TokenFilters = () => {
   return (
     <Flex gap={20} start>
       <Checkbox onChange={toggleHideNoWhitelist} checked={hideNoWhitelist}>
-        {t("Hide non-whitelisted tokens")}
+        {t("Hide non-whitelisted")}
       </Checkbox>
       <Checkbox onChange={toggleHideLowBal} checked={hideLowBal}>
-        {t("Hide low-balance tokens")}
+        {t("Hide low-balance")}
       </Checkbox>
     </Flex>
   )
