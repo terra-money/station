@@ -68,7 +68,7 @@ const Unbondings = () => {
                 >
                   {title}
                 </TooltipIcon>
-                {total !== -1 && (
+                {total !== 0 && (
                   <span className={styles.view_more}>View More</span>
                 )}
               </div>

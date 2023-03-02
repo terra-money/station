@@ -11,7 +11,6 @@ import is from "../../scripts/is"
 import useAuth from "../../hooks/useAuth"
 import AuthList from "../../components/AuthList"
 import ConnectedWallet from "./ConnectedWallet"
-import { useWallet, WalletStatus } from "@terra-money/wallet-provider"
 
 export const useManageWallet = () => {
   const { t } = useTranslation()
@@ -75,30 +74,10 @@ export const useManageWallet = () => {
     : [toExport, toPassword, toDelete, toSignMultisig, lockWallet]
 }
 
-const useWalletProvider = () => {
-  const { status, disconnect } = useWallet()
-  const navigate = useNavigate()
-  const { t } = useTranslation()
-
-  if (status !== WalletStatus.WALLET_CONNECTED) return null
-
-  return [
-    {
-      onClick: () => {
-        disconnect()
-        navigate("/", { replace: true })
-      },
-      children: t("Disconnect"),
-      icon: <LogoutIcon />,
-    },
-  ]
-}
-
 const ManageWallets = () => {
   const { t } = useTranslation()
   const { available } = useAuth()
   const list = useManageWallet()
-  const providerList = useWalletProvider()
 
   return (
     <Page title={t("Manage wallets")}>
@@ -106,7 +85,6 @@ const ManageWallets = () => {
         <ConnectedWallet>
           {list && <AuthList list={list} />}
           {!!available.length && <AuthList list={available} />}
-          {providerList && <AuthList list={providerList} />}
         </ConnectedWallet>
       </Col>
     </Page>
