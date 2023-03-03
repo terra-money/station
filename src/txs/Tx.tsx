@@ -31,6 +31,10 @@ import { useAddress, useNetwork } from "data/wallet"
 import { isBroadcastingState, latestTxState, useTxInfo } from "data/queries/tx"
 import { useBankBalance, useIsWalletEmpty } from "data/queries/bank"
 import { getShouldTax, useTaxCap, useTaxRate } from "data/queries/treasury"
+import {
+  DEFAULT_GAS_ADJUSTMENT,
+  CLASSIC_DEFAULT_GAS_ADJUSTMENT,
+} from "config/constants"
 
 import { Button, Pre } from "components/general"
 import { Flex, Grid } from "components/layout"
@@ -141,17 +145,17 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const status = !data
     ? Status.LOADING
     : isTxError(data)
-    ? Status.FAILURE
-    : Status.SUCCESS
+      ? Status.FAILURE
+      : Status.SUCCESS
 
   /* taxes */
   const taxParams = useTaxParams()
   const taxes = taxRequired
     ? calcTaxes(
-        coins ?? ([{ input: 0, denom: initialGasDenom }] as CoinInput[]),
-        taxParams,
-        isClassic
-      )
+      coins ?? ([{ input: 0, denom: initialGasDenom }] as CoinInput[]),
+      taxParams,
+      isClassic
+    )
     : undefined
   const shouldTax = getShouldTax(token, isClassic) && taxRequired
   const { data: rate = "0", ...taxRateState } = useTaxRate(!shouldTax)
@@ -160,10 +164,9 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   /* simulation: estimate gas */
   const simulationTx = estimationTxValues && createTx(estimationTxValues)
-  const gasAdjustmentSetting = isClassic
-    ? SettingKey.ClassicGasAdjustment
-    : SettingKey.GasAdjustment
-  const gasAdjustment = getLocalSetting<number>(gasAdjustmentSetting)
+  const gasAdjustment = isClassic
+    ? CLASSIC_DEFAULT_GAS_ADJUSTMENT
+    : DEFAULT_GAS_ADJUSTMENT
   const key = {
     address,
     network,
@@ -232,8 +235,8 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const max = !gasFee.amount
     ? undefined
     : isDenom(token)
-    ? getNativeMax()
-    : balance
+      ? getNativeMax()
+      : balance
 
   /* (effect): Call the onChangeMax function whenever the max changes */
   useEffect(() => {
@@ -269,16 +272,16 @@ function Tx<TxValues>(props: Props<TxValues>) {
     passwordRequired && !password
       ? t("Enter password")
       : taxState.isLoading
-      ? t("Loading tax data...")
-      : taxState.error
-      ? t("Failed to load tax data")
-      : estimatedGasState.isLoading
-      ? t("Estimating fee...")
-      : estimatedGasState.error
-      ? t("Fee estimation failed")
-      : isBroadcasting
-      ? t("Broadcasting a tx...")
-      : props.disabled || ""
+        ? t("Loading tax data...")
+        : taxState.error
+          ? t("Failed to load tax data")
+          : estimatedGasState.isLoading
+            ? t("Estimating fee...")
+            : estimatedGasState.error
+              ? t("Fee estimation failed")
+              : isBroadcasting
+                ? t("Broadcasting a tx...")
+                : props.disabled || ""
 
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<Error>()
@@ -630,10 +633,10 @@ function Tx<TxValues>(props: Props<TxValues>) {
     connectedWallet?.connectType === ConnectType.READONLY
       ? t("Wallet is connected as read-only mode")
       : !availableGasDenoms.length
-      ? t("Insufficient balance to pay transaction fee")
-      : isWalletEmpty
-      ? t("Coins required to post transactions")
-      : ""
+        ? t("Insufficient balance to pay transaction fee")
+        : isWalletEmpty
+          ? t("Coins required to post transactions")
+          : ""
 
   const submitButton = (
     <>
@@ -763,24 +766,24 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   const modal = doneSignBytes
     ? {
-        title: t("SignBytes Complete"),
-        children: (
-          <Pre height={120} normal break>
-            Byte data signing is completed.
-          </Pre>
-        ),
-      }
+      title: t("SignBytes Complete"),
+      children: (
+        <Pre height={120} normal break>
+          Byte data signing is completed.
+        </Pre>
+      ),
+    }
     : !error
-    ? undefined
-    : {
+      ? undefined
+      : {
         title:
           error instanceof UserDenied
             ? t("User denied")
             : error instanceof CreateTxFailed
-            ? t("Failed to create tx")
-            : error instanceof TxFailed
-            ? t("Tx failed")
-            : t("Error"),
+              ? t("Failed to create tx")
+              : error instanceof TxFailed
+                ? t("Tx failed")
+                : t("Error"),
         children:
           error instanceof UserDenied ? null : (
             <Pre height={120} normal break>
@@ -813,9 +816,9 @@ function Tx<TxValues>(props: Props<TxValues>) {
           onRequestClose={
             doneSignBytes
               ? () => {
-                  setDoneSignBytes(false)
-                  onPost?.()
-                }
+                setDoneSignBytes(false)
+                onPost?.()
+              }
               : () => setError(undefined)
           }
           isOpen
