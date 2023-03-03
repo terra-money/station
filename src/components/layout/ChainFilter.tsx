@@ -4,7 +4,7 @@ import { useState, memo } from "react"
 import { useTranslation } from "react-i18next"
 import styles from "./ChainFilter.module.scss"
 import { useSavedChain, useDisplayChains } from "utils/localStorage"
-import { isTerraChain } from "utils/chain"
+import { isTerraChain, isOsmosisChain } from "utils/chain"
 import { OtherChainsButton } from "components/layout"
 
 type Props = {
@@ -29,7 +29,13 @@ const ChainFilter = ({
   const { displayChains } = useDisplayChains()
 
   const networks = Object.values(network)
-    .sort((a, b) => (a.name === "Terra" ? -1 : b.name === "Terra" ? 1 : 0))
+    .sort((a, b) =>
+      isOsmosisChain(a.prefix) || isTerraChain(a.prefix)
+        ? -1
+        : b.name === "Terra"
+        ? 1
+        : 0
+    )
     .filter((n) => (terraOnly ? isTerraChain(n.prefix) : true))
     .filter((n) => displayChains.includes(n.chainID))
 

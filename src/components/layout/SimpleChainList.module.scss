@@ -1,13 +1,46 @@
 @import "mixins";
 
-.container {
-  overflow-y: scroll;
+.options {
+  position: absolute;
+  width: 140px;
+  padding: 8px 0;
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  z-index: 10;
+  max-height: 240px;
+  box-shadow: 0px 5px 7px 0px var(--wallet-shadow-color);
 
-  button {
+  .options__container {
+    margin-left: 6px;
+    height: 100%;
+    overflow-y: scroll;
+    max-height: 125px;
+    margin-top: 0;
+
+    &::-webkit-scrollbar {
+      width: 12px;
+      display: block;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 16px;
+      background-color: var(--button-default-bg);
+      border: 2px solid var(--card-bg);
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
+  }
+
+  .button {
     padding: 6px 12px;
     width: 100%;
     @include flex(flex-start);
-    border-radius: var(--border-radius);
+
+    .active {
+      border: red 2px solid;
+    }
 
     img {
       width: 18px;

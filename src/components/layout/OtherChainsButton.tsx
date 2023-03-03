@@ -2,6 +2,7 @@ import { useNetwork } from "data/wallet"
 import { useState } from "react"
 import { useDisplayChains } from "utils/localStorage"
 import { SimpleChainList } from "components/layout"
+import { useBankBalance } from "data/queries/bank"
 
 const OtherChainsButton = () => {
   const network = useNetwork()

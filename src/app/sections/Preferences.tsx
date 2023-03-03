@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next"
 import SettingsIcon from "@mui/icons-material/Settings"
 import { ReactComponent as BackIcon } from "styles/images/icons/BackButton.svg"
-import ReplayIcon from "@mui/icons-material/Replay"
-import { Flex, FlexColumn } from "components/layout"
+import { FlexColumn } from "components/layout"
+import { ChainButton } from "components/general"
 import { sandbox } from "auth/scripts/env"
 import HeaderIconButton from "../components/HeaderIconButton"
 import NetworkSetting from "./NetworkSetting"
@@ -84,7 +84,7 @@ const Preferences = () => {
       key: "displayChains",
       tab: t("Display chains"),
       value: getDisplayChainsSettingLabel(displayChains, network),
-      extra: <ReplayIcon width={18} height={18} />,
+      extra: <ChainButton />,
       disabled: false,
     },
     lcd: {
@@ -150,8 +150,7 @@ const Preferences = () => {
               <BackIcon width={18} height={18} />
             </button>
             {routes[page].tab}
-            <button className={styles.extra}>{routes[page].extra}</button>
-            <div className={styles.extra}></div>
+            <div className={styles.extra}>{routes[page].extra}</div>
           </>
         ) : (
           t("Settings")

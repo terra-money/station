@@ -6,6 +6,7 @@ import themes from "styles/themes/themes"
 import { useCallback } from "react"
 import { atom, useRecoilState } from "recoil"
 import { useNetworkName } from "data/wallet"
+import { sortChainsToFront } from "./chain"
 
 export enum SettingKey {
   Theme = "Theme",
