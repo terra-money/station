@@ -2,7 +2,7 @@ import { useQuery } from "react-query"
 import axios from "axios"
 import { RefetchOptions } from "data/query"
 
-const baseURL = "https://terra2-routing-api.tfm.dev"
+const baseURL = "https://api-terra2.tfm.com"
 export const TFM_ROUTER =
   "terra19hz374h6ruwtzrnm8ytkae782uv79h9yt9tuytgvt94t26c4793qnfg7vn"
 
