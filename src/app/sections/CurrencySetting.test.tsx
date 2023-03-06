@@ -3,12 +3,13 @@ import { render, screen } from "@testing-library/react"
 import CurrencySetting from "./CurrencySetting"
 import { RecoilRoot } from "recoil"
 import { NetworksProvider } from "../InitNetworks"
+import renderer from "react-test-renderer"
+
+type TokenFilter = <T>(network: Record<string, T>) => Record<string, T>
+const networks = {} as jest.Mocked<InterchainNetworks>
+const mockedTokenFilter = {} as jest.Mocked<TokenFilter>
 
 function renderComponent() {
-  type TokenFilter = <T>(network: Record<string, T>) => Record<string, T>
-  const networks = {} as jest.Mocked<InterchainNetworks>
-  const mockedTokenFilter = {} as jest.Mocked<TokenFilter>
-
   return render(
     <NetworksProvider
       value={{
@@ -71,5 +72,24 @@ describe("Currency Setting loads", () => {
 
     const buttons = screen.getAllByRole("button")
     expect(buttons).toHaveLength(3)
+  })
+
+  it("matches snapshot", () => {
+    const tree = renderer
+      .create(
+        <NetworksProvider
+          value={{
+            networks: networks,
+            filterEnabledNetworks: mockedTokenFilter,
+            filterDisabledNetworks: mockedTokenFilter,
+          }}
+        >
+          <RecoilRoot>
+            <CurrencySetting />
+          </RecoilRoot>
+        </NetworksProvider>
+      )
+      .toJSON()
+    expect(tree).toMatchSnapshot()
   })
 })
