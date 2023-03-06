@@ -1,0 +1,120 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Links match snapshot 1`] = `
+<div
+  className="links"
+>
+  <div
+    className="tutorial"
+  >
+    <a
+      className="link"
+      href="https://docs.terra.money/learn/station/download/station-desktop.html"
+      onClick={[Function]}
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      <svg
+        aria-hidden={true}
+        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+        data-testid="DescriptionIcon"
+        focusable="false"
+        style={
+          Object {
+            "fontSize": 18,
+          }
+        }
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"
+        />
+      </svg>
+      Documentation
+    </a>
+  </div>
+  <div
+    className="community"
+  >
+    <div
+      className="flex start wrapper menu"
+      style={
+        Object {
+          "gap": undefined,
+        }
+      }
+    >
+      <a
+        className="icon"
+        href="https://medium.com/terra-money"
+        onClick={[Function]}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <svg
+          height={18}
+          width={18}
+        >
+          Medium.svg
+        </svg>
+      </a>
+      <a
+        className="icon"
+        href="https://terra.sc/discord"
+        onClick={[Function]}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <svg
+          height={18}
+          width={18}
+        >
+          Discord.svg
+        </svg>
+      </a>
+      <a
+        className="icon"
+        href="https://t.me/TerraNetworkLobby"
+        onClick={[Function]}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <svg
+          height={18}
+          width={18}
+        >
+          Telegram.svg
+        </svg>
+      </a>
+      <a
+        className="icon"
+        href="https://twitter.com/terra_money"
+        onClick={[Function]}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <svg
+          height={18}
+          width={18}
+        >
+          Twitter.svg
+        </svg>
+      </a>
+      <a
+        className="icon"
+        href="https://github.com/terra-money"
+        onClick={[Function]}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <svg
+          height={18}
+          width={18}
+        >
+          Github.svg
+        </svg>
+      </a>
+    </div>
+  </div>
+</div>
+`;
