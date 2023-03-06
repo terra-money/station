@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next"
 import { useDisplayChains } from "utils/localStorage"
 import { useBankBalance } from "data/queries/bank"
 import styles from "./ChainButton.module.scss"
-import { sortChainsToFront } from "utils/chain"
 
 interface Props {
   //   text: string

@@ -6,6 +6,7 @@ import styles from "./ChainFilter.module.scss"
 import { useSavedChain, useDisplayChains } from "utils/localStorage"
 import { isTerraChain, isOsmosisChain } from "utils/chain"
 import { OtherChainsButton } from "components/layout"
+import { useSortedDisplayChains, useSortDisplayChains } from "utils/chain"
 
 type Props = {
   children: (chain?: string) => React.ReactNode
@@ -27,6 +28,9 @@ const ChainFilter = ({
   const { savedChain, changeSavedChain } = useSavedChain()
   const network = useNetwork()
   const { displayChains } = useDisplayChains()
+  const displayNetworks = useSortedDisplayChains()
+  const x = useSortDisplayChains(Object.values(network))
+  console.log("x", x)
 
   const networks = Object.values(network)
     .sort((a, b) =>
@@ -38,6 +42,7 @@ const ChainFilter = ({
     )
     .filter((n) => (terraOnly ? isTerraChain(n.prefix) : true))
     .filter((n) => displayChains.includes(n.chainID))
+    .filter((n) => displayNetworks.includes(n.chainID))
 
   const initNetwork =
     networks.find((n) => n.chainID === savedChain) ?? networks[0]
