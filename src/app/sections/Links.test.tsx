@@ -4,16 +4,6 @@ import { RecoilRoot } from "recoil"
 import { NetworksProvider } from "../InitNetworks"
 import renderer from "react-test-renderer"
 
-jest.mock("../../data/wallet", () => {
-  const useAddress = () => {
-    return "terra111111111111111111111111111111111111111"
-  }
-
-  return {
-    useAddress: useAddress,
-  }
-})
-
 it("Links match snapshot", () => {
   type TokenFilter = <T>(network: Record<string, T>) => Record<string, T>
   const networks = {} as jest.Mocked<InterchainNetworks>
