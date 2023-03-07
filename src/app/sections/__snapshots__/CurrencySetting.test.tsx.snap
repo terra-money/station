@@ -1,145 +1,181 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Currency Setting loads matches snapshot 1`] = `
-<div
-  className="grid"
-  style={
-    Object {
-      "gap": 8,
-      "gridTemplateColumns": undefined,
-      "gridTemplateRows": undefined,
-    }
-  }
->
+exports[`CurrencySetting component matches snapshots matches original component 1`] = `
+<DocumentFragment>
   <div
-    className="wrapper search search__small"
-    style={
-      Object {
-        "margin": 0,
-      }
-    }
+    class="grid"
+    style="gap: 8px;"
   >
-    <input
-      autoComplete="off"
-      autoFocus={true}
-      className="input input__small"
-      inputMode="search"
-      onChange={[Function]}
-      small={true}
-      value=""
-    />
-    <svg
-      aria-hidden={true}
-      className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium icon css-i4bv87-MuiSvgIcon-root"
-      data-testid="SearchIcon"
-      focusable="false"
-      viewBox="0 0 24 24"
+    <div
+      class="wrapper search search__small"
+      style="margin: 0px;"
     >
-      <path
-        d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+      <input
+        autocomplete="off"
+        class="input input__small"
+        inputmode="search"
+        value=""
       />
-    </svg>
-  </div>
-  <div
-    className="wrapper"
-  >
-    <section
-      className="selector"
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium icon css-i4bv87-MuiSvgIcon-root"
+        data-testid="SearchIcon"
+        focusable="false"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+        />
+      </svg>
+    </div>
+    <div
+      class="wrapper"
     >
-      <div
-        className="accordion"
+      <section
+        class="selector"
       >
-        <button
-          className="item"
-          onClick={[Function]}
-        >
-          <div
-            className="icons_container"
-          >
-            <div>
-              ¥ - Japanese Yen
-            </div>
-          </div>
-          <div
-            className="flex track"
-            style={
-              Object {
-                "gap": undefined,
-              }
-            }
-          >
-            <span
-              className="indicator"
-            />
-          </div>
-        </button>
         <div
-          className="content"
-        />
-      </div>
-      <div
-        className="accordion"
-      >
-        <button
-          className="item"
-          onClick={[Function]}
+          class="accordion"
         >
-          <div
-            className="icons_container"
+          <button
+            class="item"
           >
-            <div>
-              ₦ - Nigerian Naira
+            <div
+              class="icons_container"
+            >
+              <div>
+                ¥ - Japanese Yen
+              </div>
             </div>
-          </div>
+            <div
+              class="flex track"
+            >
+              <span
+                class="indicator"
+              />
+            </div>
+          </button>
           <div
-            className="flex track"
-            style={
-              Object {
-                "gap": undefined,
-              }
-            }
-          >
-            <span
-              className="indicator"
-            />
-          </div>
-        </button>
+            class="content"
+          />
+        </div>
         <div
-          className="content"
-        />
-      </div>
-      <div
-        className="accordion"
-      >
-        <button
-          className="item"
-          onClick={[Function]}
+          class="accordion"
         >
-          <div
-            className="icons_container"
+          <button
+            class="item"
           >
-            <div>
-              $ - United States Dollar
+            <div
+              class="icons_container"
+            >
+              <div>
+                ₦ - Nigerian Naira
+              </div>
             </div>
-          </div>
+            <div
+              class="flex track"
+            >
+              <span
+                class="indicator"
+              />
+            </div>
+          </button>
           <div
-            className="flex track"
-            style={
-              Object {
-                "gap": undefined,
-              }
-            }
-          >
-            <span
-              className="indicator__checked"
-            />
-          </div>
-        </button>
+            class="content"
+          />
+        </div>
         <div
-          className="content"
-        />
-      </div>
-    </section>
+          class="accordion"
+        >
+          <button
+            class="item"
+          >
+            <div
+              class="icons_container"
+            >
+              <div>
+                $ - United States Dollar
+              </div>
+            </div>
+            <div
+              class="flex track"
+            >
+              <span
+                class="indicator__checked"
+              />
+            </div>
+          </button>
+          <div
+            class="content"
+          />
+        </div>
+      </section>
+    </div>
   </div>
-</div>
+</DocumentFragment>
+`;
+
+exports[`CurrencySetting component matches snapshots matches user augmented component 1`] = `
+<DocumentFragment>
+  <div
+    class="grid"
+    style="gap: 8px;"
+  >
+    <div
+      class="wrapper search search__small"
+      style="margin: 0px;"
+    >
+      <input
+        autocomplete="off"
+        class="input input__small"
+        inputmode="search"
+        value="JPY"
+      />
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium icon css-i4bv87-MuiSvgIcon-root"
+        data-testid="SearchIcon"
+        focusable="false"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+        />
+      </svg>
+    </div>
+    <div
+      class="wrapper"
+    >
+      <section
+        class="selector"
+      >
+        <div
+          class="accordion"
+        >
+          <button
+            class="item"
+          >
+            <div
+              class="icons_container"
+            >
+              <div>
+                ¥ - Japanese Yen
+              </div>
+            </div>
+            <div
+              class="flex track"
+            >
+              <span
+                class="indicator__checked"
+              />
+            </div>
+          </button>
+          <div
+            class="content"
+          />
+        </div>
+      </section>
+    </div>
+  </div>
+</DocumentFragment>
 `;

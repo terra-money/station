@@ -3,13 +3,13 @@ import { render, screen } from "@testing-library/react"
 import CurrencySetting from "./CurrencySetting"
 import { RecoilRoot } from "recoil"
 import { NetworksProvider } from "../InitNetworks"
-import renderer from "react-test-renderer"
-
-type TokenFilter = <T>(network: Record<string, T>) => Record<string, T>
-const networks = {} as jest.Mocked<InterchainNetworks>
-const mockedTokenFilter = {} as jest.Mocked<TokenFilter>
+import user from "@testing-library/user-event"
 
 function renderComponent() {
+  type TokenFilter = <T>(network: Record<string, T>) => Record<string, T>
+  const networks = {} as jest.Mocked<InterchainNetworks>
+  const mockedTokenFilter = {} as jest.Mocked<TokenFilter>
+
   return render(
     <NetworksProvider
       value={{
@@ -61,35 +61,25 @@ const supportedFiatListMock = [
   },
 ]
 
-describe("Currency Setting loads", () => {
-  it("only currencies in supported fiat list display", () => {
-    renderComponent()
-
-    for (let { name, symbol } of supportedFiatListMock) {
-      let currencyDisplay = screen.getByText(`${symbol} - ${name}`)
-      expect(currencyDisplay).toBeInTheDocument()
-    }
-
-    const buttons = screen.getAllByRole("button")
-    expect(buttons).toHaveLength(3)
+describe("CurrencySetting component matches snapshots", () => {
+  it("matches original component", () => {
+    const { asFragment } = renderComponent()
+    expect(asFragment()).toMatchSnapshot()
   })
 
-  it("matches snapshot", () => {
-    const tree = renderer
-      .create(
-        <NetworksProvider
-          value={{
-            networks: networks,
-            filterEnabledNetworks: mockedTokenFilter,
-            filterDisabledNetworks: mockedTokenFilter,
-          }}
-        >
-          <RecoilRoot>
-            <CurrencySetting />
-          </RecoilRoot>
-        </NetworksProvider>
-      )
-      .toJSON()
-    expect(tree).toMatchSnapshot()
+  it("matches user augmented component", async () => {
+    const { asFragment } = renderComponent()
+
+    // Search for JPY currency in search bar.
+    const searchBar = screen.getByRole("textbox")
+    await user.click(searchBar)
+    await user.keyboard("JPY")
+
+    // Ensure only JPY button shows and click to change currency.
+    const jpyButton = screen.getByRole("button")
+    await user.click(jpyButton)
+
+    // Ensure snapshot matches user augmented component.
+    expect(asFragment()).toMatchSnapshot()
   })
 })
