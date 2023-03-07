@@ -3,10 +3,11 @@ import { useNetwork } from "data/wallet"
 import { useState, memo } from "react"
 import { useTranslation } from "react-i18next"
 import styles from "./ChainFilter.module.scss"
-import { useSavedChain, useDisplayChains } from "utils/localStorage"
-import { isTerraChain, isOsmosisChain } from "utils/chain"
+import { useSavedChain } from "utils/localStorage"
+import { isTerraChain } from "utils/chain"
 import { OtherChainsButton } from "components/layout"
-import { useSortedDisplayChains, useSortDisplayChains } from "utils/chain"
+import { useSortedDisplayChains } from "utils/chain"
+import { DISPLAY_CHAINS_MAX } from "config/constants"
 
 type Props = {
   children: (chain?: string) => React.ReactNode
@@ -27,22 +28,16 @@ const ChainFilter = ({
   const { t } = useTranslation()
   const { savedChain, changeSavedChain } = useSavedChain()
   const network = useNetwork()
-  const { displayChains } = useDisplayChains()
-  const displayNetworks = useSortedDisplayChains()
-  const x = useSortDisplayChains(Object.values(network))
-  console.log("x", x)
+  const sortedDisplayChains = useSortedDisplayChains()
 
-  const networks = Object.values(network)
-    .sort((a, b) =>
-      isOsmosisChain(a.prefix) || isTerraChain(a.prefix)
-        ? -1
-        : b.name === "Terra"
-        ? 1
-        : 0
-    )
+  const networks = sortedDisplayChains
+    .map((id) => network[id])
     .filter((n) => (terraOnly ? isTerraChain(n.prefix) : true))
-    .filter((n) => displayChains.includes(n.chainID))
-    .filter((n) => displayNetworks.includes(n.chainID))
+
+  const networksToShow = networks.slice(0, DISPLAY_CHAINS_MAX)
+  const otherNetworks = Object.values(network).filter(
+    (n) => !networksToShow.includes(n)
+  )
 
   const initNetwork =
     networks.find((n) => n.chainID === savedChain) ?? networks[0]
@@ -76,7 +71,7 @@ const ChainFilter = ({
               {t("All")}
             </button>
           )}
-          {networks.map((c) => (
+          {networksToShow.map((c) => (
             <button
               key={c.chainID}
               onClick={() => handleSetChain(c.chainID)}
@@ -88,7 +83,7 @@ const ChainFilter = ({
               {c.name}
             </button>
           ))}
-          {!terraOnly && <OtherChainsButton />}
+          {!terraOnly && <OtherChainsButton list={otherNetworks} />}
         </div>
       </div>
       <div className={styles.content}>{children(selectedChain)}</div>

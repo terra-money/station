@@ -1,17 +1,12 @@
-import { useNetwork } from "data/wallet"
 import { useState } from "react"
-import { useDisplayChains } from "utils/localStorage"
 import { SimpleChainList } from "components/layout"
 
-const OtherChainsButton = () => {
-  const network = useNetwork()
-  const { displayChains } = useDisplayChains()
-  const [showChainSelector, setShowChainSelector] = useState(false)
+type Props = {
+  list: InterchainNetwork[]
+}
 
-  const otherChains = Object.entries(network).filter(
-    ([k, v]) => !displayChains.includes(v.chainID)
-  )
-  const list = otherChains.map((item) => item[1])
+const OtherChainsButton = ({ list }: Props) => {
+  const [showChainSelector, setShowChainSelector] = useState(false)
 
   const openDropDown = () => {
     setShowChainSelector(true)
@@ -22,7 +17,7 @@ const OtherChainsButton = () => {
 
   return (
     <div>
-      <button onClick={() => openDropDown()}>+ {otherChains.length}</button>
+      <button onClick={() => openDropDown()}>+ {list.length}</button>
       {showChainSelector && (
         <SimpleChainList onClick={openSettings} list={list} />
       )}

@@ -1,6 +1,7 @@
 import { useBankBalance } from "data/queries/bank"
 import { useNativeDenoms } from "data/token"
 import { useExchangeRates } from "data/queries/coingecko"
+import { useDisplayChains } from "./localStorage"
 
 type ChainId = string
 type ChainPrefix = string
@@ -40,7 +41,9 @@ export const useChainsByAssetValue = () => {
 
 export const useSortedDisplayChains = () => {
   const chains = useChainsByAssetValue()
+  const { displayChains } = useDisplayChains()
   const sorted = chains
+    .filter((c) => displayChains.includes(c.chain))
     .filter((c) => isTerraChain(c.chain))
     .concat(
       chains.filter((c) => isOsmosisChain(c.chain)),
