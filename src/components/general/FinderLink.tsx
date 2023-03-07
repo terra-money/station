@@ -64,21 +64,33 @@ const FinderLink = forwardRef(
       ? "validator"
       : "address"
 
-    const link =
-      chainName === "mars"
-        ? [
-            networkName === "testnet" ? MARS_TEST_EXPLORER : MARS_EXPLORER,
-            marsPath,
-            value,
-          ].join("/")
-        : chainName === "terra" || chainName === "classic"
-        ? [FINDER, networkName, finderPath, value].join("/")
-        : [MINTSCAN, chainName, interchainPath, value].join("/")
+    let link
+
+    switch (chainName) {
+      case "mars":
+        switch (networkName) {
+          case "testnet":
+            link = [MARS_TEST_EXPLORER, marsPath, value]
+            break
+          default:
+            link = [MARS_EXPLORER, marsPath, value]
+            break
+        }
+        break
+      case "terra classic":
+      case "terra":
+        link = [FINDER, networkName, finderPath, value]
+        break
+      default:
+        link = [MINTSCAN, chainName, interchainPath, value]
+        break
+    }
 
     const className = classNames(attrs.className, styles.link)
+    const href = link.join("/")
 
     return (
-      <ExternalLink {...attrs} href={link} className={className} ref={ref} icon>
+      <ExternalLink {...attrs} href={href} className={className} ref={ref} icon>
         {short && typeof children === "string" ? truncate(children) : children}
       </ExternalLink>
     )
