@@ -1,6 +1,6 @@
 import React from "react"
 import { render, screen } from "@testing-library/react"
-import CurrencySetting from "./CurrencySetting"
+import CurrencySetting from "../sections/CurrencySetting"
 import { RecoilRoot } from "recoil"
 import { NetworksProvider } from "../InitNetworks"
 import user from "@testing-library/user-event"

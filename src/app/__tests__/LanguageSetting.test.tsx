@@ -1,6 +1,6 @@
 import React from "react"
 import { render, screen } from "@testing-library/react"
-import LanguageSetting from "./LanguageSetting"
+import LanguageSetting from "../sections/LanguageSetting"
 import { NetworksProvider } from "app/InitNetworks"
 
 type TokenFilter = <T>(network: Record<string, T>) => Record<string, T>
