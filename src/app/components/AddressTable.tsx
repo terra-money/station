@@ -40,7 +40,11 @@ const AddressTable = (props: Props) => {
     .sort((a) => (coins.some(({ chain }) => chain === a.id) ? -1 : 1))
 
   return (
-    <WithSearchInput gap={10} placeholder={t("Search for a chain...")}>
+    <WithSearchInput
+      gap={10}
+      placeholder={t("Search for a chain...")}
+      className={styles.grid__override}
+    >
       {(keyword: string) => (
         <Table
           className={className}

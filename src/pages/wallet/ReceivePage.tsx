@@ -8,7 +8,7 @@ const ReceivePage = () => {
   return (
     <section className={styles.receive}>
       <h1>{capitalize(t("receive"))}</h1>
-      <AddressTable />
+      <AddressTable className={styles.address__table} />
     </section>
   )
 }
