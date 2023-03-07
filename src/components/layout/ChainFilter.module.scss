@@ -20,7 +20,7 @@
       flex-wrap: wrap;
     }
 
-    button {
+    .button {
       @include flex(center);
       gap: 0.5rem;
       min-width: 4rem;

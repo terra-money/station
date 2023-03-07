@@ -140,10 +140,25 @@ export const useDisplayChains = () => {
     },
     [setDisplayChains, networkName, displayChains]
   )
+  const insertDisplayChain = useCallback(
+    (newChain: string) => {
+      const currentChains = [...displayChains[networkName]]
+      currentChains.splice(3, 0, newChain)
+      const newDisplayChains = {
+        ...displayChains,
+        [networkName]: currentChains,
+      }
+      setLocalSetting(SettingKey.DisplayChains, newDisplayChains)
+      setDisplayChains(newDisplayChains)
+    },
+    [setDisplayChains, networkName, displayChains]
+  )
+
   const chains = displayChains[networkName]
   return {
     displayChains: chains,
     changeDisplayChains,
+    insertDisplayChain,
   }
 }
 
