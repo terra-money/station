@@ -9,6 +9,7 @@ interface Props {
   padding?: boolean
   small?: boolean
   children: (input: string) => ReactNode
+  className?: string
 }
 
 const WithSearchInput = ({
@@ -18,11 +19,12 @@ const WithSearchInput = ({
   padding,
   small,
   inline,
+  className,
 }: Props) => {
   const [input, setInput] = useState("")
 
   return (
-    <Grid gap={gap ?? 20}>
+    <Grid gap={gap ?? 20} className={className}>
       <SearchInput
         value={input}
         small={small}

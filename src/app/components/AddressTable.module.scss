@@ -1,5 +1,12 @@
 @import "mixins";
 
+.grid__override {
+  height: calc(100% - 56px);
+  position: relative;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+}
+
 .address {
   @include flex(space-between);
 }

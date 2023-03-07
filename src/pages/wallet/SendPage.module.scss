@@ -16,6 +16,7 @@
   padding: 20px;
   margin-top: 0.2rem;
   padding-bottom: 40px;
+  padding-top: 4.5rem;
   max-width: var(--wallet-width);
   box-sizing: border-box;
   overflow-y: auto;
@@ -51,8 +52,19 @@
     margin-top: 1.2rem;
   }
   h1 {
-    margin-left: 2rem;
+    margin-top: 1.45rem;
+    margin-bottom: 1.45rem;
+    margin-left: 3rem;
   }
+}
+
+.form__header__wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--card-bg-muted);
+  z-index: 9;
 }
 
 .destination {

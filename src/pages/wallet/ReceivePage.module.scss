@@ -8,6 +8,8 @@
   max-width: var(--wallet-width);
   box-sizing: border-box;
   overflow-y: auto;
+  height: 100%;
+  position: relative;
 
   h1 {
     font-size: 18pt;
@@ -37,4 +39,9 @@
     background-color: var(--button-primary-bg);
     color: var(--button-primary-text);
   }
+}
+
+.address__table {
+  max-height: 655px;
+  align-items: start;
 }
