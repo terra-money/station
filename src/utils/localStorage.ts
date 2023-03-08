@@ -24,6 +24,7 @@ export enum SettingKey {
   EnabledNetworks = "EnabledNetworks",
   NetworkCacheTime = "NetworkCacheTime",
   DisplayChains = "DisplayChains",
+  SelectedDisplayChain = "SelectedDisplayChain",
 }
 
 const isSystemDarkMode =
@@ -44,6 +45,7 @@ export const DefaultDisplayChains = {
   mainnet: ["phoenix-1", "osmosis-1"],
   testnet: ["pisco-1"],
   classic: ["columbus-5"],
+  userSelected: [""],
 }
 
 export const DefaultCustomTokens = { mainnet: DefaultCustomTokensItem }
@@ -69,6 +71,7 @@ export const DefaultSettings = {
   [SettingKey.EnabledNetworks]: { time: 0, networks: [] as string[] },
   [SettingKey.CustomLCD]: {},
   [SettingKey.DisplayChains]: DefaultDisplayChains,
+  [SettingKey.SelectedDisplayChain]: "",
 }
 
 export const getLocalSetting = <T>(key: SettingKey): T => {
@@ -102,6 +105,10 @@ export const savedChainState = atom({
   key: "savedNetwork",
   default: getLocalSetting(SettingKey.Chain) as string | undefined,
 })
+export const selectedDisplayChainState = atom({
+  key: "savedNetwork",
+  default: getLocalSetting(SettingKey.Chain) as string,
+})
 
 export const customLCDState = atom({
   key: "customLCD",
@@ -129,6 +136,20 @@ export const useSavedChain = () => {
   return { savedChain, changeSavedChain }
 }
 
+export const useSelectedDisplayChain = () => {
+  const [selectedDisplayChain, setSelectedChain] = useRecoilState(
+    selectedDisplayChainState
+  )
+  const changeSelectedDisplayChain = useCallback(
+    (newChain: string) => {
+      setLocalSetting(SettingKey.SelectedDisplayChain, newChain)
+      setSelectedChain(newChain)
+    },
+    [setSelectedChain]
+  )
+  return { selectedDisplayChain, changeSelectedDisplayChain }
+}
+
 export const useDisplayChains = () => {
   const networkName = useNetworkName()
   const [displayChains, setDisplayChains] = useRecoilState(displayChainsState)
@@ -142,21 +163,16 @@ export const useDisplayChains = () => {
   )
   const insertDisplayChain = useCallback(
     (newChain: string) => {
-      const currentChains = [...displayChains[networkName]]
-      currentChains.splice(3, 0, newChain)
-      const newDisplayChains = {
-        ...displayChains,
-        [networkName]: currentChains,
-      }
+      const newDisplayChains = { ...displayChains, userSelected: [newChain] }
       setLocalSetting(SettingKey.DisplayChains, newDisplayChains)
       setDisplayChains(newDisplayChains)
     },
-    [setDisplayChains, networkName, displayChains]
+    [setDisplayChains, displayChains]
   )
-
-  const chains = displayChains[networkName]
   return {
-    displayChains: chains,
+    all: displayChains,
+    displayChains: displayChains[networkName],
+    userSelected: displayChains.userSelected,
     changeDisplayChains,
     insertDisplayChain,
   }

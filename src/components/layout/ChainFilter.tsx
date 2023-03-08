@@ -8,7 +8,7 @@ import { isTerraChain } from "utils/chain"
 import { OtherChainsButton } from "components/layout"
 import { useSortedDisplayChains } from "utils/chain"
 import { DISPLAY_CHAINS_MAX } from "config/constants"
-import { useDisplayChains } from "utils/localStorage"
+import { useSelectedDisplayChain } from "utils/localStorage"
 
 type Props = {
   children: (chain?: string) => React.ReactNode
@@ -32,6 +32,7 @@ const ChainFilter = ({
   const { t } = useTranslation()
   const { savedChain, changeSavedChain } = useSavedChain()
   const network = useNetwork()
+  const { selectedDisplayChain } = useSelectedDisplayChain()
   const sortedDisplayChains = useSortedDisplayChains()
 
   const networks = useMemo(
@@ -39,10 +40,18 @@ const ChainFilter = ({
       sortedDisplayChains
         .map((id) => network[id])
         .filter((n) => (terraOnly ? isTerraChain(n.prefix) : true)),
-    [network, sortedDisplayChains, terraOnly]
+    [network, sortedDisplayChains, selectedDisplayChain, terraOnly]
   )
 
-  const networksToShow = networks.slice(0, DISPLAY_CHAINS_MAX)
+  const networksToShow = useMemo(() => {
+    if (selectedDisplayChain) {
+      return [
+        ...networks.slice(0, DISPLAY_CHAINS_MAX - 1),
+        network[selectedDisplayChain],
+      ]
+    }
+    return networks.slice(0, DISPLAY_CHAINS_MAX)
+  }, [networks, selectedDisplayChain])
 
   const otherNetworks = useMemo(
     () => Object.values(network).filter((n) => !networksToShow.includes(n)),

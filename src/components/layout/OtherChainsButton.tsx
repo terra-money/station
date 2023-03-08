@@ -5,6 +5,7 @@ import { Popover } from "components/display"
 import { PopoverNone } from "app/components"
 import styles from "./OtherChainsButton.module.scss"
 import { useDisplayChains } from "utils/localStorage"
+import { useSavedChain, useSelectedDisplayChain } from "utils/localStorage"
 
 type Props = {
   list: InterchainNetwork[]
@@ -13,11 +14,12 @@ type Props = {
 const OtherChainsButton = ({ list }: Props) => {
   const [key, setKey] = useState(0)
   const { insertDisplayChain } = useDisplayChains()
+  const { savedChain, changeSavedChain } = useSavedChain()
+  const { changeSelectedDisplayChain } = useSelectedDisplayChain()
   const closePopover = () => setKey((key) => key + 1)
 
   const onClick = (chainID: string) => {
-    insertDisplayChain(chainID)
-
+    changeSelectedDisplayChain(chainID)
     closePopover()
   }
 
