@@ -13,8 +13,6 @@ type Props = {
 
 const OtherChainsButton = ({ list }: Props) => {
   const [key, setKey] = useState(0)
-  const { insertDisplayChain } = useDisplayChains()
-  const { savedChain, changeSavedChain } = useSavedChain()
   const { changeSelectedDisplayChain } = useSelectedDisplayChain()
   const closePopover = () => setKey((key) => key + 1)
 

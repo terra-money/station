@@ -11,9 +11,6 @@ const cx = classNames.bind(styles)
 
 const SimpleChainList = ({ list, onClick }: Props) => {
   const activeChains = useSortedDisplayChains()
-  // const sortedList = list.sort((a, b) => { activeChains.includes(a.chainID) ? -1 : 1 })
-
-  // const activeList = list.filter(({ chainID }) => activeChains.includes(chainID))
   return (
     <div className={styles.options}>
       {list.map(({ chainID, name, icon }) => (

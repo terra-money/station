@@ -45,7 +45,6 @@ export const DefaultDisplayChains = {
   mainnet: ["phoenix-1", "osmosis-1"],
   testnet: ["pisco-1"],
   classic: ["columbus-5"],
-  userSelected: [""],
 }
 
 export const DefaultCustomTokens = { mainnet: DefaultCustomTokensItem }
@@ -106,8 +105,8 @@ export const savedChainState = atom({
   default: getLocalSetting(SettingKey.Chain) as string | undefined,
 })
 export const selectedDisplayChainState = atom({
-  key: "savedNetwork",
-  default: getLocalSetting(SettingKey.Chain) as string,
+  key: "selectedDisplayChain",
+  default: getLocalSetting(SettingKey.SelectedDisplayChain) as string,
 })
 
 export const customLCDState = atom({
@@ -161,20 +160,10 @@ export const useDisplayChains = () => {
     },
     [setDisplayChains, networkName, displayChains]
   )
-  const insertDisplayChain = useCallback(
-    (newChain: string) => {
-      const newDisplayChains = { ...displayChains, userSelected: [newChain] }
-      setLocalSetting(SettingKey.DisplayChains, newDisplayChains)
-      setDisplayChains(newDisplayChains)
-    },
-    [setDisplayChains, displayChains]
-  )
   return {
     all: displayChains,
     displayChains: displayChains[networkName],
-    userSelected: displayChains.userSelected,
     changeDisplayChains,
-    insertDisplayChain,
   }
 }
 

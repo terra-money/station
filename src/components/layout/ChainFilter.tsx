@@ -35,23 +35,29 @@ const ChainFilter = ({
   const { selectedDisplayChain } = useSelectedDisplayChain()
   const sortedDisplayChains = useSortedDisplayChains()
 
+  console.log("selectedDisplayChain", selectedDisplayChain)
+
   const networks = useMemo(
     () =>
       sortedDisplayChains
         .map((id) => network[id])
         .filter((n) => (terraOnly ? isTerraChain(n.prefix) : true)),
-    [network, sortedDisplayChains, selectedDisplayChain, terraOnly]
+    [network, sortedDisplayChains, terraOnly]
   )
+  console.log("networks", networks)
 
   const networksToShow = useMemo(() => {
+    let toShow
     if (selectedDisplayChain) {
-      return [
+      toShow = [
         ...networks.slice(0, DISPLAY_CHAINS_MAX - 1),
         network[selectedDisplayChain],
       ]
+    } else {
+      toShow = networks.slice(0, DISPLAY_CHAINS_MAX)
     }
-    return networks.slice(0, DISPLAY_CHAINS_MAX)
-  }, [networks, selectedDisplayChain])
+    return Array.from(new Set(toShow))
+  }, [networks, network, selectedDisplayChain])
 
   const otherNetworks = useMemo(
     () => Object.values(network).filter((n) => !networksToShow.includes(n)),
