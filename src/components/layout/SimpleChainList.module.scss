@@ -11,10 +11,10 @@
 
   .button {
     padding: 6px 12px;
+    @include flex(flex-start, center);
     width: 100%;
     border-radius: none !important;
     color: var(--text-muted);
-    @include flex(center-start);
 
     &.active {
       color: var(--text);

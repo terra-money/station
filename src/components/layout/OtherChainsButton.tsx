@@ -27,6 +27,7 @@ const OtherChainsButton = ({ list }: Props) => {
       theme="none"
       maxWidth={200}
       key={key}
+      placement="bottom"
       content={<SimpleChainList onClick={onClick} list={list} />}
     >
       <button className={styles.button}>+ {list.length}</button>

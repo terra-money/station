@@ -51,7 +51,7 @@ const StakedCard = (props: PropsWithChildren<Props>) => {
         </Flex>
       ) : (
         <Grid style={{ alignItems: "end", height: "100%" }}>
-          No {cardName} on selected chain.
+          None on selected chain
         </Grid>
       )}
     </Card>
