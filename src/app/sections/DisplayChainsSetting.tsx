@@ -2,6 +2,8 @@ import WithSearchInput from "pages/custom/WithSearchInput"
 import { useDisplayChains } from "utils/localStorage"
 import SettingsSelectorToggle from "components/layout/SettingsSelectorToggle"
 import { useNetwork } from "data/wallet"
+import { ChainButton } from "components/general"
+
 import { isTerraChain } from "utils/chain"
 
 const DisplayChainsSetting = () => {
@@ -16,7 +18,11 @@ const DisplayChainsSetting = () => {
   }
 
   return (
-    <WithSearchInput placeholder="Search for chains..." gap={8}>
+    <WithSearchInput
+      placeholder="Search for chains..."
+      extra={<ChainButton />}
+      gap={8}
+    >
       {(input) => (
         <SettingsSelectorToggle
           onChange={onChange}

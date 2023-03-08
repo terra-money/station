@@ -40,14 +40,15 @@ const ChainFilter = ({
     () =>
       sortedDisplayChains
         .map((id) => network[id])
-        .filter((n) => displayChains.includes(n.chainID))
-        .filter((n) => (terraOnly ? isTerraChain(n.prefix) : true)),
-    [network, sortedDisplayChains, displayChains, terraOnly]
+        .filter((n) => displayChains.includes(n.chainID)),
+    [network, sortedDisplayChains, displayChains]
   )
 
   const networksToShow = useMemo(() => {
     let toShow
-    if (selectedDisplayChain) {
+    if (terraOnly) {
+      toShow = Object.values(network).filter((n) => isTerraChain(n.prefix))
+    } else if (selectedDisplayChain) {
       toShow = [
         ...networks.slice(0, DISPLAY_CHAINS_MAX - 1),
         network[selectedDisplayChain],
@@ -56,7 +57,7 @@ const ChainFilter = ({
       toShow = networks.slice(0, DISPLAY_CHAINS_MAX)
     }
     return Array.from(new Set(toShow))
-  }, [networks, network, selectedDisplayChain])
+  }, [networks, network, terraOnly, selectedDisplayChain])
 
   const otherNetworks = useMemo(
     () => Object.values(network).filter((n) => !networksToShow.includes(n)),
@@ -108,7 +109,12 @@ const ChainFilter = ({
               {c.name}
             </button>
           ))}
-          {!terraOnly && <OtherChainsButton list={otherNetworks} />}
+          {!terraOnly && (
+            <OtherChainsButton
+              handleSetChain={handleSetChain}
+              list={otherNetworks}
+            />
+          )}
         </div>
       </div>
       <div className={styles.content}>{children(selectedChain)}</div>

@@ -2,7 +2,6 @@ import { useTranslation } from "react-i18next"
 import SettingsIcon from "@mui/icons-material/Settings"
 import { ReactComponent as BackIcon } from "styles/images/icons/BackButton.svg"
 import { FlexColumn } from "components/layout"
-import { ChainButton } from "components/general"
 import { sandbox } from "auth/scripts/env"
 import HeaderIconButton from "../components/HeaderIconButton"
 import NetworkSetting from "./NetworkSetting"
@@ -43,7 +42,7 @@ interface SettingsPage {
 const Preferences = () => {
   const { t } = useTranslation()
   const connectedWallet = useWallet()
-  const [page, setPage] = useState<Routes | null>(null)
+  const [page, setPage] = useState<Routes | null>()
 
   const { i18n } = useTranslation()
   const { id: currencyId } = useCurrency()
@@ -51,6 +50,10 @@ const Preferences = () => {
   const network = useNetwork()
   const { name } = useTheme()
   const { displayChains } = useDisplayChains()
+
+  setTimeout(() => {
+    setPage("displayChains")
+  }, 3000)
 
   const routes: Record<Routes, SettingsPage> = {
     network: {
@@ -84,7 +87,6 @@ const Preferences = () => {
       key: "displayChains",
       tab: t("Display chains"),
       value: getDisplayChainsSettingLabel(displayChains, network),
-      extra: <ChainButton />,
       disabled: false,
     },
     lcd: {
@@ -150,7 +152,6 @@ const Preferences = () => {
               <BackIcon width={18} height={18} />
             </button>
             {routes[page].tab}
-            <div className={styles.extra}>{routes[page].extra}</div>
           </>
         ) : (
           t("Settings")

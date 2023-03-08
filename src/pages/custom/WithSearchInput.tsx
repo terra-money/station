@@ -1,6 +1,7 @@
 import { ReactNode, useState } from "react"
 import { Grid } from "components/layout"
 import { SearchInput } from "components/form"
+import { ChainButton } from "components/general"
 
 interface Props {
   gap?: number
@@ -9,6 +10,7 @@ interface Props {
   padding?: boolean
   small?: boolean
   disabled?: boolean
+  extra?: ReactNode
   children: (input: string) => ReactNode
 }
 
@@ -19,10 +21,9 @@ const WithSearchInput = ({
   padding,
   small,
   inline,
-  disabled,
+  extra,
 }: Props) => {
   const [input, setInput] = useState("")
-  if (disabled) return <>{children("")}</>
 
   return (
     <Grid gap={gap ?? 20}>
@@ -33,6 +34,7 @@ const WithSearchInput = ({
         placeholder={placeholder}
         onChange={(e) => setInput(e.target.value)}
         autoFocus
+        extra={extra}
         padding={padding}
       />
       {children(input)}

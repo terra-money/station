@@ -71,6 +71,7 @@ export const SearchInput = forwardRef(
       padding?: boolean
       small?: boolean
       inline?: boolean
+      extra?: ReactNode
     },
     ref: ForwardedRef<HTMLInputElement>
   ) => {
@@ -96,6 +97,7 @@ export const SearchInput = forwardRef(
         />
 
         <SearchIcon className={styles.icon} />
+        {attrs.extra}
       </div>
     )
   }
