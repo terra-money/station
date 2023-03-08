@@ -1,5 +1,5 @@
 import React from "react"
-import Links from "./Links"
+import Links from "../sections/Links"
 import { RecoilRoot } from "recoil"
 import { NetworksProvider } from "../InitNetworks"
 import { render } from "@testing-library/react"
