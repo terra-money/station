@@ -164,6 +164,7 @@ const useAuth = () => {
     if (!wallet) throw new Error("Wallet is not defined")
 
     const accountInfo = await lcd.auth.accountInfo(address)
+    if (!accountInfo) throw new Error("Couldn't retrieve account info")
 
     const doc = new SignDoc(
       chainID,
