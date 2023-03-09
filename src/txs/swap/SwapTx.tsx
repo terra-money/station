@@ -4,7 +4,6 @@ import { Card, ChainFilter, Page } from "components/layout"
 import { Wrong } from "components/feedback"
 import TFMSwapContext from "./TFMSwapContext"
 import TFMSwapForm from "./TFMSwapForm"
-import TFMPoweredBy from "./TFMPoweredBy"
 import { ExternalLink } from "components/general"
 
 // The sequence below is required before rendering the Swap form:
@@ -38,7 +37,7 @@ const SwapTx = () => {
   }
 
   return (
-    <Page title={t("Swap")} small extra={<TFMPoweredBy />}>
+    <Page title={t("Swap")} small>
       <TFMSwapContext>
         <ChainFilter
           outside
