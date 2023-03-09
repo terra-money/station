@@ -4,8 +4,17 @@ import {
 } from "config/constants"
 import themes from "styles/themes/themes"
 import { useCallback } from "react"
-import { atom, useRecoilState } from "recoil"
+import { useRecoilState } from "recoil"
 import { useNetworkName } from "data/wallet"
+import {
+  hideNoWhitelistState,
+  hideLowBalTokenState,
+  savedChainState,
+  selectedDisplayChainState,
+  customLCDState,
+  displayChainsState,
+  devModeState,
+} from "utils/stores"
 
 export enum SettingKey {
   Theme = "Theme",
@@ -25,6 +34,7 @@ export enum SettingKey {
   NetworkCacheTime = "NetworkCacheTime",
   DisplayChains = "DisplayChains",
   SelectedDisplayChain = "SelectedDisplayChain",
+  DevMode = "DevMode",
 }
 
 const isSystemDarkMode =
@@ -64,6 +74,7 @@ export const DefaultSettings = {
   [SettingKey.MinimumValue]: 0,
   [SettingKey.NetworkCacheTime]: 0,
   [SettingKey.HideNonWhitelistTokens]: true,
+  [SettingKey.DevMode]: false,
   [SettingKey.HideLowBalTokens]: true,
   [SettingKey.WithdrawAs]: "",
   [SettingKey.Chain]: "",
@@ -89,39 +100,6 @@ export const setLocalSetting = <T>(key: SettingKey, value: T) => {
   const item = typeof value === "string" ? value : JSON.stringify(value)
   localStorage.setItem(key, item)
 }
-
-export const hideNoWhitelistState = atom({
-  key: "hideNoWhitelistState",
-  default: !!getLocalSetting(SettingKey.HideNonWhitelistTokens),
-})
-
-export const hideLowBalTokenState = atom({
-  key: "hideLowBalTokenState",
-  default: !!getLocalSetting(SettingKey.HideLowBalTokens),
-})
-
-export const savedChainState = atom({
-  key: "savedNetwork",
-  default: getLocalSetting(SettingKey.Chain) as string | undefined,
-})
-export const selectedDisplayChainState = atom({
-  key: "selectedDisplayChain",
-  default: getLocalSetting(SettingKey.SelectedDisplayChain) as string,
-})
-
-export const customLCDState = atom({
-  key: "customLCD",
-  default: getLocalSetting<Record<string, string | undefined>>(
-    SettingKey.CustomLCD
-  ),
-})
-export const displayChainsState = atom({
-  key: "displayChains",
-  default: getLocalSetting(SettingKey.DisplayChains) as Record<
-    string,
-    string[]
-  >,
-})
 
 export const useSavedChain = () => {
   const [savedChain, setSavedChain] = useRecoilState(savedChainState)
@@ -177,19 +155,36 @@ export const useCustomLCDs = () => {
   return { customLCDs, changeCustomLCDs }
 }
 
+const toggleSetting = (
+  key: SettingKey,
+  state: boolean,
+  setState: (state: boolean) => void
+) => {
+  setLocalSetting(key, !state)
+  setState(!state)
+}
+
+export const useDevMode = () => {
+  const [devMode, setDevMode] = useRecoilState(devModeState)
+  const changeDevMode = () =>
+    toggleSetting(SettingKey.DevMode, devMode, setDevMode)
+
+  return { changeDevMode, devMode }
+}
+
 export const useTokenFilters = () => {
   const [hideNoWhitelist, setHideNoWhitelist] =
     useRecoilState(hideNoWhitelistState)
-  const toggleHideNoWhitelist = useCallback(() => {
-    setLocalSetting(SettingKey.HideNonWhitelistTokens, !hideNoWhitelist)
-    setHideNoWhitelist(!hideNoWhitelist)
-  }, [hideNoWhitelist, setHideNoWhitelist])
+  const toggleHideNoWhitelist = () =>
+    toggleSetting(
+      SettingKey.HideNonWhitelistTokens,
+      hideNoWhitelist,
+      setHideNoWhitelist
+    )
 
   const [hideLowBal, setHideLowBal] = useRecoilState(hideLowBalTokenState)
-  const toggleHideLowBal = useCallback(() => {
-    setLocalSetting(SettingKey.HideLowBalTokens, !hideLowBal)
-    setHideLowBal(!hideLowBal)
-  }, [hideLowBal, setHideLowBal])
+  const toggleHideLowBal = () =>
+    toggleSetting(SettingKey.HideLowBalTokens, hideLowBal, setHideLowBal)
 
   return {
     hideNoWhitelist,
