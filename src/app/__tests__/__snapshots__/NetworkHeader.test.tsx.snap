@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NetworkHeader component matches snapshots matches component classic 1`] = `
+<DocumentFragment>
+  <div
+    class="component"
+  >
+    CLASSIC
+  </div>
+</DocumentFragment>
+`;
+
+exports[`NetworkHeader component matches snapshots matches component localterra 1`] = `
+<DocumentFragment>
+  <div
+    class="component"
+  >
+    LOCALTERRA
+  </div>
+</DocumentFragment>
+`;
+
+exports[`NetworkHeader component matches snapshots matches component mainnet 1`] = `<DocumentFragment />`;
+
+exports[`NetworkHeader component matches snapshots matches component testnet 1`] = `
+<DocumentFragment>
+  <div
+    class="component"
+  >
+    TESTNET
+  </div>
+</DocumentFragment>
+`;
