@@ -26,24 +26,20 @@ function renderComponent() {
 }
 
 jest.mock("../../data/queries/coingecko", () => {
-  // Retain functionality of other exports.
-  const actual = jest.requireActual("../../data/queries/coingecko")
-
   // Replace functionality of useSupportedFiat.
   const useSupportedFiatMock = () => {
     return {
-      data: supportedFiatListMock,
+      data: mockSupportedFiatList,
     }
   }
 
   return {
-    ...actual,
     useSupportedFiat: useSupportedFiatMock,
   }
 })
 
 // Mocked supported fiats list.
-const supportedFiatListMock = [
+const mockSupportedFiatList = [
   {
     id: "JPY",
     name: "Japanese Yen",
