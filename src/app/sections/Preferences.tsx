@@ -51,10 +51,6 @@ const Preferences = () => {
   const { name } = useTheme()
   const { displayChains } = useDisplayChains()
 
-  setTimeout(() => {
-    setPage("displayChains")
-  }, 3000)
-
   const routes: Record<Routes, SettingsPage> = {
     network: {
       key: "network",
