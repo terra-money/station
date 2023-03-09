@@ -1,4 +1,5 @@
-import { getLocalSetting, SettingKey } from "./localStorage"
+import { getLocalSetting } from "utils/localStorage"
+import { SettingKey } from "utils/localStorage"
 import { atom } from "recoil"
 
 export const hideNoWhitelistState = atom({

@@ -1,7 +1,7 @@
 import { useBankBalance } from "data/queries/bank"
 import { useNativeDenoms } from "data/token"
 import { useExchangeRates } from "data/queries/coingecko"
-import { useDisplayChains } from "./localStorage"
+import { useDisplayChains } from "./localStorage/hooks"
 
 type ChainId = string
 type ChainPrefix = string
