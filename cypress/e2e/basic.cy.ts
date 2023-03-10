@@ -1,8 +1,7 @@
 describe("Station", () => {
   beforeEach(() => {
     cy.visit("/");
-    cy.get('[data-id="welcome-confirm"]').click();
-    cy.get(".Wallet_close__1lQWy").click();
+    cy.getClass('Wallet_close').first().click();
   });
 
   it("Home page loads and displays the user's LUNA balance", () => {
@@ -11,9 +10,9 @@ describe("Station", () => {
   });
 
   it("Wallet should be collapsible", () => {
-    cy.get(".Wallet_wallet__2ftYw.false").should("not.exist");
-    cy.get(".Wallet_close__1lQWy").click();
-    cy.get(".Wallet_wallet__2ftYw.false").should("exist");
+    cy.getClass("Wallet_wallet__closed").should("exist");
+    cy.getClass('Wallet_close').click();
+    cy.getClass("Wallet_wallet__closed").should("not.exist");
   });
 
   it("Send page loads", () => {
