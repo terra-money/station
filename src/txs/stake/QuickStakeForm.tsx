@@ -113,8 +113,8 @@ const QuickStakeForm = (props: Props) => {
   )
 
   const token = action === QuickStakeAction.DELEGATE ? baseAsset : ""
-
   const tx = {
+    decimals: readNativeDenom(token)?.decimals,
     token,
     amount,
     balance,
