@@ -38,6 +38,7 @@ const DisplayChainsSetting = () => {
               value: chainID,
               selected: displayChains.includes(chainID),
               label: network[chainID].name,
+              icon: network[chainID].icon,
             }))
             .sort((a, b) => {
               if (isTerraChain(a.value) !== isTerraChain(b.value))
