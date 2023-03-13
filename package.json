@@ -5,6 +5,11 @@
   "author": "Terra <engineering@terra.money> (https://terra.money)",
   "repository": "github:terra-money/station",
   "license": "MIT",
+  "jest": {
+    "testMatch": [
+      "**/__tests__/*.[jt]s?(x)"
+    ]
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
