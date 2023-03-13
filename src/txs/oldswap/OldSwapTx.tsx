@@ -1,8 +1,14 @@
 import { useTranslation } from "react-i18next"
-import { Page, Card, ChainFilter } from "components/layout"
-import { Wrong } from "components/feedback"
-import { ExternalLink } from "components/general"
 import { useNetworkName } from "data/wallet"
+import { Card, ChainFilter, Page } from "components/layout"
+import { Wrong } from "components/feedback"
+import TFMSwapContext from "./TFMSwapContext"
+import TFMSwapForm from "./TFMSwapForm"
+import { ExternalLink } from "components/general"
+
+// The sequence below is required before rendering the Swap form:
+// 1. `SwapContext` - Complete the network request related to swap.
+// 2. `SwapSingleContext` - Complete the network request not related to multiple swap
 
 const SwapTx = () => {
   const { t } = useTranslation()
@@ -35,7 +41,15 @@ const SwapTx = () => {
 
   return (
     <Page title={t("Swap")} small>
-      <ChainFilter outside>{(chainID) => <div>{chainID}</div>}</ChainFilter>
+      <TFMSwapContext>
+        <ChainFilter
+          outside
+          title={"Select a chain to perform swaps on"}
+          terraOnly
+        >
+          {(chainID) => <TFMSwapForm chainID={chainID ?? ""} />}
+        </ChainFilter>
+      </TFMSwapContext>
     </Page>
   )
 }

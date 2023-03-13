@@ -20,6 +20,7 @@ import ProposalDetails from "pages/gov/ProposalDetails"
 
 /* txs */
 import TransferCW721Tx from "txs/wasm/TransferCW721Tx"
+import OldSwap from "txs/oldswap/OldSwapTx"
 import SwapTx from "txs/swap/SwapTx"
 import StakeTx from "txs/stake/StakeTx"
 import WithdrawRewards from "txs/stake/WithdrawRewards"
@@ -68,6 +69,12 @@ export const useNav = () => {
       path: "/",
       element: <SwapTx />,
       title: t("Swap"),
+      icon: <SwapIcon {...ICON_SIZE} />,
+    },
+    {
+      path: "/oldswap",
+      element: <OldSwap />,
+      title: t("Old Swap"),
       icon: <SwapIcon {...ICON_SIZE} />,
     },
     {
