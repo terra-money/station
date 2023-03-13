@@ -11,7 +11,9 @@
 //
 //
 // -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
+Cypress.Commands.add('getClass' as any, (match) => { 
+    return cy.get(`[class*="${match}"]`);
+})
 //
 //
 // -- This is a child command --
