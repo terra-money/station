@@ -90,7 +90,7 @@ const Preferences = () => {
     },
     devMode: {
       key: "devMode",
-      tab: t("Developer Mode"),
+      tab: t("Developer Tools"),
       value: devMode ? "On" : "Off",
       disabled: false,
     },

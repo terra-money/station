@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react"
-import { useTranslation } from "react-i18next"
 import { SettingKey } from "utils/localStorage"
 import { getLocalSetting, setLocalSetting } from "utils/localStorage"
-import { Card, Page } from "components/layout"
 import { FormItem, Input } from "components/form"
 
-const Settings = () => {
-  const { t } = useTranslation()
+const GasAdjustment = () => {
   const [input, setInput] = useState(
     String(getLocalSetting(SettingKey.GasAdjustment))
   )
@@ -17,14 +14,10 @@ const Settings = () => {
   }, [input])
 
   return (
-    <Page title={t("Settings")} small>
-      <Card>
-        <FormItem label="Gas adjustment">
-          <Input value={input} onChange={(e) => setInput(e.target.value)} />
-        </FormItem>
-      </Card>
-    </Page>
+    <FormItem style={{ width: "100%" }} label="Gas adjustment">
+      <Input value={input} onChange={(e) => setInput(e.target.value)} />
+    </FormItem>
   )
 }
 
-export default Settings
+export default GasAdjustment
