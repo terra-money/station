@@ -205,6 +205,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
     queryKeys: [queryKey.gov.proposals],
     chain: chain ?? "",
     gasAdjustment: 1.5,
+    isTaxable: false
   }
 
   const render = () => {

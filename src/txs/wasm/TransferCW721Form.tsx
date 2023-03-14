@@ -111,6 +111,7 @@ const TransferCW721Form = ({ contract, id }: Props) => {
       ],
     ],
     chain: chainID,
+    isTaxable: true
   }
 
   const renderResolvedAddress = () => {

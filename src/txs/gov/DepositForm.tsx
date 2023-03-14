@@ -75,6 +75,7 @@ const DepositForm = () => {
     onChangeMax,
     queryKeys: [[queryKey.gov.deposits, id]],
     chain,
+    isTaxable: false
   }
 
   return (

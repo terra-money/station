@@ -311,6 +311,7 @@ const SendPage = () => {
     onChangeMax,
     onSuccess: () => reset(),
     taxRequired: true,
+    isTaxable: true, 
     queryKeys: [queryKey.bank.balances, queryKey.bank.balance],
     gasAdjustment:
       getChainIDFromAddress(addresses?.[chain ?? ""], networks) !== chain &&

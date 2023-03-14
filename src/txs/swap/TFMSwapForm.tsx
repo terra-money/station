@@ -208,6 +208,7 @@ const TFMSwapForm = ({ chainID }: { chainID: string }) => {
         { balance: address },
       ]),
     chain: chainID,
+    isTaxable: true
   }
 
   const disabled = isFetching ? t("Simulating...") : false

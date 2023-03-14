@@ -127,6 +127,7 @@ const QuickStakeForm = (props: Props) => {
       queryKey.distribution.rewards,
     ],
     chain: chainID,
+    isTaxable: false
   }
 
   return (

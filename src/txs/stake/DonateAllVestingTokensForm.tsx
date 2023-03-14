@@ -32,6 +32,7 @@ const DonateAllVestingTokensForm = ({ account }: { account: Account }) => {
     estimationTxValues,
     createTx,
     chain: chainID,
+    isTaxable: true
   }
 
   return (

@@ -82,7 +82,7 @@ interface RenderProps<TxValues> {
 
 function Tx<TxValues>(props: Props<TxValues>) {
   const { token, decimals, amount, balance, chain } = props
-  const { estimationTxValues, createTx, gasAdjustment: txGasAdjustment } = props
+  const { estimationTxValues, createTx, gasAdjustment: txGasAdjustment,isTaxable } = props
   const { children, onChangeMax } = props
   const { onPost, redirectAfterTx, queryKeys, onSuccess } = props
 
@@ -193,7 +193,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   /* tax */
   const taxAmount =
-    token && amount && shouldTax
+    token && amount && shouldTax && isTaxable
       ? calcMinimumTaxAmount(amount, { rate: taxRate, cap: taxCap })
       : undefined
 

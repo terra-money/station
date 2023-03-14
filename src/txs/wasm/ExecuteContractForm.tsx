@@ -79,6 +79,7 @@ const ExecuteContractForm = () => {
       [queryKey.wasm.contractQuery, contract, { tokens: { owner: address } }],
     ],
     chain: chainID,
+    isTaxable: true
   }
 
   const length = fields.length

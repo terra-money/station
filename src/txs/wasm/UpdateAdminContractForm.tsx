@@ -42,6 +42,7 @@ const UpdateAdminContractForm = ({ contract }: { contract: AccAddress }) => {
     estimationTxValues,
     createTx,
     chain: chainID,
+    isTaxable: false
   }
 
   return (

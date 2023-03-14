@@ -38,6 +38,7 @@ const WithdrawCommissionForm = () => {
     estimationTxValues,
     createTx,
     chain: chainID,
+    isTaxable: false
   }
 
   /* render */

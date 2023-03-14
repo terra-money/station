@@ -47,6 +47,7 @@ const StoreCodeForm = ({ chainID }: { chainID: string }) => {
     estimationTxValues,
     createTx,
     chain: chainID,
+    isTaxable: false
   }
 
   return (

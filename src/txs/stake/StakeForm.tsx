@@ -136,6 +136,7 @@ const StakeForm = (props: Props) => {
       queryKey.distribution.rewards,
     ],
     chain: chainID,
+    isTaxable: false
   }
 
   return (
