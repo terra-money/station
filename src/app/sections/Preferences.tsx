@@ -20,9 +20,9 @@ import styles from "./Preferences.module.scss"
 import SelectTheme from "./SelectTheme"
 import LCDSetting from "./LCDSetting"
 import { useTheme } from "data/settings/Theme"
-import { useDisplayChains, useDevMode } from "utils/localStorage"
+import { useDisplayChains } from "utils/localStorage"
 import { getDisplayChainsSettingLabel } from "data/queries/chains"
-import DevModeSetting from "./DevModeSetting"
+import AdvancedSettings from "./AdvancedSettings"
 
 type Routes =
   | "network"
@@ -31,7 +31,7 @@ type Routes =
   | "theme"
   | "lcd"
   | "displayChains"
-  | "devMode"
+  | "advanced"
 
 interface SettingsPage {
   key: Routes
@@ -45,7 +45,6 @@ const Preferences = () => {
   const { t } = useTranslation()
   const connectedWallet = useWallet()
   const [page, setPage] = useState<Routes | null>()
-  const { devMode } = useDevMode()
 
   const { i18n } = useTranslation()
   const { id: currencyId } = useCurrency()
@@ -88,10 +87,10 @@ const Preferences = () => {
       value: getDisplayChainsSettingLabel(displayChains, network),
       disabled: false,
     },
-    devMode: {
-      key: "devMode",
-      tab: t("Developer Tools"),
-      value: devMode ? "On" : "Off",
+    advanced: {
+      key: "advanced",
+      tab: t("Advanced"),
+      value: "",
       disabled: false,
     },
     lcd: {
@@ -125,8 +124,8 @@ const Preferences = () => {
         return <LCDSetting />
       case "displayChains":
         return <DisplayChainsSetting />
-      case "devMode":
-        return <DevModeSetting />
+      case "advanced":
+        return <AdvancedSettings />
       default:
         return (
           <FlexColumn gap={8}>
