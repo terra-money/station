@@ -2,7 +2,7 @@ import React from "react"
 import Proposals from "pages/gov/Proposals"
 import { render } from "@testing-library/react"
 import { MemoryRouter } from "react-router-dom"
-import { mockProposals, mockNetworks } from "./mocks/Proposals.mock"
+import { mockProposals, mockNetworks } from "./__mocks__/Proposals.mock"
 import { useQuery } from "react-query"
 import { RecoilRoot } from "recoil"
 
