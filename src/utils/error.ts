@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios"
 
 const getErrorMessage = (
-  error?: Error | AxiosError | unknown
+  error?: Error | AxiosError | object | unknown
 ): string | undefined => {
   if (!error) return
 
@@ -11,7 +11,7 @@ const getErrorMessage = (
   if (error instanceof Error) return error.message
 }
 
-const isError = (error?: Error | AxiosError | unknown): boolean => {
+const isError = (error?: Error | AxiosError | object | unknown): boolean => {
   if (
     !error ||
     (Object.getPrototypeOf(error) === Object.prototype &&
