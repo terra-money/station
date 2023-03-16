@@ -6,13 +6,15 @@ import DevModeTooltip from "./DevModeTooltip"
 
 const AdvancedSettings = () => {
   const { devMode, changeDevMode } = useDevMode()
-  const options = [{ value: "devMode", selected: devMode, label: "Dev Mode" }]
+  const options = [
+    { value: "devMode", selected: devMode, label: "Developer Mode" },
+  ]
 
   return (
     <FlexColumn gap={10}>
       <SettingsSelectorToggle
         onChange={changeDevMode}
-        extra={<TooltipIcon content={<DevModeTooltip />} placement="bottom" />}
+        extra={<TooltipIcon content={<DevModeTooltip />} />}
         options={options}
       />
       <GasAdjustment />
