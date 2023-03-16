@@ -1,6 +1,6 @@
 import { PropsWithChildren, ReactNode, useState } from "react"
 import LinearProgress from "@mui/material/LinearProgress"
-import { getErrorMessage } from "utils/error"
+import { getErrorMessage, isError } from "utils/error"
 import useTimeout from "utils/hooks/useTimeout"
 import { Card } from "../layout"
 import Wrong from "./Wrong"
@@ -37,7 +37,7 @@ export const WithFetching = (props: WithFetchingProps) => {
             sx={{ position: "absolute" /* to overwrite */ }}
           />
         ) : undefined,
-        error ? <Wrong>{getErrorMessage(error)}</Wrong> : undefined
+        isError(error) ? <Wrong>{getErrorMessage(error)}</Wrong> : undefined
       )}
     </>
   )
