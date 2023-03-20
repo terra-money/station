@@ -7,7 +7,6 @@ import { useSavedChain } from "utils/localStorage"
 import { isTerraChain } from "utils/chain"
 import { OtherChainsButton } from "components/layout"
 import { useSortedDisplayChains } from "utils/chain"
-import { DISPLAY_CHAINS_MAX } from "config/constants"
 import { useSelectedDisplayChain, useDisplayChains } from "utils/localStorage"
 
 type Props = {
@@ -35,7 +34,8 @@ const ChainFilter = ({
   const ref = useRef<HTMLDivElement>(null)
   const network = useNetwork()
   const { displayChains } = useDisplayChains()
-  const { selectedDisplayChain } = useSelectedDisplayChain()
+  const { selectedDisplayChain, changeSelectedDisplayChain } =
+    useSelectedDisplayChain()
   const sortedDisplayChains = useSortedDisplayChains()
 
   useEffect(() => {
@@ -48,29 +48,77 @@ const ChainFilter = ({
     return () => window.removeEventListener("resize", getwidth)
   }, [])
 
-  const displayChainMax = useMemo(() => {
-    return Math.floor(width / 100) || DISPLAY_CHAINS_MAX
-  }, [width])
-
   const networks = useMemo(
     () =>
       sortedDisplayChains
         .map((id) => network[id])
-        .filter((n) => displayChains.includes(n.chainID)),
+        .filter((n) => displayChains.includes(n?.chainID)),
     [network, sortedDisplayChains, displayChains]
   )
 
+  const getUIWidth = (networkName: string) => {
+    const container = document.createElement("button")
+    container.style.gap = "0.5rem"
+    container.style.minWidth = "4rem"
+    container.style.border = "var(--border-width) solid var(--card-border)"
+    container.style.borderRadius = "1rem"
+    container.style.padding = "0.1rem 1rem"
+    container.style.color = "var(--text-muted)"
+    container.style.boxShadow = "inset 0px 0px 0 0.5px var(--card-border)"
+    container.style.opacity = "0.75"
+    container.innerHTML = networkName
+
+    ref.current?.appendChild(container)
+    const textWidth = container.offsetWidth
+    ref.current?.removeChild(container)
+
+    const insideGap = 8 // gap: 0.5rem;
+    const imageWidth = 18 // likely max width of image
+    const outsideGap = 6.4 // gap: 0.4rem;
+    const fullWidth = textWidth + insideGap + outsideGap + imageWidth
+    return fullWidth
+  }
+
+  const displayChainMax = useMemo(() => {
+    let count = 0
+    let calculatedWidth = all ? 80 : 0 // 80 is roughly the width of the "All" button
+    let chainOverflowWidth = 80
+
+    let chainNameList = [] as string[]
+
+    for (let i = 0; i < networks.length; i++) {
+      const fullWidth = getUIWidth(networks[i].name)
+
+      calculatedWidth += fullWidth
+
+      if (width - chainOverflowWidth > calculatedWidth) {
+        chainNameList.push(networks[i].chainID)
+        count++
+      } else {
+        break
+      }
+    }
+
+    return { count, chainNameList }
+  }, [all, networks, width])
+
   const networksToShow = useMemo(() => {
     let toShow
+    const { count, chainNameList } = displayChainMax
+
     if (terraOnly) {
       toShow = Object.values(network).filter((n) => isTerraChain(n.prefix))
-    } else if (selectedDisplayChain) {
-      toShow = [
-        ...networks.slice(0, displayChainMax - 1),
-        network[selectedDisplayChain],
-      ]
+    } else if (selectedDisplayChain && selectedDisplayChain !== "undefined") {
+      toShow = [...networks.slice(0, count)]
+
+      if (!chainNameList.includes(selectedDisplayChain)) {
+        toShow = [
+          ...networks.slice(0, count - 1),
+          network[selectedDisplayChain],
+        ]
+      }
     } else {
-      toShow = networks.slice(0, displayChainMax)
+      toShow = networks.slice(0, count)
     }
     return Array.from(new Set(toShow))
   }, [networks, network, terraOnly, displayChainMax, selectedDisplayChain])
@@ -91,16 +139,16 @@ const ChainFilter = ({
     setChain(chain)
     if (terraOnly) return
     changeSavedChain(chain)
+    changeSelectedDisplayChain(chain)
   }
 
   return (
     <div className={outside ? styles.chainfilter__out : styles.chainfilter}>
       <div
-        ref={ref}
         className={cx(className, styles.header, terraOnly ? styles.swap : "")}
       >
         {title && <h1>{title}</h1>}
-        <div className={styles.pills}>
+        <div className={styles.pills} ref={ref}>
           {all && (
             <button
               onClick={() => handleSetChain(undefined)}
@@ -115,15 +163,15 @@ const ChainFilter = ({
           )}
           {networksToShow.map((c) => (
             <button
-              key={c.chainID}
-              onClick={() => handleSetChain(c.chainID)}
+              key={c?.chainID}
+              onClick={() => handleSetChain(c?.chainID)}
               className={cx(
                 styles.button,
-                selectedChain === c.chainID ? styles.active : undefined
+                selectedChain === c?.chainID ? styles.active : undefined
               )}
             >
-              <img src={c.icon} alt={c.name} />
-              {c.name}
+              <img src={c?.icon} alt={c?.name} />
+              {c?.name}
             </button>
           ))}
           {!terraOnly && (

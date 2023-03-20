@@ -15,19 +15,23 @@
     width: 100%;
     border-radius: none !important;
     color: var(--text-muted);
+    cursor: default;
+    opacity: 0.75;
 
     &.active {
       color: var(--text);
+      cursor: pointer;
+      opacity: 1;
+
+      &:hover {
+        background-color: var(--card-bg-muted);
+      }
     }
 
     img {
       width: 18px;
       height: 18px;
       margin-right: 8px;
-    }
-
-    &:hover {
-      background-color: var(--card-bg-muted);
     }
   }
 }

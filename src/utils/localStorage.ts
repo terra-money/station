@@ -106,7 +106,9 @@ export const savedChainState = atom({
 })
 export const selectedDisplayChainState = atom({
   key: "selectedDisplayChain",
-  default: getLocalSetting(SettingKey.SelectedDisplayChain) as string,
+  default: getLocalSetting(SettingKey.SelectedDisplayChain) as
+    | string
+    | undefined,
 })
 
 export const customLCDState = atom({
@@ -140,7 +142,7 @@ export const useSelectedDisplayChain = () => {
     selectedDisplayChainState
   )
   const changeSelectedDisplayChain = useCallback(
-    (newChain: string) => {
+    (newChain: string | undefined) => {
       setLocalSetting(SettingKey.SelectedDisplayChain, newChain)
       setSelectedChain(newChain)
     },

@@ -1,5 +1,5 @@
 import WithSearchInput from "pages/custom/WithSearchInput"
-import { useDisplayChains } from "utils/localStorage"
+import { useDisplayChains, useSelectedDisplayChain } from "utils/localStorage"
 import SettingsSelectorToggle from "components/layout/SettingsSelectorToggle"
 import { useNetwork } from "data/wallet"
 import { ChainButton } from "components/general"
@@ -8,6 +8,8 @@ import { isTerraChain } from "utils/chain"
 
 const DisplayChainsSetting = () => {
   const { displayChains, changeDisplayChains } = useDisplayChains()
+  const { selectedDisplayChain, changeSelectedDisplayChain } =
+    useSelectedDisplayChain()
   const network = useNetwork()
 
   const onChange = (value: string) => {
@@ -15,6 +17,9 @@ const DisplayChainsSetting = () => {
       ? displayChains.filter((chainID) => chainID !== value)
       : [...displayChains, value]
     changeDisplayChains(newDisplayChains)
+    if (value === selectedDisplayChain) {
+      changeSelectedDisplayChain(undefined)
+    }
   }
 
   return (

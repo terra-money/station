@@ -1,6 +1,5 @@
 import styles from "./SimpleChainList.module.scss"
 import classNames from "classnames"
-import { useSortedDisplayChains } from "utils/chain"
 import { useDisplayChains } from "utils/localStorage"
 
 interface Props {
@@ -28,7 +27,9 @@ const SimpleChainList = ({ list, onClick }: Props) => {
           className={cx(styles.button, {
             [styles.active]: displayChains.includes(chainID),
           })}
-          onClick={() => onClick(chainID)}
+          onClick={() =>
+            displayChains.includes(chainID) ? onClick(chainID) : {}
+          }
         >
           <img src={icon} alt={name} />
           {name}
