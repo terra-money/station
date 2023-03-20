@@ -6,7 +6,6 @@ import { Tooltip } from "components/display"
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown"
 import Flex from "./Flex"
 import styles from "./SettingsSelector.module.scss"
-import { Toggle } from "components/form"
 
 const cx = classNames.bind(styles)
 interface Props {

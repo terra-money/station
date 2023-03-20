@@ -15,7 +15,7 @@ interface Props extends CardProps {
 }
 
 const StakedCard = (props: PropsWithChildren<Props>) => {
-  const { value, amount, denom, cardName, showTokens, children } = props
+  const { value, amount, denom, showTokens, children } = props
   const currency = useCurrency()
 
   return (

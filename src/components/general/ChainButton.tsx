@@ -5,10 +5,6 @@ import { useDisplayChains } from "utils/localStorage"
 import { useBankBalance } from "data/queries/bank"
 import styles from "./ChainButton.module.scss"
 
-interface Props {
-  //   text: string
-  //   className?: string
-}
 const ChainButton = () => {
   const { t } = useTranslation()
   const { changeDisplayChains } = useDisplayChains()

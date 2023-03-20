@@ -1,7 +1,6 @@
 import { ReactNode, useState } from "react"
 import { Grid } from "components/layout"
 import { SearchInput } from "components/form"
-import { ChainButton } from "components/general"
 
 interface Props {
   gap?: number

@@ -46,7 +46,7 @@ export const useSelectedDisplayChain = () => {
     selectedDisplayChainState
   )
   const changeSelectedDisplayChain = useCallback(
-    (newChain: string) => {
+    (newChain: string | undefined) => {
       setLocalSetting(SettingKey.SelectedDisplayChain, newChain)
       setSelectedChain(newChain)
     },
