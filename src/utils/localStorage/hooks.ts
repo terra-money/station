@@ -68,7 +68,7 @@ export const useDisplayChains = () => {
   )
   return {
     all: displayChains,
-    displayChains: displayChains[networkName],
+    displayChains: displayChains[networkName].filter((c) => c !== ""),
     changeDisplayChains,
   }
 }

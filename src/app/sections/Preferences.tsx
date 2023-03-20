@@ -39,6 +39,7 @@ interface SettingsPage {
   value?: string
   disabled?: boolean
   extra?: ReactNode
+  className?: string
 }
 
 const Preferences = () => {
@@ -92,6 +93,7 @@ const Preferences = () => {
       tab: t("Advanced"),
       value: "",
       disabled: false,
+      className: styles.advanced,
     },
     lcd: {
       key: "lcd",
@@ -131,11 +133,12 @@ const Preferences = () => {
           <FlexColumn gap={8}>
             {Object.values(routes)
               .filter(({ disabled }) => !disabled)
-              .map(({ tab, value, key }) => (
+              .map(({ tab, value, key, className }) => (
                 <SettingsButton
                   title={tab}
                   value={value}
                   key={key}
+                  className={className}
                   onClick={() => setPage(key)}
                 />
               ))}

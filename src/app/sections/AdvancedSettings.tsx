@@ -2,7 +2,7 @@ import { useDevMode } from "utils/localStorage"
 import SettingsSelectorToggle from "components/layout/SettingsSelectorToggle"
 import { FlexColumn, GasAdjustment } from "components/layout"
 import { TooltipIcon } from "components/display"
-import DevModeTooltip from "./DevModeTooltip"
+import { DevModeTooltip } from "./DevModeTooltips"
 
 const AdvancedSettings = () => {
   const { devMode, changeDevMode } = useDevMode()

@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
 
-const DevModeTooltip = () => {
+export const DevModeTooltip = () => {
   const { t } = useTranslation()
 
   return (
@@ -13,5 +13,15 @@ const DevModeTooltip = () => {
     </article>
   )
 }
-
-export default DevModeTooltip
+export const GasAdjustmentTooltip = () => {
+  const { t } = useTranslation()
+  return (
+    <article>
+      <p>
+        {t(
+          "Set a gas adjustment coefficient in case none is specified by the chain"
+        )}
+      </p>
+    </article>
+  )
+}
