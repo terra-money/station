@@ -326,7 +326,9 @@ const SendPage = () => {
         <Form onSubmit={handleSubmit(submit.fn)} className={styles.form}>
           <section className={styles.send}>
             <div className={styles.form__container}>
-              <h1>{t("Send")}</h1>
+              <div className={styles.form__header__wrapper}>
+                <h1>{t("Send")}</h1>
+              </div>
               <FormItem
                 label={t("Asset")}
                 error={errors.asset?.message ?? errors.address?.message}

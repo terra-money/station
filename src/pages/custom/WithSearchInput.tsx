@@ -12,6 +12,7 @@ interface Props {
   disabled?: boolean
   extra?: ReactNode
   children: (input: string) => ReactNode
+  className?: string
 }
 
 const WithSearchInput = ({
@@ -22,11 +23,12 @@ const WithSearchInput = ({
   small,
   inline,
   extra,
+  className,
 }: Props) => {
   const [input, setInput] = useState("")
 
   return (
-    <Grid gap={gap ?? 20}>
+    <Grid gap={gap ?? 20} className={className}>
       <SearchInput
         value={input}
         small={small}
