@@ -22,7 +22,7 @@ type IBCDenoms = Record<
     string,
     {
       token: string
-      chain: string
+      chainID: string
       icsChannel?: string
     }
   >

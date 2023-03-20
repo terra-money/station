@@ -22,6 +22,7 @@ import LCDSetting from "./LCDSetting"
 import { useTheme } from "data/settings/Theme"
 import { useDisplayChains } from "utils/localStorage"
 import { getDisplayChainsSettingLabel } from "data/queries/chains"
+import AdvancedSettings from "./AdvancedSettings"
 
 type Routes =
   | "network"
@@ -30,6 +31,7 @@ type Routes =
   | "theme"
   | "lcd"
   | "displayChains"
+  | "advanced"
 
 interface SettingsPage {
   key: Routes
@@ -37,6 +39,7 @@ interface SettingsPage {
   value?: string
   disabled?: boolean
   extra?: ReactNode
+  className?: string
 }
 
 const Preferences = () => {
@@ -85,6 +88,13 @@ const Preferences = () => {
       value: getDisplayChainsSettingLabel(displayChains, network),
       disabled: false,
     },
+    advanced: {
+      key: "advanced",
+      tab: t("Advanced"),
+      value: "",
+      disabled: false,
+      className: styles.advanced,
+    },
     lcd: {
       key: "lcd",
       tab: t("Custom LCD"),
@@ -116,16 +126,19 @@ const Preferences = () => {
         return <LCDSetting />
       case "displayChains":
         return <DisplayChainsSetting />
+      case "advanced":
+        return <AdvancedSettings />
       default:
         return (
           <FlexColumn gap={8}>
             {Object.values(routes)
               .filter(({ disabled }) => !disabled)
-              .map(({ tab, value, key }) => (
+              .map(({ tab, value, key, className }) => (
                 <SettingsButton
                   title={tab}
                   value={value}
                   key={key}
+                  className={className}
                   onClick={() => setPage(key)}
                 />
               ))}
