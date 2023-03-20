@@ -21,7 +21,7 @@ const GasAdjustment = ({ extra }: { extra?: React.ReactNode }) => {
   }, [input, devMode])
 
   return (
-    <FormItem style={{ width: "100%" }} label={<>Gas Ajustment {extra}</>}>
+    <FormItem style={{ width: "100%" }} label={<>Gas Adjustment {extra}</>}>
       <Input
         disabled={!devMode}
         value={input}
