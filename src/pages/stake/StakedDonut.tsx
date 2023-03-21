@@ -70,7 +70,12 @@ const StakedDonut = ({ chain }: { chain: string }) => {
                   />
                   <p className={styles.denom}>{entry.value}</p>
                   <p className={styles.percent}>
-                    {percentage < 1 ? `< 1` : percentage}%
+                    {payload.length === 1
+                      ? `100`
+                      : percentage < 1
+                      ? `< 1`
+                      : percentage}
+                    %
                   </p>
                 </>
               )}
@@ -111,6 +116,8 @@ const StakedDonut = ({ chain }: { chain: string }) => {
   const render = () => {
     if (!interchainDelegations) return null
 
+    const graphDataKeys = Object.keys(graphData || {})
+
     return (
       <>
         {graphData && graphData[chain || "all"] ? (
@@ -133,7 +140,11 @@ const StakedDonut = ({ chain }: { chain: string }) => {
                   outerRadius={100}
                   fill="#8884d8"
                   paddingAngle={0}
-                  dataKey={chain !== "all" ? "amount" : "value"}
+                  dataKey={
+                    chain !== "all" || graphDataKeys.length === 2
+                      ? "amount"
+                      : "value"
+                  }
                 >
                   {graphData[chain || "all"].map((_, index) => (
                     <Cell
