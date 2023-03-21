@@ -9,7 +9,6 @@ export const Popover = ({ theme = "popover", ...props }: TippyProps) => {
 
   return (
     <Tippy
-      {...props}
       theme={theme}
       arrow={theme !== "none"}
       trigger="click"
@@ -17,6 +16,7 @@ export const Popover = ({ theme = "popover", ...props }: TippyProps) => {
       maxWidth={360}
       interactive
       key={pathname}
+      {...props}
     />
   )
 }

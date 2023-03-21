@@ -8,6 +8,8 @@ interface Props {
   inline?: boolean
   padding?: boolean
   small?: boolean
+  disabled?: boolean
+  extra?: ReactNode
   children: (input: string) => ReactNode
   className?: string
 }
@@ -19,6 +21,7 @@ const WithSearchInput = ({
   padding,
   small,
   inline,
+  extra,
   className,
 }: Props) => {
   const [input, setInput] = useState("")
@@ -32,6 +35,7 @@ const WithSearchInput = ({
         placeholder={placeholder}
         onChange={(e) => setInput(e.target.value)}
         autoFocus
+        extra={extra}
         padding={padding}
       />
       {children(input)}
