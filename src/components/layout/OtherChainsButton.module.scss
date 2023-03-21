@@ -1,0 +1,30 @@
+@import "mixins";
+.popover__none {
+  min-width: 100px;
+  border-radius: var(--border-radius);
+}
+
+.popover {
+  border: red 3px solid;
+  padding: 0px;
+}
+
+.button {
+  @include flex(center);
+  gap: 0.5rem;
+  min-width: 4rem;
+  border: var(--border-width) solid var(--card-border);
+  border-radius: 1rem;
+  padding: 0.1rem 1rem;
+  color: var(--text-muted);
+  box-shadow: inset 0px 0px 0 0.5px var(--card-border);
+  transition: all 0.1s;
+  opacity: 0.75;
+
+  &:hover {
+    color: var(--text);
+    border-color: var(--button-default-text);
+    box-shadow: inset 0px 0px 0 0.5px var(--button-default-text);
+    opacity: 1;
+  }
+}

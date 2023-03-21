@@ -6,6 +6,8 @@ import { useCurrency } from "data/settings/Currency"
 import { useNetworkName } from "data/wallet"
 import { useTranslation } from "react-i18next"
 import styles from "./AssetChain.module.scss"
+import CopyTokenAddress from "./CopyTokenAddress"
+import { useDevMode } from "utils/localStorage"
 
 export interface Props {
   chain: string
@@ -20,7 +22,7 @@ const AssetChain = (props: Props) => {
   const currency = useCurrency()
   const { data: prices, ...pricesState } = useExchangeRates()
   const { t } = useTranslation()
-
+  const { devMode } = useDevMode()
   const networkName = useNetworkName()
   const { networks } = useNetworks()
 
@@ -29,7 +31,10 @@ const AssetChain = (props: Props) => {
     <article className={styles.chain} key={name}>
       <TokenIcon token={name} icon={icon} size={50} />
       <section className={styles.details}>
-        <h1 className={styles.name}>{name}</h1>
+        <h1 className={styles.name}>
+          {name}
+          {devMode && <CopyTokenAddress chain={chain} token={token} />}
+        </h1>
         <h1 className={styles.price}>
           {currency.symbol}{" "}
           <Read
@@ -53,7 +58,7 @@ const AssetChain = (props: Props) => {
                 )}
               </>
             )}
-          </WithFetching>{" "}
+          </WithFetching>
           {symbol}
         </h2>
       </section>

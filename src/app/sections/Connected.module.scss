@@ -1,12 +1,7 @@
 .popover {
   min-width: 260px;
-}
-
-.modal {
-  color: var(--text);
-  font-size: 18px;
-  font-weight: var(--bold);
-  margin-bottom: 4px;
+  background-color: var(--card-bg-muted);
+  border-radius: var(--border-radius);
 }
 
 .button {

@@ -2,17 +2,23 @@ import { useMemo, useState } from "react"
 import styles from "./ChainSelector.module.scss"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 import { useNetworks } from "app/InitNetworks"
-import WithSearchInput from "pages/custom/WithSearchInput"
-import classNames from "classnames"
+import ChainList from "./ChainList"
 
 interface Props {
   chainsList: string[]
   onChange: (chain: string) => void
   value: string
   small?: boolean
+  noSearch?: boolean
 }
 
-const ChainSelector = ({ chainsList, onChange, value, small }: Props) => {
+const ChainSelector = ({
+  chainsList,
+  onChange,
+  value,
+  small,
+  noSearch,
+}: Props) => {
   const { networks } = useNetworks()
   const allNetworks = useMemo(
     () => ({
@@ -35,9 +41,8 @@ const ChainSelector = ({ chainsList, onChange, value, small }: Props) => {
       <button
         className={styles.selector}
         onClick={(e) => {
-          e.preventDefault()
           e.stopPropagation()
-          setOpen((o) => !o)
+          if (e.screenX && e.screenY) setOpen((o) => !o) // negate onClick triggered by enter key press
         }}
       >
         <span>
@@ -46,42 +51,7 @@ const ChainSelector = ({ chainsList, onChange, value, small }: Props) => {
         </span>{" "}
         <ArrowDropDownIcon style={{ fontSize: 20 }} className={styles.caret} />
       </button>
-      {open && (
-        <div className={styles.options}>
-          <WithSearchInput inline gap={4}>
-            {(search) => (
-              <div
-                className={classNames(
-                  styles.options__container,
-                  small && styles.options__container__small
-                )}
-              >
-                {list
-                  .filter(
-                    ({ chainID, name }) =>
-                      chainID.toLowerCase().includes(search.toLowerCase()) ||
-                      name.toLowerCase().includes(search.toLowerCase())
-                  )
-                  .map(({ chainID, name, icon }) => (
-                    <button
-                      className={chainID === value ? styles.active : ""}
-                      key={chainID}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        e.stopPropagation()
-                        onChange(chainID)
-                        setOpen(false)
-                      }}
-                    >
-                      <img src={icon} alt={name} />
-                      {name}
-                    </button>
-                  ))}
-              </div>
-            )}
-          </WithSearchInput>
-        </div>
-      )}
+      {open && <ChainList list={list} onChange={onChange} value={value} />}
     </div>
   )
 }

@@ -1,18 +1,11 @@
-import { ForwardedRef, HTMLAttributes, PropsWithChildren, useMemo } from "react"
+import { ForwardedRef, HTMLAttributes, PropsWithChildren } from "react"
 import { forwardRef } from "react"
 import classNames from "classnames"
 import { truncate } from "@terra.kitchen/utils"
-import {
-  FINDER,
-  MINTSCAN,
-  MARS_TEST_EXPLORER,
-  MARS_EXPLORER,
-} from "config/constants"
-import { useNetwork, useNetworkName } from "data/wallet"
+import { useNetwork } from "data/wallet"
 import { ExternalLink } from "./External"
 import { getChainIDFromAddress } from "utils/bech32"
 import styles from "./FinderLink.module.scss"
-import { getChainNamefromID } from "data/queries/chains"
 
 interface Props extends HTMLAttributes<HTMLAnchorElement> {
   value?: string
@@ -31,54 +24,28 @@ const FinderLink = forwardRef(
     ref: ForwardedRef<HTMLAnchorElement>
   ) => {
     const { block, tx, validator, chainID, ...attrs } = rest
-    const networkName = useNetworkName() // mainnet or testnet for Terra
     const networks = useNetwork()
-    const value = rest.value ?? children
-
-    const chainName = useMemo(() => {
-      const targetChainId = chainID || getChainIDFromAddress(value, networks)
-      return getChainNamefromID(targetChainId, networks)
-    }, [value, chainID, networks])
-
-    const interchainPath = tx
-      ? "txs"
-      : block
-      ? "blocks"
-      : validator
-      ? "validators"
-      : "account"
-
-    const marsPath = tx
-      ? "transactions"
-      : block
-      ? "blocks"
-      : validator
-      ? "validators"
-      : "accounts"
-
-    const finderPath = tx
-      ? "tx"
-      : block
-      ? "block"
-      : validator
-      ? "validator"
-      : "address"
-
-    const link =
-      chainName === "mars"
-        ? [
-            networkName === "testnet" ? MARS_TEST_EXPLORER : MARS_EXPLORER,
-            marsPath,
-            value,
-          ].join("/")
-        : chainName === "terra" || chainName === "classic"
-        ? [FINDER, networkName, finderPath, value].join("/")
-        : [MINTSCAN, chainName, interchainPath, value].join("/")
+    const value =
+      rest.value ?? typeof children === "string" ? (children as string) : ""
 
     const className = classNames(attrs.className, styles.link)
+    const explorer =
+      networks[chainID ?? getChainIDFromAddress(value, networks) ?? ""]
+        ?.explorer
+
+    let href
+    if (block) {
+      href = explorer?.block?.replace("{}", value)
+    } else if (tx) {
+      href = explorer?.tx?.replace("{}", value)
+    } else if (validator) {
+      href = explorer?.validator?.replace("{}", value)
+    } else {
+      href = explorer?.address?.replace("{}", value)
+    }
 
     return (
-      <ExternalLink {...attrs} href={link} className={className} ref={ref} icon>
+      <ExternalLink {...attrs} href={href} className={className} ref={ref} icon>
         {short && typeof children === "string" ? truncate(children) : children}
       </ExternalLink>
     )
