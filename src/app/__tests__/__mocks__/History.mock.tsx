@@ -1,3 +1,6 @@
+const today = new Date()
+const mockHistoryDatetime = new Date(new Date().setDate(today.getDate() - 180))
+
 export const mockHistory = [
   {
     height: "4418020",
@@ -208,7 +211,7 @@ export const mockHistory = [
         "XLADqjpe9BjpnHiedRr97gVdN1uD6MWiehzgrZQ20r4Fb4S2kDexpFXRETMTz9nfD7ErCBmErulnGmidHlAAZA==",
       ],
     },
-    timestamp: "2023-03-02T12:36:53Z",
+    timestamp: mockHistoryDatetime,
     events: [
       {
         type: "coin_spent",
