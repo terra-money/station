@@ -1,0 +1,37 @@
+@import "mixins";
+
+.options {
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  z-index: 10;
+  box-shadow: 0px 5px 7px 0px var(--wallet-shadow-color);
+  overflow-y: scroll;
+  width: 140px;
+  max-height: 240px;
+
+  .button {
+    padding: 6px 12px;
+    @include flex(flex-start, center);
+    width: 100%;
+    border-radius: none !important;
+    color: var(--text-muted);
+    cursor: default;
+    opacity: 0.75;
+
+    &.active {
+      color: var(--text);
+      cursor: pointer;
+      opacity: 1;
+
+      &:hover {
+        background-color: var(--card-bg-muted);
+      }
+    }
+
+    img {
+      width: 18px;
+      height: 18px;
+      margin-right: 8px;
+    }
+  }
+}

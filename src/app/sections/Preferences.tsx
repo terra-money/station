@@ -5,38 +5,54 @@ import { FlexColumn } from "components/layout"
 import { sandbox } from "auth/scripts/env"
 import HeaderIconButton from "../components/HeaderIconButton"
 import NetworkSetting from "./NetworkSetting"
+import DisplayChainsSetting from "./DisplayChainsSetting"
 import LanguageSetting from "./LanguageSetting"
 import CurrencySetting from "./CurrencySetting"
 import { useWallet, WalletStatus } from "@terra-money/wallet-provider"
 import { ModalButton } from "components/feedback"
 import SettingsButton from "components/layout/SettingsButton"
-import { useNetworkName } from "data/wallet"
+import { useNetwork, useNetworkName } from "data/wallet"
 import { useCurrency } from "data/settings/Currency"
 import { Languages } from "config/lang"
 import { capitalize } from "@mui/material"
-import { useState } from "react"
+import { ReactNode, useState } from "react"
 import styles from "./Preferences.module.scss"
 import SelectTheme from "./SelectTheme"
 import LCDSetting from "./LCDSetting"
 import { useTheme } from "data/settings/Theme"
+import { useDisplayChains } from "utils/localStorage"
+import { getDisplayChainsSettingLabel } from "data/queries/chains"
+import AdvancedSettings from "./AdvancedSettings"
 
-type Routes = "network" | "lang" | "currency" | "theme" | "lcd"
+type Routes =
+  | "network"
+  | "lang"
+  | "currency"
+  | "theme"
+  | "lcd"
+  | "displayChains"
+  | "advanced"
+
 interface SettingsPage {
   key: Routes
   tab: string
   value?: string
   disabled?: boolean
+  extra?: ReactNode
+  className?: string
 }
 
 const Preferences = () => {
   const { t } = useTranslation()
   const connectedWallet = useWallet()
-  const [page, setPage] = useState<Routes | null>(null)
+  const [page, setPage] = useState<Routes | null>()
 
   const { i18n } = useTranslation()
   const { id: currencyId } = useCurrency()
   const networkName = useNetworkName()
+  const network = useNetwork()
   const { name } = useTheme()
+  const { displayChains } = useDisplayChains()
 
   const routes: Record<Routes, SettingsPage> = {
     network: {
@@ -66,11 +82,23 @@ const Preferences = () => {
       value: capitalize(name),
       disabled: false,
     },
+    displayChains: {
+      key: "displayChains",
+      tab: t("Display chains"),
+      value: getDisplayChainsSettingLabel(displayChains, network),
+      disabled: false,
+    },
+    advanced: {
+      key: "advanced",
+      tab: t("Advanced"),
+      value: "",
+      disabled: false,
+      className: styles.advanced,
+    },
     lcd: {
       key: "lcd",
       tab: t("Custom LCD"),
-      // hide button on the main settings page
-      disabled: true,
+      disabled: true, // hide button on the main settings page
     },
   }
 
@@ -96,16 +124,21 @@ const Preferences = () => {
         return <SelectTheme />
       case "lcd":
         return <LCDSetting />
+      case "displayChains":
+        return <DisplayChainsSetting />
+      case "advanced":
+        return <AdvancedSettings />
       default:
         return (
           <FlexColumn gap={8}>
             {Object.values(routes)
               .filter(({ disabled }) => !disabled)
-              .map(({ tab, value, key }) => (
+              .map(({ tab, value, key, className }) => (
                 <SettingsButton
                   title={tab}
                   value={value}
                   key={key}
+                  className={className}
                   onClick={() => setPage(key)}
                 />
               ))}
@@ -118,7 +151,7 @@ const Preferences = () => {
     <ModalButton
       title={
         page ? (
-          <div>
+          <>
             <button
               className={styles.back}
               onClick={() =>
@@ -128,7 +161,7 @@ const Preferences = () => {
               <BackIcon width={18} height={18} />
             </button>
             {routes[page].tab}
-          </div>
+          </>
         ) : (
           t("Settings")
         )

@@ -89,8 +89,8 @@
     @include flex(space-between);
     background: var(--card-bg);
     color: var(--text);
-    font-size: 11pt;
     padding: 14px 16px;
+    cursor: pointer;
     font-weight: var(--normal);
     width: 100%;
 
@@ -99,6 +99,12 @@
       align-items: center;
       gap: 10px;
       max-width: 90%;
+      font-size: var(--font-size);
+
+      img {
+        height: 18px;
+        width: 18px;
+      }
 
       div {
         white-space: nowrap;
@@ -144,11 +150,7 @@
   border-radius: 50%;
   width: 8px;
   height: 8px;
-}
-
-.indicator__checked {
-  background: var(--text);
-  border-radius: 50%;
-  width: 8px;
-  height: 8px;
+  &.checked {
+    background: var(--text);
+  }
 }

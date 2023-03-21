@@ -31,6 +31,12 @@ interface InterchainNetwork {
   }
   version?: string
   isClassic?: boolean
+  explorer: {
+    address?: string
+    tx?: string
+    validator?: string
+    block?: string
+  }
 }
 
 interface TerraNetwork {

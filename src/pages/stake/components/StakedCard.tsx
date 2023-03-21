@@ -15,7 +15,7 @@ interface Props extends CardProps {
 }
 
 const StakedCard = (props: PropsWithChildren<Props>) => {
-  const { value, amount, denom, cardName, showTokens, children } = props
+  const { value, amount, denom, showTokens, children } = props
   const currency = useCurrency()
 
   return (
@@ -51,7 +51,7 @@ const StakedCard = (props: PropsWithChildren<Props>) => {
         </Flex>
       ) : (
         <Grid style={{ alignItems: "end", height: "100%" }}>
-          No {cardName} on selected chain.
+          None on selected chain
         </Grid>
       )}
     </Card>

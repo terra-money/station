@@ -1,6 +1,7 @@
 import { AccAddress } from "@terra-money/feather.js"
 import { useNetwork } from "data/wallet"
 import createContext from "utils/createContext"
+import { DefaultDisplayChains } from "utils/localStorage"
 
 type Whitelist = Record<
   string,
@@ -21,7 +22,7 @@ type IBCDenoms = Record<
     string,
     {
       token: string
-      chain: string
+      chainID: string
       icsChannel?: string
     }
   >
@@ -53,6 +54,29 @@ export function getChainNamefromID(
       .find(({ chainID }) => chainID === id)
       ?.name.toLowerCase() ?? ""
   )
+}
+
+export const getTruncateChainList = (
+  chainList: string[],
+  toShowLength = 5
+) => ({
+  toShow: chainList.slice(0, toShowLength),
+  rest: chainList.slice(toShowLength),
+})
+
+export const getDisplayChainsSettingLabel = (
+  displayChains: string[],
+  chains: Record<string, InterchainNetwork>
+) => {
+  const { toShow, rest } = getTruncateChainList(displayChains)
+  return Object.values(DefaultDisplayChains).some(
+    (arr) => JSON.stringify(arr) === JSON.stringify(displayChains)
+  )
+    ? "Default"
+    : toShow.map((chainID) => getChainNamefromID(chainID, chains)).join(", ") +
+        (rest.length > 0
+          ? ` & ${rest.length} other${rest.length === 1 ? "" : "s"}`
+          : "")
 }
 
 export function useIBCChannels() {

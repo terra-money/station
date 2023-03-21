@@ -118,10 +118,10 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   /* simulation: estimate gas */
   const simulationTx = estimationTxValues && createTx(estimationTxValues)
-  const gasAdjustmentSetting = SettingKey.GasAdjustment
   const gasAdjustment =
-    networks[chain]?.gasAdjustment ??
-    getLocalSetting<number>(gasAdjustmentSetting)
+    getLocalSetting<number>(SettingKey.GasAdjustment) ??
+    networks[chain]?.gasAdjustment
+
   const key = {
     address: addresses?.[chain],
     network: networks,
@@ -137,6 +137,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
       try {
         const unsignedTx = await lcd.tx.create([{ address: key.address }], {
           ...simulationTx,
+          gasAdjustment: key.gasAdjustment,
           feeDenoms: [gasDenom],
         })
 

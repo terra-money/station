@@ -104,12 +104,15 @@ const SendPage = () => {
     recipient,
     input,
     memo,
-    decimals,
     chain,
     address: destinationAddress,
     asset,
   } = watch()
-  const amount = toAmount(input, { decimals: decimals ?? 6 })
+
+  const decimals = asset ? readNativeDenom(asset).decimals : 6
+
+  const amount = toAmount(input, { decimals })
+
   const availableChains = useMemo(
     () =>
       availableAssets
