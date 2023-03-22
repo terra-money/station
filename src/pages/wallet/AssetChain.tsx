@@ -1,10 +1,13 @@
+import { useNetworks } from "app/InitNetworks"
 import { WithFetching } from "components/feedback"
 import { Read, TokenIcon } from "components/token"
-import { useMemoizedPrices } from "data/queries/coingecko"
+import { useExchangeRates } from "data/queries/coingecko"
 import { useCurrency } from "data/settings/Currency"
-import { useNetwork } from "data/wallet"
+import { useNetworkName } from "data/wallet"
 import { useTranslation } from "react-i18next"
 import styles from "./AssetChain.module.scss"
+import CopyTokenAddress from "./CopyTokenAddress"
+import { useDevMode } from "utils/localStorage"
 
 export interface Props {
   chain: string
@@ -17,16 +20,21 @@ export interface Props {
 const AssetChain = (props: Props) => {
   const { chain, symbol, balance, decimals, token } = props
   const currency = useCurrency()
-  const network = useNetwork()
-  const { data: prices, ...pricesState } = useMemoizedPrices()
+  const { data: prices, ...pricesState } = useExchangeRates()
   const { t } = useTranslation()
+  const { devMode } = useDevMode()
+  const networkName = useNetworkName()
+  const { networks } = useNetworks()
 
-  const { icon, name } = network[chain]
+  const { icon, name } = networks[networkName][chain]
   return (
     <article className={styles.chain} key={name}>
       <TokenIcon token={name} icon={icon} size={50} />
       <section className={styles.details}>
-        <h1 className={styles.name}>{name}</h1>
+        <h1 className={styles.name}>
+          {name}
+          {devMode && <CopyTokenAddress chain={chain} token={token} />}
+        </h1>
         <h1 className={styles.price}>
           {currency.symbol}{" "}
           <Read
@@ -50,7 +58,7 @@ const AssetChain = (props: Props) => {
                 )}
               </>
             )}
-          </WithFetching>{" "}
+          </WithFetching>
           {symbol}
         </h2>
       </section>

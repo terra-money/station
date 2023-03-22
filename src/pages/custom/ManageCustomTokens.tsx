@@ -1,5 +1,5 @@
 import { AccAddress } from "@terra-money/feather.js"
-import { useCustomTokensIBC } from "data/settings/CustomTokens"
+import { useCustomTokensNative } from "data/settings/CustomTokens"
 import { useCustomTokensCW20 } from "data/settings/CustomTokens"
 import { useCW20Whitelist } from "data/Terra/TerraAssets"
 import { useTokenInfoCW20 } from "data/queries/wasm"
@@ -10,30 +10,40 @@ import { useWhitelist } from "data/queries/chains"
 import { useNetworkName } from "data/wallet"
 
 interface Props {
-  whitelist: { cw20: CW20Whitelist }
+  whitelist: { cw20: CW20Whitelist; native: NativeWhitelist }
   keyword: string
 }
 
-const Component = ({ whitelist, keyword }: Props) => {
-  const ibc = useCustomTokensIBC()
-  const cw20 = useCustomTokensCW20()
+const isCW20 = ({ token }: CustomTokenCW20 | NativeTokenItem) =>
+  AccAddress.validate(token)
 
-  type AddedIBC = Record<string, CustomTokenIBC>
+const Component = ({ whitelist, keyword }: Props) => {
+  const cw20 = useCustomTokensCW20()
+  const native = useCustomTokensNative()
+
   type AddedCW20 = Record<TerraAddress, CustomTokenCW20>
+  type AddedNative = Record<CoinDenom, NativeTokenItem>
+
   const added = {
-    ibc: ibc.list.reduce<AddedIBC>(
-      (acc, item) => ({ ...acc, [item.denom.replace("ibc/", "")]: item }),
-      {}
-    ),
     cw20: cw20.list.reduce<AddedCW20>(
       (acc, item) => ({ ...acc, [item.token]: item }),
       {}
     ),
+    native: native.list.reduce<AddedNative>((acc, item) => {
+      const token = whitelist.native[item.denom]
+      if (token) {
+        acc[item.denom] = whitelist.native[item.denom]
+      }
+
+      return acc
+    }, {}),
   }
 
   const merged = {
-    ...added.cw20,
+    ...whitelist.native,
     ...whitelist.cw20,
+    ...added.native,
+    ...added.cw20,
   }
 
   // if listed
@@ -61,29 +71,25 @@ const Component = ({ whitelist, keyword }: Props) => {
       })
 
   const manage = {
-    list: [...ibc.list, ...cw20.list],
-    getIsAdded: (item: CustomTokenIBC | CustomTokenCW20) => {
-      if ("base_denom" in item) return ibc.getIsAdded(item)
-      else return cw20.getIsAdded(item)
+    list: [...cw20.list, ...native.list],
+    getIsAdded: (item: CustomTokenCW20 | NativeTokenItem) => {
+      if (isCW20(item)) return cw20.getIsAdded(item)
+      return native.getIsAdded({ denom: item.token })
     },
-    add: (item: CustomTokenIBC | CustomTokenCW20) => {
-      if ("base_denom" in item) return ibc.add(item)
-      else return cw20.add(item)
+    add: (item: CustomTokenCW20 | NativeTokenItem) => {
+      if (isCW20(item)) return cw20.add(item)
+      return native.add({ denom: item.token })
     },
-    remove: (item: CustomTokenIBC | CustomTokenCW20) => {
-      if ("base_denom" in item) return ibc.remove(item)
-      else return cw20.remove(item)
+    remove: (item: CustomTokenCW20 | NativeTokenItem) => {
+      if (isCW20(item)) return cw20.remove(item)
+      return native.remove({ denom: item.token })
     },
   }
 
-  const renderTokenItem = (item: CustomTokenIBC | CustomTokenCW20) => {
-    if ("base_denom" in item) {
-      const { symbol, denom, ...rest } = item
-      return { ...rest, token: denom, title: symbol, key: denom }
-    } else {
-      const { token, symbol, ...rest } = item
-      return { ...rest, token, title: symbol, contract: token, key: token }
-    }
+  const renderTokenItem = (item: CustomTokenCW20 | NativeTokenItem) => {
+    // TODO: distinguish native and cw20
+    const { token, symbol, ...rest } = item
+    return { ...rest, token, title: symbol, contract: token, key: token }
   }
 
   return (
@@ -104,6 +110,16 @@ const ManageCustomTokens = () => {
   const render = () => {
     if (!cw20) return null
 
+    const cw20Whitelist: CW20Whitelist = {}
+    const nativeWhitelist: NativeWhitelist = {}
+    Object.entries(whitelist[networkName]).forEach(([denom, asset]) => {
+      if (AccAddress.validate(denom)) {
+        cw20Whitelist[denom] = asset
+      } else {
+        nativeWhitelist[denom] = asset
+      }
+    })
+
     return (
       <WithSearchInput>
         {(input) => (
@@ -111,12 +127,9 @@ const ManageCustomTokens = () => {
             whitelist={{
               cw20: {
                 ...cw20,
-                ...Object.fromEntries(
-                  Object.entries(whitelist[networkName]).filter(([denom]) =>
-                    AccAddress.validate(denom)
-                  )
-                ),
+                ...cw20Whitelist,
               },
+              native: nativeWhitelist,
             }}
             keyword={input}
           />

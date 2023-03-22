@@ -1,0 +1,27 @@
+@import "mixins";
+
+.button {
+  @include flex(space-between);
+  border: var(--border-width) solid var(--card-border);
+  border-radius: var(--border-radius);
+  color: inherit;
+  font-weight: var(--normal);
+  transition: all var(--transition);
+  padding: 14px 16px;
+  width: 100%;
+  background-color: var(--card-bg);
+
+  &:hover {
+    background: var(--bg-muted);
+    text-decoration: none;
+  }
+}
+
+.button__action {
+  @include flex;
+  gap: 6px;
+
+  span {
+    color: var(--text-muted);
+  }
+}

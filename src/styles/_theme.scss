@@ -96,6 +96,8 @@
   --extension-bg: hsl(227 62% 11%);
   --extension-text: hsl(210 89% 61%);
 
+  --wallet-shadow-color: rgb(0 0 0 / 31%);
+
   @include mobile {
     --menu-bg: var(--card-bg);
     --menu-border: var(--card-border);
@@ -141,15 +143,17 @@
   --bg: hsl(0, 0%, 12%);
   --bg-muted: hsl(240 5% 22%);
   --card-bg: hsl(239, 6%, 17%);
-  --card-bg-muted: #232327;
+  --card-bg-muted: hsl(240, 5%, 15%);
   --card-border: hsl(240 5% 22%);
   --input-bg: var(--card-bg);
   --input-border: hsl(0 0% 30%);
 
   --wallet-shadow: 0 0 15px 3px #000000c7;
 
-  --extension-bg: hsl(240 1% 15%);
-  --extension-text: hsl(210 100% 77%);
+  --extension-bg: var(--card-bg);
+  --extension-text: var(--text);
+
+  --wallet-shadow-color: #0000009c;
 }
 
 .blossom {
@@ -193,6 +197,8 @@
 
   --extension-bg: hsl(340 100% 90%);
   --extension-text: hsl(341 100% 62%);
+
+  --wallet-shadow-color: rgb(63 63 63 / 22%);
 }
 
 .moon {
@@ -238,6 +244,8 @@
 
   --extension-bg: hsl(247 55% 6%);
   --extension-text: hsl(46 100% 90%);
+
+  --wallet-shadow-color: #000000c7;
 }
 
 .whale {
@@ -281,6 +289,8 @@
 
   --extension-bg: hsl(0 0% 100%);
   --extension-text: hsl(0 0% 27%);
+
+  --wallet-shadow-color: rgb(0 0 0 / 31%);
 
   --warning: hsl(356 100% 50%);
   --warning-light: hsl(356 100% 50% / 0.1);
@@ -327,6 +337,8 @@
 
   --extension-bg: hsl(260 66% 37%);
   --extension-text: hsl(116 100% 83%);
+
+  --wallet-shadow-color: #000000c7;
 
   --info: hsl(178 91% 52%);
   --info-light: hsl(178 91% 52% / 0.1);

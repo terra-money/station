@@ -41,7 +41,8 @@ import Auth from "auth/modules/Auth"
 //import AddNetworkPage from "auth/networks/AddNetworkPage"
 
 /* settings */
-import Settings from "pages/Settings"
+import Settings from "components/layout/GasAdjustment"
+import { useDevMode } from "utils/localStorage"
 
 /* labs */
 import Labs from "pages/labs/Labs"
@@ -54,16 +55,9 @@ const ICON_SIZE = { width: 20, height: 20 }
 
 export const useNav = () => {
   const { t } = useTranslation()
+  const { devMode } = useDevMode()
 
   const menu = [
-    /*
-    {
-      path: "/",
-      element: <Dashboard />,
-      title: t("Dashboard"),
-      icon: <WalletIcon {...ICON_SIZE} />,
-    },
-    */
     {
       path: "/",
       element: <SwapTx />,
@@ -88,21 +82,16 @@ export const useNav = () => {
       title: t("Governance"),
       icon: <GovernanceIcon {...ICON_SIZE} />,
     },
-    {
-      path: "/contract",
-      element: <Contract />,
-      title: t("Contract"),
-      icon: <ContractIcon {...ICON_SIZE} />,
-    },
-    /*
-    {
-      path: "/nft",
-      element: <NFT />,
-      title: t("NFT"),
-      icon: <NFTIcon {...ICON_SIZE} />,
-    },
-
-    */
+    ...(devMode
+      ? [
+          {
+            path: "/contract",
+            element: <Contract />,
+            title: t("Contract"),
+            icon: <ContractIcon {...ICON_SIZE} />,
+          },
+        ]
+      : []),
   ]
 
   const routes = [

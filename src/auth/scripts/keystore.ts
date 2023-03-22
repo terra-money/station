@@ -88,7 +88,8 @@ export const getDecryptedKey = ({
 
 export class PasswordError extends Error {}
 export const testPassword = (params: Params) => {
-  if (!getDecryptedKey(params)) throw new PasswordError("Incorrect password")
+  if (!getDecryptedKey(params)?.[330])
+    throw new PasswordError("Incorrect password")
   return true
 }
 

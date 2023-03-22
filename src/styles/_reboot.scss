@@ -155,3 +155,10 @@ select {
 ::-webkit-scrollbar {
   display: none;
 }
+
+code {
+  color: var(--danger);
+  background-color: var(--card-bg-muted);
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.2rem;
+}

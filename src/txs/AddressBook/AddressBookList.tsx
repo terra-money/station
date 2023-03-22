@@ -44,8 +44,8 @@ const AddressBookList = ({ onClick }: Props) => {
                 >
                   <span>
                     <img
-                      src={networks[chain].icon}
-                      alt={networks[chain].name}
+                      src={networks[chain]?.icon}
+                      alt={networks[chain]?.name}
                     />
                     {networks[chain].name}
                   </span>
@@ -92,7 +92,7 @@ const AddressBookList = ({ onClick }: Props) => {
         </Button>
         <Button onClick={() => setOpenMy(true)}>
           <AccountBalanceWalletIcon fontSize="inherit" />
-          {t("Use one of your addresses")}
+          {t("Select from your addresses")}
         </Button>
       </Grid>
     </section>

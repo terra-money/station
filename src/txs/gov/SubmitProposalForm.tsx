@@ -202,9 +202,9 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
     estimationTxValues,
     createTx,
     onChangeMax,
-    onSuccess: { label: t("Gov"), path: "/gov" },
     queryKeys: [queryKey.gov.proposals],
     chain: chain ?? "",
+    gasAdjustment: 1.5,
   }
 
   const render = () => {
@@ -396,7 +396,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
         {({ max, fee, submit }) => (
           <Form onSubmit={handleSubmit(submit.fn)}>
             <Grid gap={4}>
-              {networks[chain].prefix === "terra" && (
+              {networks[chain]?.prefix === "terra" && (
                 <FormHelp>
                   Upload proposal only after forum discussion on{" "}
                   <ExternalLink href="https://agora.terra.money">

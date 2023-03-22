@@ -1,10 +1,27 @@
-.amount {
+.value {
   font-size: 28px;
+  font-weight: var(--bold);
+  line-height: 1;
+}
+
+.small {
+  color: var(--text-muted);
+  font-size: var(--font-size-small);
+}
+
+.amount {
+  font-size: 18px;
+  line-height: 1;
   font-weight: var(--bold);
 }
 
-.small,
-.value {
-  color: var(--text-muted);
-  font-size: var(--font-size-small);
+.click_to_view {
+  color: var(--button-primary-bg);
+  font-weight: var(--bold);
+  font-size: 16px;
+}
+
+.card_helper {
+  gap: 12px;
+  padding: 28px 24px;
 }

@@ -6,7 +6,7 @@ export const getErrorMessage = (
   if (!error) return
 
   if (axios.isAxiosError(error))
-    return (error as AxiosError<any>).response?.data.message ?? error.message
+    return (error as AxiosError<any>).response?.data?.message ?? error.message
 
   if (error instanceof Error) return error.message
 }

@@ -1,0 +1,15 @@
+.table2 {
+  border-spacing: 0 !important;
+}
+
+.header_wrapper {
+  display: flex;
+  justify-content: space-between;
+  width: inherit;
+  align-items: center;
+}
+
+.view_more {
+  color: var(--button-primary-bg);
+  font-size: 12px;
+}

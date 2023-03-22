@@ -2,19 +2,20 @@ import { useTranslation } from "react-i18next"
 import { AccAddress, Coin, Delegation } from "@terra-money/feather.js"
 import { getMaxHeightStyle } from "utils/style"
 import { combineState } from "data/query"
-import { useMemoizedPrices } from "data/queries/coingecko"
+import { useExchangeRates } from "data/queries/coingecko"
 import { useInterchainDelegations } from "data/queries/staking"
 import { ValidatorLink } from "components/general"
 import { ModalButton } from "components/feedback"
 import { Table } from "components/layout"
 import { Read } from "components/token"
-import StakedCard from "./components/StakedCard"
+import StakedCard from "../components/StakedCard"
 import { useNativeDenoms } from "data/token"
+import styles from "../CardModal.module.scss"
 
 const Delegations = () => {
   const { t } = useTranslation()
   const readNativeDenom = useNativeDenoms()
-  const { data: prices, ...pricesState } = useMemoizedPrices()
+  const { data: prices, ...pricesState } = useExchangeRates()
 
   const interchainDelegations = useInterchainDelegations()
 
@@ -45,9 +46,17 @@ const Delegations = () => {
         renderButton={(open) => (
           <StakedCard
             {...state}
-            title={title}
-            amount={total.toString()}
+            title={
+              <div className={styles.header_wrapper}>
+                {title}
+                {total !== -1 && (
+                  <span className={styles.view_more}>View More</span>
+                )}
+              </div>
+            }
+            value={total?.toString() || "0"}
             onClick={open}
+            cardName={"delegations"}
           />
         )}
       >

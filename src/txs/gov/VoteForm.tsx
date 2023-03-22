@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from "react"
-import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import classNames from "classnames/bind"
 import { MsgVote, Vote } from "@terra-money/feather.js"
@@ -24,7 +23,6 @@ const Options = [
 ]
 
 const VoteForm = () => {
-  const { t } = useTranslation()
   const getVoteOptionItem = useGetVoteOptionItem()
   const { id, chain } = useProposalId()
 
@@ -42,7 +40,7 @@ const VoteForm = () => {
   const createTx = useCallback(
     ({ option }: TxValues) => {
       if (!addresses) return
-      const msgs = [new MsgVote(id, addresses[chain], Number(option))]
+      const msgs = [new MsgVote(Number(id), addresses[chain], Number(option))]
       return { msgs, chainID: chain }
     },
     [addresses, id, chain]
@@ -57,10 +55,6 @@ const VoteForm = () => {
   const tx = {
     estimationTxValues,
     createTx,
-    onSuccess: {
-      label: [t("Proposal"), id].join(" "),
-      path: `/proposal/${chain}/${id}`,
-    },
     chain,
   }
 

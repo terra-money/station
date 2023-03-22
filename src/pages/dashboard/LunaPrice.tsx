@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
 import { useCurrency } from "data/settings/Currency"
-import { useMemoizedPrices } from "data/queries/coingecko"
+import { useExchangeRates } from "data/queries/coingecko"
 import { Card } from "components/layout"
 import { Read } from "components/token"
 import { ModalButton } from "components/feedback"
@@ -12,7 +12,7 @@ const LunaPrice = () => {
   const { t } = useTranslation()
   const currency = useCurrency()
   const denom = currency.id === "uluna" ? "uusd" : currency.id
-  const { data: prices, ...state } = useMemoizedPrices()
+  const { data: prices, ...state } = useExchangeRates()
 
   const render = () => {
     if (!prices) return
