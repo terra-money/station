@@ -22,8 +22,10 @@
   background-color: var(--card-bg);
 }
 .networth__buttons {
-  @include flex(space-around);
-  margin-top: 20px;
+  display: flex;
+  gap: 48px;
+  justify-content: center;
+  margin-top: 28px;
   width: 100%;
 
   .button__wrapper {
