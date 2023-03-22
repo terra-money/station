@@ -9,13 +9,15 @@ import { isDenom, toAmount } from "@terra.kitchen/utils"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { Form, FormItem, FormWarning, Input, Select } from "components/form"
 import ChainSelector from "components/form/ChainSelector"
-import { Flex, Grid } from "components/layout"
+import { Flex, InlineFlex, Grid } from "components/layout"
+import { truncate } from "@terra.kitchen/utils"
 import { SAMPLE_ADDRESS } from "config/constants"
 import { useBankBalance } from "data/queries/bank"
 import { useExchangeRates } from "data/queries/coingecko"
 import { useNativeDenoms } from "data/token"
-import { useCallback, useEffect, useMemo } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
+import PersonIcon from "@mui/icons-material/Person"
 import { useTranslation } from "react-i18next"
 import { CoinInput, getPlaceholder, toInput } from "txs/utils"
 import styles from "./SendPage.module.scss"
@@ -31,6 +33,7 @@ import { queryKey } from "data/query"
 import Tx from "txs/Tx"
 import AddressBookList from "txs/AddressBook/AddressBookList"
 import { ModalButton } from "components/feedback"
+import { useNames } from "data/external/names"
 
 interface TxValues {
   asset: string
@@ -122,6 +125,10 @@ const SendPage = () => {
     [asset, availableAssets, defaultAsset, networks]
   )
 
+const resolvedAddress = useNames(recipient);
+
+console.log(resolvedAddress);
+
   const token = balances.find(
     ({ denom, chain }) =>
       chain === watch("chain") &&
@@ -134,11 +141,12 @@ const SendPage = () => {
       setValue("address", undefined)
     } else if (AccAddress.validate(recipient)) {
       setValue("address", recipient)
-      form.setFocus("input")
+    } else if (resolvedAddress) {
+      setValue("address", resolvedAddress)
     } else {
       setValue("address", recipient)
     }
-  }, [form, recipient, setValue])
+  }, [form, recipient, resolvedAddress, setValue])
 
   /* resolve source chain */
   useEffect(() => {
@@ -319,6 +327,16 @@ const SendPage = () => {
         : 1,
   }
 
+  const renderResolvedAddress = () => {
+    if (!resolvedAddress) return null
+    return (
+      <InlineFlex gap={4} className="success">
+        <PersonIcon fontSize="inherit" />
+        {truncate(resolvedAddress)}
+      </InlineFlex>
+    )
+  }
+
   return (
     // @ts-expect-error
     <Tx {...tx}>
@@ -357,7 +375,8 @@ const SendPage = () => {
               )}
               <FormItem
                 label={t("Recipient")}
-                extra={renderDestinationChain()}
+                // extra={renderDestinationChain()}
+                extra={renderResolvedAddress()}
                 error={errors.recipient?.message ?? errors.address?.message}
               >
                 <ModalButton
@@ -366,14 +385,14 @@ const SendPage = () => {
                     <Input
                       {...register("recipient", {
                         validate: {
-                          ...validate.recipient(),
-                          ...validate.ibc(
-                            networks,
-                            chain ?? "",
-                            token?.denom ?? "",
-                            getIBCChannel,
-                            readNativeDenom(token?.denom ?? "").isAxelar
-                          ),
+                          // ...validate.recipient(),
+                          // ...validate.ibc(
+                          //   networks,
+                          //   chain ?? "",
+                          //   token?.denom ?? "",
+                          //   getIBCChannel,
+                          //   readNativeDenom(token?.denom ?? "").isAxelar
+                          // ),
                         },
                       })}
                       placeholder={SAMPLE_ADDRESS}

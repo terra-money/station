@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useMemo } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
+import nameMatcha from "@leapwallet/name-matcha"
 import { useForm } from "react-hook-form"
 import PersonIcon from "@mui/icons-material/Person"
 import { AccAddress } from "@terra-money/feather.js"
@@ -8,7 +9,6 @@ import { truncate } from "@terra.kitchen/utils"
 import { SAMPLE_ADDRESS } from "config/constants"
 import { queryKey } from "data/query"
 import { useNetwork } from "data/wallet"
-import { useTnsAddress } from "data/external/tns"
 import { Auto, Card, InlineFlex } from "components/layout"
 import { Form, FormItem, FormHelp, Input } from "components/form"
 import NFTAssetItem from "pages/nft/NFTAssetItem"
@@ -42,6 +42,24 @@ const TransferCW721Form = ({ contract, id }: Props) => {
   const { formState } = form
   const { errors } = formState
   const { recipient, memo } = watch()
+  const [resolvedAddress, setResolvedAddress] = useState("");
+
+  useEffect(() => {
+    const resolve = async () => {
+      if (!recipient) {
+        return;
+      }
+
+      const address = await nameMatcha.resolveAll(recipient)
+      const firstAddress = Object.values(address).find((value) => value !== null) || null;
+
+      if (firstAddress) {
+        setResolvedAddress(firstAddress);
+      }
+    }
+
+  resolve();
+  }, [recipient]);
 
   const onClickAddressBookItem = async ({ recipient, memo }: AddressBook) => {
     setValue("recipient", recipient)
@@ -50,7 +68,8 @@ const TransferCW721Form = ({ contract, id }: Props) => {
   }
 
   /* resolve recipient */
-  const { data: resolvedAddress, ...tnsState } = useTnsAddress(recipient ?? "")
+  // const { data: resolvedAddress, ...tnsState } = useTnsAddress(recipient ?? "")
+  
   useEffect(() => {
     if (!recipient) {
       setValue("address", undefined)
@@ -64,17 +83,16 @@ const TransferCW721Form = ({ contract, id }: Props) => {
   }, [form, recipient, resolvedAddress, setValue])
 
   // validate(tns): not found
-  const invalid =
-    recipient?.endsWith(".ust") && !tnsState.isLoading && !resolvedAddress
-      ? t("Address not found")
-      : ""
+  // const invalid =
+  //   recipient?.endsWith(".ust") && !tnsState.isLoading && !resolvedAddress
+  //     ? t("Address not found")
+  //     : ""
 
-  const disabled =
-    invalid || (tnsState.isLoading && t("Searching for address..."))
+  const disabled = "";
 
-  useEffect(() => {
-    if (invalid) setError("recipient", { type: "invalid", message: invalid })
-  }, [invalid, setError])
+  // useEffect(() => {
+  //   if (invalid) setError("recipient", { type: "invalid", message: invalid })
+  // }, [invalid, setError])
 
   /* tx */
   const createTx = useCallback(
@@ -126,7 +144,7 @@ const TransferCW721Form = ({ contract, id }: Props) => {
   return (
     <Auto
       columns={[
-        <Card isFetching={tnsState.isLoading}>
+        <Card isFetching={false}>
           <NFTAssetItem contract={contract} id={id} />
 
           <Tx {...tx}>
