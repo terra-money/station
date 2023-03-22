@@ -57,7 +57,10 @@ const useCloseMenuOnNavigate = () => {
   const setIsWalletOpen = useSetRecoilState(isWalletBarOpen)
 
   useEffect(() => {
-    if (isOpen) setIsWalletOpen(false) // close wallet menu on mobile
+    if (isOpen) {
+      // close wallet menu on mobile
+      setIsWalletOpen(false)
+    }
     setIsOpen(false)
   }, [pathname, setIsOpen, setIsWalletOpen]) // eslint-disable-line react-hooks/exhaustive-deps
 }
