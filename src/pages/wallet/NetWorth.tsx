@@ -10,6 +10,12 @@ import styles from "./NetWorth.module.scss"
 import { useWalletRoute, Path } from "./Wallet"
 import { capitalize } from "@mui/material"
 import NetWorthTooltip from "./NetWorthTooltip"
+import { ModalButton } from "components/feedback"
+import FiatRampModal from "./FiatRampModal"
+import { Add as AddIcon, Send as SendIcon } from "@mui/icons-material"
+import classNames from "classnames"
+
+const cx = classNames.bind(styles)
 
 const NetWorth = () => {
   const { t } = useTranslation()
@@ -40,27 +46,46 @@ const NetWorth = () => {
         <Read amount={coinsValue} decimals={0} fixed={2} denom="" token="" />
       </h1>
       <div className={styles.networth__buttons}>
-        <Button
-          color="primary"
-          onClick={() =>
-            setRoute({
-              path: Path.send,
-              previousPage: route,
-            })
-          }
-        >
-          {capitalize(t("Send"))}
-        </Button>
-        <Button
-          onClick={() =>
-            setRoute({
-              path: Path.receive,
-              previousPage: route,
-            })
-          }
-        >
-          {capitalize(t("receive"))}
-        </Button>
+        <div className={styles.button__wrapper}>
+          <Button
+            color="primary"
+            onClick={() =>
+              setRoute({
+                path: Path.send,
+                previousPage: route,
+              })
+            }
+          >
+            <SendIcon className={cx(styles.icon, styles.send)} />
+          </Button>
+          <h3>{capitalize(t("send"))}</h3>
+        </div>
+        <div className={styles.button__wrapper}>
+          <Button
+            onClick={() =>
+              setRoute({
+                path: Path.receive,
+                previousPage: route,
+              })
+            }
+          >
+            <SendIcon className={cx(styles.icon, styles.receive)} />
+          </Button>
+          <h3>{capitalize(t("receive"))}</h3>
+        </div>
+        <div className={styles.button__wrapper}>
+          <ModalButton
+            minimal
+            renderButton={(open) => (
+              <Button onClick={open}>
+                <AddIcon className={styles.icon} />
+              </Button>
+            )}
+          >
+            <FiatRampModal />
+          </ModalButton>
+          <h2>{t(capitalize("buy"))}</h2>
+        </div>
       </div>
     </article>
   )
