@@ -1,5 +1,5 @@
 import { AccAddress, Coins } from "@terra-money/feather.js"
-import { isDenom, isDenomIBC } from "@terra.kitchen/utils"
+import { isDenom, isDenomIBC } from "@terra-money/terra-utils"
 
 /* coin */
 export const getAmount = (

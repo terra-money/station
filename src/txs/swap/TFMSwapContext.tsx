@@ -1,6 +1,6 @@
 import { PropsWithChildren, useMemo } from "react"
 import { zipObj } from "ramda"
-import { isDenomIBC } from "@terra.kitchen/utils"
+import { isDenomIBC } from "@terra-money/terra-utils"
 import { AccAddress } from "@terra-money/feather.js"
 import { getAmount } from "utils/coin"
 import createContext from "utils/createContext"

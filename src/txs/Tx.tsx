@@ -10,7 +10,7 @@ import { isNil } from "ramda"
 
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline"
-import { isDenom } from "@terra.kitchen/utils"
+import { isDenom } from "@terra-money/terra-utils"
 import { Coin, Coins, CreateTxOptions } from "@terra-money/feather.js"
 import { Fee } from "@terra-money/feather.js"
 import { ConnectType, UserDenied } from "@terra-money/wallet-types"
