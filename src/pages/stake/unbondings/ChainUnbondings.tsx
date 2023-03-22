@@ -3,7 +3,7 @@ import { UnbondingDelegation } from "@terra-money/feather.js"
 import { AccAddress, Dec } from "@terra-money/feather.js"
 import { useNetwork } from "data/wallet"
 import { useNativeDenoms } from "data/token"
-import { useMemoizedPrices } from "data/queries/coingecko"
+import { useExchangeRates } from "data/queries/coingecko"
 import { combineState } from "data/query"
 import { flattenUnbondings, useUnbondings } from "data/queries/staking"
 import { getDenomFromAddress } from "utils/coin"
@@ -20,12 +20,11 @@ const ChainUnbondings = ({ chain }: { chain: string }) => {
   const { t } = useTranslation()
   const networks = useNetwork()
   const readNativeDenom = useNativeDenoms()
-  const { data: prices, ...pricesState } = useMemoizedPrices()
-
-  const state = combineState(pricesState)
-
-  const { data } = useUnbondings(chain)
+  const { data: prices, ...pricesState } = useExchangeRates()
+  const { data, ...unbondingsState } = useUnbondings(chain)
   const chainUnbondings: UnbondingDelegation[] = data || []
+
+  const state = combineState(pricesState, unbondingsState)
 
   /* render */
   const title = t("Undelegations")
@@ -64,6 +63,7 @@ const ChainUnbondings = ({ chain }: { chain: string }) => {
 
     const list = flattenUnbondings(chainUnbondings)
     const totalToDisplay = chainTotalPriceAndAmount?.price
+    const showTokens = chainTotalPriceAndAmount?.amount !== -1
 
     return (
       <ModalButton
@@ -91,6 +91,7 @@ const ChainUnbondings = ({ chain }: { chain: string }) => {
             denom={chainDenom}
             onClick={open}
             cardName={"undelegations"}
+            showTokens={showTokens}
           />
         )}
       >

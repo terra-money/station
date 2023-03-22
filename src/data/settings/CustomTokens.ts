@@ -1,8 +1,7 @@
 import { atom, useRecoilState } from "recoil"
 import update from "immutability-helper"
-import { DefaultCustomTokensItem } from "utils/localStorage"
+import { DefaultCustomTokensItem, SettingKey } from "utils/localStorage"
 import { getLocalSetting, setLocalSetting } from "utils/localStorage"
-import { SettingKey } from "utils/localStorage"
 import { useNetworkName } from "../wallet"
 
 const customTokensState = atom({
@@ -11,7 +10,7 @@ const customTokensState = atom({
 })
 
 interface Params<T> {
-  type: "ibc" | "cw20" | "cw721"
+  type: "cw20" | "cw721" | "native"
   key: keyof T
 }
 
@@ -41,13 +40,12 @@ const useCustomTokens = <T extends CustomToken>({ type, key }: Params<T>) => {
   return { list, getIsAdded, update: updateList, add, remove }
 }
 
-export const useCustomTokensIBC = () => {
-  const ibc = useCustomTokens<CustomTokenIBC>({ type: "ibc", key: "denom" })
-  return ibc
-}
-
 export const useCustomTokensCW20 = () => {
   return useCustomTokens<CustomTokenCW20>({ type: "cw20", key: "token" })
+}
+
+export const useCustomTokensNative = () => {
+  return useCustomTokens<NativeTokenBasicInfo>({ type: "native", key: "denom" })
 }
 
 export const useCustomTokensCW721 = () => {

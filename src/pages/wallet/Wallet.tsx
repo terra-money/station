@@ -5,20 +5,17 @@ import { ReactComponent as BackIcon } from "styles/images/icons/BackButton.svg"
 import { ReactComponent as WalletIcon } from "styles/images/menu/Wallet.svg"
 import NetWorth from "./NetWorth"
 import AssetList from "./AssetList"
-import { useState } from "react"
 import createContext from "utils/createContext"
 import AssetPage from "./AssetPage"
 import ReceivePage from "./ReceivePage"
 import SendPage from "./SendPage"
 import { atom, useRecoilState } from "recoil"
-import TransferPage from "./TransferPage"
 
 enum Path {
   wallet = "wallet",
   coin = "coin",
   receive = "receive",
   send = "send",
-  transfer = "transfer",
 }
 
 type Route =
@@ -28,21 +25,16 @@ type Route =
   | {
       path: Path.coin
       denom: string
-      previusPage: Route
+      previousPage: Route
     }
   | {
       path: Path.receive
-      previusPage: Route
+      previousPage: Route
     }
   | {
       path: Path.send
       denom?: string
-      previusPage: Route
-    }
-  | {
-      path: Path.transfer
-      denom?: string
-      previusPage: Route
+      previousPage: Route
     }
 
 // Handle routing inside Wallet
@@ -58,24 +50,29 @@ export const isWalletBarOpen = atom({
   default: true,
 })
 
+export const walletBarRoute = atom({
+  key: "walletBarRoute",
+  default: { path: Path.wallet } as Route,
+})
+
 const Wallet = () => {
   const [isOpen, setIsOpen] = useRecoilState(isWalletBarOpen)
-  const [route, setRoute] = useState<Route>({ path: Path.wallet })
+  const [route, setRoute] = useRecoilState(walletBarRoute)
 
-  function BackButton() {
+  const BackButton = () => {
     if (route.path === Path.wallet) return null
 
     return (
       <button
         className={styles.back}
-        onClick={() => setRoute(route.previusPage)}
+        onClick={() => setRoute(route.previousPage)}
       >
         <BackIcon width={18} height={18} />
       </button>
     )
   }
 
-  function render() {
+  const render = () => {
     switch (route.path) {
       case Path.wallet:
         return (
@@ -103,13 +100,6 @@ const Wallet = () => {
           <>
             <BackButton />
             <SendPage />
-          </>
-        )
-      case Path.transfer:
-        return (
-          <>
-            <BackButton />
-            <TransferPage />
           </>
         )
     }

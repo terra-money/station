@@ -68,6 +68,7 @@ interface Props<TxValues> {
 
   /* on tx success */
   onPost?: () => void
+  onSuccess?: () => void
   redirectAfterTx?: { label: string; path: string }
   queryKeys?: QueryKey[]
 }
@@ -83,7 +84,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const { token, decimals, amount, balance, chain } = props
   const { estimationTxValues, createTx, gasAdjustment: txGasAdjustment } = props
   const { children, onChangeMax } = props
-  const { onPost, redirectAfterTx, queryKeys } = props
+  const { onPost, redirectAfterTx, queryKeys, onSuccess } = props
 
   const [isMax, setIsMax] = useState(false)
   const [gasDenom, setGasDenom] = useState<string>("")
@@ -117,10 +118,10 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   /* simulation: estimate gas */
   const simulationTx = estimationTxValues && createTx(estimationTxValues)
-  const gasAdjustmentSetting = SettingKey.GasAdjustment
   const gasAdjustment =
-    networks[chain]?.gasAdjustment ??
-    getLocalSetting<number>(gasAdjustmentSetting)
+    getLocalSetting<number>(SettingKey.GasAdjustment) ??
+    networks[chain]?.gasAdjustment
+
   const key = {
     address: addresses?.[chain],
     network: networks,
@@ -136,6 +137,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
       try {
         const unsignedTx = await lcd.tx.create([{ address: key.address }], {
           ...simulationTx,
+          gasAdjustment: key.gasAdjustment,
           feeDenoms: [gasDenom],
         })
 
@@ -253,26 +255,26 @@ function Tx<TxValues>(props: Props<TxValues>) {
       const feeCoins = taxCoins ? gasCoins.add(taxCoins) : gasCoins
       const fee = new Fee(estimatedGas, feeCoins)
 
+      const latestTxBase = {
+        queryKeys,
+        redirectAfterTx,
+        chainID: chain,
+        onSuccess: () => {
+          if (onSuccess) onSuccess()
+          setPassword("") // required for desktop form clear
+        },
+      }
+
       if (isWallet.multisig(wallet)) {
         // TODO: broadcast only to terra if wallet is multisig
         const unsignedTx = await auth.create({ ...tx, fee })
         navigate(toPostMultisigTx(unsignedTx))
       } else if (wallet) {
-        const result = await auth.post({ ...tx, fee }, password)
-        setLatestTx({
-          txhash: result.txhash,
-          queryKeys,
-          redirectAfterTx,
-          chainID: chain,
-        })
+        const { txhash } = await auth.post({ ...tx, fee }, password)
+        setLatestTx({ txhash, ...latestTxBase })
       } else {
         const { result } = await post({ ...tx, fee })
-        setLatestTx({
-          txhash: result.txhash,
-          queryKeys,
-          redirectAfterTx,
-          chainID: chain,
-        })
+        setLatestTx({ txhash: result.txhash, ...latestTxBase })
       }
 
       onPost?.()
@@ -441,17 +443,19 @@ function Tx<TxValues>(props: Props<TxValues>) {
     ? undefined
     : {
         title:
-          error instanceof UserDenied
-            ? t("User denied")
+          error instanceof UserDenied ||
+          error?.toString().includes("UserDenied")
+            ? t("Transaction was denied by user")
             : error instanceof CreateTxFailed
             ? t("Failed to create tx")
             : error instanceof TxFailed
             ? t("Tx failed")
             : t("Error"),
         children:
-          error instanceof UserDenied ? null : (
+          error instanceof UserDenied ||
+          error?.toString().includes("UserDenied") ? null : (
             <Pre height={120} normal break>
-              {error.message}
+              {error?.message}
             </Pre>
           ),
       }

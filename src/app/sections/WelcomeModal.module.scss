@@ -15,9 +15,7 @@
 
 .modal {
   @include flex-column;
-  min-height: 740px;
-  max-height: 90%;
-
+  max-height: 80vh;
   background: var(--card-bg-muted);
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
@@ -64,7 +62,7 @@
 .accordions {
   @include flex-column(flex-start, center);
   gap: 12px;
-  min-height: 450px;
+  min-height: 300px;
   overflow: scroll;
 
   .accordion,
@@ -119,10 +117,11 @@
         margin-left: 15px;
 
         li {
+          line-height: 1.8;
           .highlighted {
             background-color: var(--input-border);
             border-radius: 3px;
-            color: var(--danger);
+            color: var(--link);
             font-weight: var(--bold);
             padding: 4px 6px;
           }

@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from "react"
-import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import { ValAddress } from "@terra-money/feather.js"
 import { MsgWithdrawValidatorCommission } from "@terra-money/feather.js"
@@ -16,7 +15,6 @@ import Tx from "../Tx"
 
 // TODO: make this interchain
 const WithdrawCommissionForm = () => {
-  const { t } = useTranslation()
   const currency = useCurrency()
   const address = useAddress()
   const chainID = useChainID()
@@ -39,7 +37,6 @@ const WithdrawCommissionForm = () => {
   const tx = {
     estimationTxValues,
     createTx,
-    onSuccess: { label: t("Stake"), path: "/stake" },
     chain: chainID,
   }
 

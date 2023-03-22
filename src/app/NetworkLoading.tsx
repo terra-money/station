@@ -7,7 +7,7 @@ import { Button } from "components/general"
 import ReplayIcon from "@mui/icons-material/Replay"
 
 interface Props {
-  title: string
+  title?: string
   timeout?: {
     time: number
     fallback: () => void
@@ -32,10 +32,12 @@ const NetworkLoading = ({ title, timeout }: Props) => {
         <img src={animation} alt="Loading..." width={120} height={120} />
         <article>
           <FlexColumn gap={18}>
-            <h1 className={styles.title}>{title}</h1>
+            <h1 className={styles.title}>
+              {title ? `${title}` : "Loading..."}
+            </h1>
             {timeout && showTimeout && (
               <FlexColumn gap={10}>
-                <p>Oops, something went wrong, this is taking too much time.</p>
+                <p>Something went wrong</p>
                 <Button color="primary" onClick={timeout.fallback}>
                   <ReplayIcon /> Reload Station
                 </Button>

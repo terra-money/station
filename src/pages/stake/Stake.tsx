@@ -17,6 +17,7 @@ import QuickStakeTooltip from "./QuickStakeTooltip"
 import { Fetching } from "components/feedback"
 import styles from "./StakedDonut.module.scss"
 import ChainFilter from "components/layout/ChainFilter"
+import DelegationsPromote from "app/containers/DelegationsPromote"
 
 const Stake = () => {
   const { t } = useTranslation()
@@ -72,10 +73,10 @@ const Stake = () => {
             <Staked chain={chainSelected} />
           </Row>
         ) : (
-          <Staked chain={chainSelected} />
+          <DelegationsPromote horizontal />
         )}
 
-        <Tabs tabs={tabs} type="page" />
+        <Tabs tabs={tabs} type="page" state />
       </Col>
     </Page>
   )

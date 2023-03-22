@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next"
 import { AccAddress, Dec } from "@terra-money/feather.js"
 import { getMaxHeightStyle } from "utils/style"
 import { combineState } from "data/query"
-import { useMemoizedPrices } from "data/queries/coingecko"
+import { useExchangeRates } from "data/queries/coingecko"
 import {
   flattenUnbondings,
   useInterchainUnbondings,
@@ -23,7 +23,7 @@ const Unbondings = () => {
   const { t } = useTranslation()
   const networks = useNetwork()
   const readNativeDenom = useNativeDenoms()
-  const { data: prices, ...pricesState } = useMemoizedPrices()
+  const { data: prices, ...pricesState } = useExchangeRates()
 
   const interchainUnbondings = useInterchainUnbondings()
   const unbondings = interchainUnbondings.reduce(
@@ -68,7 +68,7 @@ const Unbondings = () => {
                 >
                   {title}
                 </TooltipIcon>
-                {total !== -1 && (
+                {total !== 0 && (
                   <span className={styles.view_more}>View More</span>
                 )}
               </div>

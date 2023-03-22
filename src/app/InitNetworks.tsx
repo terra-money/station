@@ -2,8 +2,10 @@ import { PropsWithChildren, useEffect, useState } from "react"
 import axios from "axios"
 import { STATION_ASSETS } from "config/constants"
 import createContext from "utils/createContext"
-import NetworkLoading from "./NetworkLoading"
-import { randomAddress } from "utils/bech32"
+import { useCustomLCDs } from "utils/localStorage"
+import { useValidNetworks } from "data/queries/tendermint"
+import { WithFetching } from "components/feedback"
+import { combineState } from "data/query"
 
 type TokenFilter = <T>(network: Record<string, T>) => Record<string, T>
 
@@ -11,11 +13,12 @@ export const [useNetworks, NetworksProvider] = createContext<{
   networks: InterchainNetworks
   filterEnabledNetworks: TokenFilter
   filterDisabledNetworks: TokenFilter
+  networksLoading: boolean
 }>("useNetworks")
 
 const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
   const [networks, setNetworks] = useState<InterchainNetworks>()
-  const [enabledNetworks, setEnabledNetworks] = useState<string[]>([])
+  const { customLCDs } = useCustomLCDs()
 
   useEffect(() => {
     const fetchChains = async () => {
@@ -31,82 +34,55 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
     fetchChains()
   }, [])
 
-  useEffect(() => {
-    const testChains = async () => {
-      if (!networks) return
-      const testBase = {
+  const testBase = networks
+    ? Object.values({
         ...networks.mainnet,
         ...networks.testnet,
         ...networks.classic,
-        //...networks.localterra,
-      }
+      }).map((chain) => {
+        const lcd = customLCDs[chain.chainID] ?? chain.lcd
+        return { ...chain, lcd }
+      })
+    : []
 
-      const stored = localStorage.getItem("enabledNetworks")
-      const cached = stored && JSON.parse(stored)
+  const validationResult = useValidNetworks(testBase)
 
-      if (cached && cached.time > Date.now() - 10 * 60 * 1000) {
-        setEnabledNetworks(cached.networks)
-        return
-      }
+  const validNetworks = validationResult.reduce(
+    (acc, { data }) => (data ? [...acc, data] : acc),
+    [] as string[]
+  )
+  
+  const validationState = combineState(...validationResult)
 
-      const result = await Promise.all(
-        Object.values(testBase).map(async (network) => {
-          if (network.prefix === "terra") return network.chainID
-          try {
-            const { data } = await axios.get(
-              `/cosmos/bank/v1beta1/balances/${randomAddress(network.prefix)}`,
-              {
-                baseURL: network.lcd,
-                timeout: 3_000,
-              }
-            )
-            return Array.isArray(data.balances) && network.chainID
-          } catch (e) {
-            console.error(e)
-            return null
-          }
-        })
-      )
-
-      localStorage.setItem(
-        "enabledNetworks",
-        JSON.stringify({
-          time: Date.now(),
-          networks: result.filter((r) => typeof r === "string") as string[],
-        })
-      )
-      setEnabledNetworks(
-        result.filter((r) => typeof r === "string") as string[]
-      )
-    }
-
-    testChains()
-  }, [networks])
-
-  if (!networks || !enabledNetworks.length)
-    return <NetworkLoading title="Connecting to available networks..." />
+  if (!networks) return null
 
   return (
-    <NetworksProvider
-      value={{
-        networks,
-        filterEnabledNetworks: (networks) =>
-          Object.fromEntries(
-            Object.entries(networks).filter(
-              ([chainID]) =>
-                chainID === "localterra" || enabledNetworks.includes(chainID)
-            )
-          ),
-        filterDisabledNetworks: (networks) =>
-          Object.fromEntries(
-            Object.entries(networks).filter(
-              ([chainID]) => !enabledNetworks.includes(chainID)
-            )
-          ),
-      }}
-    >
-      {children}
-    </NetworksProvider>
+    <WithFetching {...validationState} height={2}>
+      {(progress) => (
+        <NetworksProvider
+          value={{
+            networks,
+            networksLoading: validationState.isLoading,
+            filterEnabledNetworks: (networks) =>
+              Object.fromEntries(
+                Object.entries(networks).filter(
+                  ([chainID]) =>
+                    chainID === "localterra" || validNetworks.includes(chainID)
+                )
+              ),
+            filterDisabledNetworks: (networks) =>
+              Object.fromEntries(
+                Object.entries(networks).filter(
+                  ([chainID]) => !validNetworks.includes(chainID)
+                )
+              ),
+          }}
+        >
+          {progress}
+          {children}
+        </NetworksProvider>
+      )}
+    </WithFetching>
   )
 }
 

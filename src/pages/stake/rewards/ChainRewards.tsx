@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { useExchangeRates, useMemoizedPrices } from "data/queries/coingecko"
+import { useExchangeRates } from "data/queries/coingecko"
 import { useCurrency } from "data/settings/Currency"
 import { useMemoizedCalcValue } from "data/queries/coingecko"
 import { useNativeDenoms, WithTokenItem } from "data/token"
@@ -23,16 +23,15 @@ const ChainRewards = ({ chain }: { chain: string }) => {
   const readNativeDenom = useNativeDenoms()
   const networks = useNetwork()
 
-  const { data: prices, ...pricesState } = useMemoizedPrices()
   const { data: exchangeRates, ...exchangeRatesState } = useExchangeRates()
   const { data: chainRewards, ...chainRewardsState } = useRewards(chain)
 
-  const state = combineState(exchangeRatesState, pricesState, chainRewardsState)
+  const state = combineState(exchangeRatesState, chainRewardsState)
 
   /* render */
   const title = t("Staking rewards")
   const render = () => {
-    if (!chainRewards || !prices) return null
+    if (!chainRewards || !exchangeRates) return null
 
     let sameDenom = true
     const chainTotalPriceAndAmount: any = chainRewards?.total.toData().reduce(
@@ -42,8 +41,8 @@ const ChainRewards = ({ chain }: { chain: string }) => {
           sameDenom = false
         }
 
-        let newPriceHolder = amountTotal
-        let newAmountHolder = priceTotal
+        let newPriceHolder = priceTotal
+        let newAmountHolder = amountTotal
         if (index === 0) {
           newPriceHolder = 0
           newAmountHolder = 0
@@ -53,7 +52,8 @@ const ChainRewards = ({ chain }: { chain: string }) => {
           amountTotal: newAmountHolder + parseInt(amount) / 10 ** decimals,
           priceTotal:
             newPriceHolder +
-            (parseInt(amount) * (prices?.[token]?.price || 0)) / 10 ** decimals,
+            (parseInt(amount) * (exchangeRates?.[token]?.price || 0)) /
+              10 ** decimals,
         }
       },
       { amountTotal: -1, priceTotal: -1 }
@@ -81,6 +81,8 @@ const ChainRewards = ({ chain }: { chain: string }) => {
       }, true)
     }
 
+    const showTokens = totalToDisplay === -1 || sameDenom
+
     const list = totalChainRewards
 
     return (
@@ -100,8 +102,9 @@ const ChainRewards = ({ chain }: { chain: string }) => {
               </div>
             }
             value={totalToDisplay?.toString() || "-1"}
-            amount={amountToDisplay}
+            amount={amountToDisplay.toString()}
             denom={networks[chain]?.baseAsset || ""}
+            showTokens={showTokens}
             onClick={open}
             cardName="rewards"
           ></StakedCard>

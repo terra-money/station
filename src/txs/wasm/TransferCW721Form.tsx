@@ -103,7 +103,6 @@ const TransferCW721Form = ({ contract, id }: Props) => {
     estimationTxValues,
     createTx,
     disabled,
-    onSuccess: { label: t("NFT"), path: "/nft" },
     queryKeys: [
       [
         queryKey.wasm.contractQuery,

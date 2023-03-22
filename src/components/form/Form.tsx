@@ -44,14 +44,15 @@ interface FormItemProps {
   label?: ReactNode
   extra?: ReactNode
   error?: string
+  style?: React.CSSProperties
 }
 
 /* item */
 export const FormItem = (props: PropsWithChildren<FormItemProps>) => {
-  const { label, extra, error, children } = props
+  const { label, extra, error, children, style } = props
 
   return (
-    <Grid gap={4}>
+    <Grid style={style} gap={4}>
       <header className={styles.header}>
         {label && <label className={styles.label}>{label}</label>}
         <aside className={styles.extra}>{extra}</aside>

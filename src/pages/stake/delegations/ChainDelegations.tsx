@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
 import { useNativeDenoms } from "data/token"
-import { useMemoizedPrices } from "data/queries/coingecko"
+import { useExchangeRates } from "data/queries/coingecko"
 import { combineState } from "data/query"
 import { useDelegations } from "data/queries/staking"
 import { AccAddress, Coin, Delegation } from "@terra-money/feather.js"
@@ -15,7 +15,7 @@ import styles from "../CardModal.module.scss"
 const ChainDelegations = ({ chain }: { chain: string }) => {
   const { t } = useTranslation()
   const readNativeDenom = useNativeDenoms()
-  const { data: prices, ...pricesState } = useMemoizedPrices()
+  const { data: prices, ...pricesState } = useExchangeRates()
   const { data, ...chainDelegationsState } = useDelegations(chain)
   const chainDelegations: Delegation[] = data || []
 
@@ -49,6 +49,7 @@ const ChainDelegations = ({ chain }: { chain: string }) => {
     )
 
     const totalToDisplay = chainTotalPriceAndAmount?.price
+    const showTokens = chainTotalPriceAndAmount?.amount !== -1
 
     const list = chainDelegations || []
 
@@ -71,6 +72,7 @@ const ChainDelegations = ({ chain }: { chain: string }) => {
             denom={chainDenom}
             onClick={open}
             cardName={"delegations"}
+            showTokens={showTokens}
           />
         )}
       >

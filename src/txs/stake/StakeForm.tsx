@@ -16,6 +16,7 @@ import { getPlaceholder, toInput } from "../utils"
 import validate from "../validate"
 import Tx from "txs/Tx"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
+import { useNativeDenoms } from "data/token"
 
 interface TxValues {
   source?: ValAddress
@@ -41,6 +42,7 @@ const StakeForm = (props: Props) => {
   const { tab, destination, balances, validators, delegations, chainID } = props
 
   const { t } = useTranslation()
+  const readNativeDenom = useNativeDenoms()
   const addresses = useInterchainAddresses()
   const address = addresses?.[chainID]
   const networks = useNetwork()
@@ -123,6 +125,7 @@ const StakeForm = (props: Props) => {
 
   const token = tab === StakeAction.DELEGATE ? baseAsset : ""
   const tx = {
+    decimals: readNativeDenom(token)?.decimals,
     token,
     amount,
     balance,
@@ -130,10 +133,6 @@ const StakeForm = (props: Props) => {
     estimationTxValues,
     createTx,
     onChangeMax,
-    onSuccess: {
-      label: findMoniker(destination),
-      path: `/validator/${destination}`,
-    },
     queryKeys: [
       queryKey.staking.delegations,
       queryKey.staking.unbondings,

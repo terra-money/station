@@ -5,9 +5,13 @@ import { SearchInput } from "components/form"
 interface Props {
   gap?: number
   placeholder?: string
+  inline?: boolean
   padding?: boolean
   small?: boolean
+  disabled?: boolean
+  extra?: ReactNode
   children: (input: string) => ReactNode
+  className?: string
 }
 
 const WithSearchInput = ({
@@ -16,17 +20,22 @@ const WithSearchInput = ({
   placeholder,
   padding,
   small,
+  inline,
+  extra,
+  className,
 }: Props) => {
   const [input, setInput] = useState("")
 
   return (
-    <Grid gap={gap ?? 20}>
+    <Grid gap={gap ?? 20} className={className}>
       <SearchInput
         value={input}
         small={small}
+        inline={inline}
         placeholder={placeholder}
         onChange={(e) => setInput(e.target.value)}
         autoFocus
+        extra={extra}
         padding={padding}
       />
       {children(input)}

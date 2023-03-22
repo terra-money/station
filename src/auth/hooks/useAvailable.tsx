@@ -18,12 +18,12 @@ const useAvailable = () => {
     },
     {
       to: "/auth/recover",
-      children: t("Recover wallet"),
+      children: t("Import from seed phrase"),
       icon: <SettingsBackupRestoreIcon />,
     },
     {
       to: "/auth/import",
-      children: t("Import wallet"),
+      children: t("Import from private key"),
       icon: <KeyIcon />,
     },
     {

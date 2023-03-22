@@ -11,7 +11,7 @@ import { Form, FormItem, Input, Select } from "components/form"
 import ChainSelector from "components/form/ChainSelector"
 import { Flex } from "components/layout"
 import { useBankBalance } from "data/queries/bank"
-import { useMemoizedPrices } from "data/queries/coingecko"
+import { useExchangeRates } from "data/queries/coingecko"
 import { useNativeDenoms } from "data/token"
 import { useCallback, useEffect, useMemo } from "react"
 import { useForm } from "react-hook-form"
@@ -54,7 +54,7 @@ const TransferPage = () => {
   const networkName = useNetworkName()
   const { t } = useTranslation()
   const balances = useBankBalance()
-  const { data: prices } = useMemoizedPrices()
+  const { data: prices } = useExchangeRates()
   const readNativeDenom = useNativeDenoms()
   const { route } = useWalletRoute() as unknown as { route: { denom?: string } }
   const availableAssets = useMemo(
@@ -108,8 +108,8 @@ const TransferPage = () => {
       availableAssets
         .find(({ denom }) => denom === (asset ?? defaultAsset))
         ?.chains.sort((a, b) => {
-          if (networks[a].prefix === "terra") return -1
-          if (networks[b].prefix === "terra") return 1
+          if (networks[a]?.prefix === "terra") return -1
+          if (networks[b]?.prefix === "terra") return 1
           return 0
         }),
     [asset, availableAssets, defaultAsset, networks]
@@ -120,8 +120,8 @@ const TransferPage = () => {
       Object.keys(networks)
         .filter((chainID) => chainID !== chain)
         .sort((a, b) => {
-          if (networks[a].prefix === "terra") return -1
-          if (networks[b].prefix === "terra") return 1
+          if (networks[a]?.prefix === "terra") return -1
+          if (networks[b]?.prefix === "terra") return 1
           return 0
         }),
     [networks, availableChains, chain] // eslint-disable-line
@@ -333,7 +333,6 @@ const TransferPage = () => {
     createTx,
     disabled: false,
     onChangeMax,
-    onSuccess: { label: t("Wallet"), path: "/wallet" },
     taxRequired: true,
     queryKeys: [queryKey.bank.balances, queryKey.bank.balance],
     gasAdjustment:

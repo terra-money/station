@@ -17,7 +17,6 @@ import Aside from "./sections/Aside"
 import NetworkHeader from "./sections/NetworkHeader"
 import Refresh from "./sections/Refresh"
 import Preferences from "./sections/Preferences"
-import SelectTheme from "./sections/SelectTheme"
 import ConnectWallet from "./sections/ConnectWallet"
 
 /* extra */
@@ -28,56 +27,51 @@ import DevTools from "./sections/DevTools"
 /* init */
 import InitBankBalance from "./InitBankBalance"
 import Wallet from "pages/wallet/Wallet"
-import WelcomeModal from "./sections/WelcomeModal"
 import NavButton from "./sections/NavButton"
 import NetworkStatus from "components/display/NetworkStatus"
 
 const App = () => {
   const { element: routes } = useNav()
 
-  const showWelcomeModal = localStorage.getItem("welcomeModal") === null
-
   return (
-    <Layout>
-      <Banner>
-        <UpdateExtension />
-      </Banner>
+    <InitBankBalance>
+      <Layout>
+        <Banner>
+          <UpdateExtension />
+        </Banner>
 
-      <Sidebar>
-        <Nav />
-        <Aside />
-      </Sidebar>
+        <Sidebar>
+          <Nav />
+          <Aside />
+        </Sidebar>
 
-      <Header>
-        <NetworkHeader />
+        <Header>
+          <NetworkHeader />
 
-        <Actions>
-          <DevTools />
-          <section>
-            <Refresh />
-            <Preferences />
-            <SelectTheme />
-            <NetworkStatus />
-          </section>
-          <ValidatorButton />
-          <ConnectWallet />
-          <NavButton />
-        </Actions>
-        <LatestTx />
-      </Header>
+          <Actions>
+            <DevTools />
+            <section>
+              <Refresh />
+              <Preferences />
+              <NetworkStatus />
+            </section>
+            <ValidatorButton />
+            <ConnectWallet />
+            <NavButton />
+          </Actions>
+          <LatestTx />
+        </Header>
 
-      <Content>
-        <ErrorBoundary fallback={fallback}>
-          <InitBankBalance>
+        <Content>
+          <ErrorBoundary fallback={fallback}>
             <MainContainer>
               {routes}
               <Wallet />
-              {showWelcomeModal && <WelcomeModal />}
             </MainContainer>
-          </InitBankBalance>
-        </ErrorBoundary>
-      </Content>
-    </Layout>
+          </ErrorBoundary>
+        </Content>
+      </Layout>
+    </InitBankBalance>
   )
 }
 
