@@ -14,6 +14,7 @@ exports[`CurrencySetting component matches snapshots matches original component 
         autocomplete="off"
         class="input input__small"
         inputmode="search"
+        small="true"
         value=""
       />
       <svg
@@ -129,6 +130,7 @@ exports[`CurrencySetting component matches snapshots matches user augmented comp
         autocomplete="off"
         class="input input__small"
         inputmode="search"
+        small="true"
         value="JPY"
       />
       <svg

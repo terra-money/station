@@ -69,27 +69,26 @@ export const SearchInput = forwardRef(
   (
     attrs: InputHTMLAttributes<HTMLInputElement> & {
       padding?: boolean
-      small?: boolean
+      small?: string
       inline?: boolean
     },
     ref: ForwardedRef<HTMLInputElement>
   ) => {
+    const isSmallWrapper = attrs.small ? `${styles.search__small}` : ""
+    const isSmallInput = attrs.small ? `${styles.input__small}` : ""
     return (
       <div
         className={classNames(
           styles.wrapper,
           styles.search,
-          attrs.small && styles.search__small,
+          isSmallWrapper,
           attrs.inline && styles.search__inline
         )}
         style={attrs.padding ? {} : { margin: 0 }}
       >
         <input
           {...attrs}
-          className={classNames(
-            styles.input,
-            attrs.small && styles.input__small
-          )}
+          className={classNames(styles.input, isSmallInput)}
           inputMode="search"
           autoComplete="off"
           ref={ref}

@@ -39,6 +39,7 @@ const SettingsSelector = ({ value, options, onChange, withSearch }: Props) => {
                 styles.accordion,
                 openAcc === index + 1 ? "opened" : ""
               )}
+              key={value}
             >
               <button
                 key={value}

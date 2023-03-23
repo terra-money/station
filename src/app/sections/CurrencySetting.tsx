@@ -8,7 +8,7 @@ const CurrencySetting = () => {
   const [currency, setCurrency] = useCurrencyState()
 
   return (
-    <WithSearchInput gap={8} small>
+    <WithSearchInput gap={8} small={true}>
       {(input) => (
         <SettingsSelector
           options={fiatList

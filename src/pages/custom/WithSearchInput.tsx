@@ -27,7 +27,7 @@ const WithSearchInput = ({
     <Grid gap={gap ?? 20} className={className}>
       <SearchInput
         value={input}
-        small={small}
+        small={small?.toString()}
         inline={inline}
         placeholder={placeholder}
         onChange={(e) => setInput(e.target.value)}
