@@ -6,8 +6,7 @@ export enum SettingKey {
   Theme = "Theme",
   Currency = "FiatCurrency",
   CustomNetworks = "CustomNetworks",
-  GasAdjustment = "GasAdjustment", // Tx
-  ClassicGasAdjustment = "ClassicGasAdjustment",
+  GasAdjustment = "GasAdjust", // Tx
   AddressBook = "AddressBook", // Send
   HideNonWhitelistTokens = "HideNonWhiteListTokens",
   Chain = "Chain",
