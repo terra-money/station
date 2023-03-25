@@ -44,6 +44,7 @@ import { useInterchainLCDClient } from "data/queries/lcdClient"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { getShouldTax, useTaxCap, useTaxRate } from "data/queries/treasury"
 import { useNativeDenoms } from "data/token"
+import { useDevMode } from "utils/localStorage"
 
 interface Props<TxValues> {
   /* Only when the token is paid out of the balance held */
@@ -85,6 +86,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const { estimationTxValues, createTx, gasAdjustment: txGasAdjustment } = props
   const { children, onChangeMax } = props
   const { onPost, redirectAfterTx, queryKeys, onSuccess } = props
+  const { devMode } = useDevMode()
 
   const [isMax, setIsMax] = useState(false)
   const [gasDenom, setGasDenom] = useState<string>("")
@@ -118,9 +120,9 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   /* simulation: estimate gas */
   const simulationTx = estimationTxValues && createTx(estimationTxValues)
-  const gasAdjustment =
-    networks[chain]?.gasAdjustment ??
-    getLocalSetting<number>(SettingKey.GasAdjustment)
+  const gasAdjustment = devMode
+    ? getLocalSetting<number>(SettingKey.GasAdjustment)
+    : networks[chain]?.gasAdjustment
 
   const key = {
     address: addresses?.[chain],
