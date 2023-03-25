@@ -32,7 +32,7 @@ const InitBankBalance = ({ children }: PropsWithChildren<{}>) => {
   native.list.forEach(({ denom }) => {
     if (!bankBalance.find((balance) => balance.denom === denom)) {
       const token = whitelist[networkName][denom]
-      console.log({ whitelist, denom })
+
       if (!token || !token.chains || token.chains.length === 0) return
 
       bankBalance.push({
