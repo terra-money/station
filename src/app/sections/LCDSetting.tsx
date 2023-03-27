@@ -1,6 +1,6 @@
 import { useNetworkName, useNetworkOptions } from "data/wallet"
 import { useForm } from "react-hook-form"
-import { Form, FormItem, Input, Select } from "components/form"
+import { Form, FormItem, Input } from "components/form"
 import { useTranslation } from "react-i18next"
 import { useNetworks } from "app/InitNetworks"
 import ChainSelector from "components/form/ChainSelector"
@@ -44,8 +44,8 @@ const LCDSetting = () => {
     () =>
       Object.values(networks[network] ?? {})
         .sort((a, b) => {
-          if (a.prefix === "terra") return -1
-          if (b.prefix === "terra") return 1
+          if (a?.prefix === "terra") return -1
+          if (b?.prefix === "terra") return 1
           return 0
         })
         .map(({ chainID }) => chainID),

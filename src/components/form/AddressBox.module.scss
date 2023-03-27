@@ -4,23 +4,12 @@
 .wrapper {
   @include border;
   @include size;
-  align-items: stretch;
   max-width: 100%;
-  display: grid;
-  grid-template-columns: auto min-content;
-  grid-template-areas: "address after";
+  @include flex(space-between);
+  gap: 8px;
 }
 
-.address {
-  flex: 1;
-  @include flex(flex-start);
-  grid-area: address;
-  overflow-x: scroll;
-}
-
-.copy {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  grid-area: after;
-  padding-left: 10px;
+.btnWrapper {
+  @include flex;
+  gap: 8px;
 }

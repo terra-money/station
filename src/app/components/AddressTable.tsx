@@ -1,9 +1,6 @@
 import { AccAddress } from "@terra-money/feather.js"
-import { FinderLink } from "components/general"
 import { getChainNamefromID } from "data/queries/chains"
 import { useNetwork, useAddress } from "data/wallet"
-import { truncate } from "@terra.kitchen/utils"
-import { CopyIcon } from "components/general"
 import { TokenIcon } from "components/token"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { Table } from "components/layout"
@@ -43,7 +40,11 @@ const AddressTable = (props: Props) => {
     .sort((a) => (coins.some(({ chain }) => chain === a.id) ? -1 : 1))
 
   return (
-    <WithSearchInput gap={10} placeholder={t("Search for a chain...")}>
+    <WithSearchInput
+      gap={10}
+      placeholder={t("Search for a chain...")}
+      className={styles.grid__override}
+    >
       {(keyword: string) => (
         <Table
           className={className}
@@ -71,19 +72,11 @@ const AddressTable = (props: Props) => {
               ),
             },
             {
-              dataIndex: "address",
-              hidden: !finderLink,
-              render: (address: AccAddress) => (
-                <div className={styles.address}>
-                  <FinderLink value={address}>{truncate(address)}</FinderLink>
-                  <CopyIcon text={address} />
-                </div>
-              ),
-            },
-            {
               hidden: finderLink,
               dataIndex: "address",
-              render: (address: AccAddress) => <AddressBox address={address} />,
+              render: (address: AccAddress) => (
+                <AddressBox withQR address={address} />
+              ),
             },
           ]}
         />

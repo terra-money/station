@@ -104,19 +104,22 @@ const SendPage = () => {
     recipient,
     input,
     memo,
-    decimals,
     chain,
     address: destinationAddress,
     asset,
   } = watch()
-  const amount = toAmount(input, { decimals: decimals ?? 6 })
+
+  const decimals = asset ? readNativeDenom(asset).decimals : 6
+
+  const amount = toAmount(input, { decimals })
+
   const availableChains = useMemo(
     () =>
       availableAssets
         .find(({ denom }) => denom === (asset ?? defaultAsset))
         ?.chains.sort((a, b) => {
-          if (networks[a].prefix === "terra") return -1
-          if (networks[b].prefix === "terra") return 1
+          if (networks[a]?.prefix === "terra") return -1
+          if (networks[b]?.prefix === "terra") return 1
           return 0
         }),
     [asset, availableAssets, defaultAsset, networks]
@@ -325,7 +328,9 @@ const SendPage = () => {
         <Form onSubmit={handleSubmit(submit.fn)} className={styles.form}>
           <section className={styles.send}>
             <div className={styles.form__container}>
-              <h1>{t("Send")}</h1>
+              <div className={styles.form__header__wrapper}>
+                <h1>{t("Send")}</h1>
+              </div>
               <FormItem
                 label={t("Asset")}
                 error={errors.asset?.message ?? errors.address?.message}

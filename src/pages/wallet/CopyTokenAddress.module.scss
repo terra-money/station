@@ -1,0 +1,11 @@
+@import "mixins";
+
+.container {
+  @include flex(flex-start);
+  align-items: center;
+  width: fit-content;
+  background-color: var(--button-default-bg);
+  margin-top: 1rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--border-radius);
+}
