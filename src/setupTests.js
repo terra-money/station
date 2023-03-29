@@ -5,8 +5,25 @@ import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { WalletStatus } from '@terra-money/wallet-types';
 
 Enzyme.configure({ adapter: new Adapter() });
-//global.crypto = new Crypto();
-// globalThis.crypto = require('crypto');
+
+global.crypto = new Crypto();
+window.crypto = new Crypto();
+
+jest.mock('jscrypto/SHA256', () => ({
+
+}));
+
+jest.mock('jscrypto/RIPEMD160', () => ({
+
+}));
+
+jest.mock('jscrypto/Base64', () => ({
+
+}));
+
+jest.mock('jscrypto/index.js', () => ({
+
+}));
 
 jest.mock('react-modal', () => ({
   ...jest.requireActual('react-modal'),
@@ -19,11 +36,17 @@ jest.mock('@terra-money/wallet-provider', () => {
   const useWallet = () => {
     return {
       status: 'WALLET_CONNECTED',
+      network: ['pisco-1']
     };
   };
 
   return {
     useWallet: useWallet,
+    WalletStatus: {
+      INITIALIZING: "INITIALIZING",
+      WALLET_NOT_CONNECTED: "WALLET_NOT_CONNECTED",
+      WALLET_CONNECTED: "WALLET_CONNECTED",
+    },
   };
 });
 
