@@ -5,13 +5,7 @@ import { useForm } from "react-hook-form"
 import UsbIcon from "@mui/icons-material/Usb"
 import BluetoothIcon from "@mui/icons-material/Bluetooth"
 import { LedgerKey } from "@terra-money/ledger-station-js"
-import {
-  Form,
-  FormError,
-  FormHelp,
-  FormItem,
-  FormWarning,
-} from "components/form"
+import { Form, FormError, FormItem, FormWarning } from "components/form"
 import { Checkbox, Input, Submit } from "components/form"
 import validate from "../scripts/validate"
 import useAuth from "../hooks/useAuth"
@@ -23,8 +17,6 @@ import connect from "./assets/connect.json"
 import openApp from "./assets/openApp.json"
 import { Button } from "components/general"
 
-import styles from "./AccessWithLedger.module.scss"
-import { FlexColumn } from "components/layout"
 import { TooltipIcon } from "components/display"
 
 interface Values {
@@ -37,8 +29,6 @@ enum Pages {
   form = "form",
   connect = "connect",
   openTerra = "openTerra",
-  askCosmos = "askCosmos",
-  openCosmos = "openCosmos",
   selectName = "selectName",
   complete = "complete",
 }
@@ -74,7 +64,7 @@ const AccessWithLedgerForm = () => {
     navigate("/", { replace: true })
   }
 
-  const connectTerra = async () => {
+  const connectApp = async () => {
     setError(undefined)
     try {
       // wait until ledger is connected
@@ -85,34 +75,20 @@ const AccessWithLedgerForm = () => {
         index,
         onConnect: () => setPage(Pages.openTerra),
       })
-      setWords({ "330": wordsFromAddress(key330.accAddress("terra")) })
-      setPage(Pages.askCosmos)
-    } catch (error) {
-      setError(error as Error)
-      setPage(Pages.form)
-    }
-  }
-
-  const connectCosmos = async () => {
-    setError(undefined)
-    try {
-      // wait until ledger is connected
-      setPage(Pages.connect)
-      // TODO: might want to use 118 on terra too
       const key118 = await LedgerKey.create({
         transport: bluetooth ? createBleTransport : undefined,
         index,
         coinType: 118,
-        onConnect: () => setPage(Pages.openCosmos),
+        onConnect: () => setPage(Pages.openTerra),
       })
-      setWords((w) => ({
-        ...w,
+      setWords({
+        "330": wordsFromAddress(key330.accAddress("terra")),
         "118": wordsFromAddress(key118.accAddress("terra")),
-      }))
+      })
       setPage(Pages.complete)
     } catch (error) {
       setError(error as Error)
-      setPage(Pages.askCosmos)
+      setPage(Pages.form)
     }
   }
 
@@ -163,7 +139,7 @@ const AccessWithLedgerForm = () => {
             </FormItem>
 
             {error && <FormError>{error.message}</FormError>}
-            <Button color="primary" onClick={connectTerra}>
+            <Button color="primary" onClick={connectApp}>
               Connect
             </Button>
           </>
@@ -185,57 +161,6 @@ const AccessWithLedgerForm = () => {
                 <Lottie animationData={openApp} />
                 <p>
                   Open the <strong>Terra app</strong> on the Ledger device.
-                </p>
-              </section>
-            </>
-          </>
-        )
-      case Pages.askCosmos:
-        return (
-          <>
-            <>
-              <section className="center">
-                <p>{t("Do you want to import your Cosmos accounts?")}</p>
-                <FlexColumn gap={4} className={styles.warningContainer}>
-                  <FormHelp>
-                    {t(
-                      "You will need the Cosmos app installed on your Ledger."
-                    )}
-                    <br />
-                    {t(
-                      "The device will try to open the cosmos app automatically."
-                    )}
-                  </FormHelp>
-                  {error && <FormError>{error.message}, try again.</FormError>}
-                </FlexColumn>
-
-                <Button
-                  className={styles.mainButton}
-                  color="primary"
-                  onClick={connectCosmos}
-                >
-                  {t("Yes")}
-                </Button>
-                <p>
-                  <button
-                    className={styles.smallButton}
-                    onClick={() => setPage(Pages.complete)}
-                  >
-                    {t("No, I'll use only Terra")}
-                  </button>
-                </p>
-              </section>
-            </>
-          </>
-        )
-      case Pages.openCosmos:
-        return (
-          <>
-            <>
-              <section className="center">
-                <Lottie animationData={openApp} />
-                <p>
-                  Open the <strong>Cosmos app</strong> on the Ledger device.
                 </p>
               </section>
             </>
