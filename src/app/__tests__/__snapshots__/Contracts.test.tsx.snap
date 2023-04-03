@@ -1,0 +1,111 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Contract component matches snapshots matches original component 1`] = `
+<DocumentFragment>
+  <article
+    class="page"
+  >
+    <div
+      class="container grid"
+    >
+      <header
+        class="header"
+      >
+        <div
+          class="titleWrapper"
+        >
+          <h1
+            class="title"
+          >
+            Contract
+          </h1>
+        </div>
+        <div
+          class="actions end"
+        >
+          <a
+            class="button small primary"
+            href="/contract/store"
+          >
+            Upload
+          </a>
+          <a
+            class="button small primary"
+            href="/contract/instantiate"
+          >
+            Instantiate
+          </a>
+        </div>
+      </header>
+      <section
+        class="main"
+      >
+        <div
+          class="grid"
+          style="gap: 20px;"
+        >
+          <main
+            class="contract__main"
+          >
+            <section
+              class="contract__search"
+            >
+              <div
+                class="wrapper search"
+                style="margin: 0px;"
+              >
+                <input
+                  autocomplete="off"
+                  class="input"
+                  inputmode="search"
+                  value=""
+                />
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium icon css-i4bv87-MuiSvgIcon-root"
+                  data-testid="SearchIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                  />
+                </svg>
+              </div>
+            </section>
+            <section
+              class="contract__body"
+            >
+              <div
+                class="grid component"
+                style="gap: 8px;"
+              >
+                <div
+                  class="flex icon"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
+                    data-testid="InboxOutlinedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5v-3h3.56c.69 1.19 1.97 2 3.45 2s2.75-.81 3.45-2H19v3zm0-5h-4.99c0 1.1-.9 2-2 2s-2-.9-2-2H5V5h14v9z"
+                    />
+                  </svg>
+                </div>
+                <section
+                  class="content"
+                >
+                  No results found
+                </section>
+              </div>
+            </section>
+          </main>
+        </div>
+      </section>
+    </div>
+  </article>
+</DocumentFragment>
+`;
