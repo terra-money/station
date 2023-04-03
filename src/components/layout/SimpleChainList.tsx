@@ -31,9 +31,7 @@ const SimpleChainList = ({ list, onClick }: Props) => {
             className={cx(styles.button, {
               [styles.active]: displayChains.includes(chainID),
             })}
-            onClick={() =>
-              displayChains.includes(chainID) ? onClick(chainID) : {}
-            }
+            onClick={() => onClick(chainID)}
           >
             <img src={icon} alt={name} />
             {name}
