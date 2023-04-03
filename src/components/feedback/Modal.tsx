@@ -7,6 +7,8 @@ import { RenderButton } from "types/components"
 import createContext from "utils/createContext"
 import { getMaxHeightStyle } from "utils/style"
 import styles from "./Modal.module.scss"
+import { useSetRecoilState } from "recoil"
+import { displayChainPrefsOpen } from "app/sections/Preferences"
 
 const cx = classNames.bind(styles)
 
@@ -86,6 +88,7 @@ export const ModalButton = (props: PropsWithChildren<ModalButtonProps>) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const open = () => setIsModalOpen(true)
   const close = () => setIsModalOpen(false)
+  const setIsOpen = useSetRecoilState(displayChainPrefsOpen)
 
   useEffect(() => {
     close()
@@ -98,7 +101,14 @@ export const ModalButton = (props: PropsWithChildren<ModalButtonProps>) => {
   return (
     <ModalProvider value={close}>
       {renderButton(open)}
-      <Modal {...rest} isOpen={isModalOpen} onRequestClose={close} />
+      <Modal
+        {...rest}
+        isOpen={isModalOpen}
+        onRequestClose={() => {
+          close()
+          setIsOpen(false)
+        }}
+      />
     </ModalProvider>
   )
 }
