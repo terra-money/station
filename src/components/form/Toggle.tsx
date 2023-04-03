@@ -7,18 +7,13 @@ const cx = classNames.bind(styles)
 interface Props {
   checked: boolean
   onChange: () => void
-  disabled?: boolean
 }
 
 const Toggle = (props: PropsWithChildren<Props>) => {
-  const { checked, onChange, children, disabled } = props
+  const { checked, onChange, children } = props
 
   return (
-    <button
-      disabled={disabled}
-      className={cx(styles.toggle, { checked })}
-      onClick={onChange}
-    >
+    <button className={cx(styles.toggle, { checked })} onClick={onChange}>
       <span className={styles.track}>
         <span className={styles.indicator} />
       </span>
