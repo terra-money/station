@@ -7,6 +7,8 @@ import { RenderButton } from "types/components"
 import createContext from "utils/createContext"
 import { getMaxHeightStyle } from "utils/style"
 import styles from "./Modal.module.scss"
+import { useSetRecoilState } from "recoil"
+import { displayChainPrefsOpen } from "app/sections/Preferences"
 
 const cx = classNames.bind(styles)
 
@@ -76,24 +78,37 @@ interface ModalButtonProps extends ModalProps {
   renderButton: RenderButton
   modalKey?: string
   minimal?: boolean
+  isOpen?: boolean
 }
 
 export const ModalButton = (props: PropsWithChildren<ModalButtonProps>) => {
   const { pathname } = useLocation()
-  const { renderButton, modalKey = pathname, ...rest } = props
+  const { renderButton, modalKey = pathname, isOpen, ...rest } = props
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const open = () => setIsModalOpen(true)
   const close = () => setIsModalOpen(false)
+  const setIsOpen = useSetRecoilState(displayChainPrefsOpen)
 
   useEffect(() => {
     close()
   }, [modalKey])
 
+  useEffect(() => {
+    if (isOpen) open()
+  }, [isOpen])
+
   return (
     <ModalProvider value={close}>
       {renderButton(open)}
-      <Modal {...rest} isOpen={isModalOpen} onRequestClose={close} />
+      <Modal
+        {...rest}
+        isOpen={isModalOpen}
+        onRequestClose={() => {
+          close()
+          setIsOpen(false)
+        }}
+      />
     </ModalProvider>
   )
 }

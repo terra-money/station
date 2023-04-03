@@ -1,5 +1,6 @@
 import styles from "components/layout/SettingsSelector.module.scss"
 import { Toggle } from "components/form"
+import { isTerraChain } from "utils/chain"
 
 interface Props {
   onChange: any
@@ -19,7 +20,9 @@ const SettingsSelectorToggle = ({ options, onChange, extra }: Props) => {
                 {label}
                 {extra}
               </div>
-              <Toggle checked={selected} onChange={() => onChange(value)} />
+              {!isTerraChain(value) && (
+                <Toggle checked={selected} onChange={() => onChange(value)} />
+              )}
             </div>
           </div>
         ))}

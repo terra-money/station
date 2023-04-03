@@ -15,7 +15,7 @@ import { useNetwork, useNetworkName } from "data/wallet"
 import { useCurrency } from "data/settings/Currency"
 import { Languages } from "config/lang"
 import { capitalize } from "@mui/material"
-import { ReactNode, useState } from "react"
+import { ReactNode, useState, useEffect } from "react"
 import styles from "./Preferences.module.scss"
 import SelectTheme from "./SelectTheme"
 import LCDSetting from "./LCDSetting"
@@ -23,6 +23,7 @@ import { useTheme } from "data/settings/Theme"
 import { useDisplayChains } from "utils/localStorage"
 import { getDisplayChainsSettingLabel } from "data/queries/chains"
 import AdvancedSettings from "./AdvancedSettings"
+import { atom, useRecoilState } from "recoil"
 
 type Routes =
   | "network"
@@ -42,6 +43,11 @@ interface SettingsPage {
   className?: string
 }
 
+export const displayChainPrefsOpen = atom({
+  key: "displayChainPrefsOpen",
+  default: false,
+})
+
 const Preferences = () => {
   const { t } = useTranslation()
   const connectedWallet = useWallet()
@@ -53,6 +59,11 @@ const Preferences = () => {
   const network = useNetwork()
   const { name } = useTheme()
   const { displayChains } = useDisplayChains()
+  const [isOpen] = useRecoilState(displayChainPrefsOpen)
+
+  useEffect(() => {
+    if (isOpen) setPage("displayChains")
+  }, [isOpen])
 
   const routes: Record<Routes, SettingsPage> = {
     network: {
@@ -149,6 +160,7 @@ const Preferences = () => {
 
   return (
     <ModalButton
+      isOpen={isOpen}
       title={
         page ? (
           <>

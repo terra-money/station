@@ -2,6 +2,7 @@ import { useBankBalance } from "data/queries/bank"
 import { useNativeDenoms } from "data/token"
 import { useExchangeRates } from "data/queries/coingecko"
 import { useDisplayChains } from "./localStorage/hooks"
+import { useNetworkName } from "data/wallet"
 
 type ChainId = string
 type ChainPrefix = string
@@ -51,3 +52,6 @@ export const useSortedDisplayChains = () => {
     )
   return sorted.map((c) => c.chain)
 }
+
+export const useTerraChainName = () =>
+  useNetworkName() === "mainnet" ? "phoenix-1" : "pisco-1"

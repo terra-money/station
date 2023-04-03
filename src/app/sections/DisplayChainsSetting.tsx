@@ -13,6 +13,7 @@ const DisplayChainsSetting = () => {
   const network = useNetwork()
 
   const onChange = (value: string) => {
+    if (isTerraChain(value)) return
     const newDisplayChains = displayChains.includes(value)
       ? displayChains.filter((chainID) => chainID !== value)
       : [...displayChains, value]
