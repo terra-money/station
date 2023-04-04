@@ -44,7 +44,7 @@ import styles from "./Tx.module.scss"
 import { StakeAction } from "./stake/StakeForm"
 import { isMisesWallet, useConnectWallet } from "auth/hooks/useAddress"
 import { toHump } from "utils/data"
-import { useWalletProvider } from "utils/hooks/useMetamaskProvider"
+import { walletProvider } from "utils/hooks/useMetamaskProvider"
 import { useAnalytics } from "auth/hooks/useAnalytics"
 import { logEvent } from "firebase/analytics"
 
@@ -223,10 +223,10 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const lcd = useLCDClient()
   const toPostMultisigTx = useToPostMultisigTx()
   const misesState = useRecoilValue(misesStateDefault)
-  const provider = useWalletProvider();
   const analytics = useAnalytics()
   const submit = async (values: TxValues) => {
     setSubmitting(true)
+    const provider = await walletProvider();
     try {
       if (disabled) throw new Error(disabled)
       if (!estimatedGas || !has(gasAmount))
@@ -254,7 +254,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
           new AuthInfo([], fee),
           new TxBody(tx.msgs, tx.memo, tx.timeoutHeight)
         )
-        const isMises = isMisesWallet();
+        const isMises = await isMisesWallet();
         if (isMises) {
           await provider.enable(chainID)
           await provider.signAmino(chainID, address, doc.toAmino(), {});

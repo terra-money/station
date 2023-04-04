@@ -3,7 +3,7 @@
 
 import { misesStateDefault } from "app/sections/ConnectWallet"
 import { useRecoilState, useRecoilValue } from "recoil"
-import { useWalletProvider, walletPrivider } from "utils/hooks/useMetamaskProvider"
+import { walletProvider } from "utils/hooks/useMetamaskProvider"
 
 /* auth | wallet-provider */
 const useAddress = () => {
@@ -14,17 +14,18 @@ const useAddress = () => {
 }
 export default useAddress
 
-export const isMisesWallet = ()=>{
-  const provider = walletPrivider();
+export const isMisesWallet = async ()=>{
+  const provider = await walletProvider();
   return provider?.mode==="extension" || false
 }
 export function useConnectWallet() {
   const [misesState, setmisesState] = useRecoilState(misesStateDefault)
-  const provider = useWalletProvider();
   const chainId = 'mainnet';
 
   const getAddress = async (open?: () => void) => {
-    if(isMisesWallet()){
+    const provider = await walletProvider();
+    const isMises = await isMisesWallet();
+    if(isMises){
       await provider.enable(chainId);
     
       const offlineSigner = provider.getOfflineSigner?.(chainId);
@@ -53,11 +54,13 @@ export function useConnectWallet() {
       }
     }
   }
-  const isUnlocked = ()=>{
+  const isUnlocked = async ()=>{
+    const provider = await walletProvider();
     if(!provider){
       return Promise.resolve(false);
     }
-    return provider ? (!isMisesWallet() ? provider._metamask?.isUnlocked() : provider?.isUnlocked()) : Promise.resolve(false);
+    const isMises = await isMisesWallet();
+    return provider ? (!isMises ? provider._metamask?.isUnlocked() : provider?.isUnlocked()) : Promise.resolve(false);
   }
   return {
     getAddress,

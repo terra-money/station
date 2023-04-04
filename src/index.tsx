@@ -104,8 +104,6 @@ root.render(
           <WalletProvider {...chainOptions} connectorOpts={connectorOpts}>
             <InitNetworks>
               <InitWallet>
-                {/* <InitTheme /> */}
-                {/* <ElectronVersion /> */}
                 <App />
               </InitWallet>
             </InitNetworks>

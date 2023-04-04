@@ -14,7 +14,7 @@ import { useEffect } from "react"
 import { atom } from "recoil"
 import { isMisesWallet, useConnectWallet } from "auth/hooks/useAddress"
 import { Button as MuiButton } from "@mui/material"
-import { useWalletProvider } from "utils/hooks/useMetamaskProvider"
+import { walletProvider } from "utils/hooks/useMetamaskProvider"
 // import { useWallet } from "@terra-money/wallet-provider"
 
 interface Props {
@@ -37,40 +37,41 @@ const ConnectWallet = ({ renderButton }: Props) => {
   const address = useAddress()
   // const [list] = useState<any>([])
   const { getAddress, isUnlocked } = useConnectWallet()
-  const provider = useWalletProvider()
 
   useEffect(() => {
     (async () => {
+      const provider = await walletProvider()
       const isunlocked = await isUnlocked()
       const isConnected = localStorage.getItem('isConnected');
-      if(isunlocked && !!isConnected && !connectLoading) {
+      if (isunlocked && !!isConnected && !connectLoading) {
         connectLoading = true;
 
         await getAddress();
 
         connectLoading = false;
       }
-    })()
-    
-    if(!isMisesWallet() && provider){
-      provider.on("accountsChanged", async (res: string[]) => {
-        const metamask = JSON.parse(localStorage.getItem("isConnected") || "false")
-        if (res.length && metamask) {
-          getAddress()
-        }
-      })
 
-    }else{
-      window.addEventListener("mises_keystorechange", async () => {
-        if(!connectLoading){
-          connectLoading = true;
-  
-          await getAddress()
-  
-          connectLoading = false;
-        }
-      })
-    }
+      const isMises = await isMisesWallet()
+      if (!isMises && provider) {
+        provider.on("accountsChanged", async (res: string[]) => {
+          const metamask = JSON.parse(localStorage.getItem("isConnected") || "false")
+          if (res.length && metamask) {
+            getAddress()
+          }
+        })
+
+      } else {
+        window.addEventListener("mises_keystorechange", async () => {
+          if (!connectLoading) {
+            connectLoading = true;
+
+            await getAddress()
+
+            connectLoading = false;
+          }
+        })
+      }
+    })()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
