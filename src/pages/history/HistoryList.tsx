@@ -34,9 +34,13 @@ const HistoryList = ({ chainID }: Props) => {
       const result: any[] = []
       const txhases: string[] = []
 
+      if (!networks || !networks[chainID] || !networks[chainID].lcd) {
+        return result
+      }
+
       const requests = await Promise.all(
-        EVENTS.map((event) =>
-          axios.get<AccountHistory>(`/cosmos/tx/v1beta1/txs`, {
+        EVENTS.map((event) => {
+          return axios.get<AccountHistory>(`/cosmos/tx/v1beta1/txs`, {
             baseURL: networks[chainID].lcd,
             params: {
               events: `${event}='${address}'`,
@@ -46,7 +50,7 @@ const HistoryList = ({ chainID }: Props) => {
               "pagination.limit": LIMIT,
             },
           })
-        )
+        })
       )
 
       for (const { data } of requests) {
