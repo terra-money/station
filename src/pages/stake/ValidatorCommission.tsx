@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { readPercent } from "@terra.kitchen/utils"
+import { readPercent } from "@terra-money/terra-utils"
 import { Card } from "components/layout"
 import { ToNow } from "components/display"
 import ValidatorNumbers from "./components/ValidatorNumbers"

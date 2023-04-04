@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
 import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined"
-import { truncate } from "@terra.kitchen/utils"
+import { truncate } from "@terra-money/terra-utils"
 import { useAddressBook } from "data/settings/AddressBook"
 import { Button } from "components/general"
 import { Grid } from "components/layout"

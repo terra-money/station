@@ -1,5 +1,5 @@
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
-import { truncate } from "@terra.kitchen/utils"
+import { truncate } from "@terra-money/terra-utils"
 import { Flex } from "components/layout"
 import { useAddress } from "data/wallet"
 import { addressFromWords } from "utils/bech32"

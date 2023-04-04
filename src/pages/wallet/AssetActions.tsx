@@ -4,7 +4,7 @@ import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlin
 import ShortcutOutlinedIcon from "@mui/icons-material/ShortcutOutlined"
 import RestartAltIcon from "@mui/icons-material/RestartAlt"
 import OpenInNewIcon from "@mui/icons-material/OpenInNew"
-import { isDenomTerraNative } from "@terra.kitchen/utils"
+import { isDenomTerraNative } from "@terra-money/terra-utils"
 import { has } from "utils/num"
 import { useNetworkName } from "data/wallet"
 import { useIsWalletEmpty } from "data/queries/bank"
