@@ -7,8 +7,8 @@ import update from "immutability-helper"
 import BigNumber from "bignumber.js"
 import { AccAddress, Coin, Coins } from "@terra-money/feather.js"
 import { MsgExecuteContract } from "@terra-money/feather.js"
-import { isDenomTerra } from "@terra.kitchen/utils"
-import { toAmount } from "@terra.kitchen/utils"
+import { isDenomTerra } from "@terra-money/terra-utils"
+import { toAmount } from "@terra-money/terra-utils"
 
 /* helpers */
 import { has } from "utils/num"

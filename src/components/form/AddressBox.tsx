@@ -1,7 +1,7 @@
 import styles from "./AddressBox.module.scss"
 import { CopyIcon, WalletQR } from "components/general"
 import QrCodeIcon from "@mui/icons-material/QrCode"
-import { truncate } from "@terra.kitchen/utils"
+import { truncate } from "@terra-money/terra-utils"
 
 const AddressBox = ({
   address,

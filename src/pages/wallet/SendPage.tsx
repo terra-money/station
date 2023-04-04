@@ -5,7 +5,7 @@ import {
   MsgSend,
   MsgTransfer,
 } from "@terra-money/feather.js"
-import { isDenom, toAmount } from "@terra.kitchen/utils"
+import { isDenom, toAmount } from "@terra-money/terra-utils"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { Form, FormItem, FormWarning, Input, Select } from "components/form"
 import ChainSelector from "components/form/ChainSelector"
