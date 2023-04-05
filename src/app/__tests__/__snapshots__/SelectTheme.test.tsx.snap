@@ -1,0 +1,352 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SelectTheme component matches snapshots matches original component 1`] = `
+<DocumentFragment>
+  <div
+    class="grid"
+    style="gap: 20px;"
+  >
+    <div
+      class="grid"
+      style="gap: 28px; grid-template-columns: repeat(2, 1fr);"
+    >
+      <button
+        class="component disabled locked"
+        type="button"
+      >
+        <div
+          class="grid"
+          style="gap: 4px;"
+        >
+          <div
+            class="flex start"
+            style="gap: 8px;"
+          >
+            <div
+              class="flex track"
+            >
+              <span
+                class="indicator"
+              />
+            </div>
+            Light
+          </div>
+          <div
+            class="wrapper"
+          >
+            <div
+              class="flex preview"
+            >
+              <svg>
+                preview.svg
+              </svg>
+            </div>
+            <div
+              class="column unlock"
+              style="gap: 4px;"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-ptiqhd-MuiSvgIcon-root"
+                data-testid="LockIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"
+                />
+              </svg>
+              <small>
+                Stake {{amount}} Luna to unlock
+              </small>
+            </div>
+          </div>
+        </div>
+      </button>
+      <button
+        class="component disabled locked"
+        type="button"
+      >
+        <div
+          class="grid"
+          style="gap: 4px;"
+        >
+          <div
+            class="flex start"
+            style="gap: 8px;"
+          >
+            <div
+              class="flex track"
+            >
+              <span
+                class="indicator"
+              />
+            </div>
+            Dark
+          </div>
+          <div
+            class="wrapper"
+          >
+            <div
+              class="flex preview"
+            >
+              <svg>
+                preview.svg
+              </svg>
+            </div>
+            <div
+              class="column unlock"
+              style="gap: 4px;"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-ptiqhd-MuiSvgIcon-root"
+                data-testid="LockIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"
+                />
+              </svg>
+              <small>
+                Stake {{amount}} Luna to unlock
+              </small>
+            </div>
+          </div>
+        </div>
+      </button>
+      <button
+        class="component disabled locked"
+        type="button"
+      >
+        <div
+          class="grid"
+          style="gap: 4px;"
+        >
+          <div
+            class="flex start"
+            style="gap: 8px;"
+          >
+            <div
+              class="flex track"
+            >
+              <span
+                class="indicator"
+              />
+            </div>
+            Blossom
+          </div>
+          <div
+            class="wrapper"
+          >
+            <div
+              class="flex preview"
+            >
+              <svg>
+                preview.svg
+              </svg>
+            </div>
+            <div
+              class="column unlock"
+              style="gap: 4px;"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-ptiqhd-MuiSvgIcon-root"
+                data-testid="LockIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"
+                />
+              </svg>
+              <small>
+                Stake {{amount}} Luna to unlock
+              </small>
+            </div>
+          </div>
+        </div>
+      </button>
+      <button
+        class="component disabled locked"
+        type="button"
+      >
+        <div
+          class="grid"
+          style="gap: 4px;"
+        >
+          <div
+            class="flex start"
+            style="gap: 8px;"
+          >
+            <div
+              class="flex track"
+            >
+              <span
+                class="indicator"
+              />
+            </div>
+            Moon
+          </div>
+          <div
+            class="wrapper"
+          >
+            <div
+              class="flex preview"
+            >
+              <svg>
+                preview.svg
+              </svg>
+            </div>
+            <div
+              class="column unlock"
+              style="gap: 4px;"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-ptiqhd-MuiSvgIcon-root"
+                data-testid="LockIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"
+                />
+              </svg>
+              <small>
+                Stake {{amount}} Luna to unlock
+              </small>
+            </div>
+          </div>
+        </div>
+      </button>
+      <button
+        class="component disabled locked"
+        type="button"
+      >
+        <div
+          class="grid"
+          style="gap: 4px;"
+        >
+          <div
+            class="flex start"
+            style="gap: 8px;"
+          >
+            <div
+              class="flex track"
+            >
+              <span
+                class="indicator"
+              />
+            </div>
+            Whale
+          </div>
+          <div
+            class="wrapper"
+          >
+            <div
+              class="flex preview"
+            >
+              <svg>
+                preview.svg
+              </svg>
+            </div>
+            <div
+              class="column unlock"
+              style="gap: 4px;"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-ptiqhd-MuiSvgIcon-root"
+                data-testid="LockIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"
+                />
+              </svg>
+              <small>
+                Stake {{amount}} Luna to unlock
+              </small>
+            </div>
+          </div>
+        </div>
+      </button>
+      <button
+        class="component disabled locked"
+        type="button"
+      >
+        <div
+          class="grid"
+          style="gap: 4px;"
+        >
+          <div
+            class="flex start"
+            style="gap: 8px;"
+          >
+            <div
+              class="flex track"
+            >
+              <span
+                class="indicator"
+              />
+            </div>
+            Madness
+          </div>
+          <div
+            class="wrapper"
+          >
+            <div
+              class="flex preview"
+            >
+              <svg>
+                preview.svg
+              </svg>
+            </div>
+            <div
+              class="column unlock"
+              style="gap: 4px;"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-ptiqhd-MuiSvgIcon-root"
+                data-testid="LockIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"
+                />
+              </svg>
+              <small>
+                Stake {{amount}} Luna to unlock
+              </small>
+            </div>
+          </div>
+        </div>
+      </button>
+    </div>
+    <div
+      class="flex info"
+      style="gap: 4px;"
+    >
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+        data-testid="InfoIcon"
+        focusable="false"
+        style="font-size: 18px;"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+        />
+      </svg>
+      Preview is available if wallet is disconnected
+    </div>
+  </div>
+</DocumentFragment>
+`;
