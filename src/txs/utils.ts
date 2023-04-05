@@ -11,7 +11,6 @@ import {
   createLogMatcherForActions,
   getTxCanonicalMsgs,
 } from "@terra-money/log-finder-ruleset"
-import { TxInfo } from "@terra-money/feather.js"
 
 export const getPlaceholder = (decimals = 6) => "0.".padEnd(decimals + 2, "0")
 
@@ -70,14 +69,31 @@ export const useGetTxMessage = () => {
   const networkName = useNetworkName()
   const ruleset = createActionRuleSet(networkName)
   const logMatcher = createLogMatcherForActions(ruleset)
-  return (txInfo: TxInfo) => {
-    console.log("txInfo", txInfo)
-    // @ts-expect-error
-    const matchedMsg = getTxCanonicalMsgs(txInfo, logMatcher)
-    return matchedMsg
-      ? matchedMsg
-          .map((matchedLog) => matchedLog.map(({ transformed }) => transformed))
-          .flat(2)
-      : []
+
+  return (txInfo: any) => {
+    const msgType = txInfo.tx["@type"]
+    switch (msgType) {
+      case "/cosmos.tx.v1beta1.MsgSend":
+      case "/cosmos.tx.v1beta1.Transfer":
+        const coin = txInfo.tx.body.messages[0]
+        console.log("msgType", msgType)
+        return [
+          {
+            msgType,
+            canonicalMsg: [
+              `Sent ${coin.amount} ${coin.denom} to ${txInfo.to_address}`,
+            ],
+          },
+        ]
+      default:
+        const matchedMsg = getTxCanonicalMsgs(txInfo, logMatcher)
+        return matchedMsg
+          ? matchedMsg
+              .map((matchedLog) =>
+                matchedLog.map(({ transformed }) => transformed)
+              )
+              .flat(2)
+          : []
+    }
   }
 }
