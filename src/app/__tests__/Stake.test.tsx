@@ -104,7 +104,7 @@ jest.mock("../../data/queries/bank", () => {
   }
 })
 
-describe("Contract component matches snapshots", async () => {
+describe("Stake page component matches snapshots", async () => {
   it("matches original component", () => {
     const { asFragment } = renderComponent()
     expect(asFragment()).toMatchSnapshot()
@@ -113,44 +113,37 @@ describe("Contract component matches snapshots", async () => {
   it("matches undelegate page", async () => {
     const { asFragment } = renderComponent()
 
-    // Search for JPY currency in search bar.
     const undelegateButton = screen.getByRole("button", {
       name: /Undelegate/i,
     })
     await user.click(undelegateButton)
 
-    // Ensure snapshot matches user augmented component.
     expect(asFragment()).toMatchSnapshot()
   })
 
   it("matches manual staking page", async () => {
     const { asFragment } = renderComponent()
 
-    // Search for JPY currency in search bar.
     const manualStakingButton = screen.getByRole("button", {
       name: /Manual Stake/i,
     })
     await user.click(manualStakingButton)
 
-    // Ensure snapshot matches user augmented component.
     expect(asFragment()).toMatchSnapshot()
   })
 
   it("matches manual staking page with search", async () => {
     const { asFragment } = renderComponent()
 
-    // Search for JPY currency in search bar.
     const manualStakingButton = screen.getByRole("button", {
       name: /Manual Stake/i,
     })
     await user.click(manualStakingButton)
 
-    // Search for validator.
     const searchBar = screen.getByRole("textbox")
     await user.click(searchBar)
     await user.keyboard("Terran")
 
-    // Ensure snapshot matches user augmented component.
     expect(asFragment()).toMatchSnapshot()
   })
 })
