@@ -5,6 +5,13 @@ import { has } from "utils/num"
 import { FindDecimals } from "./IBCHelperContext"
 import { getShouldTax } from "data/queries/treasury"
 import { calcMinimumTaxAmount } from "./Tx"
+import { useNetworkName } from "data/wallet"
+import {
+  createActionRuleSet,
+  createLogMatcherForActions,
+  getTxCanonicalMsgs,
+} from "@terra-money/log-finder-ruleset"
+import { TxInfo } from "@terra-money/feather.js"
 
 export const getPlaceholder = (decimals = 6) => "0.".padEnd(decimals + 2, "0")
 
@@ -57,4 +64,20 @@ export const calcTaxes = (
         return new Coin(denom, tax)
       })
   )
+}
+
+export const useGetTxMessage = () => {
+  const networkName = useNetworkName()
+  const ruleset = createActionRuleSet(networkName)
+  const logMatcher = createLogMatcherForActions(ruleset)
+  return (txInfo: TxInfo) => {
+    console.log("txInfo", txInfo)
+    // @ts-expect-error
+    const matchedMsg = getTxCanonicalMsgs(txInfo, logMatcher)
+    return matchedMsg
+      ? matchedMsg
+          .map((matchedLog) => matchedLog.map(({ transformed }) => transformed))
+          .flat(2)
+      : []
+  }
 }
