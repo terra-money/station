@@ -51,8 +51,8 @@ export const useIsTerraAPIAvailable = () => {
 }
 
 export const useTerraAPI = <T>(path: string, params?: object, fallback?: T) => {
-  const baseURL = undefined
-  const available = false
+  const baseURL = useTerraAPIURL()
+  const available = useIsTerraAPIAvailable()
   const shouldFallback = !available && fallback
 
   return useQuery<T, AxiosError>(
