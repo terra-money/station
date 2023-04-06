@@ -19,7 +19,7 @@ import FaviconMadness from "./Madness/favicon.svg"
 
 /* preview */
 import { ReactComponent as PreviewLight } from "./Light/preview.svg"
-import { ReactComponent as PreviewDark } from "./Dark/preview.svg"
+// import { ReactComponent as PreviewDark } from "./Dark/preview.svg"
 import { ReactComponent as PreviewBlossom } from "./Blossom/preview.svg"
 import { ReactComponent as PreviewMoon } from "./Moon/preview.svg"
 import { ReactComponent as PreviewWhale } from "./Whale/preview.svg"
