@@ -1,0 +1,114 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NetworkSetting component matches snapshots matches original component 1`] = `
+<DocumentFragment>
+  <div
+    class="wrapper"
+  >
+    <section
+      class="selector"
+    >
+      <div
+        class="accordion"
+      >
+        <button
+          class="item"
+        >
+          <div
+            class="icons_container"
+          >
+            <div>
+              Mainnets
+            </div>
+          </div>
+          <div
+            class="flex track"
+          >
+            <span
+              class="indicator"
+            />
+          </div>
+        </button>
+        <div
+          class="content"
+        />
+      </div>
+      <div
+        class="accordion"
+      >
+        <button
+          class="item"
+        >
+          <div
+            class="icons_container"
+          >
+            <div>
+              Testnets
+            </div>
+          </div>
+          <div
+            class="flex track"
+          >
+            <span
+              class="indicator__checked"
+            />
+          </div>
+        </button>
+        <div
+          class="content"
+        />
+      </div>
+      <div
+        class="accordion"
+      >
+        <button
+          class="item"
+        >
+          <div
+            class="icons_container"
+          >
+            <div>
+              Terra Classic
+            </div>
+          </div>
+          <div
+            class="flex track"
+          >
+            <span
+              class="indicator"
+            />
+          </div>
+        </button>
+        <div
+          class="content"
+        />
+      </div>
+      <div
+        class="accordion"
+      >
+        <button
+          class="item"
+        >
+          <div
+            class="icons_container"
+          >
+            <div>
+              LocalTerra
+            </div>
+          </div>
+          <div
+            class="flex track"
+          >
+            <span
+              class="indicator"
+            />
+          </div>
+        </button>
+        <div
+          class="content"
+        />
+      </div>
+    </section>
+  </div>
+</DocumentFragment>
+`;
