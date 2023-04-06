@@ -7,13 +7,13 @@ export async function walletProvider() {
   }
 
   if (document.readyState === "complete") {
-    return window.misesWallet;
+    return window.misesWallet || window.ethereum;
   }
 
-  return new Promise((resolve,reject) => {
+  return new Promise((resolve) => {
     const documentStateChange = (event: any) => {
       if (event.target && event.target.readyState === "complete") {
-        window.misesWallet ? resolve(window.misesWallet) : reject();
+        window.misesWallet ? resolve(window.misesWallet) : resolve(window.ethereum);
 
         document.removeEventListener("readystatechange", documentStateChange);
       }
