@@ -71,17 +71,28 @@ export const useGetTxMessage = () => {
   const logMatcher = createLogMatcherForActions(ruleset)
 
   return (txInfo: any) => {
-    const msgType = txInfo.tx["@type"]
+    const txMsgs = txInfo.tx.body.messages[0]
+    // if (txInfo.txhash.startsWith("7F2DD4")) {
+    //   console.log('MsgSend', txInfo.tx)
+    // }
+    // if (txInfo.txhash.startsWith("48C514C165")) {
+    //   console.log('Transfer', txInfo.tx)
+    // }
+    if (txInfo.txhash.startsWith("48C514")) {
+      console.log("Transfer", txMsgs.receiver)
+    }
+    const msgType = txMsgs["@type"]
     switch (msgType) {
       case "/cosmos.tx.v1beta1.MsgSend":
-      case "/cosmos.tx.v1beta1.Transfer":
-        const coin = txInfo.tx.body.messages[0]
-        console.log("msgType", msgType)
+      case "/ibc.applications.transfer.v1.MsgTransfer":
+        const { denom, amount } = txMsgs.token
         return [
           {
             msgType,
             canonicalMsg: [
-              `Sent ${coin.amount} ${coin.denom} to ${txInfo.to_address}`,
+              `Sent ${amount} ${denom} to ${
+                txMsgs.to_address || txMsgs.receiver
+              }`,
             ],
           },
         ]
