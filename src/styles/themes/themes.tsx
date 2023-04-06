@@ -46,7 +46,7 @@ export const themes: Theme[] = [
     unlock: toAmount("0"),
     animation: AnimationDark,
     favicon: FaviconDark,
-    preview: <PreviewDark />,
+    preview: <PreviewLight />,
   },
   {
     name: "blossom",
