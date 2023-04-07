@@ -14,6 +14,7 @@ import { ModalButton } from "components/feedback"
 import FiatRampModal from "./FiatRampModal"
 import { Add as AddIcon, Send as SendIcon } from "@mui/icons-material"
 import classNames from "classnames"
+import { useConnectedWallet } from "@terra-money/use-wallet"
 
 const cx = classNames.bind(styles)
 
@@ -24,6 +25,7 @@ const NetWorth = () => {
   const { data: prices } = useExchangeRates()
   const readNativeDenom = useNativeDenoms()
   const { setRoute, route } = useWalletRoute()
+  const isConnected = useConnectedWallet()
 
   // TODO: show CW20 balances and staked tokens
   const coinsValue = coins?.reduce((acc, { amount, denom }) => {
@@ -73,19 +75,21 @@ const NetWorth = () => {
           </Button>
           <h3>{capitalize(t("receive"))}</h3>
         </div>
-        <div className={styles.button__wrapper}>
-          <ModalButton
-            minimal
-            renderButton={(open) => (
-              <Button onClick={open}>
-                <AddIcon className={styles.icon} />
-              </Button>
-            )}
-          >
-            <FiatRampModal />
-          </ModalButton>
-          <h2>{t(capitalize("buy"))}</h2>
-        </div>
+        {isConnected && (
+          <div className={styles.button__wrapper}>
+            <ModalButton
+              minimal
+              renderButton={(open) => (
+                <Button onClick={open}>
+                  <AddIcon className={styles.icon} />
+                </Button>
+              )}
+            >
+              <FiatRampModal />
+            </ModalButton>
+            <h2>{t(capitalize("buy"))}</h2>
+          </div>
+        )}
       </div>
     </article>
   )

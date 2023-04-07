@@ -19,7 +19,7 @@ const FiatRampModal = () => {
 
   const onToAddressMulti = Object.keys(addresses)
     .map((key) => {
-      const networkName = network[key].name
+      const networkName = network[key]?.name
       const isNetworkInList = networkList.includes(networkName.toUpperCase())
       return isNetworkInList ? `${networkName}:${addresses[key]}` : null
     })
