@@ -35,8 +35,7 @@ export const KADO_API_KEY = "c22391a1-594f-4354-a742-187adb1b91bf"
 export const LEDGER_TRANSPORT_TIMEOUT = 180000
 
 /* tx */
-export const DEFAULT_GAS_ADJUSTMENT = 2
-export const CLASSIC_DEFAULT_GAS_ADJUSTMENT = 3
+export const DEFAULT_GAS_ADJUSTMENT = 1
 
 /* disply */
 export const DISPLAY_CHAINS_MAX = 4

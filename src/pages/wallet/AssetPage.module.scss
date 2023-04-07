@@ -48,7 +48,7 @@
 .actions {
   @include flex(space-between);
   background-color: var(--card-bg);
-  padding-top: 0.6rem;
+  padding: 1.6rem;
   gap: 0.6rem;
   width: 100%;
 

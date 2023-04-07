@@ -32,6 +32,9 @@ const InitBankBalance = ({ children }: PropsWithChildren<{}>) => {
   native.list.forEach(({ denom }) => {
     if (!bankBalance.find((balance) => balance.denom === denom)) {
       const token = whitelist[networkName][denom]
+
+      if (!token || !token.chains || token.chains.length === 0) return
+
       bankBalance.push({
         denom,
         amount: "0",

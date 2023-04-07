@@ -1,7 +1,4 @@
-import {
-  DEFAULT_GAS_ADJUSTMENT,
-  CLASSIC_DEFAULT_GAS_ADJUSTMENT,
-} from "config/constants"
+import { DEFAULT_GAS_ADJUSTMENT } from "config/constants"
 
 import themes from "styles/themes/themes"
 
@@ -9,8 +6,7 @@ export enum SettingKey {
   Theme = "Theme",
   Currency = "FiatCurrency",
   CustomNetworks = "CustomNetworks",
-  GasAdjustment = "GasAdjustment", // Tx
-  ClassicGasAdjustment = "ClassicGasAdjustment",
+  GasAdjustment = "GasAdjust", // Tx
   AddressBook = "AddressBook", // Send
   HideNonWhitelistTokens = "HideNonWhiteListTokens",
   Chain = "Chain",
@@ -57,7 +53,6 @@ export const DefaultSettings = {
   },
   [SettingKey.CustomNetworks]: [] as CustomNetwork[],
   [SettingKey.GasAdjustment]: DEFAULT_GAS_ADJUSTMENT,
-  [SettingKey.ClassicGasAdjustment]: CLASSIC_DEFAULT_GAS_ADJUSTMENT,
   [SettingKey.AddressBook]: [] as AddressBook[],
   [SettingKey.CustomTokens]: DefaultCustomTokens as CustomTokens,
   [SettingKey.MinimumValue]: 0,
