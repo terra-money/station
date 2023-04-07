@@ -15,15 +15,8 @@ const FiatRampModal = () => {
 
   if (!addresses) return null
 
-  const networkList = ["TERRA", "OSMOSIS", "KUJIRA", "JUNO"]
-
   const onToAddressMulti = Object.keys(addresses)
-    .map((key) => {
-      const networkName = network[key]?.name
-      const isNetworkInList = networkList.includes(networkName.toUpperCase())
-      return isNetworkInList ? `${networkName}:${addresses[key]}` : null
-    })
-    .filter(Boolean)
+    .map((key) => `${network[key].name}:${addresses[key]}`)
     .join(",")
 
   const rampParams = {
@@ -31,7 +24,7 @@ const FiatRampModal = () => {
     apiKey: KADO_API_KEY,
     product: "BUY",
     onRevCurrency: "USDC",
-    networkList: networkList.join(","),
+    networkList: ["TERRA", "OSMOSIS", "KUJIRA", "JUNO"].join(","),
     productList: ["BUY", "SELL"].join(","),
     theme,
     onToAddressMulti,
