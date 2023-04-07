@@ -1,7 +1,7 @@
 import { ForwardedRef, HTMLAttributes, PropsWithChildren } from "react"
 import { forwardRef } from "react"
 import classNames from "classnames"
-import { truncate } from "@terra.kitchen/utils"
+import { truncate } from "@terra-money/terra-utils"
 import { useNetwork } from "data/wallet"
 import { ExternalLink } from "./External"
 import { getChainIDFromAddress } from "utils/bech32"

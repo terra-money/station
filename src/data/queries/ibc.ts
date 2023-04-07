@@ -1,5 +1,5 @@
 import { useQuery } from "react-query"
-import { isDenomIBC } from "@terra.kitchen/utils"
+import { isDenomIBC } from "@terra-money/terra-utils"
 import { queryKey, RefetchOptions } from "../query"
 import { useInterchainLCDClient } from "./lcdClient"
 

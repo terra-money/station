@@ -1,6 +1,6 @@
 import { ReactNode, useMemo } from "react"
 import { capitalize } from "@mui/material"
-import { isDenom, truncate } from "@terra.kitchen/utils"
+import { isDenom, truncate } from "@terra-money/terra-utils"
 import { AccAddress, Coin, Coins, ValAddress } from "@terra-money/feather.js"
 import { useAddress, useNetwork } from "data/wallet"
 import { useValidators } from "data/queries/staking"

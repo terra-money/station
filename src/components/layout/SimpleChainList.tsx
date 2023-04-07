@@ -1,7 +1,7 @@
 import styles from "./SimpleChainList.module.scss"
 import classNames from "classnames"
+import { isTerraChain } from "utils/chain"
 import { useDisplayChains } from "utils/localStorage"
-import { Tooltip } from "components/display"
 
 interface Props {
   list: InterchainNetwork[]
@@ -21,26 +21,20 @@ const SimpleChainList = ({ list, onClick }: Props) => {
   )
 
   return (
-    <Tooltip
-      content={"Go to display chains in settings to change your active chains"}
-    >
-      <div className={styles.options}>
-        {sortedList.map(({ chainID, name, icon }) => (
-          <button
-            key={chainID}
-            className={cx(styles.button, {
-              [styles.active]: displayChains.includes(chainID),
-            })}
-            onClick={() =>
-              displayChains.includes(chainID) ? onClick(chainID) : {}
-            }
-          >
-            <img src={icon} alt={name} />
-            {name}
-          </button>
-        ))}
-      </div>
-    </Tooltip>
+    <div className={styles.options}>
+      {sortedList.map(({ chainID, name, icon }) => (
+        <button
+          key={chainID}
+          className={cx(styles.button, {
+            [styles.active]: displayChains.includes(chainID),
+          })}
+          onClick={() => onClick(chainID)}
+        >
+          <img src={icon} alt={name} />
+          {name}
+        </button>
+      ))}
+    </div>
   )
 }
 
