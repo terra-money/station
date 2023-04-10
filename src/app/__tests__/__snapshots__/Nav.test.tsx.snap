@@ -1,0 +1,92 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Nav component matches snapshots matches original component 1`] = `
+<DocumentFragment>
+  <nav>
+    <header
+      class="header"
+    >
+      <div
+        class="item logo"
+      >
+        <img
+          alt="Station"
+          src="/static/media/favicon.1e08d51d.svg"
+        />
+         
+        <strong
+          class="title"
+        >
+          Station
+        </strong>
+      </div>
+    </header>
+    <a
+      aria-current="page"
+      class="item link active"
+      data-id="/"
+      href="/"
+    >
+      <svg
+        height="20"
+        width="20"
+      >
+        Swap.svg
+      </svg>
+      Swap
+    </a>
+    <a
+      class="item link"
+      data-id="/history"
+      href="/history"
+    >
+      <svg
+        height="20"
+        width="20"
+      >
+        History.svg
+      </svg>
+      History
+    </a>
+    <a
+      class="item link"
+      data-id="/stake"
+      href="/stake"
+    >
+      <svg
+        height="20"
+        width="20"
+      >
+        Stake.svg
+      </svg>
+      Stake
+    </a>
+    <a
+      class="item link"
+      data-id="/gov"
+      href="/gov"
+    >
+      <svg
+        height="20"
+        width="20"
+      >
+        Governance.svg
+      </svg>
+      Governance
+    </a>
+    <a
+      class="item link"
+      data-id="/contract"
+      href="/contract"
+    >
+      <svg
+        height="20"
+        width="20"
+      >
+        Contract.svg
+      </svg>
+      Contract
+    </a>
+  </nav>
+</DocumentFragment>
+`;
