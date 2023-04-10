@@ -1,32 +1,55 @@
+@import "mixins";
+
 .networth {
+  @include flex-column;
   padding: 1.6rem;
   border-bottom: var(--border-width) solid var(--card-border);
 
   p {
     color: var(--text-muted);
+    font-size: 14px;
+    line-height: 140%;
   }
 
   h1 {
-    font-weight: 600;
-    font-size: 22pt;
+    font-size: 32px;
+    line-height: 150%;
+    margin-top: 4px;
   }
 
   grid-area: details;
   height: fit-content;
   background-color: var(--card-bg);
 }
-
 .networth__buttons {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 48px;
+  justify-content: center;
+  margin-top: 28px;
+  width: 100%;
+
+  .button__wrapper {
+    @include flex-column;
+    gap: 8px;
+  }
 
   button {
     min-width: 0;
-    width: 100%;
-    padding-block: 20px;
-    height: fit-content;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    padding: 16px;
+    @include flex;
+  }
+}
+
+.icon {
+  font-size: 24px;
+
+  &.send {
+    transform: rotate(-90deg);
+  }
+  &.receive {
+    transform: rotate(90deg);
   }
 }
