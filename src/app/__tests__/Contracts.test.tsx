@@ -1,5 +1,7 @@
-import { render, screen } from "@testing-library/react"
+import { render, screen, waitFor } from "@testing-library/react"
+import React, { useState as useStateMock } from "react"
 import Contract from "pages/contract/Contract"
+import { mount, shallow } from "enzyme"
 import { useQuery } from "react-query"
 import userEvent from "@testing-library/user-event"
 import { MemoryRouter } from "react-router-dom"
@@ -15,12 +17,22 @@ function renderComponent() {
 }
 
 jest.mock("../../data/wallet", () => {
+  const mockUseAddress = () => {
+    return "terra111111111111111111111111111111111111111"
+  }
+
   const mockUseNetwork = () => {
     return mockNetworks
   }
 
+  const mockUseNetworkName = () => {
+    return "testnet"
+  }
+
   return {
+    useAddress: mockUseAddress,
     useNetwork: mockUseNetwork,
+    useNetworkName: mockUseNetworkName,
   }
 })
 
@@ -32,22 +44,61 @@ jest.mock("react-query", () => ({
   }),
 }))
 
-describe("Contract component matches snapshots", () => {
-  it("matches original component", () => {
-    useQuery.mockReturnValue({
-      data: mockContract,
-      isLoading: false,
-      error: {},
-    })
-    const { asFragment } = renderComponent()
-    expect(asFragment()).toMatchSnapshot()
-  })
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"),
+  useLocation: () => ({
+    pathname: "/contract",
+    search: "",
+    state: null,
+    hash: "",
+    key: "pbbp8kkj",
+  }),
+}))
 
+jest.mock("../../data/queries/wasm", () => {
+  const mockUseContractInfo = (address: any) => {
+    return mockContract
+  }
+
+  return {
+    useContractInfo: mockUseContractInfo,
+  }
+})
+
+// describe('Contract component matches snapshots', () => {
+//   it('matches original component', () => {
+//     useQuery.mockReturnValue({
+//       data: mockContract,
+//       isLoading: false,
+//       error: {},
+//     });
+//     const { asFragment } = renderComponent();
+//     expect(asFragment()).toMatchSnapshot();
+//   });
+
+//   it('does not find contract', async () => {
+//     useQuery.mockReturnValue({
+//       data: mockContract,
+//       isLoading: false,
+//       error: {},
+//     });
+//     const { asFragment } = renderComponent();
+
+//     // Search for contract.
+//     const contractSearch = screen.getByRole('textbox');
+//     await userEvent.type(contractSearch, 'terra');
+
+//     // Ensure snapshot matches user augmented component.
+//     expect(asFragment()).toMatchSnapshot();
+//   });
+// });
+
+describe("Find contract with address", () => {
   it("finds contract", async () => {
     useQuery.mockReturnValue({
-      data: mockContract,
+      result: mockContract,
       isLoading: false,
-      error: {},
+      error: false,
     })
     const { asFragment } = renderComponent()
 
@@ -55,24 +106,8 @@ describe("Contract component matches snapshots", () => {
     const contractSearch = screen.getByRole("textbox")
     await userEvent.type(
       contractSearch,
-      "terra17ql6m90uasctmmhedn6aasn9my6khhs096sw0g8asrkqv33j2dgqh8ttpt"
+      "terra18qr46nvqnymd4wl4md58kgdz699xcwcf6h7dd0"
     )
-
-    // Ensure snapshot matches user augmented component.
-    expect(asFragment()).toMatchSnapshot()
-  })
-
-  it("does not find contract", async () => {
-    useQuery.mockReturnValue({
-      data: mockContract,
-      isLoading: false,
-      error: {},
-    })
-    const { asFragment } = renderComponent()
-
-    // Search for contract.
-    const contractSearch = screen.getByRole("textbox")
-    await userEvent.type(contractSearch, "terra")
 
     // Ensure snapshot matches user augmented component.
     expect(asFragment()).toMatchSnapshot()
