@@ -13,6 +13,7 @@ import History from "pages/history/History"
 import Stake from "pages/stake/Stake"
 import Governance from "pages/gov/Governance"
 import Contract from "pages/contract/Contract"
+import Example from "pages/labs/Example"
 
 /* details */
 import ValidatorDetails from "pages/stake/ValidatorDetails"
@@ -82,6 +83,12 @@ export const useNav = () => {
       title: t("Governance"),
       icon: <GovernanceIcon {...ICON_SIZE} />,
     },
+    {
+      path: "/example-tx",
+      element: <Example />,
+      title: t("Example Tx"),
+      icon: <HistoryIcon {...ICON_SIZE} />,
+    },
     ...(devMode
       ? [
           {
@@ -116,6 +123,7 @@ export const useNav = () => {
     { path: "/contract/store", element: <StoreCodeTx /> },
     { path: "/contract/execute/:contract", element: <ExecuteContractTx /> },
     { path: "/contract/migrate/:contract", element: <MigrateContractTx /> },
+
     {
       path: "/contract/updateadmin/:contract",
       element: <UpdateAdminContractTx />,

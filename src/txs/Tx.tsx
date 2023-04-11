@@ -118,6 +118,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   /* simulation: estimate gas */
   const simulationTx = estimationTxValues && createTx(estimationTxValues)
+
   const gasAdjustment =
     networks[chain]?.gasAdjustment *
     getLocalSetting<number>(SettingKey.GasAdjustment)
@@ -128,12 +129,17 @@ function Tx<TxValues>(props: Props<TxValues>) {
     gasAdjustment: gasAdjustment * (txGasAdjustment ?? 1),
     msgs: simulationTx?.msgs.map((msg) => msg.toData(isClassic)),
   }
+
   const { data: estimatedGas, ...estimatedGasState } = useQuery(
     [queryKey.tx.create, key, isWalletEmpty],
     async () => {
+      console.log("estimate query")
       if (!key.address || isWalletEmpty) return 0
+      console.log("address is set:", key.address)
       if (!(wallet || connectedWallet?.availablePost)) return 0
+      console.log("wallet is set:", wallet)
       if (!simulationTx || !simulationTx.msgs.length) return 0
+      console.log("simulationTx is set:", simulationTx)
       try {
         const unsignedTx = await lcd.tx.create([{ address: key.address }], {
           ...simulationTx,
