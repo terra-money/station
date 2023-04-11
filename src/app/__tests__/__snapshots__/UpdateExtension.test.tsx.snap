@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UpdateExtension component should match snapshot when Terra extension is available and Station extension is not available 1`] = `
+<DocumentFragment>
+  <div
+    class="text info"
+  >
+    Please 
+    <a
+      href="https://chrome.google.com/webstore/detail/aiifbnbfobpmeekipheeijimdpnlpgpp"
+      rel="noreferrer"
+      target="_blank"
+    >
+      update
+    </a>
+     your version of Station Extension.
+  </div>
+</DocumentFragment>
+`;
+
+exports[`UpdateExtension component should match snapshot when Terra extension is not available and Station extension is available 1`] = `<DocumentFragment />`;
+
+exports[`UpdateExtension component should match snapshot when Terra extension is not available and Station extension is not available 1`] = `<DocumentFragment />`;
