@@ -1,19 +1,19 @@
-import { useTranslation } from 'react-i18next'
-import classNames from 'classnames/bind'
-import BigNumber from 'bignumber.js'
-import { StakingPool, Tally, TallyParams, Vote } from '@terra-money/feather.js'
-import { readAmount, readPercent } from '@terra-money/terra-utils'
-import { has } from 'utils/num'
-import { combineState } from 'data/query'
-import { useGetVoteOptionItem } from 'data/queries/gov'
-import { useProposal, useTally, useTallyParams } from 'data/queries/gov'
-import { useStakingPool } from 'data/queries/staking'
-import { Col, Row, Card, Grid } from 'components/layout'
-import { Fetching, Empty } from 'components/feedback'
-import { Read } from 'components/token'
-import { ToNow } from 'components/display'
-import VoteProgress from './components/VoteProgress'
-import styles from './ProposalVotes.module.scss'
+import { useTranslation } from "react-i18next"
+import classNames from "classnames/bind"
+import BigNumber from "bignumber.js"
+import { StakingPool, Tally, TallyParams, Vote } from "@terra-money/feather.js"
+import { readAmount, readPercent } from "@terra-money/terra-utils"
+import { has } from "utils/num"
+import { combineState } from "data/query"
+import { useGetVoteOptionItem } from "data/queries/gov"
+import { useProposal, useTally, useTallyParams } from "data/queries/gov"
+import { useStakingPool } from "data/queries/staking"
+import { Col, Row, Card, Grid } from "components/layout"
+import { Fetching, Empty } from "components/feedback"
+import { Read } from "components/token"
+import { ToNow } from "components/display"
+import VoteProgress from "./components/VoteProgress"
+import styles from "./ProposalVotes.module.scss"
 
 export const options = [
   Vote.Option.VOTE_OPTION_YES,
@@ -43,7 +43,7 @@ const ProposalVotes = ({
     proposalState,
     tallyState,
     tallyParamsState,
-    poolState,
+    poolState
   )
 
   const render = () => {
@@ -53,9 +53,9 @@ const ProposalVotes = ({
     const { total, list, flag, isPassing } = tallies
     const { voting_end_time } = proposal
 
-    const flagLabel = { quorum: t('Quorum'), threshold: t('Pass threshold') }
+    const flagLabel = { quorum: t("Quorum"), threshold: t("Pass threshold") }
 
-    if (!has(total.voted)) return <Empty>{t('No votes yet')}</Empty>
+    if (!has(total.voted)) return <Empty>{t("No votes yet")}</Empty>
 
     return (
       <Grid gap={40}>
@@ -63,15 +63,15 @@ const ProposalVotes = ({
           <Row>
             <Col span={1}>
               <article className={styles.total}>
-                <h1 className={styles.title}>{t('Total voted')}</h1>
+                <h1 className={styles.title}>{t("Total voted")}</h1>
                 <section>
                   <Read amount={total.voted} integer /> (
                   {readPercent(total.ratio)})
                   <p>
                     {isPassing ? (
-                      <strong className='info'>{t('Passing...')}</strong>
+                      <strong className="info">{t("Passing...")}</strong>
                     ) : (
-                      <strong className='danger'>{t('Not passing...')}</strong>
+                      <strong className="danger">{t("Not passing...")}</strong>
                     )}
                   </p>
                 </section>
@@ -101,7 +101,7 @@ const ProposalVotes = ({
           </Row>
         )}
 
-        <Grid gap={4} className='small'>
+        <Grid gap={4} className="small">
           <VoteProgress
             flag={{ percent: readPercent(flag.x), label: flagLabel[flag.type] }}
             list={list.map(({ option, ratio }) => ({
@@ -112,7 +112,7 @@ const ProposalVotes = ({
 
           {card && (
             <p>
-              {t('Voted: {{n}} / {{d}}', {
+              {t("Voted: {{n}} / {{d}}", {
                 n: readAmount(total.voted, { prefix: true }),
                 d: readAmount(total.staked, { prefix: true }),
               })}
@@ -120,7 +120,7 @@ const ProposalVotes = ({
           )}
 
           <p className={styles.end}>
-            {new Date(voting_end_time) > new Date() ? t('Ends') : t('Ended')}{' '}
+            {new Date(voting_end_time) > new Date() ? t("Ends") : t("Ended")}{" "}
             <ToNow>{new Date(voting_end_time)}</ToNow>
           </p>
         </Grid>
@@ -129,7 +129,7 @@ const ProposalVotes = ({
   }
 
   return card ? (
-    <Card {...state} title={t('Votes')} bordered>
+    <Card {...state} title={t("Votes")} bordered>
       {render()}
     </Card>
   ) : (
@@ -145,13 +145,13 @@ export default ProposalVotes
 const calcTallies = (
   tally: Tally,
   { quorum, threshold }: TallyParams,
-  pool: StakingPool,
+  pool: StakingPool
 ) => {
   const getTallyItem = (option: Vote.Option) => {
     const voted =
       option === Vote.Option.UNRECOGNIZED ||
       option === Vote.Option.VOTE_OPTION_UNSPECIFIED
-        ? '0'
+        ? "0"
         : tallies[option]
 
     const byVoted = Number(voted) / Number(total.voted)
@@ -177,7 +177,7 @@ const calcTallies = (
 
   /* quorum | threshold */
   const determinantThreshold = BigNumber.sum(
-    ...list.slice(0, 3).map((o) => o.ratio.byVoted),
+    ...list.slice(0, 3).map((o) => o.ratio.byVoted)
   ).toNumber()
 
   const thresholdX = threshold
@@ -187,8 +187,8 @@ const calcTallies = (
 
   const isBelowQuorum = quorum.gt(ratio)
   const flag = isBelowQuorum
-    ? { x: quorum.toNumber(), type: 'quorum' as const }
-    : { x: thresholdX, type: 'threshold' as const }
+    ? { x: quorum.toNumber(), type: "quorum" as const }
+    : { x: thresholdX, type: "threshold" as const }
 
   const yesRatio = list[0].ratio.byVoted
   const noRatio = list.slice(2, 4).map(({ ratio }) => ratio.byVoted)
