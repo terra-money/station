@@ -1,0 +1,193 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Wallet matches original component 1`] = `
+<DocumentFragment>
+  <div
+    class="wallet false"
+  >
+    <button
+      class="close"
+    >
+      <svg
+        class="close__icon"
+        height="18"
+        width="18"
+      >
+        WalletCloseArrow.svg
+      </svg>
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium close__icon__mobile css-i4bv87-MuiSvgIcon-root"
+        data-testid="CloseIcon"
+        focusable="false"
+        height="18"
+        viewBox="0 0 24 24"
+        width="18"
+      >
+        <path
+          d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+        />
+      </svg>
+    </button>
+    <article
+      class="networth"
+    >
+      <span
+        class="inline start"
+        style="gap: 4px;"
+      >
+        <p>
+          Portfolio value
+        </p>
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit muted css-1vooibu-MuiSvgIcon-root"
+          data-testid="HelpOutlineOutlinedIcon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"
+          />
+        </svg>
+      </span>
+      <h1>
+        $ 
+        <span
+          class="component"
+        >
+          2,701
+          <span
+            class="small"
+          >
+            .27
+          </span>
+        </span>
+      </h1>
+      <div
+        class="networth__buttons"
+      >
+        <button
+          class="button primary"
+          type="button"
+        >
+          Send
+        </button>
+        <button
+          class="button default"
+          type="button"
+        >
+          Receive
+        </button>
+      </div>
+    </article>
+    <article
+      class="assetlist"
+    >
+      <div
+        class="assetlist__title"
+      >
+        <h3>
+          Assets
+        </h3>
+        <button
+          class="item"
+          type="button"
+        >
+          <span
+            class="icon"
+          />
+          Manage tokens
+        </button>
+        <div />
+      </div>
+      <div
+        class="assetlist__list"
+      >
+        <div>
+          <section>
+            <article
+              class="asset"
+            >
+              <section
+                class="details"
+              >
+                <img
+                  alt=""
+                  class="icon 50"
+                  height="50"
+                  src="https://assets.terra.money/icon/svg/Terra.svg"
+                  style="padding: 14.285714285714286px;"
+                  width="50"
+                />
+                <div
+                  class="details__container"
+                >
+                  <h1
+                    class="symbol"
+                  >
+                    LUNA
+                    <span
+                      class="chains"
+                    >
+                      Terra
+                    </span>
+                    <span
+                      class="chains"
+                    >
+                      Terra
+                    </span>
+                    <span
+                      class="chain__num"
+                    >
+                      2
+                    </span>
+                  </h1>
+                  <h2
+                    class="change__down"
+                  >
+                    <svg>
+                      PriceDown.svg
+                    </svg>
+                     -2.81%
+                  </h2>
+                  <h1
+                    class="price"
+                  >
+                    $ 
+                    <span
+                      class="component"
+                    >
+                      2,701
+                      <span
+                        class="small"
+                      >
+                        .27
+                      </span>
+                    </span>
+                  </h1>
+                  <h2
+                    class="amount"
+                  >
+                    <span
+                      class="component"
+                    >
+                      2,092
+                      <span
+                        class="small"
+                      >
+                        .273346
+                      </span>
+                    </span>
+                     LUNA
+                  </h2>
+                </div>
+              </section>
+            </article>
+          </section>
+        </div>
+      </div>
+    </article>
+  </div>
+</DocumentFragment>
+`;
