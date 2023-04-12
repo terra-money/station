@@ -16,10 +16,26 @@ jest.mock("./data/wallet", () => {
   };
 });
 
-jest.mock("react-modal", () => ({
-  ...jest.requireActual("react-modal"),
-  setAppElement: () => {},
-}));
+jest.mock("@terra-money/wallet-provider", () => {
+  const actual = jest.requireActual("@terra-money/wallet-provider");
+
+  const useWallet = () => {
+    return {
+      status: "WALLET_CONNECTED",
+      network: ["pisco-1"],
+    };
+  };
+
+  return {
+    ...actual,
+    useWallet: useWallet,
+  };
+});
+
+jest.mock("react-modal", () => {
+  const TestReactModal = require("./app/__tests__/__mocks__/ReactModal.mock");
+  return TestReactModal.default;
+});
 
 jest.mock("@ledgerhq/hw-transport-web-ble", () => ({}));
 
