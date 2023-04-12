@@ -5,7 +5,7 @@ import { NetworksProvider } from "app/InitNetworks"
 import { RecoilRoot } from "recoil"
 import { MemoryRouter } from "react-router-dom"
 import { mockNetworks } from "./__mocks__/Networks.mock"
-import { mockValidators } from "./__mocks__/Validators.mock"
+import { mockValidators, mockPriorityVals } from "./__mocks__/Validators.mock"
 import { mockDelegations } from "./__mocks__/Delegations.mock"
 import { mockCalcDelegations } from "./__mocks__/CalcDelegations.mock"
 import { mockUnbondings } from "./__mocks__/Unbondings.mock"
@@ -50,29 +50,14 @@ jest.mock("../../data/wallet", () => {
   }
 })
 
-jest.mock("@terra-money/wallet-provider", () => {
-  const actual = jest.requireActual("@terra-money/wallet-provider")
-
-  const useWallet = () => {
-    return {
-      status: "WALLET_CONNECTED",
-      network: ["pisco-1"],
-    }
-  }
-
-  return {
-    ...actual,
-    useWallet: useWallet,
-  }
-})
-
 jest.mock("../../data/queries/staking", () => {
   const mockUseInterchainDelegations = () => mockDelegations
-  const mockUseInterchainValidators = () => mockValidators
+  const mockUseInterchainValidators = () => mockValidators.data
   const mockUseCalcDelegationsByValidator = () => mockCalcDelegations
   const mockUseDelegations = () => mockDelegations
   const mockUseUnbondings = () => mockUnbondings
   const mockUseValidators = () => mockValidators
+  const mockGetPriorityVals = () => mockPriorityVals
 
   return {
     useInterchainDelegations: mockUseInterchainDelegations,
@@ -81,6 +66,7 @@ jest.mock("../../data/queries/staking", () => {
     useDelegations: mockUseDelegations,
     useUnbondings: mockUseUnbondings,
     useValidators: mockUseValidators,
+    getPriorityVals: mockGetPriorityVals,
   }
 })
 
@@ -104,7 +90,15 @@ jest.mock("../../data/queries/bank", () => {
   }
 })
 
-describe("Stake page component matches snapshots", async () => {
+jest.mock("../../data/settings/Theme", () => {
+  const mockUseThemeFavicon = () => "/static/media/favicon.1e08d51d.svg"
+
+  return {
+    useThemeFavicon: mockUseThemeFavicon,
+  }
+})
+
+describe("Stake page", async () => {
   it("matches original component", () => {
     const { asFragment } = renderComponent()
     expect(asFragment()).toMatchSnapshot()

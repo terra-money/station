@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Stake page component matches snapshots matches manual staking page 1`] = `
+exports[`Stake page matches manual staking page 1`] = `
 <DocumentFragment>
   <article
     class="page"
@@ -165,7 +165,275 @@ exports[`Stake page component matches snapshots matches manual staking page 1`] 
                         </div>
                         <div
                           class="content"
-                        />
+                        >
+                          <article
+                            class="page invisible"
+                          >
+                            <div
+                              class="container grid"
+                            >
+                              <section
+                                class="main"
+                              >
+                                <section
+                                  class="table"
+                                >
+                                  <button
+                                    class="toggle"
+                                  >
+                                    <span
+                                      class="track"
+                                    >
+                                      <span
+                                        class="indicator"
+                                      />
+                                    </span>
+                                    <span
+                                      class="text"
+                                    >
+                                      Show inactive validators
+                                    </span>
+                                  </button>
+                                  <div
+                                    class="container"
+                                  >
+                                    <table
+                                      class="table default"
+                                    >
+                                      <thead>
+                                        <tr>
+                                          <th
+                                            class=""
+                                          >
+                                            <button
+                                              class="sorter"
+                                            >
+                                              Moniker
+                                              <div
+                                                class="grid"
+                                                style="gap: 4px;"
+                                              >
+                                                <svg
+                                                  class="caret"
+                                                  height="3"
+                                                  width="6"
+                                                >
+                                                  DropUp.svg
+                                                </svg>
+                                                <svg
+                                                  class="caret"
+                                                  height="3"
+                                                  width="6"
+                                                >
+                                                  DropDown.svg
+                                                </svg>
+                                              </div>
+                                            </button>
+                                          </th>
+                                          <th
+                                            class="right"
+                                          >
+                                            <button
+                                              class="sorter"
+                                            >
+                                              Voting power
+                                              <div
+                                                class="grid"
+                                                style="gap: 4px;"
+                                              >
+                                                <svg
+                                                  class="caret"
+                                                  height="3"
+                                                  width="6"
+                                                >
+                                                  DropUp.svg
+                                                </svg>
+                                                <svg
+                                                  class="caret"
+                                                  height="3"
+                                                  width="6"
+                                                >
+                                                  DropDown.svg
+                                                </svg>
+                                              </div>
+                                            </button>
+                                          </th>
+                                          <th
+                                            class="right"
+                                          >
+                                            <button
+                                              class="sorter"
+                                            >
+                                              Commission
+                                              <div
+                                                class="grid"
+                                                style="gap: 4px;"
+                                              >
+                                                <svg
+                                                  class="caret"
+                                                  height="3"
+                                                  width="6"
+                                                >
+                                                  DropUp.svg
+                                                </svg>
+                                                <svg
+                                                  class="caret"
+                                                  height="3"
+                                                  width="6"
+                                                >
+                                                  DropDown.svg
+                                                </svg>
+                                              </div>
+                                            </button>
+                                          </th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr>
+                                          <td
+                                            class=""
+                                          >
+                                            <div
+                                              class="flex start"
+                                              style="gap: 8px;"
+                                            >
+                                              <img
+                                                alt=""
+                                                class="icon"
+                                                height="22"
+                                                src="https://raw.githubusercontent.com/terra-money/validator-images/main/images/0A6AF02D1557E5B4.jpg"
+                                                width="22"
+                                              />
+                                              <div
+                                                class="grid"
+                                                style="gap: 2px;"
+                                              >
+                                                <div
+                                                  class="flex start"
+                                                  style="gap: 4px;"
+                                                >
+                                                  <a
+                                                    class="moniker"
+                                                    href="/validator/terravaloper1fzx6z3qlwjyjjt3e5q6sakvt74n08uq9alzae3"
+                                                  >
+                                                    polkachu.com
+                                                  </a>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </td>
+                                          <td
+                                            class="right"
+                                          >
+                                            100.00%
+                                          </td>
+                                          <td
+                                            class="right"
+                                          >
+                                            5.00%
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td
+                                            class=""
+                                          >
+                                            <div
+                                              class="flex start"
+                                              style="gap: 8px;"
+                                            >
+                                              <img
+                                                alt=""
+                                                class="icon"
+                                                height="22"
+                                                src="https://raw.githubusercontent.com/terra-money/validator-images/main/images/F2F91999ECCC092F.jpg"
+                                                width="22"
+                                              />
+                                              <div
+                                                class="grid"
+                                                style="gap: 2px;"
+                                              >
+                                                <div
+                                                  class="flex start"
+                                                  style="gap: 4px;"
+                                                >
+                                                  <a
+                                                    class="moniker"
+                                                    href="/validator/junovaloper1qns2cgfa0y0s4x37vkd8dtkutj5kveekxpf6jd"
+                                                  >
+                                                    🔥STAVR🔥
+                                                  </a>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </td>
+                                          <td
+                                            class="right"
+                                          >
+                                            0.00%
+                                          </td>
+                                          <td
+                                            class="right"
+                                          >
+                                            5.00%
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td
+                                            class=""
+                                          >
+                                            <div
+                                              class="flex start"
+                                              style="gap: 8px;"
+                                            >
+                                              <img
+                                                alt=""
+                                                class="icon"
+                                                height="22"
+                                                src="https://raw.githubusercontent.com/terra-money/validator-images/main/images/BA19D70D1099E80E.jpg"
+                                                width="22"
+                                              />
+                                              <div
+                                                class="grid"
+                                                style="gap: 2px;"
+                                              >
+                                                <div
+                                                  class="flex start"
+                                                  style="gap: 4px;"
+                                                >
+                                                  <a
+                                                    class="moniker"
+                                                    href="/validator/terravaloper1gtw2uxdkdt3tvq790ckjz8jm8qgwkdw3uptstn"
+                                                  >
+                                                    Terran One
+                                                  </a>
+                                                  <span
+                                                    class="inline tag bg-danger small"
+                                                  >
+                                                    Jailed
+                                                  </span>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </td>
+                                          <td
+                                            class="right"
+                                          >
+                                            0.00%
+                                          </td>
+                                          <td
+                                            class="right"
+                                          >
+                                            0.00%
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </section>
+                              </section>
+                            </div>
+                          </article>
+                        </div>
                       </div>
                     </div>
                   </section>
@@ -180,7 +448,7 @@ exports[`Stake page component matches snapshots matches manual staking page 1`] 
 </DocumentFragment>
 `;
 
-exports[`Stake page component matches snapshots matches manual staking page with search 1`] = `
+exports[`Stake page matches manual staking page with search 1`] = `
 <DocumentFragment>
   <article
     class="page"
@@ -345,7 +613,187 @@ exports[`Stake page component matches snapshots matches manual staking page with
                         </div>
                         <div
                           class="content"
-                        />
+                        >
+                          <article
+                            class="page invisible"
+                          >
+                            <div
+                              class="container grid"
+                            >
+                              <section
+                                class="main"
+                              >
+                                <section
+                                  class="table"
+                                >
+                                  <button
+                                    class="toggle"
+                                  >
+                                    <span
+                                      class="track"
+                                    >
+                                      <span
+                                        class="indicator"
+                                      />
+                                    </span>
+                                    <span
+                                      class="text"
+                                    >
+                                      Show inactive validators
+                                    </span>
+                                  </button>
+                                  <div
+                                    class="container"
+                                  >
+                                    <table
+                                      class="table default"
+                                    >
+                                      <thead>
+                                        <tr>
+                                          <th
+                                            class=""
+                                          >
+                                            <button
+                                              class="sorter"
+                                            >
+                                              Moniker
+                                              <div
+                                                class="grid"
+                                                style="gap: 4px;"
+                                              >
+                                                <svg
+                                                  class="caret"
+                                                  height="3"
+                                                  width="6"
+                                                >
+                                                  DropUp.svg
+                                                </svg>
+                                                <svg
+                                                  class="caret"
+                                                  height="3"
+                                                  width="6"
+                                                >
+                                                  DropDown.svg
+                                                </svg>
+                                              </div>
+                                            </button>
+                                          </th>
+                                          <th
+                                            class="right"
+                                          >
+                                            <button
+                                              class="sorter"
+                                            >
+                                              Voting power
+                                              <div
+                                                class="grid"
+                                                style="gap: 4px;"
+                                              >
+                                                <svg
+                                                  class="caret"
+                                                  height="3"
+                                                  width="6"
+                                                >
+                                                  DropUp.svg
+                                                </svg>
+                                                <svg
+                                                  class="caret"
+                                                  height="3"
+                                                  width="6"
+                                                >
+                                                  DropDown.svg
+                                                </svg>
+                                              </div>
+                                            </button>
+                                          </th>
+                                          <th
+                                            class="right"
+                                          >
+                                            <button
+                                              class="sorter"
+                                            >
+                                              Commission
+                                              <div
+                                                class="grid"
+                                                style="gap: 4px;"
+                                              >
+                                                <svg
+                                                  class="caret"
+                                                  height="3"
+                                                  width="6"
+                                                >
+                                                  DropUp.svg
+                                                </svg>
+                                                <svg
+                                                  class="caret"
+                                                  height="3"
+                                                  width="6"
+                                                >
+                                                  DropDown.svg
+                                                </svg>
+                                              </div>
+                                            </button>
+                                          </th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr>
+                                          <td
+                                            class=""
+                                          >
+                                            <div
+                                              class="flex start"
+                                              style="gap: 8px;"
+                                            >
+                                              <img
+                                                alt=""
+                                                class="icon"
+                                                height="22"
+                                                src="https://raw.githubusercontent.com/terra-money/validator-images/main/images/BA19D70D1099E80E.jpg"
+                                                width="22"
+                                              />
+                                              <div
+                                                class="grid"
+                                                style="gap: 2px;"
+                                              >
+                                                <div
+                                                  class="flex start"
+                                                  style="gap: 4px;"
+                                                >
+                                                  <a
+                                                    class="moniker"
+                                                    href="/validator/terravaloper1gtw2uxdkdt3tvq790ckjz8jm8qgwkdw3uptstn"
+                                                  >
+                                                    Terran One
+                                                  </a>
+                                                  <span
+                                                    class="inline tag bg-danger small"
+                                                  >
+                                                    Jailed
+                                                  </span>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </td>
+                                          <td
+                                            class="right"
+                                          >
+                                            0.00%
+                                          </td>
+                                          <td
+                                            class="right"
+                                          >
+                                            0.00%
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </section>
+                              </section>
+                            </div>
+                          </article>
+                        </div>
                       </div>
                     </div>
                   </section>
@@ -360,7 +808,7 @@ exports[`Stake page component matches snapshots matches manual staking page with
 </DocumentFragment>
 `;
 
-exports[`Stake page component matches snapshots matches original component 1`] = `
+exports[`Stake page matches original component 1`] = `
 <DocumentFragment>
   <article
     class="page"
@@ -556,7 +1004,7 @@ exports[`Stake page component matches snapshots matches original component 1`] =
 </DocumentFragment>
 `;
 
-exports[`Stake page component matches snapshots matches undelegate page 1`] = `
+exports[`Stake page matches undelegate page 1`] = `
 <DocumentFragment>
   <article
     class="page"
