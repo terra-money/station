@@ -1,0 +1,394 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Links component matches snapshots matches original component 1`] = `
+<DocumentFragment>
+  <article
+    class="page"
+  >
+    <div
+      class="container grid"
+    >
+      <header
+        class="header"
+      >
+        <div
+          class="titleWrapper"
+        >
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+            data-testid="ArrowBackIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+            />
+          </svg>
+          <h1
+            class="title"
+          >
+            Validator details
+          </h1>
+        </div>
+      </header>
+      <section
+        class="main"
+      >
+        <div
+          class="row start"
+        >
+          <div
+            class="col"
+            style="flex: 3;"
+          >
+            <div
+              class="col"
+              style="flex: 1;"
+            >
+              <article
+                class="card default"
+              >
+                <section
+                  class="main"
+                >
+                  <div
+                    class="grid"
+                    style="gap: 16px;"
+                  >
+                    <header
+                      class="header"
+                    >
+                      <img
+                        alt=""
+                        class="icon"
+                        height="60"
+                        src="https://raw.githubusercontent.com/terra-money/validator-images/main/images/0A6AF02D1557E5B4.jpg"
+                        width="60"
+                      />
+                      <div
+                        class="grid"
+                        style="gap: 4px;"
+                      >
+                        <div
+                          class="flex start"
+                          style="gap: 10px;"
+                        >
+                          <h1
+                            class="moniker"
+                          >
+                            polkachu.com
+                          </h1>
+                          <span
+                            class="inline tag bg-success"
+                          >
+                            Active
+                          </span>
+                        </div>
+                        <div
+                          class="flex start link"
+                          style="gap: 4px;"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
+                            data-testid="LaptopOutlinedIcon"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M20 18c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"
+                            />
+                          </svg>
+                          <a
+                            href="https://polkachu.com"
+                            rel="noopener noreferrer"
+                            target="_blank"
+                          >
+                            https://polkachu.com
+                          </a>
+                        </div>
+                      </div>
+                    </header>
+                    <p>
+                      Polkachu is the trusted staking service provider for blockchain projects. 100% refund for downtime slash. Contact us at hello@polkachu.com
+                    </p>
+                  </div>
+                </section>
+              </article>
+              <article
+                class="card bordered grid"
+              >
+                <header
+                  class="header"
+                >
+                  <h1
+                    class="title"
+                  >
+                    Commission
+                  </h1>
+                  <div
+                    class="flex extra"
+                  />
+                </header>
+                <section
+                  class="main"
+                >
+                  <div
+                    class="grid numbers"
+                  >
+                    <div
+                      class="grid item"
+                    >
+                      <h1
+                        class="title"
+                      >
+                        Current
+                      </h1>
+                      <p
+                        class="value"
+                      >
+                        5.00%
+                      </p>
+                    </div>
+                    <div
+                      class="grid item"
+                    >
+                      <h1
+                        class="title"
+                      >
+                        Max
+                      </h1>
+                      <p
+                        class="value"
+                      >
+                        10.00%
+                      </p>
+                    </div>
+                    <div
+                      class="grid item"
+                    >
+                      <h1
+                        class="title"
+                      >
+                        Max daily change
+                      </h1>
+                      <p
+                        class="value"
+                      >
+                        5.00%
+                      </p>
+                    </div>
+                    <div
+                      class="grid item"
+                    >
+                      <h1
+                        class="title"
+                      >
+                        Last changed
+                      </h1>
+                      <p
+                        class="value"
+                      >
+                        <span>
+                          11 months ago
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                </section>
+              </article>
+              <article
+                class="card default"
+              >
+                <section
+                  class="main"
+                >
+                  <div
+                    class="grid addresses"
+                    style="gap: 12px;"
+                  >
+                    <div
+                      class="grid item"
+                    >
+                      <h1
+                        class="title"
+                      >
+                        Operator address
+                      </h1>
+                      <p
+                        class="value"
+                      >
+                        <a
+                          class="link"
+                          href="https://terrascope.info/testnet/validator/terravaloper1fzx6z3qlwjyjjt3e5q6sakvt74n08uq9alzae3"
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          terravaloper1fzx6z3qlwjyjjt3e5q6sakvt74n08uq9alzae3
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
+                            data-testid="CallMadeIcon"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M9 5v2h6.59L4 18.59 5.41 20 17 8.41V15h2V5z"
+                            />
+                          </svg>
+                        </a>
+                      </p>
+                    </div>
+                    <div
+                      class="grid item"
+                    >
+                      <h1
+                        class="title"
+                      >
+                        Wallet address
+                      </h1>
+                      <p
+                        class="value"
+                      >
+                        <a
+                          class="link"
+                          href="https://terrascope.info/testnet/address/terra1fzx6z3qlwjyjjt3e5q6sakvt74n08uq9aswqfz"
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          terra1fzx6z3qlwjyjjt3e5q6sakvt74n08uq9aswqfz
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
+                            data-testid="CallMadeIcon"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M9 5v2h6.59L4 18.59 5.41 20 17 8.41V15h2V5z"
+                            />
+                          </svg>
+                        </a>
+                      </p>
+                    </div>
+                  </div>
+                </section>
+              </article>
+            </div>
+          </div>
+          <div
+            class="col"
+            style="flex: 2;"
+          >
+            <div
+              class="col"
+              style="flex: 1;"
+            >
+              <article
+                class="card default grid"
+              >
+                <header
+                  class="header"
+                >
+                  <h1
+                    class="title"
+                  >
+                    My delegations
+                  </h1>
+                  <div
+                    class="flex extra"
+                  />
+                </header>
+                <section
+                  class="main"
+                >
+                  <div
+                    class="grid"
+                    style="gap: 20px;"
+                  >
+                    <section>
+                      <span
+                        class="component block total"
+                      >
+                        1
+                        <span
+                          class="small"
+                        >
+                          .00
+                        </span>
+                        <span
+                          class="small"
+                        >
+                           LUNA
+                        </span>
+                      </span>
+                    </section>
+                  </div>
+                </section>
+              </article>
+              <article
+                class="card default grid"
+              >
+                <header
+                  class="header"
+                >
+                  <h1
+                    class="title"
+                  >
+                    My rewards
+                  </h1>
+                  <div
+                    class="flex extra"
+                  />
+                </header>
+                <section
+                  class="main"
+                >
+                  <div
+                    class="grid"
+                    style="gap: 20px;"
+                  >
+                    <section>
+                      <span
+                        class="component total"
+                      >
+                        0
+                        <span
+                          class="small"
+                        >
+                          .00
+                        </span>
+                        <span
+                          class="small"
+                        >
+                           LUNA
+                        </span>
+                      </span>
+                       
+                      <span
+                        class="small"
+                      />
+                    </section>
+                    <div
+                      class="actions stretch"
+                    >
+                      <span
+                        class="button default block disabled"
+                        disabled=""
+                        to="/rewards"
+                      >
+                        Withdraw rewards
+                      </span>
+                    </div>
+                  </div>
+                </section>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </article>
+</DocumentFragment>
+`;

@@ -6,12 +6,12 @@ import { Tooltip } from "components/display"
 import HeaderIconButton from "app/components/HeaderIconButton"
 
 const NetworkStatus = () => {
-  const { filterDisabledNetworks, networks, networksLoading } = useNetworks()
+  const { filterDisabledNetworks, networks } = useNetworks()
   const networkName = useNetworkName()
   const disabledNetworks = filterDisabledNetworks(networks[networkName])
   const disabled = Object.values(disabledNetworks)
 
-  if (!disabled.length || networksLoading) return null
+  if (!disabled.length) return null
 
   const NetworkDisabledTooltip = () => {
     const { t } = useTranslation()

@@ -1,0 +1,291 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Governance component matches snapshots matches original component 1`] = `
+<DocumentFragment>
+  <article
+    class="page"
+  >
+    <div
+      class="container grid"
+    >
+      <header
+        class="header"
+      >
+        <div
+          class="titleWrapper"
+        >
+          <h1
+            class="title"
+          >
+            Governance
+          </h1>
+        </div>
+        <a
+          class="button small primary"
+          href="/proposal/new"
+        >
+          New proposal
+        </a>
+      </header>
+      <section
+        class="main"
+      >
+        <div
+          class="tabsContainer"
+        >
+          <section
+            class="tabs card"
+          >
+            <a
+              class="tab active"
+              href="/#PROPOSAL_STATUS_VOTING_PERIOD"
+            >
+              <div
+                class="title"
+              >
+                Voting
+              </div>
+            </a>
+            <a
+              class="tab"
+              href="/#PROPOSAL_STATUS_DEPOSIT_PERIOD"
+            >
+              <div
+                class="title"
+              >
+                Deposit
+              </div>
+            </a>
+            <a
+              class="tab"
+              href="/#PROPOSAL_STATUS_PASSED"
+            >
+              <div
+                class="title"
+              >
+                Passed
+              </div>
+            </a>
+            <a
+              class="tab"
+              href="/#PROPOSAL_STATUS_REJECTED"
+            >
+              <div
+                class="title"
+              >
+                Rejected
+              </div>
+            </a>
+          </section>
+          <div
+            class="col"
+            style="flex: 1;"
+          >
+            <div
+              class="chainfilter"
+            >
+              <div
+                class="header"
+              >
+                <div
+                  class="pills"
+                >
+                  <button
+                    class="all active"
+                  >
+                    All
+                  </button>
+                  <button>
+                    <img
+                      alt="Terra"
+                      src="https://station-assets.terra.money/img/chains/Terra.svg"
+                    />
+                    Terra
+                  </button>
+                  <button>
+                    <img
+                      alt="Atreides"
+                      src="https://station-assets.terra.money/img/chains/Atreides.png"
+                    />
+                    Atreides
+                  </button>
+                  <button>
+                    <img
+                      alt="Corrino"
+                      src="https://station-assets.terra.money/img/chains/Corrino.png"
+                    />
+                    Corrino
+                  </button>
+                  <button>
+                    <img
+                      alt="Harkonnen"
+                      src="https://station-assets.terra.money/img/chains/Harkonnen.png"
+                    />
+                    Harkonnen
+                  </button>
+                  <button>
+                    <img
+                      alt="Ordos"
+                      src="https://station-assets.terra.money/img/chains/Ordos.png"
+                    />
+                    Ordos
+                  </button>
+                </div>
+              </div>
+              <div
+                class="content"
+              >
+                <section
+                  class="list"
+                >
+                  <a
+                    class="card default link link"
+                    href="/proposal/atreides-1/1"
+                  >
+                    <section
+                      class="main"
+                    >
+                      <div
+                        class="column item"
+                        style="gap: 36px;"
+                      >
+                        <header
+                          class="header"
+                        >
+                          <section
+                            class="meta"
+                          >
+                            <aside>
+                              <img
+                                alt="Atreides"
+                                src="https://station-assets.terra.money/img/chains/Atreides.png"
+                              />
+                              1 | Msg create alliance proposal
+                            </aside>
+                            <strong
+                              class="success"
+                            >
+                              Passed
+                            </strong>
+                          </section>
+                          <h1
+                            class="title"
+                          >
+                            New alliance created with sCorinno (3% Rewards)
+                          </h1>
+                          <p
+                            class="date"
+                          >
+                            Submitted 
+                            <span>
+                              7 days ago
+                            </span>
+                          </p>
+                        </header>
+                      </div>
+                    </section>
+                  </a>
+                  <a
+                    class="card default link link"
+                    href="/proposal/harkonnen-1/1"
+                  >
+                    <section
+                      class="main"
+                    >
+                      <div
+                        class="column item"
+                        style="gap: 36px;"
+                      >
+                        <header
+                          class="header"
+                        >
+                          <section
+                            class="meta"
+                          >
+                            <aside>
+                              <img
+                                alt="Harkonnen"
+                                src="https://station-assets.terra.money/img/chains/Harkonnen.png"
+                              />
+                              1 | Parameter change proposal
+                            </aside>
+                            <strong
+                              class="success"
+                            >
+                              Passed
+                            </strong>
+                          </section>
+                          <h1
+                            class="title"
+                          >
+                            Enable IBC transfer
+                          </h1>
+                          <p
+                            class="date"
+                          >
+                            Submitted 
+                            <span>
+                              6 months ago
+                            </span>
+                          </p>
+                        </header>
+                      </div>
+                    </section>
+                  </a>
+                  <a
+                    class="card default link link"
+                    href="/proposal/ordos-1/129"
+                  >
+                    <section
+                      class="main"
+                    >
+                      <div
+                        class="column item"
+                        style="gap: 36px;"
+                      >
+                        <header
+                          class="header"
+                        >
+                          <section
+                            class="meta"
+                          >
+                            <aside>
+                              <img
+                                alt="Ordos"
+                                src="https://station-assets.terra.money/img/chains/Ordos.png"
+                              />
+                              129 | Store code proposal
+                            </aside>
+                            <strong
+                              class="success"
+                            >
+                              Passed
+                            </strong>
+                          </section>
+                          <h1
+                            class="title"
+                          >
+                            Astroport Factory
+                          </h1>
+                          <p
+                            class="date"
+                          >
+                            Submitted 
+                            <span>
+                              1 year ago
+                            </span>
+                          </p>
+                        </header>
+                      </div>
+                    </section>
+                  </a>
+                </section>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </article>
+</DocumentFragment>
+`;

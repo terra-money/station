@@ -1,0 +1,19 @@
+name: jest-tests
+on:
+  push:
+    branches:
+      - 'test/cypress'
+  pull_request:
+    types: [opened, synchronize]
+  workflow_dispatch:
+jobs:
+  run-jest-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Install dependencies
+        run: npm install
+      - name: Run Jest
+        run: npm run test

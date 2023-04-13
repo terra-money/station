@@ -5,17 +5,25 @@
   "author": "Terra <engineering@terra.money> (https://terra.money)",
   "repository": "github:terra-money/station",
   "license": "MIT",
+  "jest": {
+    "testMatch": [
+      "**/__tests__/*.[jt]s?(x)"
+    ]
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "prepare": "husky install",
     "pre-commit": "lint-staged",
-    "analyze": "source-map-explorer 'build/static/js/*.js'"
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "cypress:open": "concurrently -k \"npm run start\" \"wait-on https://localhost:3000 && cypress open\"",
+    "cypress:test": "concurrently -k \"npm run start\" \"wait-on https://localhost:3000 && cypress run\""
   },
   "dependencies": {
     "@anchor-protocol/anchor.js": "^5.1.1",
-    "@ledgerhq/hw-transport-web-ble": "^6.27.1",
+    "@ledgerhq/devices": "6.27.1",
+    "@ledgerhq/hw-transport-web-ble": "6.27.1",
     "@mui/icons-material": "^5.8.0",
     "@mui/material": "^5.9.1",
     "@terra-money/feather.js": "^1.0.0-beta.11",
@@ -64,6 +72,10 @@
   "devDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
+    "@peculiar/webcrypto": "^1.4.1",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^12.1.2",
+    "@testing-library/user-event": "^14.4.3",
     "@types/crypto-js": "^4.1.1",
     "@types/jest": "^27.5.1",
     "@types/node": "^17.0.35",
@@ -76,14 +88,21 @@
     "@types/react-dom": "^18.0.5",
     "@types/react-modal": "^3.13.1",
     "@types/react-router-dom": "^5.3.3",
+    "@types/react-test-renderer": "^18.0.0",
     "@types/secp256k1": "^4.0.3",
     "@types/semver": "^7.3.9",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.8.0",
+    "concurrently": "^7.6.0",
+    "cypress": "^12.5.1",
+    "enzyme": "^3.11.0",
     "husky": "^8.0.1",
     "lint-staged": "^12.4.1",
     "react-error-overlay": "6.0.9",
     "react-scripts": "^4.0.3",
+    "react-test-renderer": "^17.0.2",
     "source-map-explorer": "^2.5.2",
-    "typescript": "^4.6.4"
+    "typescript": "^4.6.4",
+    "wait-on": "^7.0.1"
   },
   "resolutions": {
     "react-error-overlay": "6.0.9"

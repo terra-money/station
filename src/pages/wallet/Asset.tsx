@@ -40,7 +40,7 @@ const Asset = (props: Props) => {
       className={styles.asset}
       key={token}
       onClick={() =>
-        setRoute({ path: Path.coin, denom: token, previousPage: route })
+        setRoute({ path: Path.coin, denom: token, previusPage: route })
       }
     >
       <section className={styles.details}>
@@ -73,7 +73,7 @@ const Asset = (props: Props) => {
                 token=""
               />
             ) : (
-              "—"
+              "-"
             )}
           </h1>
           <h2 className={styles.amount}>

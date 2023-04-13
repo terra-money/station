@@ -25,7 +25,7 @@ const NetWorth = () => {
     return (
       acc +
       (parseInt(amount) *
-        (symbol?.endsWith("...") ? 0 : prices?.[token]?.price ?? 0)) /
+        (symbol.endsWith("...") ? 0 : prices?.[token]?.price ?? 0)) /
         10 ** decimals
     )
   }, 0)
@@ -45,7 +45,7 @@ const NetWorth = () => {
           onClick={() =>
             setRoute({
               path: Path.send,
-              previousPage: route,
+              previusPage: route,
             })
           }
         >
@@ -55,7 +55,7 @@ const NetWorth = () => {
           onClick={() =>
             setRoute({
               path: Path.receive,
-              previousPage: route,
+              previusPage: route,
             })
           }
         >

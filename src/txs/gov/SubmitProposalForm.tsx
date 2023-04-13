@@ -396,7 +396,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
         {({ max, fee, submit }) => (
           <Form onSubmit={handleSubmit(submit.fn)}>
             <Grid gap={4}>
-              {networks[chain]?.prefix === "terra" && (
+              {networks[chain].prefix === "terra" && (
                 <FormHelp>
                   Upload proposal only after forum discussion on{" "}
                   <ExternalLink href="https://agora.terra.money">
