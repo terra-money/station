@@ -12,15 +12,21 @@ import { mockUnbondings } from "./__mocks__/Unbondings.mock"
 import { mockRewards } from "./__mocks__/Rewards.mock"
 import { mockBalances } from "./__mocks__/Balances.mock"
 import user from "@testing-library/user-event"
+import { mockBankBalance } from "./__mocks__/BankBalance.mock"
+import { mockWhitelist } from "./__mocks__/Whitelist.mock"
+import { mockExchangeRates } from "./__mocks__/ExchangeRates.mock"
+import { mockStakingParams } from "./__mocks__/StakingParams.mock"
+import { useQuery } from "react-query"
 
 function renderComponent() {
   type TokenFilter = <T>(network: Record<string, T>) => Record<string, T>
   const networks = {} as jest.Mocked<InterchainNetworks>
-  const mockedTokenFilter = () => true as jest.Mocked<TokenFilter>
+  const mockedTokenFilter = jest.fn() as jest.Mocked<TokenFilter>
 
   return render(
     <NetworksProvider
       value={{
+        networksLoading: false,
         networks: networks,
         filterEnabledNetworks: mockedTokenFilter,
         filterDisabledNetworks: mockedTokenFilter,
@@ -36,8 +42,16 @@ function renderComponent() {
 }
 
 jest.mock("../../data/wallet", () => {
+  const mockUseAddress = () => {
+    return "terra111111111111111111111111111111111111111"
+  }
+
   const mockUseNetwork = () => {
     return mockNetworks
+  }
+
+  const mockUseNetworkName = () => {
+    return "testnet"
   }
 
   const mockUseChainID = () => {
@@ -45,8 +59,10 @@ jest.mock("../../data/wallet", () => {
   }
 
   return {
+    useAddress: mockUseAddress,
     useNetwork: mockUseNetwork,
     useChainID: mockUseChainID,
+    useNetworkName: mockUseNetworkName,
   }
 })
 
@@ -54,19 +70,25 @@ jest.mock("../../data/queries/staking", () => {
   const mockUseInterchainDelegations = () => mockDelegations
   const mockUseInterchainValidators = () => mockValidators.data
   const mockUseCalcDelegationsByValidator = () => mockCalcDelegations
+  const mockUseStakingParams = () => mockStakingParams
   const mockUseDelegations = () => mockDelegations
   const mockUseUnbondings = () => mockUnbondings
   const mockUseValidators = () => mockValidators
   const mockGetPriorityVals = () => mockPriorityVals
+  const mockGetChainUnbondTime = () => 5
+  const mockCalcDelegationsTotal = () => 12899999
 
   return {
     useInterchainDelegations: mockUseInterchainDelegations,
     useInterchainValidators: mockUseInterchainValidators,
     useCalcDelegationsByValidator: mockUseCalcDelegationsByValidator,
+    useStakingParams: mockUseStakingParams,
     useDelegations: mockUseDelegations,
     useUnbondings: mockUseUnbondings,
     useValidators: mockUseValidators,
     getPriorityVals: mockGetPriorityVals,
+    getChainUnbondTime: mockGetChainUnbondTime,
+    calcDelegationsTotal: mockCalcDelegationsTotal,
   }
 })
 
@@ -80,16 +102,6 @@ jest.mock("../../data/queries/distribution", () => {
   }
 })
 
-jest.mock("../../data/queries/bank", () => {
-  const mockUseBalances = () => {
-    return mockBalances
-  }
-
-  return {
-    useBalances: mockUseBalances,
-  }
-})
-
 jest.mock("../../data/settings/Theme", () => {
   const mockUseThemeFavicon = () => "/static/media/favicon.1e08d51d.svg"
 
@@ -98,7 +110,76 @@ jest.mock("../../data/settings/Theme", () => {
   }
 })
 
-describe("Stake page", async () => {
+jest.mock("../../data/queries/bank", () => {
+  const mockUseIsWalletEmpty = () => {
+    return false
+  }
+
+  const mockUseBankBalance = () => {
+    return mockBankBalance
+  }
+
+  const mockUseBalances = () => {
+    return mockBalances
+  }
+
+  return {
+    useIsWalletEmpty: mockUseIsWalletEmpty,
+    useBankBalance: mockUseBankBalance,
+    useBalances: mockUseBalances,
+  }
+})
+
+jest.mock("../../data/queries/chains", () => {
+  const actual = jest.requireActual("../../data/queries/chains")
+
+  const mockUseWhitelist = () => {
+    return mockWhitelist
+  }
+
+  return {
+    ...actual,
+    useWhitelist: mockUseWhitelist,
+  }
+})
+
+jest.mock("../../data/queries/coingecko", () => {
+  const mockUseExchangeRates = () => {
+    return mockExchangeRates
+  }
+
+  return {
+    useExchangeRates: mockUseExchangeRates,
+  }
+})
+
+jest.mock("@terra-money/terra-utils", () => {
+  const actual = jest.requireActual("@terra-money/terra-utils")
+  const mockTruncate = (value: string) => value
+
+  return {
+    ...actual,
+    truncate: mockTruncate,
+  }
+})
+
+jest.mock("react-query", () => ({
+  useQuery: jest.fn().mockReturnValue({
+    data: Object,
+    isLoading: Boolean,
+    error: Object,
+  }),
+}))
+
+describe("Stake", async () => {
+  beforeEach(() => {
+    useQuery.mockReturnValue({
+      data: 420829,
+      isLoading: false,
+      error: null,
+    })
+  })
+
   it("matches original component", () => {
     const { asFragment } = renderComponent()
     expect(asFragment()).toMatchSnapshot()

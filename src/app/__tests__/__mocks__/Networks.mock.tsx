@@ -1,4 +1,4 @@
-const mockNetworks = {
+export const mockNetworks = {
   "atreides-1": {
     baseAsset: "uatr",
     chainID: "atreides-1",
@@ -129,5 +129,3 @@ const mockNetworks = {
     prefix: "terra",
   },
 }
-
-export { mockNetworks }

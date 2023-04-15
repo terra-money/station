@@ -1,5 +1,10 @@
 @import "mixins";
 
+.wrapper {
+  @include flex-column();
+  gap: 8px;
+}
+
 .item {
   @include flex(space-between);
   border-top: solid 1px var(--card-border);
@@ -11,6 +16,13 @@
 
   @include mobile {
     padding: 12px 10px;
+  }
+
+  &.icon {
+    border-radius: var(--border-radius);
+    padding: 12px;
+    border: 1px solid var(--card-border);
+    background: var(--card-bg);
   }
 
   &:hover {

@@ -58,7 +58,7 @@ const StakedDonut = ({ chain }: { chain: string }) => {
                   )}
                   <p className={styles.denom}>{entry.payload.moniker}</p>
                   <p className={styles.percent}>
-                    {percentage < 1 ? `< ${percentage}` : percentage}%
+                    {percentage < 1 ? `< 1` : percentage}%
                   </p>
                 </>
               ) : (

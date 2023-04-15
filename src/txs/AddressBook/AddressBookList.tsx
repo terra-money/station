@@ -44,8 +44,8 @@ const AddressBookList = ({ onClick }: Props) => {
                 >
                   <span>
                     <img
-                      src={networks[chain].icon}
-                      alt={networks[chain].name}
+                      src={networks[chain]?.icon}
+                      alt={networks[chain]?.name}
                     />
                     {networks[chain].name}
                   </span>

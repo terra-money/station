@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Nav component matches snapshots matches original component 1`] = `
+exports[`Nav matches original component 1`] = `
 <DocumentFragment>
   <nav>
     <header
@@ -73,19 +73,6 @@ exports[`Nav component matches snapshots matches original component 1`] = `
         Governance.svg
       </svg>
       Governance
-    </a>
-    <a
-      class="item link"
-      data-id="/contract"
-      href="/contract"
-    >
-      <svg
-        height="20"
-        width="20"
-      >
-        Contract.svg
-      </svg>
-      Contract
     </a>
   </nav>
 </DocumentFragment>

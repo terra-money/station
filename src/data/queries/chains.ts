@@ -97,7 +97,7 @@ export function useIBCChannels() {
       const isCW20 = AccAddress.validate(tokenAddress)
 
       // from Terra to other chains
-      if (networks[from].prefix === "terra") {
+      if (networks[from]?.prefix === "terra") {
         // non-CW20 ICS transfer
         if (!!icsChannel && networks[to].ibc?.ics?.fromTerra === icsChannel) {
           return icsChannel
@@ -109,7 +109,7 @@ export function useIBCChannels() {
             networks[to].ibc?.fromTerra
 
         // from other chains to Terra
-      } else if (networks[to].prefix === "terra") {
+      } else if (networks[to]?.prefix === "terra") {
         // non-CW20 ICS transfer
         if (
           !!icsChannel &&
@@ -132,9 +132,9 @@ export function useIBCChannels() {
       from: string
       to: string
     }): string | undefined => {
-      if (networks[from].prefix === "terra") {
+      if (networks[from]?.prefix === "terra") {
         return networks[to].ibc?.icsFromTerra?.contract
-      } else if (networks[to].prefix === "terra") {
+      } else if (networks[to]?.prefix === "terra") {
         return networks[from].ibc?.ics?.contract
       }
     },

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`History component (containing HistoryList/Item/Message subcomponents) matches snapshots matches original component 1`] = `
+exports[`History matches original component 1`] = `
 <DocumentFragment>
   <article
     class="page"
@@ -34,41 +34,10 @@ exports[`History component (containing HistoryList/Item/Message subcomponents) m
               class="pills"
             >
               <button
-                class="active"
+                aria-expanded="false"
+                class="button"
               >
-                <img
-                  alt="Terra"
-                  src="https://station-assets.terra.money/img/chains/Terra.svg"
-                />
-                Terra
-              </button>
-              <button>
-                <img
-                  alt="Atreides"
-                  src="https://station-assets.terra.money/img/chains/Atreides.png"
-                />
-                Atreides
-              </button>
-              <button>
-                <img
-                  alt="Corrino"
-                  src="https://station-assets.terra.money/img/chains/Corrino.png"
-                />
-                Corrino
-              </button>
-              <button>
-                <img
-                  alt="Harkonnen"
-                  src="https://station-assets.terra.money/img/chains/Harkonnen.png"
-                />
-                Harkonnen
-              </button>
-              <button>
-                <img
-                  alt="Ordos"
-                  src="https://station-assets.terra.money/img/chains/Ordos.png"
-                />
-                Ordos
+                + 5
               </button>
             </div>
           </div>
@@ -111,27 +80,7 @@ exports[`History component (containing HistoryList/Item/Message subcomponents) m
                             </span>
                             <span
                               class="link"
-                            >
-                              <a
-                                class="link"
-                                href="https://terrascope.info/testnet/tx/1126F13EAD4ECBC590478A6C055271297044A8E57B6908E2844D7B964D064E67"
-                                rel="noopener noreferrer"
-                                target="_blank"
-                              >
-                                1126F1...064E67
-                                <svg
-                                  aria-hidden="true"
-                                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
-                                  data-testid="CallMadeIcon"
-                                  focusable="false"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    d="M9 5v2h6.59L4 18.59 5.41 20 17 8.41V15h2V5z"
-                                  />
-                                </svg>
-                              </a>
-                            </span>
+                            />
                           </p>
                           <p
                             class="time"
@@ -167,28 +116,7 @@ exports[`History component (containing HistoryList/Item/Message subcomponents) m
                               <p
                                 class="message"
                               >
-                                <span>
-                                  <a
-                                    class="link"
-                                    href="https://terrascope.info/testnet/address/terra18j6kg55a960v0l845mxeg6k0r8vfux5tsexdkp"
-                                    rel="noopener noreferrer"
-                                    target="_blank"
-                                    value="terra18j6kg55a960v0l845mxeg6k0r8vfux5tsexdkp"
-                                  >
-                                    my wallet
-                                    <svg
-                                      aria-hidden="true"
-                                      class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
-                                      data-testid="CallMadeIcon"
-                                      focusable="false"
-                                      viewBox="0 0 24 24"
-                                    >
-                                      <path
-                                        d="M9 5v2h6.59L4 18.59 5.41 20 17 8.41V15h2V5z"
-                                      />
-                                    </svg>
-                                  </a>
-                                </span>
+                                <span />
                                 <span>
                                    send
                                 </span>
@@ -219,26 +147,6 @@ exports[`History component (containing HistoryList/Item/Message subcomponents) m
                                 </span>
                                 <span>
                                    
-                                  <a
-                                    class="link"
-                                    href="https://terrascope.info/testnet/address/terra1mfqnlqz5hh7wzy2lcfmw82s5aqtx2l9efafqqr"
-                                    rel="noopener noreferrer"
-                                    target="_blank"
-                                    value="terra1mfqnlqz5hh7wzy2lcfmw82s5aqtx2l9efafqqr"
-                                  >
-                                    terra1...fafqqr
-                                    <svg
-                                      aria-hidden="true"
-                                      class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
-                                      data-testid="CallMadeIcon"
-                                      focusable="false"
-                                      viewBox="0 0 24 24"
-                                    >
-                                      <path
-                                        d="M9 5v2h6.59L4 18.59 5.41 20 17 8.41V15h2V5z"
-                                      />
-                                    </svg>
-                                  </a>
                                 </span>
                               </p>
                             </section>

@@ -7,11 +7,12 @@ import { NetworksProvider } from "../InitNetworks"
 function renderComponent() {
   type TokenFilter = <T>(network: Record<string, T>) => Record<string, T>
   const networks = {} as jest.Mocked<InterchainNetworks>
-  const mockedTokenFilter = {} as jest.Mocked<TokenFilter>
+  const mockedTokenFilter = jest.fn() as jest.Mocked<TokenFilter>
 
   return render(
     <NetworksProvider
       value={{
+        networksLoading: false,
         networks: networks,
         filterEnabledNetworks: mockedTokenFilter,
         filterDisabledNetworks: mockedTokenFilter,
@@ -52,7 +53,7 @@ jest.mock("../../data/wallet", () => ({
   ],
 }))
 
-describe("NetworkSetting component matches snapshots", () => {
+describe("NetworkSetting", () => {
   it("matches original component", () => {
     const [_, changeNetwork] = useNetworkState()
     const { asFragment } = renderComponent()

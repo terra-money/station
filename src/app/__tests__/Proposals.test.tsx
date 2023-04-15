@@ -6,6 +6,8 @@ import { mockProposals } from "./__mocks__/Proposals.mock"
 import { mockNetworks } from "./__mocks__/Networks.mock"
 import { useQuery } from "react-query"
 import { RecoilRoot } from "recoil"
+import { mockBankBalance } from "./__mocks__/BankBalance.mock"
+import { mockWhitelist } from "./__mocks__/Whitelist.mock"
 
 function renderComponent() {
   return render(
@@ -22,8 +24,13 @@ jest.mock("../../data/wallet", () => {
     return mockNetworks
   }
 
+  const mockUseNetworkName = () => {
+    return "testnet"
+  }
+
   return {
     useNetwork: mockUseNetwork,
+    useNetworkName: mockUseNetworkName,
   }
 })
 
@@ -35,7 +42,30 @@ jest.mock("react-query", () => ({
   }),
 }))
 
-describe("Proposals component matches snapshots", () => {
+jest.mock("../../data/queries/bank", () => {
+  const mockUseBankBalance = () => {
+    return mockBankBalance
+  }
+
+  return {
+    useBankBalance: mockUseBankBalance,
+  }
+})
+
+jest.mock("../../data/queries/chains", () => {
+  const actual = jest.requireActual("../../data/queries/chains")
+
+  const mockUseWhitelist = () => {
+    return mockWhitelist
+  }
+
+  return {
+    ...actual,
+    useWhitelist: mockUseWhitelist,
+  }
+})
+
+describe("Proposals", () => {
   it("matches original component", () => {
     useQuery.mockReturnValue({
       data: mockProposals,

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Links component matches snapshots matches original component 1`] = `
+exports[`ValidatorDetails matches original component 1`] = `
 <DocumentFragment>
   <article
     class="page"
@@ -218,27 +218,7 @@ exports[`Links component matches snapshots matches original component 1`] = `
                       </h1>
                       <p
                         class="value"
-                      >
-                        <a
-                          class="link"
-                          href="https://terrascope.info/testnet/validator/terravaloper1fzx6z3qlwjyjjt3e5q6sakvt74n08uq9alzae3"
-                          rel="noopener noreferrer"
-                          target="_blank"
-                        >
-                          terravaloper1fzx6z3qlwjyjjt3e5q6sakvt74n08uq9alzae3
-                          <svg
-                            aria-hidden="true"
-                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
-                            data-testid="CallMadeIcon"
-                            focusable="false"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              d="M9 5v2h6.59L4 18.59 5.41 20 17 8.41V15h2V5z"
-                            />
-                          </svg>
-                        </a>
-                      </p>
+                      />
                     </div>
                     <div
                       class="grid item"
@@ -250,27 +230,7 @@ exports[`Links component matches snapshots matches original component 1`] = `
                       </h1>
                       <p
                         class="value"
-                      >
-                        <a
-                          class="link"
-                          href="https://terrascope.info/testnet/address/terra1fzx6z3qlwjyjjt3e5q6sakvt74n08uq9aswqfz"
-                          rel="noopener noreferrer"
-                          target="_blank"
-                        >
-                          terra1fzx6z3qlwjyjjt3e5q6sakvt74n08uq9aswqfz
-                          <svg
-                            aria-hidden="true"
-                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
-                            data-testid="CallMadeIcon"
-                            focusable="false"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              d="M9 5v2h6.59L4 18.59 5.41 20 17 8.41V15h2V5z"
-                            />
-                          </svg>
-                        </a>
-                      </p>
+                      />
                     </div>
                   </div>
                 </section>

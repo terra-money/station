@@ -11,7 +11,7 @@ jest.mock("../../data/wallet", () => ({
   useNetworkName: jest.fn(),
 }))
 
-describe("NetworkHeader component matches snapshots", () => {
+describe("NetworkHeader", () => {
   it("matches component mainnet", () => {
     useNetworkName.mockReturnValueOnce("mainnet")
     const { asFragment } = renderComponent()

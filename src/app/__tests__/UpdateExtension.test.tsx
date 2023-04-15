@@ -2,11 +2,12 @@ import React from "react"
 import { render } from "@testing-library/react"
 import UpdateExtension from "../sections/UpdateExtension"
 
-describe("UpdateExtension component", () => {
+describe("UpdateExtension", () => {
   beforeEach(() => {
     window.isTerraExtensionAvailable = true
     window.isStationExtensionAvailable = false
   })
+
   it("should match snapshot when Terra extension is available and Station extension is not available", () => {
     const { asFragment } = render(<UpdateExtension />)
 
