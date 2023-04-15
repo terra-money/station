@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CurrencySetting component matches snapshots matches original component 1`] = `
+exports[`CurrencySetting matches original component 1`] = `
 <DocumentFragment>
   <div
     class="grid"
@@ -101,7 +101,7 @@ exports[`CurrencySetting component matches snapshots matches original component 
               class="flex track"
             >
               <span
-                class="indicator__checked"
+                class="indicator checked"
               />
             </div>
           </button>
@@ -115,7 +115,7 @@ exports[`CurrencySetting component matches snapshots matches original component 
 </DocumentFragment>
 `;
 
-exports[`CurrencySetting component matches snapshots matches user augmented component 1`] = `
+exports[`CurrencySetting matches user augmented component 1`] = `
 <DocumentFragment>
   <div
     class="grid"
@@ -166,7 +166,7 @@ exports[`CurrencySetting component matches snapshots matches user augmented comp
               class="flex track"
             >
               <span
-                class="indicator__checked"
+                class="indicator checked"
               />
             </div>
           </button>

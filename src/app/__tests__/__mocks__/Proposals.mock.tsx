@@ -7,7 +7,7 @@ const mockProposalDatetime3 = new Date(
   new Date().setDate(today.getDate() - 365)
 )
 
-const mockProposals = [
+export const mockProposals = [
   {
     prop: {
       proposal_id: "1",
@@ -147,5 +147,3 @@ const mockProposals = [
     chain: "ordos-1",
   },
 ]
-
-export { mockProposals }

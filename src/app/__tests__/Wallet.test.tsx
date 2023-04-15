@@ -6,15 +6,17 @@ import Wallet from "pages/wallet/Wallet"
 import { NetworksProvider } from "../InitNetworks"
 import { mockExchangeRates } from "./__mocks__/ExchangeRates.mock"
 import { mockNetworks } from "./__mocks__/Networks.mock"
+import { mockBankBalance } from "./__mocks__/BankBalance.mock"
 
 function renderComponent() {
   type TokenFilter = <T>(network: Record<string, T>) => Record<string, T>
   const networks = {} as jest.Mocked<InterchainNetworks>
-  const mockedTokenFilter = {} as jest.Mocked<TokenFilter>
+  const mockedTokenFilter = jest.fn() as jest.Mocked<TokenFilter>
 
   return render(
     <NetworksProvider
       value={{
+        networksLoading: false,
         networks: networks,
         filterEnabledNetworks: mockedTokenFilter,
         filterDisabledNetworks: mockedTokenFilter,
@@ -29,27 +31,13 @@ function renderComponent() {
   )
 }
 
-const mockCoins = [
-  {
-    denom:
-      "ibc/BE2E170E02D101A1DC61255C51533FED2B6163FD2757DA11494FEB6D65ABEFC4",
-    amount: "1000000000",
-    chain: "pisco-1",
-  },
-  {
-    denom: "uluna",
-    amount: "1092273346",
-    chain: "pisco-1",
-  },
-]
-
 jest.mock("../../data/queries/bank", () => {
   const mockUseIsWalletEmpty = () => {
     return false
   }
 
   const mockUseBankBalance = () => {
-    return mockCoins
+    return mockBankBalance
   }
 
   return {

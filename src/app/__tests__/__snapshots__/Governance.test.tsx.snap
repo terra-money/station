@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Governance component matches snapshots matches original component 1`] = `
+exports[`Governance matches original component 1`] = `
 <DocumentFragment>
   <article
     class="page"
@@ -91,44 +91,15 @@ exports[`Governance component matches snapshots matches original component 1`] =
                   class="pills"
                 >
                   <button
-                    class="all active"
+                    class="all button active"
                   >
                     All
                   </button>
-                  <button>
-                    <img
-                      alt="Terra"
-                      src="https://station-assets.terra.money/img/chains/Terra.svg"
-                    />
-                    Terra
-                  </button>
-                  <button>
-                    <img
-                      alt="Atreides"
-                      src="https://station-assets.terra.money/img/chains/Atreides.png"
-                    />
-                    Atreides
-                  </button>
-                  <button>
-                    <img
-                      alt="Corrino"
-                      src="https://station-assets.terra.money/img/chains/Corrino.png"
-                    />
-                    Corrino
-                  </button>
-                  <button>
-                    <img
-                      alt="Harkonnen"
-                      src="https://station-assets.terra.money/img/chains/Harkonnen.png"
-                    />
-                    Harkonnen
-                  </button>
-                  <button>
-                    <img
-                      alt="Ordos"
-                      src="https://station-assets.terra.money/img/chains/Ordos.png"
-                    />
-                    Ordos
+                  <button
+                    aria-expanded="false"
+                    class="button"
+                  >
+                    + 5
                   </button>
                 </div>
               </div>

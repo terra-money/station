@@ -6,7 +6,7 @@ function renderComponent() {
   return render(<Aside />)
 }
 
-describe("Aside component (containing Links, Grid subcomponents) matches snapshots", () => {
+describe("Aside", () => {
   it("matches original component", () => {
     const { asFragment } = renderComponent()
     expect(asFragment()).toMatchSnapshot()

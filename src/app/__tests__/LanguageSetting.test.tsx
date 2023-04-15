@@ -7,11 +7,12 @@ import user from "@testing-library/user-event"
 function renderComponent() {
   type TokenFilter = <T>(network: Record<string, T>) => Record<string, T>
   const networks = {} as jest.Mocked<InterchainNetworks>
-  const mockedTokenFilter = {} as jest.Mocked<TokenFilter>
+  const mockedTokenFilter = jest.fn() as jest.Mocked<TokenFilter>
 
   return render(
     <NetworksProvider
       value={{
+        networksLoading: false,
         networks: networks,
         filterEnabledNetworks: mockedTokenFilter,
         filterDisabledNetworks: mockedTokenFilter,
@@ -22,7 +23,7 @@ function renderComponent() {
   )
 }
 
-describe("LanguageSetting component matches snapshots", () => {
+describe("LanguageSetting", () => {
   it("matches original component", () => {
     const { asFragment } = renderComponent()
     expect(asFragment()).toMatchSnapshot()

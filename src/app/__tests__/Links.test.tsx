@@ -7,11 +7,12 @@ import { render } from "@testing-library/react"
 function renderComponent() {
   type TokenFilter = <T>(network: Record<string, T>) => Record<string, T>
   const networks = {} as jest.Mocked<InterchainNetworks>
-  const mockedTokenFilter = {} as jest.Mocked<TokenFilter>
+  const mockedTokenFilter = jest.fn() as jest.Mocked<TokenFilter>
 
   return render(
     <NetworksProvider
       value={{
+        networksLoading: false,
         networks: networks,
         filterEnabledNetworks: mockedTokenFilter,
         filterDisabledNetworks: mockedTokenFilter,
@@ -24,7 +25,7 @@ function renderComponent() {
   )
 }
 
-describe("Links component matches snapshots", () => {
+describe("Links", () => {
   it("matches original component", () => {
     const { asFragment } = renderComponent()
     expect(asFragment()).toMatchSnapshot()

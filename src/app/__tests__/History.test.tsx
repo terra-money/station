@@ -9,15 +9,17 @@ import { mockHistory } from "./__mocks__/History.mock"
 import { mockNetworks } from "./__mocks__/Networks.mock"
 import { mockWhitelist } from "./__mocks__/Whitelist.mock"
 import { mockInterchainAddresses } from "./__mocks__/InterchainAddresses.mock"
+import { mockBankBalance } from "./__mocks__/BankBalance.mock"
 
 function renderComponent() {
   type TokenFilter = <T>(network: Record<string, T>) => Record<string, T>
   const networks = {} as jest.Mocked<InterchainNetworks>
-  const mockedTokenFilter = {} as jest.Mocked<TokenFilter>
+  const mockedTokenFilter = jest.fn() as jest.Mocked<TokenFilter>
 
   return render(
     <NetworksProvider
       value={{
+        networksLoading: false,
         networks: networks,
         filterEnabledNetworks: mockedTokenFilter,
         filterDisabledNetworks: mockedTokenFilter,
@@ -75,6 +77,16 @@ jest.mock("../../data/queries/chains", () => {
   }
 })
 
+jest.mock("../../data/queries/bank", () => {
+  const mockUseBankBalance = () => {
+    return mockBankBalance.data
+  }
+
+  return {
+    useBankBalance: mockUseBankBalance,
+  }
+})
+
 jest.mock("react-query", () => ({
   useQuery: jest.fn().mockReturnValue({
     data: Object,
@@ -83,7 +95,15 @@ jest.mock("react-query", () => ({
   }),
 }))
 
-describe("History component (containing HistoryList/Item/Message subcomponents) matches snapshots", () => {
+jest.mock("../../utils/chain", () => {
+  const mockUseSortedDisplayChains = () => ["pisco-1"]
+
+  return {
+    useSortedDisplayChains: mockUseSortedDisplayChains,
+  }
+})
+
+describe("History", () => {
   it("matches original component", () => {
     useQuery.mockReturnValue({
       data: mockHistory,

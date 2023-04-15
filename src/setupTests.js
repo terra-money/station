@@ -49,6 +49,11 @@ jest.mock("@terra-money/use-wallet", () => ({
   useConnectedWallet: () => {
     return {};
   },
+  useWallet: () => {
+    return {
+      post: () => {},
+    };
+  },
 }));
 
 jest.mock("react-i18next", () => ({

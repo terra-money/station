@@ -26,7 +26,7 @@ jest.mock("../../data/settings/Theme", () => {
   }
 })
 
-describe("Nav component matches snapshots", () => {
+describe("Nav", () => {
   it("matches original component", () => {
     const { asFragment } = renderComponent()
     expect(asFragment()).toMatchSnapshot()

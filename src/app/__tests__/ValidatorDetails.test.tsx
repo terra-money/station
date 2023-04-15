@@ -12,12 +12,14 @@ import { mockExchangeRates } from "./__mocks__/ExchangeRates.mock"
 import { mockWhitelist } from "./__mocks__/Whitelist.mock"
 
 function renderComponent() {
+  type TokenFilter = <T>(network: Record<string, T>) => Record<string, T>
   const networks = {} as jest.Mocked<InterchainNetworks>
-  const mockedTokenFilter = jest.fn()
+  const mockedTokenFilter = jest.fn() as jest.Mocked<TokenFilter>
 
   return render(
     <NetworksProvider
       value={{
+        networksLoading: false,
         networks: networks,
         filterEnabledNetworks: mockedTokenFilter,
         filterDisabledNetworks: mockedTokenFilter,
@@ -119,7 +121,7 @@ jest.mock("../../data/queries/chains", () => {
   }
 })
 
-describe("Links component matches snapshots", () => {
+describe("ValidatorDetails", () => {
   it("matches original component", () => {
     const { asFragment } = renderComponent()
     expect(asFragment()).toMatchSnapshot()

@@ -2,10 +2,9 @@ import { useState } from "react"
 import { SimpleChainList } from "components/layout"
 import { Popover } from "components/display"
 import styles from "./OtherChainsButton.module.scss"
-import { useSelectedDisplayChain } from "utils/localStorage"
+import { useSelectedDisplayChain, useDisplayChains } from "utils/localStorage"
 import { displayChainPrefsOpen } from "app/sections/Preferences"
 import { useSetRecoilState } from "recoil"
-import { useDisplayChains } from "utils/localStorage"
 
 type Props = {
   list: InterchainNetwork[]

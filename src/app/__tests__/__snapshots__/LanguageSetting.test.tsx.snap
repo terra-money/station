@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`LanguageSetting component matches snapshots matches original component 1`] = `
+exports[`LanguageSetting matches original component 1`] = `
 <DocumentFragment>
   <div
     class="wrapper"
@@ -188,7 +188,7 @@ exports[`LanguageSetting component matches snapshots matches original component 
 </DocumentFragment>
 `;
 
-exports[`LanguageSetting component matches snapshots matches user augmented component 1`] = `
+exports[`LanguageSetting matches user augmented component 1`] = `
 <DocumentFragment>
   <div
     class="wrapper"
