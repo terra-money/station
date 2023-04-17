@@ -3,7 +3,6 @@ import { useIsClassic } from "data/query"
 import { useIsTerraAPIAvailable } from "data/Terra/TerraAPI"
 import TxVolume from "../charts/TxVolume"
 import StakingReturn from "../charts/StakingReturn"
-import TaxRewards from "../charts/TaxRewards"
 import Wallets from "../charts/Wallets"
 import styles from "./Charts.module.scss"
 
@@ -17,7 +16,7 @@ const Charts = () => {
   return (
     <div className={cx(styles.charts, { trisect: true })}>
       <TxVolume />
-      {isClassic ? <TaxRewards /> : <StakingReturn />}
+      {!isClassic && <StakingReturn />}
       <Wallets />
     </div>
   )
