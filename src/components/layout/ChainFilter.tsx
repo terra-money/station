@@ -135,9 +135,19 @@ const ChainFilter = ({
     all ? undefined : initNetwork?.chainID
   )
 
+  useEffect(() => {
+    if (terraOnly) {
+      const terra = Object.values(network).find((n) =>
+        isTerraChain(n.prefix)
+      )?.chainID
+      setChain(terra)
+    } else {
+      setChain(savedChain)
+    }
+  }, [terraOnly])
+
   const handleSetChain = (chain: string | undefined) => {
     setChain(chain)
-    if (terraOnly) return
     changeSavedChain(chain)
     changeSelectedDisplayChain(chain)
   }
