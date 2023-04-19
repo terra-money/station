@@ -14,6 +14,8 @@ import { ModalButton } from "components/feedback"
 import FiatRampModal from "./FiatRampModal"
 import { Add as AddIcon, Send as SendIcon } from "@mui/icons-material"
 import classNames from "classnames"
+import { isWallet } from "auth"
+import useAuth from "auth/hooks/useAuth"
 import { useConnectedWallet } from "@terra-money/use-wallet"
 
 const cx = classNames.bind(styles)
@@ -25,7 +27,9 @@ const NetWorth = () => {
   const { data: prices } = useExchangeRates()
   const readNativeDenom = useNativeDenoms()
   const { setRoute, route } = useWalletRoute()
-  const isConnected = useConnectedWallet()
+  const { wallet } = useAuth()
+  const connectedWallet = useConnectedWallet()
+  const isConnected = isWallet.local(wallet) || connectedWallet
 
   // TODO: show CW20 balances and staked tokens
   const coinsValue = coins?.reduce((acc, { amount, denom }) => {
