@@ -37,7 +37,7 @@ export const WithFetching = (props: WithFetchingProps) => {
             sx={{ position: "absolute" /* to overwrite */ }}
           />
         ) : undefined,
-        !error ? <Wrong>{getErrorMessage(error)}</Wrong> : undefined
+        error ? <Wrong>{getErrorMessage(error)}</Wrong> : undefined
       )}
     </>
   )
