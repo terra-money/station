@@ -1,6 +1,5 @@
 import styles from "./SimpleChainList.module.scss"
 import classNames from "classnames"
-import { isTerraChain } from "utils/chain"
 import { useDisplayChains } from "utils/localStorage"
 
 interface Props {

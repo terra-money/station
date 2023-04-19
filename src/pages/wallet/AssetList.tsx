@@ -14,6 +14,7 @@ import {
   useCustomTokensCW20,
   useCustomTokensNative,
 } from "data/settings/CustomTokens"
+import { isNativeToken } from "utils/chain"
 
 const AssetList = () => {
   const { t } = useTranslation()
@@ -23,16 +24,6 @@ const AssetList = () => {
   const coins = useBankBalance()
   const { data: prices } = useExchangeRates()
   const readNativeDenom = useNativeDenoms()
-  const native = useCustomTokensNative()
-  const cw20 = useCustomTokensCW20()
-  const alwaysVisibleDenoms = useMemo(
-    () =>
-      new Set([
-        ...cw20.list.map((a) => a.token),
-        ...native.list.map((a) => a.denom),
-      ]),
-    [cw20.list, native.list]
-  )
 
   const list = useMemo(
     () =>
@@ -68,7 +59,7 @@ const AssetList = () => {
           (a) => (hideNoWhitelist ? !a.symbol.endsWith("...") : true) // TODO: update and implement whitelist check
         )
         .filter((a) => {
-          if (!hideLowBal || a.price === 0 || alwaysVisibleDenoms.has(a.denom))
+          if (!hideLowBal || a.price === 0 || isNativeToken(a.denom))
             return true
           return a.price * toInput(a.balance) >= 1
         })
@@ -76,14 +67,7 @@ const AssetList = () => {
           (a, b) =>
             b.price * parseInt(b.balance) - a.price * parseInt(a.balance)
         ),
-    [
-      coins,
-      readNativeDenom,
-      prices,
-      hideNoWhitelist,
-      hideLowBal,
-      alwaysVisibleDenoms,
-    ]
+    [coins, readNativeDenom, prices, hideNoWhitelist, hideLowBal]
   )
 
   const render = () => {
