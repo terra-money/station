@@ -131,7 +131,7 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
   }
 
   if (Object.keys(selectedTotal).length === 0) {
-    return <Empty text="No rewards on selected chain" />
+    return <Empty>{t("No rewards on selected chain")}</Empty>
   }
 
   return (

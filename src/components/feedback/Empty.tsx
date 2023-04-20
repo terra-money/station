@@ -3,16 +3,12 @@ import { useTranslation } from "react-i18next"
 import InboxOutlinedIcon from "@mui/icons-material/InboxOutlined"
 import State from "./State"
 
-const Empty = ({
-  icon,
-  text,
-  children,
-}: PropsWithChildren<{ icon?: ReactNode; text?: string }>) => {
+const Empty = ({ icon, children }: PropsWithChildren<{ icon?: ReactNode }>) => {
   const { t } = useTranslation()
 
   return (
     <State icon={icon ?? <InboxOutlinedIcon fontSize="inherit" />}>
-      {children ?? t(text || "No results found")}
+      {children ?? t("No results found")}
     </State>
   )
 }
