@@ -177,6 +177,7 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
                 <section className={styles.validators}>
                   {byValidator.map(({ address, sum }) => {
                     const checked = state[address]
+                    console.log("address", address)
 
                     return (
                       <Checkbox
@@ -188,7 +189,7 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
                         key={address}
                       >
                         <div className={styles.item}>
-                          <ValidatorLink address={address} />
+                          <ValidatorLink chainID={chain} address={address} />
                         </div>
                       </Checkbox>
                     )

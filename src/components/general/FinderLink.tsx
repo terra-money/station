@@ -39,6 +39,7 @@ const FinderLink = forwardRef(
     } else if (tx) {
       href = explorer?.tx?.replace("{}", value)
     } else if (validator) {
+      console.log("href", explorer.validator)
       href = explorer?.validator?.replace("{}", value)
     } else {
       href = explorer?.address?.replace("{}", value)

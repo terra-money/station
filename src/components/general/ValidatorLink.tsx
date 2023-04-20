@@ -6,9 +6,10 @@ import { InternalLink } from "./Internal"
 interface Props {
   address: ValAddress
   internal?: boolean
+  chainID?: string
 }
 
-const ValidatorLink = ({ address, internal }: Props) => {
+const ValidatorLink = ({ address, internal, chainID }: Props) => {
   const { data: validator } = useValidator(address)
 
   const render = () => {
@@ -19,7 +20,7 @@ const ValidatorLink = ({ address, internal }: Props) => {
     return internal ? (
       <InternalLink to={`/validator/${address}`}>{moniker}</InternalLink>
     ) : (
-      <FinderLink value={address} validator>
+      <FinderLink chainID={chainID} value={address} validator>
         {moniker}
       </FinderLink>
     )
