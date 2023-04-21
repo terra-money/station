@@ -9,6 +9,7 @@ import { useNetwork } from "data/wallet"
 import { useTranslation } from "react-i18next"
 import QuickStakeForm from "txs/stake/QuickStakeForm"
 import styles from "./QuickStake.module.scss"
+import { ModalButton } from "components/feedback"
 
 export enum QuickStakeAction {
   DELEGATE = "Delegate",
@@ -47,15 +48,28 @@ const QuickStake = () => {
       chainID: "osmosis-1",
       rewards: 0.8,
     },
+    {
+      asset: "uluna",
+      unbonding: 14,
+      chainID: "kaiyo-1",
+      rewards: 0.5,
+    },
   ]
 
   return (
     <Page sub>
       <header className={styles.quick__action}>
         <div>Select asset to stake:</div>
-        <Button color="primary" size="small">
-          Quick stake
-        </Button>
+        <ModalButton
+          title={t("Quick Stake")}
+          renderButton={(open) => (
+            <Button color="primary" size="small" onClick={open}>
+              Quick stake
+            </Button>
+          )}
+        >
+          {renderQuickStakeForm("phoenix-1", "Delegate")}
+        </ModalButton>
       </header>
       <main className={styles.table__container}>
         <Table
