@@ -318,7 +318,7 @@ const SendPage = () => {
     gasAdjustment:
       getChainIDFromAddress(addresses?.[chain ?? ""], networks) !== chain &&
       AccAddress.validate(token?.denom ?? "")
-        ? 1.5
+        ? 2
         : 1,
   }
 
