@@ -2,7 +2,7 @@ name: jest-tests
 on:
   push:
     branches:
-      - 'test/cypress'
+      - "feat/testing"
   pull_request:
     types: [opened, synchronize]
   workflow_dispatch:
