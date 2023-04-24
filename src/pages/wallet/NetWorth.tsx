@@ -15,6 +15,7 @@ import FiatRampModal from "./FiatRampModal"
 import { Add as AddIcon, Send as SendIcon } from "@mui/icons-material"
 import classNames from "classnames"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
+import { useNetworkName } from "data/wallet"
 
 const cx = classNames.bind(styles)
 
@@ -26,6 +27,7 @@ const NetWorth = () => {
   const readNativeDenom = useNativeDenoms()
   const { setRoute, route } = useWalletRoute()
   const addresses = useInterchainAddresses()
+  const networkName = useNetworkName()
 
   // TODO: show CW20 balances and staked tokens
   const coinsValue = coins?.reduce((acc, { amount, denom }) => {
@@ -75,7 +77,7 @@ const NetWorth = () => {
           </Button>
           <h3>{capitalize(t("receive"))}</h3>
         </div>
-        {addresses && (
+        {addresses && networkName === "mainnet" && (
           <div className={styles.button__wrapper}>
             <ModalButton
               minimal
