@@ -37,6 +37,7 @@ export const queryKey = mirror({
   History: "",
 
   /* lcd */
+  alliance: { alliances: "" },
   auth: { accountInfo: "" },
   bank: { balance: "", balances: "", supply: "" },
   distribution: {

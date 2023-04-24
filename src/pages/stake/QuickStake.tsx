@@ -1,15 +1,16 @@
 import { readPercent } from "@terra-money/terra-utils"
 import { Button } from "components/general"
-import { ButtonFilter, Card, Flex, Grid, Page, Table } from "components/layout"
-import ChainFilter from "components/layout/ChainFilter"
-import { TokenIcon } from "components/token"
+import { Flex, Grid, Page, Table } from "components/layout"
 import { useBalances } from "data/queries/bank"
 import { useNativeDenoms } from "data/token"
-import { useNetwork } from "data/wallet"
+import { useChainID, useNetwork } from "data/wallet"
 import { useTranslation } from "react-i18next"
 import QuickStakeForm from "txs/stake/QuickStakeForm"
 import styles from "./QuickStake.module.scss"
 import { ModalButton } from "components/feedback"
+import { useAlliances } from "data/queries/alliance"
+import { useStakingParams } from "data/queries/staking"
+import { combineState } from "data/query"
 
 export enum QuickStakeAction {
   DELEGATE = "Delegate",
@@ -34,30 +35,31 @@ const QuickStake = () => {
   const { data: balances } = useBalances()
   const readNativeDenom = useNativeDenoms()
   const networks = useNetwork()
+  const chainID = useChainID()
+
+  const { data: alliances, ...alliancesState } = useAlliances(chainID)
+  const { data: stakingParams, ...stakingParamsState } =
+    useStakingParams(chainID)
+  const unbondingtime = stakingParams?.unbonding_time ?? 0
+  const state = combineState(alliancesState, stakingParamsState)
 
   const options = [
     {
-      asset: "uluna",
-      unbonding: 21,
-      chainID: "phoenix-1",
+      denom: networks[chainID]?.baseAsset,
       rewards: 1,
+      chainID,
+      unbonding: unbondingtime / 60 / 60 / 24,
     },
-    {
-      asset: "uluna",
-      unbonding: 8,
-      chainID: "osmosis-1",
-      rewards: 0.8,
-    },
-    {
-      asset: "uluna",
-      unbonding: 14,
-      chainID: "kaiyo-1",
-      rewards: 0.5,
-    },
+    ...(alliances ?? []).map(({ denom, reward_weight }) => ({
+      denom: denom ?? "",
+      rewards: Number(reward_weight),
+      chainID: "pisco-1",
+      unbonding: unbondingtime / 60 / 60 / 24,
+    })),
   ]
 
   return (
-    <Page sub>
+    <Page sub {...state}>
       <header className={styles.quick__action}>
         <div>Select asset to stake:</div>
         <ModalButton
@@ -74,14 +76,14 @@ const QuickStake = () => {
       <main className={styles.table__container}>
         <Table
           dataSource={options}
-          rowKey={({ asset }) => asset}
+          rowKey={({ denom }) => denom}
           columns={[
             {
               title: t("Staking asset"),
               dataIndex: ["asset", "chainID"],
               render: (_, option) => {
-                const { asset, chainID } = option
-                const token = readNativeDenom(asset)
+                const { denom, chainID } = option
+                const token = readNativeDenom(denom)
                 const network = networks[chainID]
 
                 return (
@@ -104,7 +106,7 @@ const QuickStake = () => {
                             />
                           )}
                         </div>
-                        {token.symbol}
+                        {token.name ?? token.symbol}
                       </Flex>
                     </Grid>
                   </Flex>
