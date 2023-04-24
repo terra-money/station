@@ -108,7 +108,7 @@ describe("History", () => {
     useQuery.mockReturnValue({
       data: mockHistory,
       isLoading: false,
-      error: {},
+      error: false,
     })
     const { asFragment } = renderComponent()
     expect(asFragment()).toMatchSnapshot()
