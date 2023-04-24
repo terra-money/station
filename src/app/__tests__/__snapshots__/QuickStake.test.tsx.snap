@@ -1,0 +1,640 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`QuickStake matches original component 1`] = `
+<DocumentFragment>
+  <article
+    class="page"
+  >
+    <div
+      class="container grid"
+    >
+      <section
+        class="main"
+      >
+        <div
+          class="buttonfilter"
+        >
+          <div
+            class="header"
+          />
+          <div
+            class="actions"
+          >
+            <button
+              class="active"
+            >
+              Delegate
+            </button>
+            <button>
+              Undelegate
+            </button>
+          </div>
+          <div
+            class="content"
+          >
+            <article
+              class="card muted default"
+            >
+              <section
+                class="main"
+              >
+                <article
+                  class="page small invisible"
+                >
+                  <div
+                    class="container grid"
+                  >
+                    <section
+                      class="main"
+                    >
+                      <div
+                        class="chainfilter__out"
+                      >
+                        <div
+                          class="filter header"
+                        >
+                          <div
+                            class="pills"
+                          >
+                            <button
+                              aria-expanded="false"
+                              class="button"
+                            >
+                              + 5
+                            </button>
+                          </div>
+                        </div>
+                        <div
+                          class="content"
+                        >
+                          <article
+                            class="page invisible"
+                          >
+                            <div
+                              class="container grid"
+                            >
+                              <section
+                                class="main"
+                              >
+                                <form
+                                  class="form undefined"
+                                >
+                                  <div
+                                    class="component warning"
+                                  >
+                                    <div
+                                      class="flex"
+                                    >
+                                      <svg
+                                        aria-hidden="true"
+                                        class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
+                                        data-testid="InfoIcon"
+                                        focusable="false"
+                                        style="font-size: 18px;"
+                                        viewBox="0 0 24 24"
+                                      >
+                                        <path
+                                          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                                        />
+                                      </svg>
+                                    </div>
+                                    <span>
+                                      Leave enough coins to pay fee for subsequent transactions
+                                    </span>
+                                  </div>
+                                  <div
+                                    class="grid"
+                                    style="gap: 4px;"
+                                  >
+                                    <header
+                                      class="header"
+                                    >
+                                      <label
+                                        class="label"
+                                      >
+                                        Amount
+                                      </label>
+                                      <aside
+                                        class="extra"
+                                      >
+                                        <button
+                                          class="muted"
+                                          type="button"
+                                        >
+                                          <div
+                                            class="flex start"
+                                            style="gap: 4px;"
+                                          >
+                                            <svg
+                                              aria-hidden="true"
+                                              class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit icon css-1vooibu-MuiSvgIcon-root"
+                                              data-testid="AccountBalanceWalletIcon"
+                                              focusable="false"
+                                              viewBox="0 0 24 24"
+                                            >
+                                              <path
+                                                d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"
+                                              />
+                                            </svg>
+                                            <span
+                                              class="component"
+                                            >
+                                              1,002
+                                              <span
+                                                class="small"
+                                              >
+                                                .284039
+                                              </span>
+                                              <span
+                                                class="small"
+                                              >
+                                                 LUNA
+                                              </span>
+                                            </span>
+                                          </div>
+                                        </button>
+                                      </aside>
+                                    </header>
+                                    <div
+                                      class="wrapper"
+                                    >
+                                      <input
+                                        autocomplete="off"
+                                        class="input before"
+                                        inputmode="decimal"
+                                        name="input"
+                                        placeholder="0.000000"
+                                      />
+                                      <div
+                                        class="flex symbol after"
+                                      >
+                                        LUNA
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div
+                                    class="component"
+                                  >
+                                    <dl>
+                                      <dt
+                                        class="gas"
+                                      >
+                                        Fee
+                                      </dt>
+                                      <dd>
+                                        <span
+                                          class="component"
+                                        >
+                                          0
+                                          <span
+                                            class="small"
+                                          >
+                                            .006313
+                                          </span>
+                                          <span
+                                            class="small"
+                                          >
+                                             LUNA
+                                          </span>
+                                        </span>
+                                      </dd>
+                                      <dt>
+                                        Balance
+                                      </dt>
+                                      <dd>
+                                        <span
+                                          class="component"
+                                        >
+                                          1,002
+                                          <span
+                                            class="small"
+                                          >
+                                            .290352
+                                          </span>
+                                          <span
+                                            class="small"
+                                          >
+                                             LUNA
+                                          </span>
+                                        </span>
+                                      </dd>
+                                      <dt>
+                                        Balance after tx
+                                      </dt>
+                                      <dd>
+                                        <span
+                                          class="component"
+                                        >
+                                          1,002
+                                          <span
+                                            class="small"
+                                          >
+                                            .284039
+                                          </span>
+                                          <span
+                                            class="small"
+                                          >
+                                             LUNA
+                                          </span>
+                                        </span>
+                                      </dd>
+                                    </dl>
+                                  </div>
+                                  <button
+                                    aria-expanded="false"
+                                    class="button small outline button"
+                                    type="button"
+                                  >
+                                    <svg
+                                      aria-hidden="true"
+                                      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                                      data-testid="AccountBalanceWalletIcon"
+                                      focusable="false"
+                                      style="font-size: 16px;"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path
+                                        d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"
+                                      />
+                                    </svg>
+                                    <span
+                                      class="button__text"
+                                    >
+                                      420829
+                                    </span>
+                                  </button>
+                                </form>
+                              </section>
+                            </div>
+                          </article>
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </article>
+              </section>
+            </article>
+          </div>
+        </div>
+      </section>
+    </div>
+  </article>
+</DocumentFragment>
+`;
+
+exports[`QuickStake matches user augmented component 1`] = `
+<DocumentFragment>
+  <article
+    class="page"
+  >
+    <div
+      class="container grid"
+    >
+      <section
+        class="main"
+      >
+        <div
+          class="buttonfilter"
+        >
+          <div
+            class="header"
+          />
+          <div
+            class="actions"
+          >
+            <button
+              class="active"
+            >
+              Delegate
+            </button>
+            <button>
+              Undelegate
+            </button>
+          </div>
+          <div
+            class="content"
+          >
+            <article
+              class="card muted default"
+            >
+              <section
+                class="main"
+              >
+                <article
+                  class="page small invisible"
+                >
+                  <div
+                    class="container grid"
+                  >
+                    <section
+                      class="main"
+                    >
+                      <div
+                        class="chainfilter__out"
+                      >
+                        <div
+                          class="filter header"
+                        >
+                          <div
+                            class="pills"
+                          >
+                            <button
+                              aria-expanded="true"
+                              class="button"
+                            >
+                              + 5
+                            </button>
+                            <div
+                              data-tippy-root=""
+                              id="tippy-3"
+                              style="z-index: 9999; visibility: visible; position: absolute; left: 0px; top: 0px; margin: 0px; transform: translate(0px, 10px);"
+                            >
+                              <div
+                                class="tippy-box popover"
+                                data-escaped=""
+                                data-placement="bottom"
+                                data-reference-hidden=""
+                                data-state="hidden"
+                                data-theme="none"
+                                role="tooltip"
+                                style="max-width: 200px; transition-duration: 0ms;"
+                                tabindex="-1"
+                              >
+                                <div
+                                  class="tippy-content"
+                                  data-state="hidden"
+                                  style="transition-duration: 0ms;"
+                                >
+                                  <div>
+                                    <div
+                                      class="options"
+                                    >
+                                      <button
+                                        class="button active"
+                                      >
+                                        <img
+                                          alt="Terra"
+                                          src="https://station-assets.terra.money/img/chains/Terra.svg"
+                                        />
+                                        Terra
+                                      </button>
+                                      <button
+                                        class="button"
+                                      >
+                                        <img
+                                          alt="Atreides"
+                                          src="https://station-assets.terra.money/img/chains/Atreides.png"
+                                        />
+                                        Atreides
+                                      </button>
+                                      <button
+                                        class="button"
+                                      >
+                                        <img
+                                          alt="Corrino"
+                                          src="https://station-assets.terra.money/img/chains/Corrino.png"
+                                        />
+                                        Corrino
+                                      </button>
+                                      <button
+                                        class="button"
+                                      >
+                                        <img
+                                          alt="Harkonnen"
+                                          src="https://station-assets.terra.money/img/chains/Harkonnen.png"
+                                        />
+                                        Harkonnen
+                                      </button>
+                                      <button
+                                        class="button"
+                                      >
+                                        <img
+                                          alt="Ordos"
+                                          src="https://station-assets.terra.money/img/chains/Ordos.png"
+                                        />
+                                        Ordos
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="content"
+                        >
+                          <article
+                            class="page invisible"
+                          >
+                            <div
+                              class="container grid"
+                            >
+                              <section
+                                class="main"
+                              >
+                                <form
+                                  class="form undefined"
+                                >
+                                  <div
+                                    class="component warning"
+                                  >
+                                    <div
+                                      class="flex"
+                                    >
+                                      <svg
+                                        aria-hidden="true"
+                                        class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
+                                        data-testid="InfoIcon"
+                                        focusable="false"
+                                        style="font-size: 18px;"
+                                        viewBox="0 0 24 24"
+                                      >
+                                        <path
+                                          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                                        />
+                                      </svg>
+                                    </div>
+                                    <span>
+                                      Leave enough coins to pay fee for subsequent transactions
+                                    </span>
+                                  </div>
+                                  <div
+                                    class="grid"
+                                    style="gap: 4px;"
+                                  >
+                                    <header
+                                      class="header"
+                                    >
+                                      <label
+                                        class="label"
+                                      >
+                                        Amount
+                                      </label>
+                                      <aside
+                                        class="extra"
+                                      >
+                                        <button
+                                          class="muted"
+                                          type="button"
+                                        >
+                                          <div
+                                            class="flex start"
+                                            style="gap: 4px;"
+                                          >
+                                            <svg
+                                              aria-hidden="true"
+                                              class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit icon css-1vooibu-MuiSvgIcon-root"
+                                              data-testid="AccountBalanceWalletIcon"
+                                              focusable="false"
+                                              viewBox="0 0 24 24"
+                                            >
+                                              <path
+                                                d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"
+                                              />
+                                            </svg>
+                                            <span
+                                              class="component"
+                                            >
+                                              1,002
+                                              <span
+                                                class="small"
+                                              >
+                                                .284039
+                                              </span>
+                                              <span
+                                                class="small"
+                                              >
+                                                 LUNA
+                                              </span>
+                                            </span>
+                                          </div>
+                                        </button>
+                                      </aside>
+                                    </header>
+                                    <div
+                                      class="wrapper"
+                                    >
+                                      <input
+                                        autocomplete="off"
+                                        class="input before"
+                                        inputmode="decimal"
+                                        name="input"
+                                        placeholder="0.000000"
+                                      />
+                                      <div
+                                        class="flex symbol after"
+                                      >
+                                        LUNA
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div
+                                    class="component"
+                                  >
+                                    <dl>
+                                      <dt
+                                        class="gas"
+                                      >
+                                        Fee
+                                      </dt>
+                                      <dd>
+                                        <span
+                                          class="component"
+                                        >
+                                          0
+                                          <span
+                                            class="small"
+                                          >
+                                            .006313
+                                          </span>
+                                          <span
+                                            class="small"
+                                          >
+                                             LUNA
+                                          </span>
+                                        </span>
+                                      </dd>
+                                      <dt>
+                                        Balance
+                                      </dt>
+                                      <dd>
+                                        <span
+                                          class="component"
+                                        >
+                                          1,002
+                                          <span
+                                            class="small"
+                                          >
+                                            .290352
+                                          </span>
+                                          <span
+                                            class="small"
+                                          >
+                                             LUNA
+                                          </span>
+                                        </span>
+                                      </dd>
+                                      <dt>
+                                        Balance after tx
+                                      </dt>
+                                      <dd>
+                                        <span
+                                          class="component"
+                                        >
+                                          1,002
+                                          <span
+                                            class="small"
+                                          >
+                                            .284039
+                                          </span>
+                                          <span
+                                            class="small"
+                                          >
+                                             LUNA
+                                          </span>
+                                        </span>
+                                      </dd>
+                                    </dl>
+                                  </div>
+                                  <button
+                                    aria-expanded="false"
+                                    class="button small outline button"
+                                    type="button"
+                                  >
+                                    <svg
+                                      aria-hidden="true"
+                                      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                                      data-testid="AccountBalanceWalletIcon"
+                                      focusable="false"
+                                      style="font-size: 16px;"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path
+                                        d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"
+                                      />
+                                    </svg>
+                                    <span
+                                      class="button__text"
+                                    >
+                                      420829
+                                    </span>
+                                  </button>
+                                </form>
+                              </section>
+                            </div>
+                          </article>
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </article>
+              </section>
+            </article>
+          </div>
+        </div>
+      </section>
+    </div>
+  </article>
+</DocumentFragment>
+`;

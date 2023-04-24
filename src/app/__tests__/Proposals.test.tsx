@@ -70,7 +70,7 @@ describe("Proposals", () => {
     useQuery.mockReturnValue({
       data: mockProposals,
       isLoading: false,
-      error: {},
+      error: false,
     })
     const { asFragment } = renderComponent()
     expect(asFragment()).toMatchSnapshot()
