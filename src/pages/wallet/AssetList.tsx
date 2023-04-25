@@ -55,10 +55,8 @@ const AssetList = () => {
           (a) => (hideNoWhitelist ? !a.symbol.endsWith("...") : true) // TODO: update and implement whitelist check
         )
         .filter((a) => {
-          if ((!hideLowBal && a.price === 0) || isNativeToken(a.denom)) {
-            console.log(a.denom)
+          if ((!hideLowBal && a.price === 0) || isNativeToken(a.denom))
             return true
-          }
           return a.price * toInput(a.balance) >= 1
         })
         .sort(
