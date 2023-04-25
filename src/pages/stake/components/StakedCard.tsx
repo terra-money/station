@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next"
 import { PropsWithChildren } from "react"
 import BigNumber from "bignumber.js"
 import { Grid, Card, Flex } from "components/layout"
@@ -17,6 +18,7 @@ interface Props extends CardProps {
 const StakedCard = (props: PropsWithChildren<Props>) => {
   const { value, amount, denom, showTokens, children } = props
   const currency = useCurrency()
+  const { t } = useTranslation()
 
   return (
     <Card
@@ -51,7 +53,7 @@ const StakedCard = (props: PropsWithChildren<Props>) => {
         </Flex>
       ) : (
         <Grid style={{ alignItems: "end", height: "100%" }}>
-          {!props.isLoading ? "None on selected chain" : ""}
+          {!props.isLoading ? t("None on selected chain") : ""}
         </Grid>
       )}
     </Card>
