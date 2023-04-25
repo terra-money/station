@@ -10,10 +10,6 @@ import Asset from "./Asset"
 import styles from "./AssetList.module.scss"
 import { useTokenFilters } from "utils/localStorage"
 import { toInput } from "txs/utils"
-import {
-  useCustomTokensCW20,
-  useCustomTokensNative,
-} from "data/settings/CustomTokens"
 import { isNativeToken } from "utils/chain"
 
 const AssetList = () => {
@@ -59,8 +55,10 @@ const AssetList = () => {
           (a) => (hideNoWhitelist ? !a.symbol.endsWith("...") : true) // TODO: update and implement whitelist check
         )
         .filter((a) => {
-          if (!hideLowBal || a.price === 0 || isNativeToken(a.denom))
+          if ((!hideLowBal && a.price === 0) || isNativeToken(a.denom)) {
+            console.log(a.denom)
             return true
+          }
           return a.price * toInput(a.balance) >= 1
         })
         .sort(

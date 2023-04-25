@@ -56,4 +56,5 @@ export const useSortedDisplayChains = () => {
 export const useTerraChainName = () =>
   useNetworkName() === "mainnet" ? "phoenix-1" : "pisco-1"
 
-export const isNativeToken = (denom: string) => !denom.startsWith("ibc/") || !denom.startsWith("factory/")
+export const isNativeToken = (denom: string) =>
+  !denom.startsWith("ibc/") && !denom.startsWith("factory/")
