@@ -10,6 +10,7 @@ import {
   useInterchainDelegations,
   useCalcDelegationsByValidator,
   useInterchainValidators,
+  useInterchainUnbondings,
 } from "data/queries/staking"
 import QuickStake from "./QuickStake"
 import { TooltipIcon } from "components/display"
@@ -25,7 +26,16 @@ const Stake = () => {
 
   const interchainDelegations = useInterchainDelegations()
   const interchainValidators = useInterchainValidators()
-  const state = combineState(...interchainDelegations, ...interchainValidators)
+  const interchainUnbondings = useInterchainUnbondings()
+  const state = combineState(
+    ...interchainDelegations,
+    ...interchainValidators,
+    ...interchainUnbondings
+  )
+  const unbondings = interchainUnbondings.reduce(
+    (acc, { data }) => (data ? [...data, ...acc] : acc),
+    [] as any[]
+  )
 
   const { graphData } = useCalcDelegationsByValidator(
     interchainDelegations,
@@ -56,7 +66,7 @@ const Stake = () => {
       }
     >
       <Col>
-        {graphData?.all.length ? (
+        {graphData?.all.length || unbondings.length ? (
           <Row>
             <Col span={2}>
               <div className={styles.forFetchingBar}>
