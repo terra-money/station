@@ -77,7 +77,7 @@ const NetWorth = () => {
           </Button>
           <h3>{capitalize(t("receive"))}</h3>
         </div>
-        {addresses && networkName === "mainnet" && (
+        {addresses && (networkName === "mainnet" || networkName === "classic") && (
           <div className={styles.button__wrapper}>
             <ModalButton
               minimal
