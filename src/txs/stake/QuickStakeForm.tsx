@@ -174,7 +174,7 @@ const QuickStakeForm = (props: Props) => {
                 onFocus={max.reset}
                 inputMode="decimal"
                 placeholder={getPlaceholder()}
-                autoFocus
+                //autoFocus
               />
             </FormItem>
 
