@@ -23,6 +23,8 @@ import { Tooltip } from "components/display"
 import { Delegation } from "@terra-money/feather.js"
 import TokenSelector, { TokenInterface } from "components/form/TokenSelector"
 import { useState } from "react"
+import { useAuth } from "auth"
+import is from "auth/scripts/is"
 
 export enum QuickStakeAction {
   DELEGATE = "Delegate",
@@ -85,6 +87,7 @@ const QuickStake = () => {
   const readNativeDenom = useNativeDenoms()
   const networks = useNetwork()
   const [token, setToken] = useState("uluna")
+  const { wallet } = useAuth()
 
   const alliancesData = useAllAlliances()
   const alliances = alliancesData.reduce(
@@ -146,7 +149,10 @@ const QuickStake = () => {
   ]
 
   const tokenList = options.reduce(
-    (acc, { denom }) => ({ [denom]: readNativeDenom(denom), ...acc }),
+    (acc, { denom }) => ({
+      [readNativeDenom(denom).token]: readNativeDenom(denom),
+      ...acc,
+    }),
     {} as Record<string, TokenInterface>
   )
 
@@ -260,11 +266,15 @@ const QuickStake = () => {
                 <Flex start gap={8}>
                   <ModalButton
                     title={t("Staking Details")}
-                    renderButton={(open) => (
-                      <Button color="primary" size="small" onClick={open}>
-                        {hasDelegations ? t("Manage Stake") : t("Stake")}
-                      </Button>
-                    )}
+                    renderButton={(open) =>
+                      is.ledger(wallet) && isAlliance ? (
+                        <Button size="small">Not available</Button>
+                      ) : (
+                        <Button color="primary" size="small" onClick={open}>
+                          {hasDelegations ? t("Manage Stake") : t("Stake")}
+                        </Button>
+                      )
+                    }
                   >
                     {renderQuickStakeForm({
                       denom,
