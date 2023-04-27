@@ -5,6 +5,7 @@ import {
   AccAddress,
   Coin,
   MsgAllianceDelegate,
+  MsgAllianceUndelegate,
   MsgDelegate,
   MsgUndelegate,
   StakingParams,
@@ -24,6 +25,7 @@ import shuffle from "utils/shuffle"
 import { getIsBonded } from "pages/stake/ValidatorsList"
 import { getChainIDFromAddress } from "utils/bech32"
 import { useNetwork } from "data/wallet"
+import { AllianceDelegationResponse } from "@terra-money/feather.js/dist/client/lcd/api/AllianceAPI"
 
 export const useInterchainValidators = () => {
   const addresses = useInterchainAddresses() || {}
@@ -148,7 +150,7 @@ export const useAllStakingParams = () => {
 export const getChainUnbondTime = (stakingParams: StakingParams) =>
   stakingParams?.unbonding_time / (60 * 60 * 24)
 
-export const useDelegations = (chainID: string) => {
+export const useDelegations = (chainID: string, disabled?: boolean) => {
   const addresses = useInterchainAddresses()
   const lcd = useInterchainLCDClient()
 
@@ -166,7 +168,7 @@ export const useDelegations = (chainID: string) => {
 
       return delegations.filter(({ balance }) => has(balance.amount.toString()))
     },
-    { ...RefetchOptions.DEFAULT }
+    { ...RefetchOptions.DEFAULT, enabled: !disabled }
   )
 }
 
@@ -616,33 +618,68 @@ export const getQuickStakeMsgs = (
 export const getQuickUnstakeMsgs = (
   address: string,
   coin: Coin,
-  delegations: Delegation[]
+  details:
+    | {
+        isAlliance: false
+        delegations: Delegation[]
+      }
+    | {
+        isAlliance: true
+        delegations: AllianceDelegationResponse[]
+      }
 ) => {
+  const { isAlliance, delegations } = details
   const { denom, amount } = coin.toData()
   const bnAmt = new BigNumber(amount)
   const msgs = []
   let remaining = bnAmt
 
-  for (const delegation of delegations) {
-    const { balance, validator_address } = delegation
-    const delAmt = new BigNumber(balance.amount.toString())
-    msgs.push(
-      new MsgUndelegate(
-        address,
-        validator_address,
-        new Coin(
-          denom,
-          remaining.lt(delAmt) ? remaining.toString() : delAmt.toString()
+  if (isAlliance) {
+    for (const d of delegations) {
+      const { balance, delegation } = d
+      const delAmt = new BigNumber(balance.amount)
+
+      msgs.push(
+        new MsgAllianceUndelegate(
+          address,
+          delegation.validator_address,
+          new Coin(
+            denom,
+            remaining.lt(delAmt) ? remaining.toString() : delAmt.toString()
+          )
         )
       )
-    )
-    if (remaining.lt(delAmt)) {
-      remaining = new BigNumber(0)
-    } else {
-      remaining = remaining.minus(delAmt)
+      if (remaining.lt(delAmt)) {
+        remaining = new BigNumber(0)
+      } else {
+        remaining = remaining.minus(delAmt)
+      }
+      if (remaining.isZero()) {
+        break
+      }
     }
-    if (remaining.isZero()) {
-      break
+  } else {
+    for (const delegation of delegations) {
+      const { balance, validator_address } = delegation
+      const delAmt = new BigNumber(balance.amount.toString())
+      msgs.push(
+        new MsgUndelegate(
+          address,
+          validator_address,
+          new Coin(
+            denom,
+            remaining.lt(delAmt) ? remaining.toString() : delAmt.toString()
+          )
+        )
+      )
+      if (remaining.lt(delAmt)) {
+        remaining = new BigNumber(0)
+      } else {
+        remaining = remaining.minus(delAmt)
+      }
+      if (remaining.isZero()) {
+        break
+      }
     }
   }
 

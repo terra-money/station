@@ -27,6 +27,7 @@ import { useInterchainAddresses } from "auth/hooks/useAddress"
 import shuffle from "utils/shuffle"
 import { memo } from "react"
 import styles from "./QuickStakeForm.module.scss"
+import { useAllianceDelegations } from "data/queries/alliance"
 
 interface TxValues {
   input?: number
@@ -58,10 +59,23 @@ const QuickStakeForm = (props: Props) => {
   const address = addresses?.[chainID]
   const network = useNetwork()
   const { data: validators, ...validatorState } = useValidators(chainID)
-  const { data: delegations, ...delegationsState } = useDelegations(chainID)
+  const { data: delegations, ...delegationsState } = useDelegations(
+    chainID,
+    isAlliance || action === QuickStakeAction.DELEGATE
+  )
+  const { data: allianceDelegations, ...allianceDelegationsState } =
+    useAllianceDelegations(
+      chainID,
+      !isAlliance || action === QuickStakeAction.DELEGATE
+    )
   const readNativeDenom = useNativeDenoms()
   const { data: stakeParams, ...stakeState } = useStakingParams(chainID)
-  const state = combineState(validatorState, delegationsState, stakeState)
+  const state = combineState(
+    validatorState,
+    delegationsState,
+    stakeState,
+    allianceDelegationsState
+  )
 
   /* form */
   const form = useForm<TxValues>({
@@ -91,10 +105,15 @@ const QuickStakeForm = (props: Props) => {
   }, [address, elegibleVals, denom, input, isAlliance, readNativeDenom])
 
   const unstakeMsgs = useMemo(() => {
-    if (!address || !delegations) return
+    if (!address || !(isAlliance ? allianceDelegations : delegations)) return
     const coin = new Coin(denom, toAmount(input || toInput(1)))
-    return getQuickUnstakeMsgs(address, coin, delegations)
-  }, [address, denom, input, delegations])
+    console.log(allianceDelegations)
+    return getQuickUnstakeMsgs(address, coin, {
+      isAlliance,
+      // @ts-expect-error
+      delegations: isAlliance ? allianceDelegations : delegations,
+    })
+  }, [address, denom, input, delegations, isAlliance, allianceDelegations])
 
   /* tx */
   const createTx = useCallback(

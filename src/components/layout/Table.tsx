@@ -49,8 +49,6 @@ function Table<T>({ dataSource, filter, rowKey, ...props }: Props<T>) {
 
   /* helpers */
   const getClassName = ({ align }: Column<T>) => cx(align)
-  const getKey = ({ dataIndex, key }: Column<T>) =>
-    key ?? (typeof dataIndex === "string" ? dataIndex : dataIndex?.join() ?? "")
 
   /* pagination */
   const [page, setPage] = useState(1)
@@ -141,7 +139,7 @@ function Table<T>({ dataSource, filter, rowKey, ...props }: Props<T>) {
                 }
 
                 return (
-                  <th className={getClassName(column)} key={getKey(column)}>
+                  <th className={getClassName(column)} key={index}>
                     {sorter && defaultSortOrder ? (
                       <button
                         className={styles.sorter}
@@ -174,7 +172,7 @@ function Table<T>({ dataSource, filter, rowKey, ...props }: Props<T>) {
             .sort((a, b) => props.sorter?.(a, b) || sorter?.(a, b) || 0)
             .slice(...range)
             .map((data, index) => (
-              <tr key={rowKey?.(data) ?? index}>
+              <tr key={index}>
                 {columns.map((column, columnIndex) => {
                   const { dataIndex, render } = column
                   const value: any =
@@ -187,7 +185,7 @@ function Table<T>({ dataSource, filter, rowKey, ...props }: Props<T>) {
                   const children = render?.(value, data, index) ?? value
 
                   return (
-                    <td className={getClassName(column)} key={getKey(column)}>
+                    <td className={getClassName(column)} key={columnIndex}>
                       {children}
                     </td>
                   )

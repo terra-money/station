@@ -12,7 +12,7 @@ import {
   AllianceDelegation,
   AllianceDetails,
   useAllAlliances,
-  useAllianceDelegations,
+  useInterchainAllianceDelegations,
 } from "data/queries/alliance"
 import {
   useAllStakingParams,
@@ -106,7 +106,7 @@ const QuickStake = () => {
     (acc, { data }) => (data ? [...data?.delegation, ...acc] : acc),
     [] as Delegation[]
   )
-  const allianceDelegationsData = useAllianceDelegations()
+  const allianceDelegationsData = useInterchainAllianceDelegations()
   const allianceDelegations = allianceDelegationsData.reduce(
     (acc, { data }) => (data ? [data, ...acc] : acc),
     [] as { delegations: AllianceDelegation[]; chainID: string }[]
@@ -169,9 +169,8 @@ const QuickStake = () => {
       <main className={styles.table__container}>
         <Table
           dataSource={options.filter(
-            ({ denom }) => readNativeDenom(denom).token === token
+            ({ denom }) => true //readNativeDenom(denom).token === token
           )}
-          //rowKey={({ denom, chainID }) => [denom, chainID].join("-")}
           columns={[
             {
               title: t("Staking asset"),

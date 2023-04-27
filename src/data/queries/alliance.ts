@@ -55,7 +55,27 @@ export interface AllianceDelegation
   balance: Coin
 }
 
-export const useAllianceDelegations = () => {
+export const useAllianceDelegations = (chainID: string, disabled?: boolean) => {
+  const addresses = useInterchainAddresses()
+  const lcd = useInterchainLCDClient()
+
+  return useQuery(
+    [queryKey.alliance.delegation, addresses, chainID],
+    async () => {
+      if (!addresses || !addresses[chainID]) return []
+
+      const { delegations } = await lcd.alliance.alliancesDelegation(
+        addresses[chainID],
+        Pagination
+      )
+
+      return delegations
+    },
+    { ...RefetchOptions.DEFAULT, enabled: !disabled }
+  )
+}
+
+export const useInterchainAllianceDelegations = () => {
   const addresses = useInterchainAddresses() || {}
   const lcd = useInterchainLCDClient()
   const network = useNetwork()

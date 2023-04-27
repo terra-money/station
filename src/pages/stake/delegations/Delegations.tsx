@@ -13,7 +13,7 @@ import { useNativeDenoms } from "data/token"
 import styles from "../CardModal.module.scss"
 import {
   AllianceDelegation,
-  useAllianceDelegations,
+  useInterchainAllianceDelegations,
 } from "data/queries/alliance"
 
 const Delegations = () => {
@@ -22,7 +22,7 @@ const Delegations = () => {
   const { data: prices, ...pricesState } = useExchangeRates()
 
   const interchainDelegations = useInterchainDelegations()
-  const allianceDelegationsData = useAllianceDelegations()
+  const allianceDelegationsData = useInterchainAllianceDelegations()
 
   const delegations: Delegation[] = interchainDelegations.reduce(
     (acc, { data }) => (data ? [...data?.delegation, ...acc] : acc),
@@ -57,16 +57,6 @@ const Delegations = () => {
       },
       0
     )
-
-    console.log()
-
-    console.log([
-      ...delegations,
-      ...allianceDelegations.map(({ balance, delegation }) => ({
-        balance,
-        validator_address: delegation?.validator_address,
-      })),
-    ])
 
     return (
       <ModalButton
