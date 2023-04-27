@@ -150,7 +150,7 @@ const QuickStakeForm = (props: Props) => {
             <FlexColumn gap={18} className={styles.token__details}>
               <Flex gap={4} start>
                 <div className={styles.token__icon__container}>
-                  {token && (
+                  {asset && (
                     <img
                       src={asset.icon}
                       alt={asset.symbol}

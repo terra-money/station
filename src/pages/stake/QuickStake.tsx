@@ -1,5 +1,5 @@
 import { readPercent } from "@terra-money/terra-utils"
-import { Button, ExternalLink } from "components/general"
+import { Button } from "components/general"
 import { Flex, Grid, InlineFlex, Page, Table, Tabs } from "components/layout"
 import { useBalances } from "data/queries/bank"
 import { useNativeDenoms } from "data/token"
@@ -214,9 +214,6 @@ const QuickStake = () => {
                                       "Assets of one chain can be staked on another, creating a mutually-beneficial economic partnership through interchain staking"
                                     )}
                                   </p>
-                                  <ExternalLink href="https://alliance.terra.money">
-                                    Learn more
-                                  </ExternalLink>
                                 </article>
                               }
                             >
@@ -268,7 +265,21 @@ const QuickStake = () => {
                     title={t("Staking Details")}
                     renderButton={(open) =>
                       is.ledger(wallet) && isAlliance ? (
-                        <Button size="small">Not available</Button>
+                        <InlineFlex gap={4} start>
+                          <Tooltip
+                            content={
+                              <article>
+                                <p>
+                                  {t(
+                                    "Alliance is currently not supported on Ledger."
+                                  )}
+                                </p>
+                              </article>
+                            }
+                          >
+                            <Button size="small">Not available</Button>
+                          </Tooltip>
+                        </InlineFlex>
                       ) : (
                         <Button color="primary" size="small" onClick={open}>
                           {hasDelegations ? t("Manage Stake") : t("Stake")}
