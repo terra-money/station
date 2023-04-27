@@ -1,19 +1,5 @@
 @import "mixins";
 
-.quick__action {
-  @include flex(flex-start);
-  padding-bottom: var(--grid-gap);
-  padding-inline: var(--main-padding-horizontal);
-  gap: 0.6rem;
-}
-
-.table__container {
-  background-color: var(--card-bg-muted);
-  padding: 20px var(--main-padding-horizontal);
-  border-top: var(--border-width) solid var(--card-border);
-  border-radius: 0 0 var(--border-radius) var(--border-radius);
-}
-
 .token__icon__container {
   position: relative;
   margin-right: 12px;
@@ -42,8 +28,7 @@
   }
 }
 
-.alliance__logo {
-  cursor: pointer;
+.token__chain {
   background-color: hsl(
     var(--button-default-bg-h),
     var(--button-default-bg-s),
@@ -54,4 +39,15 @@
   padding: 0.1rem 0.6rem;
   border-radius: 0.8rem;
   margin-left: 0.4rem;
+}
+
+.token__details {
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--card-border);
+  align-items: flex-start;
+
+  dl {
+    width: 100%;
+  }
 }

@@ -4,6 +4,7 @@ import BigNumber from "bignumber.js"
 import {
   AccAddress,
   Coin,
+  MsgAllianceDelegate,
   MsgDelegate,
   MsgUndelegate,
   StakingParams,
@@ -123,6 +124,24 @@ export const useStakingParams = (chainID: string) => {
     [queryKey.staking.params, chainID],
     () => lcd.staking.parameters(chainID),
     { ...RefetchOptions.INFINITY }
+  )
+}
+
+export const useAllStakingParams = () => {
+  const lcd = useInterchainLCDClient()
+  const network = useNetwork()
+
+  return useQueries(
+    Object.values(network ?? {}).map(({ chainID }) => {
+      return {
+        queryKey: [queryKey.staking.params, chainID],
+        queryFn: async () => {
+          const params = await lcd.staking.parameters(chainID)
+          return { ...params, chainID }
+        },
+        ...RefetchOptions.DEFAULT,
+      }
+    })
   )
 }
 
@@ -554,7 +573,8 @@ export const getQuickStakeMsgs = (
   address: string,
   coin: Coin,
   elgibleVals: ValAddress[],
-  decimals: number
+  decimals: number,
+  isAlliance: boolean
 ) => {
   const { denom, amount } = coin.toData()
   const totalAmt = new BigNumber(amount)
@@ -571,13 +591,24 @@ export const getQuickStakeMsgs = (
 
   const destVals = shuffle(elgibleVals).slice(0, numOfValDests)
 
-  const msgs = destVals.map(
-    (valDest) =>
-      new MsgDelegate(
-        address,
-        valDest,
-        new Coin(denom, totalAmt.dividedToIntegerBy(destVals.length).toString())
-      )
+  const msgs = destVals.map((valDest) =>
+    isAlliance
+      ? new MsgAllianceDelegate(
+          address,
+          valDest,
+          new Coin(
+            denom,
+            totalAmt.dividedToIntegerBy(destVals.length).toString()
+          )
+        )
+      : new MsgDelegate(
+          address,
+          valDest,
+          new Coin(
+            denom,
+            totalAmt.dividedToIntegerBy(destVals.length).toString()
+          )
+        )
   )
   return msgs
 }

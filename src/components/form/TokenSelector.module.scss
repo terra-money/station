@@ -1,0 +1,78 @@
+@import "mixins";
+
+.popover {
+  min-width: 160px;
+  height: 200px;
+  border-radius: var(--border-radius);
+}
+
+.selector {
+  @include flex(space-between);
+  background-color: var(--button-default-bg);
+  padding: 0.4rem 0.8rem;
+  appearance: none;
+  border-radius: 3rem;
+  min-width: 160px;
+
+  span {
+    @include flex(flex-start);
+
+    img {
+      width: 18px;
+      height: 18px;
+      margin-right: 8px;
+    }
+  }
+}
+
+.options {
+  width: 100%;
+  padding: 4px 0;
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  border: var(--border-width) solid var(--card-border);
+  height: 200px;
+
+  .options__container {
+    margin-left: 6px;
+    height: 100%;
+    overflow-y: scroll;
+    margin-top: 0;
+
+    &::-webkit-scrollbar {
+      width: 12px;
+      display: block;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 16px;
+      background-color: var(--button-default-bg);
+      border: 2px solid var(--card-bg);
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
+  }
+
+  .options__container__small {
+    max-height: 125px;
+  }
+
+  button {
+    padding: 6px 12px;
+    width: 100%;
+    @include flex(flex-start);
+    border-radius: var(--border-radius);
+
+    img {
+      width: 18px;
+      height: 18px;
+      margin-right: 8px;
+    }
+
+    &:hover {
+      background-color: var(--card-bg-muted);
+    }
+  }
+}

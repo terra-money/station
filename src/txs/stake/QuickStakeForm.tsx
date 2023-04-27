@@ -2,11 +2,11 @@ import { useCallback, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import { Coin } from "@terra-money/feather.js"
-import { toAmount } from "@terra-money/terra-utils"
+import { readPercent, toAmount } from "@terra-money/terra-utils"
 import { getAmount } from "utils/coin"
 import { combineState, queryKey } from "data/query"
 import { useNetwork } from "data/wallet"
-import { Grid, Page } from "components/layout"
+import { Flex, FlexColumn, Grid, Page } from "components/layout"
 import { Form, FormItem, FormWarning, Input } from "components/form"
 import { getPlaceholder, toInput } from "../utils"
 import validate from "../validate"
@@ -26,6 +26,7 @@ import {
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import shuffle from "utils/shuffle"
 import { memo } from "react"
+import styles from "./QuickStakeForm.module.scss"
 
 interface TxValues {
   input?: number
@@ -35,10 +36,22 @@ interface Props {
   action: string
   balances: { denom: string; amount: string }[]
   chainID: string
+  denom: string
+  rewardRate: number
+  unbondingTime: number
+  isAlliance: boolean
 }
 
 const QuickStakeForm = (props: Props) => {
-  const { action, balances, chainID } = props
+  const {
+    action,
+    balances,
+    chainID,
+    denom,
+    rewardRate,
+    unbondingTime,
+    isAlliance,
+  } = props
 
   const { t } = useTranslation()
   const addresses = useInterchainAddresses()
@@ -49,8 +62,6 @@ const QuickStakeForm = (props: Props) => {
   const readNativeDenom = useNativeDenoms()
   const { data: stakeParams, ...stakeState } = useStakingParams(chainID)
   const state = combineState(validatorState, delegationsState, stakeState)
-
-  const { baseAsset } = network[chainID]
 
   /* form */
   const form = useForm<TxValues>({
@@ -74,16 +85,16 @@ const QuickStakeForm = (props: Props) => {
 
   const stakeMsgs = useMemo(() => {
     if (!address || !elegibleVals) return
-    const coin = new Coin(baseAsset, toAmount(input || toInput(1)))
-    const { decimals } = readNativeDenom(baseAsset)
-    return getQuickStakeMsgs(address, coin, elegibleVals, decimals)
-  }, [address, elegibleVals, baseAsset, input, readNativeDenom])
+    const coin = new Coin(denom, toAmount(input || toInput(1)))
+    const { decimals } = readNativeDenom(denom)
+    return getQuickStakeMsgs(address, coin, elegibleVals, decimals, isAlliance)
+  }, [address, elegibleVals, denom, input, isAlliance, readNativeDenom])
 
   const unstakeMsgs = useMemo(() => {
     if (!address || !delegations) return
-    const coin = new Coin(baseAsset, toAmount(input || toInput(1)))
+    const coin = new Coin(denom, toAmount(input || toInput(1)))
     return getQuickUnstakeMsgs(address, coin, delegations)
-  }, [address, baseAsset, input, delegations])
+  }, [address, denom, input, delegations])
 
   /* tx */
   const createTx = useCallback(
@@ -98,7 +109,7 @@ const QuickStakeForm = (props: Props) => {
 
   /* fee */
   const balance = {
-    [QuickStakeAction.DELEGATE]: getAmount(balances, baseAsset), // TODO flexible denom
+    [QuickStakeAction.DELEGATE]: getAmount(balances, denom), // TODO flexible denom
     [QuickStakeAction.UNBOND]: calcDelegationsTotal(delegations ?? []),
   }[action]
 
@@ -112,7 +123,9 @@ const QuickStakeForm = (props: Props) => {
     [setValue, trigger]
   )
 
-  const token = action === QuickStakeAction.DELEGATE ? baseAsset : ""
+  const asset = readNativeDenom(denom)
+
+  const token = action === QuickStakeAction.DELEGATE ? denom : ""
   const tx = {
     decimals: readNativeDenom(token)?.decimals,
     token,
@@ -133,54 +146,90 @@ const QuickStakeForm = (props: Props) => {
     <Page invisible {...state}>
       <Tx {...tx}>
         {({ max, fee, submit }) => (
-          <Form onSubmit={handleSubmit(submit.fn)}>
-            {
-              {
-                [QuickStakeAction.DELEGATE]: (
-                  <FormWarning>
-                    {t(
-                      "Leave enough coins to pay fee for subsequent transactions"
-                    )}
-                  </FormWarning>
-                ),
-                [QuickStakeAction.UNBOND]: (
-                  <Grid gap={4}>
-                    <FormWarning>
-                      {t(
-                        "A maximum 7 undelegations can be in progress at the same time"
-                      )}
-                    </FormWarning>
-                    <FormWarning>
-                      {t(
-                        "Undelegating funds do not accrue rewards and are locked for {{daysToUnbond}} days",
-                        { daysToUnbond }
-                      )}
-                    </FormWarning>
-                  </Grid>
-                ),
-              }[action]
-            }
-            <FormItem
-              label={t("Amount")}
-              extra={max.render()}
-              error={errors.input?.message}
-            >
-              <Input
-                {...register("input", {
-                  valueAsNumber: true,
-                  validate: validate.input(toInput(max.amount)),
-                })}
-                token={baseAsset}
-                onFocus={max.reset}
-                inputMode="decimal"
-                placeholder={getPlaceholder()}
-                autoFocus
-              />
-            </FormItem>
+          <>
+            <FlexColumn gap={18} className={styles.token__details}>
+              <Flex gap={4} start>
+                <div className={styles.token__icon__container}>
+                  {token && (
+                    <img
+                      src={asset.icon}
+                      alt={asset.symbol}
+                      className={styles.token__icon}
+                    />
+                  )}
+                  {network && (
+                    <img
+                      src={network[chainID].icon}
+                      alt={network[chainID].name}
+                      className={styles.chain__icon}
+                    />
+                  )}
+                </div>
+                {asset.name ?? asset.symbol}
+                <span className={styles.token__chain}>
+                  {network[chainID]?.name}
+                </span>
+              </Flex>
+              <dl>
+                <dt>{t("Unbonding period")}:</dt>
+                <dd>{t("{{value}} days", { value: unbondingTime })}</dd>
+              </dl>
+              <dl>
+                <dt>{t("Rewards rate")}:</dt>
+                <dd>{readPercent(rewardRate)}</dd>
+              </dl>
+            </FlexColumn>
+            <Form onSubmit={handleSubmit(submit.fn)}>
+              <FormItem
+                label={t("Amount")}
+                extra={max.render()}
+                error={errors.input?.message}
+              >
+                <Input
+                  {...register("input", {
+                    valueAsNumber: true,
+                    validate: validate.input(toInput(max.amount)),
+                  })}
+                  token={denom}
+                  onFocus={max.reset}
+                  inputMode="decimal"
+                  placeholder={getPlaceholder()}
+                  autoFocus
+                />
+              </FormItem>
 
-            {fee.render()}
-            {submit.button}
-          </Form>
+              {fee.render()}
+
+              {
+                {
+                  [QuickStakeAction.DELEGATE]: (
+                    <FormWarning>
+                      {t(
+                        "Leave enough coins to pay fee for subsequent transactions"
+                      )}
+                    </FormWarning>
+                  ),
+                  [QuickStakeAction.UNBOND]: (
+                    <Grid gap={4}>
+                      <FormWarning>
+                        {t(
+                          "A maximum 7 undelegations can be in progress at the same time"
+                        )}
+                      </FormWarning>
+                      <FormWarning>
+                        {t(
+                          "Undelegating funds do not accrue rewards and are locked for {{daysToUnbond}} days",
+                          { daysToUnbond }
+                        )}
+                      </FormWarning>
+                    </Grid>
+                  ),
+                }[action]
+              }
+
+              {submit.button}
+            </Form>
+          </>
         )}
       </Tx>
     </Page>

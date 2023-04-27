@@ -1,16 +1,28 @@
 import { readPercent } from "@terra-money/terra-utils"
-import { Button } from "components/general"
-import { Flex, Grid, Page, Table } from "components/layout"
+import { Button, ExternalLink } from "components/general"
+import { Flex, Grid, InlineFlex, Page, Table, Tabs } from "components/layout"
 import { useBalances } from "data/queries/bank"
 import { useNativeDenoms } from "data/token"
-import { useChainID, useNetwork } from "data/wallet"
+import { useNetwork } from "data/wallet"
 import { useTranslation } from "react-i18next"
 import QuickStakeForm from "txs/stake/QuickStakeForm"
 import styles from "./QuickStake.module.scss"
 import { ModalButton } from "components/feedback"
-import { useAlliances } from "data/queries/alliance"
-import { useStakingParams } from "data/queries/staking"
+import {
+  AllianceDelegation,
+  AllianceDetails,
+  useAllAlliances,
+  useAllianceDelegations,
+} from "data/queries/alliance"
+import {
+  useAllStakingParams,
+  useInterchainDelegations,
+} from "data/queries/staking"
 import { combineState } from "data/query"
+import { Tooltip } from "components/display"
+import { Delegation } from "@terra-money/feather.js"
+import TokenSelector, { TokenInterface } from "components/form/TokenSelector"
+import { useState } from "react"
 
 export enum QuickStakeAction {
   DELEGATE = "Delegate",
@@ -18,71 +30,148 @@ export enum QuickStakeAction {
 }
 
 const QuickStake = () => {
-  const renderQuickStakeForm = (
-    chainID: string | undefined,
-    action: string | undefined
-  ) => {
-    if (!(balances && chainID && action)) return null
+  const renderQuickStakeForm = ({
+    chainID,
+    denom,
+    rewardRate,
+    unbondingTime,
+    isAlliance,
+    hasDelegations,
+  }: {
+    chainID: string
+    denom: string
+    rewardRate: number
+    unbondingTime: number
+    isAlliance: boolean
+    hasDelegations: boolean
+  }) => {
+    if (!balances) return null
+
     const props = {
-      action,
       balances,
+      denom,
       chainID,
+      rewardRate,
+      unbondingTime,
+      isAlliance,
     }
-    return <QuickStakeForm {...props} />
+
+    const tabs = [
+      {
+        key: "delegate",
+        tab: t("Stake"),
+        children: (
+          <QuickStakeForm {...props} action={QuickStakeAction.DELEGATE} />
+        ),
+      },
+      {
+        key: "undelegate",
+        tab: t("Unstake"),
+        children: (
+          <QuickStakeForm {...props} action={QuickStakeAction.UNBOND} />
+        ),
+      },
+    ]
+
+    return hasDelegations ? (
+      <Tabs tabs={tabs} type="line" state />
+    ) : (
+      <QuickStakeForm {...props} action={QuickStakeAction.DELEGATE} />
+    )
   }
 
   const { t } = useTranslation()
   const { data: balances } = useBalances()
   const readNativeDenom = useNativeDenoms()
   const networks = useNetwork()
-  const chainID = useChainID()
+  const [token, setToken] = useState("uluna")
 
-  const { data: alliances, ...alliancesState } = useAlliances(chainID)
-  const { data: stakingParams, ...stakingParamsState } =
-    useStakingParams(chainID)
-  const unbondingtime = stakingParams?.unbonding_time ?? 0
-  const state = combineState(alliancesState, stakingParamsState)
+  const alliancesData = useAllAlliances()
+  const alliances = alliancesData.reduce(
+    (acc, { data }) => (data ? [...acc, ...data] : acc),
+    [] as AllianceDetails[]
+  )
+  const stakingParamsData = useAllStakingParams()
+  const unbondingtime = stakingParamsData.reduce(
+    (acc, { data }) =>
+      data ? { ...acc, [data.chainID]: data.unbonding_time ?? 0 } : acc,
+    {} as Record<string, number>
+  )
+
+  const delegationsData = useInterchainDelegations()
+  const delegations: Delegation[] = delegationsData.reduce(
+    (acc, { data }) => (data ? [...data?.delegation, ...acc] : acc),
+    [] as Delegation[]
+  )
+  const allianceDelegationsData = useAllianceDelegations()
+  const allianceDelegations = allianceDelegationsData.reduce(
+    (acc, { data }) => (data ? [data, ...acc] : acc),
+    [] as { delegations: AllianceDelegation[]; chainID: string }[]
+  )
+
+  const state = combineState(
+    ...alliancesData,
+    ...stakingParamsData,
+    ...delegationsData,
+    ...allianceDelegationsData
+  )
 
   const options = [
-    {
-      denom: networks[chainID]?.baseAsset,
+    ...Object.values(networks).map(({ baseAsset, chainID }) => ({
+      denom: baseAsset,
       rewards: 1,
       chainID,
-      unbonding: unbondingtime / 60 / 60 / 24,
-    },
-    ...(alliances ?? []).map(({ denom, reward_weight }) => ({
+      unbonding: (unbondingtime[chainID] ?? 0) / 60 / 60 / 24,
+      isAlliance: false,
+      hasDelegations: delegations.some(
+        ({ balance }) =>
+          balance?.denom === baseAsset && Number(balance?.amount) > 0
+      ),
+    })),
+    ...(alliances ?? []).map(({ denom, reward_weight, chainID }) => ({
       denom: denom ?? "",
       rewards: Number(reward_weight),
-      chainID: "pisco-1",
-      unbonding: unbondingtime / 60 / 60 / 24,
+      chainID,
+      unbonding: (unbondingtime[chainID] ?? 0) / 60 / 60 / 24,
+      isAlliance: true,
+      hasDelegations: allianceDelegations.some(
+        ({ chainID: delChainID, delegations }) =>
+          delChainID === chainID &&
+          delegations.some(
+            ({ balance }) =>
+              balance?.denom === denom && Number(balance?.amount) > 0
+          )
+      ),
     })),
   ]
+
+  const tokenList = options.reduce(
+    (acc, { denom }) => ({ [denom]: readNativeDenom(denom), ...acc }),
+    {} as Record<string, TokenInterface>
+  )
 
   return (
     <Page sub {...state}>
       <header className={styles.quick__action}>
-        <div>Select asset to stake:</div>
-        <ModalButton
-          title={t("Quick Stake")}
-          renderButton={(open) => (
-            <Button color="primary" size="small" onClick={open}>
-              Quick stake
-            </Button>
-          )}
-        >
-          {renderQuickStakeForm("phoenix-1", "Delegate")}
-        </ModalButton>
+        <p>Select asset to stake:</p>
+        <TokenSelector
+          value={token}
+          tokenLists={tokenList}
+          onChange={setToken}
+        />
       </header>
       <main className={styles.table__container}>
         <Table
-          dataSource={options}
-          rowKey={({ denom }) => denom}
+          dataSource={options.filter(
+            ({ denom }) => readNativeDenom(denom).token === token
+          )}
+          //rowKey={({ denom, chainID }) => [denom, chainID].join("-")}
           columns={[
             {
               title: t("Staking asset"),
               dataIndex: ["asset", "chainID"],
               render: (_, option) => {
-                const { denom, chainID } = option
+                const { denom, chainID, isAlliance } = option
                 const token = readNativeDenom(denom)
                 const network = networks[chainID]
 
@@ -106,7 +195,29 @@ const QuickStake = () => {
                             />
                           )}
                         </div>
-                        {token.name ?? token.symbol}
+                        {token.symbol}
+
+                        {isAlliance && (
+                          <InlineFlex gap={4} start>
+                            <Tooltip
+                              content={
+                                <article>
+                                  <h1>Alliance</h1>
+                                  <p>
+                                    {t(
+                                      "Assets of one chain can be staked on another, creating a mutually-beneficial economic partnership through interchain staking"
+                                    )}
+                                  </p>
+                                  <ExternalLink href="https://alliance.terra.money">
+                                    Learn more
+                                  </ExternalLink>
+                                </article>
+                              }
+                            >
+                              <span className={styles.alliance__logo}>🤝</span>
+                            </Tooltip>
+                          </InlineFlex>
+                        )}
                       </Flex>
                     </Grid>
                   </Flex>
@@ -134,13 +245,36 @@ const QuickStake = () => {
             },
             {
               title: t("Actions"),
-              dataIndex: [],
-              render: () => (
+              dataIndex: ["asset", "chainID"],
+              render: (
+                _,
+                {
+                  denom,
+                  chainID,
+                  rewards,
+                  unbonding,
+                  isAlliance,
+                  hasDelegations,
+                }
+              ) => (
                 <Flex start gap={8}>
-                  <Button color="primary" size="small">
-                    Delegate
-                  </Button>
-                  <Button size="small">Undelegate</Button>
+                  <ModalButton
+                    title={t("Staking Details")}
+                    renderButton={(open) => (
+                      <Button color="primary" size="small" onClick={open}>
+                        {hasDelegations ? t("Manage Stake") : t("Stake")}
+                      </Button>
+                    )}
+                  >
+                    {renderQuickStakeForm({
+                      denom,
+                      chainID,
+                      rewardRate: rewards,
+                      unbondingTime: unbonding,
+                      isAlliance,
+                      hasDelegations,
+                    })}
+                  </ModalButton>
                 </Flex>
               ),
             },
