@@ -61,9 +61,9 @@ export const useAllianceDelegations = () => {
   const network = useNetwork()
 
   return useQueries(
-    Object.values(network ?? {})
-      .filter(({ alliance }) => alliance)
-      .map(({ chainID }) => {
+    Object.keys(addresses)
+      .filter((chainID) => network[chainID]?.alliance)
+      .map((chainID) => {
         return {
           queryKey: [queryKey.alliance.delegations, addresses, chainID],
           queryFn: async () => {
@@ -83,6 +83,7 @@ export const useAllianceDelegations = () => {
             }
           },
           ...RefetchOptions.DEFAULT,
+          disabled: !addresses?.[chainID],
         }
       })
   )
