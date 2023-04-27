@@ -129,7 +129,9 @@ const QuickStakeForm = (props: Props) => {
   /* fee */
   const balance = {
     [QuickStakeAction.DELEGATE]: getAmount(balances, denom), // TODO flexible denom
-    [QuickStakeAction.UNBOND]: calcDelegationsTotal(delegations ?? []),
+    [QuickStakeAction.UNBOND]: calcDelegationsTotal(
+      (isAlliance ? allianceDelegations : delegations) ?? []
+    ),
   }[action]
 
   const estimationTxValues = useMemo(() => ({ input: toInput(1) }), [])

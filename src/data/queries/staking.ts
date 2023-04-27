@@ -284,7 +284,9 @@ export const getAvailableStakeActions = (
 }
 
 /* delegation */
-export const calcDelegationsTotal = (delegations: Delegation[]) => {
+export const calcDelegationsTotal = (
+  delegations: Delegation[] | AllianceDelegationResponse[]
+) => {
   return delegations.length
     ? BigNumber.sum(
         ...delegations.map(({ balance }) => balance.amount.toString())
