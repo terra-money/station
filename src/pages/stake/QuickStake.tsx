@@ -148,13 +148,18 @@ const QuickStake = () => {
     })),
   ]
 
-  const tokenList = options.reduce(
-    (acc, { denom }) => ({
-      [readNativeDenom(denom).token]: readNativeDenom(denom),
-      ...acc,
-    }),
-    {} as Record<string, TokenInterface>
-  )
+  const tokenList = options.reduce((acc, { denom }) => {
+    const token = readNativeDenom(denom)
+    return token.lsd
+      ? {
+          [token.lsd]: readNativeDenom(token.lsd),
+          ...acc,
+        }
+      : {
+          [token.token]: token,
+          ...acc,
+        }
+  }, {} as Record<string, TokenInterface>)
 
   return (
     <Page sub {...state}>
@@ -169,7 +174,9 @@ const QuickStake = () => {
       <main className={styles.table__container}>
         <Table
           dataSource={options.filter(
-            ({ denom }) => true //readNativeDenom(denom).token === token
+            ({ denom }) =>
+              readNativeDenom(denom).token === token ||
+              readNativeDenom(denom).lsd === token
           )}
           columns={[
             {
