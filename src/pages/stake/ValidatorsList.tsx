@@ -8,31 +8,29 @@ import { BondStatus } from "@terra-money/terra.proto/cosmos/staking/v1beta1/stak
 import { bondStatusFromJSON } from "@terra-money/terra.proto/cosmos/staking/v1beta1/staking"
 import { combineState } from "data/query"
 import { getPriorityVals, useValidators } from "data/queries/staking"
-import { useDelegations, useUnbondings } from "data/queries/staking"
 import { getCalcVotingPowerRate } from "data/Terra/TerraAPI"
 import { Table, Flex, Grid, Page } from "components/layout"
 import ProfileIcon from "./components/ProfileIcon"
 import { ValidatorJailed, ValidatorUnbonded } from "./components/ValidatorTag"
 import styles from "./Validators.module.scss"
+import { LinkButton } from "components/general"
 
 const ValidatorsList = ({
   chainID,
   keyword,
+  delegatedTo,
+  denom,
 }: {
   chainID: string
   keyword: string
+  delegatedTo: string[]
+  denom: string
 }) => {
   const { t } = useTranslation()
 
   const { data: validators, ...validatorsState } = useValidators(chainID)
-  const { data: delegations, ...delegationsState } = useDelegations(chainID)
-  const { data: undelegations, ...undelegationsState } = useUnbondings(chainID)
 
-  const state = combineState(
-    validatorsState,
-    delegationsState,
-    undelegationsState
-  )
+  const state = combineState(validatorsState)
 
   const activeValidators = useMemo(() => {
     if (!validators) return null
@@ -86,16 +84,6 @@ const ValidatorsList = ({
               render: (moniker, validator) => {
                 const { operator_address, jailed, status } = validator
 
-                const delegated = delegations?.find(
-                  ({ validator_address }) =>
-                    validator_address === operator_address
-                )
-
-                const undelegated = undelegations?.find(
-                  ({ validator_address }) =>
-                    validator_address === operator_address
-                )
-
                 return (
                   <Flex start gap={8}>
                     <ProfileIcon
@@ -115,17 +103,6 @@ const ValidatorsList = ({
                           <ValidatorUnbonded />
                         )}
                       </Flex>
-
-                      {(delegated || undelegated) && (
-                        <p className={styles.muted}>
-                          {[
-                            delegated && t("Delegated"),
-                            undelegated && t("Undelegated"),
-                          ]
-                            .filter(Boolean)
-                            .join(" | ")}
-                        </p>
-                      )}
                     </Grid>
                   </Flex>
                 )
@@ -140,7 +117,6 @@ const ValidatorsList = ({
                 { voting_power_rate: b = 0 }
               ) => a - b,
               render: (value = 0) => readPercent(value),
-              align: "right",
             },
             {
               title: t("Commission"),
@@ -152,7 +128,28 @@ const ValidatorsList = ({
               ) => a.rate.toNumber() - b.rate.toNumber(),
               render: ({ rate }: Validator.CommissionRates) =>
                 readPercent(rate.toString(), { fixed: 2 }),
-              align: "right",
+            },
+            {
+              title: t("Actions"),
+              dataIndex: [],
+              render: (_, validator) => {
+                const { operator_address } = validator
+
+                return (
+                  <LinkButton
+                    to={`/stake/${operator_address}/${denom.replaceAll(
+                      "/",
+                      "="
+                    )}#Delegate`}
+                    color="primary"
+                    size="small"
+                  >
+                    {delegatedTo.includes(operator_address)
+                      ? t("Manage Stake")
+                      : t("Stake")}
+                  </LinkButton>
+                )
+              },
             },
           ]}
         />

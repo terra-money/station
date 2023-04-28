@@ -236,6 +236,8 @@ const QuickStake = () => {
             {
               title: t("Chain"),
               dataIndex: "chainID",
+              defaultSortOrder: "desc",
+              sorter: ({ chainID: a }, { chainID: b }) => a.localeCompare(b),
               render: (chainID) => networks[chainID]?.name || chainID,
             },
             {

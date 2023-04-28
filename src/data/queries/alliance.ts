@@ -7,7 +7,8 @@ import {
 } from "@terra-money/feather.js/dist/client/lcd/api/AllianceAPI"
 import { useNetwork } from "data/wallet"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
-import { Coin } from "@terra-money/feather.js"
+import { Coin, ValAddress } from "@terra-money/feather.js"
+import { StakeAction } from "txs/stake/StakeForm"
 
 export interface AllianceDetails extends AllianceAsset {
   chainID: string
@@ -107,4 +108,22 @@ export const useInterchainAllianceDelegations = () => {
         }
       })
   )
+}
+
+export const getAvailableAllianceStakeActions = (
+  destination: ValAddress,
+  delegations: AllianceDelegationResponse[]
+) => {
+  return {
+    [StakeAction.DELEGATE]: true,
+    [StakeAction.REDELEGATE]:
+      delegations.filter(
+        ({ delegation: { validator_address } }) =>
+          validator_address !== destination
+      ).length > 0,
+    [StakeAction.UNBOND]: !!delegations.filter(
+      ({ delegation: { validator_address } }) =>
+        validator_address === destination
+    ).length,
+  }
 }

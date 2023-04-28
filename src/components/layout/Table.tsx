@@ -177,7 +177,7 @@ function Table<T>({ dataSource, filter, rowKey, ...props }: Props<T>) {
             .slice(...range)
             .map((data, index) => (
               <>
-                <tr key={index}>
+                <tr key={index} className={styles.row}>
                   {extra && (
                     <td className={styles.extra__tooltip}>
                       <button

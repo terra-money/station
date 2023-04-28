@@ -68,9 +68,12 @@ const Validators = () => {
       chainID,
       unbonding: (unbondingtime[chainID] ?? 0) / 60 / 60 / 24,
       isAlliance: false,
-      hasDelegations: delegations.some(
-        ({ balance }) =>
+      delegatedTo: delegations.reduce(
+        (acc, { balance, validator_address }) =>
           balance?.denom === baseAsset && Number(balance?.amount) > 0
+            ? [...acc, validator_address]
+            : acc,
+        [] as string[]
       ),
     })),
     ...(alliances ?? []).map(({ denom, reward_weight, chainID }) => ({
@@ -79,13 +82,25 @@ const Validators = () => {
       chainID,
       unbonding: (unbondingtime[chainID] ?? 0) / 60 / 60 / 24,
       isAlliance: true,
-      hasDelegations: allianceDelegations.some(
-        ({ chainID: delChainID, delegations }) =>
+      delegatedTo: allianceDelegations.reduce(
+        (acc, { chainID: delChainID, delegations }) =>
           delChainID === chainID &&
           delegations.some(
             ({ balance }) =>
               balance?.denom === denom && Number(balance?.amount) > 0
           )
+            ? [
+                ...acc,
+                ...delegations.reduce(
+                  (acc, { delegation: { validator_address } }) => [
+                    ...acc,
+                    validator_address,
+                  ],
+                  [] as string[]
+                ),
+              ]
+            : acc,
+        [] as string[]
       ),
     })),
   ]
@@ -126,8 +141,13 @@ const Validators = () => {
                   readNativeDenom(denom).token === token ||
                   readNativeDenom(denom).lsd === token
               )}
-              extra={({ chainID }) => (
-                <ValidatorsList keyword={keyword} chainID={chainID} />
+              extra={({ chainID, denom, delegatedTo }) => (
+                <ValidatorsList
+                  keyword={keyword}
+                  chainID={chainID}
+                  denom={denom}
+                  delegatedTo={delegatedTo}
+                />
               )}
               columns={[
                 {
@@ -189,6 +209,9 @@ const Validators = () => {
                 {
                   title: t("Chain"),
                   dataIndex: "chainID",
+                  defaultSortOrder: "desc",
+                  sorter: ({ chainID: a }, { chainID: b }) =>
+                    a.localeCompare(b),
                   render: (chainID) => networks[chainID]?.name || chainID,
                 },
                 {
