@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 import { readPercent } from "@terra-money/terra-utils"
@@ -14,7 +14,6 @@ import { Table, Flex, Grid, Page } from "components/layout"
 import ProfileIcon from "./components/ProfileIcon"
 import { ValidatorJailed, ValidatorUnbonded } from "./components/ValidatorTag"
 import styles from "./Validators.module.scss"
-import { Toggle } from "components/form"
 
 const ValidatorsList = ({
   chainID,
@@ -29,9 +28,6 @@ const ValidatorsList = ({
   const { data: delegations, ...delegationsState } = useDelegations(chainID)
   const { data: undelegations, ...undelegationsState } = useUnbondings(chainID)
 
-  const [showAll, setShowAll] = useState(false)
-  const toggle = () => setShowAll((state) => !state)
-
   const state = combineState(
     validatorsState,
     delegationsState,
@@ -44,7 +40,7 @@ const ValidatorsList = ({
     const calcRate = getCalcVotingPowerRate(validators)
 
     return validators
-      .filter(({ status }) => showAll || !getIsUnbonded(status))
+      .filter(({ status }) => keyword || !getIsUnbonded(status))
       .map((validator) => {
         const { operator_address } = validator
         const voting_power_rate = calcRate(operator_address)
@@ -56,16 +52,13 @@ const ValidatorsList = ({
         }
       })
       .sort((a, b) => b.rank - a.rank)
-  }, [validators, showAll])
+  }, [validators, keyword])
 
   if (!activeValidators) return null
 
   return (
     <Page {...state} invisible>
       <section className={styles.table}>
-        {/*<Toggle checked={showAll} onChange={toggle}>
-          {t("Show inactive validators")}
-  </Toggle>*/}
         <Table
           dataSource={activeValidators}
           filter={({ description: { moniker }, operator_address }) => {

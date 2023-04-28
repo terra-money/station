@@ -4,7 +4,6 @@ import { Delegation } from "@terra-money/feather.js"
 import { bondStatusFromJSON } from "@terra-money/terra.proto/cosmos/staking/v1beta1/staking"
 import WithSearchInput from "pages/custom/WithSearchInput"
 import styles from "./Validators.module.scss"
-import ChainFilter from "components/layout/ChainFilter"
 import ValidatorsList from "./ValidatorsList"
 import { Flex, Grid, InlineFlex, Page, Table } from "components/layout"
 import { useTranslation } from "react-i18next"
@@ -22,12 +21,9 @@ import {
   useInterchainDelegations,
 } from "data/queries/staking"
 import { combineState } from "data/query"
-import { useBalances } from "data/queries/bank"
 import { useNativeDenoms } from "data/token"
 import { readPercent } from "@terra-money/terra-utils"
-import { ModalButton } from "components/feedback"
 import { Tooltip } from "components/display"
-import { Button } from "components/general"
 
 const Validators = () => {
   const { t } = useTranslation()
@@ -108,7 +104,7 @@ const Validators = () => {
   }, {} as Record<string, TokenInterface>)
 
   return (
-    <Page sub>
+    <Page sub {...state}>
       <header className={styles.select__asset}>
         <p>Select staking asset:</p>
         <TokenSelector
