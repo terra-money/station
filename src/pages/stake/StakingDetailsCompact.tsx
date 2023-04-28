@@ -98,7 +98,7 @@ const StakingDetailsCompact = ({
               </dd>
             </dl>
           </div>
-          {delegated && (
+          {!!delegated && (
             <div className={styles.staking__details__container}>
               <h4>{t("My Staked Position")}</h4>
               <p className={styles.delegated__amount}>
