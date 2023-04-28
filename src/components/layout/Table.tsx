@@ -7,6 +7,7 @@ import { TooltipIcon } from "components/display"
 import Grid from "./Grid"
 import PaginationButtons from "./PaginationButtons"
 import styles from "./Table.module.scss"
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight"
 
 const cx = classNames.bind(styles)
 
@@ -34,6 +35,7 @@ interface Props<T> {
   rowKey?: (record: T) => string
   initialSorterKey?: string
   onSort?: () => void
+  extra?: (data: T) => ReactNode
 
   className?: string
   size?: "default" | "small"
@@ -44,7 +46,7 @@ interface Props<T> {
 
 function Table<T>({ dataSource, filter, rowKey, ...props }: Props<T>) {
   const { initialSorterKey, size = "default", bordered, style } = props
-  const { pagination, className } = props
+  const { pagination, className, extra } = props
   const columns = props.columns.filter(({ hidden }) => !hidden)
 
   /* helpers */
@@ -93,6 +95,7 @@ function Table<T>({ dataSource, filter, rowKey, ...props }: Props<T>) {
 
   const [sorterIndex, setSorterIndex] = useState<number | undefined>(initIndex)
   const [sortOrder, setSortOrder] = useState<SortOrder | undefined>(initOrder)
+  const [extraActive, setActive] = useState<number | undefined>()
 
   const sorter = useMemo(() => {
     if (typeof sorterIndex !== "number") return
@@ -126,6 +129,7 @@ function Table<T>({ dataSource, filter, rowKey, ...props }: Props<T>) {
         {columns.some((col) => !!col.title) && (
           <thead>
             <tr>
+              {extra && <th></th>}
               {columns.map((column, index) => {
                 const { title, tooltip, sorter, defaultSortOrder } = column
 
@@ -172,25 +176,52 @@ function Table<T>({ dataSource, filter, rowKey, ...props }: Props<T>) {
             .sort((a, b) => props.sorter?.(a, b) || sorter?.(a, b) || 0)
             .slice(...range)
             .map((data, index) => (
-              <tr key={index}>
-                {columns.map((column, columnIndex) => {
-                  const { dataIndex, render } = column
-                  const value: any =
-                    typeof dataIndex === "string"
-                      ? data[dataIndex as keyof T]
-                      : dataIndex
-                      ? path(dataIndex, data)
-                      : undefined
-
-                  const children = render?.(value, data, index) ?? value
-
-                  return (
-                    <td className={getClassName(column)} key={columnIndex}>
-                      {children}
+              <>
+                <tr key={index}>
+                  {extra && (
+                    <td className={styles.extra__tooltip}>
+                      <button
+                        onClick={() =>
+                          setActive((i) => (i !== index ? index : undefined))
+                        }
+                        className={extraActive === index ? styles.active : ""}
+                      >
+                        <KeyboardArrowRightIcon />
+                      </button>
                     </td>
-                  )
-                })}
-              </tr>
+                  )}
+                  {columns.map((column, columnIndex) => {
+                    const { dataIndex, render } = column
+                    const value: any =
+                      typeof dataIndex === "string"
+                        ? data[dataIndex as keyof T]
+                        : dataIndex
+                        ? path(dataIndex, data)
+                        : undefined
+
+                    const children = render?.(value, data, index) ?? value
+
+                    return (
+                      <td className={getClassName(column)} key={columnIndex}>
+                        {children}
+                      </td>
+                    )
+                  })}
+                </tr>
+
+                {extra && (
+                  <tr
+                    className={classNames(
+                      styles.extra__content,
+                      extraActive !== index && styles.extra__content__disabled
+                    )}
+                  >
+                    <td colSpan={columns.length + 1}>
+                      {extraActive === index && extra(data)}
+                    </td>
+                  </tr>
+                )}
+              </>
             ))}
         </tbody>
       </table>

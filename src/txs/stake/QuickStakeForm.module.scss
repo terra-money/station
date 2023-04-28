@@ -1,5 +1,10 @@
 @import "mixins";
 
+.container {
+  overflow-y: scroll;
+  max-height: 70vh;
+}
+
 .token__icon__container {
   position: relative;
   margin-right: 12px;

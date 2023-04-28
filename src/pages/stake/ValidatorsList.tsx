@@ -63,9 +63,9 @@ const ValidatorsList = ({
   return (
     <Page {...state} invisible>
       <section className={styles.table}>
-        <Toggle checked={showAll} onChange={toggle}>
+        {/*<Toggle checked={showAll} onChange={toggle}>
           {t("Show inactive validators")}
-        </Toggle>
+  </Toggle>*/}
         <Table
           dataSource={activeValidators}
           filter={({ description: { moniker }, operator_address }) => {

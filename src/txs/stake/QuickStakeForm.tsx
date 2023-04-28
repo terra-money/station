@@ -167,7 +167,7 @@ const QuickStakeForm = (props: Props) => {
     <Page invisible {...state}>
       <Tx {...tx}>
         {({ max, fee, submit }) => (
-          <>
+          <section>
             <FlexColumn gap={18} className={styles.token__details}>
               <Flex gap={4} start>
                 <div className={styles.token__icon__container}>
@@ -250,7 +250,7 @@ const QuickStakeForm = (props: Props) => {
 
               {submit.button}
             </Form>
-          </>
+          </section>
         )}
       </Tx>
     </Page>

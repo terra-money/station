@@ -117,3 +117,34 @@
   display: flex;
   justify-content: flex-end;
 }
+
+.extra__tooltip {
+  width: 20px;
+  padding: 0;
+
+  button {
+    margin-right: -20px;
+    transition: 0.3s;
+  }
+
+  .active {
+    transform: rotateZ(90deg);
+  }
+}
+
+.extra__content {
+  transition: 0.3s;
+  td {
+    transition: 0.3s;
+  }
+  height: auto;
+}
+
+.extra__content__disabled {
+  height: 0;
+  overflow: hidden;
+  td {
+    padding: 0 20px;
+    border-top: 0px solid var(--card-border);
+  }
+}

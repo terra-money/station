@@ -164,7 +164,7 @@ const QuickStake = () => {
   return (
     <Page sub {...state}>
       <header className={styles.quick__action}>
-        <p>Select asset to stake:</p>
+        <p>{t("Select staking asset")}:</p>
         <TokenSelector
           value={token}
           tokenLists={tokenList}

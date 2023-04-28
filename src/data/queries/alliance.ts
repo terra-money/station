@@ -22,7 +22,7 @@ export const useAlliances = (chainID: string) => {
       const { alliances } = await lcd.alliance.alliances(chainID)
       return (alliances as AllianceAsset[]).map((a) => ({ ...a, chainID }))
     },
-    { ...RefetchOptions.DEFAULT }
+    { ...RefetchOptions.INFINITY }
   )
 }
 
@@ -44,7 +44,7 @@ export const useAllAlliances = () => {
               chainID,
             }))
           },
-          ...RefetchOptions.DEFAULT,
+          ...RefetchOptions.INFINITY,
         }
       })
   )
