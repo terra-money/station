@@ -27,6 +27,23 @@ export const useAlliances = (chainID: string) => {
   )
 }
 
+export const useAlliance = (
+  chainID: string,
+  denom: string,
+  disabled?: boolean
+) => {
+  const lcd = useInterchainLCDClient()
+
+  return useQuery(
+    [queryKey.alliance.alliances, chainID, denom],
+    async (): Promise<AllianceAsset> => {
+      const { alliance } = await lcd.alliance.alliance(chainID, denom)
+      return alliance
+    },
+    { ...RefetchOptions.INFINITY, enabled: !disabled }
+  )
+}
+
 export const useAllAlliances = () => {
   const lcd = useInterchainLCDClient()
   const network = useNetwork()

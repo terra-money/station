@@ -4,7 +4,7 @@ import { getAvailableStakeActions } from "data/queries/staking"
 import { useDelegations, useValidators } from "data/queries/staking"
 import { combineState } from "data/query"
 import { useBalances } from "data/queries/bank"
-import { Auto, Page, Tabs, Card, FlexColumn } from "components/layout"
+import { Auto, Page, Tabs, Card } from "components/layout"
 import ValidatorCompact from "pages/stake/ValidatorCompact"
 import StakeForm, { StakeAction } from "./StakeForm"
 import { useNetwork } from "data/wallet"
@@ -128,7 +128,7 @@ const StakeTx = () => {
             defaultActiveKey={initialTab}
             type="page"
           />,
-          <div>
+          <div className={styles.details__container}>
             <ValidatorCompact vertical />
             <StakingDetailsCompact denom={denom} chainID={network.chainID} />
           </div>,

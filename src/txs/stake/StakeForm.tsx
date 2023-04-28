@@ -143,7 +143,7 @@ const StakeForm = (props: Props) => {
 
       return { msgs, chainID }
     },
-    [address, destination, tab, denom, chainID]
+    [address, destination, tab, denom, chainID, isAlliance]
   )
 
   /* fee */

@@ -1,0 +1,69 @@
+@import "mixins";
+
+.token__icon__container {
+  position: relative;
+  margin-right: 12px;
+
+  .token__icon {
+    width: 50px;
+    height: 50px;
+    padding: 12px;
+    border-radius: 50%;
+    background: hsl(
+      var(--button-default-bg-h),
+      var(--button-default-bg-s),
+      var(--button-default-bg-l)
+    );
+  }
+
+  .chain__icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    padding: 2px;
+    border-radius: 50%;
+    background-color: var(--card-bg-muted);
+  }
+}
+
+.alliance__logo {
+  cursor: pointer;
+  background-color: hsl(
+    var(--button-default-bg-h),
+    var(--button-default-bg-s),
+    var(--button-default-bg-l)
+  );
+  color: var(--text-muted);
+  font-size: small;
+  padding: 0.1rem 0.6rem;
+  border-radius: 0.8rem;
+  margin-left: 0.4rem;
+}
+
+.staking__details__container {
+  margin-top: 1rem;
+  border-top: 1px solid var(--card-border);
+  padding-top: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+
+  dt {
+    color: var(--text-muted);
+  }
+
+  .delegated__amount {
+    color: var(--text-muted);
+    font-size: 11pt;
+    @include flex(flex-start);
+    gap: 0.4rem;
+
+    img {
+      width: 22px;
+      max-width: 22px;
+      max-height: 22px;
+    }
+  }
+}

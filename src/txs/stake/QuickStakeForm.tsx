@@ -107,7 +107,6 @@ const QuickStakeForm = (props: Props) => {
   const unstakeMsgs = useMemo(() => {
     if (!address || !(isAlliance ? allianceDelegations : delegations)) return
     const coin = new Coin(denom, toAmount(input || toInput(1)))
-    console.log(allianceDelegations)
     return getQuickUnstakeMsgs(address, coin, {
       isAlliance,
       // @ts-expect-error
