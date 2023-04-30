@@ -16,7 +16,6 @@ const Charts = () => {
   return (
     <div className={cx(styles.charts, { trisect: true })}>
       <TxVolume />
-      {!isClassic && <StakingReturn />}
       <Wallets />
     </div>
   )
