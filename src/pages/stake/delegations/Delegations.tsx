@@ -94,7 +94,7 @@ const Delegations = () => {
               title: t("Validator"),
               dataIndex: "validator_address",
               render: (address: AccAddress) => (
-                <ValidatorLink address={address} internal />
+                <ValidatorLink address={address} internal img />
               ),
             },
             {
