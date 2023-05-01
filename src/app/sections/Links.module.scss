@@ -7,6 +7,10 @@
 /* tutorial */
 .tutorial {
   border-bottom: 1px solid var(--menu-border);
+
+  &.tutorial_white a {
+    color: #ffffff;
+  }
 }
 
 /* community */

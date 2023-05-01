@@ -1,5 +1,6 @@
 import { ReactNode } from "react"
 import classNames from "classnames/bind"
+import { useTheme } from "data/settings/Theme"
 import { Contacts as ContactProps } from "types/components"
 import { ReactComponent as Medium } from "styles/images/community/Medium.svg"
 import { ReactComponent as Discord } from "styles/images/community/Discord.svg"
@@ -28,12 +29,20 @@ interface Props {
 }
 
 const Contacts = ({ contacts, menu }: Props) => {
+  const { name } = useTheme()
+
   return (
     <Flex start className={cx(styles.wrapper, { menu })}>
       {Object.entries(contacts).map(([key, href]) => {
         const icon = icons[key]
         return !icon ? null : (
-          <ExternalLink href={href} className={styles.icon} key={key}>
+          <ExternalLink
+            href={href}
+            className={`${styles.icon} ${
+              name === "blossom" && styles.icon_white
+            }`}
+            key={key}
+          >
             {icon}
           </ExternalLink>
         )

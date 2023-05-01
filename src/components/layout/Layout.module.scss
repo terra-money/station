@@ -35,6 +35,7 @@
   display: grid;
   background: var(--menu-bg);
   overflow: hidden;
+  position: relative;
 }
 
 .maincontainer {
@@ -99,6 +100,7 @@
   @include flex;
   gap: 10px;
   margin-left: auto;
+  z-index: 1;
 }
 
 .main {
@@ -121,4 +123,38 @@
       display: none;
     }
   }
+}
+
+.background_blur_blossom,
+.background_blur_blossom2,
+.background_blur_blossom3 {
+  background-color: #ec22c0;
+  position: absolute;
+  filter: blur(95px);
+  z-index: 1;
+}
+
+.background_blur_blossom {
+  height: 200px;
+  width: 700px;
+  left: -275px;
+  bottom: 225px;
+  rotate: 65deg;
+  filter: blur(85px);
+}
+
+.background_blur_blossom2 {
+  height: 100px;
+  width: 100px;
+  bottom: -15px;
+  left: -15px;
+  filter: blur(35px);
+}
+
+.background_blur_blossom3 {
+  height: 150px;
+  width: 200px;
+  right: -50px;
+  bottom: 10px;
+  rotate: 50deg;
 }

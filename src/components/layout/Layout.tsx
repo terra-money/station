@@ -1,5 +1,6 @@
 import { PropsWithChildren } from "react"
 import { atom, useRecoilValue } from "recoil"
+import { useTheme } from "data/settings/Theme"
 import classNames from "classnames/bind"
 import styles from "./Layout.module.scss"
 
@@ -16,7 +17,20 @@ export const Banner = ({ children }: PropsWithChildren<{}>) => {
 }
 
 export const Sidebar = ({ children }: PropsWithChildren<{}>) => {
-  return <div className={styles.sidebar}>{children}</div>
+  const { name } = useTheme()
+
+  return (
+    <div className={styles.sidebar}>
+      {name === "blossom" && (
+        <>
+          <div className={styles.background_blur_blossom} />
+          <div className={styles.background_blur_blossom2} />
+          <div className={styles.background_blur_blossom3} />
+        </>
+      )}
+      {children}
+    </div>
+  )
 }
 
 export const MainContainer = ({ children }: PropsWithChildren<{}>) => {
