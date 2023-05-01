@@ -21,7 +21,7 @@
       padding: 0.4rem 0.6rem;
       border-radius: 2rem;
       font-size: 10pt;
-      font-weight: 500;
+      font-weight: var(--bold);
 
       img {
         width: 20px;
@@ -29,7 +29,7 @@
     }
 
     .link {
-      font-weight: 500;
+      font-weight: var(--bold);
       font-size: 10pt;
     }
   }
@@ -38,7 +38,7 @@
     @include flex(flex-end);
     gap: 0.4rem;
     font-size: 10pt;
-    font-weight: 400;
+    font-weight: var(--bold);
     color: var(--text-muted);
 
     svg {
