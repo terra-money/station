@@ -1,5 +1,5 @@
 import classNames from "classnames"
-import { useNetwork } from "data/wallet"
+import { useChainID, useNetwork } from "data/wallet"
 import { useState, memo, useMemo, useRef, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import styles from "./ChainFilter.module.scss"
@@ -36,6 +36,7 @@ const ChainFilter = ({
   const { displayChains } = useDisplayChains()
   const { selectedDisplayChain, changeSelectedDisplayChain } =
     useSelectedDisplayChain()
+  const terraChainID = useChainID()
   const sortedDisplayChains = useSortedDisplayChains()
 
   useEffect(() => {
@@ -135,12 +136,28 @@ const ChainFilter = ({
     all ? undefined : initNetwork?.chainID
   )
 
+  useEffect(() => {
+    if (terraOnly) {
+      const terra = Object.values(network).find((n) =>
+        isTerraChain(n.prefix)
+      )?.chainID
+      setChain(terra)
+    } else {
+      setChain(savedChain)
+    }
+  }, [terraOnly]) // eslint-disable-line
+
   const handleSetChain = (chain: string | undefined) => {
     setChain(chain)
-    if (terraOnly) return
     changeSavedChain(chain)
     changeSelectedDisplayChain(chain)
   }
+
+  useEffect(() => {
+    if (selectedChain !== undefined && network[selectedChain] === undefined) {
+      handleSetChain(all ? undefined : terraChainID)
+    }
+  }, [network]) // eslint-disable-line
 
   return (
     <div className={outside ? styles.chainfilter__out : styles.chainfilter}>
