@@ -1,5 +1,5 @@
 import { useTheme } from "data/settings/Theme"
-import BlossomVideo from "../../styles/TopSmallV2.mp4"
+import BlossomVideo from "../../styles/themes/Blossom/Nav.mp4"
 import styles from "./NavBackgrounds.module.scss"
 
 const NavBackgrounds = () => {
