@@ -138,7 +138,11 @@ const StakedDonut = ({ chain }: { chain?: string }) => {
                 <h1 className={styles.title}>{t("No Delegations")}</h1>
 
                 <Grid gap={8}>
-                  <p>{t("There are no delegations on this chain.")}</p>
+                  <p>
+                    {chain
+                      ? t("There are no delegations on this chain.")
+                      : t("There are no delegations.")}
+                  </p>
                 </Grid>
               </section>
             </article>

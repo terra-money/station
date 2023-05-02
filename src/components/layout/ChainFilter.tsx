@@ -142,9 +142,14 @@ const ChainFilter = ({
 
   const handleSetChain = (chain: string | undefined) => {
     setChain(chain)
-    if (terraOnly) return
     changeSavedChain(chain)
   }
+
+  useEffect(() => {
+    if (selectedChain !== undefined && network[selectedChain] === undefined) {
+      handleSetChain(all ? undefined : terraChainID)
+    }
+  }, [network]) // eslint-disable-line
 
   return (
     <div className={outside ? styles.chainfilter__out : styles.chainfilter}>

@@ -316,10 +316,7 @@ const SendPage = () => {
     taxRequired: true,
     queryKeys: [queryKey.bank.balances, queryKey.bank.balance],
     gasAdjustment:
-      getChainIDFromAddress(addresses?.[chain ?? ""], networks) !== chain &&
-      AccAddress.validate(token?.denom ?? "")
-        ? 1.5
-        : 1,
+      getChainIDFromAddress(destinationAddress, networks) !== chain ? 2 : 1,
   }
 
   return (
