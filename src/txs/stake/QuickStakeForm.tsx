@@ -156,8 +156,10 @@ const QuickStakeForm = (props: Props) => {
     onChangeMax,
     queryKeys: [
       queryKey.staking.delegations,
+      queryKey.alliance.delegations,
       queryKey.staking.unbondings,
       queryKey.distribution.rewards,
+      queryKey.bank.balances,
     ],
     chain: chainID,
   }

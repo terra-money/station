@@ -1,4 +1,4 @@
-import { useQuery, useQueries, UseQueryResult } from "react-query"
+import { useQuery, useQueries } from "react-query"
 import { flatten, path, uniqBy } from "ramda"
 import BigNumber from "bignumber.js"
 import {
@@ -15,17 +15,20 @@ import {
 import { Delegation, UnbondingDelegation } from "@terra-money/feather.js"
 import { has } from "utils/num"
 import { StakeAction } from "txs/stake/StakeForm"
-import { queryKey, Pagination, RefetchOptions } from "../query"
+import { queryKey, Pagination, RefetchOptions, combineState } from "../query"
 import { useInterchainLCDClient } from "./lcdClient"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
-import { readAmount, toAmount } from "@terra-money/terra-utils"
+import { toAmount } from "@terra-money/terra-utils"
 import { useExchangeRates } from "data/queries/coingecko"
 import { useNativeDenoms } from "data/token"
 import shuffle from "utils/shuffle"
 import { getIsBonded } from "pages/stake/ValidatorsList"
-import { getChainIDFromAddress } from "utils/bech32"
 import { useNetwork } from "data/wallet"
 import { AllianceDelegationResponse } from "@terra-money/feather.js/dist/client/lcd/api/AllianceAPI"
+import {
+  AllianceDelegation,
+  useInterchainAllianceDelegations,
+} from "./alliance"
 
 export const useInterchainValidators = () => {
   const addresses = useInterchainAddresses() || {}
@@ -294,248 +297,64 @@ export const calcDelegationsTotal = (
     : "0"
 }
 
-export const useCalcInterchainDelegationsTotal = (
-  delegationsQueryResults: UseQueryResult<{
-    delegation: Delegation[]
-    chainID: string
-  }>[]
-) => {
+export const useStakeChartData = (chain?: string) => {
   const { data: prices } = useExchangeRates()
   const readNativeDenom = useNativeDenoms()
 
-  if (!delegationsQueryResults.length)
-    return { currencyTotal: 0, tableData: {} }
-
-  const delegationsByDemon = {} as any
-  const delegationsByChain = {} as any
-  const delegationsAmountsByDemon = {} as any
-  let currencyTotal = 0
-
-  delegationsQueryResults.forEach((result) => {
-    if (result.status === "success") {
-      currencyTotal += result.data?.delegation?.length
-        ? BigNumber.sum(
-            ...result.data.delegation.map(({ balance }) => {
-              const amount = BigNumber.sum(
-                delegationsAmountsByDemon[balance.denom] || 0,
-                balance.amount.toNumber()
-              ).toNumber()
-
-              const { token, decimals } = readNativeDenom(balance.denom)
-              const currecyPrice: any =
-                (amount * (prices?.[token]?.price || 0)) / 10 ** decimals
-
-              delegationsByDemon[balance.denom] = currecyPrice
-              delegationsAmountsByDemon[balance.denom] = amount
-
-              if (!delegationsByChain[result.data.chainID]) {
-                delegationsByChain[result.data.chainID] = {}
-                delegationsByChain[result.data.chainID][balance.denom] = {
-                  value: 0,
-                  amount: 0,
-                }
-              }
-
-              const chainSpecificAmount = BigNumber.sum(
-                delegationsByChain[result.data.chainID][balance.denom]
-                  ?.amount || 0,
-                balance.amount.toNumber()
-              ).toNumber()
-
-              const chainSpecificCurrecyPrice: any =
-                (chainSpecificAmount * (prices?.[token]?.price || 0)) /
-                10 ** decimals
-
-              delegationsByChain[result.data.chainID][balance.denom] = {
-                value: chainSpecificCurrecyPrice,
-                amount: chainSpecificAmount,
-              }
-
-              return currecyPrice
-            })
-          ).toNumber()
-        : 0
-    }
-  })
-
-  const tableDataByChain = {} as any
-  Object.keys(delegationsByChain).forEach((chainName) => {
-    tableDataByChain[chainName] = Object.keys(
-      delegationsByChain[chainName]
-    ).map((denom) => {
-      const { symbol, icon } = readNativeDenom(denom)
-      return {
-        name: symbol,
-        value: delegationsByChain[chainName][denom].value,
-        amount: readAmount(delegationsByChain[chainName][denom].amount, {}),
-        icon,
-      }
-    })
-  })
-
-  const allData = Object.keys(delegationsByDemon).map((demonName) => {
-    const { symbol, icon } = readNativeDenom(demonName)
-    return {
-      name: symbol,
-      value: delegationsByDemon[demonName],
-      amount: readAmount(delegationsAmountsByDemon[demonName], {}),
-      icon,
-    }
-  })
-
-  return { currencyTotal, graphData: { all: allData, ...tableDataByChain } }
-}
-
-interface DelegationsResult {
-  currencyTotal: number
-  graphData?: Record<
-    string,
-    {
-      name: string
-      value: number
-      amount: number
-      denom: string
-      icon?: string
-    }[]
-  >
-}
-
-export const useCalcDelegationsByValidator = (
-  delegationsQueryResults: UseQueryResult<{
-    delegation: Delegation[]
-    chainID: string
-  }>[],
-  interchainValidators: UseQueryResult<Validator[], unknown>[]
-): DelegationsResult => {
-  const { data: prices } = useExchangeRates()
-  const readNativeDenom = useNativeDenoms()
-  const networks = useNetwork()
-
-  if (!delegationsQueryResults.length) return { currencyTotal: 0 }
-
-  const delegationsPriceByDenom = {} as Record<string, number>
-  const delegationsAmountsByDenom = {} as Record<string, number>
-  const validatorByChain = {} as Record<
-    string,
-    Record<
-      ValAddress,
-      {
-        value: number
-        amount: number
-        denom: string
-      }
-    >
-  >
-  const allValidatorByChain = {} as Record<string, Validator[]>
-  let currencyTotal = 0
-
-  delegationsQueryResults.forEach((result) => {
-    if (result.status === "success") {
-      currencyTotal += result.data?.delegation?.length
-        ? BigNumber.sum(
-            ...result.data.delegation.map(({ balance, validator_address }) => {
-              const amount = BigNumber.sum(
-                delegationsAmountsByDenom[balance.denom] ?? 0,
-                balance.amount.toNumber()
-              ).toNumber()
-
-              const { token, decimals } = readNativeDenom(balance.denom)
-              const currecyPrice =
-                (amount * (prices?.[token]?.price || 0)) / 10 ** decimals
-
-              delegationsPriceByDenom[balance.denom] = currecyPrice
-              delegationsAmountsByDenom[balance.denom] = amount
-
-              if (!validatorByChain[result.data.chainID]) {
-                validatorByChain[result.data.chainID] = {}
-              }
-
-              const delegatorCurrecyPrice =
-                (balance.amount.toNumber() * (prices?.[token]?.price || 0)) /
-                10 ** decimals
-
-              validatorByChain[result.data.chainID][validator_address] = {
-                value: delegatorCurrecyPrice,
-                amount: balance.amount.toNumber(),
-                denom: balance.denom,
-              }
-
-              return currecyPrice
-            })
-          ).toNumber()
-        : 0
-    }
-  })
-
-  interchainValidators.forEach((response) => {
-    if (response.status === "success") {
-      const addressChainId =
-        getChainIDFromAddress(response.data[0]?.operator_address, networks) ||
-        ""
-      allValidatorByChain[addressChainId] = [...response.data]
-    }
-  })
-
-  const tableDataByChain = {} as Record<string, {}>
-
-  Object.keys(validatorByChain).forEach((chainName) => {
-    const delegationsDataComplete = Object.keys(
-      validatorByChain[chainName]
-    ).map((validator) => {
-      if (!allValidatorByChain[chainName]) {
-        return undefined
-      }
-      const { description } = getFindValidator(allValidatorByChain[chainName])(
-        validator
-      )
-      return {
-        address: validator,
-        moniker: description.moniker,
-        identity: description.identity,
-        value: validatorByChain[chainName][validator].value,
-        amount: validatorByChain[chainName][validator].amount,
-        denom: validatorByChain[chainName][validator].denom,
-      }
-    })
-
-    const sortedValis = delegationsDataComplete.sort(
-      (a, b) => (b?.value ?? 0) - (a?.value ?? 0)
+  const delegationsData = useInterchainDelegations()
+  const delegations: Delegation[] = delegationsData
+    .filter(({ data }) => !chain || chain === data?.chainID)
+    .reduce(
+      (acc, { data }) => (data ? [...data?.delegation, ...acc] : acc),
+      [] as Delegation[]
     )
-    if (sortedValis.length <= 4) {
-      tableDataByChain[chainName] = sortedValis
-    } else {
-      const top4 = sortedValis.slice(0, 4)
-      const other = {
-        address: "Other",
-        moniker: "Other",
-        identity: "Other",
-        value: sortedValis
-          .slice(4)
-          .reduce((acc, vali) => acc + (vali?.value ?? 0), 0),
-        amount: sortedValis
-          .slice(4)
-          .reduce((acc, vali) => acc + Number(vali?.amount ?? 0), 0),
-        denom: sortedValis[4]?.denom,
+  const allianceDelegationsData = useInterchainAllianceDelegations()
+  const allianceDelegations = allianceDelegationsData
+    .filter(({ data }) => !chain || chain === data?.chainID)
+    .reduce(
+      (acc, { data }) =>
+        data?.delegations ? [...data.delegations, ...acc] : acc,
+      [] as AllianceDelegation[]
+    )
+
+  const delAmounts: Record<string, number> = delegations.reduce(
+    (acc, { balance }) => {
+      const amount = balance.amount.toNumber()
+      const { token } = readNativeDenom(balance.denom)
+
+      return {
+        ...acc,
+        [token]: (acc[token] ?? 0) + amount,
       }
+    },
+    {} as Record<string, number>
+  )
 
-      tableDataByChain[chainName] = [...top4, other]
+  const totalAmounts = allianceDelegations.reduce((acc, { balance }) => {
+    const amount = balance.amount.toNumber()
+    const { token } = readNativeDenom(balance.denom)
+
+    return {
+      ...acc,
+      [token]: (acc[token] ?? 0) + amount,
     }
-  })
+  }, delAmounts)
 
-  const allData = Object.keys(delegationsPriceByDenom)
-    .map((denom) => {
-      const { symbol, icon } = readNativeDenom(denom)
+  return {
+    ...combineState(...delegationsData, ...allianceDelegationsData),
+
+    data: Object.entries(totalAmounts).map(([token, amount]) => {
+      const { decimals, symbol, icon } = readNativeDenom(token)
+
       return {
         name: symbol,
-        value: delegationsPriceByDenom[denom],
-        amount: delegationsAmountsByDenom[denom],
-        denom,
+        value: (amount * (prices?.[token]?.price ?? 0)) / 10 ** decimals,
+        amount,
+        denom: token,
         icon,
       }
-    })
-    .sort((a, b) => (b?.value ?? 0) - (a?.value ?? 0))
-
-  return { currencyTotal, graphData: { all: allData, ...tableDataByChain } }
+    }),
+  }
 }
 
 /* Quick stake helpers */
