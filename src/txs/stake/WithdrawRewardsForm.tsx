@@ -193,7 +193,7 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
                         key={address}
                       >
                         <div className={styles.item}>
-                          <ValidatorLink chainID={chain} address={address} />
+                          <ValidatorLink address={address} />
                         </div>
                       </Checkbox>
                     )

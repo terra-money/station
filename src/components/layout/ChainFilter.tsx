@@ -147,7 +147,7 @@ const ChainFilter = ({
 
   useEffect(() => {
     if (selectedChain !== undefined && network[selectedChain] === undefined) {
-      handleSetChain(all ? undefined : terraChainID)
+      handleSetChain(all ? undefined : chainID)
     }
   }, [network]) // eslint-disable-line
 
