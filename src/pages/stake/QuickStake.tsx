@@ -210,6 +210,10 @@ const QuickStake = () => {
                         </div>
                         {token.symbol}
 
+                        <span className={styles.alliance__logo}>
+                          {network.name}
+                        </span>
+
                         {isAlliance && (
                           <InlineFlex gap={4} start>
                             <Tooltip
@@ -234,13 +238,13 @@ const QuickStake = () => {
                 )
               },
             },
-            {
+            /*{
               title: t("Chain"),
               dataIndex: "chainID",
               defaultSortOrder: "desc",
               sorter: ({ chainID: a }, { chainID: b }) => a.localeCompare(b),
               render: (chainID) => networks[chainID]?.name || chainID,
-            },
+            },*/
             {
               title: t("Unbonding period"),
               dataIndex: "unbonding",
