@@ -13,8 +13,8 @@ export interface TokenInterface {
 
 interface Props {
   tokenLists: Record<string, TokenInterface>
-  onChange: (chain: string) => void
-  value: string
+  onChange: (chain?: string) => void
+  value?: string
 }
 
 const TokenSelector = ({ tokenLists, onChange, value }: Props) => {
@@ -40,10 +40,17 @@ const TokenSelector = ({ tokenLists, onChange, value }: Props) => {
       }
     >
       <button className={styles.selector}>
-        <span>
-          <img src={tokenLists[value]?.icon} alt={tokenLists[value]?.symbol} />{" "}
-          {tokenLists[value]?.symbol}
-        </span>{" "}
+        {value ? (
+          <span>
+            <img
+              src={tokenLists[value]?.icon}
+              alt={tokenLists[value]?.symbol}
+            />{" "}
+            {tokenLists[value]?.symbol}
+          </span>
+        ) : (
+          <span>Show all</span>
+        )}
         <ArrowDropDownIcon style={{ fontSize: 20 }} className={styles.caret} />
       </button>
     </Popover>

@@ -29,7 +29,7 @@ const Validators = () => {
   const { t } = useTranslation()
   const readNativeDenom = useNativeDenoms()
   const networks = useNetwork()
-  const [token, setToken] = useState("uluna")
+  const [token, setToken] = useState<string | undefined>("uluna")
 
   const alliancesData = useAllAlliances()
   const alliances = alliancesData.reduce(
@@ -138,6 +138,7 @@ const Validators = () => {
             <Table
               dataSource={options.filter(
                 ({ denom }) =>
+                  !token ||
                   readNativeDenom(denom).token === token ||
                   readNativeDenom(denom).lsd === token
               )}
