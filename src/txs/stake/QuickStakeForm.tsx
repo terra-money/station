@@ -7,7 +7,7 @@ import { getAmount } from "utils/coin"
 import { combineState, queryKey } from "data/query"
 import { useNetwork } from "data/wallet"
 import { Flex, FlexColumn, Grid, Page } from "components/layout"
-import { Form, FormItem, FormWarning, Input } from "components/form"
+import { Form, FormHelp, FormItem, FormWarning, Input } from "components/form"
 import { getPlaceholder, toInput } from "../utils"
 import validate from "../validate"
 import Tx from "../Tx"
@@ -144,6 +144,7 @@ const QuickStakeForm = (props: Props) => {
   )
 
   const asset = readNativeDenom(denom)
+  const feeTokenSymbol = readNativeDenom(network[chainID].baseAsset).symbol
 
   const token = action === QuickStakeAction.DELEGATE ? denom : ""
   const tx = {
@@ -219,6 +220,37 @@ const QuickStakeForm = (props: Props) => {
                   autoFocus
                 />
               </FormItem>
+
+              {isAlliance && (
+                <FormHelp>
+                  <section className={styles.alliance__info}>
+                    {feeTokenSymbol} is needed to stake on{" "}
+                    {network[chainID].name}:
+                    <ul>
+                      <li>
+                        {feeTokenSymbol} is the fee token used on the{" "}
+                        {network[chainID].name} blockchain
+                      </li>
+                      <li>
+                        To stake {asset.symbol} on {network[chainID].name},
+                        visit the Swap page and swap any token for{" "}
+                        {feeTokenSymbol}
+                      </li>
+                      <li>
+                        Send {feeTokenSymbol} from Terra to{" "}
+                        {network[chainID].name} by clicking 'Send' on your
+                        wallet sidebar and selecting your{" "}
+                        {network[chainID].name} address from your address book
+                      </li>
+                      <li>
+                        Return to the Stake page to stake your {asset.symbol}{" "}
+                        once you have {feeTokenSymbol} on{" "}
+                        {network[chainID].name}
+                      </li>
+                    </ul>
+                  </section>
+                </FormHelp>
+              )}
 
               {fee.render()}
 
