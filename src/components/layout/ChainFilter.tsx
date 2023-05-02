@@ -7,7 +7,7 @@ import { useSavedChain } from "utils/localStorage"
 import { isTerraChain } from "utils/chain"
 import { OtherChainsButton } from "components/layout"
 import { useSortedDisplayChains } from "utils/chain"
-import { useSelectedDisplayChain, useDisplayChains } from "utils/localStorage"
+import { useDisplayChains } from "utils/localStorage"
 
 type Props = {
   children: (chain?: string) => React.ReactNode
