@@ -6,7 +6,7 @@ import CloseIcon from "@mui/icons-material/Close"
 import { mobileIsMenuOpenState } from "components/layout"
 import { useNav } from "../routes"
 import styles from "./Nav.module.scss"
-import { useThemeFavicon } from "data/settings/Theme"
+import { useThemeFavicon, useTheme } from "data/settings/Theme"
 import { isWalletBarOpen } from "pages/wallet/Wallet"
 
 const cx = classNames.bind(styles)
@@ -17,6 +17,7 @@ const Nav = () => {
   const icon = useThemeFavicon()
   const [isOpen, setIsOpen] = useRecoilState(mobileIsMenuOpenState)
   const close = () => setIsOpen(false)
+  const { name } = useTheme()
 
   return (
     <nav>
@@ -44,6 +45,26 @@ const Nav = () => {
           {title}
         </NavLink>
       ))}
+
+      {name === "blossom" && (
+        <>
+          <div
+            className={`${styles.background_blur_blossom} ${
+              isOpen ? styles.open : ""
+            }`}
+          />
+          <div
+            className={`${styles.background_blur_blossom2} ${
+              isOpen ? styles.open : ""
+            }`}
+          />
+          <div
+            className={`${styles.background_blur_blossom3} ${
+              isOpen ? styles.open : ""
+            }`}
+          />
+        </>
+      )}
     </nav>
   )
 }

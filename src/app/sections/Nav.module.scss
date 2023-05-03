@@ -76,3 +76,97 @@
     }
   }
 }
+
+.background_blur_blossom,
+.background_blur_blossom2,
+.background_blur_blossom3 {
+  background-color: #ec22c0;
+  position: absolute;
+  filter: blur(95px);
+  z-index: 1;
+
+  @include mobile {
+    display: none;
+  }
+
+  &.open {
+    display: block;
+  }
+
+  @media (max-height: 501px) {
+    display: none !important;
+  }
+}
+
+.background_blur_blossom {
+  height: 200px;
+  width: 700px;
+  left: -275px;
+  bottom: 225px;
+  rotate: 65deg;
+  filter: blur(95px);
+  transition: all 0.5s ease-in-out;
+
+  &.open {
+    height: 400px;
+    filter: blur(150px);
+    left: -200px;
+    bottom: 0;
+    width: 1000px;
+    rotate: 45deg;
+  }
+
+  @media (max-height: 1000px) {
+    width: 400px;
+    right: -200px;
+    left: auto;
+    bottom: 0;
+
+    &.open {
+      width: 600px;
+      left: 200px;
+      bottom: -50px;
+      height: 200px;
+      rotate: 20deg;
+      filter: blur(90px);
+    }
+  }
+
+  @media (max-height: 700px) {
+    width: 150px;
+    height: 100px;
+    right: -15px;
+    left: auto;
+    bottom: -15px;
+    rotate: 0deg;
+    filter: blur(35px);
+  }
+}
+
+.background_blur_blossom2 {
+  height: 100px;
+  width: 100px;
+  bottom: -15px;
+  left: -15px;
+  filter: blur(35px);
+
+  @media (max-height: 700px) {
+    height: 150px !important;
+  }
+
+  &.open {
+    height: 250px;
+    width: 250px;
+    left: -50px;
+    bottom: -50px;
+    filter: blur(60px);
+  }
+}
+
+.background_blur_blossom3 {
+  height: 150px;
+  width: 200px;
+  right: -50px;
+  bottom: 10px;
+  rotate: 50deg;
+}

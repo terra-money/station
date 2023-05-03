@@ -10,6 +10,10 @@
 
   &.tutorial_white a {
     color: #ffffff;
+
+    @media (max-height: 501px) {
+      color: var(--menu-text);
+    }
   }
 }
 
