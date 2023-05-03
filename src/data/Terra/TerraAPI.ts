@@ -37,7 +37,7 @@ export const useFCDURL = () => {
   const chainID = useChainID()
   switch (chainID) {
     case "columbus-5":
-      return "https://fcd.terra.dev"
+      return "https://terra-classic-fcd.publicnode.com"
     case "pisco-1":
       return "https://pisco-fcd.terra.dev"
     default:
