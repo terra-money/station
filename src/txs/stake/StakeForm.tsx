@@ -1,7 +1,14 @@
 import { useCallback, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
-import { AccAddress, Coin, ValAddress } from "@terra-money/feather.js"
+import {
+  AccAddress,
+  Coin,
+  MsgAllianceDelegate,
+  MsgAllianceRedelegate,
+  MsgAllianceUndelegate,
+  ValAddress,
+} from "@terra-money/feather.js"
 import { Delegation, Validator } from "@terra-money/feather.js"
 import { MsgDelegate, MsgUndelegate } from "@terra-money/feather.js"
 import { MsgBeginRedelegate } from "@terra-money/feather.js"
@@ -17,6 +24,7 @@ import validate from "../validate"
 import Tx from "txs/Tx"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { useNativeDenoms } from "data/token"
+import { AllianceDelegationResponse } from "@terra-money/feather.js/dist/client/lcd/api/AllianceAPI"
 
 interface TxValues {
   source?: ValAddress
@@ -34,12 +42,29 @@ interface Props {
   destination: ValAddress
   balances: { denom: string; amount: string }[]
   validators: Validator[]
-  delegations: Delegation[]
   chainID: string
+  denom: string
+  details:
+    | {
+        isAlliance: false
+        delegations: Delegation[]
+      }
+    | {
+        isAlliance: true
+        delegations: AllianceDelegationResponse[]
+      }
 }
 
 const StakeForm = (props: Props) => {
-  const { tab, destination, balances, validators, delegations, chainID } = props
+  const {
+    tab,
+    destination,
+    balances,
+    validators,
+    chainID,
+    denom,
+    details: { isAlliance, delegations },
+  } = props
 
   const { t } = useTranslation()
   const readNativeDenom = useNativeDenoms()
@@ -47,21 +72,34 @@ const StakeForm = (props: Props) => {
   const address = addresses?.[chainID]
   const networks = useNetwork()
   const findMoniker = getFindMoniker(validators)
-  const { baseAsset } = networks[chainID]
 
-  const delegationsOptions = delegations.filter(
-    ({ validator_address }) =>
-      tab !== StakeAction.REDELEGATE || validator_address !== destination
-  )
+  const delegationsOptions = isAlliance
+    ? (delegations as AllianceDelegationResponse[]).filter(
+        ({ delegation: { validator_address } }) =>
+          tab !== StakeAction.REDELEGATE || validator_address !== destination
+      )
+    : (delegations as Delegation[]).filter(
+        ({ validator_address }) =>
+          tab !== StakeAction.REDELEGATE || validator_address !== destination
+      )
 
-  const defaultSource = delegationsOptions[0]?.validator_address
+  const defaultSource = isAlliance
+    ? (delegationsOptions as AllianceDelegationResponse[])[0]?.delegation
+        .validator_address
+    : (delegationsOptions as Delegation[])[0]?.validator_address
+
   const findDelegation = (address: AccAddress) =>
-    delegationsOptions.find(
-      ({ validator_address }) => validator_address === address
-    )
+    isAlliance
+      ? (delegationsOptions as AllianceDelegationResponse[]).find(
+          ({ delegation: { validator_address } }) =>
+            validator_address === address
+        )
+      : (delegationsOptions as Delegation[]).find(
+          ({ validator_address }) => validator_address === address
+        )
 
   /* tx context */
-  const initialGasDenom = baseAsset
+  const initialGasDenom = networks[chainID].baseAsset
 
   /* form */
   const form = useForm<TxValues>({
@@ -80,27 +118,37 @@ const StakeForm = (props: Props) => {
       if (!address) return
 
       const amount = toAmount(input)
-      const coin = new Coin(baseAsset, amount)
+      const coin = new Coin(denom, amount)
 
       if (tab === StakeAction.REDELEGATE) {
         if (!source) return
-        const msg = new MsgBeginRedelegate(address, source, destination, coin)
+        const msg = isAlliance
+          ? new MsgAllianceRedelegate(address, source, destination, coin)
+          : new MsgBeginRedelegate(address, source, destination, coin)
         return { msgs: [msg], chainID }
       }
 
       const msgs = {
-        [StakeAction.DELEGATE]: [new MsgDelegate(address, destination, coin)],
-        [StakeAction.UNBOND]: [new MsgUndelegate(address, destination, coin)],
+        [StakeAction.DELEGATE]: [
+          isAlliance
+            ? new MsgAllianceDelegate(address, destination, coin)
+            : new MsgDelegate(address, destination, coin),
+        ],
+        [StakeAction.UNBOND]: [
+          isAlliance
+            ? new MsgAllianceUndelegate(address, destination, coin)
+            : new MsgUndelegate(address, destination, coin),
+        ],
       }[tab]
 
       return { msgs, chainID }
     },
-    [address, destination, tab, baseAsset, chainID]
+    [address, destination, tab, denom, chainID, isAlliance]
   )
 
   /* fee */
   const balance = {
-    [StakeAction.DELEGATE]: getAmount(balances, baseAsset),
+    [StakeAction.DELEGATE]: getAmount(balances, denom),
     [StakeAction.REDELEGATE]:
       (source && findDelegation(source)?.balance.amount.toString()) ?? "0",
     [StakeAction.UNBOND]:
@@ -123,7 +171,7 @@ const StakeForm = (props: Props) => {
     [setValue, trigger]
   )
 
-  const token = tab === StakeAction.DELEGATE ? baseAsset : ""
+  const token = tab === StakeAction.DELEGATE ? denom : ""
   const tx = {
     decimals: readNativeDenom(token)?.decimals,
     token,
@@ -186,15 +234,33 @@ const StakeForm = (props: Props) => {
                       : false,
                 })}
               >
-                {delegationsOptions
-                  ?.filter(
-                    ({ validator_address }) => validator_address !== destination
-                  )
-                  .map(({ validator_address }) => (
-                    <option value={validator_address} key={validator_address}>
-                      {findMoniker(validator_address)}
-                    </option>
-                  ))}
+                {isAlliance
+                  ? (delegationsOptions as AllianceDelegationResponse[])
+                      ?.filter(
+                        ({ delegation: { validator_address } }) =>
+                          validator_address !== destination
+                      )
+                      .map(({ delegation: { validator_address } }) => (
+                        <option
+                          value={validator_address}
+                          key={validator_address}
+                        >
+                          {findMoniker(validator_address)}
+                        </option>
+                      ))
+                  : (delegationsOptions as Delegation[])
+                      ?.filter(
+                        ({ validator_address }) =>
+                          validator_address !== destination
+                      )
+                      .map(({ validator_address }) => (
+                        <option
+                          value={validator_address}
+                          key={validator_address}
+                        >
+                          {findMoniker(validator_address)}
+                        </option>
+                      ))}
               </Select>
             </FormItem>
           )}
@@ -209,7 +275,7 @@ const StakeForm = (props: Props) => {
                 valueAsNumber: true,
                 validate: validate.input(toInput(max.amount)),
               })}
-              token={baseAsset}
+              token={denom}
               onFocus={max.reset}
               inputMode="decimal"
               placeholder={getPlaceholder()}
