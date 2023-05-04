@@ -322,6 +322,12 @@ const SendPage = () => {
         : 1,
   }
 
+  useEffect(() => {
+    if (chain && recipient) {
+      trigger("recipient")
+    }
+  }, [chain, trigger, recipient])
+
   return (
     // @ts-expect-error
     <Tx {...tx}>
@@ -350,13 +356,31 @@ const SendPage = () => {
                 </Select>
               </FormItem>
               {availableChains && (
-                <FormItem label={t("Source chain")}>
+                // <FormItem label={t("Source chain")}>
+                //   <ChainSelector
+                //     value={chain ?? ""}
+                //     chainsList={availableChains}
+                //     onChange={(chain) => setValue("chain", chain)}
+                //   />
+                // </FormItem>
+                <div style={{ display: "grid", gap: "4px" }}>
+                  <header
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <label>{t("Source chain")}</label>
+                  </header>
                   <ChainSelector
                     value={chain ?? ""}
                     chainsList={availableChains}
-                    onChange={(chain) => setValue("chain", chain)}
+                    onChange={async (chain) => {
+                      setValue("chain", chain)
+                    }}
                   />
-                </FormItem>
+                </div>
               )}
               <FormItem
                 label={t("Recipient")}
