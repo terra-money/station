@@ -14,6 +14,8 @@ import { useCustomTokensCW20 } from "data/settings/CustomTokens"
 import { useTFMTokens } from "data/external/tfm"
 import { Card } from "components/layout"
 import { SwapAssets, validateAssets } from "./useSwapUtils"
+import { useWhitelist } from "data/queries/chains"
+import { useChainID, useNetworkName } from "data/wallet"
 
 export interface SlippageParams extends SwapAssets {
   input: number
@@ -50,6 +52,9 @@ const TFMSwapContext = ({ children }: PropsWithChildren<{}>) => {
   const { data: ibcWhitelist, ...ibcWhitelistState } = useIBCWhitelist()
   const { data: cw20Whitelist, ...cw20WhitelistState } = useCW20Whitelist()
   const { data: TFMTokens, ...TFMTokensState } = useTFMTokens()
+  const { ibcDenoms } = useWhitelist()
+  const networkName = useNetworkName()
+  const terraChainID = useChainID()
 
   // Why?
   // To search tokens with symbol (ibc, cw20)
@@ -111,7 +116,20 @@ const TFMSwapContext = ({ children }: PropsWithChildren<{}>) => {
       return { ...cw20Whitelist[token], balance }
     })
 
-    const options = { coins, tokens: [...ibc, ...cw20] }
+    const options = {
+      coins,
+      tokens: [
+        ...ibc,
+        ...cw20,
+        ...Object.entries(ibcDenoms[networkName])
+          .filter(([_, { chainID }]) => chainID === terraChainID)
+          .map(([ibc, { token }]) => ({
+            ...readNativeDenom(token),
+            token: ibc,
+            balance: getAmount(bankBalance, token),
+          })),
+      ],
+    }
 
     const findTokenItem = (token: Token) => {
       const key =
@@ -131,6 +149,8 @@ const TFMSwapContext = ({ children }: PropsWithChildren<{}>) => {
     cw20Whitelist,
     availableList,
     cw20TokensBalances,
+    ibcDenoms,
+    networkName,
     readNativeDenom,
   ])
 
