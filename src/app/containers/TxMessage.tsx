@@ -21,7 +21,7 @@ const ValidatorAddress = ({ children: address }: { children: string }) => {
   )?.description.moniker
 
   return (
-    <FinderLink value={address} short={!moniker} validator>
+    <FinderLink value={address} short={!moniker} chainID={chainID} validator>
       {moniker ?? address}
     </FinderLink>
   )
@@ -31,6 +31,8 @@ const TerraAddress = ({ children: address }: { children: string }) => {
   const { data: contracts } = useCW20Contracts()
   const { data: tokens } = useCW20Whitelist()
   const addresses = useInterchainAddresses()
+  const networks = useNetwork()
+  const chainID = getChainIDFromAddress(address, networks)
 
   const name = useMemo(() => {
     if (addresses && Object.values(addresses).includes(address))
@@ -42,7 +44,11 @@ const TerraAddress = ({ children: address }: { children: string }) => {
     return [protocol, name].join(" ")
   }, [address, addresses, contracts, tokens])
 
-  return <FinderLink value={address}>{name ?? truncate(address)}</FinderLink>
+  return (
+    <FinderLink value={address} chainID={chainID}>
+      {name ?? truncate(address)}
+    </FinderLink>
+  )
 }
 
 const Tokens = ({ children: coins }: { children: string }) => {

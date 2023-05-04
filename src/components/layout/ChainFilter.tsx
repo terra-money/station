@@ -7,7 +7,7 @@ import { useSavedChain } from "utils/localStorage"
 import { isTerraChain } from "utils/chain"
 import { OtherChainsButton } from "components/layout"
 import { useSortedDisplayChains } from "utils/chain"
-import { useSelectedDisplayChain, useDisplayChains } from "utils/localStorage"
+import { useDisplayChains } from "utils/localStorage"
 
 type Props = {
   children: (chain?: string) => React.ReactNode
@@ -33,10 +33,8 @@ const ChainFilter = ({
   const [width, setWidth] = useState(0)
   const ref = useRef<HTMLDivElement>(null)
   const network = useNetwork()
+  const chainID = useChainID()
   const { displayChains } = useDisplayChains()
-  const { selectedDisplayChain, changeSelectedDisplayChain } =
-    useSelectedDisplayChain()
-  const terraChainID = useChainID()
   const sortedDisplayChains = useSortedDisplayChains()
 
   useEffect(() => {
@@ -56,6 +54,22 @@ const ChainFilter = ({
         .filter((n) => displayChains.includes(n?.chainID)),
     [network, sortedDisplayChains, displayChains]
   )
+
+  const initNetwork =
+    networks.find((n) => n.chainID === savedChain) ?? networks[0]
+
+  const [selectedChain, setChain] = useState<string | undefined>(
+    all ? undefined : initNetwork?.chainID
+  )
+
+  let fixedChain: string | undefined
+  if (terraOnly) {
+    fixedChain = chainID
+  } else if (selectedChain && network[selectedChain]) {
+    fixedChain = selectedChain
+  } else {
+    fixedChain = all ? undefined : chainID
+  }
 
   const getUIWidth = (networkName: string) => {
     const container = document.createElement("button")
@@ -109,53 +123,31 @@ const ChainFilter = ({
 
     if (terraOnly) {
       toShow = Object.values(network).filter((n) => isTerraChain(n.prefix))
-    } else if (selectedDisplayChain && selectedDisplayChain !== "undefined") {
+    } else if (fixedChain) {
       toShow = [...networks.slice(0, count)]
 
-      if (!chainNameList.includes(selectedDisplayChain)) {
-        toShow = [
-          ...networks.slice(0, count - 1),
-          network[selectedDisplayChain],
-        ]
+      if (!chainNameList.includes(fixedChain)) {
+        toShow = [...networks.slice(0, count - 1), network[fixedChain]]
       }
     } else {
       toShow = networks.slice(0, count)
     }
     return Array.from(new Set(toShow))
-  }, [networks, network, terraOnly, displayChainMax, selectedDisplayChain])
+  }, [networks, network, terraOnly, displayChainMax, fixedChain])
 
   const otherNetworks = useMemo(
     () => Object.values(network).filter((n) => !networksToShow.includes(n)),
     [network, networksToShow]
   )
 
-  const initNetwork =
-    networks.find((n) => n.chainID === savedChain) ?? networks[0]
-
-  const [selectedChain, setChain] = useState<string | undefined>(
-    all ? undefined : initNetwork?.chainID
-  )
-
-  useEffect(() => {
-    if (terraOnly) {
-      const terra = Object.values(network).find((n) =>
-        isTerraChain(n.prefix)
-      )?.chainID
-      setChain(terra)
-    } else {
-      setChain(savedChain)
-    }
-  }, [terraOnly]) // eslint-disable-line
-
   const handleSetChain = (chain: string | undefined) => {
     setChain(chain)
     changeSavedChain(chain)
-    changeSelectedDisplayChain(chain)
   }
 
   useEffect(() => {
     if (selectedChain !== undefined && network[selectedChain] === undefined) {
-      handleSetChain(all ? undefined : terraChainID)
+      handleSetChain(all ? undefined : chainID)
     }
   }, [network]) // eslint-disable-line
 
@@ -172,7 +164,7 @@ const ChainFilter = ({
               className={cx(
                 styles.all,
                 styles.button,
-                selectedChain ?? styles.active
+                fixedChain ?? styles.active
               )}
             >
               {t("All")}
@@ -184,7 +176,7 @@ const ChainFilter = ({
               onClick={() => handleSetChain(c?.chainID)}
               className={cx(
                 styles.button,
-                selectedChain === c?.chainID ? styles.active : undefined
+                fixedChain === c?.chainID ? styles.active : undefined
               )}
             >
               <img src={c?.icon} alt={c?.name} />
@@ -199,7 +191,7 @@ const ChainFilter = ({
           )}
         </div>
       </div>
-      <div className={styles.content}>{children(selectedChain)}</div>
+      <div className={styles.content}>{children(fixedChain)}</div>
     </div>
   )
 }

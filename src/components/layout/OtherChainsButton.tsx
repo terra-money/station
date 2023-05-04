@@ -38,7 +38,9 @@ const OtherChainsButton = ({ list, handleSetChain }: Props) => {
       placement="bottom"
       content={<SimpleChainList onClick={onClick} list={list} />}
     >
-      <button className={styles.button}>+ {list.length}</button>
+      {list.length ? (
+        <button className={styles.button}>+ {list.length}</button>
+      ) : undefined}
     </Popover>
   )
 }

@@ -13,6 +13,7 @@ type Whitelist = Record<
     chains: string[]
     decimals: number
     isAxelar?: boolean
+    lsd?: string
   }
 >
 
