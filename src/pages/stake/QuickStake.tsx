@@ -1,5 +1,5 @@
 import { readPercent } from "@terra-money/terra-utils"
-import { Button, ExternalLink } from "components/general"
+import { Button } from "components/general"
 import { Flex, Grid, InlineFlex, Page, Table, Tabs } from "components/layout"
 import { useBalances } from "data/queries/bank"
 import { useNativeDenoms } from "data/token"

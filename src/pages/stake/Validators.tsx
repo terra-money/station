@@ -24,7 +24,6 @@ import { combineState } from "data/query"
 import { useNativeDenoms } from "data/token"
 import { readPercent } from "@terra-money/terra-utils"
 import { Tooltip, TooltipIcon } from "components/display"
-import { ExternalLink } from "components/general"
 
 const Validators = () => {
   const { t } = useTranslation()
