@@ -11,13 +11,6 @@
     background: var(--card-bg);
   }
 
-  th {
-    padding: 12px;
-    padding-top: 0;
-    position: sticky;
-    top: 0;
-  }
-
   td {
     padding-left: 12px;
     padding-right: 12px;
@@ -29,28 +22,48 @@
     }
     border-top: 1px solid var(--card-border);
   }
+
+  thead {
+    th {
+      padding: 12px;
+      position: sticky;
+      top: 0;
+      background: hsl(
+        var(--button-default-bg-h),
+        var(--button-default-bg-s),
+        var(--button-default-bg-l)
+      );
+    }
+
+    th:first-child {
+      border-top-left-radius: var(--border-radius);
+    }
+    th:last-child {
+      border-top-right-radius: var(--border-radius);
+    }
+  }
 }
 
 .default {
   border-collapse: separate;
-  border-spacing: 0 10px;
+  border-spacing: 0;
 
   tr {
-    padding: 30px 35px;
+    padding: 10px 20px;
   }
 
-  td:first-child {
-    border-bottom-left-radius: var(--border-radius);
-    border-top-left-radius: var(--border-radius);
-  }
-  td:last-child {
-    border-bottom-right-radius: var(--border-radius);
-    border-top-right-radius: var(--border-radius);
+  tr:last-child {
+    td:first-child {
+      border-bottom-left-radius: var(--border-radius);
+    }
+    td:last-child {
+      border-bottom-right-radius: var(--border-radius);
+    }
   }
 
   td {
-    padding: 20px 25px;
-    border-top: 0;
+    padding: 10px 20px;
+    border-top: 1px solid var(--card-border);
   }
 }
 
@@ -103,4 +116,35 @@
 .pagination {
   display: flex;
   justify-content: flex-end;
+}
+
+.extra__tooltip {
+  width: 20px;
+  padding: 0;
+
+  button {
+    margin-right: -20px;
+    transition: 0.3s;
+  }
+
+  .active {
+    transform: rotateZ(90deg);
+  }
+}
+
+.extra__content {
+  transition: 0.3s;
+  td {
+    transition: 0.3s;
+  }
+  height: auto;
+}
+
+.extra__content__disabled {
+  height: 0;
+  overflow: hidden;
+  td {
+    padding: 0 20px;
+    border-top: 0px solid var(--card-border);
+  }
 }

@@ -19,7 +19,7 @@ Station allows users to:
 
 This project was bootstrapped with [Create React App](https://create-react-app.dev/).
 
-Run Terra Station with the following commands:
+Run Station with the following commands:
 
 ```
 git clone https://github.com/terra-money/station.git
