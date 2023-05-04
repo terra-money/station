@@ -296,7 +296,7 @@ const StakeForm = (props: Props) => {
             />
           </FormItem>
 
-          {isAlliance && (
+          {isAlliance && tab === StakeAction.DELEGATE && (
             <FormHelp>
               <section className={styles.alliance__info}>
                 {feeTokenSymbol} is needed to stake on {networks[chainID].name}:
