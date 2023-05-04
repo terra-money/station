@@ -85,6 +85,8 @@ const StakingDetailsCompact = ({
             <span className={styles.alliance__logo}>
               {network[chainID].name}
             </span>
+
+            {isAlliance && <span className={styles.alliance__logo}>🤝</span>}
           </Flex>
           <div className={styles.staking__details__container}>
             <dl>
