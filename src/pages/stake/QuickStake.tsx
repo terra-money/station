@@ -1,5 +1,5 @@
 import { readPercent } from "@terra-money/terra-utils"
-import { Button } from "components/general"
+import { Button, ExternalLink } from "components/general"
 import { Flex, Grid, InlineFlex, Page, Table, Tabs } from "components/layout"
 import { useBalances } from "data/queries/bank"
 import { useNativeDenoms } from "data/token"
@@ -19,7 +19,7 @@ import {
   useInterchainDelegations,
 } from "data/queries/staking"
 import { combineState } from "data/query"
-import { Tooltip } from "components/display"
+import { Tooltip, TooltipIcon } from "components/display"
 import { Delegation } from "@terra-money/feather.js"
 import TokenSelector, { TokenInterface } from "components/form/TokenSelector"
 import { useState } from "react"
@@ -246,14 +246,47 @@ const QuickStake = () => {
               render: (chainID) => networks[chainID]?.name || chainID,
             },*/
             {
-              title: t("Unbonding period"),
+              title: (
+                <span>
+                  {t("Unbonding period")}{" "}
+                  <TooltipIcon
+                    content={
+                      <article>
+                        <p>
+                          When a delegator decides to undelegate their asset.
+                        </p>
+                        <p>No rewards accrue during this period.</p>
+                        <p>This action cannot be stopped once executed.</p>
+                      </article>
+                    }
+                  />
+                </span>
+              ),
               dataIndex: "unbonding",
               defaultSortOrder: "desc",
               sorter: ({ unbonding: a = 0 }, { unbonding: b = 0 }) => a - b,
               render: (value = 0) => t("{{value}} days", { value }),
             },
             {
-              title: t("Rewards weight"),
+              title: (
+                <span>
+                  {t("Rewards weight")}{" "}
+                  <TooltipIcon
+                    content={
+                      <article>
+                        <p>
+                          The amount of rewards an Alliance asset accrues is
+                          determined by the asset's Reward Weight.
+                        </p>
+                        <p>
+                          This parameter is set by governance and represents the
+                          maximum proportion of rewards an asset will earn.
+                        </p>
+                      </article>
+                    }
+                  />
+                </span>
+              ),
               dataIndex: "rewards",
               defaultSortOrder: "desc",
               sorter: ({ rewards: a = 0 }, { rewards: b = 0 }) => a - b,

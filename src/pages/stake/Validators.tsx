@@ -23,7 +23,8 @@ import {
 import { combineState } from "data/query"
 import { useNativeDenoms } from "data/token"
 import { readPercent } from "@terra-money/terra-utils"
-import { Tooltip } from "components/display"
+import { Tooltip, TooltipIcon } from "components/display"
+import { ExternalLink } from "components/general"
 
 const Validators = () => {
   const { t } = useTranslation()
@@ -216,14 +217,49 @@ const Validators = () => {
                   render: (chainID) => networks[chainID]?.name || chainID,
                 },
                 {
-                  title: t("Unbonding period"),
+                  title: (
+                    <span>
+                      {t("Unbonding period")}{" "}
+                      <TooltipIcon
+                        content={
+                          <article>
+                            <p>
+                              When a delegator decides to undelegate their
+                              asset.
+                            </p>
+                            <p>No rewards accrue during this period.</p>
+                            <p>This action cannot be stopped once executed.</p>
+                          </article>
+                        }
+                      />
+                    </span>
+                  ),
                   dataIndex: "unbonding",
                   defaultSortOrder: "desc",
                   sorter: ({ unbonding: a = 0 }, { unbonding: b = 0 }) => a - b,
                   render: (value = 0) => t("{{value}} days", { value }),
                 },
                 {
-                  title: t("Rewards weight"),
+                  title: (
+                    <span>
+                      {t("Rewards weight")}{" "}
+                      <TooltipIcon
+                        content={
+                          <article>
+                            <p>
+                              The amount of rewards an Alliance asset accrues is
+                              determined by the asset's Reward Weight.
+                            </p>
+                            <p>
+                              This parameter is set by governance and represents
+                              the maximum proportion of rewards an asset will
+                              earn.
+                            </p>
+                          </article>
+                        }
+                      />
+                    </span>
+                  ),
                   dataIndex: "rewards",
                   defaultSortOrder: "desc",
                   sorter: ({ rewards: a = 0 }, { rewards: b = 0 }) => a - b,

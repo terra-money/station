@@ -144,6 +144,7 @@ const TFMSwapContext = ({ children }: PropsWithChildren<{}>) => {
 
     return { options, findTokenItem, findDecimals }
   }, [
+    terraChainID,
     bankBalance,
     ibcWhitelist,
     cw20Whitelist,

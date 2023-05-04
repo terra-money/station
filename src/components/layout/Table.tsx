@@ -15,7 +15,7 @@ type SortOrder = "desc" | "asc"
 type Sorter<T> = (a: T, b: T) => number
 
 interface Column<T> {
-  title?: string
+  title?: string | ReactNode
   tooltip?: string
   dataIndex?: string | string[]
   defaultSortOrder?: SortOrder
