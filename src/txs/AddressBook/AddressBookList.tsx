@@ -31,7 +31,7 @@ const AddressBookList = ({ onClick }: Props) => {
     return (
       <Grid gap={12}>
         <section className={styles.address__table}>
-          <Grid gap={12}>
+          <Grid gap={8}>
             {Object.entries(addresses ?? {}).map(([chain, address]) => {
               return (
                 <button
