@@ -356,31 +356,13 @@ const SendPage = () => {
                 </Select>
               </FormItem>
               {availableChains && (
-                // <FormItem label={t("Source chain")}>
-                //   <ChainSelector
-                //     value={chain ?? ""}
-                //     chainsList={availableChains}
-                //     onChange={(chain) => setValue("chain", chain)}
-                //   />
-                // </FormItem>
-                <div style={{ display: "grid", gap: "4px" }}>
-                  <header
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <label>{t("Source chain")}</label>
-                  </header>
+                <FormItem label={t("Source chain")}>
                   <ChainSelector
                     value={chain ?? ""}
                     chainsList={availableChains}
-                    onChange={async (chain) => {
-                      setValue("chain", chain)
-                    }}
+                    onChange={(chain) => setValue("chain", chain)}
                   />
-                </div>
+                </FormItem>
               )}
               <FormItem
                 label={t("Recipient")}

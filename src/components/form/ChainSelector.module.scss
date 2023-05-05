@@ -41,6 +41,10 @@
     max-height: 125px;
     margin-top: 0;
 
+    .active {
+      background-color: var(--bg-muted);
+    }
+
     &::-webkit-scrollbar {
       width: 12px;
       display: block;
