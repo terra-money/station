@@ -314,20 +314,18 @@ function Tx<TxValues>(props: Props<TxValues>) {
   /* element */
   const resetMax = () => setIsMax(false)
   const renderMax: RenderMax = (onClick) => {
-    if (!(max && has(max))) return null
-
     return (
       <button
         type="button"
         className={classNames({ muted: !isMax })}
-        onClick={onClick ? () => onClick(max) : () => setIsMax(!isMax)}
+        onClick={onClick ? () => onClick(max ?? "0") : () => setIsMax(!isMax)}
       >
         <Flex gap={4} start>
           <AccountBalanceWalletIcon
             fontSize="inherit"
             className={styles.icon}
           />
-          <Read amount={max} token={token} decimals={decimals} />
+          <Read amount={max ?? "0"} token={token} decimals={decimals} />
         </Flex>
       </button>
     )

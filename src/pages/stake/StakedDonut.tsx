@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next"
-import { combineState } from "data/query"
 import { Card, Flex, Grid } from "components/layout"
 import styles from "./StakedDonut.module.scss"
 import {
@@ -10,36 +9,24 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts"
-import {
-  useInterchainDelegations,
-  useInterchainValidators,
-  useCalcDelegationsByValidator,
-} from "data/queries/staking"
+import { useStakeChartData } from "data/queries/staking"
 import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined"
 import { useThemeState } from "data/settings/Theme"
-import ProfileIcon from "./components/ProfileIcon"
 import { Read } from "components/token"
 import { useCurrency } from "data/settings/Currency"
 
-const StakedDonut = ({ chain }: { chain: string }) => {
+const StakedDonut = ({ chain }: { chain?: string }) => {
   const { t } = useTranslation()
   const [current] = useThemeState()
   const currency = useCurrency()
 
-  const interchainDelegations = useInterchainDelegations()
-  const interchainValidators = useInterchainValidators()
-  const state = combineState(...interchainDelegations, ...interchainValidators)
-
-  const { graphData } = useCalcDelegationsByValidator(
-    interchainDelegations,
-    interchainValidators
-  )
+  const { data: chartData, ...state } = useStakeChartData(chain)
 
   const defaultColors = ["#7893F5", "#7c1ae5", "#FF7940", "#FF9F40", "#acacac"]
   const COLORS = current?.donutColors || defaultColors
 
-  const RenderLegend = (props: { chainSelected: boolean; payload?: any }) => {
-    const { payload, chainSelected } = props
+  const RenderLegend = (props: { payload?: any }) => {
+    const { payload } = props
 
     return (
       <ul className={styles.legend}>
@@ -51,34 +38,23 @@ const StakedDonut = ({ chain }: { chain: string }) => {
                 className={styles.circle}
                 style={{ backgroundColor: entry.color }}
               ></div>
-              {chainSelected ? (
-                <>
-                  {entry.payload.identity !== "Other" && (
-                    <ProfileIcon src={entry.payload.identity} size={22} />
-                  )}
-                  <p className={styles.denom}>{entry.payload.moniker}</p>
-                  <p className={styles.percent}>
-                    {percentage < 1 ? `< 1` : percentage}%
-                  </p>
-                </>
-              ) : (
-                <>
-                  <img
-                    className={styles.icon}
-                    src={entry.payload.icon}
-                    alt={entry.value}
-                  />
-                  <p className={styles.denom}>{entry.value}</p>
-                  <p className={styles.percent}>
-                    {payload.length === 1
-                      ? `100`
-                      : percentage < 1
-                      ? `< 1`
-                      : percentage}
-                    %
-                  </p>
-                </>
-              )}
+
+              <>
+                <img
+                  className={styles.icon}
+                  src={entry.payload.icon}
+                  alt={entry.value}
+                />
+                <p className={styles.denom}>{entry.value}</p>
+                <p className={styles.percent}>
+                  {payload.length === 1
+                    ? `100`
+                    : percentage < 1
+                    ? `< 1`
+                    : percentage}
+                  %
+                </p>
+              </>
             </li>
           )
         })}
@@ -86,7 +62,7 @@ const StakedDonut = ({ chain }: { chain: string }) => {
     )
   }
 
-  const RenderTooltip = (props: { chainSelected: boolean; payload?: any }) => {
+  const RenderTooltip = (props: { payload?: any }) => {
     const { payload } = props
 
     return (
@@ -114,13 +90,9 @@ const StakedDonut = ({ chain }: { chain: string }) => {
   }
 
   const render = () => {
-    if (!interchainDelegations) return null
-
-    const graphDataKeys = Object.keys(graphData || {})
-
     return (
       <>
-        {graphData && graphData[chain || "all"]?.length ? (
+        {chartData?.length ? (
           <section className={styles.graphContainer}>
             <ResponsiveContainer>
               <PieChart>
@@ -128,25 +100,23 @@ const StakedDonut = ({ chain }: { chain: string }) => {
                   layout="vertical"
                   verticalAlign="middle"
                   align="right"
-                  content={<RenderLegend chainSelected={chain !== "all"} />}
+                  content={<RenderLegend />}
                   className="legend"
                 />
-                <Tooltip
-                  content={<RenderTooltip chainSelected={chain !== "all"} />}
-                />
+                <Tooltip content={<RenderTooltip />} />
                 <Pie
-                  data={graphData[chain || "all"]}
+                  data={chartData}
                   innerRadius={60}
                   outerRadius={100}
                   fill="#8884d8"
                   paddingAngle={0}
                   dataKey={
-                    chain !== "all" || graphDataKeys.length === 2
+                    chartData.reduce((acc, { value }) => acc + value, 0) === 0
                       ? "amount"
                       : "value"
                   }
                 >
-                  {graphData[chain || "all"].map((_, index) => (
+                  {chartData.map((_, index) => (
                     <Cell
                       key={`cell-${index}`}
                       fill={COLORS[index % COLORS.length]}
