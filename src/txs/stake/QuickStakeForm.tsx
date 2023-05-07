@@ -221,7 +221,7 @@ const QuickStakeForm = (props: Props) => {
                 />
               </FormItem>
 
-              {isAlliance && (
+              {isAlliance && action === QuickStakeAction.DELEGATE && (
                 <FormHelp>
                   <section className={styles.alliance__info}>
                     {feeTokenSymbol} is needed to stake on{" "}

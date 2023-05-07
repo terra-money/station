@@ -18,13 +18,21 @@ import { queryKey } from "data/query"
 import { useNetwork } from "data/wallet"
 import { getFindMoniker } from "data/queries/staking"
 import { Grid } from "components/layout"
-import { Form, FormItem, FormWarning, Input, Select } from "components/form"
+import {
+  Form,
+  FormHelp,
+  FormItem,
+  FormWarning,
+  Input,
+  Select,
+} from "components/form"
 import { getPlaceholder, toInput } from "../utils"
 import validate from "../validate"
 import Tx from "txs/Tx"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { useNativeDenoms } from "data/token"
 import { AllianceDelegationResponse } from "@terra-money/feather.js/dist/client/lcd/api/AllianceAPI"
+import styles from "./StakeTx.module.scss"
 
 interface TxValues {
   source?: ValAddress
@@ -189,6 +197,11 @@ const StakeForm = (props: Props) => {
     chain: chainID,
   }
 
+  const { symbol: feeTokenSymbol } = readNativeDenom(
+    networks[chainID].baseAsset
+  )
+  const { symbol } = readNativeDenom(denom)
+
   return (
     <Tx {...tx}>
       {({ max, fee, submit }) => (
@@ -282,6 +295,33 @@ const StakeForm = (props: Props) => {
               autoFocus
             />
           </FormItem>
+
+          {isAlliance && tab === StakeAction.DELEGATE && (
+            <FormHelp>
+              <section className={styles.alliance__info}>
+                {feeTokenSymbol} is needed to stake on {networks[chainID].name}:
+                <ul>
+                  <li>
+                    {feeTokenSymbol} is the fee token used on the{" "}
+                    {networks[chainID].name} blockchain
+                  </li>
+                  <li>
+                    To stake {symbol} on {networks[chainID].name}, visit the
+                    Swap page and swap any token for {feeTokenSymbol}
+                  </li>
+                  <li>
+                    Send {feeTokenSymbol} from Terra to {networks[chainID].name}{" "}
+                    by clicking 'Send' on your wallet sidebar and selecting your{" "}
+                    {networks[chainID].name} address from your address book
+                  </li>
+                  <li>
+                    Return to the Stake page to stake your {symbol} once you
+                    have {feeTokenSymbol} on {networks[chainID].name}
+                  </li>
+                </ul>
+              </section>
+            </FormHelp>
+          )}
 
           {fee.render()}
           {submit.button}
