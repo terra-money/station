@@ -1,19 +1,5 @@
 @import "mixins";
 
-.quick__action {
-  @include flex(flex-start);
-  padding-bottom: var(--grid-gap);
-  padding-inline: var(--main-padding-horizontal);
-  gap: 0.6rem;
-}
-
-.table__container {
-  background-color: var(--card-bg-muted);
-  padding: 20px var(--main-padding-horizontal);
-  border-top: var(--border-width) solid var(--card-border);
-  border-radius: 0 0 var(--border-radius) var(--border-radius);
-}
-
 .token__icon__container {
   position: relative;
   margin-right: 12px;
@@ -54,4 +40,30 @@
   padding: 0.1rem 0.6rem;
   border-radius: 0.8rem;
   margin-left: 0.4rem;
+}
+
+.staking__details__container {
+  margin-top: 1rem;
+  border-top: 1px solid var(--card-border);
+  padding-top: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+
+  dt {
+    color: var(--text-muted);
+  }
+
+  .delegated__amount {
+    color: var(--text-muted);
+    font-size: 11pt;
+    @include flex(flex-start);
+    gap: 0.4rem;
+
+    img {
+      width: 22px;
+      max-width: 22px;
+      max-height: 22px;
+    }
+  }
 }
