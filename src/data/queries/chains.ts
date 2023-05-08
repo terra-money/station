@@ -49,11 +49,15 @@ export function getChainNamefromID(
   id: string | undefined,
   chains: Record<string, InterchainNetwork>
 ) {
-  return (
+  const chainName =
     Object.values(chains)
       .find(({ chainID }) => chainID === id)
       ?.name.toLowerCase() ?? ""
-  )
+
+  const titleCasedChainName = chainName.replace(/\w\S*/g, function (txt) {
+    return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase()
+  })
+  return titleCasedChainName
 }
 
 export const getTruncateChainList = (
@@ -73,7 +77,10 @@ export const getDisplayChainsSettingLabel = (
     (arr) => JSON.stringify(arr) === JSON.stringify(displayChains)
   )
     ? "Default"
-    : toShow.map((chainID) => getChainNamefromID(chainID, chains)).join(", ") +
+    : toShow
+        .map((chainID) => getChainNamefromID(chainID, chains))
+        .filter((chain) => chain)
+        .join(", ") +
         (rest.length > 0
           ? ` & ${rest.length} other${rest.length === 1 ? "" : "s"}`
           : "")
