@@ -58,7 +58,7 @@ export const themes: Theme[] = [
   },
   {
     name: "moon",
-    unlock: toAmount("10"),
+    unlock: toAmount("0"),
     animation: AnimationMoon,
     favicon: FaviconMoon,
     preview: <PreviewMoon />,
