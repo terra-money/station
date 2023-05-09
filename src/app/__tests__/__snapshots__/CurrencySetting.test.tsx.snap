@@ -166,7 +166,7 @@ exports[`CurrencySetting matches user augmented component 1`] = `
               class="flex track"
             >
               <span
-                class="indicator checked"
+                class="indicator"
               />
             </div>
           </button>

@@ -14,18 +14,6 @@ function renderComponent() {
   )
 }
 
-jest.mock("lottie-react", () => ({
-  Lottie: jest.fn(),
-}))
-
-jest.mock("../../data/settings/Theme", () => {
-  const mockUseThemeFavicon = () => "/static/media/favicon.1e08d51d.svg"
-
-  return {
-    useThemeFavicon: mockUseThemeFavicon,
-  }
-})
-
 describe("Nav", () => {
   it("matches original component", () => {
     const { asFragment } = renderComponent()

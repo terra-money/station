@@ -3,13 +3,16 @@ import ValidatorDetails from "pages/stake/ValidatorDetails"
 import { RecoilRoot } from "recoil"
 import { NetworksProvider } from "../InitNetworks"
 import { render } from "@testing-library/react"
-import { mockNetworks } from "./__mocks__/Networks.mock"
-import { mockValidatorDetails } from "./__mocks__/ValidatorDetails.mock"
+import { mockNetworks } from "../../__mocks__/Networks.mock"
+import { mockValidatorDetails } from "../../__mocks__/ValidatorDetails.mock"
 import { MemoryRouter } from "react-router-dom"
-import { mockDelegation, mockDelegations } from "./__mocks__/Delegations.mock"
-import { mockRewards } from "./__mocks__/Rewards.mock"
-import { mockExchangeRates } from "./__mocks__/ExchangeRates.mock"
-import { mockWhitelist } from "./__mocks__/Whitelist.mock"
+import {
+  mockDelegation,
+  mockDelegations,
+} from "../../__mocks__/Delegations.mock"
+import { mockRewards } from "../../__mocks__/Rewards.mock"
+import { mockExchangeRates } from "../../__mocks__/ExchangeRates.mock"
+import { mockWhitelist } from "../../__mocks__/Whitelist.mock"
 
 function renderComponent() {
   type TokenFilter = <T>(network: Record<string, T>) => Record<string, T>

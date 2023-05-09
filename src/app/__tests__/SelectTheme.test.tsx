@@ -3,7 +3,7 @@ import SelectTheme from "../sections/SelectTheme"
 import { RecoilRoot } from "recoil"
 import { NetworksProvider } from "../InitNetworks"
 import { render } from "@testing-library/react"
-import { mockNetworks } from "./__mocks__/Networks.mock"
+import { mockNetworks } from "../../__mocks__/Networks.mock"
 
 function renderComponent() {
   type TokenFilter = <T>(network: Record<string, T>) => Record<string, T>

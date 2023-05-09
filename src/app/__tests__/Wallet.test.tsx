@@ -4,9 +4,9 @@ import { RecoilRoot } from "recoil"
 import { MemoryRouter } from "react-router-dom"
 import Wallet from "pages/wallet/Wallet"
 import { NetworksProvider } from "../InitNetworks"
-import { mockExchangeRates } from "./__mocks__/ExchangeRates.mock"
-import { mockNetworks } from "./__mocks__/Networks.mock"
-import { mockBankBalance } from "./__mocks__/BankBalance.mock"
+import { mockExchangeRates } from "../../__mocks__/ExchangeRates.mock"
+import { mockNetworks } from "../../__mocks__/Networks.mock"
+import { mockBankBalance } from "../../__mocks__/BankBalance.mock"
 
 function renderComponent() {
   type TokenFilter = <T>(network: Record<string, T>) => Record<string, T>

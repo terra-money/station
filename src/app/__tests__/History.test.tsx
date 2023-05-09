@@ -5,11 +5,11 @@ import { MemoryRouter } from "react-router-dom"
 import { RecoilRoot } from "recoil"
 import { NetworksProvider } from "../InitNetworks"
 import { useQuery } from "react-query"
-import { mockHistory } from "./__mocks__/History.mock"
-import { mockNetworks } from "./__mocks__/Networks.mock"
-import { mockWhitelist } from "./__mocks__/Whitelist.mock"
-import { mockInterchainAddresses } from "./__mocks__/InterchainAddresses.mock"
-import { mockBankBalance } from "./__mocks__/BankBalance.mock"
+import { mockHistory } from "../../__mocks__/History.mock"
+import { mockNetworks } from "../../__mocks__/Networks.mock"
+import { mockWhitelist } from "../../__mocks__/Whitelist.mock"
+import { mockInterchainAddresses } from "../../__mocks__/InterchainAddresses.mock"
+import { mockBankBalance } from "../../__mocks__/BankBalance.mock"
 
 function renderComponent() {
   type TokenFilter = <T>(network: Record<string, T>) => Record<string, T>
@@ -56,11 +56,15 @@ jest.mock("../../data/wallet", () => {
   const mockUseNetworkName = () => {
     return "testnet"
   }
+  const mockUseChainID = () => {
+    return "pisco-1"
+  }
 
   return {
     useAddress: mockUseAddress,
     useNetwork: mockUseNetwork,
     useNetworkName: mockUseNetworkName,
+    useChainID: mockUseChainID,
   }
 })
 

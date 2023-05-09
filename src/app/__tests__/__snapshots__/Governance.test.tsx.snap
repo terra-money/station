@@ -91,7 +91,7 @@ exports[`Governance matches original component 1`] = `
                   class="pills"
                 >
                   <button
-                    class="all button active"
+                    class="all button"
                   >
                     All
                   </button>

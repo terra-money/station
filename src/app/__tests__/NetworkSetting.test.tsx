@@ -23,36 +23,6 @@ function renderComponent() {
   )
 }
 
-const mockSetRecoilState = jest.fn()
-const mockSetNetwork = jest.fn()
-
-jest.mock("recoil", () => ({
-  useRecoilState: (network: string) => [network, mockSetRecoilState],
-  atom: () => {},
-}))
-
-jest.mock("../../data/wallet", () => ({
-  useNetworkState: () => ["testnet", mockSetNetwork],
-  useNetworkOptions: () => [
-    {
-      value: "mainnet",
-      label: "Mainnets",
-    },
-    {
-      value: "testnet",
-      label: "Testnets",
-    },
-    {
-      value: "classic",
-      label: "Terra Classic",
-    },
-    {
-      value: "localterra",
-      label: "LocalTerra",
-    },
-  ],
-}))
-
 describe("NetworkSetting", () => {
   it("matches original component", () => {
     const [_, changeNetwork] = useNetworkState()

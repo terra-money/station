@@ -59,10 +59,10 @@ export const useNav = () => {
 
   const menu = [
     {
-      path: "/",
-      element: <SwapTx />,
-      title: t("Swap"),
-      icon: <SwapIcon {...ICON_SIZE} />,
+      path: "/stake",
+      element: <Stake />,
+      title: t("Stake"),
+      icon: <StakeIcon {...ICON_SIZE} />,
     },
     {
       path: "/history",
@@ -71,16 +71,16 @@ export const useNav = () => {
       icon: <HistoryIcon {...ICON_SIZE} />,
     },
     {
-      path: "/stake",
-      element: <Stake />,
-      title: t("Stake"),
-      icon: <StakeIcon {...ICON_SIZE} />,
-    },
-    {
       path: "/gov",
       element: <Governance />,
       title: t("Governance"),
       icon: <GovernanceIcon {...ICON_SIZE} />,
+    },
+    {
+      path: "/",
+      element: <SwapTx />,
+      title: t("Swap"),
+      icon: <SwapIcon {...ICON_SIZE} />,
     },
     ...(devMode
       ? [

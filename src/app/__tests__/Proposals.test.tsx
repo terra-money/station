@@ -2,19 +2,17 @@ import React from "react"
 import Proposals from "pages/gov/Proposals"
 import { render } from "@testing-library/react"
 import { MemoryRouter } from "react-router-dom"
-import { mockProposals } from "./__mocks__/Proposals.mock"
-import { mockNetworks } from "./__mocks__/Networks.mock"
+import { mockProposals } from "../../__mocks__/Proposals.mock"
+import { mockNetworks } from "../../__mocks__/Networks.mock"
 import { useQuery } from "react-query"
 import { RecoilRoot } from "recoil"
-import { mockBankBalance } from "./__mocks__/BankBalance.mock"
-import { mockWhitelist } from "./__mocks__/Whitelist.mock"
+import { mockBankBalance } from "../../__mocks__/BankBalance.mock"
+import { mockWhitelist } from "../../__mocks__/Whitelist.mock"
 
 function renderComponent() {
   return render(
     <MemoryRouter>
-      <RecoilRoot>
-        <Proposals />
-      </RecoilRoot>
+      <Proposals />
     </MemoryRouter>
   )
 }

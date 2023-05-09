@@ -4,7 +4,6 @@ import CurrencySetting from "../sections/CurrencySetting"
 import { RecoilRoot } from "recoil"
 import { NetworksProvider } from "../InitNetworks"
 import user from "@testing-library/user-event"
-import { mockSupportedFiatList } from "./__mocks__/SupportedFiatList.mock"
 
 function renderComponent() {
   type TokenFilter = <T>(network: Record<string, T>) => Record<string, T>
@@ -20,24 +19,10 @@ function renderComponent() {
         filterDisabledNetworks: mockedTokenFilter,
       }}
     >
-      <RecoilRoot>
-        <CurrencySetting />
-      </RecoilRoot>
+      <CurrencySetting />
     </NetworksProvider>
   )
 }
-
-jest.mock("../../data/queries/coingecko", () => {
-  const useSupportedFiatMock = () => {
-    return {
-      data: mockSupportedFiatList,
-    }
-  }
-
-  return {
-    useSupportedFiat: useSupportedFiatMock,
-  }
-})
 
 describe("CurrencySetting", () => {
   it("matches original component", () => {

@@ -6,16 +6,19 @@ import QuickStake from "pages/stake/QuickStake"
 import { NetworksProvider } from "app/InitNetworks"
 import { MemoryRouter } from "react-router-dom"
 import { RecoilRoot } from "recoil"
-import { mockNetworks } from "./__mocks__/Networks.mock"
-import { mockValidators, mockPriorityVals } from "./__mocks__/Validators.mock"
-import { mockDelegations } from "./__mocks__/Delegations.mock"
-import { mockBalances } from "./__mocks__/Balances.mock"
-import { mockBankBalance } from "./__mocks__/BankBalance.mock"
-import { mockWhitelist } from "./__mocks__/Whitelist.mock"
-import { mockExchangeRates } from "./__mocks__/ExchangeRates.mock"
-import { mockStakingParams } from "./__mocks__/StakingParams.mock"
-import { mockTaxRate } from "./__mocks__/TaxRate.mock"
-import { mockTaxCap } from "./__mocks__/TaxCap.mock"
+import { mockNetworks } from "../../__mocks__/Networks.mock"
+import {
+  mockValidators,
+  mockPriorityVals,
+} from "../../__mocks__/Validators.mock"
+import { mockDelegations } from "../../__mocks__/Delegations.mock"
+import { mockBalances } from "../../__mocks__/Balances.mock"
+import { mockBankBalance } from "../../__mocks__/BankBalance.mock"
+import { mockWhitelist } from "../../__mocks__/Whitelist.mock"
+import { mockExchangeRates } from "../../__mocks__/ExchangeRates.mock"
+import { mockStakingParams } from "../../__mocks__/StakingParams.mock"
+import { mockTaxRate } from "../../__mocks__/TaxRate.mock"
+import { mockTaxCap } from "../../__mocks__/TaxCap.mock"
 
 function renderComponent() {
   type TokenFilter = <T>(network: Record<string, T>) => Record<string, T>
