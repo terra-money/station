@@ -1,0 +1,12 @@
+@import "mixins";
+
+.nav_background_wrapper {
+  position: absolute;
+  left: 0;
+  height: 100%;
+  overflow: hidden;
+
+  @include mobile {
+    display: none;
+  }
+}

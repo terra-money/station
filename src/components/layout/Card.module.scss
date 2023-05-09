@@ -24,7 +24,7 @@
   text-align: left;
 
   color: inherit;
-  font-weight: normal;
+  font-weight: var(--normal);
   transition: border-color var(--transition);
 
   &:hover {

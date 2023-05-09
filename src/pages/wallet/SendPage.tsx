@@ -319,6 +319,12 @@ const SendPage = () => {
       getChainIDFromAddress(destinationAddress, networks) !== chain ? 2 : 1,
   }
 
+  useEffect(() => {
+    if (chain && recipient) {
+      trigger("recipient")
+    }
+  }, [chain, trigger, recipient])
+
   return (
     // @ts-expect-error
     <Tx {...tx}>

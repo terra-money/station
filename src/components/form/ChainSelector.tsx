@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useMemo, useState, useRef, useEffect } from "react"
 import styles from "./ChainSelector.module.scss"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 import { useNetworks } from "app/InitNetworks"
@@ -35,10 +35,29 @@ const ChainSelector = ({
     [allNetworks, chainsList]
   )
   const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (ref.current && !ref.current.contains(event.target as Node)) {
+      setOpen(false)
+    }
+  }
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [])
+
+  const handleSelection = (selectedChain: string) => {
+    onChange(selectedChain)
+    setOpen(false)
+  }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} ref={ref}>
       <button
+        type="button"
         className={styles.selector}
         onClick={(e) => {
           e.stopPropagation()
@@ -51,7 +70,9 @@ const ChainSelector = ({
         </span>{" "}
         <ArrowDropDownIcon style={{ fontSize: 20 }} className={styles.caret} />
       </button>
-      {open && <ChainList list={list} onChange={onChange} value={value} />}
+      {open && (
+        <ChainList list={list} onChange={handleSelection} value={value} />
+      )}
     </div>
   )
 }

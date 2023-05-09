@@ -35,6 +35,7 @@
   display: grid;
   background: var(--menu-bg);
   overflow: hidden;
+  position: relative;
 }
 
 .maincontainer {
@@ -99,6 +100,7 @@
   @include flex;
   gap: 10px;
   margin-left: auto;
+  z-index: 1;
 }
 
 .main {
