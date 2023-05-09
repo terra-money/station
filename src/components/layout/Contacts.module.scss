@@ -25,4 +25,12 @@
   &:hover {
     opacity: 1;
   }
+
+  &.icon_white {
+    fill: #ffffff;
+
+    @media (max-height: 501px) {
+      fill: var(--menu-text);
+    }
+  }
 }

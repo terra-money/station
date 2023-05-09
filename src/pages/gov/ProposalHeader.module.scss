@@ -7,7 +7,7 @@
 .meta {
   @include flex(space-between);
   font-size: var(--font-size-small);
-  margin-bottom: 12px;
+  margin-bottom: 18px;
 
   aside {
     @include flex(flex-start);
@@ -26,9 +26,10 @@
 .title {
   font-size: 20px;
   font-weight: var(--normal);
-  margin-bottom: 4px;
+  margin-bottom: 8px;
 }
 
 .date {
   font-size: var(--font-size-small);
+  color: var(--text-muted);
 }

@@ -74,7 +74,6 @@
 
   .denom {
     text-transform: uppercase;
-    font-weight: 500;
     color: var(--text-muted);
     white-space: nowrap;
     overflow: hidden;
@@ -82,7 +81,7 @@
   }
 
   .percent {
-    font-weight: 500;
+    font-weight: var(--bold);
   }
 }
 
