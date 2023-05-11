@@ -77,6 +77,8 @@ export const useNativeDenoms = () => {
   function readNativeDenom(denom: Denom): TokenItem {
     const fixedDenom = denom.startsWith("ibc/")
       ? `${readDenom(denom).substring(0, 5)}...`
+      : denom.startsWith("factory/")
+      ? denom.split("/").pop()?.slice(1).toUpperCase()
       : readDenom(denom)
 
     // native token
