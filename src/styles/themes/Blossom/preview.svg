@@ -1,7 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 116">
-  <path fill="#FFEBF8" d="M0 0h220v116H0z"/>
-  <path fill="#FFD4D4" d="M0 0h220v18H0z"/>
-  <path fill="#DF303D" d="M0 0h50v116H0z"/>
-  <path fill="#FFD4D4" d="M102 33h65a4 4 0 0 1 4 4v59a4 4 0 0 1-4 4h-65a4 4 0 0 1-4-4V37a4 4 0 0 1 4-4Z"/>
-  <path fill="#DF303D" d="M112 82h46a5 5 0 1 1 0 10h-46a5 5 0 1 1 0-10Z"/>
+  <defs>
+    <linearGradient id="gradient" x1="30%" y1="0%" x2="0%" y2="100%">
+      <stop offset="50%"   stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#ec22c0"/>
+    </linearGradient>
+    <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#ec22c0"/>
+      <stop offset="50%" stop-color="#ffffff"/>
+    </linearGradient>
+  </defs>
+  <path fill="#f6e3f2" d="M0 0h220v116H0z"/>
+  <path fill="url(#gradient2)" d="M0 0h220v18H0z"/>
+  <path fill="url(#gradient)" d="M0 0h50v116H0z"/>
+  <path fill="#ffffff" d="M102 33h65a4 4 0 0 1 4 4v59a4 4 0 0 1-4 4h-65a4 4 0 0 1-4-4V37a4 4 0 0 1 4-4Z"/>
+  <path fill="#ed68d1" d="M112 82h46a5 5 0 1 1 0 10h-46a5 5 0 1 1 0-10Z"/>
 </svg>

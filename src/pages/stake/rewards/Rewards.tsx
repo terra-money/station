@@ -79,13 +79,15 @@ const Rewards = () => {
         <TokenCardGrid maxHeight>
           {list?.map(({ amount, denom }) => (
             <WithTokenItem token={denom} key={denom}>
-              {(item) => (
-                <TokenCard
-                  {...item}
-                  amount={amount}
-                  value={calcValue({ amount, denom })}
-                />
-              )}
+              {(item) =>
+                item.name && (
+                  <TokenCard
+                    {...item}
+                    amount={amount}
+                    value={calcValue({ amount, denom })}
+                  />
+                )
+              }
             </WithTokenItem>
           ))}
         </TokenCardGrid>

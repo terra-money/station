@@ -7,7 +7,7 @@
   border-radius: var(--border-radius);
   overflow: hidden;
   padding: 12px;
-  font-weight: 400;
+  font-weight: var(--normal);
 
   &:hover {
     background: var(--card-bg-muted);
@@ -16,7 +16,7 @@
   span {
     @include flex(flex-start);
     gap: 10px;
-    font-weight: 500;
+    font-weight: var(--bold);
     img {
       width: 20px;
       height: 20px;
@@ -29,23 +29,16 @@
   overflow-y: auto;
 
   &::-webkit-scrollbar {
-    background-color: var(--card-bg);
     width: 12px;
     display: block;
   }
   &::-webkit-scrollbar-track {
-    background-color: var(--card-bg);
+    background-color: rgba(0, 0, 0, 0);
   }
   &::-webkit-scrollbar-thumb {
-    border-left: 4px solid var(--card-bg);
-
-    background-color: var(--card-bg-muted);
-    border-radius: 4px;
-
-    &:hover {
-      background-color: var(--bg);
-      cursor: pointer;
-    }
+    background-color: var(--button-default-bg);
+    border-radius: 16px;
+    border: 2px solid var(--card-bg-muted);
   }
   &::-webkit-scrollbar-button {
     display: none;

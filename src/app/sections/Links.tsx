@@ -7,10 +7,12 @@ import { Contacts } from "components/layout"
 import styles from "./Links.module.scss"
 import { capitalize } from "@mui/material"
 import { useAddress } from "data/wallet"
+import { useTheme } from "data/settings/Theme"
 
 const Links = () => {
   const { t } = useTranslation()
   const isConnected = useAddress()
+  const { name } = useTheme()
 
   const community = {
     medium: "https://medium.com/terra-money",
@@ -22,7 +24,11 @@ const Links = () => {
 
   return (
     <div className={styles.links}>
-      <div className={styles.tutorial}>
+      <div
+        className={`${styles.tutorial} ${
+          name === "blossom" && styles.tutorial_white
+        }`}
+      >
         {!isConnected && (
           <ExternalLink href={SETUP} className={styles.link}>
             <BoltIcon style={{ fontSize: 18 }} />

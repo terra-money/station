@@ -145,6 +145,15 @@
 
 .line {
   --border-color: var(--text);
+
+  @for $i from 1 through 20 {
+    .tab:first-child:nth-last-child(#{$i}),
+    .tab:first-child:nth-last-child(#{$i}) ~ .tab {
+      width: calc(100% / #{$i});
+    }
+  }
+
+  margin-bottom: 1rem;
 }
 
 .reversed {
@@ -152,16 +161,17 @@
 }
 
 .line .tab {
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--text-muted);
+  color: var(--text-muted);
   margin-bottom: 12px;
-  font-size: var(--font-size-small);
   font-weight: var(--bold);
   padding: 0 14px;
-  padding-bottom: 5px;
+  padding-bottom: 0.6rem;
 
   &.active {
+    color: var(--text);
     border-bottom: 2px solid var(--border-color);
-    padding-bottom: 4px;
+    padding-bottom: calc(0.6rem - 1px);
   }
 }
 

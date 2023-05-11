@@ -7,7 +7,7 @@ const InstantiateContractTx = () => {
   const { t } = useTranslation()
 
   return (
-    <Page title={t("Instantiate a code")} small>
+    <Page title={t("Instantiate a code")} small backButton>
       <ChainFilter>
         {(chainID) => (
           <IBCHelperContext>

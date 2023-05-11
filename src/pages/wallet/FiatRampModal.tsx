@@ -28,7 +28,7 @@ const FiatRampModal = () => {
     productList: ["BUY", "SELL"].join(","),
     theme,
     onToAddressMulti,
-    cryptoList: ["USDC"].join(","),
+    cryptoList: ["USDC", "OSMO"].join(","),
   }
 
   const kadoUrlParams = qs.stringify(rampParams)

@@ -14,7 +14,8 @@ import { ModalButton } from "components/feedback"
 import FiatRampModal from "./FiatRampModal"
 import { Add as AddIcon, Send as SendIcon } from "@mui/icons-material"
 import classNames from "classnames"
-import { useConnectedWallet } from "@terra-money/use-wallet"
+import { useInterchainAddresses } from "auth/hooks/useAddress"
+import { useNetworkName } from "data/wallet"
 
 const cx = classNames.bind(styles)
 
@@ -25,7 +26,8 @@ const NetWorth = () => {
   const { data: prices } = useExchangeRates()
   const readNativeDenom = useNativeDenoms()
   const { setRoute, route } = useWalletRoute()
-  const isConnected = useConnectedWallet()
+  const addresses = useInterchainAddresses()
+  const networkName = useNetworkName()
 
   // TODO: show CW20 balances and staked tokens
   const coinsValue = coins?.reduce((acc, { amount, denom }) => {
@@ -75,7 +77,7 @@ const NetWorth = () => {
           </Button>
           <h3>{capitalize(t("receive"))}</h3>
         </div>
-        {isConnected && (
+        {addresses && networkName === "mainnet" && (
           <div className={styles.button__wrapper}>
             <ModalButton
               minimal

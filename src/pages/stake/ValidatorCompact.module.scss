@@ -26,3 +26,16 @@
     font-size: var(--font-size-small);
   }
 }
+
+.validator__details__container {
+  margin-top: 1rem;
+  border-top: 1px solid var(--card-border);
+  padding-top: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+
+  dt {
+    color: var(--text-muted);
+  }
+}

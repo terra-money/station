@@ -1,0 +1,57 @@
+@import "mixins";
+
+.quick__action {
+  @include flex(flex-start);
+  padding-bottom: var(--grid-gap);
+  padding-inline: var(--main-padding-horizontal);
+  gap: 0.6rem;
+}
+
+.table__container {
+  background-color: var(--card-bg-muted);
+  padding: 20px var(--main-padding-horizontal);
+  border-top: var(--border-width) solid var(--card-border);
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
+}
+
+.token__icon__container {
+  position: relative;
+  margin-right: 12px;
+
+  .token__icon {
+    width: 50px;
+    height: 50px;
+    padding: 12px;
+    border-radius: 50%;
+    background: hsl(
+      var(--button-default-bg-h),
+      var(--button-default-bg-s),
+      var(--button-default-bg-l)
+    );
+  }
+
+  .chain__icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    padding: 2px;
+    border-radius: 50%;
+    background-color: var(--card-bg-muted);
+  }
+}
+
+.alliance__logo {
+  cursor: pointer;
+  background-color: hsl(
+    var(--button-default-bg-h),
+    var(--button-default-bg-s),
+    var(--button-default-bg-l)
+  );
+  color: var(--text-muted);
+  font-size: small;
+  padding: 0.1rem 0.6rem;
+  border-radius: 0.8rem;
+  margin-left: 0.4rem;
+}

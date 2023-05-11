@@ -18,6 +18,7 @@ import { ValidatorLink } from "components/general"
 import { Form, FormArrow, FormItem, Checkbox } from "components/form"
 import { Card, Flex, Grid } from "components/layout"
 import { TokenCard, TokenCardGrid } from "components/token"
+import { Empty } from "components/feedback"
 import styles from "./WithdrawRewardsForm.module.scss"
 import Tx from "txs/Tx"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
@@ -73,7 +74,7 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
   /* calc */
   const selectedTotal = selected.reduce<Record<Denom, Amount>>(
     (prev, address) => {
-      const item = byValidator.find((item) => item.address === address)
+      const item = byValidator.find((i) => i.address === address)
 
       if (!item) return prev
 
@@ -127,6 +128,10 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
     querykeys: [queryKey.distribution.rewards],
     chain,
     onSuccess: () => reset(),
+  }
+
+  if (Object.keys(selectedTotal).length === 0) {
+    return <Empty>{t("No rewards on selected chain")}</Empty>
   }
 
   return (
