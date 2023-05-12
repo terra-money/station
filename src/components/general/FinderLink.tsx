@@ -26,7 +26,7 @@ const FinderLink = forwardRef(
     const { block, tx, validator, chainID, ...attrs } = rest
     const networks = useNetwork()
     const value =
-      rest.value ?? typeof children === "string" ? (children as string) : ""
+      rest.value || (typeof children === "string" ? (children as string) : "")
 
     const className = classNames(attrs.className, styles.link)
     const explorer =
