@@ -11,10 +11,10 @@ const DepositTx = () => {
   const { data: proposal, ...state } = useProposal(id, chain)
 
   return (
-    <Page title={t("Deposit")}>
+    <Page title={t("Deposit")} backButton>
       <Auto
         columns={[
-          <Card>
+          <Card inputCard>
             <DepositForm />
           </Card>,
           <Card {...state}>

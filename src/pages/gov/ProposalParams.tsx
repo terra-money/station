@@ -30,7 +30,7 @@ const ProposalParams = ({ chain }: { chain: string }) => {
   }
 
   return (
-    <Card {...state} title={t("Tallying procedure")} bordered>
+    <Card {...state} title={t("Tallying procedure")} bordered twoTone>
       {render()}
     </Card>
   )

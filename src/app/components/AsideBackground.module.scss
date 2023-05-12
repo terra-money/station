@@ -1,0 +1,12 @@
+.aside_background {
+  position: absolute;
+  top: 20%;
+
+  @media screen and (max-height: 1100px) {
+    top: 10%;
+  }
+
+  @media screen and (max-height: 1100px) {
+    top: 0%;
+  }
+}

@@ -65,14 +65,14 @@ export const themes: Theme[] = [
   },
   {
     name: "whale",
-    unlock: toAmount("100"),
+    unlock: toAmount("0"),
     animation: AnimationWhale,
     favicon: FaviconWhale,
     preview: <PreviewWhale />,
   },
   {
     name: "madness",
-    unlock: toAmount("1000"),
+    unlock: toAmount("0"),
     animation: AnimationMadness,
     favicon: FaviconMadness,
     preview: <PreviewMadness />,

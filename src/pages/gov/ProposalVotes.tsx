@@ -129,7 +129,7 @@ const ProposalVotes = ({
   }
 
   return card ? (
-    <Card {...state} title={t("Votes")} bordered>
+    <Card {...state} title={t("Votes")} bordered twoTone>
       {render()}
     </Card>
   ) : (

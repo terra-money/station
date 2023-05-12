@@ -17,12 +17,19 @@
 
 .prev {
   border-right: 0;
-  border-top-left-radius: 2px;
-  border-bottom-left-radius: 2px;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  background: var(--card-bg);
 }
 
 .next {
   border-left: 0;
-  border-top-right-radius: 2px;
-  border-bottom-right-radius: 2px;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  background: var(--card-bg);
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background: var(--input-bg);
+  }
 }
