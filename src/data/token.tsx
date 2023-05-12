@@ -7,7 +7,8 @@ import { useTokenInfoCW20 } from "./queries/wasm"
 import { useCustomTokensCW20 } from "./settings/CustomTokens"
 import { useCW20Whitelist, useIBCWhitelist } from "./Terra/TerraAssets"
 import { useWhitelist } from "./queries/chains"
-import { useNetworkName } from "./wallet"
+import { useNetworkName, useNetwork } from "./wallet"
+import { getChainIDFromAddress } from "utils/bech32"
 
 export const useTokenItem = (token: Token): TokenItem | undefined => {
   const readNativeDenom = useNativeDenoms()
@@ -73,6 +74,7 @@ export const useNativeDenoms = () => {
   const { whitelist, ibcDenoms, legacyWhitelist } = useWhitelist()
   const { list: cw20 } = useCustomTokensCW20()
   const networkName = useNetworkName()
+  const networks = useNetwork()
 
   function readNativeDenom(denom: Denom): TokenItem {
     const fixedDenom = denom.startsWith("ibc/")
@@ -81,6 +83,13 @@ export const useNativeDenoms = () => {
       ? denom.split("/").pop()?.slice(1).toUpperCase()
       : readDenom(denom)
 
+    let factoryIcon
+    if (denom.startsWith("factory/")) {
+      const chainID = getChainIDFromAddress(denom.split("/")[1], networks)
+      if (chainID) {
+        factoryIcon = networks[chainID].icon
+      }
+    }
     // native token
     if (whitelist[networkName]?.[denom]) return whitelist[networkName]?.[denom]
 
@@ -106,6 +115,8 @@ export const useNativeDenoms = () => {
         name: fixedDenom,
         icon: denom.startsWith("ibc/")
           ? "https://assets.terra.money/icon/svg/IBC.svg"
+          : denom.startsWith("factory/")
+          ? factoryIcon
           : "https://assets.terra.money/icon/svg/Terra.svg",
         decimals: 6,
       }
