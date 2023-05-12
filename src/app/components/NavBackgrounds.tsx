@@ -9,7 +9,7 @@ const NavBackgrounds = () => {
   if (name === "blossom") {
     return (
       <div className={styles.nav_background_wrapper}>
-        <video key={BlossomVideo} autoPlay muted loop>
+        <video key={BlossomVideo} autoPlay muted loop playsInline>
           <source src={BlossomVideo} type="video/mp4" />
         </video>
       </div>
@@ -19,7 +19,7 @@ const NavBackgrounds = () => {
   if (name === "moon") {
     return (
       <div className={`${styles.nav_background_wrapper} ${styles.moon}`}>
-        <video key={MoonVideo} autoPlay muted loop>
+        <video key={MoonVideo} autoPlay muted loop playsInline>
           <source src={MoonVideo} type="video/mp4" />
         </video>
       </div>

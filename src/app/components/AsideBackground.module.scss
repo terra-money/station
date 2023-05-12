@@ -6,7 +6,11 @@
     top: 10%;
   }
 
-  @media screen and (max-height: 1100px) {
+  @media screen and (max-height: 900px) {
     top: 0%;
+  }
+
+  @media screen and (max-width: 992px) {
+    display: none;
   }
 }

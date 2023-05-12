@@ -18,7 +18,13 @@ const AsideBackground = () => {
   if (name === "moon") {
     return (
       <div className={`${styles.aside_background} ${styles.moon}`}>
-        <video onEnded={handleVideoEnd} key={MoonVideo} autoPlay muted>
+        <video
+          onEnded={handleVideoEnd}
+          key={MoonVideo}
+          autoPlay
+          muted
+          playsInline
+        >
           <source src={MoonVideo} type="video/mp4" />
         </video>
       </div>

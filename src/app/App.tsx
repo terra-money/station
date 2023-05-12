@@ -33,7 +33,6 @@ import InitBankBalance from "./InitBankBalance"
 import Wallet from "pages/wallet/Wallet"
 import NavButton from "./sections/NavButton"
 import NetworkStatus from "components/display/NetworkStatus"
-import NavBackgrounds from "./sections/NavBackgrounds"
 
 const App = () => {
   const { element: routes } = useNav()
