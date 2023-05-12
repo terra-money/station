@@ -77,14 +77,22 @@ export const useNativeDenoms = () => {
   const networks = useNetwork()
 
   function readNativeDenom(denom: Denom): TokenItem {
-    const fixedDenom = denom.startsWith("ibc/")
-      ? `${readDenom(denom).substring(0, 5)}...`
+    const tokenType = denom.startsWith("ibc/")
+      ? "ibc"
       : denom.startsWith("factory/")
-      ? denom.split("/").pop()?.slice(1).toUpperCase()
-      : readDenom(denom)
+      ? "factory"
+      : ""
+    const fixedDenom =
+      tokenType === "ibc"
+        ? `${readDenom(denom).substring(0, 5)}...`
+        : tokenType === "factory" && denom.split("/").length === 3
+        ? denom.split("/").pop()?.slice(1).toUpperCase()
+        : tokenType === "factory" && denom.split("/").length > 3
+        ? denom.split("/").slice(2)?.join(":").toUpperCase()
+        : readDenom(denom)
 
     let factoryIcon
-    if (denom.startsWith("factory/")) {
+    if (tokenType === "factory") {
       const chainID = getChainIDFromAddress(denom.split("/")[1], networks)
       if (chainID) {
         factoryIcon = networks[chainID].icon
@@ -113,11 +121,12 @@ export const useNativeDenoms = () => {
         token: denom,
         symbol: fixedDenom,
         name: fixedDenom,
-        icon: denom.startsWith("ibc/")
-          ? "https://assets.terra.money/icon/svg/IBC.svg"
-          : denom.startsWith("factory/")
-          ? factoryIcon
-          : "https://assets.terra.money/icon/svg/Terra.svg",
+        icon:
+          tokenType === "ibc"
+            ? "https://assets.terra.money/icon/svg/IBC.svg"
+            : tokenType === "factory"
+            ? factoryIcon
+            : "https://assets.terra.money/icon/svg/Terra.svg",
         decimals: 6,
       }
     )
