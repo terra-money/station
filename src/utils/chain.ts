@@ -3,6 +3,7 @@ import { useNativeDenoms } from "data/token"
 import { useExchangeRates } from "data/queries/coingecko"
 import { useDisplayChains } from "./localStorage/hooks"
 import { useNetworkName } from "data/wallet"
+import { AccAddress } from "@terra-money/feather.js"
 
 type ChainId = string
 type ChainPrefix = string
@@ -55,3 +56,8 @@ export const useSortedDisplayChains = () => {
 
 export const useTerraChainName = () =>
   useNetworkName() === "mainnet" ? "phoenix-1" : "pisco-1"
+
+export const isNativeToken = (denom: string) =>
+  !denom.startsWith("ibc/") &&
+  !denom.startsWith("factory/") &&
+  !AccAddress.validate(denom)
