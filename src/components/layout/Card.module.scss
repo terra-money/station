@@ -10,6 +10,10 @@
   background: var(--card-bg);
   overflow: hidden; // truncate title, linear progress
   position: relative; // for progress bar
+
+  &.moon {
+    background: var(--card-special);
+  }
 }
 
 .inputCard {
@@ -79,6 +83,16 @@
 
   &:empty {
     display: none;
+  }
+}
+
+.twoTone {
+  .header {
+    border-bottom: var(--border-width) solid var(--card-border);
+  }
+
+  .main {
+    background-color: var(--card-bg-muted);
   }
 }
 

@@ -1,6 +1,7 @@
 import { PropsWithChildren } from "react"
 import { atom, useRecoilValue } from "recoil"
 import classNames from "classnames/bind"
+import { useTheme } from "data/settings/Theme"
 import styles from "./Layout.module.scss"
 
 const cx = classNames.bind(styles)
@@ -36,7 +37,8 @@ export const Header = ({ children }: PropsWithChildren<{}>) => {
 }
 
 export const Actions = ({ children }: PropsWithChildren<{}>) => {
-  return <div className={styles.actions}>{children}</div>
+  const { name } = useTheme()
+  return <div className={`${styles.actions} ${styles[name]}`}>{children}</div>
 }
 
 export const Content = ({ children }: PropsWithChildren<{}>) => {

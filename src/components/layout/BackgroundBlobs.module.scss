@@ -1,0 +1,30 @@
+.blob1,
+.blob2,
+.blob3 {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background: #85cafb7a;
+  z-index: -1;
+  filter: blur(250px);
+}
+
+.blob1 {
+  top: 50%;
+  left: 45%;
+  height: 600px;
+  width: 700px;
+}
+
+.blob2 {
+  top: 5%;
+  left: 5%;
+  height: 200px;
+  width: 200px;
+}
+
+.blob3 {
+  top: 5%;
+  right: 15%;
+  height: 200px;
+  width: 200px;
+}

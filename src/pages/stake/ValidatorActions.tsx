@@ -119,14 +119,14 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
 
   return (
     <Col>
-      <Card {...state} title={t("My delegations")}>
+      <Card {...state} title={t("My delegations")} bordered twoTone>
         <Grid gap={20}>
           {renderDelegationsValue()}
           {renderDelegationsActions()}
         </Grid>
       </Card>
 
-      <Card {...rewardsState} title={t("My rewards")}>
+      <Card {...rewardsState} title={t("My rewards")} bordered twoTone>
         <Grid gap={20}>
           {renderRewardsValue()}
           {renderRewardsActions()}

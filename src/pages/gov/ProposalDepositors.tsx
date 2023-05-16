@@ -14,7 +14,7 @@ const ProposalDepositors = ({ id, chain }: { id: string; chain: string }) => {
   const { data: deposits, ...state } = useDeposits(id, chain)
 
   return (
-    <Card {...state} title={t("Depositors")} bordered>
+    <Card {...state} title={t("Depositors")} bordered twoTone>
       {deposits && (
         <Table
           dataSource={deposits}

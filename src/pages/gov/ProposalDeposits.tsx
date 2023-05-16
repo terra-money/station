@@ -79,7 +79,13 @@ const ProposalDeposits = ({ id, chain, card }: Props) => {
   }
 
   return card ? (
-    <Card {...state} title={t("Deposit")} mainClassName={styles.main} bordered>
+    <Card
+      {...state}
+      title={t("Deposit")}
+      mainClassName={styles.main}
+      bordered
+      twoTone
+    >
       {render()}
     </Card>
   ) : (

@@ -17,7 +17,7 @@ import DelegationsPromote from "app/containers/DelegationsPromote"
 const Stake = () => {
   const { t } = useTranslation()
   const [chainSelected, setChainSelected] = useState("all")
-  
+
   const { data: chartData, ...state } = useStakeChartData()
 
   const tabs = [
