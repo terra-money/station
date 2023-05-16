@@ -5,6 +5,7 @@ import { AccAddress } from "@terra-money/feather.js"
 import { ASSETS } from "config/constants"
 import { useTokenInfoCW20 } from "./queries/wasm"
 import { useCustomTokensCW20 } from "./settings/CustomTokens"
+import { useGammTokens } from "./external/osmosis"
 import { useCW20Whitelist, useIBCWhitelist } from "./Terra/TerraAssets"
 import { useWhitelist } from "./queries/chains"
 import { useNetworkName, useNetwork } from "./wallet"
@@ -75,21 +76,36 @@ export const useNativeDenoms = () => {
   const { list: cw20 } = useCustomTokensCW20()
   const networkName = useNetworkName()
   const networks = useNetwork()
+  const gammTokens = useGammTokens()
 
   function readNativeDenom(denom: Denom): TokenItem {
-    const tokenType = denom.startsWith("ibc/")
-      ? "ibc"
-      : denom.startsWith("factory/")
-      ? "factory"
-      : ""
-    const fixedDenom =
-      tokenType === "ibc"
-        ? `${readDenom(denom).substring(0, 5)}...`
-        : tokenType === "factory" && denom.split("/").length === 3
-        ? denom.split("/").pop()?.slice(1).toUpperCase()
-        : tokenType === "factory" && denom.split("/").length > 3
-        ? denom.split("/").slice(2)?.join(":").toUpperCase()
+    let tokenType = ""
+
+    if (denom.startsWith("ibc/")) {
+      tokenType = "ibc"
+    } else if (denom.startsWith("factory/")) {
+      tokenType = "factory"
+    } else if (denom.startsWith("gamm/")) {
+      tokenType = "gamm"
+    }
+
+    let fixedDenom
+    if (tokenType === "ibc") {
+      fixedDenom = `${readDenom(denom).substring(0, 5)}...`
+    } else if (tokenType === "factory") {
+      const denomParts = denom.split("/")
+      if (denomParts.length === 3) {
+        fixedDenom = denomParts.pop()?.slice(1).toUpperCase()
+      } else if (denomParts.length > 3) {
+        fixedDenom = denomParts.slice(2)?.join(":").toUpperCase()
+      }
+    } else if (tokenType === "gamm") {
+      fixedDenom = gammTokens.get(denom)
+        ? gammTokens.get(denom)
         : readDenom(denom)
+    } else {
+      fixedDenom = readDenom(denom)
+    }
 
     let factoryIcon
     if (tokenType === "factory") {
