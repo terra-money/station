@@ -54,7 +54,13 @@ const AssetChain = (props: Props) => {
                 {wrong ? (
                   <span className="danger">{t("Failed to query balance")}</span>
                 ) : (
-                  <Read {...props} amount={balance} token="" />
+                  <Read
+                    {...props}
+                    amount={balance}
+                    token=""
+                    fixed={2}
+                    decimals={decimals}
+                  />
                 )}
               </>
             )}
