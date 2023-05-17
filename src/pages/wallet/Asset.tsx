@@ -48,7 +48,7 @@ const Asset = (props: Props) => {
 
         <div className={styles.details__container}>
           <h1 className={styles.symbol}>
-            {symbol}
+            {symbol.length > 16 ? symbol.slice(0, 13) + "..." : symbol}
             {chains.map((chain) => (
               <span key={chain} className={styles.chains}>
                 {network[chain].name || chain}
@@ -86,7 +86,13 @@ const Asset = (props: Props) => {
                       {t("Failed to query balance")}
                     </span>
                   ) : (
-                    <Read {...props} amount={balance} token="" />
+                    <Read
+                      {...props}
+                      amount={balance}
+                      token=""
+                      fixed={2}
+                      decimals={decimals}
+                    />
                   )}
                 </>
               )}

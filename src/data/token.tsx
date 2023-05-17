@@ -5,7 +5,11 @@ import { AccAddress } from "@terra-money/feather.js"
 import { ASSETS } from "config/constants"
 import { useTokenInfoCW20 } from "./queries/wasm"
 import { useCustomTokensCW20 } from "./settings/CustomTokens"
-import { useGammTokens, GAMM_TOKEN_DECIMALS } from "./external/osmosis"
+import {
+  useGammTokens,
+  GAMM_TOKEN_DECIMALS,
+  OSMO_ICON,
+} from "./external/osmosis"
 import { useCW20Whitelist, useIBCWhitelist } from "./Terra/TerraAssets"
 import { useWhitelist } from "./queries/chains"
 import { useNetworkName, useNetwork } from "./wallet"
@@ -94,26 +98,22 @@ export const useNativeDenoms = () => {
       decimals = GAMM_TOKEN_DECIMALS
     }
 
-    let fixedDenom
+    let fixedDenom = ""
 
     switch (tokenType) {
       case "ibc":
         fixedDenom = `${readDenom(denom).substring(0, 5)}...`
         break
 
-      case "factory": {
-        const denomParts = denom.split("/")
-        if (denomParts.length === 3) {
-          fixedDenom = denomParts.pop()?.slice(1).toUpperCase()
-        } else if (denomParts.length > 3) {
-          fixedDenom = denomParts.slice(2)?.join(":").toUpperCase()
-        }
-        break
-      }
-
       case "gamm":
         fixedDenom = gammTokens.get(denom) ?? readDenom(denom)
         break
+
+      case "factory": {
+        // TODO - lookup whitelist for factory tokens.
+        fixedDenom = "..."
+        break
+      }
 
       default:
         fixedDenom = readDenom(denom)
@@ -126,6 +126,11 @@ export const useNativeDenoms = () => {
         factoryIcon = networks[chainID].icon
       }
     }
+
+    if (tokenType === "gamm") {
+      factoryIcon = OSMO_ICON
+    }
+
     // native token
     if (whitelist[networkName]?.[denom]) return whitelist[networkName]?.[denom]
 
@@ -152,7 +157,7 @@ export const useNativeDenoms = () => {
         icon:
           tokenType === "ibc"
             ? "https://assets.terra.money/icon/svg/IBC.svg"
-            : tokenType === "factory"
+            : tokenType === "factory" || tokenType === "gamm"
             ? factoryIcon
             : "https://assets.terra.money/icon/svg/Terra.svg",
         decimals,
