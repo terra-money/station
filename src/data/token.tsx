@@ -90,21 +90,28 @@ export const useNativeDenoms = () => {
     }
 
     let fixedDenom
-    if (tokenType === "ibc") {
-      fixedDenom = `${readDenom(denom).substring(0, 5)}...`
-    } else if (tokenType === "factory") {
-      const denomParts = denom.split("/")
-      if (denomParts.length === 3) {
-        fixedDenom = denomParts.pop()?.slice(1).toUpperCase()
-      } else if (denomParts.length > 3) {
-        fixedDenom = denomParts.slice(2)?.join(":").toUpperCase()
+
+    switch (tokenType) {
+      case "ibc":
+        fixedDenom = `${readDenom(denom).substring(0, 5)}...`
+        break
+
+      case "factory": {
+        const denomParts = denom.split("/")
+        if (denomParts.length === 3) {
+          fixedDenom = denomParts.pop()?.slice(1).toUpperCase()
+        } else if (denomParts.length > 3) {
+          fixedDenom = denomParts.slice(2)?.join(":").toUpperCase()
+        }
+        break
       }
-    } else if (tokenType === "gamm") {
-      fixedDenom = gammTokens.get(denom)
-        ? gammTokens.get(denom)
-        : readDenom(denom)
-    } else {
-      fixedDenom = readDenom(denom)
+
+      case "gamm":
+        fixedDenom = gammTokens.get(denom) ?? readDenom(denom)
+        break
+
+      default:
+        fixedDenom = readDenom(denom)
     }
 
     let factoryIcon
