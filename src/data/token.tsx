@@ -5,11 +5,13 @@ import { AccAddress } from "@terra-money/feather.js"
 import { ASSETS } from "config/constants"
 import { useTokenInfoCW20 } from "./queries/wasm"
 import { useCustomTokensCW20 } from "./settings/CustomTokens"
-import { useGammTokens } from "./external/osmosis"
+import { useGammTokens, GAMM_TOKEN_DECIMALS } from "./external/osmosis"
 import { useCW20Whitelist, useIBCWhitelist } from "./Terra/TerraAssets"
 import { useWhitelist } from "./queries/chains"
 import { useNetworkName, useNetwork } from "./wallet"
 import { getChainIDFromAddress } from "utils/bech32"
+
+const DEFAULT_NATIVE_DECIMALS = 6
 
 export const useTokenItem = (token: Token): TokenItem | undefined => {
   const readNativeDenom = useNativeDenoms()
@@ -78,6 +80,8 @@ export const useNativeDenoms = () => {
   const networks = useNetwork()
   const gammTokens = useGammTokens()
 
+  let decimals = DEFAULT_NATIVE_DECIMALS
+
   function readNativeDenom(denom: Denom): TokenItem {
     let tokenType = ""
 
@@ -87,6 +91,7 @@ export const useNativeDenoms = () => {
       tokenType = "factory"
     } else if (denom.startsWith("gamm/")) {
       tokenType = "gamm"
+      decimals = GAMM_TOKEN_DECIMALS
     }
 
     let fixedDenom
@@ -150,7 +155,7 @@ export const useNativeDenoms = () => {
             : tokenType === "factory"
             ? factoryIcon
             : "https://assets.terra.money/icon/svg/Terra.svg",
-        decimals: 6,
+        decimals,
       }
     )
   }

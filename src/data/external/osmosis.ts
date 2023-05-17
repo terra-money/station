@@ -5,6 +5,8 @@ import { queryKey } from "../query"
 // https://api-osmosis.imperator.co/swagger/
 export const OSMOSIS_API_URL = "https://api-osmosis.imperator.co"
 
+export const GAMM_TOKEN_DECIMALS = 18
+
 interface IOsmosisPoolAsset {
   symbol: string
   amount: number
