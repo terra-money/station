@@ -121,7 +121,8 @@ export const useNativeDenoms = () => {
 
     let factoryIcon
     if (tokenType === "factory") {
-      const chainID = getChainIDFromAddress(denom.split("/")[1], networks)
+      const tokenAddress = denom.split(/[/:]/)[1]
+      const chainID = getChainIDFromAddress(tokenAddress, networks)
       if (chainID) {
         factoryIcon = networks[chainID].icon
       }
