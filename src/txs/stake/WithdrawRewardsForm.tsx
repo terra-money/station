@@ -62,7 +62,7 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
     setState(init(true))
   }, [init])
 
-  const selectable = byValidator.length > 1
+  const selectable = byValidator.length >= 1
   const selected = useMemo(
     () => Object.keys(state).filter((address) => state[address]),
     [state]
