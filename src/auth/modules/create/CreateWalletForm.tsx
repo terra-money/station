@@ -54,6 +54,7 @@ const CreateWalletForm = () => {
           {...register("confirm", {
             validate: (confirm) => validate.confirm(password, confirm),
           })}
+          onFocus={() => form.trigger("confirm")}
           type="password"
         />
       </FormItem>
