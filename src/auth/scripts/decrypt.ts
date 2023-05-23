@@ -21,8 +21,7 @@ const decrypt = (transitmessage: string, pass: string) => {
 
   const decoded = decrypted.toString(CryptoJS.enc.Utf8)
 
-  if (!decoded || decrypted.sigBytes < 128)
-    throw new Error("Incorrect password")
+  if (!decoded || decrypted.sigBytes < 16) throw new Error("Incorrect password")
 
   return decoded
 }
