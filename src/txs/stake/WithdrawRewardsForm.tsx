@@ -95,14 +95,27 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
     {}
   )
 
-  const selectedValidatorsText = !selected.length
-    ? t("Not selected")
-    : selected.length === 1
-    ? findMoniker(selected[0])
-    : t("{{moniker}} and {{length}} others", {
+  let selectedValidatorsText = ""
+  switch (selected.length) {
+    case 0:
+      selectedValidatorsText = t("None selected")
+      break
+    case 1:
+      selectedValidatorsText = findMoniker(selected[0])
+      break
+    case 2:
+      selectedValidatorsText = t("{{moniker}} and {{moniker2}}", {
+        moniker: findMoniker(selected[0]),
+        moniker2: findMoniker(selected[1]),
+      })
+      break
+    default:
+      selectedValidatorsText = t("{{moniker}} and {{length}} others", {
         moniker: findMoniker(selected[0]),
         length: selected.length - 1,
       })
+      break
+  }
 
   /* form */
   const { handleSubmit, reset } = useForm({ mode: "onChange" })
@@ -130,7 +143,7 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
     onSuccess: () => reset(),
   }
 
-  if (Object.keys(selectedTotal).length === 0) {
+  if (!selectable) {
     return <Empty>{t("No rewards on selected chain")}</Empty>
   }
 
