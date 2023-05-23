@@ -64,6 +64,7 @@ const ChangePasswordForm = () => {
             {...register("confirm", {
               validate: (value) => validate.confirm(password, value),
             })}
+            onFocus={() => form.trigger("confirm")}
             type="password"
           />
         </FormItem>
