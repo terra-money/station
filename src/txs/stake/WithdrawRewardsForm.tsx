@@ -171,51 +171,52 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
             </dl>
 
             {selectable && isOpen && (
-              <Card size="small" className={styles.card}>
-                <Flex className={styles.actions} start>
-                  {Object.values(state).some((state) => !state) ? (
-                    <button
-                      type="button"
-                      className={styles.button}
-                      onClick={() => setState(init(true))}
-                    >
-                      {t("Select all")}
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      className={styles.button}
-                      onClick={() => setState(init(false))}
-                    >
-                      {t("Deselect all")}
-                    </button>
-                  )}
-                </Flex>
-
-                <section className={styles.validators}>
-                  {byValidator.map(({ address, sum }) => {
-                    const checked = state[address]
-
-                    return (
-                      <Checkbox
-                        className={styles.checkbox}
-                        checked={checked}
-                        onChange={() =>
-                          setState({ ...state, [address]: !checked })
-                        }
-                        key={address}
+              <>
+                <Card size="small" className={styles.card}>
+                  <Flex className={styles.actions} start>
+                    {Object.values(state).some((state) => !state) ? (
+                      <button
+                        type="button"
+                        className={styles.button}
+                        onClick={() => setState(init(true))}
                       >
-                        <div className={styles.item}>
-                          <ValidatorLink address={address} />
-                        </div>
-                      </Checkbox>
-                    )
-                  })}
-                </section>
-              </Card>
-            )}
+                        {t("Select all")}
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className={styles.button}
+                        onClick={() => setState(init(false))}
+                      >
+                        {t("Deselect all")}
+                      </button>
+                    )}
+                  </Flex>
 
-            <FormArrow />
+                  <section className={styles.validators}>
+                    {byValidator.map(({ address, sum }) => {
+                      const checked = state[address]
+
+                      return (
+                        <Checkbox
+                          className={styles.checkbox}
+                          checked={checked}
+                          onChange={() =>
+                            setState({ ...state, [address]: !checked })
+                          }
+                          key={address}
+                        >
+                          <div className={styles.item}>
+                            <ValidatorLink address={address} />
+                          </div>
+                        </Checkbox>
+                      )
+                    })}
+                  </section>
+                </Card>
+                {selected.length ? <FormArrow /> : undefined}
+              </>
+            )}
 
             <FormItem>
               <TokenCardGrid maxHeight>
