@@ -189,7 +189,7 @@ const ProposalVotesByValidator = ({ id }: { id: string }) => {
   if (!TerraProposal?.length) return null
 
   return (
-    <Card {...state} title={t("Validators")} bordered>
+    <Card {...state} title={t("Validators")} bordered twoTone>
       {render()}
     </Card>
   )

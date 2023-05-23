@@ -1,0 +1,9 @@
+.background_blur {
+  background-color: var(--menu-bg);
+  width: 325px;
+  position: absolute;
+  z-index: -1;
+  height: 125%;
+  right: 0px;
+  filter: blur(45px);
+}

@@ -16,7 +16,7 @@ $colors: (
   }
 
   .border-#{$color} {
-    border: var(--border-width) solid $value;
+    border: 1px solid $value;
   }
 }
 

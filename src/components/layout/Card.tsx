@@ -5,6 +5,7 @@ import { ExternalLink } from "components/general"
 import { Flex } from "../layout"
 import { ErrorBoundary, WithFetching } from "../feedback"
 import styles from "./Card.module.scss"
+import { useTheme } from "data/settings/Theme"
 
 const cx = classNames.bind(styles)
 
@@ -21,6 +22,7 @@ export interface Props extends QueryState {
   className?: string
   mainClassName?: string
   inputCard?: boolean
+  twoTone?: boolean
 
   /* button */
   onClick?: () => void
@@ -42,7 +44,10 @@ const Card = (props: PropsWithChildren<Props>) => {
     mainClassName,
     muted,
     inputCard,
+    twoTone,
   } = props
+
+  const { name } = useTheme()
 
   return (
     <WithFetching {...props} height={2}>
@@ -56,6 +61,7 @@ const Card = (props: PropsWithChildren<Props>) => {
           link: to || href,
           button: onClick,
           error: wrong,
+          twoTone,
         }
 
         const cardClassName = cx(styles.card, size, style, className)
@@ -71,7 +77,9 @@ const Card = (props: PropsWithChildren<Props>) => {
               </header>
             )}
 
-            <section className={classNames(styles.main, mainClassName)}>
+            <section
+              className={classNames(styles.main, mainClassName, twoTone)}
+            >
               {wrong ?? (children && <ErrorBoundary>{children}</ErrorBoundary>)}
             </section>
           </>
@@ -82,7 +90,7 @@ const Card = (props: PropsWithChildren<Props>) => {
             {content}
           </ExternalLink>
         ) : to ? (
-          <Link to={to} className={cardClassName}>
+          <Link to={to} className={cx(cardClassName, name)}>
             {content}
           </Link>
         ) : onClick ? (

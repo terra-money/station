@@ -38,6 +38,7 @@
 /* content */
 .link {
   @include inline-flex;
+  vertical-align: middle;
 
   &.disabled {
     cursor: not-allowed;

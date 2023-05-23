@@ -4,6 +4,7 @@
   @include flex(space-between);
   border-bottom: var(--border-width) solid var(--menu-border);
   margin-bottom: 26px;
+  z-index: 1;
 }
 
 /* mobile */
@@ -20,6 +21,8 @@
 .item {
   color: var(--menu-text);
   fill: var(--menu-text);
+  z-index: 1;
+  position: relative;
 
   &:hover {
     text-decoration: none;

@@ -213,37 +213,40 @@
   --border-width: 0;
   --border-radius: 8px;
 
-  --button-primary-bg-h: 47;
-  --button-primary-bg-s: 93%;
-  --button-primary-bg-l: 67%;
+  --button-primary-bg-h: 201;
+  --button-primary-bg-s: 90%;
+  --button-primary-bg-l: 61%;
   --button-primary-bg: hsl(
     var(--button-primary-bg-h),
     var(--button-primary-bg-s),
     var(--button-primary-bg-l)
   );
-  --button-primary-text: hsl(248 55% 8%);
-  --button-default-bg-h: 47;
-  --button-default-bg-s: 93%;
-  --button-default-bg-l: 67%;
+  --button-primary-text: hsl(0 0% 100%);
+  --button-default-bg-h: 0;
+  --button-default-bg-s: 0%;
+  --button-default-bg-l: 22%;
   --button-default-bg: hsl(
     var(--button-default-bg-h),
     var(--button-default-bg-s),
     var(--button-default-bg-l)
   );
-  --button-default-text: var(--button-primary-text);
+  --button-default-text: hsl(0, 0%, 100%);
 
-  --menu-bg: var(--card-bg);
-  --menu-text: var(--text);
+  --menu-bg: hsl(0, 0%, 0%);
+  --menu-text: hsl(0, 0%, 100%);
 
-  --link: var(--button-primary-bg);
-  --text: hsl(240 9% 66%);
-  --text-muted: hsl(247 9% 40%);
+  --link: hsl(47, 93%, 67%);
+  --info: hsl(47, 93%, 67%);
+
+  --text: hsl(0, 0%, 100%);
+  --text-muted: hsl(211, 32%, 68%);
   --chart: var(--button-primary-bg);
 
-  --bg: hsl(249 54% 3%);
+  --bg: hsl(248 50% 3%);
   --bg-muted: hsl(248 55% 8%);
-  --card-bg: hsl(247, 55%, 9%);
-  --card-bg-muted: #130f32;
+  --card-bg: hsl(248, 50%, 3%);
+  --card-bg-muted: hsl(0, 0%, 8%);
+  --card-special: #2c4253;
   --card-border: hsl(240 5% 22%);
   --input-bg: var(--card-bg);
   --input-border: hsl(0 0% 100% / 0.1);

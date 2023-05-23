@@ -1,0 +1,23 @@
+@import "mixins";
+
+.nav_background_wrapper {
+  position: absolute;
+  left: 0;
+  height: 100%;
+  overflow: hidden;
+
+  &.moon {
+    width: 100%;
+    object-fit: cover;
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  @include mobile {
+    display: none;
+  }
+}

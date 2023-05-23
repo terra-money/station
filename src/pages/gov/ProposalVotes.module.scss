@@ -5,6 +5,10 @@
   grid-template-rows: auto 1fr;
   gap: 4px;
   font-size: var(--font-size-small);
+
+  .title {
+    font-size: var(--font-size);
+  }
 }
 
 .list {
@@ -38,4 +42,5 @@
 
 .end {
   margin-top: 20px;
+  color: var(--text-muted);
 }

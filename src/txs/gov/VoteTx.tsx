@@ -14,7 +14,7 @@ const VoteTx = () => {
     <Page backButton title={t("Vote")}>
       <Auto
         columns={[
-          <Card>
+          <Card inputCard>
             <VoteForm />
           </Card>,
           <Card {...state}>

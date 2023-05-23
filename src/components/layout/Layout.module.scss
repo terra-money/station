@@ -101,6 +101,12 @@
   gap: 10px;
   margin-left: auto;
   z-index: 1;
+  color: var(--menu-text);
+
+  &.light,
+  &.whale {
+    color: var(--text);
+  }
 }
 
 .main {

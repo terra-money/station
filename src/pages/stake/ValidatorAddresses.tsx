@@ -24,7 +24,7 @@ const ValidatorAddresses = ({ validator }: { validator: Validator }) => {
   ]
 
   return (
-    <Card>
+    <Card title={t("Addresses")} bordered twoTone>
       <Grid gap={12} className={styles.addresses}>
         {addresses.map((item) => (
           <ValidatorNumber {...item} key={item.title} />

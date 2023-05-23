@@ -32,7 +32,7 @@ const ValidatorCommission = ({ validator }: { validator: Validator }) => {
   ]
 
   return (
-    <Card title={t("Commission")} bordered>
+    <Card title={t("Commission")} bordered twoTone>
       <ValidatorNumbers contents={commissions} />
     </Card>
   )
