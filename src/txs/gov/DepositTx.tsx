@@ -11,7 +11,7 @@ const DepositTx = () => {
   const { data: proposal, ...state } = useProposal(id, chain)
 
   return (
-    <Page title={t("Deposit")} backButton>
+    <Page title={t("Deposit")} backButtonPath={`/proposal/${chain}/${id}`}>
       <Auto
         columns={[
           <Card inputCard>

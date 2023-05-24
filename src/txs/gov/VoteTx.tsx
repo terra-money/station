@@ -11,7 +11,7 @@ const VoteTx = () => {
   const { data: proposal, ...state } = useProposal(id, chain)
 
   return (
-    <Page backButton title={t("Vote")}>
+    <Page backButtonPath={`/proposal/${chain}/${id}`} title={t("Vote")}>
       <Auto
         columns={[
           <Card inputCard>
