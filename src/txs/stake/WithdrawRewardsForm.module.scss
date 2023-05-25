@@ -16,7 +16,7 @@
 }
 
 .button {
-  font-size: 10px;
+  font-size: var(--font-size-small);
   font-weight: var(--bold);
   padding: 6px 0;
 }
@@ -36,6 +36,11 @@
 .title {
   padding-bottom: 10px;
   font-weight: var(--bold);
+
+  dt,
+  dd {
+    font-weight: var(--bold);
+  }
 }
 
 .actions {
