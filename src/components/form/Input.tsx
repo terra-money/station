@@ -47,6 +47,7 @@ const Input = forwardRef(
 
         {actionButton && (
           <button
+            type="button"
             className={classNames(styles.symbol, styles.after)}
             onClick={(e) => {
               actionButton.onClick()
