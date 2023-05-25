@@ -32,3 +32,19 @@
   @include flex(space-between);
   flex: 1;
 }
+
+.title {
+  padding-bottom: 10px;
+  font-weight: var(--bold);
+}
+
+.actions {
+  display: flex;
+
+  .button {
+    color: var(--button-primary-bg);
+    margin-left: auto;
+    order: 2;
+    padding: 0px 5px 0px 0px;
+  }
+}

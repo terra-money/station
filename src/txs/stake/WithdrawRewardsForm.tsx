@@ -124,29 +124,30 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
       {({ fee, submit }) => (
         <Form onSubmit={handleSubmit(submit.fn)}>
           <Grid gap={12}>
-            <dl>
-              <dt>{t("Validators")}</dt>
-            </dl>
+            <Flex className={styles.actions} start>
+              {Object.values(state).some((state) => !state) ? (
+                <button
+                  type="button"
+                  className={styles.button}
+                  onClick={() => setState(init(true))}
+                >
+                  {t("Select All")}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className={styles.button}
+                  onClick={() => setState(init(false))}
+                >
+                  {t("Deselect All")}
+                </button>
+              )}
+            </Flex>
             <Card size="small" className={styles.card}>
-              <Flex className={styles.actions} start>
-                {Object.values(state).some((state) => !state) ? (
-                  <button
-                    type="button"
-                    className={styles.button}
-                    onClick={() => setState(init(true))}
-                  >
-                    {t("Select all")}
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    className={styles.button}
-                    onClick={() => setState(init(false))}
-                  >
-                    {t("Deselect all")}
-                  </button>
-                )}
-              </Flex>
+              <dl className={styles.title}>
+                <dt>{t("Validators")}</dt>
+                <dd>{t("Rewards")}</dd>
+              </dl>
               <section className={styles.validators}>
                 {byValidator.map(({ address, list: [{ denom, amount }] }) => {
                   const checked = state[address]
