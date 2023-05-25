@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, useRef } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import BigNumber from "bignumber.js"
@@ -13,7 +13,7 @@ import { calcRewardsValues } from "data/queries/distribution"
 import { WithTokenItem } from "data/token"
 import { ValidatorLink } from "components/general"
 import { Form, FormArrow, FormItem, Checkbox } from "components/form"
-import { Card, Grid } from "components/layout"
+import { Card, Flex, Grid } from "components/layout"
 import { TokenCard, TokenCardGrid } from "components/token"
 import { Empty } from "components/feedback"
 import styles from "./WithdrawRewardsForm.module.scss"
@@ -59,7 +59,6 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
     setState(init(true))
   }, [init])
 
-  let selectAll = useRef(true)
   const selectable = byValidator.length >= 1
   const selected = useMemo(
     () => Object.keys(state).filter((address) => state[address]),
@@ -125,37 +124,30 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
       {({ fee, submit }) => (
         <Form onSubmit={handleSubmit(submit.fn)}>
           <Grid gap={12}>
+            <dl>
+              <dt>{t("Validators")}</dt>
+            </dl>
             <Card size="small" className={styles.card}>
-              <dl className={styles.title}>
-                <dt>{t("Validators")}</dt>
-                <dd>{t("Rewards")}</dd>
-              </dl>
+              <Flex className={styles.actions} start>
+                {Object.values(state).some((state) => !state) ? (
+                  <button
+                    type="button"
+                    className={styles.button}
+                    onClick={() => setState(init(true))}
+                  >
+                    {t("Select all")}
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className={styles.button}
+                    onClick={() => setState(init(false))}
+                  >
+                    {t("Deselect all")}
+                  </button>
+                )}
+              </Flex>
               <section className={styles.validators}>
-                <Checkbox
-                  className={styles.checkbox}
-                  checked={
-                    selectAll.current && Object.values(state).every(Boolean)
-                  }
-                  onChange={() => {
-                    switch (
-                      selectAll.current &&
-                      Object.values(state).every(Boolean)
-                    ) {
-                      case true:
-                        selectAll.current = false
-                        setState(init(false))
-                        break
-                      case false:
-                        selectAll.current = true
-                        setState(init(true))
-                        break
-                    }
-                  }}
-                >
-                  <dl className={styles.item}>
-                    <dt>{"Select All"}</dt>
-                  </dl>
-                </Checkbox>
                 {byValidator.map(({ address, list: [{ denom, amount }] }) => {
                   const checked = state[address]
                   return (
