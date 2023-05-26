@@ -6,7 +6,7 @@ const RecoverWalletPage = () => {
   const { t } = useTranslation()
 
   return (
-    <Page title={t("Import from seed phrase")} backButton small>
+    <Page title={t("Import from seed phrase")} backButtonPath="/" small>
       <Card>
         <RecoverWalletForm />
       </Card>

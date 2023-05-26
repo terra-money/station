@@ -109,7 +109,7 @@ const StakeTx = () => {
   }
 
   return (
-    <Page {...state} title={t("Delegate")} backButton>
+    <Page {...state} title={t("Delegate")} backButtonPath="/stake">
       <Auto
         columns={[
           <Tabs

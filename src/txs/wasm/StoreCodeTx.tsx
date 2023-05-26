@@ -6,7 +6,7 @@ const StoreCodeTx = () => {
   const { t } = useTranslation()
 
   return (
-    <Page title={t("Upload a wasm file")} small backButton>
+    <Page title={t("Upload a wasm file")} small backButtonPath="/contract">
       <ChainFilter>
         {(chainID) => <StoreCodeForm chainID={chainID ?? ""} />}
       </ChainFilter>
