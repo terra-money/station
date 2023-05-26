@@ -84,8 +84,6 @@ const HistoryList = ({ chainID }: Props) => {
     )
     .slice(0, LIMIT)
 
-  console.log(history)
-
   const render = () => {
     if (addresses && !history) return null
 
