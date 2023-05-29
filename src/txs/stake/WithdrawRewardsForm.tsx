@@ -2,8 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import BigNumber from "bignumber.js"
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
-import ExpandLessIcon from "@mui/icons-material/ExpandLess"
 import { Validator, ValAddress } from "@terra-money/feather.js"
 import { Rewards } from "@terra-money/feather.js"
 import { MsgWithdrawDelegatorReward } from "@terra-money/feather.js"
@@ -11,7 +9,6 @@ import { queryKey } from "data/query"
 import { useCurrency } from "data/settings/Currency"
 import { useNetwork } from "data/wallet"
 import { useMemoizedCalcValue } from "data/queries/coingecko"
-import { getFindMoniker } from "data/queries/staking"
 import { calcRewardsValues } from "data/queries/distribution"
 import { WithTokenItem } from "data/token"
 import { ValidatorLink } from "components/general"
@@ -22,6 +19,7 @@ import { Empty } from "components/feedback"
 import styles from "./WithdrawRewardsForm.module.scss"
 import Tx from "txs/Tx"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
+import { Read } from "components/token"
 
 interface Props {
   rewards: Rewards
@@ -35,7 +33,6 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
   const addresses = useInterchainAddresses()
   const address = addresses && addresses[chain]
   const calcValue = useMemoizedCalcValue()
-  const findMoniker = getFindMoniker(validators)
   const { byValidator } = useMemo(
     () =>
       calcRewardsValues(rewards, currency.id, (coin) => Number(coin.amount)),
@@ -62,14 +59,11 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
     setState(init(true))
   }, [init])
 
-  const selectable = byValidator.length > 1
+  const selectable = byValidator.length >= 1
   const selected = useMemo(
     () => Object.keys(state).filter((address) => state[address]),
     [state]
   )
-
-  const [isOpen, setIsOpen] = useState(true)
-  const toggle = () => setIsOpen(!isOpen)
 
   /* calc */
   const selectedTotal = selected.reduce<Record<Denom, Amount>>(
@@ -94,15 +88,6 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
     },
     {}
   )
-
-  const selectedValidatorsText = !selected.length
-    ? t("Not selected")
-    : selected.length === 1
-    ? findMoniker(selected[0])
-    : t("{{moniker}} and {{length}} others", {
-        moniker: findMoniker(selected[0]),
-        length: selected.length - 1,
-      })
 
   /* form */
   const { handleSubmit, reset } = useForm({ mode: "onChange" })
@@ -130,7 +115,7 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
     onSuccess: () => reset(),
   }
 
-  if (Object.keys(selectedTotal).length === 0) {
+  if (!selectable) {
     return <Empty>{t("No rewards on selected chain")}</Empty>
   }
 
@@ -139,71 +124,56 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
       {({ fee, submit }) => (
         <Form onSubmit={handleSubmit(submit.fn)}>
           <Grid gap={12}>
-            <dl>
-              <dt>{t("Validators")}</dt>
-              <dd>
-                {selectable ? (
-                  <button type="button" onClick={toggle}>
-                    {selectedValidatorsText}
-                    {isOpen ? (
-                      <ExpandLessIcon style={{ fontSize: 16 }} />
-                    ) : (
-                      <ExpandMoreIcon style={{ fontSize: 16 }} />
-                    )}
-                  </button>
-                ) : (
-                  selectedValidatorsText
-                )}
-              </dd>
-            </dl>
-
-            {selectable && isOpen && (
-              <Card size="small" className={styles.card}>
-                <Flex className={styles.actions} start>
-                  {Object.values(state).some((state) => !state) ? (
-                    <button
-                      type="button"
-                      className={styles.button}
-                      onClick={() => setState(init(true))}
+            <Flex className={styles.actions} start>
+              {Object.values(state).some((state) => !state) ? (
+                <button
+                  type="button"
+                  className={styles.button}
+                  onClick={() => setState(init(true))}
+                >
+                  {t("Select All")}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className={styles.button}
+                  onClick={() => setState(init(false))}
+                >
+                  {t("Deselect All")}
+                </button>
+              )}
+            </Flex>
+            <Card size="small" className={styles.card}>
+              <dl className={styles.title}>
+                <dt>{t("Validators")}</dt>
+                <dd>{t("Rewards")}</dd>
+              </dl>
+              <section className={styles.validators}>
+                {byValidator.map(({ address, list: [{ denom, amount }] }) => {
+                  const checked = state[address]
+                  return (
+                    <Checkbox
+                      className={styles.checkbox}
+                      checked={checked}
+                      onChange={() =>
+                        setState({ ...state, [address]: !checked })
+                      }
+                      key={address}
                     >
-                      {t("Select all")}
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      className={styles.button}
-                      onClick={() => setState(init(false))}
-                    >
-                      {t("Deselect all")}
-                    </button>
-                  )}
-                </Flex>
-
-                <section className={styles.validators}>
-                  {byValidator.map(({ address, sum }) => {
-                    const checked = state[address]
-
-                    return (
-                      <Checkbox
-                        className={styles.checkbox}
-                        checked={checked}
-                        onChange={() =>
-                          setState({ ...state, [address]: !checked })
-                        }
-                        key={address}
-                      >
-                        <div className={styles.item}>
+                      <dl className={styles.item}>
+                        <dt>
                           <ValidatorLink address={address} />
-                        </div>
-                      </Checkbox>
-                    )
-                  })}
-                </section>
-              </Card>
-            )}
-
-            <FormArrow />
-
+                        </dt>
+                        <dd>
+                          <Read amount={amount} denom={denom} />
+                        </dd>
+                      </dl>
+                    </Checkbox>
+                  )
+                })}
+              </section>
+            </Card>
+            {selected.length ? <FormArrow /> : undefined}
             <FormItem>
               <TokenCardGrid maxHeight>
                 {Object.entries(selectedTotal).map(([denom, amount]) => (
@@ -221,7 +191,6 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
               </TokenCardGrid>
             </FormItem>
           </Grid>
-
           {fee.render()}
           {submit.button}
         </Form>

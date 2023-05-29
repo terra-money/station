@@ -16,7 +16,7 @@ interface Props extends QueryState {
   small?: boolean
   sub?: boolean // used as a page in a page
   invisible?: boolean // used as a page in a page with no margin
-  backButton?: boolean
+  backButtonPath?: string
 }
 
 const Page = (props: PropsWithChildren<Props>) => {
@@ -29,7 +29,7 @@ const Page = (props: PropsWithChildren<Props>) => {
     sub,
     invisible,
     mainClassName,
-    backButton,
+    backButtonPath,
   } = props
 
   return (
@@ -43,7 +43,9 @@ const Page = (props: PropsWithChildren<Props>) => {
               {title && (
                 <header className={styles.header}>
                   <div className={styles.titleWrapper}>
-                    {backButton && <ArrowBack onClick={() => navigate(-1)} />}
+                    {backButtonPath && (
+                      <ArrowBack onClick={() => navigate(backButtonPath)} />
+                    )}
                     <h1 className={styles.title}>{title}</h1>
                   </div>
                   {extra}

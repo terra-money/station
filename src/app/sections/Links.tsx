@@ -15,11 +15,10 @@ const Links = () => {
   const { name } = useTheme()
 
   const community = {
-    medium: "https://medium.com/terra-money",
     discord: "https://terra.sc/discord",
     telegram: "https://t.me/TerraNetworkLobby",
     twitter: "https://twitter.com/terra_money",
-    github: "https://github.com/terra-money",
+    github: "https://github.com/terra-money/station",
   }
 
   return (

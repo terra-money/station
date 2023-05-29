@@ -35,6 +35,7 @@ export const queryKey = mirror({
   TerraAssets: "",
   TerraAPI: "",
   History: "",
+  gammTokens: "",
 
   /* lcd */
   alliance: { alliances: "", delegations: "", delegation: "" },
