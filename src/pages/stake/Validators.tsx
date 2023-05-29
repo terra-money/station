@@ -237,6 +237,7 @@ const Validators = () => {
                   defaultSortOrder: "desc",
                   sorter: ({ unbonding: a = 0 }, { unbonding: b = 0 }) => a - b,
                   render: (value = 0) => t("{{value}} days", { value }),
+                  align: "right",
                 },
                 {
                   title: (
@@ -263,6 +264,7 @@ const Validators = () => {
                   defaultSortOrder: "desc",
                   sorter: ({ rewards: a = 0 }, { rewards: b = 0 }) => a - b,
                   render: (rewards = 0) => readPercent(rewards),
+                  align: "right",
                 },
               ]}
             />
