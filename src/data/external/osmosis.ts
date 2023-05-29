@@ -7,7 +7,7 @@ export const OSMOSIS_API_URL = "https://api-osmosis.imperator.co"
 
 export const GAMM_TOKEN_DECIMALS = 18
 export const OSMO_ICON =
-  "https://raw.githubusercontent.com/terra-money/station-assets/main/img/chains/Osmosis.svg"
+  "https://station-assets.terra.money/img/chains/Osmosis.svg"
 
 interface IOsmosisPoolAsset {
   symbol: string
