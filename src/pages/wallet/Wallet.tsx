@@ -10,6 +10,7 @@ import AssetPage from "./AssetPage"
 import ReceivePage from "./ReceivePage"
 import SendPage from "./SendPage"
 import { atom, useRecoilState } from "recoil"
+import { useEffect } from "react"
 
 enum Path {
   wallet = "wallet",
@@ -47,7 +48,7 @@ export { useWalletRoute, Path }
 
 export const isWalletBarOpen = atom({
   key: "isWalletBarOpen",
-  default: true,
+  default: false,
 })
 
 export const walletBarRoute = atom({
@@ -58,6 +59,12 @@ export const walletBarRoute = atom({
 const Wallet = () => {
   const [isOpen, setIsOpen] = useRecoilState(isWalletBarOpen)
   const [route, setRoute] = useRecoilState(walletBarRoute)
+
+  useEffect(() => {
+    if (document.body.clientWidth > 992) {
+      setIsOpen(true)
+    }
+  }, [setIsOpen])
 
   const BackButton = () => {
     if (route.path === Path.wallet) return null
