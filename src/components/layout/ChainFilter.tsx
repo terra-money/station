@@ -56,8 +56,7 @@ const ChainFilter = ({
   )
 
   const initNetwork =
-    sortedDisplayChains.find((chainID) => chainID === savedChain) ??
-    (all ? undefined : sortedDisplayChains[0])
+    network[savedChain ?? ""]?.chainID ?? (all ? undefined : chainID)
 
   const [selectedChain, setChain] = useState<string | undefined>(initNetwork)
 
