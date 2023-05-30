@@ -56,12 +56,10 @@ const ChainFilter = ({
   )
 
   const initNetwork =
-    networks.find((n) => n.chainID === savedChain) ??
-    (all ? undefined : networks[0])
+    sortedDisplayChains.find((chainID) => chainID === savedChain) ??
+    (all ? undefined : sortedDisplayChains[0])
 
-  const [selectedChain, setChain] = useState<string | undefined>(
-    initNetwork?.chainID
-  )
+  const [selectedChain, setChain] = useState<string | undefined>(initNetwork)
 
   let fixedChain: string | undefined
   if (terraOnly) {
