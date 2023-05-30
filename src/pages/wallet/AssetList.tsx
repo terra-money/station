@@ -10,7 +10,10 @@ import Asset from "./Asset"
 import styles from "./AssetList.module.scss"
 import { useTokenFilters } from "utils/localStorage"
 import { toInput } from "txs/utils"
-import { isNativeToken } from "utils/chain"
+import {
+  useCustomTokensCW20,
+  useCustomTokensNative,
+} from "data/settings/CustomTokens"
 
 const AssetList = () => {
   const { t } = useTranslation()
@@ -20,6 +23,16 @@ const AssetList = () => {
   const coins = useBankBalance()
   const { data: prices } = useExchangeRates()
   const readNativeDenom = useNativeDenoms()
+  const native = useCustomTokensNative()
+  const cw20 = useCustomTokensCW20()
+  const alwaysVisibleDenoms = useMemo(
+    () =>
+      new Set([
+        ...cw20.list.map((a) => a.token),
+        ...native.list.map((a) => a.denom),
+      ]),
+    [cw20.list, native.list]
+  )
 
   const list = useMemo(
     () =>
@@ -55,7 +68,9 @@ const AssetList = () => {
           (a) => (hideNoWhitelist ? !a.symbol.endsWith("...") : true) // TODO: update and implement whitelist check
         )
         .filter((a) => {
-          if (!(hideLowBal && a.price === 0) || isNativeToken(a.denom))
+          const { token } = readNativeDenom(a.denom)
+
+          if (!hideLowBal || a.price === 0 || alwaysVisibleDenoms.has(token))
             return true
           return a.price * toInput(a.balance) >= 1
         })
@@ -63,7 +78,14 @@ const AssetList = () => {
           (a, b) =>
             b.price * parseInt(b.balance) - a.price * parseInt(a.balance)
         ),
-    [coins, readNativeDenom, prices, hideNoWhitelist, hideLowBal]
+    [
+      coins,
+      readNativeDenom,
+      prices,
+      hideNoWhitelist,
+      hideLowBal,
+      alwaysVisibleDenoms,
+    ]
   )
 
   const render = () => {
@@ -75,14 +97,15 @@ const AssetList = () => {
           <FormError>{t("Coins required to post transactions")}</FormError>
         )}
         <section>
-          {list.map(({ denom, ...item }) => (
-            <Asset
-              denom={denom}
-              {...readNativeDenom(denom)}
-              {...item}
-              key={denom}
-            />
-          ))}
+          {(prices || !hideLowBal) &&
+            list.map(({ denom, ...item }) => (
+              <Asset
+                denom={denom}
+                {...readNativeDenom(denom)}
+                {...item}
+                key={denom}
+              />
+            ))}
         </section>
       </div>
     )
