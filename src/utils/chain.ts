@@ -60,4 +60,5 @@ export const useTerraChainName = () =>
 export const isNativeToken = (denom: string) =>
   !denom.startsWith("ibc/") &&
   !denom.startsWith("factory/") &&
+  !denom.startsWith("gamm/") &&
   !AccAddress.validate(denom)

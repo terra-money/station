@@ -350,7 +350,9 @@ const SendPage = () => {
                 <AssetSelector
                   value={asset ?? ""}
                   onChange={(asset) => setValue("asset", asset)}
-                  assetList={availableAssets}
+                  assetList={availableAssets.filter(
+                    ({ symbol }) => !symbol.endsWith("...")
+                  )}
                 />
               </FormItem>
               {availableChains && (

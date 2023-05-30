@@ -48,6 +48,7 @@ import { useNativeDenoms } from "data/token"
 interface Props<TxValues> {
   /* Only when the token is paid out of the balance held */
   token?: Token
+  baseDenom?: string
   decimals?: number
   amount?: Amount
   coins?: CoinInput[]
@@ -68,6 +69,7 @@ interface Props<TxValues> {
 
   /* on tx success */
   onPost?: () => void
+  hideLoader?: boolean
   onSuccess?: () => void
   redirectAfterTx?: { label: string; path: string }
   queryKeys?: QueryKey[]
@@ -81,7 +83,8 @@ interface RenderProps<TxValues> {
 }
 
 function Tx<TxValues>(props: Props<TxValues>) {
-  const { token, decimals, amount, balance, chain } = props
+  const { token, decimals, amount, balance, chain, baseDenom, hideLoader } =
+    props
   const { estimationTxValues, createTx, gasAdjustment: txGasAdjustment } = props
   const { children, onChangeMax } = props
   const { onPost, redirectAfterTx, queryKeys, onSuccess } = props
@@ -124,9 +127,10 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   const key = {
     address: addresses?.[chain],
-    network: networks,
+    //network: networks,
     gasAdjustment: gasAdjustment * (txGasAdjustment ?? 1),
-    msgs: simulationTx?.msgs.map((msg) => msg.toData(isClassic)),
+    estimationTxValues,
+    //msgs: simulationTx?.msgs.map((msg) => msg.toData(isClassic)),
   }
   const { data: estimatedGas, ...estimatedGasState } = useQuery(
     [queryKey.tx.create, key, isWalletEmpty],
@@ -271,10 +275,10 @@ function Tx<TxValues>(props: Props<TxValues>) {
         navigate(toPostMultisigTx(unsignedTx))
       } else if (wallet) {
         const { txhash } = await auth.post({ ...tx, fee }, password)
-        setLatestTx({ txhash, ...latestTxBase })
+        !hideLoader && setLatestTx({ txhash, ...latestTxBase })
       } else {
         const { result } = await post({ ...tx, fee })
-        setLatestTx({ txhash: result.txhash, ...latestTxBase })
+        !hideLoader && setLatestTx({ txhash: result.txhash, ...latestTxBase })
       }
 
       onPost?.()
@@ -325,7 +329,11 @@ function Tx<TxValues>(props: Props<TxValues>) {
             fontSize="inherit"
             className={styles.icon}
           />
-          <Read amount={max ?? "0"} token={token} decimals={decimals} />
+          <Read
+            amount={max ?? "0"}
+            token={baseDenom ?? token}
+            decimals={decimals}
+          />
         </Flex>
       </button>
     )
@@ -355,26 +363,45 @@ function Tx<TxValues>(props: Props<TxValues>) {
               >
                 {availableGasDenoms.map((denom) => (
                   <option value={denom} key={denom}>
-                    {readNativeDenom(denom).symbol}
+                    {
+                      readNativeDenom(
+                        denom === token ? baseDenom ?? denom : denom
+                      ).symbol
+                    }
                   </option>
                 ))}
               </Select>
             )}
           </dt>
-          <dd>{gasFee.amount && <Read {...gasFee} />}</dd>
+          <dd>
+            {gasFee.amount && (
+              <Read
+                {...gasFee}
+                denom={
+                  gasFee.denom === token
+                    ? baseDenom ?? gasFee.denom
+                    : gasFee.denom
+                }
+              />
+            )}
+          </dd>
 
           {balanceAfterTx && (
             <>
               <dt>{t("Balance")}</dt>
               <dd>
-                <Read amount={balance} token={token} decimals={decimals} />
+                <Read
+                  amount={balance}
+                  token={baseDenom ?? token}
+                  decimals={decimals}
+                />
               </dd>
 
               <dt>{t("Balance after tx")}</dt>
               <dd>
                 <Read
                   amount={balanceAfterTx}
-                  token={token}
+                  token={baseDenom ?? token}
                   decimals={decimals}
                   className={classNames(insufficient && "danger")}
                 />

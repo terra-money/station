@@ -22,7 +22,7 @@ const SignMultisigTxPage = () => {
   }
 
   return (
-    <Page backButton title={t("Sign a multisig tx")}>
+    <Page backButtonPath="/" title={t("Sign a multisig tx")}>
       {render()}
     </Page>
   )

@@ -5,11 +5,22 @@ import { AccAddress } from "@terra-money/feather.js"
 import { ASSETS } from "config/constants"
 import { useTokenInfoCW20 } from "./queries/wasm"
 import { useCustomTokensCW20 } from "./settings/CustomTokens"
+import {
+  useGammTokens,
+  GAMM_TOKEN_DECIMALS,
+  OSMO_ICON,
+} from "./external/osmosis"
 import { useCW20Whitelist, useIBCWhitelist } from "./Terra/TerraAssets"
 import { useWhitelist } from "./queries/chains"
-import { useNetworkName } from "./wallet"
+import { useNetworkName, useNetwork } from "./wallet"
+import { getChainIDFromAddress } from "utils/bech32"
 
-export const useTokenItem = (token: Token): TokenItem | undefined => {
+const DEFAULT_NATIVE_DECIMALS = 6
+
+export const useTokenItem = (
+  token: Token,
+  chainID?: string
+): TokenItem | undefined => {
   const readNativeDenom = useNativeDenoms()
 
   /* CW20 */
@@ -53,17 +64,18 @@ export const useTokenItem = (token: Token): TokenItem | undefined => {
     return readIBCDenom(item)
   }
 
-  return readNativeDenom(token)
+  return readNativeDenom(token, chainID)
 }
 
 interface Props {
   token: Token
+  chainID?: string
   children: (token: TokenItem) => ReactNode
 }
 
-export const WithTokenItem = ({ token, children }: Props) => {
+export const WithTokenItem = ({ token, chainID, children }: Props) => {
   const readNativeDenom = useNativeDenoms()
-  return <>{children(readNativeDenom(token))}</>
+  return <>{children(readNativeDenom(token, chainID))}</>
 }
 
 /* helpers */
@@ -73,14 +85,69 @@ export const useNativeDenoms = () => {
   const { whitelist, ibcDenoms, legacyWhitelist } = useWhitelist()
   const { list: cw20 } = useCustomTokensCW20()
   const networkName = useNetworkName()
+  const networks = useNetwork()
+  const gammTokens = useGammTokens()
 
-  function readNativeDenom(denom: Denom): TokenItem {
-    const fixedDenom = denom.startsWith("ibc/")
-      ? `${readDenom(denom).substring(0, 5)}...`
-      : readDenom(denom)
+  let decimals = DEFAULT_NATIVE_DECIMALS
+
+  function readNativeDenom(denom: Denom, chainID?: string): TokenItem {
+    let tokenType = ""
+
+    if (denom.startsWith("ibc/")) {
+      tokenType = "ibc"
+    } else if (denom.startsWith("factory/")) {
+      tokenType = "factory"
+    } else if (denom.startsWith("gamm/")) {
+      tokenType = "gamm"
+      decimals = GAMM_TOKEN_DECIMALS
+    }
+
+    let fixedDenom = ""
+
+    switch (tokenType) {
+      case "ibc":
+        fixedDenom = `${readDenom(denom).substring(0, 5)}...`
+        break
+
+      case "gamm":
+        fixedDenom = gammTokens.get(denom) ?? readDenom(denom)
+        break
+
+      case "factory": {
+        // TODO - lookup whitelist for factory tokens.
+        fixedDenom = "..."
+        break
+      }
+
+      default:
+        fixedDenom = readDenom(denom)
+    }
+
+    let factoryIcon
+    if (tokenType === "factory") {
+      const tokenAddress = denom.split(/[/:]/)[1]
+      const chainID = getChainIDFromAddress(tokenAddress, networks)
+      if (chainID) {
+        factoryIcon = networks[chainID].icon
+      }
+    }
+
+    if (tokenType === "gamm") {
+      factoryIcon = OSMO_ICON
+    }
 
     // native token
-    if (whitelist[networkName]?.[denom]) return whitelist[networkName]?.[denom]
+    if (chainID) {
+      const tokenID = `${chainID}:${denom}`
+
+      if (whitelist[networkName]?.[tokenID])
+        return whitelist[networkName]?.[tokenID]
+    } else {
+      const tokenDetails = Object.values(whitelist[networkName] ?? {}).find(
+        ({ token }) => token === denom
+      )
+      if (tokenDetails) return tokenDetails
+    }
 
     // ibc token
     const ibcToken = ibcDenoms[networkName]?.[denom]?.token
@@ -102,10 +169,13 @@ export const useNativeDenoms = () => {
         token: denom,
         symbol: fixedDenom,
         name: fixedDenom,
-        icon: denom.startsWith("ibc/")
-          ? "https://assets.terra.money/icon/svg/IBC.svg"
-          : "https://assets.terra.money/icon/svg/Terra.svg",
-        decimals: 6,
+        icon:
+          tokenType === "ibc"
+            ? "https://assets.terra.money/icon/svg/IBC.svg"
+            : tokenType === "factory" || tokenType === "gamm"
+            ? factoryIcon
+            : "https://assets.terra.money/icon/svg/Terra.svg",
+        decimals,
       }
     )
   }

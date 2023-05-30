@@ -33,7 +33,7 @@ const ValidatorDetails = () => {
   }
 
   return (
-    <Page {...state} title={t("Validator details")} backButton>
+    <Page {...state} title={t("Validator details")} backButtonPath="/stake">
       {render()}
     </Page>
   )

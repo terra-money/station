@@ -25,6 +25,7 @@ const StandardDropdown = ({
   return (
     <div className={styles.container}>
       <button
+        type="button"
         className={styles.selector}
         onClick={(e) => {
           e.preventDefault()
