@@ -18,10 +18,11 @@ export interface Props extends TokenItem, QueryState {
   change?: number
   hideActions?: boolean
   chains: string[]
+  id: string
 }
 
 const Asset = (props: Props) => {
-  const { token, icon, symbol, balance, denom, decimals, ...state } = props
+  const { token, icon, symbol, balance, denom, decimals, id, ...state } = props
   const { t } = useTranslation()
   const currency = useCurrency()
   const network = useNetwork()
@@ -38,9 +39,8 @@ const Asset = (props: Props) => {
   return (
     <article
       className={styles.asset}
-      key={token}
       onClick={() =>
-        setRoute({ path: Path.coin, denom: token, previousPage: route })
+        setRoute({ path: Path.coin, denom: id, previousPage: route })
       }
     >
       <section className={styles.details}>

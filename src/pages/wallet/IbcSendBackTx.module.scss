@@ -1,0 +1,63 @@
+@import "mixins";
+
+.steps__container {
+  @include flex(space-between);
+  margin-bottom: 1.2rem;
+
+  .chain__pill,
+  .chain__pill__active {
+    border-radius: 50%;
+    padding: 8px;
+    background: hsl(
+      var(--button-default-bg-h),
+      var(--button-default-bg-s),
+      var(--button-default-bg-l)
+    );
+    img {
+      width: 26px;
+    }
+  }
+
+  .chain__pill__active {
+    background: hsl(
+      var(--button-primary-bg-h),
+      var(--button-primary-bg-s),
+      var(--button-primary-bg-l)
+    );
+  }
+
+  .chain__path,
+  .chain__path__active {
+    height: 8px;
+    border-radius: 4px;
+    width: 100%;
+    background: hsl(
+      var(--button-default-bg-h),
+      var(--button-default-bg-s),
+      var(--button-default-bg-l)
+    );
+    color: hsl(
+      var(--button-primary-bg-h),
+      var(--button-primary-bg-s),
+      var(--button-primary-bg-l)
+    );
+    margin: 0 8px;
+  }
+
+  .chain__path__active {
+    background: hsl(
+      var(--button-primary-bg-h),
+      var(--button-primary-bg-s),
+      var(--button-primary-bg-l)
+    );
+  }
+}
+
+/* color */
+.success {
+  color: var(--success);
+}
+
+.danger {
+  color: var(--danger);
+}
