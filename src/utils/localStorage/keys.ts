@@ -12,7 +12,7 @@ export enum SettingKey {
   Chain = "Chain",
   CustomLCD = "CustomLCD",
   HideLowBalTokens = "HideLowBalTokens",
-  CustomTokens = "CustomTokens", // Wallet
+  CustomTokens = "CustomTokensInterchain", // Wallet
   MinimumValue = "MinimumValue", // Wallet (UST value to show on the list)
   WithdrawAs = "WithdrawAs", // Rewards (Preferred denom to withdraw rewards)
   EnabledNetworks = "EnabledNetworks",
@@ -27,22 +27,26 @@ export const isSystemDarkMode =
 
 export const DefaultTheme = themes[1]
 
-export const DefaultCustomTokensItem = {
+export const DefaultCustomTokensItem = (chainID: string) => ({
   cw20: [],
   cw721: [],
   native: [
     {
       denom: "uluna",
+      id: `${chainID}:uluna`,
     },
   ],
-}
+})
+
 export const DefaultDisplayChains = {
   mainnet: ["phoenix-1", "osmosis-1"],
   testnet: ["pisco-1"],
   classic: ["columbus-5"],
 }
 
-export const DefaultCustomTokens = { mainnet: DefaultCustomTokensItem }
+export const DefaultCustomTokens = {
+  mainnet: DefaultCustomTokensItem("phoenix-1"),
+}
 
 export const DefaultSettings = {
   [SettingKey.Theme]: DefaultTheme,

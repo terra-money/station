@@ -74,15 +74,27 @@ const Component = ({ whitelist, keyword }: Props) => {
     list: [...cw20.list, ...native.list],
     getIsAdded: (item: CustomTokenCW20 | NativeTokenItem) => {
       if (isCW20(item)) return cw20.getIsAdded(item)
-      return native.getIsAdded({ denom: item.token })
+      const nativeItem = item as NativeTokenItem
+      return native.getIsAdded({
+        id: [nativeItem.chains[0], nativeItem.token].join(":"),
+        denom: nativeItem.token,
+      })
     },
     add: (item: CustomTokenCW20 | NativeTokenItem) => {
       if (isCW20(item)) return cw20.add(item)
-      return native.add({ denom: item.token })
+      const nativeItem = item as NativeTokenItem
+      return native.add({
+        id: [nativeItem.chains[0], nativeItem.token].join(":"),
+        denom: nativeItem.token,
+      })
     },
     remove: (item: CustomTokenCW20 | NativeTokenItem) => {
       if (isCW20(item)) return cw20.remove(item)
-      return native.remove({ denom: item.token })
+      const nativeItem = item as NativeTokenItem
+      return native.remove({
+        id: [nativeItem.chains[0], nativeItem.token].join(":"),
+        denom: nativeItem.token,
+      })
     },
   }
 
