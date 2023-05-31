@@ -318,7 +318,7 @@ function IbcSendBackTx({ token, chainID }: Props) {
               {state.isLoading && <p>{t("Loading...")}</p>}
               {isLoading && (
                 <>
-                  <p>{t("Waiting fo on-chain confirmation...")}</p>
+                  <p>{t("Waiting for on-chain confirmation...")}</p>
                   <p>{t("This may take a few minutes")}</p>
                 </>
               )}
