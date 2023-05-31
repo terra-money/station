@@ -16,19 +16,16 @@ interface Props {
   assetList: AssetType[]
   onChange: (chain: string) => void
   value: string
-  small?: boolean
-  noSearch?: boolean
+  assetsByDenom: Record<string, AssetType>
 }
 
 const AssetSelector = ({
   assetList,
   onChange,
   value,
-  small,
-  noSearch,
+  assetsByDenom,
 }: Props) => {
   const [open, setOpen] = useState(false)
-  const [selectedIndex, setSelectedIndex] = useState(0)
   const ref = useRef<HTMLDivElement>(null)
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -43,8 +40,7 @@ const AssetSelector = ({
     }
   }, [])
 
-  const handleSelection = (denom: string, index: number) => {
-    setSelectedIndex(index)
+  const handleSelection = (denom: string) => {
     onChange(denom)
     setOpen(false)
   }
@@ -61,10 +57,10 @@ const AssetSelector = ({
       >
         <span>
           <img
-            src={assetList[selectedIndex].icon}
-            alt={assetList[selectedIndex]?.denom}
+            src={assetsByDenom[value]?.icon}
+            alt={assetsByDenom[value]?.denom}
           />{" "}
-          {assetList[selectedIndex]?.symbol}
+          {assetsByDenom[value]?.symbol}
         </span>{" "}
         <ArrowDropDownIcon style={{ fontSize: 20 }} className={styles.caret} />
       </button>

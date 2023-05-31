@@ -333,6 +333,19 @@ const SendPage = () => {
     }
   }, [chain, trigger, recipient])
 
+  const filteredAssets = useMemo(
+    () => availableAssets.filter(({ symbol }) => !symbol.endsWith("...")),
+    [availableAssets]
+  )
+
+  const assetsByDenom = filteredAssets.reduce(
+    (acc: Record<string, AssetType>, item: AssetType) => {
+      acc[item.denom] = item
+      return acc
+    },
+    {}
+  )
+
   return (
     // @ts-expect-error
     <Tx {...tx}>
@@ -350,9 +363,8 @@ const SendPage = () => {
                 <AssetSelector
                   value={asset ?? ""}
                   onChange={(asset) => setValue("asset", asset)}
-                  assetList={availableAssets.filter(
-                    ({ symbol }) => !symbol.endsWith("...")
-                  )}
+                  assetList={filteredAssets}
+                  assetsByDenom={assetsByDenom}
                 />
               </FormItem>
               {availableChains && (
