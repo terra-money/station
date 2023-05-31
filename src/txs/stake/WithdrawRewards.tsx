@@ -32,7 +32,12 @@ const WithdrawRewards = () => {
   }
 
   return (
-    <Page {...state} backButton title={t("Withdraw rewards")} small>
+    <Page
+      {...state}
+      backButtonPath="/stake"
+      title={t("Withdraw rewards")}
+      small
+    >
       {render()}
     </Page>
   )

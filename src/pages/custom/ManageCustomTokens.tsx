@@ -74,15 +74,27 @@ const Component = ({ whitelist, keyword }: Props) => {
     list: [...cw20.list, ...native.list],
     getIsAdded: (item: CustomTokenCW20 | NativeTokenItem) => {
       if (isCW20(item)) return cw20.getIsAdded(item)
-      return native.getIsAdded({ denom: item.token })
+      const nativeItem = item as NativeTokenItem
+      return native.getIsAdded({
+        id: [nativeItem.chains[0], nativeItem.token].join(":"),
+        denom: nativeItem.token,
+      })
     },
     add: (item: CustomTokenCW20 | NativeTokenItem) => {
       if (isCW20(item)) return cw20.add(item)
-      return native.add({ denom: item.token })
+      const nativeItem = item as NativeTokenItem
+      return native.add({
+        id: [nativeItem.chains[0], nativeItem.token].join(":"),
+        denom: nativeItem.token,
+      })
     },
     remove: (item: CustomTokenCW20 | NativeTokenItem) => {
       if (isCW20(item)) return cw20.remove(item)
-      return native.remove({ denom: item.token })
+      const nativeItem = item as NativeTokenItem
+      return native.remove({
+        id: [nativeItem.chains[0], nativeItem.token].join(":"),
+        denom: nativeItem.token,
+      })
     },
   }
 
@@ -104,6 +116,7 @@ const Component = ({ whitelist, keyword }: Props) => {
 
 const ManageCustomTokens = () => {
   const { data: cw20, ...cw20WhitelistState } = useCW20Whitelist()
+  console.log(cw20)
   const { whitelist } = useWhitelist()
   const networkName = useNetworkName()
 
@@ -112,11 +125,11 @@ const ManageCustomTokens = () => {
 
     const cw20Whitelist: CW20Whitelist = {}
     const nativeWhitelist: NativeWhitelist = {}
-    Object.entries(whitelist[networkName]).forEach(([denom, asset]) => {
-      if (AccAddress.validate(denom)) {
-        cw20Whitelist[denom] = asset
+    Object.entries(whitelist[networkName]).forEach(([id, asset]) => {
+      if (AccAddress.validate(asset.token)) {
+        cw20Whitelist[asset.token] = asset
       } else {
-        nativeWhitelist[denom] = asset
+        nativeWhitelist[id] = asset
       }
     })
 

@@ -10,41 +10,97 @@ import Asset from "./Asset"
 import styles from "./AssetList.module.scss"
 import { useTokenFilters } from "utils/localStorage"
 import { toInput } from "txs/utils"
-import { isNativeToken } from "utils/chain"
+import {
+  useCustomTokensCW20,
+  useCustomTokensNative,
+} from "data/settings/CustomTokens"
+import { useIBCBaseDenoms } from "data/queries/ibc"
+import { useNetwork } from "data/wallet"
 
 const AssetList = () => {
   const { t } = useTranslation()
   const isWalletEmpty = useIsWalletEmpty()
   const { hideNoWhitelist, hideLowBal } = useTokenFilters()
+  const networks = useNetwork()
 
   const coins = useBankBalance()
   const { data: prices } = useExchangeRates()
   const readNativeDenom = useNativeDenoms()
+  const native = useCustomTokensNative()
+  const cw20 = useCustomTokensCW20()
+  const alwaysVisibleDenoms = useMemo(
+    () =>
+      new Set([
+        ...cw20.list.map((a) => a.token),
+        ...native.list.map((a) => a.denom),
+      ]),
+    [cw20.list, native.list]
+  )
+
+  const unknownIBCDenomsData = useIBCBaseDenoms(
+    coins
+      .map(({ denom, chain }) => ({ denom, chainID: chain }))
+      .filter(({ denom }) => {
+        const data = readNativeDenom(denom)
+        return denom.startsWith("ibc/") && data.symbol.endsWith("...")
+      })
+  )
+  const unknownIBCDenoms = unknownIBCDenomsData.reduce(
+    (acc, { data }) =>
+      data
+        ? {
+            ...acc,
+            [data.ibcDenom]: {
+              baseDenom: data.baseDenom,
+              chainID: data.chainIDs[0],
+              chainIDs: data.chainIDs,
+            },
+          }
+        : acc,
+    {} as Record<
+      string,
+      { baseDenom: string; chainID: string; chainIDs: string[] }
+    >
+  )
 
   const list = useMemo(
     () =>
       [
         ...Object.values(
           coins.reduce((acc, { denom, amount, chain }) => {
-            const data = readNativeDenom(denom)
-            if (acc[data.token]) {
-              acc[data.token].balance = `${
-                parseInt(acc[data.token].balance) + parseInt(amount)
+            const data = readNativeDenom(
+              unknownIBCDenoms[denom]?.baseDenom ?? denom,
+              unknownIBCDenoms[denom]?.chainID ?? chain
+            )
+
+            const key = [
+              // @ts-expect-error
+              unknownIBCDenoms[denom]?.chainID ?? data.chainID ?? chain,
+              data.token,
+            ].join(":")
+
+            if (acc[key]) {
+              acc[key].balance = `${
+                parseInt(acc[key].balance) + parseInt(amount)
               }`
-              acc[data.token].chains.push(chain)
+              acc[key].chains.push(chain)
               return acc
             } else {
-              const isWhitelisted = !denom.endsWith("...")
               return {
                 ...acc,
-                [data.token]: {
-                  denom,
+                [key]: {
+                  denom: data.token,
                   balance: amount,
                   icon: data.icon,
                   symbol: data.symbol,
-                  price: isWhitelisted ? prices?.[data.token]?.price ?? 0 : 0,
-                  change: isWhitelisted ? prices?.[data.token]?.change ?? 0 : 0,
+                  price: prices?.[data.token]?.price ?? 0,
+                  change: prices?.[data.token]?.change ?? 0,
                   chains: [chain],
+                  id: key,
+                  whitelisted: !(
+                    data.symbol.endsWith("...") ||
+                    unknownIBCDenoms[denom]?.chainIDs.find((c) => !networks[c])
+                  ),
                 },
               }
             }
@@ -52,10 +108,12 @@ const AssetList = () => {
         ),
       ]
         .filter(
-          (a) => (hideNoWhitelist ? !a.symbol.endsWith("...") : true) // TODO: update and implement whitelist check
+          (a) => (hideNoWhitelist ? a.whitelisted : true) // TODO: update and implement whitelist check
         )
         .filter((a) => {
-          if (!(hideLowBal && a.price === 0) || isNativeToken(a.denom))
+          const { token } = readNativeDenom(a.denom)
+
+          if (!hideLowBal || a.price === 0 || alwaysVisibleDenoms.has(token))
             return true
           return a.price * toInput(a.balance) >= 1
         })
@@ -63,7 +121,16 @@ const AssetList = () => {
           (a, b) =>
             b.price * parseInt(b.balance) - a.price * parseInt(a.balance)
         ),
-    [coins, readNativeDenom, prices, hideNoWhitelist, hideLowBal]
+    [
+      coins,
+      readNativeDenom,
+      prices,
+      hideNoWhitelist,
+      hideLowBal,
+      alwaysVisibleDenoms,
+      unknownIBCDenoms,
+      networks,
+    ]
   )
 
   const render = () => {
@@ -75,14 +142,19 @@ const AssetList = () => {
           <FormError>{t("Coins required to post transactions")}</FormError>
         )}
         <section>
-          {list.map(({ denom, ...item }) => (
-            <Asset
-              denom={denom}
-              {...readNativeDenom(denom)}
-              {...item}
-              key={denom}
-            />
-          ))}
+          {(prices || !hideLowBal) &&
+            list.map(({ denom, chainID, id, ...item }, i) => (
+              <Asset
+                denom={denom}
+                {...readNativeDenom(
+                  unknownIBCDenoms[denom]?.baseDenom ?? denom,
+                  unknownIBCDenoms[denom]?.chainID ?? chainID
+                )}
+                id={id}
+                {...item}
+                key={i}
+              />
+            ))}
         </section>
       </div>
     )

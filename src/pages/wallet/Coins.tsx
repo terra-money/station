@@ -32,12 +32,17 @@ const Coins = () => {
           */}
 
           <section>
-            {coins.map(({ denom, ...item }) => (
+            {coins.map(({ denom, chain, ...item }) => (
               <Asset
                 chains={[]}
                 denom={denom}
-                {...readNativeDenom(denom)}
+                {...readNativeDenom(denom, chain)}
                 {...item}
+                id={[
+                  // @ts-expect-error
+                  readNativeDenom(denom, chain)?.chainID ?? chain,
+                  denom,
+                ].join(":")}
                 key={denom}
               />
             ))}

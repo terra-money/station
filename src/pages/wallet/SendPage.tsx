@@ -345,11 +345,13 @@ const SendPage = () => {
                   })}
                   autoFocus
                 >
-                  {availableAssets.map(({ denom, symbol }, i) => (
-                    <option value={denom} key={i}>
-                      {symbol}
-                    </option>
-                  ))}
+                  {availableAssets
+                    .filter(({ symbol }) => !symbol.endsWith("..."))
+                    .map(({ denom, symbol }, i) => (
+                      <option value={denom} key={i}>
+                        {symbol}
+                      </option>
+                    ))}
                 </Select>
               </FormItem>
               {availableChains && (

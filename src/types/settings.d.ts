@@ -10,6 +10,7 @@ type CustomTokens = Record<NetworkName, CustomTokensByNetwork>
 
 interface NativeTokenBasicInfo {
   denom: CoinDenom
+  id: string
 }
 
 interface CustomTokensByNetwork {

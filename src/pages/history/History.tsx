@@ -7,8 +7,8 @@ const History = () => {
 
   return (
     <Page title={t("History")}>
-      <ChainFilter outside>
-        {(chain) => <HistoryList chainID={chain ?? ""} />}
+      <ChainFilter outside all>
+        {(chain) => <HistoryList chainID={chain} />}
       </ChainFilter>
     </Page>
   )
