@@ -116,6 +116,7 @@ const Component = ({ whitelist, keyword }: Props) => {
 
 const ManageCustomTokens = () => {
   const { data: cw20, ...cw20WhitelistState } = useCW20Whitelist()
+  console.log(cw20)
   const { whitelist } = useWhitelist()
   const networkName = useNetworkName()
 
@@ -124,11 +125,11 @@ const ManageCustomTokens = () => {
 
     const cw20Whitelist: CW20Whitelist = {}
     const nativeWhitelist: NativeWhitelist = {}
-    Object.entries(whitelist[networkName]).forEach(([denom, asset]) => {
-      if (AccAddress.validate(denom)) {
-        cw20Whitelist[denom] = asset
+    Object.entries(whitelist[networkName]).forEach(([id, asset]) => {
+      if (AccAddress.validate(asset.token)) {
+        cw20Whitelist[asset.token] = asset
       } else {
-        nativeWhitelist[denom] = asset
+        nativeWhitelist[id] = asset
       }
     })
 
