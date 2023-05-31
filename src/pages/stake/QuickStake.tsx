@@ -21,7 +21,9 @@ import {
 import { combineState } from "data/query"
 import { Tooltip, TooltipIcon } from "components/display"
 import { Delegation } from "@terra-money/feather.js"
-import TokenSelector, { TokenInterface } from "components/form/TokenSelector"
+import TokenSelector, {
+  TokenInterface,
+} from "components/form/Selectors/TokenSelector/TokenSelector"
 import { useState } from "react"
 import { useAuth } from "auth"
 import is from "auth/scripts/is"
