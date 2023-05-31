@@ -16,7 +16,6 @@ import {
 } from "data/settings/CustomTokens"
 import { useIBCBaseDenoms } from "data/queries/ibc"
 import { useNetwork } from "data/wallet"
-import { isNativeToken } from "utils/chain"
 
 const AssetList = () => {
   const { t } = useTranslation()
@@ -143,18 +142,19 @@ const AssetList = () => {
           <FormError>{t("Coins required to post transactions")}</FormError>
         )}
         <section>
-          {(prices || !hideLowBal) && list.map(({ denom, chainID, id, ...item }, i) => (
-            <Asset
-              denom={denom}
-              {...readNativeDenom(
-                unknownIBCDenoms[denom]?.baseDenom ?? denom,
-                unknownIBCDenoms[denom]?.chainID ?? chainID
-              )}
-              id={id}
-              {...item}
-              key={i}
-            />
-          ))}
+          {(prices || !hideLowBal) &&
+            list.map(({ denom, chainID, id, ...item }, i) => (
+              <Asset
+                denom={denom}
+                {...readNativeDenom(
+                  unknownIBCDenoms[denom]?.baseDenom ?? denom,
+                  unknownIBCDenoms[denom]?.chainID ?? chainID
+                )}
+                id={id}
+                {...item}
+                key={i}
+              />
+            ))}
         </section>
       </div>
     )
