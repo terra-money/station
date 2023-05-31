@@ -5,6 +5,8 @@ import Overlay from "./components/Overlay"
 import { useEffect, useState } from "react"
 import { Button } from "components/general"
 import ReplayIcon from "@mui/icons-material/Replay"
+import { useWallet } from "@terra-money/use-wallet"
+import { WalletStatus } from "@terra-money/wallet-types"
 
 interface Props {
   title?: string
@@ -17,6 +19,7 @@ interface Props {
 const NetworkLoading = ({ title, timeout }: Props) => {
   const { name, animation } = useTheme()
   const [showTimeout, setShowTimeout] = useState(false)
+  const { status } = useWallet()
 
   useEffect(() => {
     let t: NodeJS.Timeout
@@ -35,14 +38,16 @@ const NetworkLoading = ({ title, timeout }: Props) => {
             <h1 className={styles.title}>
               {title ? `${title}` : "Loading..."}
             </h1>
-            {timeout && showTimeout && (
-              <FlexColumn gap={10}>
-                <p>Something went wrong</p>
-                <Button color="primary" onClick={timeout.fallback}>
-                  <ReplayIcon /> Reload Station
-                </Button>
-              </FlexColumn>
-            )}
+            {timeout &&
+              showTimeout &&
+              status !== WalletStatus.WALLET_NOT_CONNECTED && (
+                <FlexColumn gap={10}>
+                  <p>Something went wrong</p>
+                  <Button color="primary" onClick={timeout.fallback}>
+                    <ReplayIcon /> Reload Station
+                  </Button>
+                </FlexColumn>
+              )}
           </FlexColumn>
         </article>
       </FlexColumn>
