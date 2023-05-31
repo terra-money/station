@@ -12,10 +12,13 @@ import { capitalize } from "@mui/material"
 import NetWorthTooltip from "./NetWorthTooltip"
 import { ModalButton } from "components/feedback"
 import FiatRampModal from "./FiatRampModal"
-import { Add as AddIcon, Send as SendIcon } from "@mui/icons-material"
+// import { Add as AddIcon, Send as SendIcon } from "@mui/icons-material"
 import classNames from "classnames"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { useNetworkName } from "data/wallet"
+import { ReactComponent as SendIcon } from "styles/images/icons/Send_v2.svg"
+import { ReactComponent as ReceiveIcon } from "styles/images/icons/Receive_v2.svg"
+import { ReactComponent as AddIcon } from "styles/images/icons/Buy_v2.svg"
 
 const cx = classNames.bind(styles)
 
@@ -53,6 +56,7 @@ const NetWorth = () => {
         <div className={styles.button__wrapper}>
           <Button
             color="primary"
+            className={styles.wallet_primary}
             onClick={() =>
               setRoute({
                 path: Path.send,
@@ -73,7 +77,7 @@ const NetWorth = () => {
               })
             }
           >
-            <SendIcon className={cx(styles.icon, styles.receive)} />
+            <ReceiveIcon className={cx(styles.icon, styles.receive)} />
           </Button>
           <h3>{capitalize(t("receive"))}</h3>
         </div>
