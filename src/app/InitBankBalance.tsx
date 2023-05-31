@@ -29,16 +29,21 @@ const InitBankBalance = ({ children }: PropsWithChildren<{}>) => {
     [] as CoinBalance[]
   )
 
-  native.list.forEach(({ denom }) => {
-    if (!bankBalance.find((balance) => balance.denom === denom)) {
-      const token = whitelist[networkName][denom]
+  native.list.forEach(({ id }) => {
+    const [chain, denom] = id.split(":")
+    if (
+      !bankBalance.find(
+        (balance) => balance.denom === denom && balance.chain === chain
+      )
+    ) {
+      const token = whitelist[networkName][id]
 
       if (!token || !token.chains || token.chains.length === 0) return
 
       bankBalance.push({
         denom,
         amount: "0",
-        chain: token.chains[0],
+        chain,
       })
     }
   })

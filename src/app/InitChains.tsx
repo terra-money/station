@@ -11,10 +11,10 @@ const InitChains = ({ children }: PropsWithChildren<{}>) => {
 
   useEffect(() => {
     axios
-      .get("/coins.json", { baseURL: STATION_ASSETS })
+      .get("/denoms.json", { baseURL: STATION_ASSETS })
       .then(({ data }) => setWhitelist(data))
     axios
-      .get("/ibc_denoms.json", { baseURL: STATION_ASSETS })
+      .get("/ibc.json", { baseURL: STATION_ASSETS })
       .then(({ data }) => setIbcDenoms(data))
     axios
       .get("/station/coins.json", { baseURL: ASSETS })
