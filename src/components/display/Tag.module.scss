@@ -1,5 +1,5 @@
 @use "sass:math";
-@import "mixins";
+@import "styles/_mixins.scss";
 
 @mixin size($height: 22px) {
   border-radius: math.div($height, 2);
