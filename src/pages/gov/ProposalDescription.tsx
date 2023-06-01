@@ -118,12 +118,14 @@ const ProposalDescription = ({ proposal }: { proposal: ProposalResult }) => {
 export default ProposalDescription
 
 function isLinkSafe(url: string) {
-  console.log(url)
   try {
     const { protocol, hostname } = new URL(url)
     return (
       protocol === "https:" &&
-      (hostname === "terra.money" || hostname.endsWith(".terra.money"))
+      (hostname === "terra.money" ||
+        hostname.endsWith(".terra.money") ||
+        hostname === "commonwealth.im" ||
+        hostname === "forums.terrarebels.net")
     )
   } catch (e) {
     return false
