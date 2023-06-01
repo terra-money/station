@@ -116,7 +116,6 @@ const Component = ({ whitelist, keyword }: Props) => {
 
 const ManageCustomTokens = () => {
   const { data: cw20, ...cw20WhitelistState } = useCW20Whitelist()
-  console.log(cw20)
   const { whitelist } = useWhitelist()
   const networkName = useNetworkName()
 

@@ -129,12 +129,10 @@ function IbcSendBackTx({ token, chainID }: Props) {
     if (waitUntil) {
       ;(async () => {
         while (maxIterations--) {
-          console.log(waitUntil)
           const tokenBalance = await getBalance(
             waitUntil.denom,
             waitUntil.chainID
           )
-          console.log(tokenBalance)
 
           if (Number(tokenBalance) > waitUntil.balance) {
             setWaitUntil(undefined)
