@@ -115,7 +115,14 @@ export const useNativeDenoms = () => {
 
       case "factory": {
         // TODO - lookup whitelist for factory tokens.
-        fixedDenom = "..."
+        const factoryParts = denom.split(/[/:]/)
+        let tokenAddress = ""
+        if (factoryParts.length >= 2) {
+          tokenAddress = denom.split(/[/:]/)[1].toUpperCase()
+        }
+        fixedDenom = `${
+          tokenAddress.length > 16 ? tokenAddress.slice(0, 13) : tokenAddress
+        }...`
         break
       }
 
