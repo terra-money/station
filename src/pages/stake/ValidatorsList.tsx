@@ -117,6 +117,7 @@ const ValidatorsList = ({
                 { voting_power_rate: b = 0 }
               ) => a - b,
               render: (value = 0) => readPercent(value),
+              align: "right",
             },
             {
               title: t("Commission"),
@@ -128,6 +129,7 @@ const ValidatorsList = ({
               ) => a.rate.toNumber() - b.rate.toNumber(),
               render: ({ rate }: Validator.CommissionRates) =>
                 readPercent(rate.toString(), { fixed: 2 }),
+              align: "right",
             },
             {
               title: t("Actions"),
