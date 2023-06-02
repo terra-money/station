@@ -7,7 +7,9 @@ import styles from "./Validators.module.scss"
 import ValidatorsList from "./ValidatorsList"
 import { Flex, Grid, InlineFlex, Page, Table } from "components/layout"
 import { useTranslation } from "react-i18next"
-import TokenSelector, { TokenInterface } from "components/form/TokenSelector"
+import TokenSelector, {
+  TokenInterface,
+} from "components/form/Selectors/TokenSelector/TokenSelector"
 import { useNetwork } from "data/wallet"
 import { useState } from "react"
 import {
