@@ -51,7 +51,7 @@ const ChainFilter = ({
     () =>
       sortedDisplayChains
         .map((id) => network[id])
-        .filter((n) => displayChains.includes(n?.chainID)),
+        .filter((n) => displayChains?.includes(n?.chainID)),
     [network, sortedDisplayChains, displayChains]
   )
 
