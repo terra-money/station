@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { useQuery } from "react-query"
+import { useQueries, useQuery } from "react-query"
 import { last } from "ramda"
 import { sentenceCase } from "sentence-case"
 import { AccAddress, Proposal, Vote } from "@terra-money/feather.js"
@@ -116,15 +116,12 @@ export interface ProposalResult46 {
 /* proposals */
 export const useProposals = (status: ProposalStatus) => {
   const networks = useNetwork()
-  return useQuery(
-    [queryKey.gov.proposals, status],
-    async () => {
-      const chainList = Object.values(networks)
-      // TODO: Pagination
-      // Required when the number of results exceed 100
-      // About 50 passed propsals from 2019 to 2021
-      const proposals = await Promise.all(
-        chainList.map(async ({ lcd, version }) => {
+
+  return useQueries(
+    Object.values(networks).map(({ lcd, version, chainID }) => {
+      return {
+        queryKey: [queryKey.gov.proposals, lcd, status],
+        queryFn: async () => {
           if (version === "0.46") {
             const {
               data: { proposals },
@@ -136,30 +133,32 @@ export const useProposals = (status: ProposalStatus) => {
               },
             })
 
-            return (proposals as ProposalResult46[]).map((prop) => ({
-              ...prop,
-              proposal_id: prop.id,
-              content: prop.messages.length
-                ? prop.messages[0]["@type"] ===
-                  "/cosmos.gov.v1.MsgExecLegacyContent"
-                  ? prop.messages[0].content
+            return (
+              (proposals as ProposalResult46[]).map((prop) => ({
+                ...prop,
+                proposal_id: prop.id,
+                content: prop.messages.length
+                  ? prop.messages[0]["@type"] ===
+                    "/cosmos.gov.v1.MsgExecLegacyContent"
+                    ? prop.messages[0].content
+                    : {
+                        ...prop.messages[0],
+                        title: JSON.parse(prop.metadata).title,
+                        description: JSON.parse(prop.metadata).summary,
+                      }
                   : {
-                      ...prop.messages[0],
+                      "@type": "/cosmos.gov.v1.TextProposal",
                       title: JSON.parse(prop.metadata).title,
                       description: JSON.parse(prop.metadata).summary,
-                    }
-                : {
-                    "@type": "/cosmos.gov.v1.TextProposal",
-                    title: JSON.parse(prop.metadata).title,
-                    description: JSON.parse(prop.metadata).summary,
-                  },
-              final_tally_result: {
-                yes: prop.final_tally_result.yes_count,
-                abstain: prop.final_tally_result.abstain_count,
-                no: prop.final_tally_result.no_count,
-                no_with_veto: prop.final_tally_result.no_with_veto_count,
-              },
-            })) as ProposalResult[]
+                    },
+                final_tally_result: {
+                  yes: prop.final_tally_result.yes_count,
+                  abstain: prop.final_tally_result.abstain_count,
+                  no: prop.final_tally_result.no_count,
+                  no_with_veto: prop.final_tally_result.no_with_veto_count,
+                },
+              })) as ProposalResult[]
+            ).map((prop) => ({ prop, chain: chainID }))
           } else {
             const {
               data: { proposals },
@@ -170,23 +169,15 @@ export const useProposals = (status: ProposalStatus) => {
                 proposal_status: Proposal.Status[status],
               },
             })
-            return proposals as ProposalResult[]
+            return (proposals as ProposalResult[]).map((prop) => ({
+              prop,
+              chain: chainID,
+            }))
           }
-        })
-      )
-
-      return proposals
-        .reduce(
-          (acc, cur, i) => {
-            cur.map((prop) => acc.push({ prop, chain: chainList[i].chainID }))
-            return acc
-          },
-          [] as { prop: ProposalResult; chain: string }[]
-          // remove proposals with unsupported protobuf content
-        )
-        .filter(({ prop }) => prop.content)
-    },
-    { ...RefetchOptions.DEFAULT }
+        },
+        ...RefetchOptions.DEFAULT,
+      }
+    })
   )
 }
 
