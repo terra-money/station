@@ -5,7 +5,7 @@ import {
   MsgSend,
   MsgTransfer,
 } from "@terra-money/feather.js"
-import { isDenom, toAmount } from "@terra-money/terra-utils"
+import { toAmount } from "@terra-money/terra-utils"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { Form, FormItem, FormWarning, Input } from "components/form"
 import ChainSelector from "components/form/Selectors/ChainSelector/ChainSelector"
@@ -216,19 +216,19 @@ const SendPage = () => {
       if (!chain || !destinationChain || !token) return
 
       if (destinationChain === chain) {
-        const msgs = isDenom(token?.denom)
+        const msgs = AccAddress.validate(token?.denom)
           ? [
-              new MsgSend(
-                addresses[token?.chain ?? ""],
-                address,
-                amount + token?.denom
-              ),
-            ]
-          : [
               new MsgExecuteContract(
                 addresses[token?.chain ?? ""],
                 token?.denom ?? "",
                 execute_msg
+              ),
+            ]
+          : [
+              new MsgSend(
+                addresses[token?.chain ?? ""],
+                address,
+                amount + token?.denom
               ),
             ]
 
