@@ -60,7 +60,10 @@ export const useDisplayChains = () => {
   const [displayChains, setDisplayChains] = useRecoilState(displayChainsState)
   const changeDisplayChains = useCallback(
     (newChains: string[]) => {
-      const newDisplayChains = { ...displayChains, [networkName]: newChains }
+      const newDisplayChains = {
+        ...(displayChains || []),
+        [networkName]: newChains,
+      }
       setLocalSetting(SettingKey.DisplayChains, newDisplayChains)
       setDisplayChains(newDisplayChains)
     },
@@ -68,7 +71,7 @@ export const useDisplayChains = () => {
   )
   return {
     all: displayChains,
-    displayChains: displayChains[networkName].filter((c) => c !== ""),
+    displayChains: displayChains[networkName]?.filter((c) => c !== ""),
     changeDisplayChains,
   }
 }
