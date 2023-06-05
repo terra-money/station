@@ -118,7 +118,7 @@ export const useNativeDenoms = () => {
         const factoryParts = denom.split(/[/:]/)
         let tokenAddress = ""
         if (factoryParts.length >= 2) {
-          tokenAddress = denom.split(/[/:]/)[1].toUpperCase()
+          tokenAddress = factoryParts.slice(2).join(" ")
         }
         fixedDenom = `${
           tokenAddress.length > 16 ? tokenAddress.slice(0, 13) : tokenAddress
