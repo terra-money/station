@@ -36,6 +36,8 @@ import { SwapAssets, validateAssets } from "./useSwapUtils"
 import { validateParams } from "./useSwapUtils"
 import { calcMinimumReceive, SlippageParams } from "./SingleSwapContext"
 import { useTFMSwap, validateTFMSlippageParams } from "./TFMSwapContext"
+import { useCustomTokensCW20 } from "data/settings/CustomTokens"
+import { useNativeDenoms } from "data/token"
 
 interface TFMSwapParams extends SwapAssets {
   amount: string
@@ -48,6 +50,10 @@ const TFMSwapForm = ({ chainID }: { chainID: string }) => {
   const { t } = useTranslation()
   const address = useAddress()
   const { state } = useLocation()
+
+  // token whitelists
+  const cw20 = useCustomTokensCW20()
+  const readNativeDenom = useNativeDenoms()
 
   /* swap context */
   const { options, findTokenItem, findDecimals } = useTFMSwap()
@@ -202,14 +208,19 @@ const TFMSwapForm = ({ chainID }: { chainID: string }) => {
     createTx,
     queryKeys: [
       queryKey.bank.balances,
-      ...[offerAsset, askAsset]
-        .filter((asset) => asset && AccAddress.validate(asset))
-        .map((token) => [
-          queryKey.wasm.contractQuery,
-          token,
-          { balance: address },
-        ]),
+      queryKey.bank.balance,
+      queryKey.wasm.contractQuery,
     ],
+    onSuccess: () => {
+      if (askAsset && AccAddress.validate(askAsset)) {
+        const data = readNativeDenom(askAsset)
+        cw20.add({
+          ...data,
+          token: askAsset,
+          name: data.name ?? data.symbol,
+        })
+      }
+    },
     chain: chainID,
   }
 
