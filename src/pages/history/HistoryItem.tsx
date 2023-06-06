@@ -2,7 +2,7 @@ import { Fragment } from "react"
 import { useTranslation } from "react-i18next"
 import { FinderLink } from "components/general"
 import { Card } from "components/layout"
-import { Dl, ToNow } from "components/display"
+import { Dl } from "components/display"
 import { ReadMultiple } from "components/token"
 import HistoryMessage from "./HistoryMessage"
 import styles from "./HistoryItem.module.scss"
@@ -73,7 +73,7 @@ const HistoryItem = ({
         </p>
         <p className={styles.time}>
           <DateRangeIcon />
-          <ToNow>{new Date(timestamp)}</ToNow>
+          <span>{new Date(timestamp).toLocaleString()}</span>
         </p>
       </header>
 
