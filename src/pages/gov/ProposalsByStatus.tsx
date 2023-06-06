@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next"
 import {
+  ProposalResult,
   ProposalStatus,
   useProposals,
   useProposalStatusItem,
@@ -10,10 +11,17 @@ import ProposalItem from "./ProposalItem"
 import GovernanceParams from "./GovernanceParams"
 import styles from "./ProposalsByStatus.module.scss"
 import ChainFilter from "components/layout/ChainFilter"
+import { combineState } from "data/query"
 
 const ProposalsByStatus = ({ status }: { status: ProposalStatus }) => {
   const { t } = useTranslation()
-  const { data: proposals, ...proposalState } = useProposals(status)
+  const proposalsResult = useProposals(status)
+  const proposals = proposalsResult.reduce(
+    (acc, { data }) => (data ? [...acc, ...data] : acc),
+    [] as { prop: ProposalResult; chain: string }[]
+  )
+
+  const proposalState = combineState(...proposalsResult)
   const { label } = useProposalStatusItem(status)
 
   const render = () => {

@@ -118,7 +118,6 @@ const ProposalDescription = ({ proposal }: { proposal: ProposalResult }) => {
 export default ProposalDescription
 
 function isLinkSafe(url: string) {
-  console.log(url)
   try {
     const { protocol, hostname } = new URL(url)
     return (

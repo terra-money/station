@@ -8,7 +8,7 @@ import {
 import { isDenom, toAmount } from "@terra-money/terra-utils"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { Form, FormItem, Input, Select } from "components/form"
-import ChainSelector from "components/form/ChainSelector"
+import ChainSelector from "components/form/Selectors/ChainSelector/ChainSelector"
 import { Flex } from "components/layout"
 import { useBankBalance } from "data/queries/bank"
 import { useExchangeRates } from "data/queries/coingecko"

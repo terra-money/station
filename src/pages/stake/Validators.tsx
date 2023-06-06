@@ -7,7 +7,9 @@ import styles from "./Validators.module.scss"
 import ValidatorsList from "./ValidatorsList"
 import { Flex, Grid, InlineFlex, Page, Table } from "components/layout"
 import { useTranslation } from "react-i18next"
-import TokenSelector, { TokenInterface } from "components/form/TokenSelector"
+import TokenSelector, {
+  TokenInterface,
+} from "components/form/Selectors/TokenSelector/TokenSelector"
 import { useNetwork } from "data/wallet"
 import { useState } from "react"
 import {
@@ -237,6 +239,7 @@ const Validators = () => {
                   defaultSortOrder: "desc",
                   sorter: ({ unbonding: a = 0 }, { unbonding: b = 0 }) => a - b,
                   render: (value = 0) => t("{{value}} days", { value }),
+                  align: "right",
                 },
                 {
                   title: (
@@ -263,6 +266,7 @@ const Validators = () => {
                   defaultSortOrder: "desc",
                   sorter: ({ rewards: a = 0 }, { rewards: b = 0 }) => a - b,
                   render: (rewards = 0) => readPercent(rewards),
+                  align: "right",
                 },
               ]}
             />

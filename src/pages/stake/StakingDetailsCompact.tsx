@@ -40,8 +40,6 @@ const StakingDetailsCompact = ({
   const { data: allianceDelegations, ...allianceDelegationsState } =
     useAllianceDelegations(chainID, !isAlliance)
 
-  console.log(delegations)
-
   const delegated = isAlliance
     ? allianceDelegations?.reduce(
         (acc, { balance: amount }) => acc + Number(amount),
