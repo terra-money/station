@@ -6,6 +6,7 @@ import { useNetwork } from "data/wallet"
 import { Card, Col, Page } from "components/layout"
 import { Empty } from "components/feedback"
 import HistoryItem from "./HistoryItem"
+import { State } from "components/feedback"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 
 interface Props {
@@ -86,6 +87,13 @@ const HistoryList = ({ chainID }: Props) => {
 
   const render = () => {
     if (addresses && !history) return null
+
+    if (!addresses)
+      return (
+        <Card>
+          <State>Connect Wallet</State>
+        </Card>
+      )
 
     return !history?.length ? (
       <Card>
