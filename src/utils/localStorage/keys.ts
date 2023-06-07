@@ -42,6 +42,7 @@ export const DefaultDisplayChains = {
   mainnet: ["phoenix-1", "osmosis-1"],
   testnet: ["pisco-1"],
   classic: ["columbus-5"],
+  localterra: ["localterra"],
 }
 
 export const DefaultCustomTokens = {
