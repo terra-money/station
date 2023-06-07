@@ -21,8 +21,8 @@ const AssetPage = () => {
   const { t } = useTranslation()
   const { setRoute, route } = useWalletRoute()
   const routeDenom = route.path === Path.coin ? route.denom ?? "uluna" : "uluna"
-  const [chain, denom] = routeDenom.includes(":")
-    ? routeDenom.split(":")
+  const [chain, denom] = routeDenom.includes("*")
+    ? routeDenom.split("*")
     : [undefined, routeDenom]
   const { token, symbol, icon, decimals } = readNativeDenom(denom, chain)
 
