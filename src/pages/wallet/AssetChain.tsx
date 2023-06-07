@@ -34,7 +34,7 @@ const AssetChain = (props: Props) => {
 
   return (
     <article className={styles.chain} key={name}>
-      <TokenIcon token={name} icon={icon} size={50} />
+      <TokenIcon token={name} icon={icon} size={28} />
       <section className={styles.details}>
         <h1 className={styles.name}>
           <h4>

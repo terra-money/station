@@ -50,7 +50,14 @@ const NetWorth = () => {
       </TooltipIcon>
       <h1>
         {currency.symbol}{" "}
-        <Read amount={coinsValue} decimals={0} fixed={2} denom="" token="" />
+        <Read
+          className={styles.amount}
+          amount={coinsValue}
+          decimals={0}
+          fixed={2}
+          denom=""
+          token=""
+        />
       </h1>
       <div className={styles.networth__buttons}>
         <div className={styles.button__wrapper}>
@@ -70,6 +77,7 @@ const NetWorth = () => {
         </div>
         <div className={styles.button__wrapper}>
           <Button
+            className={styles.wallet_default}
             onClick={() =>
               setRoute({
                 path: Path.receive,
@@ -86,7 +94,7 @@ const NetWorth = () => {
             <ModalButton
               minimal
               renderButton={(open) => (
-                <Button onClick={open}>
+                <Button className={styles.wallet_default} onClick={open}>
                   <AddIcon className={styles.icon} />
                 </Button>
               )}

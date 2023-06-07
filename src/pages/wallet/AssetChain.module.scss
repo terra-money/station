@@ -8,10 +8,6 @@
   position: relative; // to loading indicator
   transition: 300ms;
   height: fit-content;
-
-  &:hover {
-    background-color: var(--card-bg);
-  }
 }
 
 .details {
@@ -39,6 +35,7 @@
   h4 {
     @include flex(flex-start);
     gap: 8px;
+    font-size: 16px;
 
     .send__back__button {
       color: var(--warning);
@@ -59,13 +56,14 @@
 
 .price {
   grid-area: price;
+  font-size: 16px;
   text-align: end;
 }
 
 .amount {
   grid-area: amount;
   text-align: end;
-  font-size: 15px;
+  font-size: 12px;
   font-weight: var(--normal);
   color: var(--text-muted);
   white-space: nowrap;
