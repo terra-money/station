@@ -4,11 +4,11 @@ import styles from "./ActionsBackground.module.scss"
 const ActionsBackground = () => {
   const { name } = useTheme()
 
-  if (name === "light" || name === "whale") {
-    return <></>
+  if (name === "moon") {
+    return <div className={styles.background_blur} />
   }
 
-  return <div className={styles.background_blur} />
+  return <></>
 }
 
 export default ActionsBackground

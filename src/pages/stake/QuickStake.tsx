@@ -21,7 +21,9 @@ import {
 import { combineState } from "data/query"
 import { Tooltip, TooltipIcon } from "components/display"
 import { Delegation } from "@terra-money/feather.js"
-import TokenSelector, { TokenInterface } from "components/form/TokenSelector"
+import TokenSelector, {
+  TokenInterface,
+} from "components/form/Selectors/TokenSelector/TokenSelector"
 import { useState } from "react"
 import { useAuth } from "auth"
 import is from "auth/scripts/is"
@@ -266,6 +268,7 @@ const QuickStake = () => {
               defaultSortOrder: "desc",
               sorter: ({ unbonding: a = 0 }, { unbonding: b = 0 }) => a - b,
               render: (value = 0) => t("{{value}} days", { value }),
+              align: "right",
             },
             {
               title: (
@@ -291,6 +294,7 @@ const QuickStake = () => {
               defaultSortOrder: "desc",
               sorter: ({ rewards: a = 0 }, { rewards: b = 0 }) => a - b,
               render: (rewards = 0) => readPercent(rewards),
+              align: "right",
             },
             {
               title: t("Actions"),

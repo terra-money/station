@@ -1,4 +1,4 @@
-import styles from "./ChainSelector.module.scss"
+import styles from "../../ChainSelector.module.scss"
 import WithSearchInput from "pages/custom/WithSearchInput"
 import classNames from "classnames"
 

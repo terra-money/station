@@ -129,12 +129,10 @@ function IbcSendBackTx({ token, chainID }: Props) {
     if (waitUntil) {
       ;(async () => {
         while (maxIterations--) {
-          console.log(waitUntil)
           const tokenBalance = await getBalance(
             waitUntil.denom,
             waitUntil.chainID
           )
-          console.log(tokenBalance)
 
           if (Number(tokenBalance) > waitUntil.balance) {
             setWaitUntil(undefined)
@@ -318,7 +316,7 @@ function IbcSendBackTx({ token, chainID }: Props) {
               {state.isLoading && <p>{t("Loading...")}</p>}
               {isLoading && (
                 <>
-                  <p>{t("Waiting fo on-chain confirmation...")}</p>
+                  <p>{t("Waiting for on-chain confirmation...")}</p>
                   <p>{t("This may take a few minutes")}</p>
                 </>
               )}

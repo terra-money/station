@@ -1,39 +1,30 @@
-import { useMemo, useState, useRef, useEffect } from "react"
-import styles from "./ChainSelector.module.scss"
+import { useState, useRef, useEffect } from "react"
+import styles from "../../ChainSelector.module.scss"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
-import { useNetworks } from "app/InitNetworks"
-import ChainList from "./ChainList"
+import AssetList from "./AssetList"
 
-interface Props {
-  chainsList: string[]
-  onChange: (chain: string) => void
-  value: string
-  small?: boolean
-  noSearch?: boolean
+interface AssetType {
+  denom: string
+  balance: string
+  icon: string
+  symbol: string
+  price: number
+  chains: string[]
 }
 
-const ChainSelector = ({
-  chainsList,
+interface Props {
+  assetList: AssetType[]
+  onChange: (chain: string) => void
+  value: string
+  assetsByDenom: Record<string, AssetType>
+}
+
+const AssetSelector = ({
+  assetList,
   onChange,
   value,
-  small,
-  noSearch,
+  assetsByDenom,
 }: Props) => {
-  const { networks } = useNetworks()
-  const allNetworks = useMemo(
-    () => ({
-      ...networks.localterra,
-      ...networks.classic,
-      ...networks.testnet,
-      ...networks.mainnet,
-    }),
-    [networks]
-  )
-
-  const list = useMemo(
-    () => chainsList.map((chainID) => allNetworks[chainID]),
-    [allNetworks, chainsList]
-  )
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -49,8 +40,8 @@ const ChainSelector = ({
     }
   }, [])
 
-  const handleSelection = (selectedChain: string) => {
-    onChange(selectedChain)
+  const handleSelection = (denom: string) => {
+    onChange(denom)
     setOpen(false)
   }
 
@@ -65,16 +56,19 @@ const ChainSelector = ({
         }}
       >
         <span>
-          <img src={allNetworks[value]?.icon} alt={allNetworks[value]?.name} />{" "}
-          {allNetworks[value]?.name}
+          <img
+            src={assetsByDenom[value]?.icon}
+            alt={assetsByDenom[value]?.denom}
+          />{" "}
+          {assetsByDenom[value]?.symbol}
         </span>{" "}
         <ArrowDropDownIcon style={{ fontSize: 20 }} className={styles.caret} />
       </button>
       {open && (
-        <ChainList list={list} onChange={handleSelection} value={value} />
+        <AssetList list={assetList} onChange={handleSelection} value={value} />
       )}
     </div>
   )
 }
 
-export default ChainSelector
+export default AssetSelector
