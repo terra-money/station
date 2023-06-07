@@ -99,3 +99,25 @@
   color: var(--text-muted);
   font-size: var(--font-size-small);
 }
+
+.loading {
+  .loading__icon {
+    background-color: var(--button-default-bg);
+    min-width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+
+  .symbol,
+  .change__up {
+    background-color: var(--button-default-bg);
+    min-height: 18px;
+    border-radius: 0.3rem;
+    max-width: 100px;
+  }
+
+  .change__up {
+    margin-top: 6px;
+    max-width: 80px;
+  }
+}
