@@ -15,6 +15,12 @@
   @include flex(space-between);
   width: 100%;
   padding: 12px 16px;
+  cursor: pointer;
+  user-select: none;
+
+  &:active {
+    box-shadow: inset 0px 0px 2px var(--button-default-text);
+  }
 }
 
 .header {

@@ -1,17 +1,18 @@
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
+import MultisigBadge from "../../components/MultisigBadge"
+import ContentCopy from "@mui/icons-material/ContentCopy"
+import BluetoothIcon from "@mui/icons-material/Bluetooth"
+import SelectPreconfigured from "./SelectPreconfigured"
+import AuthButton from "../../components/AuthButton"
+import { useWallet } from "@terra-money/use-wallet"
 import { truncate } from "@terra-money/terra-utils"
+import { addressFromWords } from "utils/bech32"
+import styles from "./SwitchWallet.module.scss"
+import UsbIcon from "@mui/icons-material/Usb"
+import useAuth from "../../hooks/useAuth"
 import { Flex } from "components/layout"
 import { useAddress } from "data/wallet"
-import { addressFromWords } from "utils/bech32"
-import AuthButton from "../../components/AuthButton"
-import MultisigBadge from "../../components/MultisigBadge"
-import UsbIcon from "@mui/icons-material/Usb"
-import BluetoothIcon from "@mui/icons-material/Bluetooth"
-import useAuth from "../../hooks/useAuth"
 import is from "../../scripts/is"
-import SelectPreconfigured from "./SelectPreconfigured"
-import styles from "./SwitchWallet.module.scss"
-import { useWallet } from "@terra-money/use-wallet"
 
 const SwitchWallet = () => {
   const { disconnect } = useWallet()
@@ -25,7 +26,9 @@ const SwitchWallet = () => {
         {wallet && (
           <li className={styles.listItem}>
             <AuthButton
-              onClick={() => {}}
+              onClick={() => {
+                navigator.clipboard.writeText(address || "")
+              }}
               className={styles.wallet}
               active={true}
             >
@@ -39,8 +42,8 @@ const SwitchWallet = () => {
                   ))}
                 <strong>{"name" in wallet ? wallet.name : "Ledger"}</strong>
               </Flex>
-
               {truncate(address)}
+              <ContentCopy style={{ fontSize: 12, marginLeft: -46 }} />
             </AuthButton>
           </li>
         )}
