@@ -25,8 +25,6 @@ const ProposalsByStatus = ({ status }: { status: ProposalStatus }) => {
   const { label } = useProposalStatusItem(status)
 
   const render = () => {
-    if (!proposals) return null
-
     proposals.sort(
       (a, b) =>
         new Date(b.prop.voting_start_time || b.prop.submit_time).getTime() -
@@ -34,49 +32,44 @@ const ProposalsByStatus = ({ status }: { status: ProposalStatus }) => {
     )
 
     return (
-      <>
-        <ChainFilter all>
-          {(chain) => {
-            const filtered = proposals.filter(
-              (p) => !chain || p.chain === chain
-            )
-            return !filtered.length ? (
-              <>
-                <Card>
-                  <Empty>
-                    {t("No proposals in {{label}} period", {
-                      label: label.toLowerCase(),
-                    })}
-                  </Empty>
-                </Card>
-                {chain && <GovernanceParams chain={chain} />}
-              </>
-            ) : (
-              <>
-                <section className={styles.list}>
-                  {filtered.map(({ prop, chain }, i) => (
-                    <Card
-                      to={`/proposal/${chain}/${prop.proposal_id}`}
-                      className={styles.link}
-                      key={i}
-                    >
-                      <ProposalItem
-                        proposal={prop}
-                        chain={chain}
-                        showVotes={
-                          status ===
-                          ProposalStatus.PROPOSAL_STATUS_VOTING_PERIOD
-                        }
-                      />
-                    </Card>
-                  ))}
-                </section>
-                {chain && <GovernanceParams chain={chain} />}
-              </>
-            )
-          }}
-        </ChainFilter>
-      </>
+      <ChainFilter all>
+        {(chain) => {
+          const filtered = proposals.filter((p) => !chain || p.chain === chain)
+          return !filtered.length ? (
+            <>
+              <Card>
+                <Empty>
+                  {t("No proposals in {{label}} period", {
+                    label: label.toLowerCase(),
+                  })}
+                </Empty>
+              </Card>
+              {chain && <GovernanceParams chain={chain} />}
+            </>
+          ) : (
+            <>
+              <section className={styles.list}>
+                {filtered.map(({ prop, chain }, i) => (
+                  <Card
+                    to={`/proposal/${chain}/${prop.proposal_id}`}
+                    className={styles.link}
+                    key={i}
+                  >
+                    <ProposalItem
+                      proposal={prop}
+                      chain={chain}
+                      showVotes={
+                        status === ProposalStatus.PROPOSAL_STATUS_VOTING_PERIOD
+                      }
+                    />
+                  </Card>
+                ))}
+              </section>
+              {chain && <GovernanceParams chain={chain} />}
+            </>
+          )
+        }}
+      </ChainFilter>
     )
   }
 
