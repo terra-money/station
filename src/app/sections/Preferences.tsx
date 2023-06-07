@@ -8,7 +8,7 @@ import NetworkSetting from "./NetworkSetting"
 import DisplayChainsSetting from "./DisplayChainsSetting"
 import LanguageSetting from "./LanguageSetting"
 import CurrencySetting from "./CurrencySetting"
-import { useWallet, WalletStatus } from "@terra-money/wallet-provider"
+import { useWallet, WalletStatus } from "@terra-money/wallet-kit"
 import { ModalButton } from "components/feedback"
 import SettingsButton from "components/layout/SettingsButton"
 import { useNetwork, useNetworkName } from "data/wallet"
@@ -70,8 +70,7 @@ const Preferences = () => {
       key: "network",
       tab: t("Network"),
       value: capitalize(networkName),
-      disabled:
-        !sandbox && connectedWallet.status === WalletStatus.WALLET_CONNECTED,
+      disabled: !sandbox && connectedWallet.status === WalletStatus.CONNECTED,
     },
     lang: {
       key: "lang",

@@ -18,7 +18,7 @@ import styles from "./Connected.module.scss"
 import { useRecoilState } from "recoil"
 import { isWalletBarOpen, walletBarRoute, Path } from "pages/wallet/Wallet"
 import { useNavigate } from "react-router-dom"
-import { useWallet } from "@terra-money/use-wallet"
+import { useWallet } from "@terra-money/wallet-kit"
 import {
   Contacts as ContactsIcon,
   Logout as LogoutIcon,
