@@ -18,7 +18,7 @@ import styles from "./Connected.module.scss"
 import { useRecoilState } from "recoil"
 import { isWalletBarOpen, walletBarRoute, Path } from "pages/wallet/Wallet"
 import { useNavigate } from "react-router-dom"
-import { useWallet } from "@terra-money/wallet-kit"
+import { useConnectedWallet, useWallet } from "@terra-money/wallet-kit"
 import {
   Contacts as ContactsIcon,
   Logout as LogoutIcon,
@@ -30,6 +30,7 @@ const Connected = () => {
   const navigate = useNavigate()
   const { wallet, getLedgerKey, disconnect: disconnectLedger } = useAuth()
   const { disconnect } = useWallet()
+  const connectedWallet = useConnectedWallet()
   const { data: name } = useTnsName(address ?? "")
   const [, setWalletIsOpen] = useRecoilState(isWalletBarOpen)
   const [, setWalletRoute] = useRecoilState(walletBarRoute)
@@ -117,7 +118,9 @@ const Connected = () => {
         className={styles.button}
       >
         <span className={styles.button__text}>
-          {isWallet.local(wallet) ? wallet.name : truncate(name ?? address)}
+          {isWallet.local(wallet)
+            ? wallet.name
+            : connectedWallet?.name ?? truncate(name ?? address)}
         </span>
       </Button>
     </Popover>
