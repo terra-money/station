@@ -5,7 +5,7 @@
 
   .label,
   .line {
-    transform: translate(-50%, 0);
+    transform: translate(var(--x-pos), 0);
   }
 }
 
