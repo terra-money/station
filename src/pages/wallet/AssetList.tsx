@@ -1,6 +1,5 @@
-import { FormError } from "components/form"
 import { InternalButton } from "components/general"
-import { useBankBalance, useIsWalletEmpty } from "data/queries/bank"
+import { useBankBalance } from "data/queries/bank"
 import { useExchangeRates } from "data/queries/coingecko"
 import { useNativeDenoms } from "data/token"
 import { useMemo } from "react"
@@ -16,14 +15,18 @@ import {
 } from "data/settings/CustomTokens"
 import { useIBCBaseDenoms } from "data/queries/ibc"
 import { useNetwork } from "data/wallet"
+import { useInitialBankBalance } from "data/queries/bank"
+import { combineState } from "data/query"
 
 const AssetList = () => {
   const { t } = useTranslation()
-  const isWalletEmpty = useIsWalletEmpty()
   const { hideNoWhitelist, hideLowBal } = useTokenFilters()
   const networks = useNetwork()
 
   const coins = useBankBalance()
+  const balancesState = useInitialBankBalance()
+  const state = combineState(...balancesState)
+
   const { data: prices } = useExchangeRates()
   const readNativeDenom = useNativeDenoms()
   const native = useCustomTokensNative()
@@ -133,14 +136,18 @@ const AssetList = () => {
     ]
   )
 
+  const numLoadres =
+    prices || !hideLowBal
+      ? state.isLoading
+        ? Math.max(list.length - 6, 0)
+        : 0
+      : 6
+
   const render = () => {
     if (!coins) return
 
     return (
       <div>
-        {isWalletEmpty && (
-          <FormError>{t("Coins required to post transactions")}</FormError>
-        )}
         <section>
           {(prices || !hideLowBal) &&
             list.map(({ denom, chainID, id, ...item }, i) => (
@@ -155,6 +162,9 @@ const AssetList = () => {
                 key={i}
               />
             ))}
+          {[...Array(numLoadres)].map((_, i) => (
+            <Asset key={i} />
+          ))}
         </section>
       </div>
     )

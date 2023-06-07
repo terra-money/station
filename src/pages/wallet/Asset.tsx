@@ -21,19 +21,34 @@ export interface Props extends TokenItem, QueryState {
   id: string
 }
 
-const Asset = (props: Props) => {
-  const { token, icon, symbol, balance, denom, decimals, id, ...state } = props
+const Asset = (props: Props | {}) => {
   const { t } = useTranslation()
   const currency = useCurrency()
   const network = useNetwork()
-  const chains = props.chains.filter((chain) => !!network[chain])
-
   const { data: prices, ...pricesState } = useExchangeRates()
   const { route, setRoute } = useWalletRoute()
 
+  if (!("denom" in props)) {
+    return (
+      <article className={[styles.asset, styles.loading].join(" ")}>
+        <section className={styles.details}>
+          <div className={styles.loading__icon} />
+
+          <div className={styles.details__container}>
+            <h1 className={styles.symbol}> </h1>
+            <h2 className={styles.change__up}> </h2>
+            <h1 className={styles.price}> </h1>
+            <h2 className={styles.amount}> </h2>
+          </div>
+        </section>
+      </article>
+    )
+  }
+
+  const { token, icon, symbol, balance, denom, decimals, id, ...state } = props
+  const chains = props.chains.filter((chain) => !!network[chain])
   const coinPrice = props.price ?? 0
   const change = props.change ?? 0
-
   const walletPrice = coinPrice * parseInt(balance ?? "0")
 
   return (
