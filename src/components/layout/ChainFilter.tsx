@@ -83,7 +83,9 @@ const ChainFilter = ({
 
     ref.current?.appendChild(container)
     const textWidth = container.offsetWidth
-    ref.current?.removeChild(container)
+    if (ref.current?.contains(container)) {
+      ref.current?.removeChild(container)
+    }
 
     const insideGap = 8 // gap: 0.5rem;
     const imageWidth = 18 // likely max width of image
