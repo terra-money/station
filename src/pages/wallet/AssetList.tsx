@@ -98,7 +98,7 @@ const AssetList = () => {
                   chains: [chain],
                   id: key,
                   whitelisted: !(
-                    data.symbol.endsWith("...") ||
+                    data.isNonWhitelisted ||
                     unknownIBCDenoms[denom]?.chainIDs.find((c) => !networks[c])
                   ),
                 },
