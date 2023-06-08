@@ -21,8 +21,8 @@ const AssetPage = () => {
   const { t } = useTranslation()
   const { setRoute, route } = useWalletRoute()
   const routeDenom = route.path === Path.coin ? route.denom ?? "uluna" : "uluna"
-  const [chain, denom] = routeDenom.includes(":")
-    ? routeDenom.split(":")
+  const [chain, denom] = routeDenom.includes("*")
+    ? routeDenom.split("*")
     : [undefined, routeDenom]
   const { token, symbol, icon, decimals } = readNativeDenom(denom, chain)
 
@@ -90,6 +90,7 @@ const AssetPage = () => {
                       balance={b.amount}
                       chain={b.chain}
                       token={token}
+                      denom={b.denom}
                       decimals={decimals}
                     />
                     {token === "uluna" && isTerraChain(b.chain) && <Vesting />}
@@ -111,6 +112,7 @@ const AssetPage = () => {
                       balance={b.amount}
                       chain={b.chain}
                       token={token}
+                      denom={b.denom}
                       decimals={decimals}
                       path={unknownIBCDenoms[b.denom]?.chains}
                       ibcDenom={b.denom}

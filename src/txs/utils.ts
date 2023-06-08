@@ -1,10 +1,17 @@
-import BigNumber from "bignumber.js"
 import { readAmount, toAmount } from "@terra-money/terra-utils"
 import { Coin, Coins } from "@terra-money/feather.js"
-import { has } from "utils/num"
-import { FindDecimals } from "./IBCHelperContext"
 import { getShouldTax } from "data/queries/treasury"
+import { FindDecimals } from "./IBCHelperContext"
 import { calcMinimumTaxAmount } from "./Tx"
+import BigNumber from "bignumber.js"
+import { has } from "utils/num"
+import axios from "axios"
+
+// Intercept all axios errors.
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {}
+)
 
 export const getPlaceholder = (decimals = 6) => "0.".padEnd(decimals + 2, "0")
 

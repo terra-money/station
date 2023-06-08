@@ -5,8 +5,9 @@ import { useState } from "react"
 interface Props {
   text: string
   className?: string
+  size?: number
 }
-const CopyIcon = ({ text, className }: Props) => {
+const CopyIcon = ({ text, className, size }: Props) => {
   const [copied, setCopied] = useState(false)
 
   return (
@@ -19,9 +20,9 @@ const CopyIcon = ({ text, className }: Props) => {
       }}
     >
       {copied ? (
-        <Check style={{ fontSize: 18 }} />
+        <Check style={{ fontSize: size ?? 18 }} />
       ) : (
-        <ContentCopy style={{ fontSize: 18 }} />
+        <ContentCopy style={{ fontSize: size ?? 18 }} />
       )}
     </button>
   )

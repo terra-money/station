@@ -14,9 +14,9 @@ const DisplayChainsSetting = () => {
 
   const onChange = (value: string) => {
     if (isTerraChain(value)) return
-    const newDisplayChains = displayChains.includes(value)
-      ? displayChains.filter((chainID) => chainID !== value)
-      : [...displayChains, value]
+    const newDisplayChains = displayChains?.includes(value)
+      ? displayChains?.filter((chainID) => chainID !== value)
+      : [...(displayChains || []), value]
     changeDisplayChains(newDisplayChains)
     if (value === selectedDisplayChain) {
       changeSelectedDisplayChain(undefined)
@@ -42,7 +42,7 @@ const DisplayChainsSetting = () => {
             )
             .map((chainID) => ({
               value: chainID,
-              selected: displayChains.includes(chainID),
+              selected: displayChains?.includes(chainID),
               label: network[chainID].name,
               icon: network[chainID].icon,
             }))

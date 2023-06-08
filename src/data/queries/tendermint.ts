@@ -84,13 +84,15 @@ export const useValidNetworks = (networks: Network[]) => {
         queryFn: async () => {
           if (prefix === "terra") return chainID
 
-          const { data } = await axios.get(
+          const { data } = (await axios.get(
             `/cosmos/bank/v1beta1/balances/${randomAddress(prefix)}`,
             {
               baseURL: lcd, // TODO: pass custom lcd to the function
               timeout: VALIDATION_TIMEOUT,
             }
-          )
+          )) || {
+            data: {},
+          }
 
           if (Array.isArray(data.balances)) return chainID
         },

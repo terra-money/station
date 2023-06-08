@@ -45,7 +45,7 @@ export const useSortedDisplayChains = () => {
   const chains = useChainsByAssetValue()
   const { displayChains } = useDisplayChains()
   const sorted = chains
-    .filter((c) => displayChains.includes(c.chain))
+    .filter((c) => displayChains?.includes(c.chain))
     .filter((c) => isTerraChain(c.chain))
     .concat(
       chains.filter((c) => isOsmosisChain(c.chain)),

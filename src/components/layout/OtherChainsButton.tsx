@@ -21,7 +21,7 @@ const OtherChainsButton = ({ list, handleSetChain }: Props) => {
   const closePopover = () => setKey((key) => key + 1)
 
   const onClick = (chainID: string) => {
-    if (displayChains.includes(chainID)) {
+    if (displayChains?.includes(chainID)) {
       changeSelectedDisplayChain(chainID)
       handleSetChain(chainID)
     } else {
