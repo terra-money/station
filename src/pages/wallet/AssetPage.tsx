@@ -70,16 +70,10 @@ const AssetPage = () => {
         <TokenIcon token={token} icon={icon} size={50} />
         <h1>
           {currency.symbol}{" "}
-          <Read
-            decimals={decimals}
-            amount={totalBalance * price}
-            fixed={2}
-            token={symbol}
-          />
+          <Read decimals={decimals} amount={totalBalance * price} fixed={2} />
         </h1>
         <p>
-          <Read decimals={decimals} amount={totalBalance} token={symbol} />
-          {symbol}
+          <Read decimals={decimals} amount={totalBalance} /> {symbol}
         </p>
       </section>
       <section className={styles.chainlist}>
