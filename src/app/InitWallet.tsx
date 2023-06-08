@@ -14,7 +14,7 @@ const InitWallet = ({ children }: PropsWithChildren<{}>) => {
       timeout={{
         time: 3000,
         fallback: () => {
-          localStorage.removeItem("__terra_extension_router_session__")
+          localStorage.removeItem("__wallet_kit_connected_wallet")
           window.location.reload()
         },
       }}
