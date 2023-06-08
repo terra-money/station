@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next"
 import { ProposalResult, useParseProposalType } from "data/queries/gov"
 import { useProposalStatusItem } from "data/queries/gov"
-import { ToNow } from "components/display"
+import { DateTimeRenderer } from "components/display"
 import styles from "./ProposalHeader.module.scss"
 import { useNetwork } from "data/wallet"
 
@@ -34,7 +34,10 @@ const ProposalHeader = ({
 
       <h1 className={styles.title}>{title}</h1>
       <p className={styles.date}>
-        {t("Submitted")} <ToNow>{new Date(submit_time)}</ToNow>
+        {t("Submitted")}{" "}
+        <DateTimeRenderer format={"localestring"}>
+          {submit_time}
+        </DateTimeRenderer>
       </p>
     </header>
   )

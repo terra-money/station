@@ -9,7 +9,7 @@ import styles from "./ValidatorCompact.module.scss"
 import ProfileIcon from "./components/ProfileIcon"
 import { useTranslation } from "react-i18next"
 import { readPercent } from "@terra-money/terra-utils"
-import { ToNow } from "components/display"
+import { DateTimeRenderer } from "components/display"
 
 const cx = classNames.bind(styles)
 
@@ -66,7 +66,9 @@ const ValidatorCompact = ({ vertical }: { vertical?: boolean }) => {
         <dl>
           <dt>{t("Last changed")}</dt>
           <dd>
-            <ToNow>{new Date(update_time)}</ToNow>
+            <DateTimeRenderer format={"localestring"}>
+              {update_time}
+            </DateTimeRenderer>
           </dd>
         </dl>
       </div>

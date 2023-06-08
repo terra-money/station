@@ -11,7 +11,7 @@ import { ValidatorLink } from "components/general"
 import { ModalButton } from "components/feedback"
 import { Table } from "components/layout"
 import { Read } from "components/token"
-import { ToNow, TooltipIcon } from "components/display"
+import { DateTimeRenderer, TooltipIcon } from "components/display"
 import StakedCard from "../components/StakedCard"
 import { UnbondingDelegation } from "@terra-money/feather.js"
 import { useNetwork } from "data/wallet"
@@ -103,7 +103,11 @@ const Unbondings = () => {
             {
               title: t("Release"),
               dataIndex: "completion_time",
-              render: (date: Date) => <ToNow>{date}</ToNow>,
+              render: (date: Date) => (
+                <DateTimeRenderer format={"localestring"}>
+                  {date}
+                </DateTimeRenderer>
+              ),
               align: "right",
             },
           ]}

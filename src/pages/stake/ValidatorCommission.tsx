@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next"
 import { readPercent } from "@terra-money/terra-utils"
 import { Card } from "components/layout"
-import { ToNow } from "components/display"
+import { DateTimeRenderer } from "components/display"
 import ValidatorNumbers from "./components/ValidatorNumbers"
 import { Validator } from "@terra-money/feather.js"
 
@@ -27,7 +27,11 @@ const ValidatorCommission = ({ validator }: { validator: Validator }) => {
     },
     {
       title: t("Last changed"),
-      content: <ToNow>{new Date(update_time)}</ToNow>,
+      content: (
+        <DateTimeRenderer format={"localestring"}>
+          {update_time}
+        </DateTimeRenderer>
+      ),
     },
   ]
 
