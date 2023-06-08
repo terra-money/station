@@ -34,6 +34,18 @@
     font-weight: var(--normal);
     color: var(--text-muted);
     white-space: nowrap;
+
+    .copy__denom {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 5px;
+      color: hsl(
+        var(--button-primary-bg-h),
+        var(--button-primary-bg-s),
+        var(--button-primary-bg-l)
+      );
+    }
   }
 
   h4 {
