@@ -32,14 +32,14 @@ const AssetChain = (props: Props) => {
   const networks = useNetwork()
   const { devMode } = useDevMode()
 
-  const { icon, name } = networks[chain]
+  const { icon, name } = networks[chain] || {}
 
   // send back is not available if one of the chains the asset went through is not supprted by Station
   const isSendBackDisabled = !!path?.find((chain) => !networks[chain])
 
   return (
     <article className={styles.chain} key={name}>
-      <TokenIcon token={name} icon={icon} size={50} />
+      <TokenIcon token={name} icon={icon} size={28} />
       <section className={styles.details}>
         <h1 className={styles.name}>
           <h4>

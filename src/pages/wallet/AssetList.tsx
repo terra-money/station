@@ -16,6 +16,7 @@ import {
 } from "data/settings/CustomTokens"
 import { useIBCBaseDenoms } from "data/queries/ibc"
 import { useNetwork } from "data/wallet"
+import { ReactComponent as ManageAssets } from "styles/images/icons/ManageAssets.svg"
 
 const AssetList = () => {
   const { t } = useTranslation()
@@ -166,7 +167,10 @@ const AssetList = () => {
         <h3>Assets</h3>
         <ManageTokens>
           {(open) => (
-            <InternalButton onClick={open}>{t("Manage tokens")}</InternalButton>
+            <InternalButton className={styles.manage__button} onClick={open}>
+              {t("Manage")}
+              <ManageAssets />
+            </InternalButton>
           )}
         </ManageTokens>
       </div>

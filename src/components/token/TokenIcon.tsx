@@ -27,9 +27,8 @@ const TokenIcon = ({ token, icon, size, ...rest }: Props) => {
     size === "inherit"
       ? undefined
       : {
-          width: size ?? 34,
-          height: size ?? 34,
-          style: { padding: (size ?? 34) / 3.5 },
+          width: size ?? 24,
+          height: size ?? 24,
         }
 
   const attrs = { ...rest, ...sizes, src, className: cx(styles.icon, size) }
