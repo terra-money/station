@@ -102,8 +102,10 @@ const AssetPage = () => {
           </>
         )}
         {filteredUnsupportedBalances.length > 0 && (
-          <div>
-            <h3>{t("Unsupported Chains")}</h3>
+          <>
+            <div className={styles.chainlist__title}>
+              <h3>{t("Unsupported Chains")}</h3>
+            </div>
             <div className={styles.chainlist__list}>
               {filteredUnsupportedBalances
                 .sort((a, b) => parseInt(b.amount) - parseInt(a.amount))
@@ -122,7 +124,7 @@ const AssetPage = () => {
                   </div>
                 ))}
             </div>
-          </div>
+          </>
         )}
       </section>
 
