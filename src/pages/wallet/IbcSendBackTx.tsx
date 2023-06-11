@@ -182,7 +182,7 @@ function IbcSendBackTx({ token, chainID }: Props) {
 
   const createTx = useCallback(
     ({ input }: TxValues) => {
-      if (!ibcDetails || !addresses || !IBCdenom || input === undefined) return
+      if (!ibcDetails || !addresses || !IBCdenom || !input) return
 
       const msgs = [
         new MsgTransfer(
