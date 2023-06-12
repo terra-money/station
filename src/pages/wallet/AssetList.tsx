@@ -17,6 +17,7 @@ import { useIBCBaseDenoms } from "data/queries/ibc"
 import { useNetwork } from "data/wallet"
 import { useInitialBankBalance } from "data/queries/bank"
 import { combineState } from "data/query"
+import { ReactComponent as ManageAssets } from "styles/images/icons/ManageAssets.svg"
 
 const AssetList = () => {
   const { t } = useTranslation()
@@ -80,7 +81,7 @@ const AssetList = () => {
               // @ts-expect-error
               unknownIBCDenoms[denom]?.chainID ?? data.chainID ?? chain,
               data.token,
-            ].join(":")
+            ].join("*")
 
             if (acc[key]) {
               acc[key].balance = `${
@@ -101,7 +102,7 @@ const AssetList = () => {
                   chains: [chain],
                   id: key,
                   whitelisted: !(
-                    data.symbol.endsWith("...") ||
+                    data.isNonWhitelisted ||
                     unknownIBCDenoms[denom]?.chainIDs.find((c) => !networks[c])
                   ),
                 },
@@ -176,7 +177,10 @@ const AssetList = () => {
         <h3>Assets</h3>
         <ManageTokens>
           {(open) => (
-            <InternalButton onClick={open}>{t("Manage tokens")}</InternalButton>
+            <InternalButton className={styles.manage__button} onClick={open}>
+              {t("Manage")}
+              <ManageAssets />
+            </InternalButton>
           )}
         </ManageTokens>
       </div>

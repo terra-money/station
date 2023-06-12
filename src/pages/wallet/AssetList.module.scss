@@ -16,6 +16,21 @@
   grid-area: title;
 }
 
+.manage__button {
+  display: flex;
+  gap: 8px;
+
+  svg {
+    width: 16px;
+    height: 16px;
+
+    path {
+      fill: var(--button-primary-bg);
+      stroke: var(--button-primary-bg);
+    }
+  }
+}
+
 .assetlist__list {
   overflow-y: auto;
   grid-area: list;
