@@ -10,55 +10,70 @@
 
   &:hover {
     background-color: var(--card-bg);
-
-    .details__container {
-      grid-template-areas:
-        "symbol symbol"
-        "change amount";
-    }
-
-    .chain__num,
-    .price {
-      display: none;
-    }
-
-    .chains {
-      display: inline;
-      background-color: var(--button-default-bg);
-      padding: 2px 10px;
-      font-size: 12px;
-      border-radius: 10px;
-    }
   }
 }
 
 .details {
   @include flex(flex-start);
-  gap: 10px;
+  gap: 16px;
   width: 100%;
+
+  .token__icon__container {
+    position: relative;
+
+    .chain__icon {
+      position: absolute;
+      bottom: -8px;
+      right: -10px;
+      width: 20px;
+      height: 20px;
+      padding: 2px;
+      border-radius: 50%;
+      background-color: var(--card-bg-muted);
+    }
+  }
 }
 
 .details__container {
-  display: grid;
   width: 100%;
-  max-width: 100%;
-  grid-template-areas:
-    "symbol price"
-    "change amount";
+  max-width: calc(100% - 40px);
+  display: flex;
+  flex-direction: column;
+
+  .top__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .bottom__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
 
 .symbol {
   @include flex(flex-start);
   gap: 6px;
-  font-size: 15px;
-  grid-area: symbol;
+  font-size: 16px;
+  overflow: hidden;
+
+  .symbol__name {
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .chain__num {
-  background-color: var(--button-default-bg);
-  padding: 2px 10px;
+  background-color: var(--bg-muted);
+  padding: 2px 8px;
   font-size: 12px;
-  border-radius: 10px;
+  line-height: 130%;
+  border-radius: 4px;
 }
 
 .chains {
@@ -66,19 +81,28 @@
 }
 
 .amount {
-  font-size: 15px;
-  grid-area: amount;
+  font-size: 12px;
   font-weight: var(--normal);
   color: var(--text-muted);
   text-align: right;
   white-space: nowrap;
+  max-width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+  flex-wrap: wrap;
+
+  .sub__amount {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100px;
+  }
 }
 
 .change__up,
 .change__down {
   @include flex(flex-start);
   font-weight: var(--normal);
-  grid-area: change;
   gap: 4px;
 }
 
@@ -91,8 +115,12 @@
 }
 
 .price {
-  text-align: right;
-  grid-area: price;
+  font-size: 16px;
+  font-weight: var(--bold);
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  justify-content: flex-end;
 }
 
 .value {

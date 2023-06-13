@@ -90,7 +90,10 @@ export const useNativeDenoms = () => {
 
   let decimals = DEFAULT_NATIVE_DECIMALS
 
-  function readNativeDenom(denom: Denom, chainID?: string): TokenItem {
+  function readNativeDenom(
+    denom: Denom,
+    chainID?: string
+  ): TokenItem & { isNonWhitelisted?: boolean } {
     let tokenType = ""
 
     if (denom.startsWith("ibc/")) {
@@ -114,8 +117,12 @@ export const useNativeDenoms = () => {
         break
 
       case "factory": {
-        // TODO - lookup whitelist for factory tokens.
-        fixedDenom = "..."
+        const factoryParts = denom.split(/[/:]/)
+        let tokenAddress = ""
+        if (factoryParts.length >= 2) {
+          tokenAddress = factoryParts.slice(2).join(" ")
+        }
+        fixedDenom = tokenAddress
         break
       }
 
@@ -176,6 +183,7 @@ export const useNativeDenoms = () => {
             ? factoryIcon
             : "https://assets.terra.money/icon/svg/Terra.svg",
         decimals,
+        isNonWhitelisted: true,
       }
     )
   }

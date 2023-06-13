@@ -21,8 +21,8 @@ const AssetPage = () => {
   const { t } = useTranslation()
   const { setRoute, route } = useWalletRoute()
   const routeDenom = route.path === Path.coin ? route.denom ?? "uluna" : "uluna"
-  const [chain, denom] = routeDenom.includes(":")
-    ? routeDenom.split(":")
+  const [chain, denom] = routeDenom.includes("*")
+    ? routeDenom.split("*")
     : [undefined, routeDenom]
   const { token, symbol, icon, decimals } = readNativeDenom(denom, chain)
 
@@ -70,22 +70,18 @@ const AssetPage = () => {
         <TokenIcon token={token} icon={icon} size={50} />
         <h1>
           {currency.symbol}{" "}
-          <Read
-            decimals={decimals}
-            amount={totalBalance * price}
-            fixed={2}
-            token={symbol}
-          />
+          <Read decimals={decimals} amount={totalBalance * price} fixed={2} />
         </h1>
         <p>
-          <Read decimals={decimals} amount={totalBalance} token={symbol} />
-          {symbol}
+          <Read decimals={decimals} amount={totalBalance} /> {symbol}
         </p>
       </section>
-      <section className={styles.chainlist}>
+      <section className={styles.chainlist__container}>
         {filteredBalances.length > 0 && (
-          <div>
-            <h3>{t("Chains")}</h3>
+          <div className={styles.chainlist}>
+            <div className={styles.chainlist__title}>
+              <h3>{t("Chains")}</h3>
+            </div>
             <div className={styles.chainlist__list}>
               {filteredBalances
                 .sort((a, b) => parseInt(b.amount) - parseInt(a.amount))
@@ -96,6 +92,7 @@ const AssetPage = () => {
                       balance={b.amount}
                       chain={b.chain}
                       token={token}
+                      denom={b.denom}
                       decimals={decimals}
                     />
                     {token === "uluna" && isTerraChain(b.chain) && <Vesting />}
@@ -105,8 +102,10 @@ const AssetPage = () => {
           </div>
         )}
         {filteredUnsupportedBalances.length > 0 && (
-          <div>
-            <h3>{t("Unsupported Chains")}</h3>
+          <div className={styles.chainlist}>
+            <div className={styles.chainlist__title}>
+              <h3>{t("Unsupported Chains")}</h3>
+            </div>
             <div className={styles.chainlist__list}>
               {filteredUnsupportedBalances
                 .sort((a, b) => parseInt(b.amount) - parseInt(a.amount))
@@ -117,6 +116,7 @@ const AssetPage = () => {
                       balance={b.amount}
                       chain={b.chain}
                       token={token}
+                      denom={b.denom}
                       decimals={decimals}
                       path={unknownIBCDenoms[b.denom]?.chains}
                       ibcDenom={b.denom}
