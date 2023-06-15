@@ -63,7 +63,7 @@ const SingleSwapContext = ({ children }: PropsWithChildren<{}>) => {
     if (!(ibcWhitelist && cw20Whitelist)) return
 
     const terraswapAvailableList = uniq(
-      flatten(Object.values(pairs).map(({ assets }) => assets))
+      flatten(Object.values(pairs ?? {}).map(({ assets }) => assets))
     )
 
     const ibc = terraswapAvailableList

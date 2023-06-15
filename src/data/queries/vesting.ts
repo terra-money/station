@@ -166,5 +166,5 @@ export const useAccount = () => {
 }
 
 export const isVestingAccount = (data: any) => {
-  return Object.values(VestingAccountTypes).includes(data["@type"])
+  return Object.values(VestingAccountTypes ?? {}).includes(data["@type"])
 }

@@ -51,7 +51,7 @@ export function getChainNamefromID(
   chains: Record<string, InterchainNetwork>
 ) {
   const chainName =
-    Object.values(chains)
+    Object.values(chains ?? {})
       .find(({ chainID }) => chainID === id)
       ?.name.toLowerCase() ?? ""
 
@@ -74,7 +74,7 @@ export const getDisplayChainsSettingLabel = (
   chains: Record<string, InterchainNetwork>
 ) => {
   const { toShow, rest } = getTruncateChainList(displayChains)
-  return Object.values(DefaultDisplayChains).some(
+  return Object.values(DefaultDisplayChains ?? {}).some(
     (arr) => JSON.stringify(arr) === JSON.stringify(displayChains)
   )
     ? "Default"

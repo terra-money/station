@@ -121,7 +121,7 @@ const TFMSwapContext = ({ children }: PropsWithChildren<{}>) => {
       tokens: [
         ...ibc,
         ...cw20,
-        ...Object.entries(ibcDenoms[networkName])
+        ...Object.entries(ibcDenoms[networkName] ?? {})
           .filter(([_, { chainID }]) => chainID === terraChainID)
           .map(([ibc, { token }]) => ({
             ...readNativeDenom(token),

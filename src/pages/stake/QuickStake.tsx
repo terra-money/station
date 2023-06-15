@@ -122,7 +122,7 @@ const QuickStake = () => {
   )
 
   const options = [
-    ...Object.values(networks).map(({ baseAsset, chainID }) => ({
+    ...Object.values(networks ?? {}).map(({ baseAsset, chainID }) => ({
       denom: baseAsset,
       rewards: 1,
       chainID,

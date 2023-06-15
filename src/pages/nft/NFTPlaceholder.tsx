@@ -67,10 +67,10 @@ const NFTPlaceholder = () => {
 
   const byProtocol = groupBy(
     ({ protocol, name }) => protocol ?? name,
-    Object.values(data).filter(({ icon }) => icon)
+    Object.values(data ?? {}).filter(({ icon }) => icon)
   )
 
-  return <List list={Object.values(byProtocol)} />
+  return <List list={Object.values(byProtocol ?? {})} />
 }
 
 export default NFTPlaceholder

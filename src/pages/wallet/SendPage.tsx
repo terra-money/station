@@ -62,7 +62,9 @@ const SendPage = () => {
   const balances = useBankBalance()
   const { data: prices } = useExchangeRates()
   const readNativeDenom = useNativeDenoms()
-  const { route } = useWalletRoute() as unknown as { route: { denom?: string } }
+  const { route } = useWalletRoute() as unknown as {
+    route: { denom?: string }
+  }
 
   const availableAssets = useMemo(
     () =>
@@ -88,7 +90,7 @@ const SendPage = () => {
               },
             } as Record<string, AssetType>
           }
-        }, {} as Record<string, AssetType>)
+        }, {} as Record<string, AssetType>) ?? {}
       ).sort(
         (a, b) => b.price * parseInt(b.balance) - a.price * parseInt(a.balance)
       ),

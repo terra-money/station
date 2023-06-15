@@ -35,7 +35,7 @@ export const useInterchainValidators = () => {
   const lcd = useInterchainLCDClient()
 
   return useQueries(
-    Object.keys(addresses).map((chainID) => {
+    Object.keys(addresses ?? {}).map((chainID) => {
       return {
         queryKey: [queryKey.interchain.staking.validators, addresses, chainID],
         queryFn: async () => {
@@ -91,7 +91,7 @@ export const useInterchainDelegations = () => {
   const lcd = useInterchainLCDClient()
 
   return useQueries(
-    Object.keys(addresses).map((chainID) => {
+    Object.keys(addresses ?? {}).map((chainID) => {
       return {
         queryKey: [queryKey.interchain.staking.delegations, addresses, chainID],
         queryFn: async () => {
@@ -184,7 +184,7 @@ export const useDelegation = (validatorAddress: ValAddress) => {
     async () => {
       if (!addresses) return
       const prefix = ValAddress.getPrefix(validatorAddress)
-      const address = Object.values(addresses).find(
+      const address = Object.values(addresses ?? {}).find(
         (a) => AccAddress.getPrefix(a as string) === prefix
       )
       if (!address) return
@@ -207,7 +207,7 @@ export const useInterchainUnbondings = () => {
   const lcd = useInterchainLCDClient()
 
   return useQueries(
-    Object.keys(addresses).map((chainID) => {
+    Object.keys(addresses ?? {}).map((chainID) => {
       return {
         queryKey: [queryKey.interchain.staking.unbondings, addresses, chainID],
         queryFn: async () => {
@@ -343,7 +343,7 @@ export const useStakeChartData = (chain?: string) => {
   return {
     ...combineState(...delegationsData, ...allianceDelegationsData),
 
-    data: Object.entries(totalAmounts).map(([token, amount]) => {
+    data: Object.entries(totalAmounts ?? {}).map(([token, amount]) => {
       const { decimals, symbol, icon } = readNativeDenom(token)
 
       return {

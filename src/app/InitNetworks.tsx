@@ -35,11 +35,13 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
   }, [])
 
   const testBase = networks
-    ? Object.values({
-        ...networks.mainnet,
-        ...networks.testnet,
-        ...networks.classic,
-      }).map((chain) => {
+    ? Object.values(
+        {
+          ...networks.mainnet,
+          ...networks.testnet,
+          ...networks.classic,
+        } ?? {}
+      ).map((chain) => {
         const lcd = customLCDs[chain?.chainID] ?? chain.lcd
         return { ...chain, lcd }
       })
@@ -65,16 +67,16 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
             networksLoading: validationState.isLoading,
             filterEnabledNetworks: (networks) =>
               Object.fromEntries(
-                Object.entries(networks).filter(
+                Object.entries(networks ?? {}).filter(
                   ([chainID]) =>
                     chainID === "localterra" || validNetworks.includes(chainID)
-                )
+                ) ?? {}
               ),
             filterDisabledNetworks: (networks) =>
               Object.fromEntries(
-                Object.entries(networks).filter(
+                Object.entries(networks ?? {}).filter(
                   ([chainID]) => !validNetworks.includes(chainID)
-                )
+                ) ?? {}
               ),
           }}
         >

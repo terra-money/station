@@ -43,10 +43,10 @@ export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
 
   function withCustomLCDs(networks: Record<ChainID, InterchainNetwork>) {
     return Object.fromEntries(
-      Object.entries(networks).map(([key, val]) => [
+      Object.entries(networks ?? {}).map(([key, val]) => [
         key,
         { ...val, lcd: customLCDs[val?.chainID] || val.lcd },
-      ])
+      ]) ?? {}
     )
   }
 
@@ -78,7 +78,7 @@ export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
     const terra = Object.values(
       withCustomLCDs(
         networks[network as NetworkName] as Record<ChainID, InterchainNetwork>
-      )
+      ) ?? {}
     ).find(({ prefix }) => prefix === "terra")
     if (!terra) return {}
     return filterEnabledNetworks({ [terra?.chainID]: terra })
@@ -88,7 +88,7 @@ export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
     const chains330 = Object.values(
       withCustomLCDs(
         networks[network as NetworkName] as Record<ChainID, InterchainNetwork>
-      )
+      ) ?? {}
     ).filter(({ coinType }) => coinType === "330")
 
     return filterEnabledNetworks(

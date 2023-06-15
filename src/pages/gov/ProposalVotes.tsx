@@ -170,7 +170,7 @@ const calcTallies = (
   }
 
   const total = {
-    voted: BigNumber.sum(...Object.values(tallies)).toString(),
+    voted: BigNumber.sum(...Object.values(tallies ?? {})).toString(),
     staked: pool.bonded_tokens.amount.toString(),
   }
 
