@@ -14,7 +14,7 @@ const CopyTokenAddress = ({
 
   const ibc = ibcDenoms[networkName]
   const denom = Object.keys(ibc).find(
-    (key) => ibc[key].chainID === chain && ibc[key].token === token
+    (key) => ibc[key]?.chainID === chain && ibc[key].token === token
   )
 
   return (

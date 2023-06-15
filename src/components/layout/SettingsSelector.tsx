@@ -80,7 +80,7 @@ const SettingsSelector = ({
                 Object.keys(networksOnSelection).map((network: any) => (
                   <div
                     className={styles.network}
-                    key={networksOnSelection[network].chainID}
+                    key={networksOnSelection[network]?.chainID}
                   >
                     <img
                       src={networksOnSelection[network].icon}
