@@ -11,12 +11,12 @@
   grid-template-rows: min-content auto min-content;
   transition: 400ms;
   background-color: var(--card-bg-muted);
+  clip-path: inset(0px 0px 0px -100px);
 
   @media (max-width: (1420px)) {
     position: absolute;
     right: 0;
     box-shadow: var(--wallet-shadow);
-    clip-path: inset(0px 0px 0px -100px);
   }
 
   @media (max-width: (420px)) {
