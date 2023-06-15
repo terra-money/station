@@ -45,7 +45,7 @@ export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
     return Object.fromEntries(
       Object.entries(networks).map(([key, val]) => [
         key,
-        { ...val, lcd: customLCDs[val.chainID] || val.lcd },
+        { ...val, lcd: customLCDs[val?.chainID] || val.lcd },
       ])
     )
   }
@@ -81,7 +81,7 @@ export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
       )
     ).find(({ prefix }) => prefix === "terra")
     if (!terra) return {}
-    return filterEnabledNetworks({ [terra.chainID]: terra })
+    return filterEnabledNetworks({ [terra?.chainID]: terra })
   }
 
   if (wallet && !wallet?.words?.["118"]) {
@@ -93,7 +93,7 @@ export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
 
     return filterEnabledNetworks(
       chains330.reduce((acc, chain) => {
-        acc[chain.chainID] = chain
+        acc[chain?.chainID] = chain
         return acc
       }, {} as Record<ChainID, InterchainNetwork>)
     )

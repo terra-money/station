@@ -39,14 +39,14 @@ const StakeTx = () => {
 
   const { data: balances, ...balancesState } = useBalances()
   const { data: validators, ...validatorsState } = useValidators(
-    network.chainID
+    network?.chainID
   )
   const { data: delegations, ...delegationsState } = useDelegations(
-    network.chainID,
+    network?.chainID,
     isAlliance
   )
   const { data: allianceDelegations, ...allianceDelegationsState } =
-    useAllianceDelegations(network.chainID, !isAlliance)
+    useAllianceDelegations(network?.chainID, !isAlliance)
 
   const state = combineState(
     balancesState,
@@ -82,7 +82,7 @@ const StakeTx = () => {
         destination,
         balances,
         validators,
-        chainID: network.chainID,
+        chainID: network?.chainID,
         denom,
         details: {
           isAlliance,
@@ -97,7 +97,7 @@ const StakeTx = () => {
         destination,
         balances,
         validators,
-        chainID: network.chainID,
+        chainID: network?.chainID,
         denom,
         details: {
           isAlliance,
@@ -130,7 +130,7 @@ const StakeTx = () => {
           />,
           <div className={styles.details__container}>
             <ValidatorCompact vertical />
-            <StakingDetailsCompact denom={denom} chainID={network.chainID} />
+            <StakingDetailsCompact denom={denom} chainID={network?.chainID} />
           </div>,
         ]}
       />

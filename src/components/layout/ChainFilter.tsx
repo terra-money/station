@@ -105,7 +105,7 @@ const ChainFilter = ({
       calculatedWidth += fullWidth
 
       if (width - chainOverflowWidth > calculatedWidth) {
-        chainNameList.push(networks[i].chainID)
+        chainNameList.push(networks[i]?.chainID)
         count++
       } else {
         break

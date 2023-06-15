@@ -148,8 +148,8 @@ const useAuth = () => {
     if (!wallet) throw new Error("Wallet is not defined")
     const { words } = wallet
     const address = addressFromWords(
-      words[networks[txOptions.chainID].coinType] ?? "",
-      networks[txOptions.chainID]?.prefix
+      words[networks[txOptions?.chainID].coinType] ?? "",
+      networks[txOptions?.chainID]?.prefix
     )
 
     return await lcd.tx.create([{ address }], txOptions)
@@ -192,7 +192,7 @@ const useAuth = () => {
     if (!wallet) throw new Error("Wallet is not defined")
 
     if (is.ledger(wallet)) {
-      const key = await getLedgerKey(networks[txOptions.chainID].coinType)
+      const key = await getLedgerKey(networks[txOptions?.chainID].coinType)
       const wallet = lcd.wallet(key)
       const signMode = SignatureV2.SignMode.SIGN_MODE_LEGACY_AMINO_JSON
       return await wallet.createAndSignTx({
@@ -204,10 +204,10 @@ const useAuth = () => {
       return await lcd.wallet(key).createAndSignTx(txOptions)
     }*/ else {
       const pk = getKey(password)
-      if (!pk || !pk[networks[txOptions.chainID].coinType])
+      if (!pk || !pk[networks[txOptions?.chainID].coinType])
         throw new PasswordError("Incorrect password")
       const key = new RawKey(
-        Buffer.from(pk[networks[txOptions.chainID].coinType] ?? "", "hex")
+        Buffer.from(pk[networks[txOptions?.chainID].coinType] ?? "", "hex")
       )
       const wallet = lcd.wallet(key)
       return await wallet.createAndSignTx(txOptions)
@@ -236,7 +236,7 @@ const useAuth = () => {
   const post = async (txOptions: CreateTxOptions, password = "") => {
     if (!wallet) throw new Error("Wallet is not defined")
     const signedTx = await sign(txOptions, password)
-    const result = await lcd.tx.broadcastSync(signedTx, txOptions.chainID)
+    const result = await lcd.tx.broadcastSync(signedTx, txOptions?.chainID)
     if (isTxError(result)) throw new Error(result.raw_log)
     return result
   }
