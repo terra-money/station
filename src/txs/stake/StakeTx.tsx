@@ -23,7 +23,7 @@ const StakeTx = () => {
   const networks = useNetwork()
   const network = useMemo(() => {
     if (!destination || !ValAddress.validate(destination)) return null
-    return Object.values(networks).find(
+    return Object.values(networks ?? {}).find(
       ({ prefix }) => prefix === ValAddress.getPrefix(destination)
     )
   }, [networks, destination])
@@ -113,7 +113,7 @@ const StakeTx = () => {
       <Auto
         columns={[
           <Tabs
-            tabs={Object.values(StakeAction).map((tab) => {
+            tabs={Object.values(StakeAction ?? {}).map((tab) => {
               return {
                 key: tab,
                 tab: t(tab),

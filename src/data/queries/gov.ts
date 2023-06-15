@@ -118,7 +118,7 @@ export const useProposals = (status: ProposalStatus) => {
   const networks = useNetwork()
 
   return useQueries(
-    Object.values(networks).map(({ lcd, version, chainID }) => {
+    Object.values(networks ?? {}).map(({ lcd, version, chainID }) => {
       return {
         queryKey: [queryKey.gov.proposals, lcd, status],
         queryFn: async () => {

@@ -40,7 +40,7 @@ const Component = ({ whitelist, keyword }: Props) => {
     ? result
       ? [result]
       : []
-    : Object.values(merged).filter(({ name, symbol }) =>
+    : Object.values(merged ?? {}).filter(({ name, symbol }) =>
         [symbol, name].some((word) =>
           word?.toLowerCase().includes(keyword.toLowerCase())
         )

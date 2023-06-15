@@ -16,11 +16,11 @@ import pl from "locales/pl.json"
 import zh from "locales/zh.json"
 
 const flatten = (obj: object, initial = {}): Dictionary<string> => {
-  return Object.entries(obj).reduce((prev, [key, value]) => {
+  return Object.entries(obj ?? {}).reduce((prev, [key, value]) => {
     if (!value) return prev
     const next =
       typeof value === "string" ? { [key]: value } : flatten(value, prev)
-    return Object.assign({}, prev, next)
+    return Object.assign({}, prev ?? {}, next ?? {})
   }, initial)
 }
 

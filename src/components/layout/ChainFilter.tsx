@@ -120,7 +120,9 @@ const ChainFilter = ({
     const { count, chainNameList } = displayChainMax
 
     if (terraOnly) {
-      toShow = Object.values(network).filter((n) => isTerraChain(n.prefix))
+      toShow = Object.values(network ?? {}).filter((n) =>
+        isTerraChain(n.prefix)
+      )
     } else if (fixedChain) {
       toShow = [...networks.slice(0, count)]
 
@@ -134,7 +136,8 @@ const ChainFilter = ({
   }, [networks, network, terraOnly, displayChainMax, fixedChain])
 
   const otherNetworks = useMemo(
-    () => Object.values(network).filter((n) => !networksToShow.includes(n)),
+    () =>
+      Object.values(network ?? {}).filter((n) => !networksToShow.includes(n)),
     [network, networksToShow]
   )
 

@@ -105,7 +105,7 @@ const AssetList = () => {
                 },
               }
             }
-          }, {} as Record<string, any>)
+          }, {} as Record<string, any>) ?? {}
         ),
       ]
         .filter(

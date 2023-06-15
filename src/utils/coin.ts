@@ -78,7 +78,8 @@ export const getDenomFromAddress = (
   address: AccAddress
 ) => {
   return (
-    Object.values(networks).find(({ prefix }) => address.startsWith(prefix))
-      ?.baseAsset || "uluna"
+    Object.values(networks ?? {}).find(({ prefix }) =>
+      address.startsWith(prefix)
+    )?.baseAsset || "uluna"
   )
 }
