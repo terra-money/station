@@ -51,6 +51,38 @@ const STAKED_TOKENS: Record<string, string> = {
   terra14y9aa87v4mjvpf0vu8xm7nvldvjvk4h3wly2240u0586j4l6qm2q7ngp7t: "sHAR",
 }
 
+type PriceInfo = {
+  price: number
+  change: number
+}
+
+type PriceList = {
+  [key: string]: PriceInfo
+}
+
+export const calculateAssetValue = (
+  prices: PriceList | undefined,
+  token: string,
+  balance: string,
+  ibcDenom?: string | undefined
+) => {
+  if (prices) {
+    let assetPrice = 0
+
+    if (ibcDenom && prices[ibcDenom]) {
+      assetPrice = prices[ibcDenom].price
+    } else if (prices[token]) {
+      assetPrice = prices[token].price
+    }
+
+    const parsedBalance = parseInt(balance) || 0
+
+    return assetPrice * parsedBalance
+  }
+
+  return 0
+}
+
 export const useExchangeRates = () => {
   const currency = useCurrency()
   const isClassic = useNetworkName() === "classic"

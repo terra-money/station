@@ -1,6 +1,6 @@
 import { WithFetching } from "components/feedback"
 import { Read, TokenIcon } from "components/token"
-import { useExchangeRates } from "data/queries/coingecko"
+import { useExchangeRates, calculateAssetValue } from "data/queries/coingecko"
 import { useCurrency } from "data/settings/Currency"
 import { useNetwork } from "data/wallet"
 import { useTranslation } from "react-i18next"
@@ -31,6 +31,8 @@ const AssetChain = (props: Props) => {
 
   const networks = useNetwork()
   const { devMode } = useDevMode()
+
+  const assetValue = calculateAssetValue(prices, token, balance, ibcDenom)
 
   const { icon, name } = networks[chain] || {}
 
@@ -96,7 +98,7 @@ const AssetChain = (props: Props) => {
           {currency.symbol}{" "}
           <Read
             {...props}
-            amount={(prices?.[token]?.price || 0) * parseInt(balance)}
+            amount={assetValue}
             decimals={decimals}
             fixed={2}
             denom=""
