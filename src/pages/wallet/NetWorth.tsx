@@ -1,24 +1,24 @@
+import { useMemo } from "react"
+import { capitalize } from "@mui/material"
+import { useInterchainAddresses } from "auth/hooks/useAddress"
+import classNames from "classnames"
+import { TooltipIcon } from "components/display"
+import { ModalButton } from "components/feedback"
 import { Button } from "components/general"
 import { Read } from "components/token"
-import { TooltipIcon } from "components/display"
-import { useBankBalance } from "data/queries/bank"
+import { useBankBalance, useIsWalletEmpty } from "data/queries/bank"
 import { useExchangeRates } from "data/queries/coingecko"
 import { useCurrency } from "data/settings/Currency"
 import { useNativeDenoms } from "data/token"
+import { useChainID, useNetwork, useNetworkName } from "data/wallet"
 import { useTranslation } from "react-i18next"
-import styles from "./NetWorth.module.scss"
-import { useWalletRoute, Path } from "./Wallet"
-import { capitalize } from "@mui/material"
-import NetWorthTooltip from "./NetWorthTooltip"
-import { ModalButton } from "components/feedback"
-import FiatRampModal from "./FiatRampModal"
-// import { Add as AddIcon, Send as SendIcon } from "@mui/icons-material"
-import classNames from "classnames"
-import { useInterchainAddresses } from "auth/hooks/useAddress"
-import { useNetworkName } from "data/wallet"
-import { ReactComponent as SendIcon } from "styles/images/icons/Send_v2.svg"
-import { ReactComponent as ReceiveIcon } from "styles/images/icons/Receive_v2.svg"
 import { ReactComponent as AddIcon } from "styles/images/icons/Buy_v2.svg"
+import { ReactComponent as ReceiveIcon } from "styles/images/icons/Receive_v2.svg"
+import { ReactComponent as SendIcon } from "styles/images/icons/Send_v2.svg"
+import FiatRampModal from "./FiatRampModal"
+import styles from "./NetWorth.module.scss"
+import NetWorthTooltip from "./NetWorthTooltip"
+import { Path, useWalletRoute } from "./Wallet"
 
 const cx = classNames.bind(styles)
 
@@ -31,6 +31,14 @@ const NetWorth = () => {
   const { setRoute, route } = useWalletRoute()
   const addresses = useInterchainAddresses()
   const networkName = useNetworkName()
+  const isWalletEmpty = useIsWalletEmpty()
+
+  const networks = useNetwork()
+  const chainID = useChainID()
+  const availableGasDenoms = useMemo(() => {
+    return Object.keys(networks[chainID]?.gasPrices || {})
+  }, [chainID, networks])
+  const sendButtonDisabled = isWalletEmpty && !!availableGasDenoms.length
 
   // TODO: show CW20 balances and staked tokens
   const coinsValue = coins?.reduce((acc, { amount, denom }) => {
@@ -64,6 +72,7 @@ const NetWorth = () => {
           <Button
             color="primary"
             className={styles.wallet_primary}
+            disabled={sendButtonDisabled}
             onClick={() =>
               setRoute({
                 path: Path.send,
