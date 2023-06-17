@@ -127,7 +127,8 @@ const TFMSwapContext = ({ children }: PropsWithChildren<{}>) => {
             ...readNativeDenom(token),
             token: ibc,
             balance: getAmount(bankBalance, token),
-          })),
+          }))
+          .filter((entry) => (entry.isNonWhitelisted ? false : true)),
       ],
     }
 
