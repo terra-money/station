@@ -6,7 +6,7 @@ import { RecoilRoot } from "recoil"
 import { getChainOptions } from "@terra-money/wallet-controller"
 import { WalletProvider } from "@terra-money/wallet-provider"
 import "tippy.js/dist/tippy.css"
-import { initSentry } from "utils/sentry/setupSentry"
+import { initSentry } from "utils/analytics/setupSentry"
 
 import "config/lang"
 import { BRIDGE } from "config/constants"
