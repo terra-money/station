@@ -1,17 +1,17 @@
-import { useNativeDenoms } from "data/token"
-import { useWalletRoute, Path } from "./Wallet"
-import styles from "./AssetPage.module.scss"
-import { Read, TokenIcon } from "components/token"
-import { useCurrency } from "data/settings/Currency"
-import { useExchangeRates } from "data/queries/coingecko"
-import { useBankBalance } from "data/queries/bank"
-import AssetChain from "./AssetChain"
-import { Button } from "components/general"
-import { useTranslation } from "react-i18next"
 import { capitalize } from "@mui/material"
-import Vesting from "./Vesting"
-import { isTerraChain } from "utils/chain"
+import { useTranslation } from "react-i18next"
+import { Button } from "components/general"
+import { Read, TokenIcon } from "components/token"
+import { useBankBalance } from "data/queries/bank"
+import { useExchangeRates } from "data/queries/coingecko"
 import { useIBCBaseDenoms } from "data/queries/ibc"
+import { useCurrency } from "data/settings/Currency"
+import { useNativeDenoms } from "data/token"
+import { isTerraChain } from "utils/chain"
+import AssetChain from "./AssetChain"
+import styles from "./AssetPage.module.scss"
+import Vesting from "./Vesting"
+import { Path, useWalletRoute } from "./Wallet"
 
 const AssetPage = () => {
   const currency = useCurrency()
@@ -55,9 +55,17 @@ const AssetPage = () => {
     {} as Record<string, { baseDenom: string; chains: string[] }>
   )
 
-  const filteredUnsupportedBalances = balances.filter(
-    (b) => unknownIBCDenoms[b.denom]?.baseDenom === token
-  )
+  const filteredUnsupportedBalances = balances.filter((b) => {
+    // only return unsupported token if the current chain is found in the ibc path
+    if (chain) {
+      return (
+        unknownIBCDenoms[b.denom]?.baseDenom === token &&
+        unknownIBCDenoms[b.denom]?.chains.includes(chain)
+      )
+    }
+
+    return unknownIBCDenoms[b.denom]?.baseDenom === token
+  })
 
   const totalBalance = [
     ...filteredBalances,
