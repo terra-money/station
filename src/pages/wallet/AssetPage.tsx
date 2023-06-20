@@ -60,7 +60,7 @@ const AssetPage = () => {
     if (chain) {
       return (
         unknownIBCDenoms[b.denom]?.baseDenom === token &&
-        unknownIBCDenoms[b.denom]?.chains.includes(chain)
+        unknownIBCDenoms[b.denom]?.chains?.includes(chain)
       )
     }
 
