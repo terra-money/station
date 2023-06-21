@@ -167,6 +167,18 @@ export const useNativeDenoms = () => {
       }
     }
 
+    // Assuming terra-utils returns "Luna" for LUNC.
+    if (fixedDenom === "Luna") {
+      return {
+        token: denom,
+        symbol: "LUNC",
+        name: "Luna Classic",
+        icon: "https://assets.terra.money/icon/svg/LUNC.svg",
+        decimals: 6,
+        isNonWhitelisted: false,
+      }
+    }
+
     return (
       legacyWhitelist[denom] ??
       cw20.find(({ token }) => denom === token) ??

@@ -26,11 +26,18 @@ const AssetPage = () => {
     : [undefined, routeDenom]
   const { token, symbol, icon, decimals } = readNativeDenom(denom, chain)
 
-  const filteredBalances = balances.filter(
-    (b) => readNativeDenom(b.denom).token === token
-  )
+  const filteredBalances = balances.filter((b) => {
+    return readNativeDenom(b.denom).token === token && b.chain === chain
+  })
 
-  const price = symbol?.endsWith("...") ? 0 : prices?.[token]?.price ?? 0
+  let price
+  if (symbol === "LUNC") {
+    price = prices?.["uluna:classic"]?.price ?? 0
+  } else if (!symbol.endsWith("...")) {
+    price = prices?.[token]?.price ?? 0
+  } else {
+    price = 0
+  }
 
   const unknownIBCDenomsData = useIBCBaseDenoms(
     balances
@@ -103,7 +110,9 @@ const AssetPage = () => {
                       denom={b.denom}
                       decimals={decimals}
                     />
-                    {token === "uluna" && isTerraChain(b.chain) && <Vesting />}
+                    {token === "uluna" &&
+                      symbol !== "LUNC" &&
+                      isTerraChain(b.chain) && <Vesting />}
                   </div>
                 ))}
             </div>

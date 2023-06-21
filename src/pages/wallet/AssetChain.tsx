@@ -29,6 +29,13 @@ const AssetChain = (props: Props) => {
   const { data: prices, ...pricesState } = useExchangeRates()
   const { t } = useTranslation()
 
+  let price
+  if (symbol === "LUNC") {
+    price = prices?.["uluna:classic"]?.price ?? 0
+  } else {
+    price = prices?.[token]?.price ?? 0
+  }
+
   const networks = useNetwork()
   const { devMode } = useDevMode()
 
@@ -96,7 +103,7 @@ const AssetChain = (props: Props) => {
           {currency.symbol}{" "}
           <Read
             {...props}
-            amount={(prices?.[token]?.price || 0) * parseInt(balance)}
+            amount={price * parseInt(balance)}
             decimals={decimals}
             fixed={2}
             denom=""
