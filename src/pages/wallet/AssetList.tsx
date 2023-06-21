@@ -86,6 +86,21 @@ const AssetList = () => {
               }`
               acc[key].chains.push(chain)
               return acc
+            } else if (key === "columbus-5*uluna") {
+              return {
+                ...acc,
+                [key]: {
+                  denom: data.token,
+                  balance: amount,
+                  icon: "https://assets.terra.money/icon/svg/LUNC.svg",
+                  symbol: "LUNC",
+                  price: prices?.["uluna:classic"]?.price ?? 0,
+                  change: prices?.["uluna:classic"]?.change ?? 0,
+                  chains: [chain],
+                  id: key,
+                  whitelisted: true,
+                },
+              }
             } else {
               return {
                 ...acc,
