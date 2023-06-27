@@ -33,7 +33,9 @@ export const useTokenItem = (
   // 2. Whitelist
   const cw20WhitelistResult = useCW20Whitelist(!!customTokenItem)
   const { data: cw20Whitelist = {} } = cw20WhitelistResult
-  const listedCW20TokenItem = Object.values(cw20Whitelist).find(matchToken)
+  const listedCW20TokenItem = Object.values(cw20Whitelist ?? {}).find(
+    matchToken
+  )
 
   // 3. Contract query - token info
   const shouldQueryCW20 = cw20WhitelistResult.isSuccess && !listedCW20TokenItem
@@ -171,7 +173,9 @@ export const useNativeDenoms = () => {
       legacyWhitelist[denom] ??
       cw20.find(({ token }) => denom === token) ??
       // that's needed for axl tokens
-      Object.values(whitelist[networkName]).find((t) => t.token === denom) ?? {
+      Object.values(whitelist[networkName] ?? {}).find(
+        (t) => t.token === denom
+      ) ?? {
         // default token icon
         token: denom,
         symbol: fixedDenom,

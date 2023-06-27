@@ -53,8 +53,8 @@ const AssetList = () => {
             ...acc,
             [data.ibcDenom]: {
               baseDenom: data.baseDenom,
-              chainID: data.chainIDs[0],
-              chainIDs: data.chainIDs,
+              chainID: data?.chainIDs[0],
+              chainIDs: data?.chainIDs,
             },
           }
         : acc,
@@ -76,7 +76,7 @@ const AssetList = () => {
 
             const key = [
               // @ts-expect-error
-              unknownIBCDenoms[denom]?.chainID ?? data.chainID ?? chain,
+              unknownIBCDenoms[denom]?.chainID ?? data?.chainID ?? chain,
               data.token,
             ].join("*")
 
@@ -105,7 +105,7 @@ const AssetList = () => {
                 },
               }
             }
-          }, {} as Record<string, any>)
+          }, {} as Record<string, any>) ?? {}
         ),
       ]
         .filter(

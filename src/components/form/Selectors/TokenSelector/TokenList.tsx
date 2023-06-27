@@ -28,7 +28,7 @@ const TokenList = ({ list, onChange, value, small }: Props) => {
         >
           Show all
         </button>
-        {Object.values(list).map(({ symbol, icon, token }) => (
+        {Object.values(list ?? {}).map(({ symbol, icon, token }) => (
           <button
             className={token === value ? styles.active : ""}
             key={token}

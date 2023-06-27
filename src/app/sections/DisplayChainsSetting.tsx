@@ -32,7 +32,7 @@ const DisplayChainsSetting = () => {
       {(input) => (
         <SettingsSelectorToggle
           onChange={onChange}
-          options={Object.keys(network)
+          options={Object.keys(network ?? {})
             .filter(
               (chainID) =>
                 network[chainID].name

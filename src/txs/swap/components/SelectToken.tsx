@@ -90,7 +90,9 @@ const SelectToken = ({ value: selected, onChange, ...props }: Props) => {
 
   const [keyword, setKeyword] = useState("")
 
-  const items = flatten(Object.values(options.map(({ children }) => children)))
+  const items = flatten(
+    Object.values(options.map(({ children }) => children) ?? {})
+  )
   const current = items.find((item) => item.value === selected)
   const byKeyword = items.filter((item) =>
     [item.value, item.symbol].some((k) =>

@@ -99,7 +99,7 @@ const QuickStake = () => {
   const stakingParamsData = useAllStakingParams()
   const unbondingtime = stakingParamsData.reduce(
     (acc, { data }) =>
-      data ? { ...acc, [data.chainID]: data.unbonding_time ?? 0 } : acc,
+      data ? { ...acc, [data?.chainID]: data.unbonding_time ?? 0 } : acc,
     {} as Record<string, number>
   )
 
@@ -122,7 +122,7 @@ const QuickStake = () => {
   )
 
   const options = [
-    ...Object.values(networks).map(({ baseAsset, chainID }) => ({
+    ...Object.values(networks ?? {}).map(({ baseAsset, chainID }) => ({
       denom: baseAsset,
       rewards: 1,
       chainID,

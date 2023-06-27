@@ -63,7 +63,7 @@ const Component = ({ whitelist, keyword }: Props) => {
     ? result
       ? [result]
       : []
-    : Object.values(merged).filter((item) => {
+    : Object.values(merged ?? {}).filter((item) => {
         const { symbol, name } = item
         return [symbol, name].some((word) =>
           word?.toLowerCase().includes(keyword.toLowerCase())
@@ -124,7 +124,7 @@ const ManageCustomTokens = () => {
 
     const cw20Whitelist: CW20Whitelist = {}
     const nativeWhitelist: NativeWhitelist = {}
-    Object.entries(whitelist[networkName]).forEach(([id, asset]) => {
+    Object.entries(whitelist[networkName] ?? {}).forEach(([id, asset]) => {
       if (AccAddress.validate(asset.token)) {
         cw20Whitelist[asset.token] = asset
       } else {
