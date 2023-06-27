@@ -86,8 +86,8 @@ export const useExchangeRates = () => {
             return [
               denom,
               {
-                price: prices.uluna_classic.usd * fiatPrice,
-                change: prices.uluna_classic.change24h,
+                price: prices?.uluna_classic?.usd * fiatPrice,
+                change: prices?.uluna_classic?.change24h,
               },
             ]
           }
