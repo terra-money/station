@@ -128,10 +128,8 @@ export const calcRewardsValues = (
   }
 
   const total = calc(rewards.total)
-  const _byValidator = Object.entries(rewards.rewards ?? {}).map(
-    ([address, coins]) => ({ ...calc(coins), address })
-  )
-  const byValidator = _byValidator
+  const byValidator = Object.entries(rewards.rewards ?? {})
+    .map(([address, coins]) => ({ ...calc(coins), address }))
     .filter(({ sum, list }) => has(sum) || !!list.length)
     .sort(({ sum: a }, { sum: b }) => Number(b) - Number(a))
 
