@@ -121,9 +121,9 @@ export const calcRewardsValues = (
 ) => {
   const calc = (coins: Coins) => {
     const list = sortCoins(coins, currency).filter(({ amount }) => has(amount))
-    const toSum = list.map((item) => calcValue(item) ?? 0)
-    console.log("toSum", toSum)
-    const sum = BigNumber.sum(...toSum).toString()
+    const sum = BigNumber.sum(
+      ...list.map((item) => calcValue(item) ?? 0)
+    ).toString()
     return { sum, list }
   }
 
@@ -131,7 +131,6 @@ export const calcRewardsValues = (
   const _byValidator = Object.entries(rewards.rewards ?? {}).map(
     ([address, coins]) => ({ ...calc(coins), address })
   )
-  console.log("_byValidator", _byValidator)
   const byValidator = _byValidator
     .filter(({ sum, list }) => has(sum) || !!list.length)
     .sort(({ sum: a }, { sum: b }) => Number(b) - Number(a))
