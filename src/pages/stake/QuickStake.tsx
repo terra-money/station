@@ -108,6 +108,7 @@ const QuickStake = () => {
     (acc, { data }) => (data ? [...data?.delegation, ...acc] : acc),
     [] as Delegation[]
   )
+
   const allianceDelegationsData = useInterchainAllianceDelegations()
   const allianceDelegations = allianceDelegationsData.reduce(
     (acc, { data }) => (data ? [data, ...acc] : acc),
