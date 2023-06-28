@@ -134,7 +134,7 @@ const QuickStake = () => {
       ),
     })),
     ...(alliances ?? []).map(({ denom, reward_weight, chainID }) => ({
-      denom: denom ?? "",
+      denom,
       rewards: Number(reward_weight),
       chainID,
       unbonding: (unbondingtime[chainID] ?? 0) / 60 / 60 / 24,
@@ -152,6 +152,7 @@ const QuickStake = () => {
 
   const tokenList = options.reduce((acc, { denom }) => {
     const token = readNativeDenom(denom)
+    if (token.type === "ibc") return acc
     return token.lsd
       ? {
           [token.lsd]: readNativeDenom(token.lsd),
