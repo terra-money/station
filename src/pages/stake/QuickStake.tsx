@@ -134,7 +134,7 @@ const QuickStake = () => {
       ),
     })),
     ...(alliances ?? []).map(({ denom, reward_weight, chainID }) => ({
-      denom,
+      denom: denom ?? "",
       rewards: Number(reward_weight),
       chainID,
       unbonding: (unbondingtime[chainID] ?? 0) / 60 / 60 / 24,
