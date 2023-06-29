@@ -51,6 +51,7 @@ const ImportWalletForm = () => {
           "330": wordsFromAddress(address),
         },
         key: { "330": Buffer.from(pk, "hex") },
+        pubkey: { "330": "" },
       })
       connect(name)
       navigate("/")

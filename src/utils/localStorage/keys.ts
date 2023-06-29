@@ -20,6 +20,7 @@ export enum SettingKey {
   DisplayChains = "DisplayChains",
   SelectedDisplayChain = "SelectedDisplayChain",
   DevMode = "DevMode",
+  Preconfigure = "Preconfigure",
 }
 
 export const isSystemDarkMode =
@@ -71,4 +72,5 @@ export const DefaultSettings = {
   [SettingKey.CustomLCD]: {},
   [SettingKey.DisplayChains]: DefaultDisplayChains,
   [SettingKey.SelectedDisplayChain]: "",
+  [SettingKey.Preconfigure]: true,
 }

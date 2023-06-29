@@ -12,10 +12,12 @@ import is from "../../scripts/is"
 import SelectPreconfigured from "./SelectPreconfigured"
 import styles from "./SwitchWallet.module.scss"
 import { useWallet } from "@terra-money/use-wallet"
+import usePreconfigured from "auth/hooks/usePreconfigured"
 
 const SwitchWallet = () => {
   const { disconnect } = useWallet()
   const { wallet, wallets, connect, connectedWallet } = useAuth()
+  const preconfigured = usePreconfigured()
   const address = useAddress()
 
   const localWallets = !!(wallets.length || wallet) && (
@@ -46,6 +48,12 @@ const SwitchWallet = () => {
         )}
         {wallets
           .filter((wallet) => wallet.name !== connectedWallet?.name)
+          .filter(
+            (wallet) =>
+              !preconfigured.find(
+                (preconfigured) => wallet.name === preconfigured.name
+              )
+          )
           .map((wallet) => {
             const { name, lock } = wallet
             const active = name === connectedWallet?.name

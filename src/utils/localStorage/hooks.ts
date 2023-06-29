@@ -10,6 +10,7 @@ import {
   customLCDState,
   displayChainsState,
   devModeState,
+  preconfigureState,
 } from "utils/localStorage"
 
 export const getLocalSetting = <T>(key: SettingKey): T => {
@@ -101,6 +102,14 @@ export const useDevMode = () => {
     toggleSetting(SettingKey.DevMode, devMode, setDevMode)
 
   return { changeDevMode, devMode }
+}
+
+export const usePreconfigure = () => {
+  const [preconfigure, setPreconfigure] = useRecoilState(preconfigureState)
+  const changePreconfigure = () =>
+    toggleSetting(SettingKey.Preconfigure, preconfigure, setPreconfigure)
+
+  return { changePreconfigure, preconfigure }
 }
 
 export const useTokenFilters = () => {

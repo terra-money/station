@@ -10,6 +10,10 @@ export const devModeState = atom({
   key: "devModeState",
   default: !!getLocalSetting(SettingKey.DevMode),
 })
+export const preconfigureState = atom({
+  key: "preconfigureState",
+  default: !!getLocalSetting(SettingKey.Preconfigure),
+})
 
 export const hideLowBalTokenState = atom({
   key: "hideLowBalTokenState",

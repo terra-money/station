@@ -25,6 +25,7 @@ const AddNetwork = () => {
 
   const submit = (values: CustomNetwork) => {
     add(values)
+    values.preconfigure = true
     setNetwork(values.name)
     navigate("/")
   }

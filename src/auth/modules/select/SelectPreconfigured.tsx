@@ -1,14 +1,14 @@
 import { useTranslation } from "react-i18next"
 import usePreconfigured from "auth/hooks/usePreconfigured"
-import { useNetwork } from "data/wallet"
 import { Select } from "components/form"
 import useAuth from "../../hooks/useAuth"
+import { usePreconfigure } from "utils/localStorage"
 
 const SelectPreconfigured = () => {
   const { t } = useTranslation()
-  const { connectedWallet } = useAuth()
+  const { connectedWallet, connectPreconfigured } = useAuth()
+  const { preconfigure } = usePreconfigure()
   const preconfigured = usePreconfigured()
-  const { preconfigure } = useNetwork()
 
   if (!preconfigure) return null
 
@@ -20,8 +20,8 @@ const SelectPreconfigured = () => {
     <Select
       value={selected?.name ?? ""}
       onChange={(e) => {
-        //const wallet = preconfigured.find(({ name }) => name === e.target.value)
-        //if (wallet) connectPreconfigured(wallet)
+        const wallet = preconfigured.find(({ name }) => name === e.target.value)
+        if (wallet) connectPreconfigured(wallet)
       }}
     >
       <option value="" disabled>

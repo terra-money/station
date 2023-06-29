@@ -17,6 +17,7 @@ import useAvailable from "./useAvailable"
 import { addressFromWords, wordsFromAddress } from "utils/bech32"
 import { useNetwork } from "./useNetwork"
 import { createBleTransport } from "utils/ledger"
+import { SeedKey } from "@terra-money/feather.js"
 
 export const walletState = atom({
   key: "interchain-wallet",
@@ -60,6 +61,50 @@ const useAuth = () => {
     [setWallet]
   )
 
+  const connectPreconfigured = useCallback(
+    (preWallet: PreconfiguredWallet) => {
+      const wallets = getStoredWallets()
+      const storedWallet = wallets.find(
+        (wallet) => wallet.name === preWallet.name
+      )
+      if (storedWallet) {
+        storeWallet(storedWallet as any)
+        setWallet(storedWallet as any)
+      } else {
+        const { name, mnemonic } = preWallet
+        const index = 0
+        const legacy = false
+        const seed = SeedKey.seedFromMnemonic(mnemonic)
+        const key330 = new SeedKey({ seed, coinType: 330, index: 0 })
+        const key118 = new SeedKey({ seed, coinType: 118, index: 0 })
+        const words = {
+          "330": wordsFromAddress(key330.accAddress("terra")),
+          "118": wordsFromAddress(key118.accAddress("terra")),
+        }
+        const pubkey = {
+          // @ts-expect-error
+          "330": key330.publicKey.key,
+          // @ts-expect-error
+          "118": key118.publicKey.key,
+        }
+        const password = "LocalTerra"
+        const encryptedSeed = encrypt(seed.toString("hex"), password)
+        const wallet: SeedStoredWallet = {
+          name,
+          words,
+          encryptedSeed,
+          pubkey,
+          index,
+          legacy,
+        }
+        addWallet({ name, password, words, seed, pubkey, index, legacy })
+        storeWallet(wallet)
+        setWallet(wallet)
+      }
+    },
+    [setWallet]
+  )
+
   const connectLedger = useCallback(
     (
       words: { "330": string; "118"?: string },
@@ -95,6 +140,7 @@ const useAuth = () => {
 
   /* disconnected */
   const disconnect = useCallback(() => {
+    console.log("disconneting wallet")
     clearWallet()
     setWallet(undefined)
   }, [setWallet])
@@ -249,6 +295,7 @@ const useAuth = () => {
     connectedWallet,
     connect,
     connectLedger,
+    connectPreconfigured,
     disconnect,
     lock,
     available,

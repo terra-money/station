@@ -1,4 +1,4 @@
-import { useDevMode } from "utils/localStorage"
+import { useDevMode, usePreconfigure } from "utils/localStorage"
 import SettingsSelectorToggle from "components/layout/SettingsSelectorToggle"
 import { FlexColumn, GasAdjustment } from "components/layout"
 import { TooltipIcon } from "components/display"
@@ -6,8 +6,16 @@ import { DevModeTooltip } from "./DevModeTooltips"
 
 const AdvancedSettings = () => {
   const { devMode, changeDevMode } = useDevMode()
-  const options = [
+  const { preconfigure, changePreconfigure } = usePreconfigure()
+  const dmoptions = [
     { value: "devMode", selected: devMode, label: "Developer Mode" },
+  ]
+  const pcoptions = [
+    {
+      value: "preconfigure",
+      selected: preconfigure,
+      label: "Preconfigured accounts",
+    },
   ]
 
   return (
@@ -15,7 +23,11 @@ const AdvancedSettings = () => {
       <SettingsSelectorToggle
         onChange={changeDevMode}
         extra={<TooltipIcon content={<DevModeTooltip />} />}
-        options={options}
+        options={dmoptions}
+      />
+      <SettingsSelectorToggle
+        onChange={changePreconfigure}
+        options={pcoptions}
       />
       <GasAdjustment />
     </FlexColumn>
