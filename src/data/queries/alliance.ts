@@ -14,6 +14,21 @@ export interface AllianceDetails extends AllianceAsset {
   chainID: string
 }
 
+export function EmptyAllianceDetails(): AllianceDetails {
+  return {
+    chainID: "",
+    denom: "",
+    reward_weight: "0",
+    take_rate: "0",
+    total_tokens: "0",
+    total_validator_shares: "0",
+    reward_start_time: "0",
+    reward_change_rate: "0",
+    reward_change_interval: "0",
+    last_reward_change_time: "0",
+  }
+}
+
 export const useAlliances = (chainID: string) => {
   const lcd = useInterchainLCDClient()
 
@@ -55,7 +70,16 @@ export const useAllAlliances = () => {
         return {
           queryKey: [queryKey.alliance.alliances, chainID],
           queryFn: async (): Promise<AllianceDetails[]> => {
-            const { alliances } = await lcd.alliance.alliances(chainID)
+            let { alliances } = await lcd.alliance.alliances(chainID)
+
+            // Filter out the alliance created by the Alliance Protocol Hub because it's economics are calculated differently
+            // and should not be visibile in the frontend UI bcause the stake is held by the Hub contract
+            // https://github.com/terra-money/alliance-protocol/blob/main/contracts/alliance-hub/src/contract.rs#L49-L51
+            if (alliances?.length) {
+              alliances = alliances.filter(
+                (a) => !a.denom.endsWith("/ualliance")
+              )
+            }
 
             return (alliances as AllianceAsset[]).map((a) => ({
               ...a,

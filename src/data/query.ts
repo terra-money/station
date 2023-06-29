@@ -39,6 +39,14 @@ export const queryKey = mirror({
 
   /* lcd */
   alliance: { alliances: "", delegations: "", delegation: "" },
+  allianceProtocol: {
+    hubConfig: "",
+    hubWhitelistedAssets: "",
+    hubStakedBalances: "",
+    hubPendingRewards: "",
+
+    oracleConfig: "",
+  },
   auth: { accountInfo: "" },
   bank: { balance: "", balances: "", supply: "" },
   distribution: {

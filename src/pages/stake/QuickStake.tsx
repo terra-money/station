@@ -27,6 +27,7 @@ import TokenSelector, {
 import { useState } from "react"
 import { useAuth } from "auth"
 import is from "auth/scripts/is"
+import { useAllianceHub } from "data/queries/alliance-protocol"
 
 export enum QuickStakeAction {
   DELEGATE = "Delegate",
@@ -91,11 +92,16 @@ const QuickStake = () => {
   const [token, setToken] = useState<string | undefined>("uluna")
   const { wallet } = useAuth()
 
+  const allianceHub = useAllianceHub()
+  const allianceHubAssets = allianceHub.useWhitelistedAssets()
+  const allianceHubAssetsData = allianceHubAssets.data
+
   const alliancesData = useAllAlliances()
   const alliances = alliancesData.reduce(
     (acc, { data }) => (data ? [...acc, ...data] : acc),
-    [] as AllianceDetails[]
+    allianceHubAssetsData ? allianceHubAssetsData : ([] as AllianceDetails[])
   )
+
   const stakingParamsData = useAllStakingParams()
   const unbondingtime = stakingParamsData.reduce(
     (acc, { data }) =>
@@ -205,7 +211,7 @@ const QuickStake = () => {
                           {network && (
                             <img
                               src={network.icon}
-                              alt={network.name}
+                              alt={network?.name}
                               className={styles.chain__icon}
                             />
                           )}
