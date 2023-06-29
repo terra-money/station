@@ -33,6 +33,14 @@ export const useNetworkOptions = () => {
     { value: "localterra", label: "LocalTerra" },
   ]
 }
+export const useStakeEnabledNetworks = () => {
+  const networks = useNetwork()
+  return Object.fromEntries(
+    Object.entries(networks).filter(
+      ([_, { stakingDisabled }]) => !stakingDisabled
+    )
+  )
+}
 
 export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
   const { networks, filterEnabledNetworks } = useNetworks()

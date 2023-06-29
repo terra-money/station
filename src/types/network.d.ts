@@ -16,6 +16,7 @@ interface InterchainNetwork {
   icon: string
   coinType: "118" | "330"
   alliance?: boolean
+  stakingDisabled?: boolean
   ibc?: {
     toTerra: string
     fromTerra: string

@@ -3,7 +3,7 @@ import { Button } from "components/general"
 import { Flex, Grid, InlineFlex, Page, Table, Tabs } from "components/layout"
 import { useBalances } from "data/queries/bank"
 import { useNativeDenoms } from "data/token"
-import { useNetwork } from "data/wallet"
+import { useStakeEnabledNetworks } from "data/wallet"
 import { useTranslation } from "react-i18next"
 import QuickStakeForm from "txs/stake/QuickStakeForm"
 import styles from "./QuickStake.module.scss"
@@ -87,7 +87,7 @@ const QuickStake = () => {
   const { t } = useTranslation()
   const { data: balances } = useBalances()
   const readNativeDenom = useNativeDenoms()
-  const networks = useNetwork()
+  const networks = useStakeEnabledNetworks()
   const [token, setToken] = useState<string | undefined>("uluna")
   const { wallet } = useAuth()
 

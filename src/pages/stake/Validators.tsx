@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next"
 import TokenSelector, {
   TokenInterface,
 } from "components/form/Selectors/TokenSelector/TokenSelector"
-import { useNetwork } from "data/wallet"
+import { useStakeEnabledNetworks } from "data/wallet"
 import { useState } from "react"
 import {
   AllianceDelegation,
@@ -30,7 +30,7 @@ import { Tooltip, TooltipIcon } from "components/display"
 const Validators = () => {
   const { t } = useTranslation()
   const readNativeDenom = useNativeDenoms()
-  const networks = useNetwork()
+  const networks = useStakeEnabledNetworks()
   const [token, setToken] = useState<string | undefined>("uluna")
 
   const alliancesData = useAllAlliances()
@@ -123,7 +123,7 @@ const Validators = () => {
   return (
     <Page sub {...state}>
       <header className={styles.select__asset}>
-        <p>Select staking asset:</p>
+        <p>{t("Select staking asset")}:</p>
         <TokenSelector
           value={token}
           tokenLists={tokenList}

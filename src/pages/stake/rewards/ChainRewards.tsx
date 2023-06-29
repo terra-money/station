@@ -3,7 +3,7 @@ import { useExchangeRates } from "data/queries/coingecko"
 import { useCurrency } from "data/settings/Currency"
 import { useMemoizedCalcValue } from "data/queries/coingecko"
 import { useNativeDenoms, WithTokenItem } from "data/token"
-import { useNetwork } from "data/wallet"
+import { useStakeEnabledNetworks } from "data/wallet"
 import { combineState } from "data/query"
 import {
   useRewards,
@@ -21,7 +21,7 @@ const ChainRewards = ({ chain }: { chain: string }) => {
   const currency = useCurrency()
   const calcValue = useMemoizedCalcValue()
   const readNativeDenom = useNativeDenoms()
-  const networks = useNetwork()
+  const networks = useStakeEnabledNetworks()
 
   const { data: exchangeRates, ...exchangeRatesState } = useExchangeRates()
   const { data: chainRewards, ...chainRewardsState } = useRewards(chain)
