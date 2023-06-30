@@ -17,7 +17,7 @@ export interface AHConfig {
 }
 
 export interface AHWhitelistedAssets {
-  [propName: ChainID]: NativeAssetInfo
+  [propName: ChainID]: Array<NativeAssetInfo>
 }
 
 export interface AHStakedBalanceReq {

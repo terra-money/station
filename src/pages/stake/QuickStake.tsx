@@ -94,12 +94,10 @@ const QuickStake = () => {
 
   const allianceHub = useAllianceHub()
   const allianceHubAssets = allianceHub.useWhitelistedAssets()
-  const allianceHubAssetsData = allianceHubAssets.data
-
   const alliancesData = useAllAlliances()
   const alliances = alliancesData.reduce(
     (acc, { data }) => (data ? [...acc, ...data] : acc),
-    allianceHubAssetsData ? allianceHubAssetsData : ([] as AllianceDetails[])
+    allianceHubAssets.data ? allianceHubAssets.data : ([] as AllianceDetails[])
   )
 
   const stakingParamsData = useAllStakingParams()
@@ -219,7 +217,7 @@ const QuickStake = () => {
                         {token.symbol}
 
                         <span className={styles.alliance__logo}>
-                          {network.name}
+                          {network?.name}
                         </span>
 
                         {isAlliance && (

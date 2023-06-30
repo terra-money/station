@@ -53,11 +53,13 @@ export const useAllianceHub = () => {
 
         const alliancesDetails = new Array<AllianceDetails>()
         for (const [key, asset] of Object.entries(data)) {
-          alliancesDetails.push({
-            ...EmptyAllianceDetails(),
-            chainID: key,
-            denom: asset.native,
-          })
+          for (const alliance of asset) {
+            alliancesDetails.push({
+              ...EmptyAllianceDetails(),
+              chainID: key,
+              denom: alliance.native,
+            })
+          }
         }
 
         return alliancesDetails
