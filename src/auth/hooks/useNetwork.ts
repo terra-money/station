@@ -5,6 +5,7 @@ import { useWallet, WalletStatus } from "@terra-money/wallet-provider"
 import { walletState } from "./useAuth"
 import is from "../scripts/is"
 import { useCustomLCDs } from "utils/localStorage"
+import { ChainFeature } from "types/components"
 
 const networkState = atom({
   key: "network",
@@ -33,11 +34,13 @@ export const useNetworkOptions = () => {
     { value: "localterra", label: "LocalTerra" },
   ]
 }
-export const useStakeEnabledNetworks = () => {
+
+export const useNetworkWithFeature = (feature: ChainFeature) => {
   const networks = useNetwork()
   return Object.fromEntries(
     Object.entries(networks).filter(
-      ([_, { stakingDisabled }]) => !stakingDisabled
+      ([_, { disabledModules }]) =>
+        disabledModules && !disabledModules.includes(feature)
     )
   )
 }

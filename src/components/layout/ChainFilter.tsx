@@ -16,6 +16,7 @@ type Props = {
   title?: string
   className?: string
   terraOnly?: boolean
+  featureDepedency?: string
 }
 
 const cx = classNames.bind(styles)

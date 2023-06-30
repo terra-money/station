@@ -23,7 +23,9 @@ import { useExchangeRates } from "data/queries/coingecko"
 import { useNativeDenoms } from "data/token"
 import shuffle from "utils/shuffle"
 import { getIsBonded } from "pages/stake/ValidatorsList"
-import { useStakeEnabledNetworks } from "data/wallet"
+import { useNetworkWithFeature } from "data/wallet"
+import { ChainFeature } from "types/chains"
+
 import { AllianceDelegationResponse } from "@terra-money/feather.js/dist/client/lcd/api/AllianceAPI"
 import {
   AllianceDelegation,
@@ -134,7 +136,7 @@ export const useStakingParams = (chainID: string) => {
 
 export const useAllStakingParams = () => {
   const lcd = useInterchainLCDClient()
-  const network = useStakeEnabledNetworks()
+  const network = useNetworkWithFeature(ChainFeature.STAKING)
 
   return useQueries(
     Object.values(network ?? {}).map(({ chainID }) => {

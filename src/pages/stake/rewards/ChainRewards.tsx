@@ -3,7 +3,7 @@ import { useExchangeRates } from "data/queries/coingecko"
 import { useCurrency } from "data/settings/Currency"
 import { useMemoizedCalcValue } from "data/queries/coingecko"
 import { useNativeDenoms, WithTokenItem } from "data/token"
-import { useStakeEnabledNetworks } from "data/wallet"
+import { useNetworkWithFeature } from "data/wallet"
 import { combineState } from "data/query"
 import {
   useRewards,
@@ -15,13 +15,14 @@ import StakedCard from "../components/StakedCard"
 import { TokenCard, TokenCardGrid } from "components/token"
 import RewardsTooltip from "../RewardsTooltip"
 import styles from "../CardModal.module.scss"
+import { ChainFeature } from "types/chains"
 
 const ChainRewards = ({ chain }: { chain: string }) => {
   const { t } = useTranslation()
   const currency = useCurrency()
   const calcValue = useMemoizedCalcValue()
   const readNativeDenom = useNativeDenoms()
-  const networks = useStakeEnabledNetworks()
+  const networks = useNetworkWithFeature(ChainFeature.STAKING)
 
   const { data: exchangeRates, ...exchangeRatesState } = useExchangeRates()
   const { data: chainRewards, ...chainRewardsState } = useRewards(chain)

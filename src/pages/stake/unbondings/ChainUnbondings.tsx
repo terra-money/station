@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next"
 import { UnbondingDelegation } from "@terra-money/feather.js"
 import { AccAddress, Dec } from "@terra-money/feather.js"
-import { useStakeEnabledNetworks } from "data/wallet"
+import { useNetworkWithFeature } from "data/wallet"
 import { useNativeDenoms } from "data/token"
 import { useExchangeRates } from "data/queries/coingecko"
 import { combineState } from "data/query"
@@ -15,10 +15,11 @@ import { Read } from "components/token"
 import { DateTimeRenderer, TooltipIcon } from "components/display"
 import StakedCard from "../components/StakedCard"
 import styles from "../CardModal.module.scss"
+import { ChainFeature } from "types/chains"
 
 const ChainUnbondings = ({ chain }: { chain: string }) => {
   const { t } = useTranslation()
-  const networks = useStakeEnabledNetworks()
+  const networks = useNetworkWithFeature(ChainFeature.STAKING)
   const readNativeDenom = useNativeDenoms()
   const { data: prices, ...pricesState } = useExchangeRates()
   const { data, ...unbondingsState } = useUnbondings(chain)
