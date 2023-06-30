@@ -1,3 +1,3 @@
 export enum ChainFeature {
-  STAKING = "Staking",
+  STAKING = "staking",
 }

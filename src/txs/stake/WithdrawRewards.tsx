@@ -8,6 +8,7 @@ import WithdrawRewardsTx from "./WithdrawRewardsTx"
 
 const WithdrawRewards = () => {
   const { t } = useTranslation()
+  console.log("render")
   const interchainDelegations = useInterchainDelegations()
 
   const delegations = interchainDelegations.reduce(

@@ -32,7 +32,7 @@ const AssetChain = (props: Props) => {
   const networks = useNetwork()
   const { devMode } = useDevMode()
 
-  const { icon, name } = networks[chain] || {}
+  const { icon, name } = networks[chain]
 
   // send back is not available if one of the chains the asset went through is not supprted by Station
   const isSendBackDisabled = !!path?.find((chain) => !networks[chain])

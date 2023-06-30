@@ -6,9 +6,13 @@ import {
   AllianceDelegationResponse,
 } from "@terra-money/feather.js/dist/client/lcd/api/AllianceAPI"
 import { useNetwork } from "data/wallet"
-import { useInterchainAddresses } from "auth/hooks/useAddress"
+import {
+  useInterchainAddresses,
+  useInterchainAddressesWithFeature,
+} from "auth/hooks/useAddress"
 import { Coin, ValAddress } from "@terra-money/feather.js"
 import { StakeAction } from "txs/stake/StakeForm"
+import { ChainFeature } from "types/chains"
 
 export interface AllianceDetails extends AllianceAsset {
   chainID: string
@@ -74,7 +78,7 @@ export interface AllianceDelegation
 }
 
 export const useAllianceDelegations = (chainID: string, disabled?: boolean) => {
-  const addresses = useInterchainAddresses()
+  const addresses = useInterchainAddressesWithFeature(ChainFeature.STAKING)
   const lcd = useInterchainLCDClient()
 
   return useQuery(
@@ -94,7 +98,7 @@ export const useAllianceDelegations = (chainID: string, disabled?: boolean) => {
 }
 
 export const useInterchainAllianceDelegations = () => {
-  const addresses = useInterchainAddresses() || {}
+  const addresses = useInterchainAddressesWithFeature(ChainFeature.STAKING)
   const lcd = useInterchainLCDClient()
   const network = useNetwork()
 
