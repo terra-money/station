@@ -42,6 +42,7 @@ const QuickStake = () => {
     unbondingTime,
     isAlliance,
     hasDelegations,
+    stakeOnAllianceHub,
   }: {
     chainID: string
     denom: string
@@ -49,6 +50,7 @@ const QuickStake = () => {
     unbondingTime: number
     isAlliance: boolean
     hasDelegations: boolean
+    stakeOnAllianceHub?: boolean
   }) => {
     if (!balances) return null
 
@@ -59,6 +61,7 @@ const QuickStake = () => {
       rewardRate,
       unbondingTime,
       isAlliance,
+      stakeOnAllianceHub,
     }
 
     const tabs = [
@@ -132,26 +135,32 @@ const QuickStake = () => {
       chainID,
       unbonding: (unbondingtime[chainID] ?? 0) / 60 / 60 / 24,
       isAlliance: false,
+      stakeOnAllianceHub: false,
       hasDelegations: delegations.some(
         ({ balance }) =>
           balance?.denom === baseAsset && Number(balance?.amount) > 0
       ),
     })),
-    ...(alliances ?? []).map(({ denom, reward_weight, chainID }) => ({
-      denom: denom ?? "",
-      rewards: Number(reward_weight),
-      chainID,
-      unbonding: (unbondingtime[chainID] ?? 0) / 60 / 60 / 24,
-      isAlliance: true,
-      hasDelegations: allianceDelegations.some(
-        ({ chainID: delChainID, delegations }) =>
-          delChainID === chainID &&
-          delegations.some(
-            ({ balance }) =>
-              balance?.denom === denom && Number(balance?.amount) > 0
-          )
-      ),
-    })),
+    ...(alliances ?? []).map(
+      ({ denom, reward_weight, chainID, stakeOnAllianceHub }) => ({
+        denom: denom ?? "",
+        rewards: Number(reward_weight),
+        chainID,
+        unbonding: stakeOnAllianceHub
+          ? 0
+          : (unbondingtime[chainID] ?? 0) / 60 / 60 / 24,
+        isAlliance: true,
+        stakeOnAllianceHub: stakeOnAllianceHub,
+        hasDelegations: allianceDelegations.some(
+          ({ chainID: delChainID, delegations }) =>
+            delChainID === chainID &&
+            delegations.some(
+              ({ balance }) =>
+                balance?.denom === denom && Number(balance?.amount) > 0
+            )
+        ),
+      })
+    ),
   ]
 
   const tokenList = options.reduce((acc, { denom }) => {
@@ -244,13 +253,6 @@ const QuickStake = () => {
                 )
               },
             },
-            /*{
-              title: t("Chain"),
-              dataIndex: "chainID",
-              defaultSortOrder: "desc",
-              sorter: ({ chainID: a }, { chainID: b }) => a.localeCompare(b),
-              render: (chainID) => networks[chainID]?.name || chainID,
-            },*/
             {
               title: (
                 <span>
@@ -312,6 +314,7 @@ const QuickStake = () => {
                   unbonding,
                   isAlliance,
                   hasDelegations,
+                  stakeOnAllianceHub,
                 }
               ) => (
                 <Flex start gap={8}>
@@ -348,6 +351,7 @@ const QuickStake = () => {
                       unbondingTime: unbonding,
                       isAlliance,
                       hasDelegations,
+                      stakeOnAllianceHub,
                     })}
                   </ModalButton>
                 </Flex>

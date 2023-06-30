@@ -12,6 +12,8 @@ import { StakeAction } from "txs/stake/StakeForm"
 
 export interface AllianceDetails extends AllianceAsset {
   chainID: string
+  originChainID?: string
+  stakeOnAllianceHub?: boolean
 }
 
 export function EmptyAllianceDetails(): AllianceDetails {

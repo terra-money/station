@@ -28,6 +28,7 @@ import shuffle from "utils/shuffle"
 import { memo } from "react"
 import styles from "./QuickStakeForm.module.scss"
 import { useAllianceDelegations } from "data/queries/alliance"
+import { useAllianceHub } from "data/queries/alliance-protocol"
 
 interface TxValues {
   input?: number
@@ -41,6 +42,7 @@ interface Props {
   rewardRate: number
   unbondingTime: number
   isAlliance: boolean
+  stakeOnAllianceHub?: boolean
 }
 
 const QuickStakeForm = (props: Props) => {
@@ -52,6 +54,7 @@ const QuickStakeForm = (props: Props) => {
     rewardRate,
     unbondingTime,
     isAlliance,
+    stakeOnAllianceHub,
   } = props
 
   const { t } = useTranslation()
@@ -76,6 +79,8 @@ const QuickStakeForm = (props: Props) => {
     stakeState,
     allianceDelegationsState
   )
+  const allianceHub = useAllianceHub()
+  const allianceHUbContract = allianceHub.useHubAddress()
 
   /* form */
   const form = useForm<TxValues>({
@@ -101,18 +106,50 @@ const QuickStakeForm = (props: Props) => {
     if (!address || !elegibleVals) return
     const coin = new Coin(denom, toAmount(input || toInput(1)))
     const { decimals } = readNativeDenom(denom)
-    return getQuickStakeMsgs(address, coin, elegibleVals, decimals, isAlliance)
-  }, [address, elegibleVals, denom, input, isAlliance, readNativeDenom])
+    return getQuickStakeMsgs(
+      address,
+      coin,
+      elegibleVals,
+      decimals,
+      isAlliance,
+      allianceHUbContract,
+      stakeOnAllianceHub
+    )
+  }, [
+    address,
+    elegibleVals,
+    denom,
+    input,
+    isAlliance,
+    readNativeDenom,
+    allianceHUbContract,
+    stakeOnAllianceHub,
+  ])
 
   const unstakeMsgs = useMemo(() => {
     if (!address || !(isAlliance ? allianceDelegations : delegations)) return
     const coin = new Coin(denom, toAmount(input || toInput(1)))
-    return getQuickUnstakeMsgs(address, coin, {
-      isAlliance,
-      // @ts-expect-error
-      delegations: isAlliance ? allianceDelegations : delegations,
-    })
-  }, [address, denom, input, delegations, isAlliance, allianceDelegations])
+    return getQuickUnstakeMsgs(
+      address,
+      coin,
+      {
+        isAlliance,
+        // @ts-expect-error
+        delegations: isAlliance ? allianceDelegations : delegations,
+      },
+      allianceHUbContract,
+      stakeOnAllianceHub
+    )
+  }, [
+    address,
+    denom,
+    input,
+    delegations,
+    isAlliance,
+    allianceDelegations,
+    allianceHUbContract,
+    stakeOnAllianceHub,
+  ])
 
   /* tx */
   const createTx = useCallback(

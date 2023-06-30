@@ -4,9 +4,11 @@ import BigNumber from "bignumber.js"
 import {
   AccAddress,
   Coin,
+  Coins,
   MsgAllianceDelegate,
   MsgAllianceUndelegate,
   MsgDelegate,
+  MsgExecuteContract,
   MsgUndelegate,
   StakingParams,
   ValAddress,
@@ -397,12 +399,27 @@ export const getQuickStakeMsgs = (
   coin: Coin,
   elgibleVals: ValAddress[],
   decimals: number,
-  isAlliance: boolean
+  isAlliance: boolean,
+  hubAddress: string,
+  stakeOnAllianceHub?: boolean
 ) => {
   const { denom, amount } = coin.toData()
   const totalAmt = new BigNumber(amount)
   const isLessThanAmt = (amt: number) =>
     totalAmt.isLessThan(toAmount(amt, { decimals }))
+
+  if (isAlliance && stakeOnAllianceHub) {
+    return [
+      new MsgExecuteContract(
+        address,
+        hubAddress,
+        {
+          stake: {},
+        },
+        new Coins([coin])
+      ),
+    ]
+  }
 
   const numOfValDests = isLessThanAmt(100)
     ? 1
@@ -447,13 +464,28 @@ export const getQuickUnstakeMsgs = (
     | {
         isAlliance: true
         delegations: AllianceDelegationResponse[]
-      }
+      },
+  hubAddress: string,
+  stakeOnAllianceHub?: boolean
 ) => {
   const { isAlliance, delegations } = details
   const { denom, amount } = coin.toData()
   const bnAmt = new BigNumber(amount)
   const msgs = []
   let remaining = bnAmt
+
+  if (isAlliance && stakeOnAllianceHub) {
+    return [
+      new MsgExecuteContract(address, hubAddress, {
+        unstake: {
+          info: {
+            native: delegations[0].balance.denom,
+          },
+          amount: amount,
+        },
+      }),
+    ]
+  }
 
   if (isAlliance) {
     for (const d of delegations) {

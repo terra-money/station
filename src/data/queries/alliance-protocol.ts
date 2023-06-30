@@ -11,7 +11,7 @@ import {
 import { AllianceDetails, EmptyAllianceDetails } from "./alliance"
 
 export const useAllianceHub = () => {
-  const _useAddress = () => {
+  const useHubAddress = () => {
     const chainID = useChainID()
 
     if (chainID === "phoenix-1") {
@@ -25,7 +25,7 @@ export const useAllianceHub = () => {
 
   const useConfig = () => {
     const lcd = useInterchainLCDClient()
-    const hubAddress = _useAddress()
+    const hubAddress = useHubAddress()
 
     return useQuery(
       [queryKey.allianceProtocol.hubConfig],
@@ -41,7 +41,8 @@ export const useAllianceHub = () => {
 
   const useWhitelistedAssets = () => {
     const lcd = useInterchainLCDClient()
-    const hubAddress = _useAddress()
+    const hubAddress = useHubAddress()
+    const chainID = useChainID()
 
     return useQuery(
       [queryKey.allianceProtocol.hubWhitelistedAssets],
@@ -56,8 +57,10 @@ export const useAllianceHub = () => {
           for (const alliance of asset) {
             alliancesDetails.push({
               ...EmptyAllianceDetails(),
-              chainID: key,
+              chainID: chainID,
               denom: alliance.native,
+              stakeOnAllianceHub: true,
+              originChainID: key,
             })
           }
         }
@@ -70,7 +73,7 @@ export const useAllianceHub = () => {
 
   const useStakedBalances = (address?: string) => {
     const lcd = useInterchainLCDClient()
-    const hubAddress = _useAddress()
+    const hubAddress = useHubAddress()
 
     return useQuery(
       [queryKey.allianceProtocol.hubStakedBalances],
@@ -91,7 +94,7 @@ export const useAllianceHub = () => {
 
   const usePendingRewards = (address?: string) => {
     const lcd = useInterchainLCDClient()
-    const hubAddress = _useAddress()
+    const hubAddress = useHubAddress()
 
     return useQuery(
       [queryKey.allianceProtocol.hubPendingRewards],
@@ -115,5 +118,6 @@ export const useAllianceHub = () => {
     useWhitelistedAssets,
     useStakedBalances,
     usePendingRewards,
+    useHubAddress,
   }
 }
