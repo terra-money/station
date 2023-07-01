@@ -76,8 +76,9 @@ const Preferences = () => {
       key: "lang",
       tab: t("Language"),
       value:
-        Object.values(Languages).find(({ value }) => value === i18n.language)
-          ?.label ?? Languages.en.label,
+        Object.values(Languages ?? {}).find(
+          ({ value }) => value === i18n.language
+        )?.label ?? Languages.en.label,
       disabled: false,
     },
     currency: {
@@ -141,7 +142,7 @@ const Preferences = () => {
       default:
         return (
           <FlexColumn gap={8}>
-            {Object.values(routes)
+            {Object.values(routes ?? {})
               .filter(({ disabled }) => !disabled)
               .map(({ tab, value, key, className }) => (
                 <SettingsButton

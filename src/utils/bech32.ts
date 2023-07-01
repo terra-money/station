@@ -13,7 +13,7 @@ export function getChainIDFromAddress(
 ) {
   if (!AccAddress.validate(address)) return undefined
   const addPrefix = AccAddress.getPrefix(address)
-  return Object.values(chains).find(
+  return Object.values(chains ?? {}).find(
     ({ prefix }) => prefix === addPrefix || `${prefix}valoper` === addPrefix
   )?.chainID
 }

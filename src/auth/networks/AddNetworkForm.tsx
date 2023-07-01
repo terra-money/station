@@ -45,10 +45,10 @@ const AddNetwork = () => {
         />
       </FormItem>
 
-      <FormItem label={t("Chain ID")} error={errors.chainID?.message}>
+      <FormItem label={t("Chain ID")} error={errors?.chainID?.message}>
         <Input
           {...register("chainID", { required: true })}
-          placeholder={mainnet.chainID}
+          placeholder={mainnet?.chainID}
         />
       </FormItem>
 

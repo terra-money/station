@@ -15,7 +15,7 @@ const FiatRampModal = () => {
 
   if (!addresses) return null
 
-  const onToAddressMulti = Object.keys(addresses)
+  const onToAddressMulti = Object.keys(addresses ?? {})
     .map((key) => `${network[key]?.name}:${addresses[key]}`)
     .join(",")
 

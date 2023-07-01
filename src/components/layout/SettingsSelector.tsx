@@ -53,7 +53,7 @@ const SettingsSelector = ({
             >
               <div className={styles.icons_container}>
                 <div>{label}</div>
-                {Object.keys(networksOnSelection).length > 1 && (
+                {Object.keys(networksOnSelection ?? {}).length > 1 && (
                   <Tooltip content={t("View active chains")}>
                     <KeyboardArrowDownIcon
                       className={styles.icon}
@@ -76,11 +76,11 @@ const SettingsSelector = ({
                 openAcc === index + 1 ? "opened" : ""
               )}
             >
-              {Object.keys(networksOnSelection).length > 1 &&
-                Object.keys(networksOnSelection).map((network: any) => (
+              {Object.keys(networksOnSelection ?? {}).length > 1 &&
+                Object.keys(networksOnSelection ?? {}).map((network: any) => (
                   <div
                     className={styles.network}
-                    key={networksOnSelection[network].chainID}
+                    key={networksOnSelection[network]?.chainID}
                   >
                     <img
                       src={networksOnSelection[network].icon}

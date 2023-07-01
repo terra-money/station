@@ -141,7 +141,7 @@ const LCDSetting = () => {
         />
       </FormItem>
 
-      <FormItem label={t("Chain")} error={errors.chainID?.message}>
+      <FormItem label={t("Chain")} error={errors?.chainID?.message}>
         <ChainSelector
           chainsList={networksList}
           value={chainID}

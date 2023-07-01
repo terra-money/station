@@ -307,7 +307,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
     : false
 
   const availableGasDenoms = useMemo(() => {
-    return Object.keys(networks[chain]?.gasPrices || {})
+    return Object.keys(networks[chain]?.gasPrices ?? {})
   }, [chain, networks])
 
   useEffect(() => {

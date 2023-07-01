@@ -51,7 +51,7 @@ const LunaPriceChart = () => {
       <ButtonGroup
         value={chartInterval}
         onChange={setChartInterval}
-        options={Object.values(ChartInterval).map((value) => {
+        options={Object.values(ChartInterval ?? {}).map((value) => {
           return { value, label: value }
         })}
       />

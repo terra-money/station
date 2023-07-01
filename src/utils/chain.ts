@@ -1,18 +1,18 @@
-import { useBankBalance } from "data/queries/bank"
-import { useNativeDenoms } from "data/token"
 import { useExchangeRates } from "data/queries/coingecko"
 import { useDisplayChains } from "./localStorage/hooks"
-import { useNetworkName } from "data/wallet"
 import { AccAddress } from "@terra-money/feather.js"
+import { useBankBalance } from "data/queries/bank"
+import { useNativeDenoms } from "data/token"
+import { useNetworkName } from "data/wallet"
 
 type ChainId = string
 type ChainPrefix = string
 
 export const isTerraChain = (id: ChainId | ChainPrefix) =>
-  id.startsWith("phoenix-") || id.startsWith("pisco-") || id === "terra"
+  id?.startsWith("phoenix-") || id?.startsWith("pisco-") || id === "terra"
 
 export const isOsmosisChain = (id: ChainId | ChainPrefix) =>
-  id.startsWith("osmosis-") || id === "osmo"
+  id?.startsWith("osmosis-") || id === "osmo"
 
 export const useChainsByAssetValue = () => {
   const coins = useBankBalance()
@@ -38,7 +38,9 @@ export const useChainsByAssetValue = () => {
     return acc
   }, {})
 
-  return Object.values(aggregatedCoinValues).sort((a, b) => b.value - a.value)
+  return Object.values(aggregatedCoinValues ?? {}).sort(
+    (a, b) => b.value - a.value
+  )
 }
 
 export const useSortedDisplayChains = () => {
