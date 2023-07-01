@@ -22,27 +22,31 @@
   }
 }
 
+.chainlist__container {
+  padding-top: 25px;
+  padding-bottom: 1.6rem;
+}
+
 .chainlist {
   background-color: var(--card-bg-muted);
-  padding-top: 1.6rem;
   padding-inline: 10px;
   grid-area: list;
   display: grid;
   grid-template-areas: "title" "list";
   grid-template-rows: min-content auto;
   overflow-y: hidden;
+}
 
-  h3 {
-    padding-left: 10px;
-    grid-area: title;
-    margin-bottom: 10px;
-  }
+.chainlist__title {
+  grid-area: title;
+  margin-bottom: 5px;
+  padding-left: 10px;
 }
 
 .chainlist__list {
   overflow-y: auto;
   grid-area: list;
-  padding-bottom: 1.6rem;
+  padding-bottom: 1rem;
 }
 
 .actions {

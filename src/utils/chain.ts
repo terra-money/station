@@ -20,12 +20,12 @@ export const useChainsByAssetValue = () => {
   const { data: prices } = useExchangeRates()
 
   const coinValues = coins?.map(({ amount, denom, chain }) => {
-    const { token, decimals, symbol } = readNativeDenom(denom)
+    const { token, decimals, isNonWhitelisted } = readNativeDenom(denom)
     return {
       chain,
       value:
         (parseInt(amount) *
-          (symbol?.endsWith("...") ? 0 : prices?.[token]?.price ?? 0)) /
+          (isNonWhitelisted ? 0 : prices?.[token]?.price ?? 0)) /
         10 ** decimals,
     }
   })

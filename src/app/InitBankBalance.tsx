@@ -30,7 +30,8 @@ const InitBankBalance = ({ children }: PropsWithChildren<{}>) => {
   )
 
   native.list.forEach(({ id }) => {
-    const [chain, denom] = id.split(":")
+    const [chain, ...denomData] = id.split(":")
+    const denom = denomData.join(":")
     if (
       !bankBalance.find(
         (balance) => balance.denom === denom && balance.chain === chain
