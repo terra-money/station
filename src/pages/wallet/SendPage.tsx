@@ -272,7 +272,8 @@ const SendPage = () => {
                 addresses[token?.chain ?? ""],
                 address,
                 undefined,
-                (Date.now() + 120 * 1000) * 1e6
+                (Date.now() + 120 * 1000) * 1e6,
+                undefined
               ),
             ]
 
