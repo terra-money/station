@@ -15,7 +15,7 @@ import {
   EmptyAllianceDetails,
 } from "./alliance"
 import useAddress from "auth/hooks/useAddress"
-import { Coin } from "@terra-money/feather.js"
+import { Coin, Rewards, Coins } from "@terra-money/feather.js"
 import { AllianceDelegationResponse as AllianceModuleDelegationResponse } from "@terra-money/feather.js/dist/client/lcd/api/AllianceAPI"
 
 export const useAllianceHub = () => {
@@ -143,14 +143,14 @@ export const useAllianceHub = () => {
   }
 
   const usePendingRewards = () => {
-    const chainID = useChainID()
     const address = useAddress()
     const lcd = useInterchainLCDClient()
     const hubAddress = useHubAddress()
+    const rewards: Rewards = { rewards: {}, total: new Coins() }
 
     return useQuery(
       [queryKey.allianceProtocol.hubPendingRewards],
-      async (): Promise<AHAllPendingRewardsQueryRes> => {
+      async (): Promise<Rewards> => {
         try {
           const data: AHAllPendingRewardsQueryRes =
             await lcd.wasm.contractQuery(hubAddress, {
@@ -158,9 +158,29 @@ export const useAllianceHub = () => {
                 address,
               },
             })
-          return data
+
+          data.forEach((pendingReward) => {
+            const tokens = new Coin(
+              pendingReward.reward_asset.native,
+              pendingReward.rewards
+            )
+
+            // Just in case the hub address already exists we
+            // addup the token rewards
+            if (rewards.rewards[hubAddress] !== undefined) {
+              rewards.rewards[hubAddress] =
+                rewards.rewards[hubAddress].add(tokens)
+            } else {
+              rewards.rewards[hubAddress] = Coins.fromString(
+                pendingReward.reward_asset.native + pendingReward.rewards
+              )
+            }
+
+            rewards.total = rewards.total.add(tokens)
+          })
+          return rewards
         } catch (e) {
-          return []
+          return rewards
         }
       },
       { ...RefetchOptions.INFINITY }

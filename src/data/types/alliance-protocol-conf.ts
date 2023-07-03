@@ -38,7 +38,7 @@ export type AHAllPendingRewardsQueryRes = AHAllPendingRewardQueryRes[]
 export interface AHAllPendingRewardQueryRes {
   staked_asset: NativeAssetInfo
   reward_asset: NativeAssetInfo
-  pending_reward: string
+  rewards: string
 }
 
 export interface NativeAssetInfo {

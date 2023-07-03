@@ -12,17 +12,28 @@ import StakedCard from "../components/StakedCard"
 import RewardsTooltip from "../RewardsTooltip"
 import styles from "../CardModal.module.scss"
 import { Coin } from "@terra-money/feather.js"
+import { useAllianceHub } from "data/queries/alliance-protocol"
 
 const Rewards = () => {
   const { t } = useTranslation()
   const currency = useCurrency()
   const calcValue = useMemoizedCalcValue()
   const readNativeDenom = useNativeDenoms()
+  const allianceHub = useAllianceHub()
 
+  const { data: allianceHubRewards, ...allianceHubPendingRewardsState } =
+    allianceHub.usePendingRewards()
   const { data: rewards, ...rewardsState } = useRewards()
+
+  console.log("allianceHubRewards", allianceHubRewards)
+  console.log("rewards", rewards)
   const { data: exchangeRates, ...exchangeRatesState } = useExchangeRates()
 
-  const state = combineState(rewardsState, exchangeRatesState)
+  const state = combineState(
+    rewardsState,
+    exchangeRatesState,
+    allianceHubPendingRewardsState
+  )
 
   /* render */
   const title = t("Staking rewards")
