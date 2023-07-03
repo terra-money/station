@@ -8,7 +8,15 @@ import {
   AHStakedBalancesRes,
   AHWhitelistedAssets,
 } from "data/types/alliance-protocol-conf"
-import { AllianceDetails, EmptyAllianceDetails } from "./alliance"
+import {
+  AllianceDelegationRes,
+  AllianceDetails,
+  EmptyAllianceDelegation,
+  EmptyAllianceDetails,
+} from "./alliance"
+import useAddress from "auth/hooks/useAddress"
+import { Coin } from "@terra-money/feather.js"
+import { AllianceDelegationResponse as AllianceModuleDelegationResponse } from "@terra-money/feather.js/dist/client/lcd/api/AllianceAPI"
 
 export const useAllianceHub = () => {
   const useHubAddress = () => {
@@ -71,43 +79,89 @@ export const useAllianceHub = () => {
     )
   }
 
-  const useStakedBalances = (address?: string) => {
+  const useStakedBalances = () => {
+    const chainID = useChainID()
+    const address = useAddress()
     const lcd = useInterchainLCDClient()
     const hubAddress = useHubAddress()
+    const alliancesDelegations = new Array<AllianceDelegationRes>()
 
     return useQuery(
       [queryKey.allianceProtocol.hubStakedBalances],
-      async (): Promise<AHStakedBalancesRes> => {
-        const data: AHStakedBalancesRes = await lcd.wasm.contractQuery(
-          hubAddress,
-          {
-            all_staked_balances: {
-              address,
-            },
-          }
-        )
-        return data
+      async (): Promise<AllianceDelegationRes[]> => {
+        try {
+          const data: AHStakedBalancesRes = await lcd.wasm.contractQuery(
+            hubAddress,
+            {
+              all_staked_balances: {
+                address,
+              },
+            }
+          )
+
+          alliancesDelegations.push({
+            chainID: chainID,
+            delegations: data.map((del) => {
+              return {
+                balance: new Coin(del.asset.native, del.balance),
+                delegation: {
+                  ...EmptyAllianceDelegation(),
+                  delegator_address: address as string,
+                  denom: del.asset.native,
+                },
+              }
+            }),
+          })
+
+          return alliancesDelegations
+        } catch (e) {
+          return alliancesDelegations
+        }
       },
       { ...RefetchOptions.INFINITY }
     )
   }
 
-  const usePendingRewards = (address?: string) => {
+  const parseDelegations = (
+    delegations?: AllianceDelegationRes[]
+  ): AllianceModuleDelegationResponse[] => {
+    if (delegations === undefined) {
+      return []
+    }
+
+    return delegations.flatMap((del) => {
+      return del.delegations.map((del) => {
+        return {
+          ...del,
+          balance: {
+            amount: del.balance.amount.toString(),
+            denom: del.balance.denom,
+          },
+        }
+      })
+    })
+  }
+
+  const usePendingRewards = () => {
+    const chainID = useChainID()
+    const address = useAddress()
     const lcd = useInterchainLCDClient()
     const hubAddress = useHubAddress()
 
     return useQuery(
       [queryKey.allianceProtocol.hubPendingRewards],
       async (): Promise<AHAllPendingRewardsQueryRes> => {
-        const data: AHAllPendingRewardsQueryRes = await lcd.wasm.contractQuery(
-          hubAddress,
-          {
-            all_pending_rewards: {
-              address,
-            },
-          }
-        )
-        return data
+        try {
+          const data: AHAllPendingRewardsQueryRes =
+            await lcd.wasm.contractQuery(hubAddress, {
+              all_pending_rewards: {
+                address,
+              },
+            })
+          return data
+        } catch (e) {
+          return []
+        }
       },
       { ...RefetchOptions.INFINITY }
     )
@@ -119,5 +173,6 @@ export const useAllianceHub = () => {
     useStakedBalances,
     usePendingRewards,
     useHubAddress,
+    parseDelegations,
   }
 }

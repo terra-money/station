@@ -66,11 +66,19 @@ const QuickStakeForm = (props: Props) => {
     chainID,
     isAlliance || action === QuickStakeAction.DELEGATE
   )
-  const { data: allianceDelegations, ...allianceDelegationsState } =
+  const allianceHub = useAllianceHub()
+  const allianceHubDelegations = allianceHub.useStakedBalances() || { data: [] }
+
+  let { data: allianceDelegations, ...allianceDelegationsState } =
     useAllianceDelegations(
       chainID,
       !isAlliance || action === QuickStakeAction.DELEGATE
     )
+
+  allianceDelegations = allianceDelegations?.concat(
+    allianceHub.parseDelegations(allianceHubDelegations.data)
+  )
+
   const readNativeDenom = useNativeDenoms()
   const { data: stakeParams, ...stakeState } = useStakingParams(chainID)
   const state = combineState(
@@ -79,7 +87,6 @@ const QuickStakeForm = (props: Props) => {
     stakeState,
     allianceDelegationsState
   )
-  const allianceHub = useAllianceHub()
   const allianceHUbContract = allianceHub.useHubAddress()
 
   /* form */
@@ -161,7 +168,7 @@ const QuickStakeForm = (props: Props) => {
     },
     [action, unstakeMsgs, stakeMsgs, chainID]
   )
-
+  console.log("allianceDelegations isAlliance", isAlliance, allianceDelegations)
   /* fee */
   const balance = {
     [QuickStakeAction.DELEGATE]: getAmount(balances, denom), // TODO flexible denom
@@ -201,6 +208,7 @@ const QuickStakeForm = (props: Props) => {
     ],
     chain: chainID,
   }
+  console.log(tx)
 
   return (
     <Page invisible {...state}>

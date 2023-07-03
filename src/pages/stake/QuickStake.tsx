@@ -9,7 +9,6 @@ import QuickStakeForm from "txs/stake/QuickStakeForm"
 import styles from "./QuickStake.module.scss"
 import { ModalButton } from "components/feedback"
 import {
-  AllianceDelegation,
   AllianceDetails,
   useAllAlliances,
   useInterchainAllianceDelegations,
@@ -94,8 +93,8 @@ const QuickStake = () => {
   const networks = useNetwork()
   const [token, setToken] = useState<string | undefined>("uluna")
   const { wallet } = useAuth()
-
   const allianceHub = useAllianceHub()
+
   const allianceHubAssets = allianceHub.useWhitelistedAssets()
   const alliancesData = useAllAlliances()
   const alliances = alliancesData.reduce(
@@ -109,23 +108,22 @@ const QuickStake = () => {
       data ? { ...acc, [data.chainID]: data.unbonding_time ?? 0 } : acc,
     {} as Record<string, number>
   )
-
   const delegationsData = useInterchainDelegations()
   const delegations: Delegation[] = delegationsData.reduce(
     (acc, { data }) => (data ? [...data?.delegation, ...acc] : acc),
     [] as Delegation[]
   )
-  const allianceDelegationsData = useInterchainAllianceDelegations()
-  const allianceDelegations = allianceDelegationsData.reduce(
+  const alliancesHubDelegations = allianceHub.useStakedBalances()
+  const alliancesDelegationsData = useInterchainAllianceDelegations()
+  const alliancesDelegations = alliancesDelegationsData.reduce(
     (acc, { data }) => (data ? [data, ...acc] : acc),
-    [] as { delegations: AllianceDelegation[]; chainID: string }[]
+    alliancesHubDelegations.data ? alliancesHubDelegations.data : []
   )
-
   const state = combineState(
     ...alliancesData,
     ...stakingParamsData,
     ...delegationsData,
-    ...allianceDelegationsData
+    ...alliancesDelegationsData
   )
 
   const options = [
@@ -136,10 +134,12 @@ const QuickStake = () => {
       unbonding: (unbondingtime[chainID] ?? 0) / 60 / 60 / 24,
       isAlliance: false,
       stakeOnAllianceHub: false,
-      hasDelegations: delegations.some(
-        ({ balance }) =>
+      hasDelegations: delegations.some(({ balance }) => {
+        const isPositiveBalance =
           balance?.denom === baseAsset && Number(balance?.amount) > 0
-      ),
+
+        return isPositiveBalance
+      }),
     })),
     ...(alliances ?? []).map(
       ({ denom, reward_weight, chainID, stakeOnAllianceHub }) => ({
@@ -151,13 +151,16 @@ const QuickStake = () => {
           : (unbondingtime[chainID] ?? 0) / 60 / 60 / 24,
         isAlliance: true,
         stakeOnAllianceHub: stakeOnAllianceHub,
-        hasDelegations: allianceDelegations.some(
-          ({ chainID: delChainID, delegations }) =>
-            delChainID === chainID &&
-            delegations.some(
-              ({ balance }) =>
-                balance?.denom === denom && Number(balance?.amount) > 0
+        hasDelegations: alliancesDelegations.some(
+          ({ chainID: delChainID, delegations }) => {
+            const isSameID = delChainID === chainID
+            const isPositiveBalance = delegations.some(
+              (del: any) =>
+                del.balance?.denom === denom && Number(del.balance?.amount) > 0
             )
+
+            return isSameID && isPositiveBalance
+          }
         ),
       })
     ),

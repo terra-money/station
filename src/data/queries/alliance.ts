@@ -4,6 +4,7 @@ import { useInterchainLCDClient } from "./lcdClient"
 import {
   AllianceAsset,
   AllianceDelegationResponse,
+  AllianceDelegation as AllianceModuleDelegation,
 } from "@terra-money/feather.js/dist/client/lcd/api/AllianceAPI"
 import { useNetwork } from "data/wallet"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
@@ -97,6 +98,22 @@ export const useAllAlliances = () => {
 export interface AllianceDelegation
   extends Omit<AllianceDelegationResponse, "balance"> {
   balance: Coin
+}
+
+export function EmptyAllianceDelegation(): AllianceModuleDelegation {
+  return {
+    delegator_address: "",
+    validator_address: "",
+    denom: "",
+    shares: "0",
+    reward_history: [],
+    last_reward_claim_height: "0",
+  }
+}
+
+export interface AllianceDelegationRes {
+  delegations: AllianceDelegation[]
+  chainID: string
 }
 
 export const useAllianceDelegations = (chainID: string, disabled?: boolean) => {
