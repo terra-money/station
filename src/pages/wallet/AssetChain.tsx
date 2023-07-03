@@ -2,7 +2,7 @@ import { WithFetching } from "components/feedback"
 import { Read, TokenIcon } from "components/token"
 import { useExchangeRates } from "data/queries/coingecko"
 import { useCurrency } from "data/settings/Currency"
-import { useNetwork } from "data/wallet"
+import { useNetwork, useNetworkName } from "data/wallet"
 import { useTranslation } from "react-i18next"
 import styles from "./AssetChain.module.scss"
 import IbcSendBack from "./IbcSendBack"
@@ -28,14 +28,24 @@ const AssetChain = (props: Props) => {
   const currency = useCurrency()
   const { data: prices, ...pricesState } = useExchangeRates()
   const { t } = useTranslation()
+  const networkName = useNetworkName()
 
   const networks = useNetwork()
   const { devMode } = useDevMode()
 
   const { icon, name } = networks[chain] || {}
 
+  let price
+  if (symbol === "LUNC" && networkName !== "classic") {
+    price = prices?.["uluna:classic"]?.price ?? 0
+  } else {
+    price = prices?.[token]?.price ?? 0
+  }
+
   // send back is not available if one of the chains the asset went through is not supprted by Station
-  const isSendBackDisabled = !!path?.find((chain) => !networks[chain])
+  const isSendBackDisabled =
+    !!path?.find((chain) => !networks[chain]) ||
+    (symbol === "LUNC" && networkName !== "classic")
 
   return (
     <article className={styles.chain} key={name}>
@@ -94,14 +104,18 @@ const AssetChain = (props: Props) => {
         </h1>
         <h1 className={styles.price}>
           {currency.symbol}{" "}
-          <Read
-            {...props}
-            amount={(prices?.[token]?.price || 0) * parseInt(balance)}
-            decimals={decimals}
-            fixed={2}
-            denom=""
-            token=""
-          />
+          {price ? (
+            <Read
+              {...props}
+              amount={price * parseInt(balance)}
+              decimals={decimals}
+              fixed={2}
+              denom=""
+              token=""
+            />
+          ) : (
+            <span>—</span>
+          )}
         </h1>
         <h2 className={styles.amount}>
           <WithFetching {...pricesState} height={1}>

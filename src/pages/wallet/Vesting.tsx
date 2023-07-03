@@ -1,9 +1,12 @@
-import { useTranslation } from "react-i18next"
-import { isVestingAccount, useAccount } from "data/queries/vesting"
-import { parseVestingSchedule } from "data/queries/vesting"
-import { Read } from "components/token"
+import {
+  parseVestingSchedule,
+  isVestingAccount,
+  useAccount,
+} from "data/queries/vesting"
 import VestingScheduleTable from "./VestingScheduleTable"
+import { useTranslation } from "react-i18next"
 import styles from "./Vesting.module.scss"
+import { Read } from "components/token"
 
 const Vesting = () => {
   const { t } = useTranslation()
