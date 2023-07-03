@@ -28,15 +28,15 @@ services:
     networks:
       - default
     ports:
-      - '3101:3101'
+      - '3001:3001'
 
   station:
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        REACT_APP_ASSETS: http://localhost:3101
-        REACT_APP_STATION_ASSETS: http://localhost:3101
+        REACT_APP_ASSETS: http://localhost:3001
+        REACT_APP_STATION_ASSETS: http://localhost:3001
     image: localterra/station:latest
     networks:
       - default
