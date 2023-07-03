@@ -67,9 +67,6 @@ const ibc = (
 
       if (sourceChain === destinationChain) return true
 
-      if (isAxelar)
-        return "Axelar tokens cannot be transferred with Station yet."
-
       if (!AccAddress.validate(token)) {
         const channel = getIBCChannel({
           from: sourceChain,
@@ -86,7 +83,7 @@ const ibc = (
           // TODO: pass the ICS chennel if needed (should be as it is for validation)
         })
         if (!channel)
-          return `IBC transfers are not yet available for this CW20 token`
+          return `Cross-chain transfers aren't currently enabled for this token`
       }
 
       return true

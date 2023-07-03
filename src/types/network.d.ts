@@ -5,6 +5,12 @@ type InterchainNetworks = Record<
   Record<ChainID, InterchainNetwork>
 >
 
+interface IcsChannel {
+  contract: string
+  channel: string
+  otherChannel: string
+}
+
 interface InterchainNetwork {
   chainID: ChainID
   lcd: string
@@ -30,6 +36,8 @@ interface InterchainNetwork {
       fromTerra: string
     }
   }
+  channels?: Record<ChainID, string>
+  icsChannels?: Record<ChainID, IcsChannel>
   version?: string
   isClassic?: boolean
   explorer: {

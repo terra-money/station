@@ -181,13 +181,12 @@ const SendPage = () => {
 
     if (
       chain === destinationChain ||
-      (getIBCChannel({
+      getIBCChannel({
         from: chain,
         to: destinationChain,
         tokenAddress: token.denom,
         icsChannel: ibcDenoms[networkName][token.denom]?.icsChannel,
-      }) &&
-        !readNativeDenom(token.denom).isAxelar)
+      })
     ) {
       return (
         <span className={styles.destination}>
@@ -478,7 +477,7 @@ const SendPage = () => {
                   {!memo && (
                     <FormWarning>
                       {t(
-                        "This is a cross-chain transaction. Don't send tokens to exchanges with this tx."
+                        "Do not use this cross-chain transaction to send tokens to exchanges as a loss of funds could occur"
                       )}
                     </FormWarning>
                   )}

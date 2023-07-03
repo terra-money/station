@@ -188,13 +188,12 @@ const TransferPage = () => {
 
     if (
       chain === destinationChain ||
-      (getIBCChannel({
+      getIBCChannel({
         from: chain,
         to: destinationChain,
         tokenAddress: token.denom,
         icsChannel: ibcDenoms[networkName][token.denom]?.icsChannel,
-      }) &&
-        !readNativeDenom(token.denom).isAxelar)
+      })
     ) {
       return (
         <span className={styles.destination}>
