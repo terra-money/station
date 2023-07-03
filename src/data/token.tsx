@@ -97,7 +97,6 @@ export const useNativeDenoms = () => {
     chainID?: string
   ): TokenItem & { isNonWhitelisted?: boolean } {
     let tokenType = ""
-
     if (denom.startsWith("ibc/")) {
       tokenType = "ibc"
     } else if (denom.startsWith("factory/")) {
@@ -108,7 +107,6 @@ export const useNativeDenoms = () => {
     }
 
     let fixedDenom = ""
-
     switch (tokenType) {
       case "ibc":
         fixedDenom = `${readDenom(denom).substring(0, 5)}...`
@@ -159,13 +157,37 @@ export const useNativeDenoms = () => {
     }
 
     // ibc token
-    const ibcToken = ibcDenoms[networkName]?.[denom]?.token
-
-    if (ibcToken && whitelist[networkName][ibcToken]) {
+    let ibcToken = ibcDenoms[networkName]?.[denom]?.token
+    const chainOrigin = ibcDenoms[networkName]?.[denom]?.chainID
+    const ibcLunc =
+      chainOrigin &&
+      ["phoenix-1:uluna", "pisco-1:uluna"].includes(ibcToken) &&
+      networkName !== "classic" &&
+      ibcDenoms["classic"]?.[denom]
+    if (ibcLunc) {
+      ibcToken = ibcDenoms["classic"]?.[denom]?.token
+      return {
+        ...whitelist["classic"][ibcToken],
+        // @ts-expect-error
+        chains: [ibcDenoms["classic"]?.[denom]?.chainID],
+      }
+    } else if (ibcToken && whitelist[networkName][ibcToken]) {
       return {
         ...whitelist[networkName][ibcToken],
         // @ts-expect-error
         chains: [ibcDenoms[networkName][denom].chain],
+      }
+    }
+
+    // Assuming terra-utils returns "Luna" for LUNC.
+    if (fixedDenom === "Luna" && networkName !== "classic") {
+      return {
+        token: denom,
+        symbol: "LUNC",
+        name: "Luna Classic",
+        icon: "https://assets.terra.money/icon/svg/LUNC.svg",
+        decimals: 6,
+        isNonWhitelisted: false,
       }
     }
 
@@ -180,6 +202,7 @@ export const useNativeDenoms = () => {
         token: denom,
         symbol: fixedDenom,
         name: fixedDenom,
+        type: tokenType,
         icon:
           tokenType === "ibc"
             ? "https://assets.terra.money/icon/svg/IBC.svg"

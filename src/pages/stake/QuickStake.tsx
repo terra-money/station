@@ -107,6 +107,7 @@ const QuickStake = () => {
     (acc, { data }) => (data ? [...data?.delegation, ...acc] : acc),
     [] as Delegation[]
   )
+
   const allianceDelegationsData = useInterchainAllianceDelegations()
   const allianceDelegations = allianceDelegationsData.reduce(
     (acc, { data }) => (data ? [data, ...acc] : acc),
@@ -151,6 +152,7 @@ const QuickStake = () => {
 
   const tokenList = options.reduce((acc, { denom }) => {
     const token = readNativeDenom(denom)
+    if (token.type === "ibc") return acc
     return token.lsd
       ? {
           [token.lsd]: readNativeDenom(token.lsd),
