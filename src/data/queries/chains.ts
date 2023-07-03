@@ -103,15 +103,11 @@ export function useIBCChannels() {
       icsChannel?: string
     }): string | undefined => {
       const isCW20 = AccAddress.validate(tokenAddress)
-      if (
-        icsChannel &&
-        networks[from]?.icsChannels?.[to].channel === icsChannel
-      ) {
-        return icsChannel
+      const icsToChannel = networks[from]?.icsChannels?.[to]?.channel
+      if (icsChannel && icsToChannel === icsChannel) {
+        return icsToChannel
       }
-      return isCW20
-        ? networks[from]?.icsChannels?.[to]?.channel
-        : networks[from]?.channels?.[to]
+      return isCW20 ? icsToChannel : networks[from]?.channels?.[to]
 
       //   // from Terra to other chains
       //   if (networks[from]?.prefix === "terra") {
