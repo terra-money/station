@@ -479,7 +479,7 @@ export const getQuickUnstakeMsgs = (
       new MsgExecuteContract(address, hubAddress, {
         unstake: {
           info: {
-            native: delegations[0].balance.denom,
+            native: coin.denom,
           },
           amount: amount,
         },

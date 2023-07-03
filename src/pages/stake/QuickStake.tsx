@@ -143,7 +143,7 @@ const QuickStake = () => {
     })),
     ...(alliances ?? []).map(
       ({ denom, reward_weight, chainID, stakeOnAllianceHub }) => ({
-        denom: denom ?? "",
+        denom: denom,
         rewards: Number(reward_weight),
         chainID,
         unbonding: stakeOnAllianceHub

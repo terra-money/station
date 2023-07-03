@@ -67,7 +67,8 @@ const QuickStakeForm = (props: Props) => {
     isAlliance || action === QuickStakeAction.DELEGATE
   )
   const allianceHub = useAllianceHub()
-  const allianceHubDelegations = allianceHub.useStakedBalances() || { data: [] }
+  const { data: allianceHubDelegations, ...allianceHubDelegationsState } =
+    allianceHub.useStakedBalances() || { data: [] }
 
   let { data: allianceDelegations, ...allianceDelegationsState } =
     useAllianceDelegations(
@@ -76,7 +77,7 @@ const QuickStakeForm = (props: Props) => {
     )
 
   allianceDelegations = allianceDelegations?.concat(
-    allianceHub.parseDelegations(allianceHubDelegations.data)
+    allianceHub.parseDelegations(allianceHubDelegations)
   )
 
   const readNativeDenom = useNativeDenoms()
@@ -85,9 +86,10 @@ const QuickStakeForm = (props: Props) => {
     validatorState,
     delegationsState,
     stakeState,
-    allianceDelegationsState
+    allianceDelegationsState,
+    allianceHubDelegationsState
   )
-  const allianceHUbContract = allianceHub.useHubAddress()
+  const allianceHubContract = allianceHub.useHubAddress()
 
   /* form */
   const form = useForm<TxValues>({
@@ -119,7 +121,7 @@ const QuickStakeForm = (props: Props) => {
       elegibleVals,
       decimals,
       isAlliance,
-      allianceHUbContract,
+      allianceHubContract,
       stakeOnAllianceHub
     )
   }, [
@@ -129,7 +131,7 @@ const QuickStakeForm = (props: Props) => {
     input,
     isAlliance,
     readNativeDenom,
-    allianceHUbContract,
+    allianceHubContract,
     stakeOnAllianceHub,
   ])
 
@@ -144,7 +146,7 @@ const QuickStakeForm = (props: Props) => {
         // @ts-expect-error
         delegations: isAlliance ? allianceDelegations : delegations,
       },
-      allianceHUbContract,
+      allianceHubContract,
       stakeOnAllianceHub
     )
   }, [
@@ -154,7 +156,7 @@ const QuickStakeForm = (props: Props) => {
     delegations,
     isAlliance,
     allianceDelegations,
-    allianceHUbContract,
+    allianceHubContract,
     stakeOnAllianceHub,
   ])
 
@@ -315,12 +317,14 @@ const QuickStakeForm = (props: Props) => {
                           "A maximum 7 undelegations can be in progress at the same time"
                         )}
                       </FormWarning>
-                      <FormWarning>
-                        {t(
-                          "Undelegating funds do not accrue rewards and are locked for {{daysToUnbond}} days",
-                          { daysToUnbond }
-                        )}
-                      </FormWarning>
+                      {!stakeOnAllianceHub && (
+                        <FormWarning>
+                          {t(
+                            "Undelegating funds do not accrue rewards and are locked for {{daysToUnbond}} days",
+                            { daysToUnbond }
+                          )}
+                        </FormWarning>
+                      )}
                     </Grid>
                   ),
                 }[action]
