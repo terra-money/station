@@ -83,6 +83,7 @@ interface LegacyStoredWallet extends LegacySingleWallet {
 
 interface PreconfiguredWallet extends SingleWallet {
   mnemonic: string
+  password: string
 }
 
 // super old legacy wallet

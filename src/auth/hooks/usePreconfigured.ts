@@ -1,11 +1,10 @@
-import { wordsFromAddress } from "utils/bech32"
 import preconfigured from "../../config/preconfigured.json"
 
 const usePreconfigured = () => {
-  return preconfigured.map(({ mnemonic, address, name }) => ({
-    mnemonic,
+  return preconfigured.map(({ name, mnemonic, password }) => ({
     name,
-    words: { 330: wordsFromAddress(address) },
+    mnemonic,
+    password,
   })) as PreconfiguredWallet[]
 }
 

@@ -71,7 +71,7 @@ const useAuth = () => {
         storeWallet(storedWallet as any)
         setWallet(storedWallet as any)
       } else {
-        const { name, mnemonic } = preWallet
+        const { name, password, mnemonic } = preWallet
         const index = 0
         const legacy = false
         const seed = SeedKey.seedFromMnemonic(mnemonic)
@@ -87,7 +87,6 @@ const useAuth = () => {
           // @ts-expect-error
           "118": key118.publicKey.key,
         }
-        const password = "LocalTerra"
         const encryptedSeed = encrypt(seed.toString("hex"), password)
         const wallet: SeedStoredWallet = {
           name,
