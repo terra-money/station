@@ -22,7 +22,6 @@ export const storeWallet = (user: Wallet) => {
 }
 
 export const clearWallet = () => {
-  console.log("clearing wallet")
   localStorage.removeItem("user")
   localStorage.setItem("user", "{}")
 }
@@ -40,7 +39,6 @@ const storeWallets = (wallets: StoredWallet[]) => {
 /* stored wallet */
 export const getStoredWallet = (name: string): ResultStoredWallet => {
   const wallets = getStoredWallets()
-  console.log(wallets)
   const wallet = wallets.find((wallet) => wallet.name === name)
   if (!wallet) throw new Error("Wallet does not exist")
   return wallet
@@ -154,7 +152,6 @@ export const changePassword = (params: ChangePasswordParams) => {
   const { name, oldPassword, newPassword } = params
   testPassword({ name, password: oldPassword })
   const key = getDecryptedKey({ name, password: oldPassword })
-  console.log(key)
   if (!key) throw new Error("Key does not exist, cannot change password")
   if ("seed" in key) {
     const encryptedSeed = encrypt(key.seed, newPassword)
