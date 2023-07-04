@@ -16,7 +16,6 @@ import {
 } from "./alliance"
 import useAddress from "auth/hooks/useAddress"
 import { Coin, Rewards, Coins } from "@terra-money/feather.js"
-import { AllianceDelegationResponse as AllianceModuleDelegationResponse } from "@terra-money/feather.js/dist/client/lcd/api/AllianceAPI"
 
 export const useAllianceHub = () => {
   const useHubAddress = () => {
@@ -55,6 +54,8 @@ export const useAllianceHub = () => {
     return useQuery(
       [queryKey.allianceProtocol.hubWhitelistedAssets],
       async (): Promise<Array<AllianceDetails>> => {
+        if (chainID !== "phoenix-1" && chainID !== "pisco-1") return []
+
         const data: AHWhitelistedAssets = await lcd.wasm.contractQuery(
           hubAddress,
           { whitelisted_assets: {} }
@@ -79,7 +80,7 @@ export const useAllianceHub = () => {
     )
   }
 
-  const useStakedBalances = () => {
+  const useDelegations = () => {
     const chainID = useChainID()
     const address = useAddress()
     const lcd = useInterchainLCDClient()
@@ -90,6 +91,8 @@ export const useAllianceHub = () => {
       [queryKey.allianceProtocol.hubStakedBalances],
       async (): Promise<AllianceDelegationRes[]> => {
         try {
+          if (chainID !== "phoenix-1" && chainID !== "pisco-1") return []
+
           const data: AHStakedBalancesRes = await lcd.wasm.contractQuery(
             hubAddress,
             {
@@ -107,6 +110,7 @@ export const useAllianceHub = () => {
                 delegation: {
                   ...EmptyAllianceDelegation(),
                   delegator_address: address as string,
+                  validator_address: hubAddress,
                   denom: del.asset.native,
                 },
               }
@@ -122,27 +126,8 @@ export const useAllianceHub = () => {
     )
   }
 
-  const parseDelegations = (
-    delegations?: AllianceDelegationRes[]
-  ): AllianceModuleDelegationResponse[] => {
-    if (delegations === undefined) {
-      return []
-    }
-
-    return delegations.flatMap((del) => {
-      return del.delegations.map((del) => {
-        return {
-          ...del,
-          balance: {
-            amount: del.balance.amount.toString(),
-            denom: del.balance.denom,
-          },
-        }
-      })
-    })
-  }
-
   const usePendingRewards = () => {
+    const chainID = useChainID()
     const address = useAddress()
     const lcd = useInterchainLCDClient()
     const hubAddress = useHubAddress()
@@ -151,6 +136,8 @@ export const useAllianceHub = () => {
     return useQuery(
       [queryKey.allianceProtocol.hubPendingRewards],
       async (): Promise<Rewards> => {
+        if (chainID !== "phoenix-1" && chainID !== "pisco-1") return rewards
+
         try {
           const data: AHAllPendingRewardsQueryRes =
             await lcd.wasm.contractQuery(hubAddress, {
@@ -190,9 +177,8 @@ export const useAllianceHub = () => {
   return {
     useConfig,
     useWhitelistedAssets,
-    useStakedBalances,
+    useDelegations,
     usePendingRewards,
     useHubAddress,
-    parseDelegations,
   }
 }

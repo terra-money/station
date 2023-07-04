@@ -15,6 +15,7 @@ import StakedCard from "../components/StakedCard"
 import { TokenCard, TokenCardGrid } from "components/token"
 import RewardsTooltip from "../RewardsTooltip"
 import styles from "../CardModal.module.scss"
+import { useAllianceHub } from "data/queries/alliance-protocol"
 
 const ChainRewards = ({ chain }: { chain: string }) => {
   const { t } = useTranslation()
@@ -22,11 +23,18 @@ const ChainRewards = ({ chain }: { chain: string }) => {
   const calcValue = useMemoizedCalcValue()
   const readNativeDenom = useNativeDenoms()
   const networks = useNetwork()
+  const allianceHub = useAllianceHub()
 
+  const { data: allianceHubRewards, ...allianceHubPendingRewardsState } =
+    allianceHub.usePendingRewards()
   const { data: exchangeRates, ...exchangeRatesState } = useExchangeRates()
   const { data: chainRewards, ...chainRewardsState } = useRewards(chain)
 
-  const state = combineState(exchangeRatesState, chainRewardsState)
+  const state = combineState(
+    exchangeRatesState,
+    chainRewardsState,
+    allianceHubPendingRewardsState
+  )
 
   /* render */
   const title = t("Staking rewards")

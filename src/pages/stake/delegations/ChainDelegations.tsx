@@ -11,15 +11,32 @@ import { Read } from "components/token"
 import StakedCard from "../components/StakedCard"
 import { getMaxHeightStyle } from "utils/style"
 import styles from "../CardModal.module.scss"
+import { useAllianceHub } from "data/queries/alliance-protocol"
+import { parseResToDelegation } from "data/parsers/alliance-protocol"
 
 const ChainDelegations = ({ chain }: { chain: string }) => {
   const { t } = useTranslation()
   const readNativeDenom = useNativeDenoms()
   const { data: prices, ...pricesState } = useExchangeRates()
-  const { data, ...chainDelegationsState } = useDelegations(chain)
-  const chainDelegations: Delegation[] = data || []
+  const allianceHub = useAllianceHub()
 
-  const state = combineState(pricesState, chainDelegationsState)
+  const { data: hubDelegations, ...hubDelegationsState } =
+    allianceHub.useDelegations()
+  const { data, ...chainDelegationsState } = useDelegations(chain)
+  let chainDelegations: Delegation[] = data || []
+  const filteredHubDelegations =
+    chain === undefined
+      ? hubDelegations
+      : hubDelegations?.filter((del) => del.chainID === chain)
+  chainDelegations = chainDelegations.concat(
+    parseResToDelegation(filteredHubDelegations)
+  )
+
+  const state = combineState(
+    pricesState,
+    chainDelegationsState,
+    hubDelegationsState
+  )
 
   const title = t("Delegations")
 
@@ -85,9 +102,13 @@ const ChainDelegations = ({ chain }: { chain: string }) => {
             {
               title: t("Validator"),
               dataIndex: "validator_address",
-              render: (address: AccAddress) => (
-                <ValidatorLink address={address} internal />
-              ),
+              render: (address: AccAddress) => {
+                if (address === allianceHub.useHubAddress()) {
+                  return <span>{t("Alliance Hub")}</span>
+                } else {
+                  return <ValidatorLink address={address} internal />
+                }
+              },
             },
             {
               title: t("Delegated"),

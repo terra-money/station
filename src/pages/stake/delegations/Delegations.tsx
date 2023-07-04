@@ -15,29 +15,38 @@ import {
   AllianceDelegation,
   useInterchainAllianceDelegations,
 } from "data/queries/alliance"
+import { useAllianceHub } from "data/queries/alliance-protocol"
+import { getAllianceDelegations } from "data/parsers/alliance-protocol"
 
 const Delegations = () => {
   const { t } = useTranslation()
   const readNativeDenom = useNativeDenoms()
   const { data: prices, ...pricesState } = useExchangeRates()
+  const allianceHub = useAllianceHub()
 
   const interchainDelegations = useInterchainDelegations()
+  const allianceHubDelegations = allianceHub.useDelegations()
   const allianceDelegationsData = useInterchainAllianceDelegations()
 
   const delegations: Delegation[] = interchainDelegations.reduce(
     (acc, { data }) => (data ? [...data?.delegation, ...acc] : acc),
     [] as Delegation[]
   )
-  const allianceDelegations: AllianceDelegation[] =
+  let allianceDelegations: AllianceDelegation[] =
     allianceDelegationsData.reduce(
       (acc, { data }) =>
         data?.delegations ? [...data.delegations, ...acc] : acc,
       [] as AllianceDelegation[]
     )
+  allianceDelegations = allianceDelegations.concat(
+    getAllianceDelegations(allianceHubDelegations?.data)
+  )
+
   const state = combineState(
     pricesState,
     ...interchainDelegations,
-    ...allianceDelegationsData
+    ...allianceDelegationsData,
+    allianceHubDelegations
   )
 
   /* render */

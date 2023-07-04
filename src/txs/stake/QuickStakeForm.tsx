@@ -29,6 +29,7 @@ import { memo } from "react"
 import styles from "./QuickStakeForm.module.scss"
 import { useAllianceDelegations } from "data/queries/alliance"
 import { useAllianceHub } from "data/queries/alliance-protocol"
+import { parseDelegationsToResponse } from "data/parsers/alliance-protocol"
 
 interface TxValues {
   input?: number
@@ -68,7 +69,11 @@ const QuickStakeForm = (props: Props) => {
   )
   const allianceHub = useAllianceHub()
   const { data: allianceHubDelegations, ...allianceHubDelegationsState } =
-    allianceHub.useStakedBalances() || { data: [] }
+    allianceHub.useDelegations()
+  const filteredHubDelegations =
+    chainID !== undefined
+      ? allianceHubDelegations?.filter((del) => del.chainID === chainID)
+      : allianceHubDelegations
 
   let { data: allianceDelegations, ...allianceDelegationsState } =
     useAllianceDelegations(
@@ -77,7 +82,7 @@ const QuickStakeForm = (props: Props) => {
     )
 
   allianceDelegations = allianceDelegations?.concat(
-    allianceHub.parseDelegations(allianceHubDelegations)
+    parseDelegationsToResponse(filteredHubDelegations)
   )
 
   const readNativeDenom = useNativeDenoms()
@@ -170,7 +175,6 @@ const QuickStakeForm = (props: Props) => {
     },
     [action, unstakeMsgs, stakeMsgs, chainID]
   )
-  console.log("allianceDelegations isAlliance", isAlliance, allianceDelegations)
   /* fee */
   const balance = {
     [QuickStakeAction.DELEGATE]: getAmount(balances, denom), // TODO flexible denom
@@ -210,7 +214,6 @@ const QuickStakeForm = (props: Props) => {
     ],
     chain: chainID,
   }
-  console.log(tx)
 
   return (
     <Page invisible {...state}>

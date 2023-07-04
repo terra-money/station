@@ -24,9 +24,6 @@ const Rewards = () => {
   const { data: allianceHubRewards, ...allianceHubPendingRewardsState } =
     allianceHub.usePendingRewards()
   const { data: rewards, ...rewardsState } = useRewards()
-
-  console.log("allianceHubRewards", allianceHubRewards)
-  console.log("rewards", rewards)
   const { data: exchangeRates, ...exchangeRatesState } = useExchangeRates()
 
   const state = combineState(

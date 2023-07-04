@@ -31,6 +31,8 @@ import {
   AllianceDelegation,
   useInterchainAllianceDelegations,
 } from "./alliance"
+import { useAllianceHub } from "./alliance-protocol"
+import { getAllianceDelegations } from "data/parsers/alliance-protocol"
 
 export const useInterchainValidators = () => {
   const addresses = useInterchainAddresses() || {}
@@ -302,6 +304,14 @@ export const calcDelegationsTotal = (
 export const useStakeChartData = (chain?: string) => {
   const { data: prices } = useExchangeRates()
   const readNativeDenom = useNativeDenoms()
+  const allianceHub = useAllianceHub()
+
+  const hubDelegations = allianceHub.useDelegations()
+
+  const filteredHubDelegations =
+    chain === undefined
+      ? hubDelegations.data
+      : hubDelegations.data?.filter((data) => data?.chainID === chain)
 
   const delegationsData = useInterchainDelegations()
   const delegations: Delegation[] = delegationsData
@@ -311,13 +321,17 @@ export const useStakeChartData = (chain?: string) => {
       [] as Delegation[]
     )
   const allianceDelegationsData = useInterchainAllianceDelegations()
-  const allianceDelegations = allianceDelegationsData
+  let allianceDelegations = allianceDelegationsData
+    .concat()
     .filter(({ data }) => !chain || chain === data?.chainID)
     .reduce(
       (acc, { data }) =>
         data?.delegations ? [...data.delegations, ...acc] : acc,
       [] as AllianceDelegation[]
     )
+  allianceDelegations = allianceDelegations.concat(
+    getAllianceDelegations(filteredHubDelegations)
+  )
 
   const delAmounts: Record<string, number> = delegations.reduce(
     (acc, { balance }) => {
@@ -343,7 +357,11 @@ export const useStakeChartData = (chain?: string) => {
   }, delAmounts)
 
   return {
-    ...combineState(...delegationsData, ...allianceDelegationsData),
+    ...combineState(
+      ...delegationsData,
+      ...allianceDelegationsData,
+      hubDelegations
+    ),
 
     data: Object.entries(totalAmounts).map(([token, amount]) => {
       const { decimals, symbol, icon } = readNativeDenom(token)
