@@ -34,10 +34,18 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: hot-reloader
       args:
         REACT_APP_ASSETS: http://localhost:3001
         REACT_APP_STATION_ASSETS: http://localhost:3001
-    image: localterra/station:latest
+    image: ghcr.io/terra-money/station:localhr
+    entrypoint: >
+      /bin/sh -c "Echo "
+    environment:
+      NODE_ENV: "development"
+
+    volumes:
+      - ./:/app/dev
     networks:
       - default
     ports:

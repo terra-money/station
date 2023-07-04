@@ -17,8 +17,9 @@ import usePreconfigured from "auth/hooks/usePreconfigured"
 const SwitchWallet = () => {
   const { disconnect } = useWallet()
   const { wallet, wallets, connect, connectedWallet } = useAuth()
-  const preconfigured = usePreconfigured()
+  const { getPreconfigured } = usePreconfigured()
   const address = useAddress()
+  const preconfigured = getPreconfigured()
 
   const localWallets = !!(wallets.length || wallet) && (
     <div>

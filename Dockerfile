@@ -8,11 +8,12 @@ RUN set -eux &&\
         libudev-dev \
         libusb-1.0-0-dev
 
-COPY ./package*.json ./
+COPY package*.json ./
+COPY tsconfig.json ./
 
 RUN set -eux && \
     npm install -g typescript react-scripts && \
-    npm install --include=dev
+    npm install --include=dev 
 
 COPY . .
 
@@ -35,12 +36,24 @@ RUN set -eux && \
 
 ###############################################################################
 
+FROM node:16-alpine as hot-reloader
+
+# add node modules to parent directory
+COPY --from=builder /app/node_modules /app/node_modules
+ENV PATH=/app/node_modules/.bin:$PATH
+
+# use bind mount to enable hot reloading
+WORKDIR /app/dev
+COPY . .
+
+CMD ["npm", "run", "start"]
+
+###############################################################################
+
 FROM node:16-alpine
 
 WORKDIR /app
-
 COPY --from=builder /app/build .
-
 
 RUN set -eux && \
     npm install -g serve

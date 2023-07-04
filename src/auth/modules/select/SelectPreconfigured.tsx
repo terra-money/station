@@ -6,9 +6,10 @@ import { usePreconfigure } from "utils/localStorage"
 
 const SelectPreconfigured = () => {
   const { t } = useTranslation()
-  const { connectedWallet, connectPreconfigured } = useAuth()
+  const { connectedWallet } = useAuth()
   const { preconfigure } = usePreconfigure()
-  const preconfigured = usePreconfigured()
+  const { getPreconfigured, connectPreconfigured } = usePreconfigured()
+  const preconfigured = getPreconfigured()
 
   if (!preconfigure) return null
 

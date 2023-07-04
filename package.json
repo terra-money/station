@@ -11,6 +11,8 @@
     "test": "react-scripts test",
     "prepare": "husky install",
     "pre-commit": "lint-staged",
+    "start:dev": "node -r dotenv/config dist/server.js",
+    "start:watch": "nodemon -r dotenv/config src/server.ts",
     "analyze": "source-map-explorer 'build/static/js/*.js'"
   },
   "dependencies": {
@@ -43,6 +45,7 @@
     "js-base64": "^3.7.2",
     "keccak256": "^1.0.6",
     "lottie-react": "^2.3.1",
+    "nodemon": "^2.0.22",
     "numeral": "^2.0.6",
     "prettier": "^2.6.2",
     "qrcode.react": "^3.0.2",
