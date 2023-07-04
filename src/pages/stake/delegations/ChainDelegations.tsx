@@ -4,7 +4,7 @@ import { useExchangeRates } from "data/queries/coingecko"
 import { combineState } from "data/query"
 import { useDelegations } from "data/queries/staking"
 import { AccAddress, Coin, Delegation } from "@terra-money/feather.js"
-import { ValidatorLink } from "components/general"
+import { FinderLink, ValidatorLink } from "components/general"
 import { ModalButton } from "components/feedback"
 import { Table } from "components/layout"
 import { Read } from "components/token"
@@ -104,7 +104,7 @@ const ChainDelegations = ({ chain }: { chain: string }) => {
               dataIndex: "validator_address",
               render: (address: AccAddress) => {
                 if (address === allianceHub.useHubAddress()) {
-                  return <span>{t("Alliance Hub")}</span>
+                  return <FinderLink value={address}>Alliance Hub</FinderLink>
                 } else {
                   return <ValidatorLink address={address} internal />
                 }

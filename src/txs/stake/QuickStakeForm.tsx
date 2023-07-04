@@ -29,7 +29,7 @@ import { memo } from "react"
 import styles from "./QuickStakeForm.module.scss"
 import { useAllianceDelegations } from "data/queries/alliance"
 import { useAllianceHub } from "data/queries/alliance-protocol"
-import { parseDelegationsToResponse } from "data/parsers/alliance-protocol"
+import BigNumber from "bignumber.js"
 
 interface TxValues {
   input?: number
@@ -57,7 +57,6 @@ const QuickStakeForm = (props: Props) => {
     isAlliance,
     stakeOnAllianceHub,
   } = props
-
   const { t } = useTranslation()
   const addresses = useInterchainAddresses()
   const address = addresses?.[chainID]
@@ -75,15 +74,11 @@ const QuickStakeForm = (props: Props) => {
       ? allianceHubDelegations?.filter((del) => del.chainID === chainID)
       : allianceHubDelegations
 
-  let { data: allianceDelegations, ...allianceDelegationsState } =
+  const { data: allianceDelegations, ...allianceDelegationsState } =
     useAllianceDelegations(
       chainID,
       !isAlliance || action === QuickStakeAction.DELEGATE
     )
-
-  allianceDelegations = allianceDelegations?.concat(
-    parseDelegationsToResponse(filteredHubDelegations)
-  )
 
   const readNativeDenom = useNativeDenoms()
   const { data: stakeParams, ...stakeState } = useStakingParams(chainID)
@@ -175,15 +170,32 @@ const QuickStakeForm = (props: Props) => {
     },
     [action, unstakeMsgs, stakeMsgs, chainID]
   )
+
+  const calculateUnbondBalance = () => {
+    if (isAlliance && stakeOnAllianceHub && filteredHubDelegations) {
+      return filteredHubDelegations
+        .reduce((acc, del) => {
+          const amount = BigNumber.sum(
+            ...del.delegations.map(({ balance }) => balance.amount.toString())
+          )
+
+          return acc.plus(amount)
+        }, new BigNumber(0))
+        .toString()
+    } else if (isAlliance && allianceDelegations) {
+      return calcDelegationsTotal(allianceDelegations)
+    } else {
+      return calcDelegationsTotal(delegations)
+    }
+  }
+
   /* fee */
   const balance = {
     [QuickStakeAction.DELEGATE]: getAmount(balances, denom), // TODO flexible denom
-    [QuickStakeAction.UNBOND]: calcDelegationsTotal(
-      (isAlliance ? allianceDelegations : delegations) ?? []
-    ),
+    [QuickStakeAction.UNBOND]: calculateUnbondBalance(),
   }[action]
 
-  const estimationTxValues = useMemo(() => ({ input: toInput(1) }), [])
+  const estimationTxValues = useMemo(() => ({ input: toInput(0) }), [])
 
   const onChangeMax = useCallback(
     async (input: number) => {

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import BigNumber from "bignumber.js"
-import { ValAddress } from "@terra-money/feather.js"
+import { MsgExecuteContract, ValAddress } from "@terra-money/feather.js"
 import { Rewards } from "@terra-money/feather.js"
 import { MsgWithdrawDelegatorReward } from "@terra-money/feather.js"
 import { queryKey } from "data/query"
@@ -97,12 +97,29 @@ const WithdrawRewardsForm = ({ rewards, chain }: Props) => {
   const createTx = useCallback(() => {
     if (!address) return
 
-    const msgs = selected.map((operatorAddress) => {
-      return new MsgWithdrawDelegatorReward(address, operatorAddress)
-    })
+    const msgs: Array<MsgWithdrawDelegatorReward | MsgExecuteContract> = []
+
+    for (const selection of selected) {
+      if (selection.startsWith("terravaloper")) {
+        let msg = new MsgWithdrawDelegatorReward(address, selection)
+        msgs.push(msg)
+      } else {
+        // Since each selection is a unique address with multiple coins
+        // we don't need to worry about duplicate coins.
+        for (const coin of rewards.rewards[selection].toArray()) {
+          let msg = new MsgExecuteContract(address, allianceHubAddress, {
+            claim_rewards: {
+              native: coin.denom,
+            },
+          })
+
+          msgs.push(msg)
+        }
+      }
+    }
 
     return { msgs, chainID: chain }
-  }, [address, selected, chain])
+  }, [address, selected, chain, allianceHubAddress, rewards])
 
   /* fee */
   const estimationTxValues = useMemo(() => ({}), [])

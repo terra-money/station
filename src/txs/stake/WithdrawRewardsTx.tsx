@@ -16,23 +16,26 @@ const WithdrawRewardsTx = ({ chain }: Props) => {
     allianceHub.usePendingRewards()
   const { data: stakingRewards, ...stakingRewardsState } = useRewards(chain)
 
-  // If there are stakingRewards add to allianceHubRewards
-  // otherwise default to empty Coins
-  const totalRewards = stakingRewards?.total
-    ? stakingRewards.total.add(
-        allianceHubRewards?.total ?? Coins.fromAmino(null)
-      )
-    : allianceHubRewards?.total
-    ? allianceHubRewards?.total
-    : Coins.fromAmino(null)
   const rewards: Rewards = {
     rewards: {
       ...stakingRewards?.rewards,
-      ...allianceHubRewards?.rewards,
     },
-    total: totalRewards,
+    total: stakingRewards?.total ?? Coins.fromAmino(null),
   }
 
+  // If the current chain is terra mainnet or testnet and alliance
+  // hub has rewards, append these rewards to the total rewards
+  if (
+    (chain === "pisco-1" || chain === "phoenix-1") &&
+    allianceHubRewards?.total
+  ) {
+    rewards.total = rewards.total.add(allianceHubRewards.total)
+
+    rewards.rewards = {
+      ...rewards.rewards,
+      ...allianceHubRewards.rewards,
+    }
+  }
   const state = combineState(stakingRewardsState, allianceHubRewardsState)
 
   if (!rewards || !state.isSuccess) return null

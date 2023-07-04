@@ -7,7 +7,7 @@ import {
   AHConfig,
   AHStakedBalancesRes,
   AHWhitelistedAssets,
-} from "data/types/alliance-protocol-conf"
+} from "data/types/alliance-protocol"
 import {
   AllianceDelegationRes,
   AllianceDetails,
@@ -102,20 +102,24 @@ export const useAllianceHub = () => {
             }
           )
 
-          alliancesDelegations.push({
-            chainID: chainID,
-            delegations: data.map((del) => {
-              return {
-                balance: new Coin(del.asset.native, del.balance),
-                delegation: {
-                  ...EmptyAllianceDelegation(),
-                  delegator_address: address as string,
-                  validator_address: hubAddress,
-                  denom: del.asset.native,
-                },
-              }
-            }),
-          })
+          for (const del of data) {
+            if (del.balance !== "0") {
+              alliancesDelegations.push({
+                chainID: chainID,
+                delegations: data.map((del) => {
+                  return {
+                    balance: new Coin(del.asset.native, del.balance),
+                    delegation: {
+                      ...EmptyAllianceDelegation(),
+                      delegator_address: address as string,
+                      validator_address: hubAddress,
+                      denom: del.asset.native,
+                    },
+                  }
+                }),
+              })
+            }
+          }
 
           return alliancesDelegations
         } catch (e) {
@@ -145,10 +149,11 @@ export const useAllianceHub = () => {
                 address,
               },
             })
-          console.log("AHAllPendingRewardsQueryRes", data)
           data[0].rewards = "696969696969699669699"
 
-          data.forEach((pendingReward) => {
+          for (const pendingReward of data) {
+            if (pendingReward.rewards === "0") continue
+
             const tokens = new Coin(
               pendingReward.reward_asset.native,
               pendingReward.rewards
@@ -166,7 +171,8 @@ export const useAllianceHub = () => {
             }
 
             rewards.total = rewards.total.add(tokens)
-          })
+          }
+
           return rewards
         } catch (e) {
           return rewards

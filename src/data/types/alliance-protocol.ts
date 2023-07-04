@@ -4,6 +4,8 @@
 // AH stands for Alliance Hub
 // AO stands for Alliance Oracle
 
+import { Rewards } from "@terra-money/feather.js"
+
 export const ChainID = String
 
 export interface AHConfig {
@@ -49,4 +51,8 @@ export interface AOConfig {
   data_expiry_seconds: number
   governance_addr: string
   controller_addr: string
+}
+
+export interface AllianceProtocolPendingRewards extends Rewards {
+  staked_asset: string
 }
