@@ -5,6 +5,7 @@ import { useWallet, WalletStatus } from "@terra-money/wallet-provider"
 import { walletState } from "./useAuth"
 import is from "../scripts/is"
 import { useCustomLCDs } from "utils/localStorage"
+import { NetworkName, ChainID, InterchainNetwork } from "types/network"
 
 const networkState = atom({
   key: "network",

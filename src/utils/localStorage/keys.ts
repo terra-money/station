@@ -1,6 +1,7 @@
 import { DEFAULT_GAS_ADJUSTMENT } from "config/constants"
 
 import themes from "styles/themes/themes"
+import { CustomNetwork } from "types/network"
 
 export enum SettingKey {
   Theme = "Theme",

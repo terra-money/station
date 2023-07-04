@@ -4,6 +4,7 @@ import { AccAddress } from "@terra-money/feather.js"
 import { validateMsg } from "utils/data"
 import wordlist from "bip39/src/wordlists/english.json"
 import { getChainIDFromAddress } from "utils/bech32"
+import { InterchainNetwork } from "types/network"
 
 const lessThan = (max: number, label = "Amount", optional = false) => {
   return (value = 0) => {

@@ -1,5 +1,6 @@
 import { AccAddress } from "@terra-money/feather.js"
 import { useNetwork } from "data/wallet"
+import { InterchainNetwork } from "types/network"
 import createContext from "utils/createContext"
 import { DefaultDisplayChains } from "utils/localStorage"
 
@@ -104,33 +105,18 @@ export function useIBCChannels() {
     }): string | undefined => {
       const isCW20 = AccAddress.validate(tokenAddress)
 
-      // from Terra to other chains
-      if (networks[from]?.prefix === "terra") {
-        // non-CW20 ICS transfer
-        if (!!icsChannel && networks[to].ibc?.ics?.fromTerra === icsChannel) {
-          return icsChannel
-        }
-        return isCW20
-          ? // CW20 ICS transfer
-            networks[to].ibc?.icsFromTerra?.fromTerra
-          : // standard IBC transfer
-            networks[to].ibc?.fromTerra
-
-        // from other chains to Terra
-      } else if (networks[to]?.prefix === "terra") {
-        // non-CW20 ICS transfer
-        if (
-          !!icsChannel &&
-          networks[from].ibc?.icsFromTerra?.toTerra === icsChannel
-        ) {
-          return icsChannel
-        }
-        return isCW20
-          ? // CW20 ICS transfer
-            networks[from].ibc?.ics?.toTerra
-          : // standard IBC transfer
-            networks[from].ibc?.toTerra
+      if (isCW20) {
+        return networks[from]?.icsChannels?.[to]?.channel
       }
+
+      if (
+        icsChannel &&
+        networks[to]?.icsChannels?.[from]?.otherChannel === icsChannel
+      ) {
+        return icsChannel
+      }
+
+      return networks[from]?.channels?.[to]
     },
 
     getICSContract: ({
@@ -140,11 +126,7 @@ export function useIBCChannels() {
       from: string
       to: string
     }): string | undefined => {
-      if (networks[from]?.prefix === "terra") {
-        return networks[to].ibc?.icsFromTerra?.contract
-      } else if (networks[to]?.prefix === "terra") {
-        return networks[from].ibc?.ics?.contract
-      }
+      return networks[from]?.icsChannels?.[to]?.contract
     },
   }
 }

@@ -6,6 +6,7 @@ import { useSelectedDisplayChain } from "utils/localStorage"
 import { displayChainPrefsOpen } from "app/sections/Preferences"
 import { useSetRecoilState } from "recoil"
 import { useDisplayChains } from "utils/localStorage"
+import { InterchainNetwork } from "types/network"
 
 type Props = {
   list: InterchainNetwork[]
