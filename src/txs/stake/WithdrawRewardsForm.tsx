@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import BigNumber from "bignumber.js"
-import { Validator, ValAddress } from "@terra-money/feather.js"
+import { ValAddress } from "@terra-money/feather.js"
 import { Rewards } from "@terra-money/feather.js"
 import { MsgWithdrawDelegatorReward } from "@terra-money/feather.js"
 import { queryKey } from "data/query"
@@ -11,7 +11,7 @@ import { useNetwork } from "data/wallet"
 import { useMemoizedCalcValue } from "data/queries/coingecko"
 import { calcRewardsValues } from "data/queries/distribution"
 import { WithTokenItem } from "data/token"
-import { ValidatorLink } from "components/general"
+import { FinderLink, ValidatorLink } from "components/general"
 import { Form, FormArrow, FormItem, Checkbox } from "components/form"
 import { Card, Flex, Grid } from "components/layout"
 import { TokenCard, TokenCardGrid } from "components/token"
@@ -20,16 +20,18 @@ import styles from "./WithdrawRewardsForm.module.scss"
 import Tx from "txs/Tx"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { Read } from "components/token"
+import { useAllianceHub } from "data/queries/alliance-protocol"
 
 interface Props {
   rewards: Rewards
-  validators: Validator[]
   chain: string
 }
 
-const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
+const WithdrawRewardsForm = ({ rewards, chain }: Props) => {
   const { t } = useTranslation()
   const currency = useCurrency()
+  const allianceHub = useAllianceHub()
+  const allianceHubAddress = allianceHub.useHubAddress()
   const addresses = useInterchainAddresses()
   const address = addresses && addresses[chain]
   const calcValue = useMemoizedCalcValue()
@@ -52,7 +54,6 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
       ),
     [byValidator]
   )
-
   const [state, setState] = useState<Record<ValAddress, boolean>>(init(true))
 
   useEffect(() => {
@@ -162,7 +163,13 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
                     >
                       <dl className={styles.item}>
                         <dt>
-                          <ValidatorLink address={address} />
+                          {address === allianceHubAddress ? (
+                            <FinderLink value={address}>
+                              Alliance Hub
+                            </FinderLink>
+                          ) : (
+                            <ValidatorLink address={address} />
+                          )}
                         </dt>
                         <dd>
                           <Read amount={amount} denom={denom} />

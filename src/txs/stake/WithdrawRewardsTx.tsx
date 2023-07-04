@@ -1,28 +1,43 @@
 import { combineState } from "data/query"
 import { useRewards } from "data/queries/distribution"
-import { useValidators } from "data/queries/staking"
 
 import WithdrawRewardsForm from "./WithdrawRewardsForm"
+import { useAllianceHub } from "data/queries/alliance-protocol"
+import { Coins, Rewards } from "@terra-money/feather.js"
 
 interface Props {
   chain: string
 }
 
 const WithdrawRewardsTx = ({ chain }: Props) => {
-  const { data: rewards, ...rewardsState } = useRewards(chain)
-  const { data: validators, ...validatorsState } = useValidators(chain)
+  const allianceHub = useAllianceHub()
 
-  const state = combineState(rewardsState, validatorsState)
+  const { data: allianceHubRewards, ...allianceHubRewardsState } =
+    allianceHub.usePendingRewards()
+  const { data: stakingRewards, ...stakingRewardsState } = useRewards(chain)
 
-  if (!rewards || !validators || !state.isSuccess) return null
+  // If there are stakingRewards add to allianceHubRewards
+  // otherwise default to empty Coins
+  const totalRewards = stakingRewards?.total
+    ? stakingRewards.total.add(
+        allianceHubRewards?.total ?? Coins.fromAmino(null)
+      )
+    : allianceHubRewards?.total
+    ? allianceHubRewards?.total
+    : Coins.fromAmino(null)
+  const rewards: Rewards = {
+    rewards: {
+      ...stakingRewards?.rewards,
+      ...allianceHubRewards?.rewards,
+    },
+    total: totalRewards,
+  }
 
-  return (
-    <WithdrawRewardsForm
-      rewards={rewards}
-      validators={validators}
-      chain={chain ?? ""}
-    />
-  )
+  const state = combineState(stakingRewardsState, allianceHubRewardsState)
+
+  if (!rewards || !state.isSuccess) return null
+
+  return <WithdrawRewardsForm rewards={rewards} chain={chain ?? ""} />
 }
 
 export default WithdrawRewardsTx

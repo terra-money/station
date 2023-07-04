@@ -131,11 +131,11 @@ export const useAllianceHub = () => {
     const address = useAddress()
     const lcd = useInterchainLCDClient()
     const hubAddress = useHubAddress()
-    const rewards: Rewards = { rewards: {}, total: new Coins() }
 
     return useQuery(
       [queryKey.allianceProtocol.hubPendingRewards],
       async (): Promise<Rewards> => {
+        const rewards: Rewards = { rewards: {}, total: new Coins() }
         if (chainID !== "phoenix-1" && chainID !== "pisco-1") return rewards
 
         try {
@@ -145,6 +145,8 @@ export const useAllianceHub = () => {
                 address,
               },
             })
+          console.log("AHAllPendingRewardsQueryRes", data)
+          data[0].rewards = "696969696969699669699"
 
           data.forEach((pendingReward) => {
             const tokens = new Coin(
@@ -159,7 +161,7 @@ export const useAllianceHub = () => {
                 rewards.rewards[hubAddress].add(tokens)
             } else {
               rewards.rewards[hubAddress] = Coins.fromString(
-                pendingReward.reward_asset.native + pendingReward.rewards
+                pendingReward.rewards + pendingReward.reward_asset.native
               )
             }
 
