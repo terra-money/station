@@ -20,6 +20,7 @@ import { createAmplitudeClient } from "utils/analytics/setupAmplitude"
 import { Flex } from "components/layout"
 import TxMessage from "../containers/TxMessage"
 import styles from "./LatestTx.module.scss"
+import { AnalyticsEvent } from "utils/analytics"
 
 const { createActionRuleSet, getTxCanonicalMsgs, createLogMatcherForActions } =
   ruleset
@@ -59,7 +60,9 @@ const TxIndicator = ({ txhash }: { txhash: string }) => {
   }, [status, onSuccess])
 
   useEffect(() => {
-    amplitude.trackEvent(`Station-Web-Transaction`, { status, txhash })
+    if (status !== Status.LOADING) {
+      amplitude.trackEvent(AnalyticsEvent.TRASNACTION, { status, txhash })
+    }
   }, [status, amplitude, txhash])
 
   /* render component */

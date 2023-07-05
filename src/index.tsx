@@ -5,8 +5,7 @@ import { ReactQueryDevtools } from "react-query/devtools"
 import { RecoilRoot } from "recoil"
 import { WalletProvider, getInitialConfig } from "@terra-money/wallet-kit"
 import "tippy.js/dist/tippy.css"
-import { initSentry } from "utils/analytics/setupSentry"
-import { createAmplitudeClient } from "utils/analytics/setupAmplitude"
+import { initAnalytics } from "utils/analytics"
 
 import "config/lang"
 import { debug } from "utils/env"
@@ -22,8 +21,7 @@ import InitChains from "app/InitChains"
 import WithNodeInfo from "app/WithNodeInfo"
 import InitQueryClient from "app/InitQueryClient"
 
-initSentry()
-createAmplitudeClient()
+initAnalytics()
 
 getInitialConfig().then((defaultNetworks) =>
   render(
