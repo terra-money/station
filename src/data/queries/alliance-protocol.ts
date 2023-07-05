@@ -148,6 +148,35 @@ export const useAllianceHub = () => {
             },
           })
 
+          /*const data: AHAllRewards = [
+            {
+              reward_asset: {
+                native: "uwhale",
+              },
+              rewards: "420",
+              staked_asset: {
+                native: "umars",
+              }
+            },
+            {
+              reward_asset: {
+                native: "usei",
+              },
+              rewards: "423",
+              staked_asset: {
+                native: "umars",
+              }
+            },
+            {
+              reward_asset: {
+                native: "uluna",
+              },
+              rewards: "422",
+              staked_asset: {
+                native: "ibc/623CD0B9778AD974713317EA0438A0CCAA72AF0BBE7BEE002205BCA25F1CA3BA",
+              }
+            },
+          ]*/
           return data
         } catch (e) {
           return []

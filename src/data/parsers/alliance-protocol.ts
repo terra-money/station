@@ -3,7 +3,7 @@ import {
   AllianceDelegationRes,
 } from "data/queries/alliance"
 import { AllianceDelegationResponse as AllianceModuleDelegationResponse } from "@terra-money/feather.js/dist/client/lcd/api/AllianceAPI"
-import { Delegation } from "@terra-money/feather.js"
+import { Coin, Coins, Delegation } from "@terra-money/feather.js"
 import { AHAllRewards } from "data/types/alliance-protocol"
 import { DefaultRewardsListing, RewardsListing } from "data/types/rewards-form"
 
@@ -72,10 +72,14 @@ export const getAllianceDelegations = (
 }
 
 export const parseRewards = (
-  data: AHAllRewards,
-  allianceHubAddress: string
+  data?: AHAllRewards,
+  allianceHubAddress?: string
 ): RewardsListing => {
   const allyRewards = DefaultRewardsListing()
+  if (data === undefined || allianceHubAddress === undefined) {
+    return allyRewards
+  }
+
   const sortedData = data.sort((a, b) => Number(b.rewards) - Number(a.rewards))
 
   for (const item of sortedData) {
@@ -100,4 +104,20 @@ export const parseRewards = (
   }
 
   return allyRewards
+}
+
+export const getCoinsFromRewards = (data?: AHAllRewards): Coins => {
+  let coins = new Coins()
+  if (data === undefined) {
+    return coins
+  }
+
+  for (const item of data) {
+    if (item.rewards === "0") continue
+
+    const _coins = new Coin(item.reward_asset.native, item.rewards)
+    coins = coins.add(_coins)
+  }
+
+  return coins
 }

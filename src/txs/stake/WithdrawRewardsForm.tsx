@@ -10,7 +10,7 @@ import { useCurrency } from "data/settings/Currency"
 import { useNetwork } from "data/wallet"
 import { useMemoizedCalcValue } from "data/queries/coingecko"
 import { calcRewardsValues } from "data/queries/distribution"
-import { WithTokenItem } from "data/token"
+import { WithTokenItem, useNativeDenoms } from "data/token"
 import { FinderLink, ValidatorLink } from "components/general"
 import { Form, FormArrow, FormItem, Checkbox } from "components/form"
 import { Card, Flex, Grid } from "components/layout"
@@ -32,6 +32,7 @@ interface Props {
 
 const WithdrawRewardsForm = ({ rewards, chain, ahRewards }: Props) => {
   const { t } = useTranslation()
+  const readNativeDenom = useNativeDenoms()
   const currency = useCurrency()
   const allianceHub = useAllianceHub()
   const allianceHubAddress = allianceHub.useHubAddress()
@@ -40,7 +41,7 @@ const WithdrawRewardsForm = ({ rewards, chain, ahRewards }: Props) => {
   const calcValue = useMemoizedCalcValue()
   const networks = useNetwork()
   const listing = useMemo(() => {
-    let { byValidator: stByVal, total: stTotalByVal } = calcRewardsValues(
+    const { byValidator: stByVal, total: stTotalByVal } = calcRewardsValues(
       rewards,
       currency.id,
       (coin) => Number(coin.amount)
@@ -53,7 +54,7 @@ const WithdrawRewardsForm = ({ rewards, chain, ahRewards }: Props) => {
       }
     }
 
-    let { byValidator: stByAllyVal, total: stTotalByAlly } = parseRewards(
+    const { byValidator: stByAllyVal, total: stTotalByAlly } = parseRewards(
       ahRewards,
       allianceHubAddress
     )
@@ -198,6 +199,7 @@ const WithdrawRewardsForm = ({ rewards, chain, ahRewards }: Props) => {
                     index
                   ) => {
                     const checked = state[index]
+                    const { name } = readNativeDenom(denom)
 
                     return (
                       <Checkbox
@@ -212,7 +214,7 @@ const WithdrawRewardsForm = ({ rewards, chain, ahRewards }: Props) => {
                           <dt>
                             {address === allianceHubAddress ? (
                               <FinderLink value={address}>
-                                Alliance Hub ({stakedAsset?.slice(0, 12)})
+                                Alliance Hub ({name})
                               </FinderLink>
                             ) : (
                               <ValidatorLink address={address} />

@@ -25,47 +25,56 @@ const Delegations = () => {
   const allianceHub = useAllianceHub()
 
   const interchainDelegations = useInterchainDelegations()
-  const allianceHubDelegations = allianceHub.useDelegations()
+  const allianceHubDelegationsData = allianceHub.useDelegations()
   const allianceDelegationsData = useInterchainAllianceDelegations()
 
   const delegations: Delegation[] = interchainDelegations.reduce(
     (acc, { data }) => (data ? [...data?.delegation, ...acc] : acc),
     [] as Delegation[]
   )
-  let allianceDelegations: AllianceDelegation[] =
+  const allianceDelegations: AllianceDelegation[] =
     allianceDelegationsData.reduce(
       (acc, { data }) =>
         data?.delegations ? [...data.delegations, ...acc] : acc,
       [] as AllianceDelegation[]
     )
-  allianceDelegations = allianceDelegations.concat(
-    getAllianceDelegations(allianceHubDelegations?.data)
+  const allianceHubDelegations = getAllianceDelegations(
+    allianceHubDelegationsData?.data
   )
 
   const state = combineState(
     pricesState,
     ...interchainDelegations,
     ...allianceDelegationsData,
-    allianceHubDelegations
+    allianceHubDelegationsData
   )
+
+  const allDelegations = [
+    ...delegations,
+    ...allianceDelegations.map(({ balance, delegation }) => ({
+      balance,
+      validator_address: delegation?.validator_address,
+    })),
+    ...allianceHubDelegations.map(({ balance, delegation }) => ({
+      balance,
+      validator_address: delegation?.validator_address,
+    })),
+  ]
 
   /* render */
   const title = t("Delegations")
 
   const render = () => {
-    if (!delegations || !allianceDelegations || !prices) return null
+    if (!allDelegations || !prices) return null
 
-    const total = [...delegations, ...allianceDelegations].reduce(
-      (acc, { balance }) => {
-        const { token, decimals } = readNativeDenom(balance?.denom ?? "")
-        return (
-          acc +
-          (balance.amount.toNumber() * (prices[token]?.price || 0)) /
-            10 ** decimals
-        )
-      },
-      0
-    )
+    const total = allDelegations.reduce((acc, { balance }) => {
+      const { token, decimals } = readNativeDenom(balance?.denom ?? "")
+
+      let amount = balance.amount.toNumber() ?? 0
+      let tokenPrice = prices[token]?.price ?? 0
+
+      return acc + (amount * tokenPrice) / 10 ** decimals
+    }, 0)
 
     return (
       <ModalButton
@@ -88,13 +97,7 @@ const Delegations = () => {
         )}
       >
         <Table
-          dataSource={[
-            ...delegations,
-            ...allianceDelegations.map(({ balance, delegation }) => ({
-              balance,
-              validator_address: delegation?.validator_address,
-            })),
-          ]}
+          dataSource={allDelegations}
           sorter={({ balance: { amount: a } }, { balance: { amount: b } }) =>
             b.minus(a).toNumber()
           }

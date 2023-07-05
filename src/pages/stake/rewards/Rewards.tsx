@@ -21,7 +21,7 @@ const Rewards = () => {
   const readNativeDenom = useNativeDenoms()
   const allianceHub = useAllianceHub()
 
-  const { data: allianceHubRewards, ...allianceHubPendingRewardsState } =
+  const { data: allianceHubRewards, ...allianceHubRewardsState } =
     allianceHub.usePendingRewards()
   const { data: rewards, ...rewardsState } = useRewards()
   const { data: exchangeRates, ...exchangeRatesState } = useExchangeRates()
@@ -29,7 +29,7 @@ const Rewards = () => {
   const state = combineState(
     rewardsState,
     exchangeRatesState,
-    allianceHubPendingRewardsState
+    allianceHubRewardsState
   )
 
   /* render */
