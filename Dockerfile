@@ -38,6 +38,12 @@ RUN set -eux && \
 
 FROM node:16-alpine as hot-reloader
 
+ARG REACT_APP_ASSETS="https://assets.terra.money" \
+    REACT_APP_STATION_ASSETS="https://station-assets.terra.money"
+
+ENV REACT_APP_ASSETS=${REACT_APP_ASSETS} \
+    REACT_APP_STATION_ASSETS=${REACT_APP_STATION_ASSETS}
+
 # add node modules to parent directory
 COPY --from=builder /app/node_modules /app/node_modules
 ENV PATH=/app/node_modules/.bin:$PATH
