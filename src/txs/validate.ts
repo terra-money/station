@@ -68,9 +68,6 @@ const ibc = (
 
       if (sourceChain === destinationChain) return true
 
-      if (isAxelar)
-        return "Axelar tokens cannot be transferred with Station yet."
-
       if (!AccAddress.validate(token)) {
         const channel = getIBCChannel({
           from: sourceChain,
