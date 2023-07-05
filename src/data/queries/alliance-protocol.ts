@@ -3,7 +3,7 @@ import { useInterchainLCDClient } from "./lcdClient"
 import { useQuery } from "react-query"
 import { useChainID } from "data/wallet"
 import {
-  AHAllPendingRewardsQueryRes,
+  AHAllRewards,
   AHConfig,
   AHStakedBalancesRes,
   AHWhitelistedAssets,
@@ -15,14 +15,14 @@ import {
   EmptyAllianceDetails,
 } from "./alliance"
 import useAddress from "auth/hooks/useAddress"
-import { Coin, Rewards, Coins } from "@terra-money/feather.js"
+import { Coin } from "@terra-money/feather.js"
 
 export const useAllianceHub = () => {
   const useHubAddress = () => {
     const chainID = useChainID()
 
     if (chainID === "phoenix-1") {
-      throw Error("Not yet deployed on Phoenix-1 ")
+      return ""
     } else if (chainID === "pisco-1") {
       return "terra1majrm6e6n0eg760n9fs4g5jvwzh4ytp8e2d99mfgzv2e7mjmdwxse0ty73"
     }
@@ -138,44 +138,19 @@ export const useAllianceHub = () => {
 
     return useQuery(
       [queryKey.allianceProtocol.hubPendingRewards],
-      async (): Promise<Rewards> => {
-        const rewards: Rewards = { rewards: {}, total: new Coins() }
-        if (chainID !== "phoenix-1" && chainID !== "pisco-1") return rewards
+      async (): Promise<AHAllRewards> => {
+        if (chainID !== "phoenix-1" && chainID !== "pisco-1") return []
 
         try {
-          const data: AHAllPendingRewardsQueryRes =
-            await lcd.wasm.contractQuery(hubAddress, {
-              all_pending_rewards: {
-                address,
-              },
-            })
-          data[0].rewards = "696969696969699669699"
+          const data: AHAllRewards = await lcd.wasm.contractQuery(hubAddress, {
+            all_pending_rewards: {
+              address,
+            },
+          })
 
-          for (const pendingReward of data) {
-            if (pendingReward.rewards === "0") continue
-
-            const tokens = new Coin(
-              pendingReward.reward_asset.native,
-              pendingReward.rewards
-            )
-
-            // Just in case the hub address already exists we
-            // addup the token rewards
-            if (rewards.rewards[hubAddress] !== undefined) {
-              rewards.rewards[hubAddress] =
-                rewards.rewards[hubAddress].add(tokens)
-            } else {
-              rewards.rewards[hubAddress] = Coins.fromString(
-                pendingReward.rewards + pendingReward.reward_asset.native
-              )
-            }
-
-            rewards.total = rewards.total.add(tokens)
-          }
-
-          return rewards
+          return data
         } catch (e) {
-          return rewards
+          return []
         }
       },
       { ...RefetchOptions.INFINITY }

@@ -15,6 +15,7 @@ import { useAddress } from "../wallet"
 import { useInterchainLCDClient } from "./lcdClient"
 import { CalcValue } from "./coingecko"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
+import { RewardsListing } from "data/types/rewards-form"
 
 export const useRewards = (chainID?: string) => {
   const addresses = useInterchainAddresses()
@@ -118,7 +119,7 @@ export const calcRewardsValues = (
   rewards: Rewards,
   currency: Denom,
   calcValue: CalcValue
-) => {
+): RewardsListing => {
   const calc = (coins: Coins) => {
     const list = sortCoins(coins, currency).filter(({ amount }) => has(amount))
     const sum = BigNumber.sum(

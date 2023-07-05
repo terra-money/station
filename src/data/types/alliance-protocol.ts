@@ -32,12 +32,8 @@ export interface AHStakedBalance {
   balance: string
 }
 
-export interface AHAllPendingRewardsQueryReq {
-  address: string
-}
-
-export type AHAllPendingRewardsQueryRes = AHAllPendingRewardQueryRes[]
-export interface AHAllPendingRewardQueryRes {
+export type AHAllRewards = AHRewards[]
+export interface AHRewards {
   staked_asset: NativeAssetInfo
   reward_asset: NativeAssetInfo
   rewards: string

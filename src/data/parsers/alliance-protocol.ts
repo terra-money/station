@@ -4,6 +4,8 @@ import {
 } from "data/queries/alliance"
 import { AllianceDelegationResponse as AllianceModuleDelegationResponse } from "@terra-money/feather.js/dist/client/lcd/api/AllianceAPI"
 import { Delegation } from "@terra-money/feather.js"
+import { AHAllRewards } from "data/types/alliance-protocol"
+import { DefaultRewardsListing, RewardsListing } from "data/types/rewards-form"
 
 export const parseDelegationsToResponse = (
   delegations?: AllianceDelegationRes[]
@@ -31,7 +33,6 @@ export const parseResToDelegation = (
   if (delegations === undefined) {
     return []
   }
-
   const _delegations = delegations.flatMap((del) => del.delegations)
 
   return _delegations.map((del) => {
@@ -68,4 +69,35 @@ export const getAllianceDelegations = (
   }
 
   return allianceDelegationsList
+}
+
+export const parseRewards = (
+  data: AHAllRewards,
+  allianceHubAddress: string
+): RewardsListing => {
+  const allyRewards = DefaultRewardsListing()
+  const sortedData = data.sort((a, b) => Number(b.rewards) - Number(a.rewards))
+
+  for (const item of sortedData) {
+    if (item.rewards === "0") continue
+
+    allyRewards.byValidator.push({
+      stakedAsset: item.staked_asset.native,
+      address: allianceHubAddress,
+      sum: item.rewards,
+      list: [
+        {
+          amount: item.rewards,
+          denom: item.reward_asset.native,
+        },
+      ],
+    })
+
+    allyRewards.total.list.push({
+      amount: item.rewards,
+      denom: item.reward_asset.native,
+    })
+  }
+
+  return allyRewards
 }
