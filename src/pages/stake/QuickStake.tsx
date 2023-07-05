@@ -25,8 +25,7 @@ import TokenSelector, {
   TokenInterface,
 } from "components/form/Selectors/TokenSelector/TokenSelector"
 import { useState } from "react"
-import { useAuth } from "auth"
-import is from "auth/scripts/is"
+import { useIsLedger } from "utils/ledger"
 
 export enum QuickStakeAction {
   DELEGATE = "Delegate",
@@ -89,7 +88,7 @@ const QuickStake = () => {
   const readNativeDenom = useNativeDenoms()
   const networks = useNetwork()
   const [token, setToken] = useState<string | undefined>("uluna")
-  const { wallet } = useAuth()
+  const isLedger = useIsLedger()
 
   const alliancesData = useAllAlliances()
   const alliances = alliancesData.reduce(
@@ -242,13 +241,6 @@ const QuickStake = () => {
                 )
               },
             },
-            /*{
-              title: t("Chain"),
-              dataIndex: "chainID",
-              defaultSortOrder: "desc",
-              sorter: ({ chainID: a }, { chainID: b }) => a.localeCompare(b),
-              render: (chainID) => networks[chainID]?.name || chainID,
-            },*/
             {
               title: (
                 <span>
@@ -316,7 +308,7 @@ const QuickStake = () => {
                   <ModalButton
                     title={t("Staking Details")}
                     renderButton={(open) =>
-                      is.ledger(wallet) && isAlliance ? (
+                      isLedger && isAlliance ? (
                         <InlineFlex gap={4} start>
                           <Tooltip
                             content={

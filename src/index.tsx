@@ -3,14 +3,12 @@ import { render } from "react-dom"
 import { BrowserRouter } from "react-router-dom"
 import { ReactQueryDevtools } from "react-query/devtools"
 import { RecoilRoot } from "recoil"
-import { getChainOptions } from "@terra-money/wallet-controller"
-import { WalletProvider } from "@terra-money/wallet-provider"
+import { WalletProvider, getInitialConfig } from "@terra-money/wallet-kit"
 import "tippy.js/dist/tippy.css"
 import { initSentry } from "utils/analytics/setupSentry"
 import { createAmplitudeClient } from "utils/analytics/setupAmplitude"
 
 import "config/lang"
-import { BRIDGE } from "config/constants"
 import { debug } from "utils/env"
 
 import "index.scss"
@@ -24,17 +22,16 @@ import InitChains from "app/InitChains"
 import WithNodeInfo from "app/WithNodeInfo"
 import InitQueryClient from "app/InitQueryClient"
 
-const connectorOpts = { bridge: BRIDGE }
 initSentry()
 createAmplitudeClient()
 
-getChainOptions().then((chainOptions) =>
+getInitialConfig().then((defaultNetworks) =>
   render(
     <StrictMode>
       <RecoilRoot>
         <BrowserRouter>
           <ScrollToTop />
-          <WalletProvider {...chainOptions} connectorOpts={connectorOpts}>
+          <WalletProvider defaultNetworks={defaultNetworks}>
             <InitQueryClient>
               <InitNetworks>
                 <WithNodeInfo>
