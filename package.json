@@ -11,8 +11,11 @@
     "test": "react-scripts test",
     "prepare": "husky install",
     "pre-commit": "lint-staged",
-    "start:dev": "node -r dotenv/config dist/server.js",
-    "start:watch": "nodemon -r dotenv/config src/server.ts"
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "dc:up": "docker-compose up --build -d",
+    "dc:logs": "docker-compose logs -f",
+    "dc:down": "docker-compose down",
+    "dc:purge": "docker compose rm -f -s -v && docker volume rm localterra_terra"
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.0.0",
