@@ -1,6 +1,7 @@
 import styles from "../../ChainSelector.module.scss"
 import WithSearchInput from "pages/custom/WithSearchInput"
 import classNames from "classnames"
+import { InterchainNetwork } from "types/network"
 
 interface Props {
   list: InterchainNetwork[]

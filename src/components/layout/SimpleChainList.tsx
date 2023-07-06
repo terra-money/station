@@ -1,5 +1,6 @@
 import styles from "./SimpleChainList.module.scss"
 import classNames from "classnames"
+import { InterchainNetwork } from "types/network"
 import { useDisplayChains } from "utils/localStorage"
 
 interface Props {

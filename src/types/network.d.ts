@@ -1,9 +1,13 @@
+import { AccAddress } from "@terra-money/feather.js"
+
 type NetworkName = string
 type ChainID = string
 type InterchainNetworks = Record<
   NetworkName,
   Record<ChainID, InterchainNetwork>
 >
+
+type IBCChannel = string
 
 interface InterchainNetwork {
   chainID: ChainID
@@ -16,20 +20,15 @@ interface InterchainNetwork {
   icon: string
   coinType: "118" | "330"
   alliance?: boolean
-  ibc?: {
-    toTerra: string
-    fromTerra: string
-    ics?: {
-      contract: string
-      toTerra: string
-      fromTerra: string
+  channels?: Record<ChainID, IBCChannel>
+  icsChannels?: Record<
+    ChainID,
+    {
+      contract: AccAddress
+      channel: IBCChannel
+      otherChannel: IBCChannel
     }
-    icsFromTerra?: {
-      contract: string
-      toTerra: string
-      fromTerra: string
-    }
-  }
+  >
   version?: string
   isClassic?: boolean
   explorer: {
