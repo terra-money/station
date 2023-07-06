@@ -110,6 +110,7 @@ const Validators = () => {
 
   const tokenList = options.reduce((acc, { denom }) => {
     const token = readNativeDenom(denom)
+    if (token.type === "ibc") return acc
     return token.lsd
       ? {
           [token.lsd]: readNativeDenom(token.lsd),

@@ -132,7 +132,7 @@ export const calcRewardsValues = (
   const total = calc(rewards.total)
   const byValidator = Object.entries(rewards.rewards ?? {})
     .map(([address, coins]) => ({ ...calc(coins), address }))
-    .filter(({ sum }) => has(sum))
+    .filter(({ list }) => has(list.length))
     .sort(({ sum: a }, { sum: b }) => Number(b) - Number(a))
 
   return { total, byValidator }

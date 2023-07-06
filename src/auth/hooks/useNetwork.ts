@@ -1,11 +1,12 @@
 import { atom, useRecoilState, useRecoilValue } from "recoil"
 import { useNetworks } from "app/InitNetworks"
 import { getStoredNetwork, storeNetwork } from "../scripts/network"
-import { useWallet, WalletStatus } from "@terra-money/wallet-provider"
+import { useWallet, WalletStatus } from "@terra-money/wallet-kit"
 import { walletState } from "./useAuth"
 import is from "../scripts/is"
 import { useCustomLCDs } from "utils/localStorage"
 import { ChainFeature } from "types/chains"
+import { NetworkName, ChainID, InterchainNetwork } from "types/network"
 
 const networkState = atom({
   key: "network",
@@ -64,7 +65,7 @@ export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
   }
 
   // check connected wallet
-  if (connectedWallet.status === WalletStatus.WALLET_CONNECTED) {
+  if (connectedWallet.status === WalletStatus.CONNECTED) {
     if (network !== "mainnet" && "phoenix-1" in connectedWallet.network) {
       setNetwork("mainnet")
     } else if (network !== "testnet" && "pisco-1" in connectedWallet.network) {

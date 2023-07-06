@@ -1,4 +1,5 @@
 import { atom, useRecoilState } from "recoil"
+import { CustomNetwork } from "types/network"
 import { getLocalSetting, setLocalSetting } from "utils/localStorage"
 import { SettingKey } from "utils/localStorage"
 

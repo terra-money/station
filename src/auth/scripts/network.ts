@@ -1,3 +1,5 @@
+import { NetworkName } from "types/network"
+
 export const getStoredNetwork = () => {
   return localStorage.getItem("network") ?? "mainnet"
 }
