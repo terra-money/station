@@ -162,7 +162,7 @@ export const useNativeDenoms = () => {
     if (
       ibcToken &&
       whitelist[networkName][ibcToken] &&
-      ibcDenoms[networkName][denom].chainID === chainID
+      (!chainID || ibcDenoms[networkName][denom].chainID === chainID)
     ) {
       return {
         ...whitelist[networkName][ibcToken],
