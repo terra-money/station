@@ -5,6 +5,7 @@ import { useWallet, WalletStatus } from "@terra-money/wallet-kit"
 import { walletState } from "./useAuth"
 import is from "../scripts/is"
 import { useCustomLCDs } from "utils/localStorage"
+import { ChainFeature } from "types/chains"
 import { NetworkName, ChainID, InterchainNetwork } from "types/network"
 
 const networkState = atom({
@@ -33,6 +34,18 @@ export const useNetworkOptions = () => {
     { value: "classic", label: "Terra Classic" },
     { value: "localterra", label: "LocalTerra" },
   ]
+}
+
+export const useNetworkWithFeature = (feature?: ChainFeature) => {
+  const networks = useNetwork()
+  if (!feature) return networks
+  return Object.fromEntries(
+    Object.entries(networks).filter(
+      ([_, n]) =>
+        !Array.isArray(n.disabledModules) ||
+        !n.disabledModules.includes(feature)
+    )
+  )
 }
 
 export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
@@ -68,7 +81,6 @@ export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
     ) {
       setNetwork("localterra")
     }
-
     return filterEnabledNetworks(
       connectedWallet.network as Record<ChainID, InterchainNetwork>
     )

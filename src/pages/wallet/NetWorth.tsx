@@ -36,7 +36,7 @@ const NetWorth = () => {
   const networks = useNetwork()
   const chainID = useChainID()
   const availableGasDenoms = useMemo(() => {
-    return Object.keys(networks[chainID]?.gasPrices || {})
+    return Object.keys(networks[chainID]?.gasPrices)
   }, [chainID, networks])
   const sendButtonDisabled = isWalletEmpty && !!availableGasDenoms.length
 

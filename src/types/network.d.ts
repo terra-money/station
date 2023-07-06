@@ -20,6 +20,16 @@ interface InterchainNetwork {
   icon: string
   coinType: "118" | "330"
   alliance?: boolean
+  disabledModules?: string[]
+  ibc?: {
+    toTerra: string
+    fromTerra: string
+    ics?: {
+      contract: string
+      toTerra: string
+      fromTerra: string
+    }
+  }
   channels?: Record<ChainID, IBCChannel>
   icsChannels?: Record<
     ChainID,
