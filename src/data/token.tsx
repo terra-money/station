@@ -158,20 +158,8 @@ export const useNativeDenoms = () => {
 
     // ibc token
     let ibcToken = ibcDenoms[networkName]?.[denom]?.token
-    const chainOrigin = ibcDenoms[networkName]?.[denom]?.chainID
-    const ibcLunc =
-      chainOrigin &&
-      ["phoenix-1:uluna", "pisco-1:uluna"].includes(ibcToken) &&
-      networkName !== "classic" &&
-      ibcDenoms["classic"]?.[denom]
-    if (ibcLunc) {
-      ibcToken = ibcDenoms["classic"]?.[denom]?.token
-      return {
-        ...whitelist["classic"][ibcToken],
-        // @ts-expect-error
-        chains: [ibcDenoms["classic"]?.[denom]?.chainID],
-      }
-    } else if (ibcToken && whitelist[networkName][ibcToken]) {
+
+    if (ibcToken && whitelist[networkName][ibcToken]) {
       return {
         ...whitelist[networkName][ibcToken],
         // @ts-expect-error
@@ -179,15 +167,25 @@ export const useNativeDenoms = () => {
       }
     }
 
-    // Assuming terra-utils returns "Luna" for LUNC.
-    if (fixedDenom === "Luna" && networkName !== "classic") {
-      return {
-        token: denom,
-        symbol: "LUNC",
-        name: "Luna Classic",
-        icon: "https://assets.terra.money/icon/svg/LUNC.svg",
-        decimals: 6,
-        isNonWhitelisted: false,
+    if (denom === "uluna") {
+      if (chainID === "columbus-5" || (!chainID && networkName === "classic")) {
+        return {
+          token: denom,
+          symbol: "LUNC",
+          name: "Luna Classic",
+          icon: "https://assets.terra.money/icon/svg/LUNC.svg",
+          decimals: 6,
+          isNonWhitelisted: false,
+        }
+      } else {
+        return {
+          token: denom,
+          symbol: "LUNA",
+          name: "Luna",
+          icon: "https://assets.terra.money/icon/svg/Luna.svg",
+          decimals: 6,
+          isNonWhitelisted: false,
+        }
       }
     }
 
