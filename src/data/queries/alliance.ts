@@ -6,10 +6,7 @@ import {
   AllianceDelegationResponse,
 } from "@terra-money/feather.js/dist/client/lcd/api/AllianceAPI"
 import { useNetwork } from "data/wallet"
-import {
-  useInterchainAddresses,
-  useInterchainAddressesWithFeature,
-} from "auth/hooks/useAddress"
+import { useInterchainAddressesWithFeature } from "auth/hooks/useAddress"
 import { Coin, ValAddress } from "@terra-money/feather.js"
 import { StakeAction } from "txs/stake/StakeForm"
 import { ChainFeature } from "types/chains"

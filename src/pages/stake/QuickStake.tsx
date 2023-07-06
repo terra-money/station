@@ -25,8 +25,6 @@ import TokenSelector, {
   TokenInterface,
 } from "components/form/Selectors/TokenSelector/TokenSelector"
 import { useState } from "react"
-import { useAuth } from "auth"
-import is from "auth/scripts/is"
 import { ChainFeature } from "types/chains"
 import { useIsLedger } from "utils/ledger"
 
