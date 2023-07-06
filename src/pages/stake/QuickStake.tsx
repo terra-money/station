@@ -24,7 +24,6 @@ import TokenSelector, {
   TokenInterface,
 } from "components/form/Selectors/TokenSelector/TokenSelector"
 import { useState } from "react"
-import { useAuth } from "auth"
 import { useAllianceHub } from "data/queries/alliance-protocol"
 import { useIsLedger } from "utils/ledger"
 
@@ -92,7 +91,6 @@ const QuickStake = () => {
   const readNativeDenom = useNativeDenoms()
   const networks = useNetwork()
   const [token, setToken] = useState<string | undefined>("uluna")
-  const { wallet } = useAuth()
   const allianceHub = useAllianceHub()
   const isLedger = useIsLedger()
 

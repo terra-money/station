@@ -76,8 +76,6 @@ const Delegations = () => {
     totalTokensAmount += amount
     return acc + (amount * tokenPrice) / 10 ** decimals
   }, 0)
-  console.log("totalTokensAmount", totalTokensAmount)
-  console.log("totalTokensPrice", totalTokensPrice)
 
   return (
     <ModalButton
@@ -97,6 +95,7 @@ const Delegations = () => {
           amount={totalTokensAmount?.toString()}
           onClick={open}
           cardName={"delegations"}
+          hideAmount
         />
       )}
     >

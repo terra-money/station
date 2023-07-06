@@ -13,16 +13,19 @@ import { getMaxHeightStyle } from "utils/style"
 import styles from "../CardModal.module.scss"
 import { useAllianceHub } from "data/queries/alliance-protocol"
 import { parseResToDelegation } from "data/parsers/alliance-protocol"
+import { useNetwork } from "data/wallet"
 
 const ChainDelegations = ({ chain }: { chain: string }) => {
   const { t } = useTranslation()
   const readNativeDenom = useNativeDenoms()
+  const networks = useNetwork()
   const { data: prices, ...pricesState } = useExchangeRates()
   const allianceHub = useAllianceHub()
 
   const { data: hubDelegations, ...hubDelegationsState } =
     allianceHub.useDelegations()
   const { data, ...chainDelegationsState } = useDelegations(chain)
+  const currentNetwork = networks[chain]
   let chainDelegations: Delegation[] = data || []
   const filteredHubDelegations =
     chain === undefined
@@ -43,7 +46,7 @@ const ChainDelegations = ({ chain }: { chain: string }) => {
   const render = () => {
     if (!chainDelegations || !prices) return null
 
-    const chainDenom = chainDelegations?.[0]?.balance.denom || ""
+    const chainDenom = currentNetwork?.baseAsset
     const chainTotalPriceAndAmount: any = chainDelegations?.reduce(
       ({ price, amount }, { balance }, index) => {
         const { token, decimals } = readNativeDenom(balance.denom)
@@ -54,13 +57,18 @@ const ChainDelegations = ({ chain }: { chain: string }) => {
           newAmountHolder = 0
         }
 
-        return {
-          price:
-            newPriceHolder +
-            (balance.amount.toNumber() * (prices[token]?.price || 0)) /
-              10 ** decimals,
-          amount: newAmountHolder + balance.amount.toNumber() / 10 ** decimals,
+        if (chainDenom === balance.denom) {
+          return {
+            price:
+              newPriceHolder +
+              (balance.amount.toNumber() * (prices[token]?.price || 0)) /
+                10 ** decimals,
+            amount:
+              newAmountHolder + balance.amount.toNumber() / 10 ** decimals,
+          }
         }
+
+        return { price, amount }
       },
       { price: 0, amount: 0 }
     )
@@ -83,10 +91,10 @@ const ChainDelegations = ({ chain }: { chain: string }) => {
             }
             value={chainTotalPriceAndAmount?.price?.toString()}
             amount={chainTotalPriceAndAmount?.amount?.toString()}
-            hideAmount
             denom={chainDenom}
             onClick={open}
             cardName={"delegations"}
+            forceClickAction={list?.length > 0}
           />
         )}
       >

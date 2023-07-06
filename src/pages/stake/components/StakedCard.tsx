@@ -12,10 +12,11 @@ interface Props extends CardProps {
   value: Value
   denom?: string
   cardName: string
+  forceClickAction?: boolean
 }
 
 const StakedCard = (props: PropsWithChildren<Props>) => {
-  const { value, amount, denom, hideAmount, children } = props
+  const { value, amount, denom, hideAmount, forceClickAction, children } = props
   const currency = useCurrency()
   const { t } = useTranslation()
 
@@ -24,7 +25,9 @@ const StakedCard = (props: PropsWithChildren<Props>) => {
       {...props}
       className={styles.card_helper}
       onClick={
-        Number(value) > 0 || Number(amount) > 0 ? props.onClick : undefined
+        forceClickAction || Number(value) > 0 || Number(amount) > 0
+          ? props.onClick
+          : undefined
       }
     >
       {value ? (
