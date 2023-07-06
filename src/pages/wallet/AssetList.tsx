@@ -52,7 +52,9 @@ const AssetList = () => {
       data
         ? {
             ...acc,
-            [data.ibcDenom]: {
+            [[data.ibcDenom, data.chainIDs[data.chainIDs.length - 1]].join(
+              "*"
+            )]: {
               baseDenom: data.baseDenom,
               chainID: data?.chainIDs[0],
               chainIDs: data?.chainIDs,
@@ -71,13 +73,15 @@ const AssetList = () => {
         ...Object.values(
           coins.reduce((acc, { denom, amount, chain }) => {
             const data = readNativeDenom(
-              unknownIBCDenoms[denom]?.baseDenom ?? denom,
-              unknownIBCDenoms[denom]?.chainIDs[0] ?? chain
+              unknownIBCDenoms[[denom, chain].join("*")]?.baseDenom ?? denom,
+              unknownIBCDenoms[[denom, chain].join("*")]?.chainIDs[0] ?? chain
             )
 
             const key = [
               // @ts-expect-error
-              unknownIBCDenoms[denom]?.chainIDs[0] ?? data?.chainID ?? chain,
+              unknownIBCDenoms[[denom, chain].join("*")]?.chainIDs[0] ??
+                data?.chainID ??
+                chain,
               data.token,
             ].join("*")
 
@@ -119,7 +123,9 @@ const AssetList = () => {
                   id: key,
                   whitelisted: !(
                     data.isNonWhitelisted ||
-                    unknownIBCDenoms[denom]?.chainIDs.find((c) => !networks[c])
+                    unknownIBCDenoms[[denom, chain].join("*")]?.chainIDs.find(
+                      (c) => !networks[c]
+                    )
                   ),
                 },
               }
@@ -168,8 +174,9 @@ const AssetList = () => {
             <Asset
               denom={denom}
               {...readNativeDenom(
-                unknownIBCDenoms[denom]?.baseDenom ?? denom,
-                unknownIBCDenoms[denom]?.chainID ?? chainID
+                unknownIBCDenoms[[denom, chainID].join("*")]?.baseDenom ??
+                  denom,
+                unknownIBCDenoms[[denom, chainID].join("*")]?.chainID ?? chainID
               )}
               id={id}
               {...item}
