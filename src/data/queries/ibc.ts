@@ -77,7 +77,7 @@ export const useIBCBaseDenoms = (data: { denom: Denom; chainID: string }[]) => {
           const channels = []
 
           for (let i = 0; i < paths.length; i += 2) {
-            const chain = chains[chains.length - 1]
+            const chain = chains[0]
 
             if (!network[chain]?.lcd) return
 
