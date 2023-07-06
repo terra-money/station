@@ -162,7 +162,7 @@ function IbcSendBackTx({ token, chainID }: Props) {
       calculateIBCDenom(
         ibcDetails.baseDenom,
         ibcDetails.channels
-          .slice(step)
+          .slice(0, ibcDetails.channels.length - step)
           .reduce(
             (acc, cur) =>
               acc
@@ -184,10 +184,13 @@ function IbcSendBackTx({ token, chainID }: Props) {
     ({ input }: TxValues) => {
       if (!ibcDetails || !addresses || !IBCdenom || !input) return
 
+      const { channel, port } =
+        ibcDetails.channels[ibcDetails.channels.length - 1 - step]
+
       const msgs = [
         new MsgTransfer(
-          ibcDetails.channels[step].port,
-          ibcDetails.channels[step].channel,
+          port,
+          channel,
           new Coin(IBCdenom, input * 10 ** decimals),
           addresses[chains[step]],
           addresses[chains[step + 1]],
@@ -233,7 +236,7 @@ function IbcSendBackTx({ token, chainID }: Props) {
       const nextDenom = calculateIBCDenom(
         ibcDetails?.baseDenom ?? "",
         (ibcDetails?.channels ?? [])
-          .slice(step + 1)
+          .slice(0, (ibcDetails?.channels.length ?? 0) - step - 1)
           .reduce(
             (acc, cur) =>
               acc
