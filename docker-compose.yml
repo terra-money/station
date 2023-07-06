@@ -40,7 +40,6 @@ services:
         REACT_APP_STATION_ASSETS: http://localhost:3001
     image: foundation/station:latest
     networks:
-      - internal
       - default
     ports:
       - '3000:3000'
