@@ -78,8 +78,8 @@ const AssetList = () => {
             )
 
             const key = [
-              // @ts-expect-error
               unknownIBCDenoms[[denom, chain].join("*")]?.chainIDs[0] ??
+                // @ts-expect-error
                 data?.chainID ??
                 chain,
               data.token,
