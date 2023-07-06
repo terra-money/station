@@ -42,8 +42,8 @@ const AssetPage = () => {
   const unknownIBCDenomsData = useIBCBaseDenoms(
     balances
       .map(({ denom, chain }) => ({ denom, chainID: chain }))
-      .filter(({ denom }) => {
-        const data = readNativeDenom(denom)
+      .filter(({ denom, chainID }) => {
+        const data = readNativeDenom(denom, chainID)
         return denom.startsWith("ibc/") && data.symbol.endsWith("...")
       })
   )
@@ -53,7 +53,9 @@ const AssetPage = () => {
       data
         ? {
             ...acc,
-            [data.ibcDenom]: {
+            [[data.ibcDenom, data.chainIDs[data.chainIDs.length - 1]].join(
+              "*"
+            )]: {
               baseDenom: data.baseDenom,
               chains: data?.chainIDs,
             },
@@ -64,8 +66,8 @@ const AssetPage = () => {
 
   const filteredBalances = balances.filter((b) => {
     return (
-      readNativeDenom(b.denom).token === token &&
-      readNativeDenom(b.denom).symbol === symbol
+      readNativeDenom(b.denom, b.chain).token === token &&
+      readNativeDenom(b.denom, b.chain).symbol === symbol
     )
   })
 
@@ -73,12 +75,12 @@ const AssetPage = () => {
     // only return unsupported token if the current chain is found in the ibc path
     if (chain) {
       return (
-        unknownIBCDenoms[b.denom]?.baseDenom === token &&
-        unknownIBCDenoms[b.denom]?.chains?.includes(chain)
+        unknownIBCDenoms[[b.denom, b.chain].join("*")]?.baseDenom === token &&
+        unknownIBCDenoms[[b.denom, b.chain].join("*")]?.chains?.[0] === chain
       )
     }
 
-    return unknownIBCDenoms[b.denom]?.baseDenom === token
+    return unknownIBCDenoms[[b.denom, b.chain].join("*")]?.baseDenom === token
   })
 
   const totalBalance = [
@@ -146,7 +148,9 @@ const AssetPage = () => {
                       token={token}
                       denom={b.denom}
                       decimals={decimals}
-                      path={unknownIBCDenoms[b.denom]?.chains}
+                      path={
+                        unknownIBCDenoms[[b.denom, b.chain].join("*")]?.chains
+                      }
                       ibcDenom={b.denom}
                     />
                   </div>
