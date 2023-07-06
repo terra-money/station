@@ -25,7 +25,6 @@ import {
 } from "data/queries/staking"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import shuffle from "utils/shuffle"
-import { memo } from "react"
 import styles from "./QuickStakeForm.module.scss"
 import { useAllianceDelegations } from "data/queries/alliance"
 import { useAllianceHub } from "data/queries/alliance-protocol"
@@ -217,6 +216,9 @@ const QuickStakeForm = (props: Props) => {
     estimationTxValues,
     createTx,
     onChangeMax,
+    onSuccess: () => {
+      console.log("onSuccess", this)
+    },
     queryKeys: [
       queryKey.staking.delegations,
       queryKey.alliance.delegations,
@@ -354,4 +356,4 @@ const QuickStakeForm = (props: Props) => {
   )
 }
 
-export default memo(QuickStakeForm)
+export default QuickStakeForm
