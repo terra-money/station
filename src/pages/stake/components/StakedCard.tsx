@@ -8,14 +8,14 @@ import { useCurrency } from "data/settings/Currency"
 
 interface Props extends CardProps {
   amount?: Amount
+  hideAmount?: boolean
   value: Value
   denom?: string
   cardName: string
-  showTokens?: boolean
 }
 
 const StakedCard = (props: PropsWithChildren<Props>) => {
-  const { value, amount, denom, showTokens, children } = props
+  const { value, amount, denom, hideAmount, children } = props
   const currency = useCurrency()
   const { t } = useTranslation()
 
@@ -37,7 +37,9 @@ const StakedCard = (props: PropsWithChildren<Props>) => {
             {currency.symbol} <Read amount={value} decimals={0} fixed={2} />
             <span className={styles.small}>{children}</span>
           </span>
-          {showTokens || Number(amount) > 0 ? (
+          {hideAmount ? (
+            ""
+          ) : Number(amount) > 0 ? (
             <Read
               amount={amount}
               decimals={0}

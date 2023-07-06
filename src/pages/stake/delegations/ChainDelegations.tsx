@@ -65,9 +65,6 @@ const ChainDelegations = ({ chain }: { chain: string }) => {
       { price: 0, amount: 0 }
     )
 
-    const totalToDisplay = chainTotalPriceAndAmount?.price
-    const showTokens = chainTotalPriceAndAmount?.amount !== 0
-
     const list = chainDelegations || []
 
     return (
@@ -79,17 +76,17 @@ const ChainDelegations = ({ chain }: { chain: string }) => {
             title={
               <div className={styles.header_wrapper}>
                 {title}
-                {totalToDisplay !== -1 && (
+                {list?.length > 0 && (
                   <span className={styles.view_more}>View More</span>
                 )}
               </div>
             }
-            value={totalToDisplay?.toString() || "0"}
+            value={chainTotalPriceAndAmount?.price?.toString()}
             amount={chainTotalPriceAndAmount?.amount?.toString()}
+            hideAmount
             denom={chainDenom}
             onClick={open}
             cardName={"delegations"}
-            showTokens={showTokens}
           />
         )}
       >

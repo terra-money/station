@@ -64,69 +64,70 @@ const Delegations = () => {
   /* render */
   const title = t("Delegations")
 
-  const render = () => {
-    if (!allDelegations || !prices) return null
+  if (!allDelegations || !prices) return null
 
-    const total = allDelegations.reduce((acc, { balance }) => {
-      const { token, decimals } = readNativeDenom(balance?.denom ?? "")
+  let totalTokensAmount = 0
+  const totalTokensPrice = allDelegations.reduce((acc, { balance }) => {
+    const { token, decimals } = readNativeDenom(balance?.denom ?? "")
 
-      let amount = balance.amount.toNumber() ?? 0
-      let tokenPrice = prices[token]?.price ?? 0
+    let amount = balance.amount.toNumber() ?? 0
+    let tokenPrice = prices[token]?.price ?? 0
 
-      return acc + (amount * tokenPrice) / 10 ** decimals
-    }, 0)
+    totalTokensAmount += amount
+    return acc + (amount * tokenPrice) / 10 ** decimals
+  }, 0)
+  console.log("totalTokensAmount", totalTokensAmount)
+  console.log("totalTokensPrice", totalTokensPrice)
 
-    return (
-      <ModalButton
-        title={title}
-        renderButton={(open) => (
-          <StakedCard
-            {...state}
-            title={
-              <div className={styles.header_wrapper}>
-                {title}
-                {total !== -1 && (
-                  <span className={styles.view_more}>View More</span>
-                )}
-              </div>
-            }
-            value={total?.toString() || "0"}
-            onClick={open}
-            cardName={"delegations"}
-          />
-        )}
-      >
-        <Table
-          dataSource={allDelegations}
-          sorter={({ balance: { amount: a } }, { balance: { amount: b } }) =>
-            b.minus(a).toNumber()
+  return (
+    <ModalButton
+      title={title}
+      renderButton={(open) => (
+        <StakedCard
+          {...state}
+          title={
+            <div className={styles.header_wrapper}>
+              {title}
+              {totalTokensPrice !== -1 && (
+                <span className={styles.view_more}>View More</span>
+              )}
+            </div>
           }
-          columns={[
-            {
-              title: t("Validator"),
-              dataIndex: "validator_address",
-              render: (address: AccAddress) => {
-                if (address === allianceHub.useHubAddress()) {
-                  return <FinderLink value={address}>Alliance Hub</FinderLink>
-                } else {
-                  return <ValidatorLink address={address} internal img />
-                }
-              },
-            },
-            {
-              title: t("Delegated"),
-              dataIndex: "balance",
-              render: (balance: Coin) => <Read {...balance.toData()} />,
-              align: "right",
-            },
-          ]}
-          style={getMaxHeightStyle(320)}
+          value={totalTokensPrice?.toString()}
+          amount={totalTokensAmount?.toString()}
+          onClick={open}
+          cardName={"delegations"}
         />
-      </ModalButton>
-    )
-  }
-
-  return render()
+      )}
+    >
+      <Table
+        dataSource={allDelegations}
+        sorter={({ balance: { amount: a } }, { balance: { amount: b } }) =>
+          b.minus(a).toNumber()
+        }
+        columns={[
+          {
+            title: t("Validator"),
+            dataIndex: "validator_address",
+            render: (address: AccAddress) => {
+              if (address === allianceHub.useHubAddress()) {
+                return <FinderLink value={address}>Alliance Hub</FinderLink>
+              } else {
+                return <ValidatorLink address={address} internal img />
+              }
+            },
+          },
+          {
+            title: t("Delegated"),
+            dataIndex: "balance",
+            render: (balance: Coin) => <Read {...balance.toData()} />,
+            align: "right",
+          },
+        ]}
+        style={getMaxHeightStyle(320)}
+      />
+    </ModalButton>
+  )
 }
 
 export default Delegations
