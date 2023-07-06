@@ -199,7 +199,7 @@ const WithdrawRewardsForm = ({ rewards, chain, ahRewards }: Props) => {
                     index
                   ) => {
                     const checked = state[index]
-                    const { name } = readNativeDenom(denom)
+                    const { symbol } = readNativeDenom(stakedAsset ?? "")
 
                     return (
                       <Checkbox
@@ -214,7 +214,7 @@ const WithdrawRewardsForm = ({ rewards, chain, ahRewards }: Props) => {
                           <dt>
                             {address === allianceHubAddress ? (
                               <FinderLink value={address}>
-                                Alliance Hub ({name})
+                                Alliance Hub ({symbol})
                               </FinderLink>
                             ) : (
                               <ValidatorLink address={address} />
