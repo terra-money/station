@@ -36,7 +36,7 @@ RUN set -eux && \
 
 ###############################################################################
 
-FROM node:16-alpine as hot-reloader
+FROM node:16 as reloader
 
 ARG REACT_APP_ASSETS="https://assets.terra.money" \
     REACT_APP_STATION_ASSETS="https://station-assets.terra.money"
@@ -49,7 +49,7 @@ COPY --from=builder /app/node_modules /app/node_modules
 ENV PATH=/app/node_modules/.bin:$PATH
 
 # use bind mount to enable hot reloading
-WORKDIR /app/dev
+WORKDIR /app/src
 COPY . .
 
 CMD ["npm", "run", "start"]

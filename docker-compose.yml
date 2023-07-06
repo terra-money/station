@@ -32,24 +32,31 @@ services:
 
   station:
     build:
-      context: .
+      context: ./station
       dockerfile: Dockerfile
       target: hot-reloader
       args:
         REACT_APP_ASSETS: http://localhost:3001
         REACT_APP_STATION_ASSETS: http://localhost:3001
-    image: ghcr.io/terra-money/station:localhr
-    entrypoint: >
-      /bin/sh -c "Echo "
-    environment:
-      NODE_ENV: "development"
-
-    volumes:
-      - ./:/app/dev
+    image: foundation/station:latest
     networks:
+      - internal
       - default
     ports:
       - '3000:3000'
+    # To enable/disable hot reload in station 
+    # comment/uncomment the build `target` above and
+    # comment/uncomment the following lines below
+    command: >
+      /bin/sh -c "
+        echo 'Development server will take 2-3min to start up.' && \
+        exec npm run start"
+    environment:
+      NODE_ENV: "development"
+      HTTPS: "false"
+    volumes:
+      - ./:/app/dev
+      - /app/dev/node_modules
 
 ###############################################################################
 

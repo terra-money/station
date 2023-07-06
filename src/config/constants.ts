@@ -9,6 +9,7 @@ export const ASSETS =
   process.env.REACT_APP_ASSETS ?? "https://assets.terra.money"
 export const STATION_ASSETS =
   process.env.REACT_APP_STATION_ASSETS ?? "https://station-assets.terra.money"
+
 export const OBSERVER = "wss://observer.terra.dev"
 
 /* website */
