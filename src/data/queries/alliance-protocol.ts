@@ -176,7 +176,7 @@ export const useAllianceHub = () => {
                 native: "ibc/623CD0B9778AD974713317EA0438A0CCAA72AF0BBE7BEE002205BCA25F1CA3BA",
               }
             },
-          ]*/
+          ];*/
           return data
         } catch (e) {
           return []

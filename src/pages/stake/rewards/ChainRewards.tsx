@@ -25,7 +25,9 @@ const ChainRewards = ({ chain }: { chain: string }) => {
   const { data: allianceHubRewards, ...allianceHubRewardsState } =
     allianceHub.usePendingRewards()
   const { data: exchangeRates, ...exchangeRatesState } = useExchangeRates()
-  const { data: chainRewards, ...chainRewardsState } = useRewards(chain)
+  const { data: chainRewards, ...chainRewardsState } = useRewards(
+    chain === "all" ? undefined : chain
+  )
 
   const state = combineState(
     exchangeRatesState,
@@ -39,10 +41,10 @@ const ChainRewards = ({ chain }: { chain: string }) => {
     return null
   }
 
-  // If the selected network is phoenix-1 or pisco-1
+  // If the selected network is phoenix-1, pisco-1 or all
   // account the rewards from alliance hub as well
   let totalChainRewardsList =
-    chain === "phoenix-1" || chain === "pisco-1"
+    chain === "phoenix-1" || chain === "pisco-1" || chain === "all"
       ? chainRewards.total.add(getCoinsFromRewards(allianceHubRewards))
       : chainRewards.total
   // Find the current chain denom
