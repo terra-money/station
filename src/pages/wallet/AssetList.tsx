@@ -42,8 +42,8 @@ const AssetList = () => {
   const unknownIBCDenomsData = useIBCBaseDenoms(
     coins
       .map(({ denom, chain }) => ({ denom, chainID: chain }))
-      .filter(({ denom }) => {
-        const data = readNativeDenom(denom)
+      .filter(({ denom, chainID }) => {
+        const data = readNativeDenom(denom, chainID)
         return denom.startsWith("ibc/") && data.symbol.endsWith("...")
       })
   )
@@ -72,12 +72,12 @@ const AssetList = () => {
           coins.reduce((acc, { denom, amount, chain }) => {
             const data = readNativeDenom(
               unknownIBCDenoms[denom]?.baseDenom ?? denom,
-              unknownIBCDenoms[denom]?.chainID ?? chain
+              unknownIBCDenoms[denom]?.chainIDs[0] ?? chain
             )
 
             const key = [
               // @ts-expect-error
-              unknownIBCDenoms[denom]?.chainID ?? data?.chainID ?? chain,
+              unknownIBCDenoms[denom]?.chainIDs[0] ?? data?.chainID ?? chain,
               data.token,
             ].join("*")
 

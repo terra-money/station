@@ -84,7 +84,7 @@ export const WithTokenItem = ({ token, chainID, children }: Props) => {
 export const getIcon = (path: string) => `${ASSETS}/icon/svg/${path}`
 
 export const useNativeDenoms = () => {
-  const { whitelist, ibcDenoms, legacyWhitelist } = useWhitelist()
+  const { whitelist, ibcDenoms } = useWhitelist()
   const { list: cw20 } = useCustomTokensCW20()
   const networkName = useNetworkName()
   const networks = useNetwork()
@@ -159,11 +159,15 @@ export const useNativeDenoms = () => {
     // ibc token
     let ibcToken = ibcDenoms[networkName]?.[denom]?.token
 
-    if (ibcToken && whitelist[networkName][ibcToken]) {
+    if (
+      ibcToken &&
+      whitelist[networkName][ibcToken] &&
+      ibcDenoms[networkName][denom].chainID === chainID
+    ) {
       return {
         ...whitelist[networkName][ibcToken],
         // @ts-expect-error
-        chains: [ibcDenoms[networkName][denom].chain],
+        chains: [ibcDenoms[networkName][denom].chainID],
       }
     }
 
@@ -177,7 +181,7 @@ export const useNativeDenoms = () => {
           decimals: 6,
           isNonWhitelisted: false,
         }
-      } else {
+      } else if (chainID === "phoenix-1" || chainID === "pisco-1") {
         return {
           token: denom,
           symbol: "LUNA",
@@ -190,12 +194,7 @@ export const useNativeDenoms = () => {
     }
 
     return (
-      legacyWhitelist[denom] ??
-      cw20.find(({ token }) => denom === token) ??
-      // that's needed for axl tokens
-      Object.values(whitelist[networkName] ?? {}).find(
-        (t) => t.token === denom
-      ) ?? {
+      cw20.find(({ token }) => denom === token) ?? {
         // default token icon
         token: denom,
         symbol: fixedDenom,

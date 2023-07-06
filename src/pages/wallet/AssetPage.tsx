@@ -42,8 +42,8 @@ const AssetPage = () => {
   const unknownIBCDenomsData = useIBCBaseDenoms(
     balances
       .map(({ denom, chain }) => ({ denom, chainID: chain }))
-      .filter(({ denom }) => {
-        const data = readNativeDenom(denom)
+      .filter(({ denom, chainID }) => {
+        const data = readNativeDenom(denom, chainID)
         return denom.startsWith("ibc/") && data.symbol.endsWith("...")
       })
   )
@@ -64,8 +64,8 @@ const AssetPage = () => {
 
   const filteredBalances = balances.filter((b) => {
     return (
-      readNativeDenom(b.denom).token === token &&
-      readNativeDenom(b.denom).symbol === symbol
+      readNativeDenom(b.denom, b.chain).token === token &&
+      readNativeDenom(b.denom, b.chain).symbol === symbol
     )
   })
 
