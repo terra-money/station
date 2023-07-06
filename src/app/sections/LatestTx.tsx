@@ -61,9 +61,9 @@ const TxIndicator = ({ txhash }: { txhash: string }) => {
 
   useEffect(() => {
     if (status !== Status.LOADING) {
-      amplitude.trackEvent(AnalyticsEvent.TRASNACTION, { status, txhash })
+      amplitude.trackEvent(AnalyticsEvent.TRANSACTION, { status })
     }
-  }, [status, amplitude, txhash])
+  }, [status, amplitude])
 
   /* render component */
   const icon = {

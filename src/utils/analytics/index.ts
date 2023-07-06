@@ -7,10 +7,5 @@ export const initAnalytics = () => {
 }
 
 export enum AnalyticsEvent {
-  LOGIN = "Login",
-  LOGOUT = "Logout",
-  SIGNUP = "Signup",
-  ONBOARDING_START = "Onboarding Start",
-  ONBOARDING_COMPLETE = "Onboarding Complete",
-  TRASNACTION = "Transaction",
+  TRANSACTION = "Transaction",
 }
