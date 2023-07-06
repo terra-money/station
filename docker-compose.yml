@@ -34,7 +34,7 @@ services:
     build:
       context: ./station
       dockerfile: Dockerfile
-      target: hot-reloader
+      target: reloader
       args:
         REACT_APP_ASSETS: http://localhost:3001
         REACT_APP_STATION_ASSETS: http://localhost:3001
