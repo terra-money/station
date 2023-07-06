@@ -1,4 +1,4 @@
-import { useConnectedWallet } from "@terra-money/use-wallet"
+import { useConnectedWallet } from "@terra-money/wallet-kit"
 import { useNetworks } from "app/InitNetworks"
 import { addressFromWords } from "utils/bech32"
 import useAuth from "./useAuth"
@@ -35,7 +35,7 @@ export const useInterchainAddresses = () => {
   const words = wallet?.words
   if (!words) return
 
-  const addresses = Object.values(networks).reduce(
+  const addresses = Object.values(networks ?? {}).reduce(
     (acc, { prefix, coinType, chainID }) => {
       acc[chainID] = addressFromWords(words[coinType] as string, prefix)
       return acc

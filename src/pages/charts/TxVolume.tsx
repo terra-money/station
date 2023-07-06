@@ -49,7 +49,7 @@ const TxVolume = () => {
           onChange={(e) => setType(e.target.value as Aggregate)}
           small
         >
-          {Object.values(Aggregate).map((type) => (
+          {Object.values(Aggregate ?? {}).map((type) => (
             <option value={type} key={type}>
               {capitalize(type)}
             </option>

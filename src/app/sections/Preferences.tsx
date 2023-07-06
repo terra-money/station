@@ -8,7 +8,7 @@ import NetworkSetting from "./NetworkSetting"
 import DisplayChainsSetting from "./DisplayChainsSetting"
 import LanguageSetting from "./LanguageSetting"
 import CurrencySetting from "./CurrencySetting"
-import { useWallet, WalletStatus } from "@terra-money/wallet-provider"
+import { useWallet, WalletStatus } from "@terra-money/wallet-kit"
 import { ModalButton } from "components/feedback"
 import SettingsButton from "components/layout/SettingsButton"
 import { useNetwork, useNetworkName } from "data/wallet"
@@ -70,15 +70,15 @@ const Preferences = () => {
       key: "network",
       tab: t("Network"),
       value: capitalize(networkName),
-      disabled:
-        !sandbox && connectedWallet.status === WalletStatus.WALLET_CONNECTED,
+      disabled: !sandbox && connectedWallet.status === WalletStatus.CONNECTED,
     },
     lang: {
       key: "lang",
       tab: t("Language"),
       value:
-        Object.values(Languages).find(({ value }) => value === i18n.language)
-          ?.label ?? Languages.en.label,
+        Object.values(Languages ?? {}).find(
+          ({ value }) => value === i18n.language
+        )?.label ?? Languages.en.label,
       disabled: false,
     },
     currency: {
@@ -142,7 +142,7 @@ const Preferences = () => {
       default:
         return (
           <FlexColumn gap={8}>
-            {Object.values(routes)
+            {Object.values(routes ?? {})
               .filter(({ disabled }) => !disabled)
               .map(({ tab, value, key, className }) => (
                 <SettingsButton

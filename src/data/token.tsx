@@ -33,7 +33,9 @@ export const useTokenItem = (
   // 2. Whitelist
   const cw20WhitelistResult = useCW20Whitelist(!!customTokenItem)
   const { data: cw20Whitelist = {} } = cw20WhitelistResult
-  const listedCW20TokenItem = Object.values(cw20Whitelist).find(matchToken)
+  const listedCW20TokenItem = Object.values(cw20Whitelist ?? {}).find(
+    matchToken
+  )
 
   // 3. Contract query - token info
   const shouldQueryCW20 = cw20WhitelistResult.isSuccess && !listedCW20TokenItem
@@ -95,7 +97,6 @@ export const useNativeDenoms = () => {
     chainID?: string
   ): TokenItem & { isNonWhitelisted?: boolean } {
     let tokenType = ""
-
     if (denom.startsWith("ibc/")) {
       tokenType = "ibc"
     } else if (denom.startsWith("factory/")) {
@@ -106,7 +107,6 @@ export const useNativeDenoms = () => {
     }
 
     let fixedDenom = ""
-
     switch (tokenType) {
       case "ibc":
         fixedDenom = `${readDenom(denom).substring(0, 5)}...`
@@ -157,9 +157,21 @@ export const useNativeDenoms = () => {
     }
 
     // ibc token
-    const ibcToken = ibcDenoms[networkName]?.[denom]?.token
-
-    if (ibcToken && whitelist[networkName][ibcToken]) {
+    let ibcToken = ibcDenoms[networkName]?.[denom]?.token
+    const chainOrigin = ibcDenoms[networkName]?.[denom]?.chainID
+    const ibcLunc =
+      chainOrigin &&
+      ["phoenix-1:uluna", "pisco-1:uluna"].includes(ibcToken) &&
+      networkName !== "classic" &&
+      ibcDenoms["classic"]?.[denom]
+    if (ibcLunc) {
+      ibcToken = ibcDenoms["classic"]?.[denom]?.token
+      return {
+        ...whitelist["classic"][ibcToken],
+        // @ts-expect-error
+        chains: [ibcDenoms["classic"]?.[denom]?.chainID],
+      }
+    } else if (ibcToken && whitelist[networkName][ibcToken]) {
       return {
         ...whitelist[networkName][ibcToken],
         // @ts-expect-error
@@ -167,15 +179,30 @@ export const useNativeDenoms = () => {
       }
     }
 
+    // Assuming terra-utils returns "Luna" for LUNC.
+    if (fixedDenom === "Luna" && networkName !== "classic") {
+      return {
+        token: denom,
+        symbol: "LUNC",
+        name: "Luna Classic",
+        icon: "https://assets.terra.money/icon/svg/LUNC.svg",
+        decimals: 6,
+        isNonWhitelisted: false,
+      }
+    }
+
     return (
       legacyWhitelist[denom] ??
       cw20.find(({ token }) => denom === token) ??
       // that's needed for axl tokens
-      Object.values(whitelist[networkName]).find((t) => t.token === denom) ?? {
+      Object.values(whitelist[networkName] ?? {}).find(
+        (t) => t.token === denom
+      ) ?? {
         // default token icon
         token: denom,
         symbol: fixedDenom,
         name: fixedDenom,
+        type: tokenType,
         icon:
           tokenType === "ibc"
             ? "https://assets.terra.money/icon/svg/IBC.svg"

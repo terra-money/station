@@ -37,7 +37,7 @@ const WithdrawRewardsForm = ({ rewards, chain, ahRewards }: Props) => {
   const allianceHub = useAllianceHub()
   const allianceHubAddress = allianceHub.useHubAddress()
   const addresses = useInterchainAddresses()
-  const address = addresses && addresses[chain]
+  const address = addresses && (addresses[chain] as string)
   const calcValue = useMemoizedCalcValue()
   const networks = useNetwork()
   const listing = useMemo(() => {
@@ -169,7 +169,7 @@ const WithdrawRewardsForm = ({ rewards, chain, ahRewards }: Props) => {
         <Form onSubmit={handleSubmit(submit.fn)}>
           <Grid gap={12}>
             <Flex className={styles.actions} start>
-              {Object.values(state).some((state) => !state) ? (
+              {Object.values(state ?? {}).some((state) => !state) ? (
                 <button
                   type="button"
                   className={styles.button}
@@ -233,7 +233,7 @@ const WithdrawRewardsForm = ({ rewards, chain, ahRewards }: Props) => {
             {selected.length ? <FormArrow /> : undefined}
             <FormItem>
               <TokenCardGrid maxHeight>
-                {Object.entries(selectedTotal).map(([denom, amount]) => (
+                {Object.entries(selectedTotal ?? {}).map(([denom, amount]) => (
                   <WithTokenItem token={denom} key={denom}>
                     {(item) => (
                       <TokenCard

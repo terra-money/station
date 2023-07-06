@@ -16,6 +16,7 @@ import { useThemeAnimation } from "data/settings/Theme"
 import { useNetworkName } from "data/wallet"
 import { Button, FinderLink, LinkButton } from "components/general"
 import { Modal, LoadingCircular } from "components/feedback"
+import { createAmplitudeClient } from "utils/analytics/setupAmplitude"
 import { Flex } from "components/layout"
 import TxMessage from "../containers/TxMessage"
 import styles from "./LatestTx.module.scss"
@@ -30,6 +31,7 @@ enum Status {
 }
 
 const TxIndicator = ({ txhash }: { txhash: string }) => {
+  const amplitude = createAmplitudeClient()
   const { t } = useTranslation()
   const navigate = useNavigate()
   const animation = useThemeAnimation()
@@ -55,6 +57,10 @@ const TxIndicator = ({ txhash }: { txhash: string }) => {
   useEffect(() => {
     status === Status.SUCCESS && onSuccess?.()
   }, [status, onSuccess])
+
+  useEffect(() => {
+    amplitude.trackEvent(`Station-Web-Transaction`, { status, txhash })
+  }, [status, amplitude, txhash])
 
   /* render component */
   const icon = {

@@ -12,10 +12,10 @@ const cx = classNames.bind(styles)
 const SimpleChainList = ({ list, onClick }: Props) => {
   const { displayChains } = useDisplayChains()
   const sortedList = list.sort((a, b) =>
-    displayChains?.includes(a.chainID) && !displayChains?.includes(b.chainID)
+    displayChains?.includes(a?.chainID) && !displayChains?.includes(b?.chainID)
       ? -1
-      : !displayChains?.includes(a.chainID) &&
-        displayChains?.includes(b.chainID)
+      : !displayChains?.includes(a?.chainID) &&
+        displayChains?.includes(b?.chainID)
       ? 1
       : 0
   )

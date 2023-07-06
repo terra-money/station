@@ -25,8 +25,8 @@ import TokenSelector, {
 } from "components/form/Selectors/TokenSelector/TokenSelector"
 import { useState } from "react"
 import { useAuth } from "auth"
-import is from "auth/scripts/is"
 import { useAllianceHub } from "data/queries/alliance-protocol"
+import { useIsLedger } from "utils/ledger"
 
 export enum QuickStakeAction {
   DELEGATE = "Delegate",
@@ -94,6 +94,7 @@ const QuickStake = () => {
   const [token, setToken] = useState<string | undefined>("uluna")
   const { wallet } = useAuth()
   const allianceHub = useAllianceHub()
+  const isLedger = useIsLedger()
 
   const allianceHubAssets = allianceHub.useWhitelistedAssets()
   const alliancesData = useAllAlliances()
@@ -105,7 +106,7 @@ const QuickStake = () => {
   const stakingParamsData = useAllStakingParams()
   const unbondingtime = stakingParamsData.reduce(
     (acc, { data }) =>
-      data ? { ...acc, [data.chainID]: data.unbonding_time ?? 0 } : acc,
+      data ? { ...acc, [data?.chainID]: data.unbonding_time ?? 0 } : acc,
     {} as Record<string, number>
   )
   const delegationsData = useInterchainDelegations()
@@ -127,7 +128,7 @@ const QuickStake = () => {
   )
 
   const options = [
-    ...Object.values(networks).map(({ baseAsset, chainID }) => ({
+    ...Object.values(networks ?? {}).map(({ baseAsset, chainID }) => ({
       denom: baseAsset,
       rewards: 1,
       chainID,
@@ -168,6 +169,7 @@ const QuickStake = () => {
 
   const tokenList = options.reduce((acc, { denom }) => {
     const token = readNativeDenom(denom)
+    if (token.type === "ibc") return acc
     return token.lsd
       ? {
           [token.lsd]: readNativeDenom(token.lsd),
@@ -324,7 +326,7 @@ const QuickStake = () => {
                   <ModalButton
                     title={t("Staking Details")}
                     renderButton={(open) =>
-                      is.ledger(wallet) && isAlliance ? (
+                      isLedger && isAlliance ? (
                         <InlineFlex gap={4} start>
                           <Tooltip
                             content={

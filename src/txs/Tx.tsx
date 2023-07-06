@@ -13,9 +13,7 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline"
 import { isDenom } from "@terra-money/terra-utils"
 import { Coin, Coins, CreateTxOptions } from "@terra-money/feather.js"
 import { Fee } from "@terra-money/feather.js"
-import { ConnectType, UserDenied } from "@terra-money/wallet-types"
-import { CreateTxFailed, TxFailed } from "@terra-money/wallet-types"
-import { useWallet, useConnectedWallet } from "@terra-money/use-wallet"
+import { useWallet, useConnectedWallet } from "@terra-money/wallet-kit"
 
 import { Contents } from "types/components"
 import { has } from "utils/num"
@@ -137,7 +135,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
     [queryKey.tx.create, key, isWalletEmpty],
     async () => {
       if (!key.address || isWalletEmpty) return 0
-      if (!(wallet || connectedWallet?.availablePost)) return 0
+      if (!(wallet || connectedWallet)) return 0
       if (!simulationTx || !simulationTx.msgs.length) return 0
       try {
         const unsignedTx = await lcd.tx.create([{ address: key.address }], {
@@ -278,6 +276,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
         !hideLoader && setLatestTx({ txhash, ...latestTxBase })
       } else {
         const { result } = await post({ ...tx, fee })
+        if (!result) throw new Error("Tx failed")
         !hideLoader && setLatestTx({ txhash: result.txhash, ...latestTxBase })
       }
 
@@ -307,7 +306,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
     : false
 
   const availableGasDenoms = useMemo(() => {
-    return Object.keys(networks[chain]?.gasPrices || {})
+    return Object.keys(networks[chain]?.gasPrices ?? {})
   }, [chain, networks])
 
   useEffect(() => {
@@ -413,14 +412,11 @@ function Tx<TxValues>(props: Props<TxValues>) {
     )
   }
 
-  const walletError =
-    connectedWallet?.connectType === ConnectType.READONLY
-      ? t("Wallet is connected as read-only mode")
-      : !availableGasDenoms.length
-      ? t("Insufficient balance to pay transaction fee")
-      : isWalletEmpty
-      ? t("Coins required to post transactions")
-      : ""
+  const walletError = !availableGasDenoms.length
+    ? t("Insufficient balance to pay transaction fee")
+    : isWalletEmpty
+    ? t("Coins required to post transactions")
+    : ""
 
   const submitButton = (
     <>
@@ -467,22 +463,14 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const modal = !error
     ? undefined
     : {
-        title:
-          error instanceof UserDenied ||
-          error?.toString().includes("UserDenied")
-            ? t("Transaction was denied by user")
-            : error instanceof CreateTxFailed
-            ? t("Failed to create tx")
-            : error instanceof TxFailed
-            ? t("Tx failed")
-            : t("Error"),
-        children:
-          error instanceof UserDenied ||
-          error?.toString().includes("UserDenied") ? null : (
-            <Pre height={120} normal break>
-              {error?.message}
-            </Pre>
-          ),
+        title: error?.toString().includes("UserDenied")
+          ? t("Transaction was denied by user")
+          : t("Error"),
+        children: error?.toString().includes("UserDenied") ? null : (
+          <Pre height={120} normal break>
+            {error?.message}
+          </Pre>
+        ),
       }
 
   return (

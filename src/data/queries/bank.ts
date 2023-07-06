@@ -88,7 +88,7 @@ export const useBalances = () => {
     [queryKey.bank.balances, addresses],
     async () => {
       if (!addresses) return [] as CoinBalance[]
-      const chains = Object.keys(addresses)
+      const chains = Object.keys(addresses ?? {})
 
       // TODO: Pagination
       // Required when the number of results exceed 100

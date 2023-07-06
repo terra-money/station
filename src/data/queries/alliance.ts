@@ -142,7 +142,7 @@ export const useInterchainAllianceDelegations = () => {
   const network = useNetwork()
 
   return useQueries(
-    Object.keys(addresses)
+    Object.keys(addresses ?? {})
       .filter((chainID) => network[chainID]?.alliance)
       .map((chainID) => {
         return {

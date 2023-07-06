@@ -109,7 +109,10 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
   const { errors } = form.formState
   const { input, ...values } = watch()
   const amount = toAmount(input)
-  const { fields, append, remove } = useFieldArray({ control, name: "changes" })
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "changes",
+  })
   const coinsFieldArray = useFieldArray({ control, name: "coins" })
 
   /* update input */
@@ -418,7 +421,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
 
             <FormItem label={t("Proposal type")} error={errors.type?.message}>
               <Select {...register("type")}>
-                {Object.values(ProposalType).map((type) => (
+                {Object.values(ProposalType ?? {}).map((type) => (
                   <option value={type} key={type}>
                     {t(type)}
                   </option>
