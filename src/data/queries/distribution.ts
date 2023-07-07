@@ -14,11 +14,13 @@ import { queryKey, RefetchOptions } from "../query"
 import { useAddress } from "../wallet"
 import { useInterchainLCDClient } from "./lcdClient"
 import { CalcValue } from "./coingecko"
-import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { RewardsListing } from "data/types/rewards-form"
+import { useInterchainAddressesWithFeature } from "auth/hooks/useAddress"
+import { ChainFeature } from "types/chains"
 
 export const useRewards = (chainID?: string) => {
-  const addresses = useInterchainAddresses()
+  const addresses = useInterchainAddressesWithFeature(ChainFeature.STAKING)
+  console.log("addresses", addresses)
   const lcd = useInterchainLCDClient()
 
   return useQuery(

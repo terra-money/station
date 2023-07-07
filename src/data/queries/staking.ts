@@ -19,13 +19,15 @@ import { has } from "utils/num"
 import { StakeAction } from "txs/stake/StakeForm"
 import { queryKey, Pagination, RefetchOptions, combineState } from "../query"
 import { useInterchainLCDClient } from "./lcdClient"
-import { useInterchainAddresses } from "auth/hooks/useAddress"
+import { useInterchainAddressesWithFeature } from "auth/hooks/useAddress"
 import { toAmount } from "@terra-money/terra-utils"
 import { useExchangeRates } from "data/queries/coingecko"
 import { useNativeDenoms } from "data/token"
 import shuffle from "utils/shuffle"
 import { getIsBonded } from "pages/stake/ValidatorsList"
-import { useNetwork } from "data/wallet"
+import { useNetworkWithFeature } from "data/wallet"
+import { ChainFeature } from "types/chains"
+
 import { AllianceDelegationResponse } from "@terra-money/feather.js/dist/client/lcd/api/AllianceAPI"
 import {
   AllianceDelegation,
@@ -35,7 +37,8 @@ import { useAllianceHub } from "./alliance-protocol"
 import { getAllianceDelegations } from "data/parsers/alliance-protocol"
 
 export const useInterchainValidators = () => {
-  const addresses = useInterchainAddresses() || {}
+  const addresses = useInterchainAddressesWithFeature(ChainFeature.STAKING)
+  console.log("addresses", addresses)
   const lcd = useInterchainLCDClient()
 
   return useQueries(
@@ -91,7 +94,7 @@ export const useValidators = (chainID: string) => {
 }
 
 export const useInterchainDelegations = () => {
-  const addresses = useInterchainAddresses() || {}
+  const addresses = useInterchainAddressesWithFeature(ChainFeature.STAKING)
   const lcd = useInterchainLCDClient()
 
   return useQueries(
@@ -138,7 +141,7 @@ export const useStakingParams = (chainID: string) => {
 
 export const useAllStakingParams = () => {
   const lcd = useInterchainLCDClient()
-  const network = useNetwork()
+  const network = useNetworkWithFeature(ChainFeature.STAKING)
 
   return useQueries(
     Object.values(network ?? {}).map(({ chainID }) => {
@@ -158,7 +161,7 @@ export const getChainUnbondTime = (stakingParams: StakingParams) =>
   stakingParams?.unbonding_time / (60 * 60 * 24)
 
 export const useDelegations = (chainID: string, disabled?: boolean) => {
-  const addresses = useInterchainAddresses()
+  const addresses = useInterchainAddressesWithFeature(ChainFeature.STAKING)
   const lcd = useInterchainLCDClient()
 
   return useQuery(
@@ -180,7 +183,7 @@ export const useDelegations = (chainID: string, disabled?: boolean) => {
 }
 
 export const useDelegation = (validatorAddress: ValAddress) => {
-  const addresses = useInterchainAddresses()
+  const addresses = useInterchainAddressesWithFeature(ChainFeature.STAKING)
   const lcd = useInterchainLCDClient()
 
   return useQuery(
@@ -207,7 +210,7 @@ export const useDelegation = (validatorAddress: ValAddress) => {
 }
 
 export const useInterchainUnbondings = () => {
-  const addresses = useInterchainAddresses() || {}
+  const addresses = useInterchainAddressesWithFeature(ChainFeature.STAKING)
   const lcd = useInterchainLCDClient()
 
   return useQueries(
@@ -226,7 +229,7 @@ export const useInterchainUnbondings = () => {
 }
 
 export const useUnbondings = (chainID: string) => {
-  const addresses = useInterchainAddresses()
+  const addresses = useInterchainAddressesWithFeature(ChainFeature.STAKING)
   const lcd = useInterchainLCDClient()
 
   return useQuery(

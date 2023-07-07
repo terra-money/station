@@ -13,6 +13,7 @@ import { Fetching } from "components/feedback"
 import styles from "./StakedDonut.module.scss"
 import ChainFilter from "components/layout/ChainFilter"
 import DelegationsPromote from "app/containers/DelegationsPromote"
+import { ChainFeature } from "types/chains"
 
 const Stake = () => {
   const { t } = useTranslation()
@@ -49,7 +50,12 @@ const Stake = () => {
             <Col span={2}>
               <div className={styles.forFetchingBar}>
                 <Fetching {...state}>
-                  <ChainFilter title={t("Staked funds")} all {...state}>
+                  <ChainFilter
+                    title={t("Staked funds")}
+                    feature={ChainFeature.STAKING}
+                    all
+                    {...state}
+                  >
                     {(chain) => {
                       setChainSelected(chain || "all")
                       return <StakedDonut chain={chain} />

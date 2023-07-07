@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next"
 import { useExchangeRates } from "data/queries/coingecko"
 import { useMemoizedCalcValue } from "data/queries/coingecko"
 import { useNativeDenoms, WithTokenItem } from "data/token"
-import { useNetwork } from "data/wallet"
+import { useNetworkWithFeature } from "data/wallet"
 import { combineState } from "data/query"
 import { useRewards } from "data/queries/distribution"
 import { ModalButton } from "components/feedback"
@@ -13,14 +13,15 @@ import RewardsTooltip from "../RewardsTooltip"
 import styles from "../CardModal.module.scss"
 import { useAllianceHub } from "data/queries/alliance-protocol"
 import { getCoinsFromRewards } from "data/parsers/alliance-protocol"
+import { ChainFeature } from "types/chains"
 
 const ChainRewards = ({ chain }: { chain: string }) => {
   const { t } = useTranslation()
   const title = t("Staking rewards")
   const calcValue = useMemoizedCalcValue()
   const readNativeDenom = useNativeDenoms()
-  const networks = useNetwork()
   const allianceHub = useAllianceHub()
+  const networks = useNetworkWithFeature(ChainFeature.STAKING)
 
   const { data: allianceHubRewards, ...allianceHubRewardsState } =
     allianceHub.usePendingRewards()
