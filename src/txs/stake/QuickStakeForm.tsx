@@ -68,7 +68,7 @@ const QuickStakeForm = (props: Props) => {
   const allianceHub = useAllianceHub()
   const { data: allianceHubDelegations, ...allianceHubDelegationsState } =
     allianceHub.useDelegations()
-  const filteredHubDelegations =
+  const filteredHubDelegationsByChainID =
     chainID !== undefined
       ? allianceHubDelegations?.filter((del) => del.chainID === chainID)
       : allianceHubDelegations
@@ -171,16 +171,18 @@ const QuickStakeForm = (props: Props) => {
   )
 
   const calculateUnbondBalance = () => {
-    if (isAlliance && stakeOnAllianceHub && filteredHubDelegations) {
-      return filteredHubDelegations
-        .reduce((acc, del) => {
-          const amount = BigNumber.sum(
-            ...del.delegations.map(({ balance }) => balance.amount.toString())
-          )
+    if (isAlliance && stakeOnAllianceHub && filteredHubDelegationsByChainID) {
+      let amount = new BigNumber(0)
 
-          return acc.plus(amount)
-        }, new BigNumber(0))
-        .toString()
+      for (const hubDel of filteredHubDelegationsByChainID) {
+        for (const del of hubDel.delegations) {
+          if (del.delegation.denom === denom) {
+            amount = amount.plus(del.balance.amount.toString())
+          }
+        }
+      }
+
+      return amount.toString()
     } else if (isAlliance && allianceDelegations) {
       return calcDelegationsTotal(allianceDelegations)
     } else {
@@ -216,9 +218,6 @@ const QuickStakeForm = (props: Props) => {
     estimationTxValues,
     createTx,
     onChangeMax,
-    onSuccess: () => {
-      console.log("onSuccess", this)
-    },
     queryKeys: [
       queryKey.staking.delegations,
       queryKey.alliance.delegations,

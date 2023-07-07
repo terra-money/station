@@ -6,8 +6,6 @@
 
 import { Rewards } from "@terra-money/feather.js"
 
-export const ChainID = String
-
 export interface AHConfig {
   governance: string
   controller: string
@@ -19,7 +17,7 @@ export interface AHConfig {
 }
 
 export interface AHWhitelistedAssets {
-  [propName: ChainID]: Array<NativeAssetInfo>
+  [propName: string]: Array<NativeAssetInfo>
 }
 
 export interface AHStakedBalanceReq {

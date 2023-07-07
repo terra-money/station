@@ -20,7 +20,6 @@ import { ChainFeature } from "types/chains"
 
 export const useRewards = (chainID?: string) => {
   const addresses = useInterchainAddressesWithFeature(ChainFeature.STAKING)
-  console.log("addresses", addresses)
   const lcd = useInterchainLCDClient()
 
   return useQuery(

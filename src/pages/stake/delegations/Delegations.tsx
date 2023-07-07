@@ -28,6 +28,13 @@ const Delegations = () => {
   const allianceHubDelegationsData = allianceHub.useDelegations()
   const allianceDelegationsData = useInterchainAllianceDelegations()
 
+  const state = combineState(
+    pricesState,
+    ...interchainDelegations,
+    ...allianceDelegationsData,
+    allianceHubDelegationsData
+  )
+
   const delegations: Delegation[] = interchainDelegations.reduce(
     (acc, { data }) => (data ? [...data?.delegation, ...acc] : acc),
     [] as Delegation[]
@@ -40,13 +47,6 @@ const Delegations = () => {
     )
   const allianceHubDelegations = getAllianceDelegations(
     allianceHubDelegationsData?.data
-  )
-
-  const state = combineState(
-    pricesState,
-    ...interchainDelegations,
-    ...allianceDelegationsData,
-    allianceHubDelegationsData
   )
 
   const allDelegations = [

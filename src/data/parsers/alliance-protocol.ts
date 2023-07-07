@@ -3,7 +3,7 @@ import {
   AllianceDelegationRes,
 } from "data/queries/alliance"
 import { AllianceDelegationResponse as AllianceModuleDelegationResponse } from "@terra-money/feather.js/dist/client/lcd/api/AllianceAPI"
-import { Coin, Coins, Delegation } from "@terra-money/feather.js"
+import { Coin, Coins, Dec, Delegation } from "@terra-money/feather.js"
 import { AHAllRewards } from "data/types/alliance-protocol"
 import { DefaultRewardsListing, RewardsListing } from "data/types/rewards-form"
 
@@ -28,26 +28,27 @@ export const parseDelegationsToResponse = (
 }
 
 export const parseResToDelegation = (
-  delegations?: AllianceDelegationRes[]
+  data?: AllianceDelegationRes[],
+  chain?: string
 ): Delegation[] => {
-  if (delegations === undefined) {
-    return []
-  }
-  const _delegations = delegations.flatMap((del) => del.delegations)
+  const parsedDelegations = new Array<Delegation>()
+  if (data === undefined) return parsedDelegations
 
-  return _delegations.map((del) => {
-    return Delegation.fromData({
-      delegation: {
-        delegator_address: del.delegation.delegator_address,
-        validator_address: del.delegation.validator_address,
-        shares: del.delegation.shares,
-      },
-      balance: {
-        amount: del.balance.amount.toString(),
-        denom: del.balance.denom,
-      },
-    })
-  })
+  for (const item of data) {
+    if (chain === undefined || chain === "" || item.chainID === chain) {
+      for (const del of item.delegations) {
+        const parsedDel = new Delegation(
+          del.delegation.delegator_address,
+          del.delegation.validator_address,
+          new Dec(del.delegation.shares),
+          new Coin(del.balance.denom, del.balance.amount)
+        )
+        parsedDelegations.push(parsedDel)
+      }
+    }
+  }
+
+  return parsedDelegations
 }
 
 export const getAllianceDelegations = (
