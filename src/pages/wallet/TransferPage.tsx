@@ -192,7 +192,8 @@ const TransferPage = () => {
         from: chain,
         to: destinationChain,
         tokenAddress: token.denom,
-        icsChannel: ibcDenoms[networkName][token.denom]?.icsChannel,
+        icsChannel:
+          ibcDenoms[networkName][`${chain}:${token.denom}`]?.icsChannel,
       }) &&
         !readNativeDenom(token.denom).isAxelar)
     ) {
@@ -253,7 +254,8 @@ const TransferPage = () => {
           from: chain,
           to: destinationChain,
           tokenAddress: token.denom,
-          icsChannel: ibcDenoms[networkName][token?.denom ?? ""]?.icsChannel,
+          icsChannel:
+            ibcDenoms[networkName][`${chain}:${token.denom}`]?.icsChannel,
         })
         if (!channel) throw new Error("No IBC channel found")
 
