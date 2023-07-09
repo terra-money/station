@@ -135,7 +135,7 @@ export const useMemoizedCalcValue = () => {
   return useCallback<CalcValue>(
     ({ amount, denom }) => {
       if (!memoizedPrices) return
-      return Number(amount) * Number(memoizedPrices[denom].price ?? 0)
+      return Number(amount) * Number(memoizedPrices[denom]?.price ?? 0)
     },
     [memoizedPrices]
   )
