@@ -290,6 +290,7 @@ const TFMSwapForm = ({ chainID }: { chainID: string }) => {
                     ),
                   })}
                   inputMode="decimal"
+                  type="number"
                   placeholder={getPlaceholder(offerDecimals)}
                   onFocus={max.reset}
                   autoFocus
@@ -333,6 +334,7 @@ const TFMSwapForm = ({ chainID }: { chainID: string }) => {
               })}
               input={slippageInput} // to warn
               inputMode="decimal"
+              type="number"
               placeholder={getPlaceholder(2)}
               error={errors.slippageInput?.message}
             />

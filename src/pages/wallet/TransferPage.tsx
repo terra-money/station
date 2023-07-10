@@ -419,6 +419,7 @@ const TransferPage = () => {
                     ),
                   })}
                   token={asset}
+                  type="number"
                   inputMode="decimal"
                   onFocus={max.reset}
                   placeholder={getPlaceholder(decimals)}

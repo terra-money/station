@@ -213,6 +213,7 @@ const QuickStakeForm = (props: Props) => {
                     valueAsNumber: true,
                     validate: validate.input(toInput(max.amount)),
                   })}
+                  type="number"
                   token={denom}
                   onFocus={max.reset}
                   inputMode="decimal"
