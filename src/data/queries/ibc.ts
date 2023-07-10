@@ -5,6 +5,7 @@ import { useInterchainLCDClient } from "./lcdClient"
 import { useNetwork } from "data/wallet"
 import axios from "axios"
 import crypto from "crypto"
+import { AccAddress } from "@terra-money/feather.js"
 
 export const useIBCBaseDenom = (
   denom: Denom,
@@ -111,7 +112,10 @@ export const useIBCBaseDenoms = (data: { denom: Denom; chainID: string }[]) => {
 export function calculateIBCDenom(baseDenom: string, path: string) {
   if (!path) return baseDenom
 
-  const assetString = [path, baseDenom].join("/")
+  const assetString = [
+    path,
+    AccAddress.validate(baseDenom) ? `cw20:${baseDenom}` : baseDenom,
+  ].join("/")
   const hash = crypto.createHash("sha256")
   hash.update(assetString)
   return `ibc/${hash.digest("hex").toUpperCase()}`
