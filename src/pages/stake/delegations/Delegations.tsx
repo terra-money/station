@@ -26,6 +26,7 @@ const Delegations = () => {
 
   const interchainDelegations = useInterchainDelegations()
   const allianceHubDelegationsData = allianceHub.useDelegations()
+  console.log("allianceHubDelegationsData", allianceHubDelegationsData)
   const allianceDelegationsData = useInterchainAllianceDelegations()
 
   const state = combineState(

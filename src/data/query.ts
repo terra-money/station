@@ -44,8 +44,6 @@ export const queryKey = mirror({
     hubWhitelistedAssets: "",
     hubStakedBalances: "",
     hubPendingRewards: "",
-
-    oracleConfig: "",
   },
   auth: { accountInfo: "" },
   bank: { balance: "", balances: "", supply: "" },

@@ -219,6 +219,8 @@ const QuickStakeForm = (props: Props) => {
     createTx,
     onChangeMax,
     queryKeys: [
+      queryKey.allianceProtocol.hubPendingRewards,
+      queryKey.allianceProtocol.hubStakedBalances,
       queryKey.staking.delegations,
       queryKey.alliance.delegations,
       queryKey.staking.unbondings,

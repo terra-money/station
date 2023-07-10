@@ -85,11 +85,11 @@ export const useAllianceHub = () => {
     const address = useAddress()
     const lcd = useInterchainLCDClient()
     const hubAddress = useHubAddress()
-    const alliancesDelegations = new Array<AllianceDelegationRes>()
 
     return useQuery(
       [queryKey.allianceProtocol.hubStakedBalances],
       async (): Promise<AllianceDelegationRes[]> => {
+        const alliancesDelegations = new Array<AllianceDelegationRes>()
         try {
           if (chainID !== "phoenix-1" && chainID !== "pisco-1") return []
 
