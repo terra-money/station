@@ -93,10 +93,14 @@ export const useIBCBaseDenoms = (data: { denom: Denom; chainID: string }[]) => {
             chains.unshift(data.identified_client_state.client_state.chain_id)
           }
 
+          console.log(base_denom)
           return {
             ibcDenom: denom,
             baseDenom: base_denom.startsWith("cw20:")
               ? base_denom.replace("cw20:", "")
+              : // fix for kujira factory tokens
+              base_denom.startsWith("factory:")
+              ? base_denom.replaceAll(":", "/")
               : base_denom,
             chainIDs: chains,
             channels,

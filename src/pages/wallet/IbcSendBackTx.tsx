@@ -122,6 +122,8 @@ function IbcSendBackTx({ token, chainID }: Props) {
     }
   }
 
+  const isKujira = ibcDetails?.chainIDs[0] === "kaiyo-1"
+
   useEffect(() => {
     // around 3 minutes with a 10 seconds interval
     let maxIterations = 18
@@ -160,7 +162,9 @@ function IbcSendBackTx({ token, chainID }: Props) {
     () =>
       ibcDetails &&
       calculateIBCDenom(
-        ibcDetails.baseDenom,
+        isKujira
+          ? ibcDetails.baseDenom?.replaceAll("/", ":")
+          : ibcDetails.baseDenom,
         ibcDetails.channels
           .slice(0, ibcDetails.channels.length - step)
           .reduce(
@@ -171,7 +175,7 @@ function IbcSendBackTx({ token, chainID }: Props) {
             ""
           )
       ),
-    [step, ibcDetails]
+    [step, ibcDetails, isKujira]
   )
 
   const chains = useMemo(
@@ -234,7 +238,9 @@ function IbcSendBackTx({ token, chainID }: Props) {
     onChangeMax,
     onPost: () => {
       const nextDenom = calculateIBCDenom(
-        ibcDetails?.baseDenom ?? "",
+        (isKujira
+          ? ibcDetails?.baseDenom?.replaceAll("/", ":")
+          : ibcDetails?.baseDenom) ?? "",
         (ibcDetails?.channels ?? [])
           .slice(0, (ibcDetails?.channels.length ?? 0) - step - 1)
           .reduce(
