@@ -94,6 +94,7 @@ function IbcSendBackTx({ token, chainID }: Props) {
   const { errors } = formState
   const { input } = watch()
   const queryClient = useQueryClient()
+  const networks = useNetwork()
 
   const [step, setStep] = useState<number>(0)
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -122,7 +123,7 @@ function IbcSendBackTx({ token, chainID }: Props) {
     }
   }
 
-  const isKujira = ibcDetails?.chainIDs[0] === "kaiyo-1"
+  const isKujira = networks[ibcDetails?.chainIDs[0] ?? ""]?.prefix === "kujira"
 
   useEffect(() => {
     // around 3 minutes with a 10 seconds interval

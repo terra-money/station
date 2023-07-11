@@ -93,7 +93,6 @@ export const useIBCBaseDenoms = (data: { denom: Denom; chainID: string }[]) => {
             chains.unshift(data.identified_client_state.client_state.chain_id)
           }
 
-          console.log(base_denom)
           return {
             ibcDenom: denom,
             baseDenom: base_denom.startsWith("cw20:")
@@ -114,7 +113,10 @@ export const useIBCBaseDenoms = (data: { denom: Denom; chainID: string }[]) => {
 }
 
 export function calculateIBCDenom(baseDenom: string, path: string) {
-  if (!path) return baseDenom
+  if (!path)
+    return baseDenom.startsWith("factory:")
+      ? baseDenom.replaceAll(":", "/")
+      : baseDenom
 
   const assetString = [
     path,
