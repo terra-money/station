@@ -97,6 +97,9 @@ export const useIBCBaseDenoms = (data: { denom: Denom; chainID: string }[]) => {
             ibcDenom: denom,
             baseDenom: base_denom.startsWith("cw20:")
               ? base_denom.replace("cw20:", "")
+              : // fix for kujira factory tokens
+              base_denom.startsWith("factory:")
+              ? base_denom.replaceAll(":", "/")
               : base_denom,
             chainIDs: chains,
             channels,
@@ -110,7 +113,10 @@ export const useIBCBaseDenoms = (data: { denom: Denom; chainID: string }[]) => {
 }
 
 export function calculateIBCDenom(baseDenom: string, path: string) {
-  if (!path) return baseDenom
+  if (!path)
+    return baseDenom.startsWith("factory:")
+      ? baseDenom.replaceAll(":", "/")
+      : baseDenom
 
   const assetString = [
     path,
