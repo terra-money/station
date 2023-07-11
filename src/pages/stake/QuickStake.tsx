@@ -1,4 +1,3 @@
-import { readPercent } from "@terra-money/terra-utils"
 import { Button } from "components/general"
 import { Flex, Grid, InlineFlex, Page, Table, Tabs } from "components/layout"
 import { useBalances } from "data/queries/bank"
@@ -263,32 +262,6 @@ const QuickStake = () => {
               defaultSortOrder: "desc",
               sorter: ({ unbonding: a = 0 }, { unbonding: b = 0 }) => a - b,
               render: (value = 0) => t("{{value}} days", { value }),
-              align: "right",
-            },
-            {
-              title: (
-                <span>
-                  {t("Rewards weight")}{" "}
-                  <TooltipIcon
-                    content={
-                      <article>
-                        <p>
-                          The amount of rewards an Alliance asset accrues is
-                          determined by the asset's Reward Weight.
-                        </p>
-                        <p>
-                          This parameter is set by governance and represents the
-                          maximum proportion of rewards an asset will earn.
-                        </p>
-                      </article>
-                    }
-                  />
-                </span>
-              ),
-              dataIndex: "rewards",
-              defaultSortOrder: "desc",
-              sorter: ({ rewards: a = 0 }, { rewards: b = 0 }) => a - b,
-              render: (rewards = 0) => readPercent(rewards),
               align: "right",
             },
             {
