@@ -125,7 +125,12 @@ const AssetPage = () => {
                     />
                     {token === "uluna" &&
                       symbol !== "LUNC" &&
-                      isTerraChain(b.chain) && <Vesting />}
+                      isTerraChain(b.chain) && (
+                        <Vesting
+                          price={prices?.[token]?.price}
+                          symbol={symbol}
+                        />
+                      )}
                   </div>
                 ))}
             </div>
