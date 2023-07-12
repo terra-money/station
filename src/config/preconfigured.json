@@ -32,6 +32,7 @@
   {
     "name": "test5",
     "address": "terra18wlvftxzj6zt0xugy2lr9nxzu402690ltaf4ss",
+    "password": "LocalTerra",
     "mnemonic": "second render cat sing soup reward cluster island bench diet lumber grocery repeat balcony perfect diesel stumble piano distance caught occur example ozone loyal"
   },
   {
@@ -43,6 +44,7 @@
   {
     "name": "test7",
     "address": "terra17tv2hvwpg0ukqgd2y5ct2w54fyan7z0zxrm2f9",
+    "password": "LocalTerra",
     "mnemonic": "noble width taxi input there patrol clown public spell aunt wish punch moment will misery eight excess arena pen turtle minimum grain vague inmate"
   },
   {
