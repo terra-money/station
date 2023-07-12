@@ -6,6 +6,7 @@ import { useCustomLCDs } from "utils/localStorage"
 import { useValidNetworks } from "data/queries/tendermint"
 import { WithFetching } from "components/feedback"
 import { combineState } from "data/query"
+import { InterchainNetworks } from "types/network"
 
 type TokenFilter = <T>(network: Record<string, T>) => Record<string, T>
 

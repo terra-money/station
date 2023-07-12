@@ -10,6 +10,7 @@ import { CopyIcon, InternalButton } from "components/general"
 import { Tooltip } from "components/display"
 import { useDevMode } from "utils/localStorage"
 import { truncate } from "@terra-money/terra-utils"
+import { useNetworks } from "app/InitNetworks"
 
 export interface Props {
   chain: string
@@ -29,11 +30,12 @@ const AssetChain = (props: Props) => {
   const { data: prices, ...pricesState } = useExchangeRates()
   const { t } = useTranslation()
   const networkName = useNetworkName()
+  const allNetworks = useNetworks().networks[networkName]
 
   const networks = useNetwork()
   const { devMode } = useDevMode()
 
-  const { icon, name } = networks[chain] || {}
+  const { icon, name } = allNetworks[chain] ?? { name: chain }
 
   let price
   if (symbol === "LUNC" && networkName !== "classic") {
@@ -77,7 +79,7 @@ const AssetChain = (props: Props) => {
                   chainID={chain}
                   token={ibcDenom}
                   title={`Send ${symbol} back to ${
-                    networks[path[0]]?.name ?? path[0]
+                    allNetworks[path[0]]?.name ?? path[0]
                   }`}
                 >
                   {(open) => (
@@ -92,7 +94,9 @@ const AssetChain = (props: Props) => {
                 </IbcSendBack>
               ))}
           </h4>
-          {path && <p>{path.map((c) => networks[c]?.name ?? c).join(" → ")}</p>}
+          {path && (
+            <p>{path.map((c) => allNetworks[c]?.name ?? c).join(" → ")}</p>
+          )}
           {devMode && (
             <p>
               <span className={styles.copy__denom}>

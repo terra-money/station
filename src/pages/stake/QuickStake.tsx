@@ -3,7 +3,7 @@ import { Button } from "components/general"
 import { Flex, Grid, InlineFlex, Page, Table, Tabs } from "components/layout"
 import { useBalances } from "data/queries/bank"
 import { useNativeDenoms } from "data/token"
-import { useNetwork } from "data/wallet"
+import { useNetworkWithFeature } from "data/wallet"
 import { useTranslation } from "react-i18next"
 import QuickStakeForm from "txs/stake/QuickStakeForm"
 import styles from "./QuickStake.module.scss"
@@ -25,8 +25,8 @@ import TokenSelector, {
   TokenInterface,
 } from "components/form/Selectors/TokenSelector/TokenSelector"
 import { useState } from "react"
-import { useAuth } from "auth"
-import is from "auth/scripts/is"
+import { ChainFeature } from "types/chains"
+import { useIsLedger } from "utils/ledger"
 
 export enum QuickStakeAction {
   DELEGATE = "Delegate",
@@ -87,9 +87,9 @@ const QuickStake = () => {
   const { t } = useTranslation()
   const { data: balances } = useBalances()
   const readNativeDenom = useNativeDenoms()
-  const networks = useNetwork()
+  const networks = useNetworkWithFeature(ChainFeature.STAKING)
   const [token, setToken] = useState<string | undefined>("uluna")
-  const { wallet } = useAuth()
+  const isLedger = useIsLedger()
 
   const alliancesData = useAllAlliances()
   const alliances = alliancesData.reduce(
@@ -242,13 +242,6 @@ const QuickStake = () => {
                 )
               },
             },
-            /*{
-              title: t("Chain"),
-              dataIndex: "chainID",
-              defaultSortOrder: "desc",
-              sorter: ({ chainID: a }, { chainID: b }) => a.localeCompare(b),
-              render: (chainID) => networks[chainID]?.name || chainID,
-            },*/
             {
               title: (
                 <span>
@@ -316,7 +309,7 @@ const QuickStake = () => {
                   <ModalButton
                     title={t("Staking Details")}
                     renderButton={(open) =>
-                      is.ledger(wallet) && isAlliance ? (
+                      isLedger && isAlliance ? (
                         <InlineFlex gap={4} start>
                           <Tooltip
                             content={

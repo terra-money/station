@@ -1,5 +1,6 @@
 import { AccAddress, Coins } from "@terra-money/feather.js"
 import { isDenom, isDenomIBC } from "@terra-money/terra-utils"
+import { InterchainNetwork } from "types/network"
 
 /* coin */
 export const getAmount = (

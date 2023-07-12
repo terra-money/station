@@ -38,7 +38,6 @@ interface TxValues {
   source?: ValAddress
   input?: number
 }
-
 export enum StakeAction {
   DELEGATE = "Delegate",
   REDELEGATE = "Redelegate",
