@@ -213,7 +213,10 @@ const WithdrawRewardsForm = ({ rewards, chain, ahRewards }: Props) => {
                         <dl className={styles.item}>
                           <dt>
                             {address === allianceHubAddress ? (
-                              <FinderLink value={address}>
+                              <FinderLink
+                                value={address}
+                                style={{ fontSize: "12px" }}
+                              >
                                 Alliance Hub ({symbol})
                               </FinderLink>
                             ) : (

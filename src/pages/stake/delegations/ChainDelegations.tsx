@@ -4,7 +4,7 @@ import { useExchangeRates } from "data/queries/coingecko"
 import { combineState } from "data/query"
 import { useDelegations } from "data/queries/staking"
 import { AccAddress, Coin } from "@terra-money/feather.js"
-import { FinderLink, ValidatorLink } from "components/general"
+import { ValidatorLink } from "components/general"
 import { ModalButton } from "components/feedback"
 import { Table } from "components/layout"
 import { Read } from "components/token"
@@ -14,13 +14,13 @@ import styles from "../CardModal.module.scss"
 import { useAllianceHub } from "data/queries/alliance-protocol"
 import { parseResToDelegation } from "data/parsers/alliance-protocol"
 import { useNetwork } from "data/wallet"
+import AllianceHubStakeCTA from "../components/AllianceHubStakeCTA"
 
 const ChainDelegations = ({ chain }: { chain: string }) => {
   const { t } = useTranslation()
   const readNativeDenom = useNativeDenoms()
   const networks = useNetwork()
   const allianceHub = useAllianceHub()
-
   const { data: prices, ...pricesState } = useExchangeRates()
   const { data: hubDelegations, ...hubDelegationsState } =
     allianceHub.useDelegations()
@@ -101,9 +101,9 @@ const ChainDelegations = ({ chain }: { chain: string }) => {
           {
             title: t("Validator"),
             dataIndex: "validator_address",
-            render: (address: AccAddress) => {
+            render: (address: AccAddress, r) => {
               if (address === allianceHub.useHubAddress()) {
-                return <FinderLink value={address}>Alliance Hub</FinderLink>
+                return <AllianceHubStakeCTA denom={r.balance.denom} />
               } else {
                 return <ValidatorLink address={address} internal />
               }

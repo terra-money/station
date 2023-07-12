@@ -12,7 +12,6 @@ import { getPlaceholder, toInput } from "../utils"
 import validate from "../validate"
 import Tx from "../Tx"
 import { useNativeDenoms } from "data/token"
-import { QuickStakeAction } from "pages/stake/QuickStake"
 import {
   getQuickStakeMsgs,
   getQuickUnstakeMsgs,
@@ -29,6 +28,7 @@ import styles from "./QuickStakeForm.module.scss"
 import { useAllianceDelegations } from "data/queries/alliance"
 import { useAllianceHub } from "data/queries/alliance-protocol"
 import BigNumber from "bignumber.js"
+import { QuickStakeAction } from "pages/stake/hooks/useQuickStake"
 
 interface TxValues {
   input?: number

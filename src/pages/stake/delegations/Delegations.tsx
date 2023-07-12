@@ -4,7 +4,7 @@ import { getMaxHeightStyle } from "utils/style"
 import { combineState } from "data/query"
 import { useExchangeRates } from "data/queries/coingecko"
 import { useInterchainDelegations } from "data/queries/staking"
-import { FinderLink, ValidatorLink } from "components/general"
+import { ValidatorLink } from "components/general"
 import { ModalButton } from "components/feedback"
 import { Table } from "components/layout"
 import { Read } from "components/token"
@@ -17,6 +17,7 @@ import {
 } from "data/queries/alliance"
 import { useAllianceHub } from "data/queries/alliance-protocol"
 import { getAllianceDelegations } from "data/parsers/alliance-protocol"
+import AllianceHubStakeCTA from "../components/AllianceHubStakeCTA"
 
 const Delegations = () => {
   const { t } = useTranslation()
@@ -26,7 +27,6 @@ const Delegations = () => {
 
   const interchainDelegations = useInterchainDelegations()
   const allianceHubDelegationsData = allianceHub.useDelegations()
-  console.log("allianceHubDelegationsData", allianceHubDelegationsData)
   const allianceDelegationsData = useInterchainAllianceDelegations()
 
   const state = combineState(
@@ -109,9 +109,9 @@ const Delegations = () => {
           {
             title: t("Validator"),
             dataIndex: "validator_address",
-            render: (address: AccAddress) => {
+            render: (address: AccAddress, r) => {
               if (address === allianceHub.useHubAddress()) {
-                return <FinderLink value={address}>Alliance Hub</FinderLink>
+                return <AllianceHubStakeCTA denom={r.balance.denom} />
               } else {
                 return <ValidatorLink address={address} internal img />
               }

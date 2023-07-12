@@ -1,11 +1,10 @@
 import { readPercent } from "@terra-money/terra-utils"
 import { Button } from "components/general"
-import { Flex, Grid, InlineFlex, Page, Table, Tabs } from "components/layout"
+import { Flex, Grid, InlineFlex, Page, Table } from "components/layout"
 import { useBalances } from "data/queries/bank"
 import { useNativeDenoms } from "data/token"
 import { useNetworkWithFeature } from "data/wallet"
 import { useTranslation } from "react-i18next"
-import QuickStakeForm from "txs/stake/QuickStakeForm"
 import styles from "./QuickStake.module.scss"
 import { ModalButton } from "components/feedback"
 import {
@@ -27,73 +26,17 @@ import { useState } from "react"
 import { useAllianceHub } from "data/queries/alliance-protocol"
 import { ChainFeature } from "types/chains"
 import { useIsLedger } from "utils/ledger"
-
-export enum QuickStakeAction {
-  DELEGATE = "Delegate",
-  UNBOND = "Undelegate",
-}
+import { useQuickStakeForm } from "./hooks/useQuickStake"
 
 const QuickStake = () => {
-  const renderQuickStakeForm = ({
-    chainID,
-    denom,
-    rewardRate,
-    unbondingTime,
-    isAlliance,
-    hasDelegations,
-    stakeOnAllianceHub,
-  }: {
-    chainID: string
-    denom: string
-    rewardRate: number
-    unbondingTime: number
-    isAlliance: boolean
-    hasDelegations: boolean
-    stakeOnAllianceHub?: boolean
-  }) => {
-    if (!balances) return null
-
-    const props = {
-      balances,
-      denom,
-      chainID,
-      rewardRate,
-      unbondingTime,
-      isAlliance,
-      stakeOnAllianceHub,
-    }
-
-    const tabs = [
-      {
-        key: "delegate",
-        tab: t("Stake"),
-        children: (
-          <QuickStakeForm {...props} action={QuickStakeAction.DELEGATE} />
-        ),
-      },
-      {
-        key: "undelegate",
-        tab: t("Unstake"),
-        children: (
-          <QuickStakeForm {...props} action={QuickStakeAction.UNBOND} />
-        ),
-      },
-    ]
-
-    return hasDelegations ? (
-      <Tabs tabs={tabs} type="line" state />
-    ) : (
-      <QuickStakeForm {...props} action={QuickStakeAction.DELEGATE} />
-    )
-  }
-
   const { t } = useTranslation()
-  const { data: balances } = useBalances()
+  const quickStakeForm = useQuickStakeForm(t)
   const readNativeDenom = useNativeDenoms()
   const networks = useNetworkWithFeature(ChainFeature.STAKING)
   const [token, setToken] = useState<string | undefined>("uluna")
   const allianceHub = useAllianceHub()
   const isLedger = useIsLedger()
+  const balancesRes = useBalances()
 
   const allianceHubAssets = allianceHub.useWhitelistedAssets()
   const alliancesData = useAllAlliances()
@@ -348,15 +291,16 @@ const QuickStake = () => {
                       )
                     }
                   >
-                    {renderQuickStakeForm({
-                      denom,
+                    {quickStakeForm.render(
                       chainID,
-                      rewardRate: rewards,
-                      unbondingTime: unbonding,
+                      denom,
+                      balancesRes.data ?? [],
+                      rewards,
+                      unbonding,
                       isAlliance,
                       hasDelegations,
-                      stakeOnAllianceHub,
-                    })}
+                      stakeOnAllianceHub
+                    )}
                   </ModalButton>
                 </Flex>
               ),
