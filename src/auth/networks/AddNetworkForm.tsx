@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form"
 import { useNetworkState } from "data/wallet"
 import { useCustomNetworks } from "data/settings/CustomNetworks"
 import { Form, FormItem, Submit, Input, Checkbox } from "components/form"
+import { CustomNetwork } from "types/network"
 
 const AddNetwork = () => {
   const { t } = useTranslation()
@@ -45,10 +46,10 @@ const AddNetwork = () => {
         />
       </FormItem>
 
-      <FormItem label={t("Chain ID")} error={errors.chainID?.message}>
+      <FormItem label={t("Chain ID")} error={errors?.chainID?.message}>
         <Input
           {...register("chainID", { required: true })}
-          placeholder={mainnet.chainID}
+          placeholder={mainnet?.chainID}
         />
       </FormItem>
 

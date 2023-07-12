@@ -9,7 +9,7 @@ const Pairs = () => {
 
   return (
     <Col>
-      {Object.entries(pairs).map(([pair, { dex, type, assets }]) => (
+      {Object.entries(pairs ?? {}).map(([pair, { dex, type, assets }]) => (
         <Card
           title={pair}
           extra={[dex, type].join(": ")}

@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
 import UsbIcon from "@mui/icons-material/Usb"
-import { useWallet } from "@terra-money/wallet-provider"
+import { useWallet } from "@terra-money/wallet-kit"
 import { STATION } from "config/constants"
 import { RenderButton } from "types/components"
 import { useAddress } from "data/wallet"
@@ -20,7 +20,7 @@ interface Props {
 const ConnectWallet = ({ renderButton }: Props) => {
   const { t } = useTranslation()
 
-  const { connect, availableConnections, availableInstallations } = useWallet()
+  const { connect, availableWallets } = useWallet()
 
   const { available } = useAuth()
 
@@ -34,23 +34,25 @@ const ConnectWallet = ({ renderButton }: Props) => {
   )
 
   const list = [
-    ...availableConnections
-      .filter(({ type }) => type !== "READONLY")
-      .map(({ type, identifier, name, icon }) => ({
+    ...availableWallets
+      .filter(({ isInstalled }) => isInstalled)
+      .map(({ id, name, icon }) => ({
         src: icon,
         children: name,
-        onClick: () => connect(type, identifier),
+        onClick: () => connect(id),
       })),
     {
       icon: <UsbIcon />,
       to: "/auth/ledger",
       children: t("Access with ledger"),
     },
-    ...availableInstallations.map(({ name, icon, url }) => ({
-      src: icon,
-      children: t(`Install ${name}`),
-      href: url,
-    })),
+    ...availableWallets
+      .filter(({ isInstalled, website }) => !isInstalled && website)
+      .map(({ name, icon, website }) => ({
+        src: icon,
+        children: t(`Install ${name}`),
+        href: website ?? "",
+      })),
   ]
 
   return (

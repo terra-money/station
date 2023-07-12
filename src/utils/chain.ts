@@ -38,7 +38,9 @@ export const useChainsByAssetValue = () => {
     return acc
   }, {})
 
-  return Object.values(aggregatedCoinValues).sort((a, b) => b.value - a.value)
+  return Object.values(aggregatedCoinValues ?? {}).sort(
+    (a, b) => b.value - a.value
+  )
 }
 
 export const useSortedDisplayChains = () => {

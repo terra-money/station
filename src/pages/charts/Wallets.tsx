@@ -34,7 +34,7 @@ const Wallets = () => {
           onChange={(e) => setWalletsType(e.target.value as AggregateWallets)}
           small
         >
-          {Object.values(AggregateWallets).map((type) => (
+          {Object.values(AggregateWallets ?? {}).map((type) => (
             <option value={type} key={type}>
               {capitalize(type)}
             </option>

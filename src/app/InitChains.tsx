@@ -14,7 +14,7 @@ const InitChains = ({ children }: PropsWithChildren<{}>) => {
       .get("/denoms.json", { baseURL: STATION_ASSETS })
       .then(({ data }) => setWhitelist(data))
     axios
-      .get("/ibc.json", { baseURL: STATION_ASSETS })
+      .get("/ibc_tokens.json", { baseURL: STATION_ASSETS })
       .then(({ data }) => setIbcDenoms(data))
     axios
       .get("/station/coins.json", { baseURL: ASSETS })

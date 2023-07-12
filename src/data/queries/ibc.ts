@@ -5,6 +5,7 @@ import { useInterchainLCDClient } from "./lcdClient"
 import { useNetwork } from "data/wallet"
 import axios from "axios"
 import crypto from "crypto"
+import { AccAddress } from "@terra-money/feather.js"
 
 export const useIBCBaseDenom = (
   denom: Denom,
@@ -27,7 +28,7 @@ export const useIBCBaseDenom = (
       const channels = []
 
       for (let i = 0; i < paths.length; i += 2) {
-        const chain = chains[chains.length - 1]
+        const chain = chains[0]
 
         if (!network[chain]?.lcd) return
 
@@ -77,7 +78,7 @@ export const useIBCBaseDenoms = (data: { denom: Denom; chainID: string }[]) => {
           const channels = []
 
           for (let i = 0; i < paths.length; i += 2) {
-            const chain = chains[chains.length - 1]
+            const chain = chains[0]
 
             if (!network[chain]?.lcd) return
 
@@ -96,6 +97,9 @@ export const useIBCBaseDenoms = (data: { denom: Denom; chainID: string }[]) => {
             ibcDenom: denom,
             baseDenom: base_denom.startsWith("cw20:")
               ? base_denom.replace("cw20:", "")
+              : // fix for kujira factory tokens
+              base_denom.startsWith("factory:")
+              ? base_denom.replaceAll(":", "/")
               : base_denom,
             chainIDs: chains,
             channels,
@@ -109,9 +113,15 @@ export const useIBCBaseDenoms = (data: { denom: Denom; chainID: string }[]) => {
 }
 
 export function calculateIBCDenom(baseDenom: string, path: string) {
-  if (!path) return baseDenom
+  if (!path)
+    return baseDenom.startsWith("factory:")
+      ? baseDenom.replaceAll(":", "/")
+      : baseDenom
 
-  const assetString = [path, baseDenom].join("/")
+  const assetString = [
+    path,
+    AccAddress.validate(baseDenom) ? `cw20:${baseDenom}` : baseDenom,
+  ].join("/")
   const hash = crypto.createHash("sha256")
   hash.update(assetString)
   return `ibc/${hash.digest("hex").toUpperCase()}`

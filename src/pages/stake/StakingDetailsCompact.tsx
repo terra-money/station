@@ -2,13 +2,14 @@ import classNames from "classnames/bind"
 import { Card, Flex, Grid } from "components/layout"
 import styles from "./StakingDetailsCompact.module.scss"
 import { useNativeDenoms } from "data/token"
-import { useNetwork } from "data/wallet"
+import { useNetworkWithFeature } from "data/wallet"
 import { useTranslation } from "react-i18next"
 import { readPercent } from "@terra-money/terra-utils"
 import { useDelegations, useStakingParams } from "data/queries/staking"
 import { useAlliance, useAllianceDelegations } from "data/queries/alliance"
 import { combineState } from "data/query"
 import { Read } from "components/token"
+import { ChainFeature } from "types/chains"
 
 const cx = classNames.bind(styles)
 
@@ -19,7 +20,7 @@ const StakingDetailsCompact = ({
   denom: string
   chainID: string
 }) => {
-  const network = useNetwork()
+  const network = useNetworkWithFeature(ChainFeature.STAKING)
   const { t } = useTranslation()
   const readNativeDenom = useNativeDenoms()
   const token = readNativeDenom(denom)

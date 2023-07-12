@@ -12,6 +12,7 @@ const ProposalDescription = ({ proposal }: { proposal: ProposalResult }) => {
   const { description } = proposal.content
 
   const parseText = (text: string) => {
+    if (!text) return null
     const result: (React.ReactNode | string)[] = []
     const lines = text.split(/\\n|\n/)
 

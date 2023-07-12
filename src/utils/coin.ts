@@ -1,5 +1,6 @@
 import { AccAddress, Coins } from "@terra-money/feather.js"
 import { isDenom, isDenomIBC } from "@terra-money/terra-utils"
+import { InterchainNetwork } from "types/network"
 
 /* coin */
 export const getAmount = (
@@ -78,7 +79,8 @@ export const getDenomFromAddress = (
   address: AccAddress
 ) => {
   return (
-    Object.values(networks).find(({ prefix }) => address.startsWith(prefix))
-      ?.baseAsset || "uluna"
+    Object.values(networks ?? {}).find(({ prefix }) =>
+      address.startsWith(prefix)
+    )?.baseAsset || "uluna"
   )
 }

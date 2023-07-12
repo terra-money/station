@@ -32,7 +32,7 @@ const StakingReturn = () => {
           onChange={(e) => setType(e.target.value as AggregateStakingReturn)}
           small
         >
-          {Object.values(AggregateStakingReturn).map((type) => (
+          {Object.values(AggregateStakingReturn ?? {}).map((type) => (
             <option value={type} key={type}>
               {capitalize(type)}
             </option>

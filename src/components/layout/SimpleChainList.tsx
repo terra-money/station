@@ -1,5 +1,6 @@
 import styles from "./SimpleChainList.module.scss"
 import classNames from "classnames"
+import { InterchainNetwork } from "types/network"
 import { useDisplayChains } from "utils/localStorage"
 
 interface Props {
@@ -12,10 +13,10 @@ const cx = classNames.bind(styles)
 const SimpleChainList = ({ list, onClick }: Props) => {
   const { displayChains } = useDisplayChains()
   const sortedList = list.sort((a, b) =>
-    displayChains?.includes(a.chainID) && !displayChains?.includes(b.chainID)
+    displayChains?.includes(a?.chainID) && !displayChains?.includes(b?.chainID)
       ? -1
-      : !displayChains?.includes(a.chainID) &&
-        displayChains?.includes(b.chainID)
+      : !displayChains?.includes(a?.chainID) &&
+        displayChains?.includes(b?.chainID)
       ? 1
       : 0
   )

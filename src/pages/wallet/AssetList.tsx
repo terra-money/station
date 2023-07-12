@@ -15,7 +15,7 @@ import {
   useCustomTokensNative,
 } from "data/settings/CustomTokens"
 import { useIBCBaseDenoms } from "data/queries/ibc"
-import { useNetwork } from "data/wallet"
+import { useNetwork, useNetworkName } from "data/wallet"
 import { ReactComponent as ManageAssets } from "styles/images/icons/ManageAssets.svg"
 
 const AssetList = () => {
@@ -23,6 +23,7 @@ const AssetList = () => {
   const isWalletEmpty = useIsWalletEmpty()
   const { hideNoWhitelist, hideLowBal } = useTokenFilters()
   const networks = useNetwork()
+  const networkName = useNetworkName()
 
   const coins = useBankBalance()
   const { data: prices } = useExchangeRates()
@@ -41,8 +42,8 @@ const AssetList = () => {
   const unknownIBCDenomsData = useIBCBaseDenoms(
     coins
       .map(({ denom, chain }) => ({ denom, chainID: chain }))
-      .filter(({ denom }) => {
-        const data = readNativeDenom(denom)
+      .filter(({ denom, chainID }) => {
+        const data = readNativeDenom(denom, chainID)
         return denom.startsWith("ibc/") && data.symbol.endsWith("...")
       })
   )
@@ -51,10 +52,12 @@ const AssetList = () => {
       data
         ? {
             ...acc,
-            [data.ibcDenom]: {
+            [[data.ibcDenom, data.chainIDs[data.chainIDs.length - 1]].join(
+              "*"
+            )]: {
               baseDenom: data.baseDenom,
-              chainID: data.chainIDs[0],
-              chainIDs: data.chainIDs,
+              chainID: data?.chainIDs[0],
+              chainIDs: data?.chainIDs,
             },
           }
         : acc,
@@ -70,13 +73,15 @@ const AssetList = () => {
         ...Object.values(
           coins.reduce((acc, { denom, amount, chain }) => {
             const data = readNativeDenom(
-              unknownIBCDenoms[denom]?.baseDenom ?? denom,
-              unknownIBCDenoms[denom]?.chainID ?? chain
+              unknownIBCDenoms[[denom, chain].join("*")]?.baseDenom ?? denom,
+              unknownIBCDenoms[[denom, chain].join("*")]?.chainIDs[0] ?? chain
             )
 
             const key = [
-              // @ts-expect-error
-              unknownIBCDenoms[denom]?.chainID ?? data.chainID ?? chain,
+              unknownIBCDenoms[[denom, chain].join("*")]?.chainIDs[0] ??
+                // @ts-expect-error
+                data?.chainID ??
+                chain,
               data.token,
             ].join("*")
 
@@ -86,6 +91,24 @@ const AssetList = () => {
               }`
               acc[key].chains.push(chain)
               return acc
+            } else if (
+              key === "columbus-5*uluna" &&
+              networkName !== "classic"
+            ) {
+              return {
+                ...acc,
+                [key]: {
+                  denom: data.token,
+                  balance: amount,
+                  icon: "https://assets.terra.money/icon/svg/LUNC.svg",
+                  symbol: "LUNC",
+                  price: prices?.["uluna:classic"]?.price ?? 0,
+                  change: prices?.["uluna:classic"]?.change ?? 0,
+                  chains: [chain],
+                  id: key,
+                  whitelisted: true,
+                },
+              }
             } else {
               return {
                 ...acc,
@@ -100,12 +123,14 @@ const AssetList = () => {
                   id: key,
                   whitelisted: !(
                     data.isNonWhitelisted ||
-                    unknownIBCDenoms[denom]?.chainIDs.find((c) => !networks[c])
+                    unknownIBCDenoms[[denom, chain].join("*")]?.chainIDs.find(
+                      (c) => !networks[c]
+                    )
                   ),
                 },
               }
             }
-          }, {} as Record<string, any>)
+          }, {} as Record<string, any>) ?? {}
         ),
       ]
         .filter(
@@ -114,8 +139,9 @@ const AssetList = () => {
         .filter((a) => {
           const { token } = readNativeDenom(a.denom)
 
-          if (!hideLowBal || a.price === 0 || alwaysVisibleDenoms.has(token))
+          if (!hideLowBal || a.price === 0 || alwaysVisibleDenoms.has(token)) {
             return true
+          }
           return a.price * toInput(a.balance) >= 1
         })
         .sort(
@@ -131,6 +157,7 @@ const AssetList = () => {
       alwaysVisibleDenoms,
       unknownIBCDenoms,
       networks,
+      networkName,
     ]
   )
 
@@ -143,19 +170,19 @@ const AssetList = () => {
           <FormError>{t("Coins required to post transactions")}</FormError>
         )}
         <section>
-          {(prices || !hideLowBal) &&
-            list.map(({ denom, chainID, id, ...item }, i) => (
-              <Asset
-                denom={denom}
-                {...readNativeDenom(
-                  unknownIBCDenoms[denom]?.baseDenom ?? denom,
-                  unknownIBCDenoms[denom]?.chainID ?? chainID
-                )}
-                id={id}
-                {...item}
-                key={i}
-              />
-            ))}
+          {list.map(({ denom, chainID, id, ...item }, i) => (
+            <Asset
+              denom={denom}
+              {...readNativeDenom(
+                unknownIBCDenoms[[denom, chainID].join("*")]?.baseDenom ??
+                  denom,
+                unknownIBCDenoms[[denom, chainID].join("*")]?.chainID ?? chainID
+              )}
+              id={id}
+              {...item}
+              key={i}
+            />
+          ))}
         </section>
       </div>
     )

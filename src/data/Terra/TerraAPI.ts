@@ -150,7 +150,7 @@ export const calcSelfDelegation = (validator?: TerraValidator) => {
 export const useVotingPowerRate = (address: ValAddress) => {
   const networks = useNetwork()
   const prefix = ValAddress.getPrefix(address)
-  const chainID = Object.values(networks).find(
+  const chainID = Object.values(networks ?? {}).find(
     ({ prefix: p }) => p === prefix
   )?.chainID
 

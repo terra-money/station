@@ -13,15 +13,16 @@ import { Col, Card, ExtraActions, Grid } from "components/layout"
 import { Read } from "components/token"
 import { StakeAction } from "txs/stake/StakeForm"
 import styles from "./ValidatorActions.module.scss"
-import { useNetwork } from "data/wallet"
+import { useNetworkWithFeature } from "data/wallet"
+import { ChainFeature } from "types/chains"
 
 const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
   const { t } = useTranslation()
   const currency = useCurrency()
-  const networks = useNetwork()
+  const networks = useNetworkWithFeature(ChainFeature.STAKING)
   const chain = useMemo(() => {
     const prefix = ValAddress.getPrefix(destination)
-    return Object.values(networks).find(({ prefix: p }) => p === prefix)
+    return Object.values(networks ?? {}).find(({ prefix: p }) => p === prefix)
   }, [networks, destination])
   const { data: delegation, ...delegationState } = useDelegation(destination)
   const { data: delegations, ...delegationsState } = useDelegations(
@@ -62,7 +63,7 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
 
     return (
       <ExtraActions align="stretch">
-        {Object.values(StakeAction).map((action) => (
+        {Object.values(StakeAction ?? {}).map((action) => (
           <LinkButton
             to={`/stake/${destination}`}
             state={action}

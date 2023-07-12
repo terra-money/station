@@ -94,6 +94,7 @@ function IbcSendBackTx({ token, chainID }: Props) {
   const { errors } = formState
   const { input } = watch()
   const queryClient = useQueryClient()
+  const networks = useNetwork()
 
   const [step, setStep] = useState<number>(0)
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -122,6 +123,8 @@ function IbcSendBackTx({ token, chainID }: Props) {
     }
   }
 
+  const isKujira = networks[ibcDetails?.chainIDs[0] ?? ""]?.prefix === "kujira"
+
   useEffect(() => {
     // around 3 minutes with a 10 seconds interval
     let maxIterations = 18
@@ -131,7 +134,7 @@ function IbcSendBackTx({ token, chainID }: Props) {
         while (maxIterations--) {
           const tokenBalance = await getBalance(
             waitUntil.denom,
-            waitUntil.chainID
+            waitUntil?.chainID
           )
 
           if (Number(tokenBalance) > waitUntil.balance) {
@@ -160,9 +163,11 @@ function IbcSendBackTx({ token, chainID }: Props) {
     () =>
       ibcDetails &&
       calculateIBCDenom(
-        ibcDetails.baseDenom,
+        isKujira
+          ? ibcDetails.baseDenom?.replaceAll("/", ":")
+          : ibcDetails.baseDenom,
         ibcDetails.channels
-          .slice(step)
+          .slice(0, ibcDetails.channels.length - step)
           .reduce(
             (acc, cur) =>
               acc
@@ -171,7 +176,7 @@ function IbcSendBackTx({ token, chainID }: Props) {
             ""
           )
       ),
-    [step, ibcDetails]
+    [step, ibcDetails, isKujira]
   )
 
   const chains = useMemo(
@@ -184,10 +189,13 @@ function IbcSendBackTx({ token, chainID }: Props) {
     ({ input }: TxValues) => {
       if (!ibcDetails || !addresses || !IBCdenom || !input) return
 
+      const { channel, port } =
+        ibcDetails.channels[ibcDetails.channels.length - 1 - step]
+
       const msgs = [
         new MsgTransfer(
-          ibcDetails.channels[step].port,
-          ibcDetails.channels[step].channel,
+          port,
+          channel,
           new Coin(IBCdenom, input * 10 ** decimals),
           addresses[chains[step]],
           addresses[chains[step + 1]],
@@ -231,9 +239,11 @@ function IbcSendBackTx({ token, chainID }: Props) {
     onChangeMax,
     onPost: () => {
       const nextDenom = calculateIBCDenom(
-        ibcDetails?.baseDenom ?? "",
+        (isKujira
+          ? ibcDetails?.baseDenom?.replaceAll("/", ":")
+          : ibcDetails?.baseDenom) ?? "",
         (ibcDetails?.channels ?? [])
-          .slice(step + 1)
+          .slice(0, (ibcDetails?.channels.length ?? 0) - step - 1)
           .reduce(
             (acc, cur) =>
               acc

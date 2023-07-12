@@ -56,7 +56,9 @@ const TransferPage = () => {
   const balances = useBankBalance()
   const { data: prices } = useExchangeRates()
   const readNativeDenom = useNativeDenoms()
-  const { route } = useWalletRoute() as unknown as { route: { denom?: string } }
+  const { route } = useWalletRoute() as unknown as {
+    route: { denom?: string }
+  }
   const availableAssets = useMemo(
     () =>
       Object.values(
@@ -81,7 +83,7 @@ const TransferPage = () => {
               },
             } as Record<string, AssetType>
           }
-        }, {} as Record<string, AssetType>)
+        }, {} as Record<string, AssetType>) ?? {}
       ).sort(
         (a, b) => b.price * parseInt(b.balance) - a.price * parseInt(a.balance)
       ),
@@ -117,7 +119,7 @@ const TransferPage = () => {
 
   const availableDestinations = useMemo(
     () =>
-      Object.keys(networks)
+      Object.keys(networks ?? {})
         .filter((chainID) => chainID !== chain)
         .sort((a, b) => {
           if (networks[a]?.prefix === "terra") return -1
@@ -190,7 +192,8 @@ const TransferPage = () => {
         from: chain,
         to: destinationChain,
         tokenAddress: token.denom,
-        icsChannel: ibcDenoms[networkName][token.denom]?.icsChannel,
+        icsChannel:
+          ibcDenoms[networkName][`${chain}:${token.denom}`]?.icsChannel,
       }) &&
         !readNativeDenom(token.denom).isAxelar)
     ) {
@@ -251,7 +254,8 @@ const TransferPage = () => {
           from: chain,
           to: destinationChain,
           tokenAddress: token.denom,
-          icsChannel: ibcDenoms[networkName][token?.denom ?? ""]?.icsChannel,
+          icsChannel:
+            ibcDenoms[networkName][`${chain}:${token.denom}`]?.icsChannel,
         })
         if (!channel) throw new Error("No IBC channel found")
 
