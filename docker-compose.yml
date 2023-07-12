@@ -1,0 +1,66 @@
+version: '3.9'
+
+###############################################################################
+services:
+
+  haproxy:
+    image: haproxy:2.8.0-alpine
+    volumes:
+      - ./docker-assets/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    networks:
+      - default
+    ports:
+      - '1317:1317'
+      - '8444:8444'
+
+  localterra:
+    image: ghcr.io/terra-money/localterra:${TERRA_VERSION:-latest}
+    platform: linux/amd64
+    hostname: terrad
+    volumes:
+      - terra:/app
+    networks:
+      - default
+
+  assets:
+    image: ghcr.io/terra-money/station-assets:1.0.1
+    hostname: assets
+    networks:
+      - default
+    ports:
+      - '3001:3001'
+
+  station:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      target: reloader
+      args:
+        REACT_APP_ASSETS: http://localhost:3001
+        REACT_APP_STATION_ASSETS: http://localhost:3001
+    image: ghcr.io/terra-money/station:localhr
+    networks:
+      - default
+    ports:
+      - '3000:3000'
+    # To enable/disable hot reload in station
+    # comment/uncomment the build `target` above and
+    # comment/uncomment the following lines below
+    command: >
+      /bin/sh -c "
+        echo 'Development server will take 2-3min to start up.' && \
+        exec npm run start"
+    environment:
+      NODE_ENV: "development"
+      HTTPS: "false"
+    volumes:
+      - ./:/app/dev
+      - /app/dev/node_modules
+
+###############################################################################
+
+volumes:
+  terra:
+
+networks:
+  default:
