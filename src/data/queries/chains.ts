@@ -111,9 +111,9 @@ export function useIBCChannels() {
 
       if (
         icsChannel &&
-        networks[to]?.icsChannels?.[from]?.otherChannel === icsChannel
+        networks[to]?.icsChannels?.[from]?.channel === icsChannel
       ) {
-        return icsChannel
+        return networks[to]?.icsChannels?.[from]?.otherChannel
       }
 
       return networks[from]?.channels?.[to]

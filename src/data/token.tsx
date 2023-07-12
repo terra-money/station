@@ -157,17 +157,21 @@ export const useNativeDenoms = () => {
     }
 
     // ibc token
-    let ibcToken = ibcDenoms[networkName]?.[denom]?.token
+    let ibcToken = chainID
+      ? ibcDenoms[networkName]?.[`${chainID}:${denom}`]
+      : Object.entries(ibcDenoms[networkName] ?? {}).find(
+          ([k]) => k.split(":")[1] === denom
+        )?.[1]
 
     if (
       ibcToken &&
-      whitelist[networkName][ibcToken] &&
-      (!chainID || ibcDenoms[networkName][denom].chainID === chainID)
+      whitelist[networkName][ibcToken?.token] &&
+      (!chainID || ibcToken?.chainID === chainID)
     ) {
       return {
-        ...whitelist[networkName][ibcToken],
+        ...whitelist[networkName][ibcToken?.token],
         // @ts-expect-error
-        chains: [ibcDenoms[networkName][denom].chainID],
+        chains: [ibcToken?.chainID],
       }
     }
 

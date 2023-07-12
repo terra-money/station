@@ -123,9 +123,9 @@ const TFMSwapContext = ({ children }: PropsWithChildren<{}>) => {
         ...cw20,
         ...Object.entries(ibcDenoms[networkName] ?? {})
           .filter(([_, { chainID }]) => chainID === terraChainID)
-          .map(([ibc, { token }]) => ({
-            ...readNativeDenom(token),
-            token: ibc,
+          .map(([ibc, { token, chainID }]) => ({
+            ...readNativeDenom(token, chainID),
+            token: ibc.split(":")[1],
             balance: getAmount(bankBalance, token),
           }))
           .filter((entry) => (entry.isNonWhitelisted ? false : true)),
