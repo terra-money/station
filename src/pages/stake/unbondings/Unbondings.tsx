@@ -14,14 +14,15 @@ import { Read } from "components/token"
 import { DateTimeRenderer, TooltipIcon } from "components/display"
 import StakedCard from "../components/StakedCard"
 import { UnbondingDelegation } from "@terra-money/feather.js"
-import { useNetwork } from "data/wallet"
+import { useNetworkWithFeature } from "data/wallet"
 import { useNativeDenoms } from "data/token"
 import { getDenomFromAddress } from "utils/coin"
 import styles from "../CardModal.module.scss"
+import { ChainFeature } from "types/chains"
 
 const Unbondings = () => {
   const { t } = useTranslation()
-  const networks = useNetwork()
+  const networks = useNetworkWithFeature(ChainFeature.STAKING)
   const readNativeDenom = useNativeDenoms()
   const { data: prices, ...pricesState } = useExchangeRates()
 

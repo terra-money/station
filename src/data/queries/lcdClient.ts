@@ -5,9 +5,7 @@ import { useChainID, useNetwork } from "data/wallet"
 
 export const useInterchainLCDClient = () => {
   const network = useNetwork()
-
   const lcdClient = useMemo(() => new InterchainLCDClient(network), [network])
-
   return lcdClient
 }
 

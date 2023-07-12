@@ -42,8 +42,8 @@ const AssetList = () => {
   const unknownIBCDenomsData = useIBCBaseDenoms(
     coins
       .map(({ denom, chain }) => ({ denom, chainID: chain }))
-      .filter(({ denom }) => {
-        const data = readNativeDenom(denom)
+      .filter(({ denom, chainID }) => {
+        const data = readNativeDenom(denom, chainID)
         return denom.startsWith("ibc/") && data.symbol.endsWith("...")
       })
   )
@@ -52,7 +52,9 @@ const AssetList = () => {
       data
         ? {
             ...acc,
-            [data.ibcDenom]: {
+            [[data.ibcDenom, data.chainIDs[data.chainIDs.length - 1]].join(
+              "*"
+            )]: {
               baseDenom: data.baseDenom,
               chainID: data?.chainIDs[0],
               chainIDs: data?.chainIDs,
@@ -71,13 +73,15 @@ const AssetList = () => {
         ...Object.values(
           coins.reduce((acc, { denom, amount, chain }) => {
             const data = readNativeDenom(
-              unknownIBCDenoms[denom]?.baseDenom ?? denom,
-              unknownIBCDenoms[denom]?.chainID ?? chain
+              unknownIBCDenoms[[denom, chain].join("*")]?.baseDenom ?? denom,
+              unknownIBCDenoms[[denom, chain].join("*")]?.chainIDs[0] ?? chain
             )
 
             const key = [
-              // @ts-expect-error
-              unknownIBCDenoms[denom]?.chainID ?? data?.chainID ?? chain,
+              unknownIBCDenoms[[denom, chain].join("*")]?.chainIDs[0] ??
+                // @ts-expect-error
+                data?.chainID ??
+                chain,
               data.token,
             ].join("*")
 
@@ -119,7 +123,9 @@ const AssetList = () => {
                   id: key,
                   whitelisted: !(
                     data.isNonWhitelisted ||
-                    unknownIBCDenoms[denom]?.chainIDs.find((c) => !networks[c])
+                    unknownIBCDenoms[[denom, chain].join("*")]?.chainIDs.find(
+                      (c) => !networks[c]
+                    )
                   ),
                 },
               }
@@ -168,8 +174,9 @@ const AssetList = () => {
             <Asset
               denom={denom}
               {...readNativeDenom(
-                unknownIBCDenoms[denom]?.baseDenom ?? denom,
-                unknownIBCDenoms[denom]?.chainID ?? chainID
+                unknownIBCDenoms[[denom, chainID].join("*")]?.baseDenom ??
+                  denom,
+                unknownIBCDenoms[[denom, chainID].join("*")]?.chainID ?? chainID
               )}
               id={id}
               {...item}

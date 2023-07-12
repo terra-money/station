@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next"
 import TokenSelector, {
   TokenInterface,
 } from "components/form/Selectors/TokenSelector/TokenSelector"
-import { useNetwork } from "data/wallet"
+import { useNetworkWithFeature } from "data/wallet"
 import { useState } from "react"
 import {
   AllianceDelegation,
@@ -26,11 +26,12 @@ import { combineState } from "data/query"
 import { useNativeDenoms } from "data/token"
 import { readPercent } from "@terra-money/terra-utils"
 import { Tooltip, TooltipIcon } from "components/display"
+import { ChainFeature } from "types/chains"
 
 const Validators = () => {
   const { t } = useTranslation()
   const readNativeDenom = useNativeDenoms()
-  const networks = useNetwork()
+  const networks = useNetworkWithFeature(ChainFeature.STAKING)
   const [token, setToken] = useState<string | undefined>("uluna")
 
   const alliancesData = useAllAlliances()
@@ -124,7 +125,7 @@ const Validators = () => {
   return (
     <Page sub {...state}>
       <header className={styles.select__asset}>
-        <p>Select staking asset:</p>
+        <p>{t("Select staking asset")}:</p>
         <TokenSelector
           value={token}
           tokenLists={tokenList}

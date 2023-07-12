@@ -1,5 +1,5 @@
 import classNames from "classnames"
-import { useChainID, useNetwork } from "data/wallet"
+import { useChainID, useNetworkWithFeature } from "data/wallet"
 import { useState, memo, useMemo, useRef, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import styles from "./ChainFilter.module.scss"
@@ -8,6 +8,7 @@ import { isTerraChain } from "utils/chain"
 import { OtherChainsButton } from "components/layout"
 import { useSortedDisplayChains } from "utils/chain"
 import { useDisplayChains } from "utils/localStorage"
+import { ChainFeature } from "types/chains"
 
 type Props = {
   children: (chain?: string) => React.ReactNode
@@ -16,6 +17,7 @@ type Props = {
   title?: string
   className?: string
   terraOnly?: boolean
+  feature?: ChainFeature // module feature required to display chain
 }
 
 const cx = classNames.bind(styles)
@@ -27,12 +29,13 @@ const ChainFilter = ({
   title,
   className,
   terraOnly,
+  feature,
 }: Props) => {
   const { t } = useTranslation()
   const { savedChain, changeSavedChain } = useSavedChain()
   const [width, setWidth] = useState(0)
   const ref = useRef<HTMLDivElement>(null)
-  const network = useNetwork()
+  const network = useNetworkWithFeature(feature)
   const chainID = useChainID()
   const { displayChains } = useDisplayChains()
   const sortedDisplayChains = useSortedDisplayChains()
