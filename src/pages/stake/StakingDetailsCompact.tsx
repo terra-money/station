@@ -4,7 +4,6 @@ import styles from "./StakingDetailsCompact.module.scss"
 import { useNativeDenoms } from "data/token"
 import { useNetworkWithFeature } from "data/wallet"
 import { useTranslation } from "react-i18next"
-import { readPercent } from "@terra-money/terra-utils"
 import { useDelegations, useStakingParams } from "data/queries/staking"
 import { useAlliance, useAllianceDelegations } from "data/queries/alliance"
 import { combineState } from "data/query"
@@ -91,12 +90,6 @@ const StakingDetailsCompact = ({
             <dl>
               <dt>{t("Unbonding period")}:</dt>
               <dd>{t("{{value}} days", { value: daysToUnbond })}</dd>
-            </dl>
-            <dl>
-              <dt>{t("Rewards rate")}:</dt>
-              <dd>
-                {readPercent(isAlliance ? alliance?.reward_weight ?? 0 : 1)}
-              </dd>
             </dl>
           </div>
           {!!delegated && (
