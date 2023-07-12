@@ -266,7 +266,7 @@ const QuickStake = () => {
             },
             {
               title: t("Actions"),
-              dataIndex: ["asset", "chainID"],
+              dataIndex: "actions",
               render: (
                 _,
                 {
