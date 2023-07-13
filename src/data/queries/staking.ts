@@ -34,7 +34,6 @@ import {
 
 export const useInterchainValidators = () => {
   const addresses = useInterchainAddressesWithFeature(ChainFeature.STAKING)
-  console.log("addresses", addresses)
   const lcd = useInterchainLCDClient()
 
   return useQueries(
