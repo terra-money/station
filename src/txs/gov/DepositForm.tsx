@@ -93,6 +93,7 @@ const DepositForm = () => {
               })}
               token={networks[chain].baseAsset}
               onFocus={max.reset}
+              type="number"
               inputMode="decimal"
               placeholder={getPlaceholder()}
               autoFocus
