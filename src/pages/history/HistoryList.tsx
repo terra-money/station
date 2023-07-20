@@ -23,7 +23,7 @@ interface PaginationKeys {
  * Returns pagination keys for the given chain. Switched by cosmos_sdk
  * version in the future, isTerra for now.
  *
- * @param isTerra comma-separated list of coins
+ * @param isTerra boolean based on chain-id.  True if Terra, false if not.
  */
 function getPaginationKeys(isTerra: boolean): PaginationKeys {
   if (isTerra) {
