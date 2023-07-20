@@ -31,6 +31,7 @@ const Input = forwardRef(
             before: token || actionButton,
             after: selectBefore,
           })}
+          step="any"
           autoComplete="off"
           ref={ref}
         />

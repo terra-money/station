@@ -1,18 +1,18 @@
 import { ReactComponent as ReceiveIcon } from "styles/images/icons/Receive_v2.svg"
 import { ReactComponent as SendIcon } from "styles/images/icons/Send_v2.svg"
-import { ReactComponent as AddIcon } from "styles/images/icons/Buy_v2.svg"
-import { useChainID, useNetwork, useNetworkName } from "data/wallet"
+// import { ReactComponent as AddIcon } from "styles/images/icons/Buy_v2.svg"
+import { useChainID, useNetwork } from "data/wallet"
 import { useBankBalance, useIsWalletEmpty } from "data/queries/bank"
-import { useInterchainAddresses } from "auth/hooks/useAddress"
+// import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { useExchangeRates } from "data/queries/coingecko"
 import { useCurrency } from "data/settings/Currency"
-import { ModalButton } from "components/feedback"
+// import { ModalButton } from "components/feedback"
 import { TooltipIcon } from "components/display"
 import { Path, useWalletRoute } from "./Wallet"
 import NetWorthTooltip from "./NetWorthTooltip"
 import { useTranslation } from "react-i18next"
 import { useNativeDenoms } from "data/token"
-import FiatRampModal from "./FiatRampModal"
+// import FiatRampModal from "./FiatRampModal"
 import { Button } from "components/general"
 import styles from "./NetWorth.module.scss"
 import { capitalize } from "@mui/material"
@@ -29,8 +29,8 @@ const NetWorth = () => {
   const { data: prices } = useExchangeRates()
   const readNativeDenom = useNativeDenoms()
   const { setRoute, route } = useWalletRoute()
-  const addresses = useInterchainAddresses()
-  const networkName = useNetworkName()
+  // const addresses = useInterchainAddresses()
+  // const networkName = useNetworkName()
   const isWalletEmpty = useIsWalletEmpty()
 
   const networks = useNetwork()
@@ -98,7 +98,7 @@ const NetWorth = () => {
           </Button>
           <h3>{capitalize(t("receive"))}</h3>
         </div>
-        {addresses && networkName === "mainnet" && (
+        {/* {addresses && networkName === "mainnet" && (
           <div className={styles.button__wrapper}>
             <ModalButton
               minimal
@@ -112,7 +112,7 @@ const NetWorth = () => {
             </ModalButton>
             <h2>{t(capitalize("buy"))}</h2>
           </div>
-        )}
+        )} */}
       </div>
     </article>
   )
