@@ -54,8 +54,8 @@ services:
       NODE_ENV: "development"
       HTTPS: "false"
     volumes:
-      - ./:/app/dev
-      - /app/dev/node_modules
+      - ./:/app/src
+      - /app/src/node_modules
 
 ###############################################################################
 
