@@ -33,7 +33,7 @@ const SlippageControl = forwardRef(
         <section className={styles.main}>
           <label className={styles.label}>{t("Slippage tolerance")}</label>
           <Flex gap={2} className={className}>
-            <input {...attrs} autoComplete="off" ref={ref} />
+            <input {...attrs} autoComplete="off" step="any" ref={ref} />
             <span>%</span>
           </Flex>
         </section>
