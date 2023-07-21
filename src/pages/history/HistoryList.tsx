@@ -45,7 +45,7 @@ const HistoryList = ({ chainID }: Props) => {
   const addresses = useInterchainAddresses()
   const networks = useNetwork()
 
-  const LIMIT = 100
+  const LIMIT = 75
   const EVENTS = [
     // any tx signed by the user
     "message.sender",
