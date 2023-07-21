@@ -36,7 +36,13 @@ export const AssetInput = forwardRef(
     ref: ForwardedRef<HTMLInputElement>
   ) => {
     return (
-      <input {...attrs} className={styles.input} autoComplete="off" ref={ref} />
+      <input
+        {...attrs}
+        className={styles.input}
+        autoComplete="off"
+        step="any"
+        ref={ref}
+      />
     )
   }
 )
