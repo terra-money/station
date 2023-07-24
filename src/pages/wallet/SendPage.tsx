@@ -102,7 +102,12 @@ const SendPage = () => {
       ),
     [balances, readNativeDenom, networkName, prices]
   )
-  const defaultAsset = route?.denom || availableAssets[0].denom
+
+  const filteredAssets = useMemo(
+    () => availableAssets.filter(({ symbol }) => !symbol.endsWith("...")),
+    [availableAssets]
+  )
+  const defaultAsset = route?.denom || filteredAssets[0].denom
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })
@@ -343,12 +348,7 @@ const SendPage = () => {
     }
   }, [chain, trigger, recipient])
 
-  const filteredAssets = useMemo(
-    () => availableAssets.filter(({ symbol }) => !symbol.endsWith("...")),
-    [availableAssets]
-  )
-
-  const assetsByDenom = filteredAssets.reduce(
+  const assetsByDenom = availableAssets.reduce(
     (acc: Record<string, AssetType>, item: AssetType) => {
       acc[item.denom] = item
       return acc
@@ -371,7 +371,7 @@ const SendPage = () => {
                 error={errors.asset?.message ?? errors.address?.message}
               >
                 <AssetSelector
-                  value={asset ?? ""}
+                  value={asset ?? defaultAsset}
                   onChange={(asset) => setValue("asset", asset)}
                   assetList={filteredAssets}
                   assetsByDenom={assetsByDenom}
