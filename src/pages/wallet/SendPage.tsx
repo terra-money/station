@@ -348,7 +348,7 @@ const SendPage = () => {
     }
   }, [chain, trigger, recipient])
 
-  const assetsByDenom = availableAssets.reduce(
+  const assetsByDenom = filteredAssets.reduce(
     (acc: Record<string, AssetType>, item: AssetType) => {
       acc[item.denom] = item
       return acc
