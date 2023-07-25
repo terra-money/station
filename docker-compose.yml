@@ -4,8 +4,9 @@ version: '3.9'
 services:
 
   traefik:
-    image: traefik:v2.4
+    image: traefik:v2.10
     command:
+      - --accesslog=true
       - --api.insecure=true # Dont do that in production!
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
