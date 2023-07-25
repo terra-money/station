@@ -1,7 +1,7 @@
 import { PropsWithChildren, useEffect, useState } from "react"
 import Overlay from "./components/Overlay"
 import LocalTerraError from "./LocalTerraError"
-import { useChainID } from "data/wallet"
+import { useNetwork, useChainID } from "data/wallet"
 import NetworkLoading from "./NetworkLoading"
 import axios from "axios"
 
@@ -12,6 +12,7 @@ enum Status {
 }
 
 const WithNodeInfo = ({ children }: PropsWithChildren<{}>) => {
+  const networks = useNetwork()
   const chainID = useChainID()
   const [state, setState] = useState<Status>(
     chainID === "localterra" ? Status.loading : Status.success
@@ -23,7 +24,7 @@ const WithNodeInfo = ({ children }: PropsWithChildren<{}>) => {
       const { data } = await axios.get(
         "cosmos/base/tendermint/v1beta1/node_info",
         {
-          baseURL: "http://localhost:1317",
+          baseURL: networks[chainID].lcd,
         }
       )
       if (data.default_node_info.network === "localterra") {
