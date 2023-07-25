@@ -7,16 +7,45 @@ import { Card, Col, Page } from "components/layout"
 import { Empty } from "components/feedback"
 import HistoryItem from "./HistoryItem"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
+import { isTerraChain } from "utils/chain"
 
 interface Props {
   chainID?: string
+}
+
+interface PaginationKeys {
+  limit: string
+  offset: string
+  reverse: string
+}
+
+/**
+ * Returns pagination keys for the given chain. Switched by cosmos_sdk
+ * version in the future, isTerra for now.
+ *
+ * @param isTerra boolean based on chain-id.  True if Terra, false if not.
+ */
+function getPaginationKeys(isTerra: boolean): PaginationKeys {
+  if (isTerra) {
+    return {
+      limit: "limit",
+      offset: "page",
+      reverse: "orderBy",
+    }
+  } else {
+    return {
+      limit: "pagination.limit",
+      offset: "pagination.offset",
+      reverse: "pagination.reverse",
+    }
+  }
 }
 
 const HistoryList = ({ chainID }: Props) => {
   const addresses = useInterchainAddresses()
   const networks = useNetwork()
 
-  const LIMIT = 100
+  const LIMIT = 75
   const EVENTS = [
     // any tx signed by the user
     "message.sender",
@@ -31,6 +60,11 @@ const HistoryList = ({ chainID }: Props) => {
       .filter((chain) => !chainID || chain === chainID)
       .map((chain) => {
         const address = chain && addresses?.[chain]
+
+        const isTerra = isTerraChain(chain)
+
+        // return pagination keys by network.
+        const paginationKeys = getPaginationKeys(isTerra)
 
         return {
           queryKey: [queryKey.History, networks?.[chain]?.lcd, address],
@@ -49,9 +83,9 @@ const HistoryList = ({ chainID }: Props) => {
                   params: {
                     events: `${event}='${address}'`,
                     //order_by: "ORDER_BY_DESC",
-                    "pagination.offset": 0 || undefined,
-                    "pagination.reverse": true,
-                    "pagination.limit": LIMIT,
+                    [paginationKeys.offset]: 0 || undefined,
+                    [paginationKeys.reverse]: isTerra ? 2 : true,
+                    [paginationKeys.limit]: LIMIT,
                   },
                 })
               })

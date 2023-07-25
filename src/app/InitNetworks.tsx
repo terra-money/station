@@ -41,6 +41,7 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
           ...networks.mainnet,
           ...networks.testnet,
           ...networks.classic,
+          ...networks.localterra,
         } ?? {}
       ).map((chain) => {
         const lcd = customLCDs[chain?.chainID] ?? chain.lcd
