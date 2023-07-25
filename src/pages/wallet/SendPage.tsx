@@ -107,7 +107,6 @@ const SendPage = () => {
     () => availableAssets.filter(({ symbol }) => !symbol.endsWith("...")),
     [availableAssets]
   )
-  const defaultAsset = route?.denom || filteredAssets[0].denom
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })
@@ -126,6 +125,8 @@ const SendPage = () => {
   const decimals = asset ? readNativeDenom(asset).decimals : 6
 
   const amount = toAmount(input, { decimals })
+
+  const defaultAsset = route?.denom || filteredAssets[0].denom
 
   const availableChains = useMemo(
     () =>
@@ -335,7 +336,11 @@ const SendPage = () => {
     createTx,
     disabled: false,
     onChangeMax,
-    onSuccess: () => reset(),
+    onSuccess: () => {
+      reset()
+      setValue("asset", asset)
+      setValue("chain", chain)
+    },
     taxRequired: true,
     queryKeys: [queryKey.bank.balances, queryKey.bank.balance],
     gasAdjustment:
@@ -348,7 +353,7 @@ const SendPage = () => {
     }
   }, [chain, trigger, recipient])
 
-  const assetsByDenom = filteredAssets.reduce(
+  const assetsByDenom = availableAssets.reduce(
     (acc: Record<string, AssetType>, item: AssetType) => {
       acc[item.denom] = item
       return acc
