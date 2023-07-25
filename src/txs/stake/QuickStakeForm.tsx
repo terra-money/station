@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import { Coin } from "@terra-money/feather.js"
-import { readPercent, toAmount } from "@terra-money/terra-utils"
+import { toAmount } from "@terra-money/terra-utils"
 import { getAmount } from "utils/coin"
 import { combineState, queryKey } from "data/query"
 import { useNetwork } from "data/wallet"
@@ -38,21 +38,12 @@ interface Props {
   balances: { denom: string; amount: string }[]
   chainID: string
   denom: string
-  rewardRate: number
   unbondingTime: number
   isAlliance: boolean
 }
 
 const QuickStakeForm = (props: Props) => {
-  const {
-    action,
-    balances,
-    chainID,
-    denom,
-    rewardRate,
-    unbondingTime,
-    isAlliance,
-  } = props
+  const { action, balances, chainID, denom, unbondingTime, isAlliance } = props
 
   const { t } = useTranslation()
   const addresses = useInterchainAddresses()
@@ -197,10 +188,6 @@ const QuickStakeForm = (props: Props) => {
                 <dt>{t("Unbonding period")}:</dt>
                 <dd>{t("{{value}} days", { value: unbondingTime })}</dd>
               </dl>
-              <dl>
-                <dt>{t("Rewards rate")}:</dt>
-                <dd>{readPercent(rewardRate)}</dd>
-              </dl>
             </FlexColumn>
             <Form onSubmit={handleSubmit(submit.fn)}>
               <FormItem
@@ -213,6 +200,7 @@ const QuickStakeForm = (props: Props) => {
                     valueAsNumber: true,
                     validate: validate.input(toInput(max.amount)),
                   })}
+                  type="number"
                   token={denom}
                   onFocus={max.reset}
                   inputMode="decimal"

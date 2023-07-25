@@ -12,7 +12,11 @@
     "test": "react-scripts test",
     "prepare": "husky install",
     "pre-commit": "lint-staged",
-    "analyze": "source-map-explorer 'build/static/js/*.js'"
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "dc:up": "docker-compose up --build -d",
+    "dc:logs": "docker-compose logs -f",
+    "dc:down": "docker-compose down",
+    "dc:purge": "docker compose rm -f -s -v && docker volume rm localterra_terra"
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.0.0",
@@ -59,7 +63,7 @@
     "recoil": "^0.7.2",
     "sass": "^1.52.1",
     "secp256k1": "^4.0.3",
-    "semver": "^7.3.7",
+    "semver": "^7.5.2",
     "sentence-case": "^3.0.4",
     "xss": "1.0.11"
   },
