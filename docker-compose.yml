@@ -33,14 +33,16 @@ services:
       - default
     labels:
       - "traefik.enable=true"
+      - "traefik.http.services.localterra.loadbalancer.server.port=1317"
+      - "traefik.http.routers.localterra.service=localterra"
       - "traefik.http.routers.localterra.entrypoints=localterra"
       - "traefik.http.routers.localterra.rule=PathPrefix(`/`)"
-      - "traefik.http.services.localterra.loadbalancer.server.port=1317"
-      - "traefik.http.middlewares.testheader.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
-      - "traefik.http.middlewares.testheader.headers.accesscontrolallowheaders=*"
-      - "traefik.http.middlewares.testheader.headers.accesscontrolalloworiginlist=*"
-      - "traefik.http.middlewares.testheader.headers.accesscontrolmaxage=3600"
-      - "traefik.http.middlewares.testheader.headers.addvaryheader=true"
+      - "traefik.http.routers.localterra-lcd.middlewares=cors"
+      - "traefik.http.middlewares.cors.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
+      - "traefik.http.middlewares.cors.headers.accesscontrolallowheaders=*"
+      - "traefik.http.middlewares.cors.headers.accesscontrolalloworiginlist=*"
+      - "traefik.http.middlewares.cors.headers.accesscontrolmaxage=3600"
+      - "traefik.http.middlewares.cors.headers.addvaryheader=true"
 
   assets:
     image: ghcr.io/terra-money/station-assets:1.0.2
