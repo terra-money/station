@@ -3,15 +3,24 @@ version: '3.9'
 ###############################################################################
 services:
 
-  haproxy:
-    image: haproxy:2.8.0-alpine
+  traefik:
+    image: traefik:v2.4
+    command:
+      - --api.insecure=true # Dont do that in production!
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.localterra.address=:1317
+      - --entrypoints.assets.address=:33001
+      - --entrypoints.station.address=:33000
+    ports:
+      - 1317:1317
+      - 8080:8080
+      - 33000:33000
+      - 33001:33001
     volumes:
-      - ./docker-assets/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
       - default
-    ports:
-      - '1317:1317'
-      - '8444:8444'
 
   localterra:
     image: ghcr.io/terra-money/localterra:${TERRA_VERSION:-latest}
@@ -21,14 +30,29 @@ services:
       - terra:/app
     networks:
       - default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.localterra.entrypoints=localterra"
+      - "traefik.http.routers.localterra.rule=PathPrefix(`/`)"
+      - "traefik.http.services.localterra.loadbalancer.server.port=1317"
+      - "traefik.http.middlewares.testheader.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
+      - "traefik.http.middlewares.testheader.headers.accesscontrolallowheaders=*"
+      - "traefik.http.middlewares.testheader.headers.accesscontrolalloworiginlist=*"
+      - "traefik.http.middlewares.testheader.headers.accesscontrolmaxage=3600"
+      - "traefik.http.middlewares.testheader.headers.addvaryheader=true"
 
   assets:
-    image: ghcr.io/terra-money/station-assets:1.0.1
+    image: ghcr.io/terra-money/station-assets:1.0.2
     hostname: assets
     networks:
       - default
     ports:
-      - '3001:3001'
+      - 3001:3001
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.assets.entrypoints=assets"
+      - "traefik.http.routers.assets.rule=PathPrefix(`/`)"
+      - "traefik.http.services.assets.loadbalancer.server.port=3001"
 
   station:
     build:
@@ -36,13 +60,19 @@ services:
       dockerfile: Dockerfile
       target: reloader
       args:
-        REACT_APP_ASSETS: http://localhost:3001
-        REACT_APP_STATION_ASSETS: http://localhost:3001
+        REACT_APP_ASSETS: http://localhost:8000/assets
+        REACT_APP_STATION_ASSETS: http://localhost:8000/assets
     image: ghcr.io/terra-money/station:localhr
     networks:
       - default
     ports:
-      - '3000:3000'
+      - 3000:3000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.station.entrypoints=station"
+      - "traefik.http.routers.station.rule=PathPrefix(`/`)"
+      - "traefik.http.services.station.loadbalancer.server.port=3000"
+
     # To enable/disable hot reload in station
     # comment/uncomment the build `target` above and
     # comment/uncomment the following lines below
