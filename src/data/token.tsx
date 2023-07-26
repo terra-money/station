@@ -83,6 +83,12 @@ export const WithTokenItem = ({ token, chainID, children }: Props) => {
 /* helpers */
 export const getIcon = (path: string) => `${ASSETS}/icon/svg/${path}`
 
+export enum TokenType {
+  IBC = "ibc",
+  GAMM = "gamm",
+  FACTORY = "factory",
+}
+
 export const useNativeDenoms = () => {
   const { whitelist, ibcDenoms } = useWhitelist()
   const { list: cw20 } = useCustomTokensCW20()
@@ -98,25 +104,25 @@ export const useNativeDenoms = () => {
   ): TokenItem & { isNonWhitelisted?: boolean } {
     let tokenType = ""
     if (denom.startsWith("ibc/")) {
-      tokenType = "ibc"
+      tokenType = TokenType.IBC
     } else if (denom.startsWith("factory/")) {
-      tokenType = "factory"
+      tokenType = TokenType.FACTORY
     } else if (denom.startsWith("gamm/")) {
-      tokenType = "gamm"
+      tokenType = TokenType.GAMM
       decimals = GAMM_TOKEN_DECIMALS
     }
 
     let fixedDenom = ""
     switch (tokenType) {
-      case "ibc":
+      case TokenType.IBC:
         fixedDenom = `${readDenom(denom).substring(0, 5)}...`
         break
 
-      case "gamm":
+      case TokenType.GAMM:
         fixedDenom = gammTokens.get(denom) ?? readDenom(denom)
         break
 
-      case "factory": {
+      case TokenType.FACTORY: {
         const factoryParts = denom.split(/[/:]/)
         let tokenAddress = ""
         if (factoryParts.length >= 2) {
@@ -131,7 +137,7 @@ export const useNativeDenoms = () => {
     }
 
     let factoryIcon
-    if (tokenType === "factory") {
+    if (tokenType === TokenType.FACTORY) {
       const tokenAddress = denom.split(/[/:]/)[1]
       const chainID = getChainIDFromAddress(tokenAddress, networks)
       if (chainID) {
@@ -139,7 +145,7 @@ export const useNativeDenoms = () => {
       }
     }
 
-    if (tokenType === "gamm") {
+    if (tokenType === TokenType.GAMM) {
       factoryIcon = OSMO_ICON
     }
 
@@ -205,9 +211,9 @@ export const useNativeDenoms = () => {
         name: fixedDenom,
         type: tokenType,
         icon:
-          tokenType === "ibc"
+          tokenType === TokenType.IBC
             ? "https://assets.terra.money/icon/svg/IBC.svg"
-            : tokenType === "factory" || tokenType === "gamm"
+            : tokenType === TokenType.FACTORY || TokenType.GAMM
             ? factoryIcon
             : "https://assets.terra.money/icon/svg/Terra.svg",
         decimals,
