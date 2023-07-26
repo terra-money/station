@@ -49,7 +49,6 @@ const VoteProgress = ({ flag, list }: Props) => {
   return (
     <div>
       <Flag left={flag.percent}>{flag.label}</Flag>
-
       <Flex className={styles.track} start>
         {list.map(({ percent: width, color }) => {
           const className = classNames(styles.item, `bg-${color}`)

@@ -104,10 +104,15 @@ const ProposalVotes = ({
         <Grid gap={4} className="small">
           <VoteProgress
             flag={{ percent: readPercent(flag.x), label: flagLabel[flag.type] }}
-            list={list.map(({ option, ratio }) => ({
-              color: getVoteOptionItem(option).color,
-              percent: readPercent(ratio.byStaked),
-            }))}
+            list={list
+              .map(({ option, ratio }) => ({
+                color: getVoteOptionItem(option).color,
+                percent: readPercent(ratio.byStaked),
+                option,
+              }))
+              .sort((a, _) =>
+                a.option === Vote.Option.VOTE_OPTION_ABSTAIN ? 1 : -1
+              )}
           />
 
           {card && (
