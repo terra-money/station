@@ -17,9 +17,9 @@ import styles from "./ProposalVotes.module.scss"
 
 export const options = [
   Vote.Option.VOTE_OPTION_YES,
-  Vote.Option.VOTE_OPTION_ABSTAIN,
   Vote.Option.VOTE_OPTION_NO,
   Vote.Option.VOTE_OPTION_NO_WITH_VETO,
+  Vote.Option.VOTE_OPTION_ABSTAIN,
 ]
 
 const ProposalVotes = ({
@@ -104,15 +104,10 @@ const ProposalVotes = ({
         <Grid gap={4} className="small">
           <VoteProgress
             flag={{ percent: readPercent(flag.x), label: flagLabel[flag.type] }}
-            list={list
-              .map(({ option, ratio }) => ({
-                color: getVoteOptionItem(option).color,
-                percent: readPercent(ratio.byStaked),
-                option,
-              }))
-              .sort((a, _) =>
-                a.option === Vote.Option.VOTE_OPTION_ABSTAIN ? 1 : -1
-              )}
+            list={list.map(({ option, ratio }) => ({
+              color: getVoteOptionItem(option).color,
+              percent: readPercent(ratio.byStaked),
+            }))}
           />
 
           {card && (
@@ -169,9 +164,9 @@ const calcTallies = (
 
   const tallies = {
     [Vote.Option.VOTE_OPTION_YES]: tally.yes.toString(),
-    [Vote.Option.VOTE_OPTION_ABSTAIN]: tally.abstain.toString(),
     [Vote.Option.VOTE_OPTION_NO]: tally.no.toString(),
     [Vote.Option.VOTE_OPTION_NO_WITH_VETO]: tally.no_with_veto.toString(),
+    [Vote.Option.VOTE_OPTION_ABSTAIN]: tally.abstain.toString(),
   }
 
   const total = {
