@@ -32,17 +32,19 @@ services:
     networks:
       - default
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.localterra.loadbalancer.server.port=1317"
-      - "traefik.http.routers.localterra.service=localterra"
-      - "traefik.http.routers.localterra.entrypoints=localterra"
-      - "traefik.http.routers.localterra.rule=PathPrefix(`/`)"
-      - "traefik.http.routers.localterra-lcd.middlewares=cors"
-      - "traefik.http.middlewares.cors.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
-      - "traefik.http.middlewares.cors.headers.accesscontrolallowheaders=*"
-      - "traefik.http.middlewares.cors.headers.accesscontrolalloworiginlist=*"
-      - "traefik.http.middlewares.cors.headers.accesscontrolmaxage=3600"
-      - "traefik.http.middlewares.cors.headers.addvaryheader=true"
+      - traefik.enable=true
+      - traefik.http.routers.localterra.rule=PathPrefix(`/`)
+      - traefik.http.routers.localterra.entrypoints=localterra
+      - traefik.http.routers.localterra.service=localterra
+      - traefik.http.services.localterra.loadbalancer.server.port=1317
+      - traefik.http.routers.localterra-lcd.middlewares=cors,localterra-context
+      - traefik.http.middlewares.localterra-context.redirectregex.regex=^http:\/\/([^\/]+)\/?$$
+      - traefik.http.middlewares.localterra-context.redirectregex.replacement=http://$$1/swagger/
+      - traefik.http.middlewares.cors.headers.accesscontrolallowmethods=GET,OPTIONS,PUT
+      - traefik.http.middlewares.cors.headers.accesscontrolallowheaders=*
+      - traefik.http.middlewares.cors.headers.accesscontrolalloworiginlist=*
+      - traefik.http.middlewares.cors.headers.accesscontrolmaxage=3600
+      - traefik.http.middlewares.cors.headers.addvaryheader=true
 
   assets:
     image: ghcr.io/terra-money/station-assets:1.0.2
@@ -52,10 +54,10 @@ services:
     ports:
       - 3001:3001
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.assets.entrypoints=assets"
-      - "traefik.http.routers.assets.rule=PathPrefix(`/`)"
-      - "traefik.http.services.assets.loadbalancer.server.port=3001"
+      - traefik.enable=true
+      - traefik.http.routers.assets.entrypoints=assets
+      - traefik.http.routers.assets.rule=PathPrefix(`/`)
+      - traefik.http.services.assets.loadbalancer.server.port=3001
 
   station:
     build:
@@ -71,10 +73,10 @@ services:
     ports:
       - 3000:3000
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.station.entrypoints=station"
-      - "traefik.http.routers.station.rule=PathPrefix(`/`)"
-      - "traefik.http.services.station.loadbalancer.server.port=3000"
+      - traefik.enable=true
+      - traefik.http.routers.station.entrypoints=station
+      - traefik.http.routers.station.rule=PathPrefix(`/`)
+      - traefik.http.services.station.loadbalancer.server.port=3000
 
     # To enable/disable hot reload in station
     # comment/uncomment the build `target` above and
