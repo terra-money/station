@@ -139,7 +139,7 @@ const QuickStakeForm = (props: Props) => {
 
   const token = action === QuickStakeAction.DELEGATE ? denom : ""
   const tx = {
-    decimals: readNativeDenom(token)?.decimals,
+    decimals: readNativeDenom(network[chainID].baseAsset).decimals,
     token,
     amount,
     balance,

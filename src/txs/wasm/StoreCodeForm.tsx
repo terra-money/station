@@ -5,6 +5,8 @@ import { MsgStoreCode } from "@terra-money/feather.js"
 import { Form, FormItem, Upload } from "components/form"
 import Tx from "../Tx"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
+import { useNetwork } from "data/wallet"
+import { useNativeDenoms } from "data/token"
 
 interface TxValues {
   code: string
@@ -15,6 +17,8 @@ const StoreCodeForm = ({ chainID }: { chainID: string }) => {
   const { t } = useTranslation()
   const addresses = useInterchainAddresses()
   const address = addresses && addresses[chainID]
+  const network = useNetwork()
+  const readNativeDenom = useNativeDenoms()
 
   /* form */
   const [file, setFile] = useState<File>()
@@ -46,6 +50,7 @@ const StoreCodeForm = ({ chainID }: { chainID: string }) => {
   const tx = {
     estimationTxValues,
     createTx,
+    decimals: readNativeDenom(network[chainID].baseAsset ?? "")?.decimals ?? 6,
     chain: chainID,
   }
 
