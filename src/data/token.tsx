@@ -176,6 +176,7 @@ export const useNativeDenoms = () => {
     ) {
       return {
         ...whitelist[networkName][ibcToken?.token],
+        type: tokenType,
         // @ts-expect-error
         chains: [ibcToken?.chainID],
       }

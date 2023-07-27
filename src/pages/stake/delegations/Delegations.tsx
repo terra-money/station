@@ -4,12 +4,12 @@ import { getMaxHeightStyle } from "utils/style"
 import { combineState } from "data/query"
 import { useExchangeRates } from "data/queries/coingecko"
 import { useInterchainDelegations } from "data/queries/staking"
-import { ValidatorLink, InternalLink } from "components/general"
+import { StakingAssetLink } from "components/general"
 import { ModalButton } from "components/feedback"
 import { Table } from "components/layout"
 import { Read } from "components/token"
 import StakedCard from "../components/StakedCard"
-import { TokenType, useNativeDenoms } from "data/token"
+import { useNativeDenoms } from "data/token"
 import styles from "../CardModal.module.scss"
 import {
   AllianceDelegation,
@@ -93,18 +93,9 @@ const Delegations = () => {
             {
               title: t("Validator"),
               dataIndex: "validator_address",
-              render: (address: AccAddress, { balance }) =>
-                readNativeDenom(balance.denom).type === TokenType.IBC ? (
-                  <InternalLink
-                    to={`/stake/${address}/ibc=${
-                      balance.denom.split("/")[1]
-                    }#Undelegate`}
-                  >
-                    {address}
-                  </InternalLink>
-                ) : (
-                  <ValidatorLink address={address} internal img />
-                ),
+              render: (address: AccAddress, { balance }) => (
+                <StakingAssetLink address={address} denom={balance.denom} />
+              ),
             },
             {
               title: t("Delegated"),

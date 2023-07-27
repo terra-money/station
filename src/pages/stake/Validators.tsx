@@ -23,7 +23,7 @@ import {
   useInterchainDelegations,
 } from "data/queries/staking"
 import { combineState } from "data/query"
-import { useNativeDenoms } from "data/token"
+import { TokenType, useNativeDenoms } from "data/token"
 import { Tooltip, TooltipIcon } from "components/display"
 import { ChainFeature } from "types/chains"
 
@@ -109,7 +109,7 @@ const Validators = () => {
 
   const tokenList = options.reduce((acc, { denom }) => {
     const token = readNativeDenom(denom)
-    if (token.type === "ibc") return acc
+    if (token.type === TokenType.IBC) return acc
     return token.lsd
       ? {
           [token.lsd]: readNativeDenom(token.lsd),
