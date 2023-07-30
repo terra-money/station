@@ -52,6 +52,7 @@ type Key =
   | {
       "330": string
       "118"?: string
+      "60"?: string
     }
   | { seed: string; index: number; legacy: boolean }
 
@@ -100,13 +101,13 @@ export const testPassword = (params: Params) => {
 
 type AddWalletParams =
   | {
-      words: { "330": string; "118"?: string }
+      words: { "330": string; "118"?: string; "60"?: string }
       password: string
       seed: Buffer
       name: string
       index: number
       legacy: boolean
-      pubkey: { "330": string; "118"?: string }
+      pubkey: { "330": string; "118"?: string; "60"?: string }
     }
   | {
       words: { "330": string; "118"?: string }
@@ -196,6 +197,46 @@ export const changePassword = (params: ChangePasswordParams) => {
     })
     storeWallets(next)
   }
+}
+
+interface StorePubKeyParams {
+  name: string
+  pubkey: {
+    "330": string
+    "118"?: string
+    "60"?: string
+  }
+}
+
+export const storePubKey = (params: StorePubKeyParams) => {
+  const { name, pubkey } = params
+  const wallets = getStoredWallets()
+  const next = wallets.map((wallet) => {
+    if (wallet.name === name) {
+      if ("address" in wallet) {
+        if (!("encrypted" in wallet)) return wallet
+
+        const { address, encrypted } = wallet
+        return {
+          name,
+          words: {
+            "330": wordsFromAddress(address),
+          },
+          encrypted: {
+            "330": encrypted,
+          },
+          pubkey: {
+            "330": pubkey["330"],
+          },
+        }
+      } else {
+        return { ...wallet, pubkey }
+      }
+    }
+    return wallet
+  })
+
+  storeWallets(next)
 }
 
 export const deleteWallet = (name: string) => {

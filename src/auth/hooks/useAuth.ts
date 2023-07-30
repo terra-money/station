@@ -196,6 +196,7 @@ const useAuth = () => {
 
     if (is.ledger(wallet)) {
       const key = await getLedgerKey(networks[chainID].coinType)
+      // @ts-expect-error
       return await key.createSignatureAmino(doc)
     } else {
       const pk = getKey(password)
@@ -204,7 +205,10 @@ const useAuth = () => {
       if ("seed" in pk) {
         const key = new SeedKey({
           seed: Buffer.from(pk.seed, "hex"),
-          coinType: pk.legacy ? 118 : parseInt(networks[chainID].coinType),
+          coinType:
+            pk.legacy && parseInt(networks[chainID].coinType) === 330
+              ? 118
+              : parseInt(networks[chainID].coinType),
           index: pk.index || 0,
         })
         return await key.createSignatureAmino(doc)
@@ -224,6 +228,7 @@ const useAuth = () => {
 
     if (is.ledger(wallet)) {
       const key = await getLedgerKey(networks[txOptions?.chainID].coinType)
+      // @ts-expect-error
       const wallet = lcd.wallet(key)
       const signMode = SignatureV2.SignMode.SIGN_MODE_LEGACY_AMINO_JSON
       return await wallet.createAndSignTx({
@@ -237,9 +242,10 @@ const useAuth = () => {
       if ("seed" in pk) {
         const key = new SeedKey({
           seed: Buffer.from(pk.seed, "hex"),
-          coinType: pk.legacy
-            ? 118
-            : parseInt(networks[txOptions.chainID].coinType),
+          coinType:
+            pk.legacy && parseInt(networks[txOptions?.chainID].coinType) === 330
+              ? 118
+              : parseInt(networks[txOptions?.chainID].coinType),
           index: pk.index || 0,
         })
         const w = lcd.wallet(key)
