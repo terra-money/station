@@ -11,6 +11,7 @@ import { Read } from "components/token"
 import StakedCard from "../components/StakedCard"
 import { getMaxHeightStyle } from "utils/style"
 import styles from "../CardModal.module.scss"
+import { useAllianceDelegations } from "data/queries/alliance"
 
 const ChainDelegations = ({ chain }: { chain: string }) => {
   const { t } = useTranslation()
@@ -18,8 +19,14 @@ const ChainDelegations = ({ chain }: { chain: string }) => {
   const { data: prices, ...pricesState } = useExchangeRates()
   const { data, ...chainDelegationsState } = useDelegations(chain)
   const chainDelegations: Delegation[] = data || []
+  const { data: allianceDelegations, ...allianceDelegationsState } =
+    useAllianceDelegations(chain)
 
-  const state = combineState(pricesState, chainDelegationsState)
+  const state = combineState(
+    pricesState,
+    chainDelegationsState,
+    allianceDelegationsState
+  )
 
   const title = t("Delegations")
 
@@ -47,6 +54,8 @@ const ChainDelegations = ({ chain }: { chain: string }) => {
       },
       { price: -1, amount: -1 }
     )
+
+    console.log("chainTotalPriceAndAmount", chainTotalPriceAndAmount)
 
     const totalToDisplay = chainTotalPriceAndAmount?.price
     const showTokens = chainTotalPriceAndAmount?.amount !== -1
