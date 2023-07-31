@@ -78,10 +78,7 @@ const QuickStakeForm = (props: Props) => {
   const { input } = watch()
   const amount = toAmount(input)
 
-  const daysToUnbond = useMemo(() => {
-    if (!stakeParams) return
-    return getChainUnbondTime(stakeParams)
-  }, [stakeParams])
+  const daysToUnbond = getChainUnbondTime(stakeParams?.unbonding_time)
 
   const elegibleVals = useMemo(() => {
     if (!validators) return
