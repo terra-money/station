@@ -98,7 +98,7 @@ const NetWorth = () => {
           </Button>
           <h3>{capitalize(t("receive"))}</h3>
         </div>
-        {/* {addresses && networkName === "mainnet" && (
+        {addresses && networkName === "mainnet" && (
           <div className={styles.button__wrapper}>
             <ModalButton
               minimal
@@ -112,7 +112,7 @@ const NetWorth = () => {
             </ModalButton>
             <h2>{t(capitalize("buy"))}</h2>
           </div>
-        )} */}
+        )}
       </div>
     </article>
   )
