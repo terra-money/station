@@ -4,7 +4,11 @@ import styles from "./StakingDetailsCompact.module.scss"
 import { useNativeDenoms } from "data/token"
 import { useNetworkWithFeature } from "data/wallet"
 import { useTranslation } from "react-i18next"
-import { useDelegations, useStakingParams } from "data/queries/staking"
+import {
+  useDelegations,
+  useStakingParams,
+  getChainUnbondTime,
+} from "data/queries/staking"
 import { useAlliance, useAllianceDelegations } from "data/queries/alliance"
 import { combineState } from "data/query"
 import { Read } from "components/token"
@@ -24,7 +28,7 @@ const StakingDetailsCompact = ({
   const readNativeDenom = useNativeDenoms()
   const token = readNativeDenom(denom)
   const { data: stakeParams, ...stakeState } = useStakingParams(chainID)
-  const daysToUnbond = (stakeParams?.unbonding_time ?? 0) / 60 / 60 / 24
+  const daysToUnbond = getChainUnbondTime(stakeParams?.unbonding_time)
 
   const isAlliance = network[chainID].baseAsset !== denom
   const { data: alliance, ...allianceState } = useAlliance(

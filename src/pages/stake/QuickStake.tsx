@@ -16,6 +16,7 @@ import {
 import {
   useAllStakingParams,
   useInterchainDelegations,
+  getChainUnbondTime,
 } from "data/queries/staking"
 import { combineState } from "data/query"
 import { Tooltip, TooltipIcon } from "components/display"
@@ -126,7 +127,7 @@ const QuickStake = () => {
       denom: baseAsset,
       rewards: 1,
       chainID,
-      unbonding: (unbondingtime[chainID] ?? 0) / 60 / 60 / 24,
+      unbonding: getChainUnbondTime(unbondingtime[chainID]),
       isAlliance: false,
       hasDelegations: delegations.some(
         ({ balance }) =>
@@ -137,7 +138,7 @@ const QuickStake = () => {
       denom: denom ?? "",
       rewards: Number(reward_weight),
       chainID,
-      unbonding: (unbondingtime[chainID] ?? 0) / 60 / 60 / 24,
+      unbonding: getChainUnbondTime(unbondingtime[chainID]),
       isAlliance: true,
       hasDelegations: allianceDelegations.some(
         ({ chainID: delChainID, delegations }) =>
