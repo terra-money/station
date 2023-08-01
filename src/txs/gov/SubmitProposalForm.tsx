@@ -198,11 +198,13 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
     [setValue, trigger]
   )
 
+  const token = networks[chain].baseAsset
+
   const tx = {
-    token: networks[chain].baseAsset,
+    token,
     amount,
     balance,
-    decimals: readNativeDenom(networks[chain].baseAsset).decimals,
+    decimals: readNativeDenom(token).decimals,
     estimationTxValues,
     createTx,
     onChangeMax,

@@ -50,7 +50,7 @@ const StoreCodeForm = ({ chainID }: { chainID: string }) => {
   const tx = {
     estimationTxValues,
     createTx,
-    decimals: readNativeDenom(network[chainID].baseAsset ?? "")?.decimals ?? 6,
+    decimals: readNativeDenom(network[chainID].baseAsset).decimals,
     chain: chainID,
   }
 
