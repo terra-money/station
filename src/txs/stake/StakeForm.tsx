@@ -180,7 +180,7 @@ const StakeForm = (props: Props) => {
 
   const token = tab === StakeAction.DELEGATE ? denom : ""
   const tx = {
-    decimals: readNativeDenom(token).decimals,
+    decimals: readNativeDenom(networks[chainID].baseAsset).decimals,
     token,
     amount,
     balance,
