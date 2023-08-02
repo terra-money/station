@@ -9,6 +9,7 @@ const cx = classNames.bind(styles)
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
   token?: Token
+  decimals?: number
   selectBefore?: ReactNode
   actionButton?: {
     icon: ReactNode

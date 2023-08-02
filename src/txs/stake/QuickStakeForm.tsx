@@ -77,6 +77,7 @@ const QuickStakeForm = (props: Props) => {
   const { errors } = formState
   const { input } = watch()
   const amount = toAmount(input)
+  const { decimals } = readNativeDenom(denom)
 
   const daysToUnbond = useMemo(() => {
     if (!stakeParams) return
@@ -91,9 +92,8 @@ const QuickStakeForm = (props: Props) => {
   const stakeMsgs = useMemo(() => {
     if (!address || !elegibleVals) return
     const coin = new Coin(denom, toAmount(input || toInput(1)))
-    const { decimals } = readNativeDenom(denom)
     return getQuickStakeMsgs(address, coin, elegibleVals, decimals, isAlliance)
-  }, [address, elegibleVals, denom, input, isAlliance, readNativeDenom])
+  }, [address, elegibleVals, denom, input, decimals, isAlliance])
 
   const unstakeMsgs = useMemo(() => {
     if (!address || !(isAlliance ? allianceDelegations : delegations)) return
@@ -135,11 +135,12 @@ const QuickStakeForm = (props: Props) => {
   )
 
   const asset = readNativeDenom(denom)
-  const feeTokenSymbol = readNativeDenom(network[chainID].baseAsset).symbol
+  const baseAssetDenom = readNativeDenom(network[chainID].baseAsset)
+  const feeTokenSymbol = baseAssetDenom.symbol
 
   const token = action === QuickStakeAction.DELEGATE ? denom : ""
   const tx = {
-    decimals: readNativeDenom(network[chainID].baseAsset).decimals,
+    decimals: baseAssetDenom.decimals,
     token,
     amount,
     balance,
@@ -202,6 +203,7 @@ const QuickStakeForm = (props: Props) => {
                   })}
                   type="number"
                   token={denom}
+                  decimals={baseAssetDenom.decimals}
                   onFocus={max.reset}
                   inputMode="decimal"
                   placeholder={getPlaceholder()}
