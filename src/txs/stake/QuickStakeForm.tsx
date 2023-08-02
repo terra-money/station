@@ -76,7 +76,12 @@ const QuickStakeForm = (props: Props) => {
   const { register, trigger, watch, setValue, handleSubmit, formState } = form
   const { errors } = formState
   const { input } = watch()
-  const amount = toAmount(input)
+  const { decimals } = readNativeDenom(denom)
+  const amount = toAmount(input, { decimals })
+  const coin = useMemo(
+    () => new Coin(denom, toAmount(input || toInput(1), { decimals })),
+    [denom, decimals, input]
+  )
 
   const daysToUnbond = useMemo(() => {
     if (!stakeParams) return
@@ -90,20 +95,17 @@ const QuickStakeForm = (props: Props) => {
 
   const stakeMsgs = useMemo(() => {
     if (!address || !elegibleVals) return
-    const coin = new Coin(denom, toAmount(input || toInput(1)))
-    const { decimals } = readNativeDenom(denom)
     return getQuickStakeMsgs(address, coin, elegibleVals, decimals, isAlliance)
-  }, [address, elegibleVals, denom, input, isAlliance, readNativeDenom])
+  }, [address, elegibleVals, coin, isAlliance, decimals])
 
   const unstakeMsgs = useMemo(() => {
     if (!address || !(isAlliance ? allianceDelegations : delegations)) return
-    const coin = new Coin(denom, toAmount(input || toInput(1)))
     return getQuickUnstakeMsgs(address, coin, {
       isAlliance,
       // @ts-expect-error
       delegations: isAlliance ? allianceDelegations : delegations,
     })
-  }, [address, denom, input, delegations, isAlliance, allianceDelegations])
+  }, [address, coin, delegations, isAlliance, allianceDelegations])
 
   /* tx */
   const createTx = useCallback(
@@ -138,8 +140,9 @@ const QuickStakeForm = (props: Props) => {
   const feeTokenSymbol = readNativeDenom(network[chainID].baseAsset).symbol
 
   const token = action === QuickStakeAction.DELEGATE ? denom : ""
+
   const tx = {
-    decimals: readNativeDenom(token)?.decimals,
+    decimals,
     token,
     amount,
     balance,
@@ -198,13 +201,16 @@ const QuickStakeForm = (props: Props) => {
                 <Input
                   {...register("input", {
                     valueAsNumber: true,
-                    validate: validate.input(toInput(max.amount)),
+                    validate: validate.input(
+                      toInput(max.amount, decimals),
+                      decimals
+                    ),
                   })}
                   type="number"
                   token={denom}
                   onFocus={max.reset}
                   inputMode="decimal"
-                  placeholder={getPlaceholder()}
+                  placeholder={getPlaceholder(decimals)}
                   autoFocus
                 />
               </FormItem>

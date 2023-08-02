@@ -118,6 +118,11 @@ function Tx<TxValues>(props: Props<TxValues>) {
     : undefined
 
   /* simulation: estimate gas */
+  const baseAssetDecimals = useMemo(() => {
+    if (!networks[chain]?.baseAsset) return
+    return readNativeDenom(networks[chain].baseAsset).decimals
+  }, [networks, chain, readNativeDenom])
+
   const simulationTx = estimationTxValues && createTx(estimationTxValues)
   const gasAdjustment =
     networks[chain]?.gasAdjustment *
@@ -376,7 +381,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
           <dd>
             {gasFee.amount && (
               <Read
-                decimals={decimals}
+                decimals={baseAssetDecimals}
                 {...gasFee}
                 denom={
                   gasFee.denom === token

@@ -117,14 +117,15 @@ const StakeForm = (props: Props) => {
   const { register, trigger, watch, setValue, handleSubmit, formState } = form
   const { errors } = formState
   const { source, input } = watch()
-  const amount = toAmount(input)
+  const { decimals } = readNativeDenom(denom)
+  const amount = toAmount(input, { decimals })
 
   /* tx */
   const createTx = useCallback(
     ({ input, source }: TxValues) => {
       if (!address) return
 
-      const amount = toAmount(input)
+      const amount = toAmount(input, { decimals })
       const coin = new Coin(denom, amount)
 
       if (tab === StakeAction.REDELEGATE) {
@@ -196,9 +197,8 @@ const StakeForm = (props: Props) => {
     chain: chainID,
   }
 
-  const { symbol: feeTokenSymbol } = readNativeDenom(
-    networks[chainID].baseAsset
-  )
+  const { symbol: feeTokenSymbol, decimals: feeTokenDecimals } =
+    readNativeDenom(networks[chainID].baseAsset)
   const { symbol } = readNativeDenom(denom)
 
   return (
@@ -285,13 +285,16 @@ const StakeForm = (props: Props) => {
             <Input
               {...register("input", {
                 valueAsNumber: true,
-                validate: validate.input(toInput(max.amount)),
+                validate: validate.input(
+                  toInput(max.amount, feeTokenDecimals),
+                  feeTokenDecimals
+                ),
               })}
               token={denom}
               onFocus={max.reset}
               type="number"
               inputMode="decimal"
-              placeholder={getPlaceholder()}
+              placeholder={getPlaceholder(feeTokenDecimals)}
               autoFocus
             />
           </FormItem>
