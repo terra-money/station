@@ -13,7 +13,7 @@ interface Props {
   img?: boolean
 }
 
-const StakingAssetLink = ({ address, denom, internal, img }: Props) => {
+const StakingAssetLink = ({ address, denom }: Props) => {
   const { data: validator } = useValidator(address)
   const readNativeDenom = useNativeDenoms()
 
@@ -24,7 +24,7 @@ const StakingAssetLink = ({ address, denom, internal, img }: Props) => {
     } = validator
     return readNativeDenom(denom).type === TokenType.IBC ? (
       <InternalLink
-        to={`/stake/${address}/${denom.replaceAll("=", "/")}#Undelegate`}
+        to={`/stake/${address}/${denom.replaceAll("/", "=")}#Undelegate`}
       >
         <InlineFlex gap={8}>
           <ProfileIcon src={identity} size={22} /> {moniker}
