@@ -46,7 +46,7 @@ const TokenCard = ({ token, icon, symbol, name, balance, ...props }: Props) => {
         <footer className={styles.footer}>
           <p className={styles.balance}>
             {balance && <AccountBalanceWalletIcon fontSize="inherit" />}
-            <Read amount={amount} {...config} />
+            <Read amount={amount} denom={token} {...config} />
           </p>
         </footer>
       )}

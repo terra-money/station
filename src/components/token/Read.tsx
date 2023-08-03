@@ -4,12 +4,13 @@ import { FormatConfig } from "@terra-money/terra-utils"
 import { formatPercent, readAmount, truncate } from "@terra-money/terra-utils"
 import { WithTokenItem } from "data/token"
 import styles from "./Read.module.scss"
+import { useNativeDenoms } from "data/token"
 
 const cx = classNames.bind(styles)
 
 interface Props extends Partial<FormatConfig> {
+  denom: Denom
   amount?: Amount | Value
-  denom?: Denom
   token?: Token
 
   approx?: boolean
@@ -23,16 +24,18 @@ const Read = forwardRef(
     { amount, denom, approx, block, auto, ...props }: Props,
     ref: ForwardedRef<HTMLSpanElement>
   ) => {
+    const readNativeDenom = useNativeDenoms()
     if (!(amount || Number.isFinite(amount))) return null
+    const { decimals } = readNativeDenom(denom)
 
     const comma = !(typeof props.comma === "boolean" && props.comma === false)
 
     const fixed = !auto
       ? props.fixed
-      : Number(amount) >= Math.pow(10, (props.decimals ?? 6) + 3)
+      : Number(amount) >= Math.pow(10, decimals + 3)
       ? 0
-      : Number(amount) < Math.pow(10, props.decimals ?? 6)
-      ? props.decimals
+      : Number(amount) < Math.pow(10, decimals)
+      ? decimals
       : 2
 
     const lessThanFloor = fixed && Math.pow(10, -fixed)

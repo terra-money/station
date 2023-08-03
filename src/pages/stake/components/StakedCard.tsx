@@ -10,7 +10,7 @@ import { useCurrency } from "data/settings/Currency"
 interface Props extends CardProps {
   amount?: Amount
   value: Value
-  denom?: string
+  denom: string
   cardName: string
   showTokens?: boolean
 }
@@ -38,7 +38,8 @@ const StakedCard = (props: PropsWithChildren<Props>) => {
           style={{ justifyContent: "space-between", alignItems: "flex-end" }}
         >
           <span className={styles.value}>
-            {currency.symbol} <Read amount={value} decimals={0} fixed={2} />
+            {currency.symbol}{" "}
+            <Read amount={value} denom={denom} decimals={0} fixed={2} />
             <span className={styles.small}>{children}</span>
           </span>
           {new BigNumber(amount || -1).gt(0.0) && showTokens && (
