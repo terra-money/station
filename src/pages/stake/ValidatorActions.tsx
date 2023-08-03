@@ -15,6 +15,7 @@ import { StakeAction } from "txs/stake/StakeForm"
 import styles from "./ValidatorActions.module.scss"
 import { useNetworkWithFeature } from "data/wallet"
 import { ChainFeature } from "types/chains"
+import { useNativeDenoms } from "data/token"
 
 const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
   const { t } = useTranslation()
@@ -31,6 +32,8 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
   const { data: rewards, ...rewardsState } = useRewards()
   const state = combineState(delegationState, delegationsState)
   const calcValue = useMemoizedCalcValue()
+  const readNativeDenom = useNativeDenoms()
+  const { decimals } = readNativeDenom(chain?.baseAsset ?? "")
 
   const label = {
     [StakeAction.DELEGATE]: t("Delegate"),
@@ -48,6 +51,7 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
       <section>
         <Read
           amount={amount}
+          decimals={decimals}
           denom={chain?.baseAsset}
           className={styles.total}
           block
@@ -97,6 +101,7 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
           amount={amount}
           denom={chain?.baseAsset}
           className={styles.total}
+          decimals={decimals}
         />{" "}
         <span className={styles.small}>
           {list.length > 1 &&

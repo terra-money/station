@@ -24,18 +24,17 @@ const DepositForm = () => {
   const addresses = useInterchainAddresses()
   const networks = useNetwork()
   const readNativeDenom = useNativeDenoms()
+  const { baseAsset } = networks[chain]
 
   const bankBalance = useBankBalance()
-  const balance =
-    bankBalance.find((b) => b.denom === networks[chain].baseAsset)?.amount ??
-    "0"
+  const balance = bankBalance.find((b) => b.denom === baseAsset)?.amount ?? "0"
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })
   const { register, trigger, watch, setValue, handleSubmit, formState } = form
   const { errors } = formState
   const { input } = watch()
-  const { token, decimals } = readNativeDenom(networks[chain].baseAsset)
+  const { token, decimals } = readNativeDenom(baseAsset)
   const amount = toAmount(input, { decimals })
   /* tx */
   const createTx = useCallback(

@@ -151,7 +151,7 @@ const StakeForm = (props: Props) => {
 
       return { msgs, chainID }
     },
-    [address, destination, tab, denom, chainID, isAlliance]
+    [address, destination, tab, denom, chainID, isAlliance, decimals]
   )
 
   /* fee */
@@ -162,6 +162,8 @@ const StakeForm = (props: Props) => {
     [StakeAction.UNBOND]:
       findDelegation(destination)?.balance.amount.toString() ?? "0",
   }[tab]
+
+  console.log(balance)
 
   const estimationTxValues = useMemo(() => {
     return {

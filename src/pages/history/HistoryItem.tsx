@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next"
 import { FinderLink } from "components/general"
 import { Card } from "components/layout"
 import { Dl, DateTimeRenderer } from "components/display"
-import { ReadMultiple } from "components/token"
 import HistoryMessage from "./HistoryMessage"
 import styles from "./HistoryItem.module.scss"
 import DateRangeIcon from "@mui/icons-material/DateRange"
@@ -16,6 +15,8 @@ import {
   getTxCanonicalMsgs,
 } from "@terra-money/log-finder-ruleset"
 import { TxInfo } from "@terra-money/feather.js"
+import { useNativeDenoms } from "data/token"
+import { Read } from "components/token"
 
 const HistoryItem = ({
   txhash,
@@ -28,7 +29,9 @@ const HistoryItem = ({
     tx: {
       body: { memo },
       auth_info: {
-        fee: { amount: fee },
+        fee: {
+          amount: [fee],
+        },
         signer_infos,
       },
     },
@@ -38,9 +41,12 @@ const HistoryItem = ({
   const { t } = useTranslation()
   const network = useNetwork()
   const networkName = useNetworkName()
+  const readNativeDenom = useNativeDenoms()
+
+  const { decimals } = readNativeDenom(network[chain].baseAsset)
 
   const data = [
-    { title: t("Fee"), content: <ReadMultiple list={fee} /> },
+    { title: t("Fee"), content: <Read {...fee} decimals={decimals} /> },
     { title: t("Memo"), content: memo },
     { title: t("Log"), content: !success && raw_log },
   ]

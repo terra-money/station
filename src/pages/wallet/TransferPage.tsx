@@ -104,7 +104,7 @@ const TransferPage = () => {
     address: destinationAddress,
     asset,
   } = watch()
-  const amount = toAmount(input, { decimals: decimals ?? 6 })
+  const amount = toAmount(input, { decimals: decimals })
   const availableChains = useMemo(
     () =>
       availableAssets
