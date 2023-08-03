@@ -163,8 +163,6 @@ const StakeForm = (props: Props) => {
       findDelegation(destination)?.balance.amount.toString() ?? "0",
   }[tab]
 
-  console.log(balance)
-
   const estimationTxValues = useMemo(() => {
     return {
       input: toInput(2),
@@ -183,7 +181,7 @@ const StakeForm = (props: Props) => {
 
   const token = tab === StakeAction.DELEGATE ? denom : ""
   const tx = {
-    decimals: readNativeDenom(token)?.decimals,
+    decimals,
     token,
     amount,
     balance,

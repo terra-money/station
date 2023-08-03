@@ -100,7 +100,12 @@ const Delegations = () => {
             {
               title: t("Delegated"),
               dataIndex: "balance",
-              render: (balance: Coin) => <Read {...balance.toData()} />,
+              render: (balance: Coin) => (
+                <Read
+                  decimals={readNativeDenom(balance.denom).decimals}
+                  {...balance.toData()}
+                />
+              ),
               align: "right",
             },
           ]}
