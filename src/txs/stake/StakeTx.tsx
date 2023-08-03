@@ -21,11 +21,6 @@ const StakeTx = () => {
   const { t } = useTranslation()
   const { address: destination, denom: paramDenom } = useParams() // destination validator
   const networks = useNetwork()
-  console.log("destination", destination)
-  console.log(
-    "ValAddress.validate(destination)",
-    ValAddress.validate(destination || "")
-  )
 
   const network = useMemo(() => {
     if (!destination || !ValAddress.validate(destination)) return null
