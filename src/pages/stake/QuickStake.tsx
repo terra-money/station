@@ -26,7 +26,6 @@ import TokenSelector, {
 } from "components/form/Selectors/TokenSelector/TokenSelector"
 import { useState } from "react"
 import { ChainFeature } from "types/chains"
-import { useIsLedger } from "utils/ledger"
 
 export enum QuickStakeAction {
   DELEGATE = "Delegate",
@@ -89,7 +88,6 @@ const QuickStake = () => {
   const readNativeDenom = useNativeDenoms()
   const networks = useNetworkWithFeature(ChainFeature.STAKING)
   const [token, setToken] = useState<string | undefined>("uluna")
-  const isLedger = useIsLedger()
 
   const alliancesData = useAllAlliances()
   const alliances = alliancesData.reduce(
@@ -282,29 +280,11 @@ const QuickStake = () => {
                 <Flex start gap={8}>
                   <ModalButton
                     title={t("Staking Details")}
-                    renderButton={(open) =>
-                      isLedger && isAlliance ? (
-                        <InlineFlex gap={4} start>
-                          <Tooltip
-                            content={
-                              <article>
-                                <p>
-                                  {t(
-                                    "Alliance is currently not supported on Ledger."
-                                  )}
-                                </p>
-                              </article>
-                            }
-                          >
-                            <Button size="small">Not available</Button>
-                          </Tooltip>
-                        </InlineFlex>
-                      ) : (
-                        <Button color="primary" size="small" onClick={open}>
-                          {hasDelegations ? t("Manage Stake") : t("Stake")}
-                        </Button>
-                      )
-                    }
+                    renderButton={(open) => (
+                      <Button color="primary" size="small" onClick={open}>
+                        {hasDelegations ? t("Manage Stake") : t("Stake")}
+                      </Button>
+                    )}
                   >
                     {renderQuickStakeForm({
                       denom,
