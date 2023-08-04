@@ -1,7 +1,7 @@
 import { Button } from "components/general"
 import { Flex, Grid, InlineFlex, Page, Table, Tabs } from "components/layout"
 import { useBalances } from "data/queries/bank"
-import { useNativeDenoms } from "data/token"
+import { TokenType, useNativeDenoms } from "data/token"
 import { useNetworkWithFeature } from "data/wallet"
 import { useTranslation } from "react-i18next"
 import QuickStakeForm from "txs/stake/QuickStakeForm"
@@ -151,7 +151,7 @@ const QuickStake = () => {
 
   const tokenList = options.reduce((acc, { denom }) => {
     const token = readNativeDenom(denom)
-    if (token.type === "ibc") return acc
+    if (token.type === TokenType.IBC) return acc
     return token.lsd
       ? {
           [token.lsd]: readNativeDenom(token.lsd),
