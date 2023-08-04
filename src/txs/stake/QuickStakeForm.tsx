@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import { Coin } from "@terra-money/feather.js"
-import { readPercent, toAmount } from "@terra-money/terra-utils"
+import { toAmount } from "@terra-money/terra-utils"
 import { getAmount } from "utils/coin"
 import { combineState, queryKey } from "data/query"
 import { useNetwork } from "data/wallet"
@@ -39,7 +39,6 @@ interface Props {
   balances: { denom: string; amount: string }[]
   chainID: string
   denom: string
-  rewardRate: number
   unbondingTime: number
   isAlliance: boolean
   stakeOnAllianceHub?: boolean
@@ -51,7 +50,6 @@ const QuickStakeForm = (props: Props) => {
     balances,
     chainID,
     denom,
-    rewardRate,
     unbondingTime,
     isAlliance,
     stakeOnAllianceHub,
@@ -100,10 +98,7 @@ const QuickStakeForm = (props: Props) => {
   const { input } = watch()
   const amount = toAmount(input)
 
-  const daysToUnbond = useMemo(() => {
-    if (!stakeParams) return
-    return getChainUnbondTime(stakeParams)
-  }, [stakeParams])
+  const daysToUnbond = getChainUnbondTime(stakeParams?.unbonding_time)
 
   const elegibleVals = useMemo(() => {
     if (!validators) return
@@ -262,10 +257,6 @@ const QuickStakeForm = (props: Props) => {
                 <dt>{t("Unbonding period")}:</dt>
                 <dd>{t("{{value}} days", { value: unbondingTime })}</dd>
               </dl>
-              <dl>
-                <dt>{t("Rewards rate")}:</dt>
-                <dd>{readPercent(rewardRate)}</dd>
-              </dl>
             </FlexColumn>
             <Form onSubmit={handleSubmit(submit.fn)}>
               <FormItem
@@ -278,6 +269,7 @@ const QuickStakeForm = (props: Props) => {
                     valueAsNumber: true,
                     validate: validate.input(toInput(max.amount)),
                   })}
+                  type="number"
                   token={denom}
                   onFocus={max.reset}
                   inputMode="decimal"

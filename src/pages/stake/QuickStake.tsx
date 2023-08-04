@@ -1,4 +1,3 @@
-import { readPercent } from "@terra-money/terra-utils"
 import { Button } from "components/general"
 import { Flex, Grid, InlineFlex, Page, Table } from "components/layout"
 import { useBalances } from "data/queries/bank"
@@ -15,6 +14,7 @@ import {
 import {
   useAllStakingParams,
   useInterchainDelegations,
+  getChainUnbondTime,
 } from "data/queries/staking"
 import { combineState } from "data/query"
 import { Tooltip, TooltipIcon } from "components/display"
@@ -74,7 +74,7 @@ const QuickStake = () => {
       denom: baseAsset,
       rewards: 1,
       chainID,
-      unbonding: (unbondingtime[chainID] ?? 0) / 60 / 60 / 24,
+      unbonding: getChainUnbondTime(unbondingtime[chainID]),
       isAlliance: false,
       stakeOnAllianceHub: false,
       hasDelegations: delegations.some(({ balance }) => {
@@ -224,34 +224,8 @@ const QuickStake = () => {
               align: "right",
             },
             {
-              title: (
-                <span>
-                  {t("Rewards weight")}{" "}
-                  <TooltipIcon
-                    content={
-                      <article>
-                        <p>
-                          The amount of rewards an Alliance asset accrues is
-                          determined by the asset's Reward Weight.
-                        </p>
-                        <p>
-                          This parameter is set by governance and represents the
-                          maximum proportion of rewards an asset will earn.
-                        </p>
-                      </article>
-                    }
-                  />
-                </span>
-              ),
-              dataIndex: "rewards",
-              defaultSortOrder: "desc",
-              sorter: ({ rewards: a = 0 }, { rewards: b = 0 }) => a - b,
-              render: (rewards = 0) => readPercent(rewards),
-              align: "right",
-            },
-            {
               title: t("Actions"),
-              dataIndex: ["asset", "chainID"],
+              dataIndex: "actions",
               render: (
                 _,
                 {

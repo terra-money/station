@@ -50,7 +50,7 @@ function Table<T>({ dataSource, filter, rowKey, ...props }: Props<T>) {
   const columns = props.columns.filter(({ hidden }) => !hidden)
 
   /* helpers */
-  const getClassName = ({ align }: Column<T>) => cx(align)
+  const getClassName = ({ align, dataIndex }: Column<T>) => cx(align, dataIndex)
 
   /* pagination */
   const [page, setPage] = useState(1)

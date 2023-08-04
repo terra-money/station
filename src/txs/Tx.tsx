@@ -375,6 +375,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
           <dd>
             {gasFee.amount && (
               <Read
+                decimals={decimals}
                 {...gasFee}
                 denom={
                   gasFee.denom === token

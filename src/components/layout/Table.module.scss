@@ -148,3 +148,11 @@
     border-top: 0px solid var(--card-border);
   }
 }
+
+.actions {
+  padding-left: 100px !important;
+
+  @media (max-width: 1550px) and (min-width: 1420px) {
+    padding-left: 50px !important;
+  }
+}

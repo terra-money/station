@@ -10,7 +10,6 @@ import {
   MsgDelegate,
   MsgExecuteContract,
   MsgUndelegate,
-  StakingParams,
   ValAddress,
   Validator,
 } from "@terra-money/feather.js"
@@ -156,8 +155,10 @@ export const useAllStakingParams = () => {
   )
 }
 
-export const getChainUnbondTime = (stakingParams: StakingParams) =>
-  stakingParams?.unbonding_time / (60 * 60 * 24)
+export const getChainUnbondTime = (unbondTime: number | undefined) => {
+  if (!unbondTime) return 0
+  return +(unbondTime / (60 * 60 * 24)).toFixed(2)
+}
 
 export const useDelegations = (chainID: string, disabled?: boolean) => {
   const addresses = useInterchainAddressesWithFeature(ChainFeature.STAKING)

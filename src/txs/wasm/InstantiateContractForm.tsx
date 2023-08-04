@@ -119,6 +119,7 @@ const InstantiateContractForm = ({ chainID }: { chainID: string }) => {
                 },
               })}
               inputMode="decimal"
+              type="number"
               placeholder="1"
               autoFocus
             />
@@ -156,6 +157,7 @@ const InstantiateContractForm = ({ chainID }: { chainID: string }) => {
                       valueAsNumber: true,
                     })}
                     inputMode="decimal"
+                    type="number"
                     placeholder={getPlaceholder(decimals)}
                     selectBefore={
                       <Select {...register(`coins.${index}.denom`)} before>
