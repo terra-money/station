@@ -100,7 +100,7 @@ const sortWhitelistCW20 = (data: CW20Whitelist) => {
 
   return fromPairs(
     sorted.map(([t, { decimals, ...item }]) => {
-      return [t, { ...item, decimals }]
+      return [t, { ...item, decimals: decimals ?? 6 }]
     })
   )
 }
