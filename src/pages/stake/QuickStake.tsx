@@ -1,7 +1,7 @@
 import { Button } from "components/general"
 import { Flex, Grid, InlineFlex, Page, Table } from "components/layout"
 import { useBalances } from "data/queries/bank"
-import { useNativeDenoms } from "data/token"
+import { TokenType, useNativeDenoms } from "data/token"
 import { useNetworkWithFeature } from "data/wallet"
 import { useTranslation } from "react-i18next"
 import styles from "./QuickStake.module.scss"
@@ -25,8 +25,12 @@ import TokenSelector, {
 import { useState } from "react"
 import { useAllianceHub } from "data/queries/alliance-protocol"
 import { ChainFeature } from "types/chains"
-import { useIsLedger } from "utils/ledger"
 import { useQuickStakeForm } from "./hooks/useQuickStake"
+
+export enum QuickStakeAction {
+  DELEGATE = "Delegate",
+  UNBOND = "Undelegate",
+}
 
 const QuickStake = () => {
   const { t } = useTranslation()
@@ -35,7 +39,6 @@ const QuickStake = () => {
   const networks = useNetworkWithFeature(ChainFeature.STAKING)
   const [token, setToken] = useState<string | undefined>("uluna")
   const allianceHub = useAllianceHub()
-  const isLedger = useIsLedger()
   const balancesRes = useBalances()
 
   const allianceHubAssets = allianceHub.useWhitelistedAssets()
@@ -111,7 +114,7 @@ const QuickStake = () => {
 
   const tokenList = options.reduce((acc, { denom }) => {
     const token = readNativeDenom(denom)
-    if (token.type === "ibc") return acc
+    if (token.type === TokenType.IBC) return acc
     return token.lsd
       ? {
           [token.lsd]: readNativeDenom(token.lsd),
@@ -241,29 +244,11 @@ const QuickStake = () => {
                 <Flex start gap={8}>
                   <ModalButton
                     title={t("Staking Details")}
-                    renderButton={(open) =>
-                      isLedger && isAlliance ? (
-                        <InlineFlex gap={4} start>
-                          <Tooltip
-                            content={
-                              <article>
-                                <p>
-                                  {t(
-                                    "Alliance is currently not supported on Ledger."
-                                  )}
-                                </p>
-                              </article>
-                            }
-                          >
-                            <Button size="small">Not available</Button>
-                          </Tooltip>
-                        </InlineFlex>
-                      ) : (
-                        <Button color="primary" size="small" onClick={open}>
-                          {hasDelegations ? t("Manage Stake") : t("Stake")}
-                        </Button>
-                      )
-                    }
+                    renderButton={(open) => (
+                      <Button color="primary" size="small" onClick={open}>
+                        {hasDelegations ? t("Manage Stake") : t("Stake")}
+                      </Button>
+                    )}
                   >
                     {quickStakeForm.render(
                       chainID,
