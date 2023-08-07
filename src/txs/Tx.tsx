@@ -275,7 +275,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
         const { txhash } = await auth.post({ ...tx, fee }, password)
         !hideLoader && setLatestTx({ txhash, ...latestTxBase })
       } else {
-        const { result } = await post({ ...tx, fee })
+        const result = await post({ ...tx, fee })
         if (!result) throw new Error("Tx failed")
         !hideLoader && setLatestTx({ txhash: result.txhash, ...latestTxBase })
       }
