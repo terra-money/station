@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next"
 import { PropsWithChildren } from "react"
-import BigNumber from "bignumber.js"
 import { Grid, Card, Flex } from "components/layout"
 import { Props as CardProps } from "components/layout/Card"
 import { Read } from "components/token"
@@ -9,14 +8,15 @@ import { useCurrency } from "data/settings/Currency"
 
 interface Props extends CardProps {
   amount?: Amount
+  hideAmount?: boolean
   value: Value
   denom?: string
   cardName: string
-  showTokens?: boolean
+  forceClickAction?: boolean
 }
 
 const StakedCard = (props: PropsWithChildren<Props>) => {
-  const { value, amount, denom, showTokens, children } = props
+  const { value, amount, denom, hideAmount, forceClickAction, children } = props
   const currency = useCurrency()
   const { t } = useTranslation()
 
@@ -25,13 +25,12 @@ const StakedCard = (props: PropsWithChildren<Props>) => {
       {...props}
       className={styles.card_helper}
       onClick={
-        new BigNumber(value).gt(0.0) || new BigNumber(amount || 0).gt(0.0)
+        forceClickAction || Number(value) > 0 || Number(amount) > 0
           ? props.onClick
           : undefined
       }
     >
-      {(value !== "-1" && value !== "0") ||
-      (amount !== undefined && new BigNumber(amount || 0).gt(0.0)) ? (
+      {value ? (
         <Flex
           wrap
           gap={12}
@@ -41,7 +40,9 @@ const StakedCard = (props: PropsWithChildren<Props>) => {
             {currency.symbol} <Read amount={value} decimals={0} fixed={2} />
             <span className={styles.small}>{children}</span>
           </span>
-          {new BigNumber(amount || -1).gt(0.0) && showTokens && (
+          {hideAmount ? (
+            ""
+          ) : Number(amount) > 0 ? (
             <Read
               amount={amount}
               decimals={0}
@@ -49,6 +50,8 @@ const StakedCard = (props: PropsWithChildren<Props>) => {
               denom={denom}
               className={styles.amount}
             />
+          ) : (
+            ""
           )}
         </Flex>
       ) : (

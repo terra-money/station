@@ -4,9 +4,11 @@ import BigNumber from "bignumber.js"
 import {
   AccAddress,
   Coin,
+  Coins,
   MsgAllianceDelegate,
   MsgAllianceUndelegate,
   MsgDelegate,
+  MsgExecuteContract,
   MsgUndelegate,
   ValAddress,
   Validator,
@@ -30,6 +32,8 @@ import {
   AllianceDelegation,
   useInterchainAllianceDelegations,
 } from "./alliance"
+import { useAllianceHub } from "./alliance-protocol"
+import { getAllianceDelegations } from "data/parsers/alliance-protocol"
 
 export const useInterchainValidators = () => {
   const addresses = useInterchainAddressesWithFeature(ChainFeature.STAKING)
@@ -291,9 +295,9 @@ export const getAvailableStakeActions = (
 
 /* delegation */
 export const calcDelegationsTotal = (
-  delegations: Delegation[] | AllianceDelegationResponse[]
+  delegations?: Delegation[] | AllianceDelegationResponse[]
 ) => {
-  return delegations.length
+  return delegations?.length
     ? BigNumber.sum(
         ...delegations.map(({ balance }) => balance.amount.toString())
       ).toString()
@@ -303,6 +307,14 @@ export const calcDelegationsTotal = (
 export const useStakeChartData = (chain?: string) => {
   const { data: prices } = useExchangeRates()
   const readNativeDenom = useNativeDenoms()
+  const allianceHub = useAllianceHub()
+
+  const hubDelegations = allianceHub.useDelegations()
+
+  const filteredHubDelegations =
+    chain === undefined
+      ? hubDelegations.data
+      : hubDelegations.data?.filter((data) => data?.chainID === chain)
 
   const delegationsData = useInterchainDelegations()
   const delegations: Delegation[] = delegationsData
@@ -312,13 +324,17 @@ export const useStakeChartData = (chain?: string) => {
       [] as Delegation[]
     )
   const allianceDelegationsData = useInterchainAllianceDelegations()
-  const allianceDelegations = allianceDelegationsData
+  let allianceDelegations = allianceDelegationsData
+    .concat()
     .filter(({ data }) => !chain || chain === data?.chainID)
     .reduce(
       (acc, { data }) =>
         data?.delegations ? [...data.delegations, ...acc] : acc,
       [] as AllianceDelegation[]
     )
+  allianceDelegations = allianceDelegations.concat(
+    getAllianceDelegations(filteredHubDelegations)
+  )
 
   const delAmounts: Record<string, number> = delegations.reduce(
     (acc, { balance }) => {
@@ -344,7 +360,11 @@ export const useStakeChartData = (chain?: string) => {
   }, delAmounts)
 
   return {
-    ...combineState(...delegationsData, ...allianceDelegationsData),
+    ...combineState(
+      ...delegationsData,
+      ...allianceDelegationsData,
+      hubDelegations
+    ),
 
     data: Object.entries(totalAmounts ?? {}).map(([token, amount]) => {
       const { decimals, symbol, icon } = readNativeDenom(token)
@@ -400,12 +420,27 @@ export const getQuickStakeMsgs = (
   coin: Coin,
   elgibleVals: ValAddress[],
   decimals: number,
-  isAlliance: boolean
+  isAlliance: boolean,
+  hubAddress: string,
+  stakeOnAllianceHub?: boolean
 ) => {
   const { denom, amount } = coin.toData()
   const totalAmt = new BigNumber(amount)
   const isLessThanAmt = (amt: number) =>
     totalAmt.isLessThan(toAmount(amt, { decimals }))
+
+  if (isAlliance && stakeOnAllianceHub) {
+    return [
+      new MsgExecuteContract(
+        address,
+        hubAddress,
+        {
+          stake: {},
+        },
+        new Coins([coin])
+      ),
+    ]
+  }
 
   const numOfValDests = isLessThanAmt(100)
     ? 1
@@ -450,13 +485,28 @@ export const getQuickUnstakeMsgs = (
     | {
         isAlliance: true
         delegations: AllianceDelegationResponse[]
-      }
+      },
+  hubAddress: string,
+  stakeOnAllianceHub?: boolean
 ) => {
   const { isAlliance, delegations } = details
   const { denom, amount } = coin.toData()
   const bnAmt = new BigNumber(amount)
   const msgs = []
   let remaining = bnAmt
+
+  if (isAlliance && stakeOnAllianceHub) {
+    return [
+      new MsgExecuteContract(address, hubAddress, {
+        unstake: {
+          info: {
+            native: coin.denom,
+          },
+          amount: amount,
+        },
+      }),
+    ]
+  }
 
   if (isAlliance) {
     for (const d of delegations) {

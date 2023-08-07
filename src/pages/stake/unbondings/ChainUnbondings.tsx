@@ -59,12 +59,11 @@ const ChainUnbondings = ({ chain }: { chain: string }) => {
           amount: newAmountHolder + balance / 10 ** decimals,
         }
       },
-      { price: -1, amount: -1 }
+      { price: 0, amount: 0 }
     )
 
     const list = flattenUnbondings(chainUnbondings)
     const totalToDisplay = chainTotalPriceAndAmount?.price
-    const showTokens = chainTotalPriceAndAmount?.amount !== -1
 
     return (
       <ModalButton
@@ -82,7 +81,7 @@ const ChainUnbondings = ({ chain }: { chain: string }) => {
                 >
                   {title}
                 </TooltipIcon>
-                {totalToDisplay !== -1 && (
+                {list?.length > 0 && (
                   <span className={styles.view_more}>View More</span>
                 )}
               </div>
@@ -92,7 +91,6 @@ const ChainUnbondings = ({ chain }: { chain: string }) => {
             denom={chainDenom}
             onClick={open}
             cardName={"undelegations"}
-            showTokens={showTokens}
           />
         )}
       >
