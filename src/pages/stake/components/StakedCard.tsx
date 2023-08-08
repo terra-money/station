@@ -38,13 +38,7 @@ const StakedCard = (props: PropsWithChildren<Props>) => {
         >
           <span className={styles.value}>
             {currency.symbol}{" "}
-            <Read
-              amount={value}
-              denom={denom}
-              hideDenom
-              decimals={0}
-              fixed={2}
-            />
+            <Read amount={value} denom={denom} hideDenom fixed={2} />
             <span className={styles.small}>{children}</span>
           </span>
           {hideAmount ? (

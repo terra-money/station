@@ -1,4 +1,4 @@
-import { ForwardedRef, forwardRef, Fragment, memo } from "react"
+import { ForwardedRef, forwardRef, Fragment } from "react"
 import classNames from "classnames/bind"
 import { FormatConfig } from "@terra-money/terra-utils"
 import { formatPercent, readAmount, truncate } from "@terra-money/terra-utils"
@@ -17,6 +17,7 @@ interface Props extends Partial<FormatConfig> {
   block?: boolean
   className?: string
   auto?: boolean
+  debug?: boolean
 }
 
 const Read = forwardRef(
@@ -27,6 +28,7 @@ const Read = forwardRef(
     const readNativeDenoms = useNativeDenoms()
     if (!(amount || Number.isFinite(amount))) return null
     const { decimals: readDecimals } = readNativeDenoms(denom)
+
     const decimals = props.decimals ?? readDecimals
 
     const comma = !(typeof props.comma === "boolean" && props.comma === false)
@@ -46,7 +48,7 @@ const Read = forwardRef(
       Number(amount) > 0 &&
       Number(amount) < lessThanFloor
 
-    const config = { ...props, comma, fixed }
+    const config = { ...props, decimals, comma, fixed }
     const [integer, decimal] = readAmount(amount, config).split(".")
 
     const renderDecimal = () => {
@@ -86,7 +88,7 @@ const Read = forwardRef(
   }
 )
 
-export default memo(Read)
+export default Read
 
 /* percent */
 interface PercentProps extends Partial<FormatConfig> {

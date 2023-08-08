@@ -5,6 +5,7 @@ import { MsgStoreCode } from "@terra-money/feather.js"
 import { Form, FormItem, Upload } from "components/form"
 import Tx from "../Tx"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
+import { useBaseAsset } from "data/token"
 
 interface TxValues {
   code: string
@@ -15,6 +16,7 @@ const StoreCodeForm = ({ chainID }: { chainID: string }) => {
   const { t } = useTranslation()
   const addresses = useInterchainAddresses()
   const address = addresses && addresses[chainID]
+  const baseAsset = useBaseAsset(chainID)
 
   /* form */
   const [file, setFile] = useState<File>()
@@ -47,6 +49,7 @@ const StoreCodeForm = ({ chainID }: { chainID: string }) => {
     estimationTxValues,
     createTx,
     chain: chainID,
+    token: baseAsset,
   }
 
   return (

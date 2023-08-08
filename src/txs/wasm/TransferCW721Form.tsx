@@ -17,6 +17,7 @@ import validate from "../validate"
 import Tx from "../Tx"
 import { getChainIDFromAddress } from "utils/bech32"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
+import { useBaseAsset } from "data/token"
 
 interface TxValues {
   recipient?: string // AccAddress | TNS
@@ -35,6 +36,7 @@ const TransferCW721Form = ({ contract, id }: Props) => {
   const network = useNetwork()
   const chainID = getChainIDFromAddress(contract, network) ?? ""
   const connectedAddress = addresses?.[chainID]
+  const baseAsset = useBaseAsset(chainID)
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })
@@ -111,6 +113,7 @@ const TransferCW721Form = ({ contract, id }: Props) => {
       ],
     ],
     chain: chainID,
+    token: baseAsset,
   }
 
   const renderResolvedAddress = () => {

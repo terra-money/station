@@ -102,7 +102,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const setLatestTx = useSetRecoilState(latestTxState)
   const isBroadcasting = useRecoilValue(isBroadcastingState)
   const readNativeDenom = useNativeDenoms()
-  const baseAsset = useBaseAsset(chain)
 
   /* taxes */
   const isClassic = networks[chain]?.isClassic
@@ -318,6 +317,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
   /* element */
   const resetMax = () => setIsMax(false)
   const renderMax: RenderMax = (onClick) => {
+    console.log("max", max)
     return (
       <button
         type="button"
@@ -329,7 +329,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
             fontSize="inherit"
             className={styles.icon}
           />
-          <Read amount={max ?? "0"} denom={baseAsset} />
+          <Read amount={max ?? "0"} debug denom={token} />
         </Flex>
       </button>
     )
@@ -359,11 +359,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
               >
                 {availableGasDenoms.map((denom) => (
                   <option value={denom} key={denom}>
-                    {
-                      readNativeDenom(
-                        denom === token ? baseDenom ?? denom : denom
-                      ).symbol
-                    }
+                    {readNativeDenom(denom).symbol}
                   </option>
                 ))}
               </Select>

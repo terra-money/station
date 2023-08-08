@@ -45,6 +45,8 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
         ? delegation.balance.amount.toString()
         : "0"
 
+    console.log(delegation && delegation.balance.amount.toString())
+
     return (
       <section>
         <Read

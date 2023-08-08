@@ -197,10 +197,9 @@ const TFMSwapForm = ({ chainID }: { chainID: string }) => {
     }
   )
 
-  const token = offerAsset
   const decimals = offerDecimals
   const tx = {
-    token,
+    token: askAsset ?? initialOfferAsset,
     decimals,
     amount,
     balance,

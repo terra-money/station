@@ -36,11 +36,7 @@ const ChainRewards = ({ chain }: { chain: string }) => {
     allianceHubRewardsState
   )
 
-  // If the data is not available do not
-  // compute anything nor render the KPI
-  if (!chainRewards || !allianceHubRewards || !exchangeRates) {
-    return null
-  }
+  if (!chainRewards || !allianceHubRewards || !exchangeRates) return null
 
   // If the selected network is phoenix-1, pisco-1 or all
   // account the rewards from alliance hub as well
@@ -48,24 +44,24 @@ const ChainRewards = ({ chain }: { chain: string }) => {
     chain === "phoenix-1" || chain === "pisco-1" || chain === "all"
       ? chainRewards.total.add(getCoinsFromRewards(allianceHubRewards))
       : chainRewards.total
-  // Find the current chain denom
-  const selectedChainDenom = networks[chain]?.baseAsset
 
-  // Values to be displayed in the KPI
-  let tokensPrice = 0
-  let tokensAmount = 0
+  const { tokensPrice, tokensAmount } = totalChainRewardsList.toArray().reduce(
+    (acc, { amount, denom }) => {
+      const { token, decimals } = readNativeDenom(denom)
+      const tokenPrice = exchangeRates[token]?.price ?? 0
+      const tokensValue =
+        (amount.toNumber() * tokenPrice) / Math.pow(10, decimals)
 
-  // Compute the value of the rewards in the selected currency
-  for (const { amount, denom } of totalChainRewardsList.toArray()) {
-    const { token, decimals } = readNativeDenom(denom)
-    const tokenPrice = exchangeRates[token]?.price ?? 0
-    const tokensValue = (amount.toNumber() * tokenPrice) / 10 ** decimals
-
-    tokensPrice += tokensValue
-    if (denom === selectedChainDenom) {
-      tokensAmount += amount.toNumber() / 10 ** decimals
-    }
-  }
+      acc.tokensPrice += tokensValue
+      if (denom === networks[chain].baseAsset) {
+        acc.tokensAmount += amount.toNumber() / Math.pow(10, decimals)
+      }
+      return acc
+    },
+    { tokensPrice: 0, tokensAmount: 0 }
+  )
+  console.log("tokensAmount", tokensAmount)
+  console.log("tokensPrice", tokensPrice)
 
   return (
     <ModalButton
@@ -78,14 +74,14 @@ const ChainRewards = ({ chain }: { chain: string }) => {
               <TooltipIcon content={<RewardsTooltip />} placement="bottom">
                 {title}
               </TooltipIcon>
-              {tokensPrice !== 0 && (
+              {tokensPrice && (
                 <span className={styles.view_more}>View More</span>
               )}
             </div>
           }
-          value={tokensPrice?.toString()}
+          value={tokensPrice.toString()}
           amount={tokensAmount.toString()}
-          denom={selectedChainDenom}
+          denom={networks[chain].baseAsset}
           onClick={open}
           cardName="rewards"
         ></StakedCard>

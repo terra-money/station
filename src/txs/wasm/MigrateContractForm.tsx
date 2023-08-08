@@ -8,6 +8,7 @@ import { Form, FormItem } from "components/form"
 import { Input, EditorInput } from "components/form"
 import validate from "../validate"
 import Tx from "../Tx"
+import { useBaseAsset } from "data/token"
 
 interface TxValues {
   id?: number
@@ -20,6 +21,7 @@ const MigrateContractForm = ({ contract }: { contract: AccAddress }) => {
 
   const address = useAddress()
   const chainID = useChainID()
+  const baseAsset = useBaseAsset(chainID)
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })
@@ -51,6 +53,7 @@ const MigrateContractForm = ({ contract }: { contract: AccAddress }) => {
     estimationTxValues,
     createTx,
     chain: chainID,
+    token: baseAsset,
   }
 
   return (

@@ -73,6 +73,7 @@ const ExecuteContractForm = () => {
   const tx = {
     estimationTxValues,
     coins,
+    token: network[chainID].baseAsset,
     createTx,
     taxRequired: true,
     queryKeys: [

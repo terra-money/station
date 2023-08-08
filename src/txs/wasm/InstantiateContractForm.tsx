@@ -85,6 +85,7 @@ const InstantiateContractForm = ({ chainID }: { chainID: string }) => {
     createTx,
     taxRequired: true,
     chain: chainID,
+    token: network[chainID].baseAsset,
   }
 
   const length = fields.length

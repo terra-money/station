@@ -7,6 +7,7 @@ import { Form, FormItem } from "components/form"
 import { Input } from "components/form"
 import validate from "../validate"
 import Tx from "../Tx"
+import { useBaseAsset } from "data/token"
 
 interface TxValues {
   new_admin?: string
@@ -18,6 +19,7 @@ const UpdateAdminContractForm = ({ contract }: { contract: AccAddress }) => {
 
   const address = useAddress()
   const chainID = useChainID()
+  const baseAsset = useBaseAsset(chainID)
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })
@@ -42,6 +44,7 @@ const UpdateAdminContractForm = ({ contract }: { contract: AccAddress }) => {
     estimationTxValues,
     createTx,
     chain: chainID,
+    token: baseAsset,
   }
 
   return (
