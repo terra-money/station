@@ -84,6 +84,7 @@ const Delegations = () => {
       renderButton={(open) => (
         <StakedCard
           {...state}
+          denom=""
           title={
             <div className={styles.header_wrapper}>
               {title}

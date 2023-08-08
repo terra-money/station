@@ -84,7 +84,7 @@ const ExpectedPrice = ({ mode, input, ...props }: Props) => {
           {!isLoading && (
             <Read
               amount={minimum_receive}
-              token={askAsset}
+              denom={askAsset}
               decimals={findDecimals(askAsset)}
             />
           )}

@@ -10,7 +10,7 @@ interface Props extends CardProps {
   amount?: Amount
   hideAmount?: boolean
   value: Value
-  denom?: string
+  denom: string
   cardName: string
   forceClickAction?: boolean
 }
@@ -37,7 +37,8 @@ const StakedCard = (props: PropsWithChildren<Props>) => {
           style={{ justifyContent: "space-between", alignItems: "flex-end" }}
         >
           <span className={styles.value}>
-            {currency.symbol} <Read amount={value} decimals={0} fixed={2} />
+            {currency.symbol}{" "}
+            <Read amount={value} denom={denom} decimals={0} fixed={2} />
             <span className={styles.small}>{children}</span>
           </span>
           {hideAmount ? (

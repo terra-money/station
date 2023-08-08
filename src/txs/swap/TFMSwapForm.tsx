@@ -309,10 +309,11 @@ const TFMSwapForm = ({ chainID }: { chainID: string }) => {
               options={getOptions("askAsset")}
               addonAfter={
                 <AssetReadOnly>
-                  {simulatedValue ? (
+                  {simulatedValue && askAsset ? (
                     <Read
                       amount={simulatedValue}
                       decimals={askDecimals}
+                      denom={askAsset}
                       approx
                     />
                   ) : (

@@ -95,13 +95,19 @@ const AssetPage = () => {
         <h1>
           {currency.symbol}{" "}
           {price ? (
-            <Read decimals={decimals} amount={totalBalance * price} fixed={2} />
+            <Read
+              decimals={decimals}
+              denom=""
+              amount={totalBalance * price}
+              fixed={2}
+            />
           ) : (
             <span>—</span>
           )}
         </h1>
         <p>
-          <Read decimals={decimals} amount={totalBalance} fixed={2} /> {symbol}
+          <Read decimals={decimals} denom="" amount={totalBalance} fixed={2} />{" "}
+          {symbol}
         </p>
       </section>
       <section className={styles.chainlist__container}>
@@ -125,7 +131,7 @@ const AssetPage = () => {
                     />
                     {token === "uluna" &&
                       symbol !== "LUNC" &&
-                      isTerraChain(b.chain) && <Vesting />}
+                      isTerraChain(b.chain) && <Vesting denom={token} />}
                   </div>
                 ))}
             </div>

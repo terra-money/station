@@ -25,7 +25,7 @@ const GovernanceParams = ({ chain }: { chain: string }) => {
       content: minDeposit && (
         <Read
           amount={minDeposit.amount.toString()}
-          token={network[chain].baseAsset}
+          denom={network[chain].baseAsset}
         />
       ),
     },

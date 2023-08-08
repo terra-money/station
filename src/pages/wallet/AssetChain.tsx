@@ -115,7 +115,6 @@ const AssetChain = (props: Props) => {
               decimals={decimals}
               fixed={2}
               denom=""
-              token=""
             />
           ) : (
             <span>—</span>
@@ -132,7 +131,7 @@ const AssetChain = (props: Props) => {
                   <Read
                     {...props}
                     amount={balance}
-                    token=""
+                    denom=""
                     fixed={2}
                     decimals={decimals}
                   />

@@ -14,6 +14,7 @@ import { Read } from "components/token"
 import { DateTimeRenderer } from "components/display"
 import VoteProgress from "./components/VoteProgress"
 import styles from "./ProposalVotes.module.scss"
+import { useNetwork } from "data/wallet"
 
 export const options = [
   Vote.Option.VOTE_OPTION_YES,
@@ -33,11 +34,13 @@ const ProposalVotes = ({
 }) => {
   const { t } = useTranslation()
   const getVoteOptionItem = useGetVoteOptionItem()
+  const network = useNetwork()
 
   const { data: proposal, ...proposalState } = useProposal(id, chain)
   const { data: tally, ...tallyState } = useTally(id, chain)
   const { data: tallyParams, ...tallyParamsState } = useTallyParams(chain)
   const { data: pool, ...poolState } = useStakingPool(chain)
+  const denom = network[chain].baseAsset
 
   const state = combineState(
     proposalState,
@@ -65,7 +68,7 @@ const ProposalVotes = ({
               <article className={styles.total}>
                 <h1 className={styles.title}>{t("Total voted")}</h1>
                 <section>
-                  <Read amount={total.voted} integer /> (
+                  <Read amount={total.voted} denom={denom} integer /> (
                   {readPercent(total.ratio)})
                   <p>
                     {isPassing ? (
@@ -92,7 +95,7 @@ const ProposalVotes = ({
                       <p className={styles.ratio}>
                         {readPercent(ratio.byVoted)}
                       </p>
-                      <Read amount={voted} integer />
+                      <Read amount={voted} denom={denom} integer />
                     </article>
                   )
                 })}

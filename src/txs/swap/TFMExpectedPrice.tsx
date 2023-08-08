@@ -26,7 +26,7 @@ const TFMExpectedPrice = (props: Props) => {
       <dd>
         <Read
           amount={minimum_receive}
-          token={askAsset}
+          denom={askAsset}
           decimals={findDecimals(askAsset)}
         />
       </dd>

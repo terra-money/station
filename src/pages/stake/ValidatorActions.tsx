@@ -39,6 +39,7 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
   }
 
   const renderDelegationsValue = () => {
+    if (!chain) return null
     const amount =
       delegationState.isSuccess && delegation
         ? delegation.balance.amount.toString()
@@ -48,7 +49,7 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
       <section>
         <Read
           amount={amount}
-          denom={chain?.baseAsset}
+          denom={chain.baseAsset}
           className={styles.total}
           block
         />
@@ -87,6 +88,7 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
   }, [calcValue, currency, destination, rewards])
 
   const renderRewardsValue = () => {
+    if (!chain) return null
     const { list } = rewardsValues
     const amount =
       list.find(({ denom }) => denom === chain?.baseAsset)?.amount ?? "0"
@@ -95,7 +97,7 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
       <section>
         <Read
           amount={amount}
-          denom={chain?.baseAsset}
+          denom={chain.baseAsset}
           className={styles.total}
         />{" "}
         <span className={styles.small}>

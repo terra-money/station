@@ -65,23 +65,22 @@ const StakedDonut = ({ chain }: { chain?: string }) => {
   const RenderTooltip = (props: { payload?: any }) => {
     const { payload } = props
 
+    if (!payload?.length) return null
+    const { name, moniker, denom, amount, value } = payload[0].payload
+
     return (
       <div className={styles.tooltip}>
-        <h6>{payload[0]?.payload.name || payload[0]?.payload.moniker}</h6>
+        <h6>{name || moniker}</h6>
         <div className={styles.infoLine}>
           <p>Balance: </p>
           <p>
-            <Read
-              amount={payload[0]?.payload.amount}
-              fixed={2}
-              token={payload[0]?.payload.denom}
-            />
+            <Read amount={amount} fixed={2} denom={denom} />
           </p>
         </div>
         <div className={styles.infoLine}>
           <p>Value: </p>
           <p>
-            <Read amount={payload[0]?.payload.value} fixed={2} decimals={0} />{" "}
+            <Read amount={value} denom={denom} fixed={2} decimals={0} />{" "}
             {currency.symbol}
           </p>
         </div>

@@ -1,16 +1,16 @@
-import { ForwardedRef, forwardRef, Fragment } from "react"
+import { ForwardedRef, forwardRef, Fragment, memo } from "react"
 import classNames from "classnames/bind"
 import { FormatConfig } from "@terra-money/terra-utils"
 import { formatPercent, readAmount, truncate } from "@terra-money/terra-utils"
 import { WithTokenItem } from "data/token"
 import styles from "./Read.module.scss"
+import { useNativeDenoms } from "data/token"
 
 const cx = classNames.bind(styles)
 
 interface Props extends Partial<FormatConfig> {
+  denom: Denom
   amount?: Amount | Value
-  denom?: Denom
-  token?: Token
 
   approx?: boolean
   block?: boolean
@@ -23,15 +23,19 @@ const Read = forwardRef(
     { amount, denom, approx, block, auto, ...props }: Props,
     ref: ForwardedRef<HTMLSpanElement>
   ) => {
+    const readNativeDenoms = useNativeDenoms()
     if (!(amount || Number.isFinite(amount))) return null
+    const { decimals: readDecimals } = readNativeDenoms(denom)
+    const decimals = props.decimals ?? readDecimals
+    console.log("decimals", denom, decimals)
 
     const comma = !(typeof props.comma === "boolean" && props.comma === false)
 
     const fixed = !auto
       ? props.fixed
-      : Number(amount) >= Math.pow(10, (props.decimals ?? 6) + 3)
+      : Number(amount) >= Math.pow(10, decimals + 3)
       ? 0
-      : Number(amount) < Math.pow(10, props.decimals ?? 6)
+      : Number(amount) < Math.pow(10, decimals)
       ? props.decimals
       : 2
 
@@ -56,15 +60,13 @@ const Read = forwardRef(
     }
 
     const renderSymbol = () => {
-      const token = props.token ?? denom
-
-      if (!token) return null
+      if (!denom) return null
 
       return (
         <span className={styles.small}>
           {" "}
-          <WithTokenItem token={token}>
-            {({ symbol }) => symbol ?? truncate(token)}
+          <WithTokenItem token={denom}>
+            {({ symbol }) => symbol ?? truncate(denom)}
           </WithTokenItem>
         </span>
       )
@@ -84,7 +86,7 @@ const Read = forwardRef(
   }
 )
 
-export default Read
+export default memo(Read)
 
 /* percent */
 interface PercentProps extends Partial<FormatConfig> {

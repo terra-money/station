@@ -104,6 +104,7 @@ const StakingDetailsCompact = ({
                 <p>
                   <Read
                     amount={delegated}
+                    denom={token.symbol}
                     decimals={token.decimals}
                     fixed={2}
                   />{" "}

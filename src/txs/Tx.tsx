@@ -330,8 +330,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
           />
           <Read
             amount={max ?? "0"}
-            token={baseDenom ?? token}
-            decimals={decimals}
+            denom={baseDenom ?? token ?? gasFee.denom}
           />
         </Flex>
       </button>
@@ -392,8 +391,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
               <dd>
                 <Read
                   amount={balance}
-                  token={baseDenom ?? token}
-                  decimals={decimals}
+                  denom={baseDenom ?? token ?? gasFee.denom}
                 />
               </dd>
 
@@ -401,8 +399,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
               <dd>
                 <Read
                   amount={balanceAfterTx}
-                  token={baseDenom ?? token}
-                  decimals={decimals}
+                  denom={baseDenom ?? token ?? gasFee.denom}
                   className={classNames(insufficient && "danger")}
                 />
               </dd>

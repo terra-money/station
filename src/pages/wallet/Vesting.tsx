@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next"
 import styles from "./Vesting.module.scss"
 import { Read } from "components/token"
 
-const Vesting = () => {
+const Vesting = ({ denom }: { denom: string }) => {
   const { t } = useTranslation()
   const { data } = useAccount()
 
@@ -16,6 +16,7 @@ const Vesting = () => {
   if (!isVestingAccount(data)) return null
 
   const schedule = parseVestingSchedule(data)
+  // TODO: make component accept variable denom
 
   return (
     <>
@@ -23,15 +24,15 @@ const Vesting = () => {
         <dl>
           <dt>{t("Vested")}</dt>
           <dd>
-            <Read amount={schedule.amount.vested} />
+            <Read amount={schedule.amount.vested} denom={denom} />
           </dd>
           <dt>{t("Total")}</dt>
           <dd>
-            <Read amount={schedule.amount.total} />
+            <Read amount={schedule.amount.total} denom={denom} />
           </dd>
         </dl>
       </section>
-      <VestingScheduleTable {...schedule} />
+      <VestingScheduleTable {...schedule} denom={denom} />
     </>
   )
 }
