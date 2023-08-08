@@ -123,7 +123,10 @@ function isLinkSafe(url: string) {
     const { protocol, hostname } = new URL(url)
     return (
       protocol === "https:" &&
-      (hostname === "terra.money" || hostname.endsWith(".terra.money"))
+      (hostname === "terra.money" ||
+        hostname.endsWith(".terra.money") ||
+        hostname === "commonwealth.im" ||
+        hostname === "forums.terrarebels.net")
     )
   } catch (e) {
     return false
