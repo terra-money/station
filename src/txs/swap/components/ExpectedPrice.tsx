@@ -55,11 +55,7 @@ const ExpectedPrice = ({ mode, input, ...props }: Props) => {
         {renderExpectedPrice()}
 
         <dt>{t("Trading fee")}</dt>
-        <dd>
-          {!isLoading && (
-            <Read amount={fee} denom={askAsset} decimals={askDecimals} />
-          )}
-        </dd>
+        <dd>{!isLoading && <Read amount={fee} denom={askAsset} />}</dd>
       </>
     )
   }
@@ -81,13 +77,7 @@ const ExpectedPrice = ({ mode, input, ...props }: Props) => {
       <>
         <dt>{t("Minimum received")}</dt>
         <dd>
-          {!isLoading && (
-            <Read
-              amount={minimum_receive}
-              token={askAsset}
-              decimals={findDecimals(askAsset)}
-            />
-          )}
+          {!isLoading && <Read amount={minimum_receive} denom={askAsset} />}
         </dd>
       </>
     )

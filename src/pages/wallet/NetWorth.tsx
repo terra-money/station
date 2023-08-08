@@ -64,7 +64,6 @@ const NetWorth = () => {
           decimals={0}
           fixed={2}
           denom=""
-          token=""
         />
       </h1>
       <div className={styles.networth__buttons}>

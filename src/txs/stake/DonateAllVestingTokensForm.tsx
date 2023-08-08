@@ -7,6 +7,7 @@ import { Account, parseVestingSchedule } from "data/queries/vesting"
 import { Form, FormItem, Input } from "components/form"
 import { toInput } from "txs/utils"
 import Tx from "../Tx"
+import { useBaseAsset } from "data/token"
 
 const DonateAllVestingTokensForm = ({ account }: { account: Account }) => {
   const { t } = useTranslation()
@@ -14,6 +15,7 @@ const DonateAllVestingTokensForm = ({ account }: { account: Account }) => {
   const chainID = useChainID()
   const schedule = parseVestingSchedule(account)
   const balance = schedule.amount.total
+  const baseAsset = useBaseAsset(chainID)
 
   /* form */
   const { handleSubmit } = useForm({ mode: "onChange" })
@@ -32,6 +34,7 @@ const DonateAllVestingTokensForm = ({ account }: { account: Account }) => {
     estimationTxValues,
     createTx,
     chain: chainID,
+    token: baseAsset,
   }
 
   return (

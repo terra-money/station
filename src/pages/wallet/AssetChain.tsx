@@ -16,7 +16,6 @@ export interface Props {
   chain: string
   balance: string
   symbol: string
-  decimals: number
   token: string
   denom: string
   path?: string[]
@@ -24,8 +23,7 @@ export interface Props {
 }
 
 const AssetChain = (props: Props) => {
-  const { chain, symbol, balance, decimals, token, path, ibcDenom, denom } =
-    props
+  const { chain, symbol, balance, token, path, ibcDenom, denom } = props
   const currency = useCurrency()
   const { data: prices, ...pricesState } = useExchangeRates()
   const { t } = useTranslation()
@@ -112,10 +110,8 @@ const AssetChain = (props: Props) => {
             <Read
               {...props}
               amount={price * parseInt(balance)}
-              decimals={decimals}
               fixed={2}
               denom=""
-              token=""
             />
           ) : (
             <span>—</span>
@@ -129,13 +125,7 @@ const AssetChain = (props: Props) => {
                 {wrong ? (
                   <span className="danger">{t("Failed to query balance")}</span>
                 ) : (
-                  <Read
-                    {...props}
-                    amount={balance}
-                    token=""
-                    fixed={2}
-                    decimals={decimals}
-                  />
+                  <Read {...props} amount={balance} fixed={2} />
                 )}
               </>
             )}

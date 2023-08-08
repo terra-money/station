@@ -8,6 +8,7 @@ import useProposalId from "pages/gov/useProposalId"
 import Tx from "../Tx"
 import styles from "./VoteForm.module.scss"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
+import { useBaseAsset } from "data/token"
 
 const cx = classNames.bind(styles)
 
@@ -25,6 +26,7 @@ const Options = [
 const VoteForm = () => {
   const getVoteOptionItem = useGetVoteOptionItem()
   const { id, chain } = useProposalId()
+  const baseAsset = useBaseAsset(chain)
 
   if (!id) throw new Error("Proposal is not defined")
 
@@ -56,6 +58,7 @@ const VoteForm = () => {
     estimationTxValues,
     createTx,
     chain,
+    token: baseAsset,
   }
 
   return (

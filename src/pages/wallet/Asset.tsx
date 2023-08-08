@@ -68,14 +68,7 @@ const Asset = (props: Props) => {
             <h1 className={styles.price}>
               {currency.symbol}{" "}
               {coinPrice ? (
-                <Read
-                  {...props}
-                  amount={walletPrice}
-                  decimals={decimals}
-                  fixed={2}
-                  denom=""
-                  token=""
-                />
+                <Read {...props} amount={walletPrice} fixed={2} denom="" />
               ) : (
                 <span>—</span>
               )}
@@ -100,7 +93,6 @@ const Asset = (props: Props) => {
                       <Read
                         {...props}
                         amount={balance}
-                        token=""
                         fixed={2}
                         decimals={decimals}
                       />
@@ -108,7 +100,6 @@ const Asset = (props: Props) => {
                   </>
                 )}
               </WithFetching>{" "}
-              <span className={styles.sub__amount}>{symbol}</span>
             </h2>
           </div>
         </div>

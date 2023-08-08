@@ -157,6 +157,7 @@ const WithdrawRewardsForm = ({ rewards, chain, ahRewards }: Props) => {
     querykeys: [queryKey.distribution.rewards],
     chain,
     onSuccess: () => reset(),
+    token: networks[chain].baseAsset,
   }
 
   if (!listing.byValidator?.length) {

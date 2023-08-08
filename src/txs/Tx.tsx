@@ -41,11 +41,11 @@ import styles from "./Tx.module.scss"
 import { useInterchainLCDClient } from "data/queries/lcdClient"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { getShouldTax, useTaxCap, useTaxRate } from "data/queries/treasury"
-import { useNativeDenoms } from "data/token"
+import { useBaseAsset, useNativeDenoms } from "data/token"
 
 interface Props<TxValues> {
   /* Only when the token is paid out of the balance held */
-  token?: Token
+  token: Token
   baseDenom?: string
   decimals?: number
   amount?: Amount
@@ -102,6 +102,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const setLatestTx = useSetRecoilState(latestTxState)
   const isBroadcasting = useRecoilValue(isBroadcastingState)
   const readNativeDenom = useNativeDenoms()
+  const baseAsset = useBaseAsset(chain)
 
   /* taxes */
   const isClassic = networks[chain]?.isClassic
@@ -328,11 +329,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
             fontSize="inherit"
             className={styles.icon}
           />
-          <Read
-            amount={max ?? "0"}
-            token={baseDenom ?? token}
-            decimals={decimals}
-          />
+          <Read amount={max ?? "0"} denom={baseAsset} />
         </Flex>
       </button>
     )
@@ -375,7 +372,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
           <dd>
             {gasFee.amount && (
               <Read
-                decimals={decimals}
                 {...gasFee}
                 denom={
                   gasFee.denom === token
@@ -390,19 +386,14 @@ function Tx<TxValues>(props: Props<TxValues>) {
             <>
               <dt>{t("Balance")}</dt>
               <dd>
-                <Read
-                  amount={balance}
-                  token={baseDenom ?? token}
-                  decimals={decimals}
-                />
+                <Read amount={balance} denom={token} />
               </dd>
 
               <dt>{t("Balance after tx")}</dt>
               <dd>
                 <Read
                   amount={balanceAfterTx}
-                  token={baseDenom ?? token}
-                  decimals={decimals}
+                  denom={token}
                   className={classNames(insufficient && "danger")}
                 />
               </dd>

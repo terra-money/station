@@ -8,7 +8,7 @@ import { useAddress, useChainID } from "data/wallet"
 import { useMemoizedCalcValue } from "data/queries/coingecko"
 import { useValidatorCommission } from "data/queries/distribution"
 import { useWithdrawAddress } from "data/queries/distribution"
-import { WithTokenItem } from "data/token"
+import { WithTokenItem, useBaseAsset } from "data/token"
 import { Form, FormArrow, Input } from "components/form"
 import { TokenCard, TokenCardGrid } from "components/token"
 import Tx from "../Tx"
@@ -19,7 +19,7 @@ const WithdrawCommissionForm = () => {
   const address = useAddress()
   const chainID = useChainID()
   const calcValue = useMemoizedCalcValue()
-
+  const baseAsset = useBaseAsset(chainID)
   /* form */
   const { handleSubmit } = useForm({ mode: "onChange" })
 
@@ -38,6 +38,7 @@ const WithdrawCommissionForm = () => {
     estimationTxValues,
     createTx,
     chain: chainID,
+    token: baseAsset,
   }
 
   /* render */

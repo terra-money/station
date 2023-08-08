@@ -24,7 +24,7 @@ const VestingScheduleTable = ({ type, schedule }: ParsedVestingSchedule) => {
         {
           title: "Amount",
           dataIndex: "amount",
-          render: (value) => <Read amount={value} />,
+          render: (value) => <Read amount={value} denom="uluna" />,
           align: "right",
         },
       ]}

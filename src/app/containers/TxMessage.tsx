@@ -68,7 +68,7 @@ const Tokens = ({ children: coins }: { children: string }) => {
 
             return (
               <WithTokenItem token={data.denom} key={denom}>
-                {({ decimals }) => <Read {...data} decimals={decimals} />}
+                {() => <Read {...data} />}
               </WithTokenItem>
             )
           })}

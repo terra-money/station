@@ -14,6 +14,7 @@ import { useCW20Whitelist, useIBCWhitelist } from "./Terra/TerraAssets"
 import { useWhitelist } from "./queries/chains"
 import { useNetworkName, useNetwork } from "./wallet"
 import { getChainIDFromAddress } from "utils/bech32"
+import { ChainID } from "types/network"
 
 const DEFAULT_NATIVE_DECIMALS = 6
 
@@ -87,6 +88,11 @@ export enum TokenType {
   IBC = "ibc",
   GAMM = "gamm",
   FACTORY = "factory",
+}
+export const useBaseAsset = (chain: ChainID) => {
+  const network = useNetwork()
+  if (!network[chain]) return ""
+  return network[chain].baseAsset
 }
 
 export const useNativeDenoms = () => {

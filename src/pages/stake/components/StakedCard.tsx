@@ -30,14 +30,21 @@ const StakedCard = (props: PropsWithChildren<Props>) => {
           : undefined
       }
     >
-      {value ? (
+      {value && denom ? (
         <Flex
           wrap
           gap={12}
           style={{ justifyContent: "space-between", alignItems: "flex-end" }}
         >
           <span className={styles.value}>
-            {currency.symbol} <Read amount={value} decimals={0} fixed={2} />
+            {currency.symbol}{" "}
+            <Read
+              amount={value}
+              denom={denom}
+              hideDenom
+              decimals={0}
+              fixed={2}
+            />
             <span className={styles.small}>{children}</span>
           </span>
           {hideAmount ? (
