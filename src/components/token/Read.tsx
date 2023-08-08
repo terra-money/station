@@ -27,6 +27,7 @@ const Read = forwardRef(
     if (!(amount || Number.isFinite(amount))) return null
     const { decimals: readDecimals } = readNativeDenoms(denom)
     const decimals = props.decimals ?? readDecimals
+    console.log("denom", denom)
     console.log("decimals", denom, decimals)
 
     const comma = !(typeof props.comma === "boolean" && props.comma === false)

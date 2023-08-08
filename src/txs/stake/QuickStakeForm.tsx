@@ -87,6 +87,7 @@ const QuickStakeForm = (props: Props) => {
     allianceHubDelegationsState
   )
   const allianceHubContract = allianceHub.useHubAddress()
+  const { decimals } = readNativeDenom(denom)
 
   /* form */
   const form = useForm<TxValues>({
@@ -96,7 +97,11 @@ const QuickStakeForm = (props: Props) => {
   const { register, trigger, watch, setValue, handleSubmit, formState } = form
   const { errors } = formState
   const { input } = watch()
-  const amount = toAmount(input)
+  const amount = toAmount(input, { decimals })
+  const coin = useMemo(
+    () => new Coin(denom, toAmount(input || toInput(1), { decimals })),
+    [denom, decimals, input]
+  )
 
   const daysToUnbond = getChainUnbondTime(stakeParams?.unbonding_time)
 
@@ -107,8 +112,6 @@ const QuickStakeForm = (props: Props) => {
 
   const stakeMsgs = useMemo(() => {
     if (!address || !elegibleVals) return
-    const coin = new Coin(denom, toAmount(input || toInput(1)))
-    const { decimals } = readNativeDenom(denom)
     return getQuickStakeMsgs(
       address,
       coin,
@@ -121,17 +124,15 @@ const QuickStakeForm = (props: Props) => {
   }, [
     address,
     elegibleVals,
-    denom,
-    input,
+    coin,
     isAlliance,
-    readNativeDenom,
     allianceHubContract,
     stakeOnAllianceHub,
+    decimals,
   ])
 
   const unstakeMsgs = useMemo(() => {
     if (!address || !(isAlliance ? allianceDelegations : delegations)) return
-    const coin = new Coin(denom, toAmount(input || toInput(1)))
     return getQuickUnstakeMsgs(
       address,
       coin,
@@ -145,8 +146,7 @@ const QuickStakeForm = (props: Props) => {
     )
   }, [
     address,
-    denom,
-    input,
+    coin,
     delegations,
     isAlliance,
     allianceDelegations,
@@ -206,7 +206,7 @@ const QuickStakeForm = (props: Props) => {
 
   const token = action === QuickStakeAction.DELEGATE ? denom : ""
   const tx = {
-    decimals: readNativeDenom(token)?.decimals,
+    decimals,
     token,
     amount,
     balance,

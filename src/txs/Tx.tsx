@@ -371,35 +371,20 @@ function Tx<TxValues>(props: Props<TxValues>) {
               </Select>
             )}
           </dt>
-          <dd>
-            {gasFee.amount && (
-              <Read
-                decimals={decimals}
-                {...gasFee}
-                denom={
-                  gasFee.denom === token
-                    ? baseDenom ?? gasFee.denom
-                    : gasFee.denom
-                }
-              />
-            )}
-          </dd>
+          <dd>{gasFee.amount && <Read {...gasFee} denom={gasDenom} />}</dd>
 
           {balanceAfterTx && (
             <>
               <dt>{t("Balance")}</dt>
               <dd>
-                <Read
-                  amount={balance}
-                  denom={baseDenom ?? token ?? gasFee.denom}
-                />
+                <Read amount={balance} denom={gasDenom} />
               </dd>
 
               <dt>{t("Balance after tx")}</dt>
               <dd>
                 <Read
                   amount={balanceAfterTx}
-                  denom={baseDenom ?? token ?? gasFee.denom}
+                  denom={gasDenom}
                   className={classNames(insufficient && "danger")}
                 />
               </dd>
