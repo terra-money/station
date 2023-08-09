@@ -26,7 +26,7 @@ const AssetPage = () => {
   const [chain, denom] = routeDenom.includes("*")
     ? routeDenom.split("*")
     : [undefined, routeDenom]
-  const { token, symbol, icon, decimals } = readNativeDenom(denom, chain)
+  const { token, symbol, icon } = readNativeDenom(denom, chain)
 
   const isLuncOffClassic = symbol === "LUNC" && networkName !== "classic"
 
@@ -124,7 +124,7 @@ const AssetPage = () => {
                     />
                     {token === "uluna" &&
                       symbol !== "LUNC" &&
-                      isTerraChain(b.chain) && <Vesting />}
+                      isTerraChain(b.chain) && <Vesting denom={token} />}
                   </div>
                 ))}
             </div>

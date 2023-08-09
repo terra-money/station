@@ -96,7 +96,9 @@ const QuickStakeForm = (props: Props) => {
   const { register, trigger, watch, setValue, handleSubmit, formState } = form
   const { errors } = formState
   const { input } = watch()
-  const amount = toAmount(input)
+  const { decimals } = readNativeDenom(denom)
+  const amount = toAmount(input, { decimals })
+  const coin = new Coin(denom, toAmount(input || toInput(1), { decimals }))
 
   const daysToUnbond = getChainUnbondTime(stakeParams?.unbonding_time)
 
@@ -107,7 +109,6 @@ const QuickStakeForm = (props: Props) => {
 
   const stakeMsgs = useMemo(() => {
     if (!address || !elegibleVals) return
-    const coin = new Coin(denom, toAmount(input || toInput(1)))
     const { decimals } = readNativeDenom(denom)
     return getQuickStakeMsgs(
       address,
@@ -121,8 +122,8 @@ const QuickStakeForm = (props: Props) => {
   }, [
     address,
     elegibleVals,
+    coin,
     denom,
-    input,
     isAlliance,
     readNativeDenom,
     allianceHubContract,
@@ -131,7 +132,6 @@ const QuickStakeForm = (props: Props) => {
 
   const unstakeMsgs = useMemo(() => {
     if (!address || !(isAlliance ? allianceDelegations : delegations)) return
-    const coin = new Coin(denom, toAmount(input || toInput(1)))
     return getQuickUnstakeMsgs(
       address,
       coin,
@@ -145,8 +145,7 @@ const QuickStakeForm = (props: Props) => {
     )
   }, [
     address,
-    denom,
-    input,
+    coin,
     delegations,
     isAlliance,
     allianceDelegations,
@@ -206,7 +205,7 @@ const QuickStakeForm = (props: Props) => {
 
   const token = action === QuickStakeAction.DELEGATE ? denom : ""
   const tx = {
-    decimals: readNativeDenom(token)?.decimals,
+    decimals: asset.decimals,
     token,
     amount,
     balance,
@@ -267,7 +266,9 @@ const QuickStakeForm = (props: Props) => {
                 <Input
                   {...register("input", {
                     valueAsNumber: true,
-                    validate: validate.input(toInput(max.amount)),
+                    validate: validate.input(
+                      toInput(max.amount, asset.decimals)
+                    ),
                   })}
                   type="number"
                   token={denom}

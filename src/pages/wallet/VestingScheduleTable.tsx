@@ -2,7 +2,11 @@ import { ParsedVestingSchedule } from "data/queries/vesting"
 import { Table } from "components/layout"
 import { Read } from "components/token"
 
-const VestingScheduleTable = ({ type, schedule }: ParsedVestingSchedule) => {
+const VestingScheduleTable = ({
+  type,
+  schedule,
+  denom,
+}: ParsedVestingSchedule & { denom: string }) => {
   return (
     <Table
       columns={[
@@ -24,7 +28,7 @@ const VestingScheduleTable = ({ type, schedule }: ParsedVestingSchedule) => {
         {
           title: "Amount",
           dataIndex: "amount",
-          render: (value) => <Read amount={value} denom="uluna" />,
+          render: (value) => <Read amount={value} denom={denom} />,
           align: "right",
         },
       ]}

@@ -41,7 +41,7 @@ import styles from "./Tx.module.scss"
 import { useInterchainLCDClient } from "data/queries/lcdClient"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { getShouldTax, useTaxCap, useTaxRate } from "data/queries/treasury"
-import { useBaseAsset, useNativeDenoms } from "data/token"
+import { useNativeDenoms } from "data/token"
 
 interface Props<TxValues> {
   /* Only when the token is paid out of the balance held */
@@ -317,7 +317,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
   /* element */
   const resetMax = () => setIsMax(false)
   const renderMax: RenderMax = (onClick) => {
-    console.log("max", max)
     return (
       <button
         type="button"

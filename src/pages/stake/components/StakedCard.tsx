@@ -30,7 +30,7 @@ const StakedCard = (props: PropsWithChildren<Props>) => {
           : undefined
       }
     >
-      {value && denom ? (
+      {value ? (
         <Flex
           wrap
           gap={12}
@@ -38,7 +38,7 @@ const StakedCard = (props: PropsWithChildren<Props>) => {
         >
           <span className={styles.value}>
             {currency.symbol}{" "}
-            <Read amount={value} denom={denom} hideDenom fixed={2} />
+            <Read amount={value} denom="" decimals={0} fixed={2} />
             <span className={styles.small}>{children}</span>
           </span>
           {hideAmount ? (
@@ -48,7 +48,7 @@ const StakedCard = (props: PropsWithChildren<Props>) => {
               amount={amount}
               decimals={0}
               fixed={2}
-              denom={denom}
+              denom={denom || ""}
               className={styles.amount}
             />
           ) : (
