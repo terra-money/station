@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form"
 import { Coin } from "@terra-money/feather.js"
 import { toAmount } from "@terra-money/terra-utils"
 import { getAmount } from "utils/coin"
+import { ExternalLink } from "components/general"
 import { combineState, queryKey } from "data/query"
 import { useNetwork } from "data/wallet"
 import { Flex, FlexColumn, Grid, Page } from "components/layout"
@@ -290,8 +291,12 @@ const QuickStakeForm = (props: Props) => {
                       </li>
                       <li>
                         To stake {asset.symbol} on {network[chainID].name},
-                        visit the Swap page and swap any token for{" "}
-                        {feeTokenSymbol}
+                        visit{" "}
+                        <ExternalLink href="https://tfm.com/ibc">
+                          https://tfm.com/ibc
+                        </ExternalLink>{" "}
+                        and swap any token for {feeTokenSymbol} on{" "}
+                        {network[chainID].name}
                       </li>
                       <li>
                         Send {feeTokenSymbol} to {network[chainID].name} by
