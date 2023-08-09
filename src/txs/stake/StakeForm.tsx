@@ -9,6 +9,7 @@ import {
   MsgAllianceUndelegate,
   ValAddress,
 } from "@terra-money/feather.js"
+import { ExternalLink } from "components/general"
 import { Delegation, Validator } from "@terra-money/feather.js"
 import { MsgDelegate, MsgUndelegate } from "@terra-money/feather.js"
 import { MsgBeginRedelegate } from "@terra-money/feather.js"
@@ -306,8 +307,12 @@ const StakeForm = (props: Props) => {
                     {networks[chainID].name} blockchain
                   </li>
                   <li>
-                    To stake {symbol} on {networks[chainID].name}, visit the
-                    Swap page and swap any token for {feeTokenSymbol}
+                    To stake {symbol} on {networks[chainID].name}, visit{" "}
+                    <ExternalLink href="https://tfm.com/ibc">
+                      https://tfm.com/ibc
+                    </ExternalLink>{" "}
+                    and swap any token for {feeTokenSymbol} on{" "}
+                    {networks[chainID].name}
                   </li>
                   <li>
                     Send {feeTokenSymbol} from Terra to {networks[chainID].name}{" "}
