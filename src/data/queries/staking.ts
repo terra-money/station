@@ -371,7 +371,8 @@ export const useStakeChartData = (chain?: string) => {
 
       return {
         name: symbol,
-        value: (amount * (prices?.[token]?.price ?? 0)) / 10 ** decimals,
+        value:
+          (amount * (prices?.[token]?.price ?? 0)) / Math.pow(10, decimals),
         amount,
         denom: token,
         icon,

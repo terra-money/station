@@ -55,8 +55,8 @@ const ChainUnbondings = ({ chain }: { chain: string }) => {
         return {
           price:
             newPriceHolder +
-            (balance * (prices[token]?.price || 0)) / 10 ** decimals,
-          amount: newAmountHolder + balance / 10 ** decimals,
+            (balance * (prices[token]?.price || 0)) / Math.pow(10, decimals),
+          amount: newAmountHolder + balance / Math.pow(10, decimals),
         }
       },
       { price: 0, amount: 0 }

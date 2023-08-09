@@ -98,7 +98,10 @@ const QuickStakeForm = (props: Props) => {
   const { input } = watch()
   const { decimals } = readNativeDenom(denom)
   const amount = toAmount(input, { decimals })
-  const coin = new Coin(denom, toAmount(input || toInput(1), { decimals }))
+  const coin = useMemo(
+    () => new Coin(denom, toAmount(input || toInput(1), { decimals })),
+    [denom, decimals, input]
+  )
 
   const daysToUnbond = getChainUnbondTime(stakeParams?.unbonding_time)
 

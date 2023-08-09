@@ -75,7 +75,7 @@ const Delegations = () => {
     let tokenPrice = prices[token]?.price ?? 0
 
     totalTokensAmount += amount
-    return acc + (amount * tokenPrice) / 10 ** decimals
+    return acc + (amount * tokenPrice) / Math.pow(10, decimals)
   }, 0)
 
   return (

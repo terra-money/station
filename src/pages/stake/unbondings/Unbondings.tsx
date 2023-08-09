@@ -48,7 +48,9 @@ const Unbondings = () => {
 
       const denom = getDenomFromAddress(networks, unbonding.delegator_address)
       const { token, decimals } = readNativeDenom(denom)
-      return acc + (balance * (prices[token]?.price || 0)) / 10 ** decimals
+      return (
+        acc + (balance * (prices[token]?.price || 0)) / Math.pow(10, decimals)
+      )
     }, 0)
 
     const list = flattenUnbondings(unbondings)

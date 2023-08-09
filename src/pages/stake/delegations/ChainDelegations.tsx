@@ -59,8 +59,10 @@ const ChainDelegations = ({ chain }: { chain: string }) => {
           price:
             newPriceHolder +
             (balance.amount.toNumber() * (prices[token]?.price || 0)) /
-              10 ** decimals,
-          amount: newAmountHolder + balance.amount.toNumber() / 10 ** decimals,
+              Math.pow(10, decimals),
+          amount:
+            newAmountHolder +
+            balance.amount.toNumber() / Math.pow(10, decimals),
         }
       }
 
