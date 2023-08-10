@@ -324,7 +324,7 @@ const StakeForm = (props: Props) => {
                   </li>
                   <li>
                     Return to Station's Stake page to stake your {symbol} on{" "}
-                    {networks[chainID].name}
+                    {networks[chainID].name}.
                   </li>
                 </ul>
               </section>

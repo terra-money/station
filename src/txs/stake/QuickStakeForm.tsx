@@ -308,7 +308,7 @@ const QuickStakeForm = (props: Props) => {
                       </li>
                       <li>
                         Return to Station's Stake page to stake your{" "}
-                        {asset.symbol} on {network[chainID].name}
+                        {asset.symbol} on {network[chainID].name}.
                       </li>
                     </ul>
                   </section>
