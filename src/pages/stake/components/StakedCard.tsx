@@ -48,7 +48,7 @@ const StakedCard = (props: PropsWithChildren<Props>) => {
               amount={amount}
               decimals={0}
               fixed={2}
-              denom={denom || ""}
+              denom={denom ?? ""}
               className={styles.amount}
             />
           ) : (
