@@ -287,7 +287,7 @@ const QuickStakeForm = (props: Props) => {
                     <ul>
                       <li>
                         {feeTokenSymbol} is the fee token used on the{" "}
-                        {network[chainID].name} blockchain
+                        {network[chainID].name} blockchain.
                       </li>
                       <li>
                         To stake {asset.symbol} on {network[chainID].name},
@@ -296,7 +296,9 @@ const QuickStakeForm = (props: Props) => {
                           https://tfm.com/ibc
                         </ExternalLink>{" "}
                         and swap any token for {feeTokenSymbol} on{" "}
-                        {network[chainID].name}
+                        {network[chainID].name}. Make sure the {feeTokenSymbol}{" "}
+                        is being sent to your {network[chainID].name} wallet on
+                        Station.
                       </li>
                       <li>
                         Send {feeTokenSymbol} to {network[chainID].name} by
@@ -305,9 +307,8 @@ const QuickStakeForm = (props: Props) => {
                         book
                       </li>
                       <li>
-                        Return to the Stake page to stake your {asset.symbol}{" "}
-                        once you have {feeTokenSymbol} on{" "}
-                        {network[chainID].name}
+                        Return to Station's Stake page to stake your{" "}
+                        {asset.symbol} on {network[chainID].name}
                       </li>
                     </ul>
                   </section>
