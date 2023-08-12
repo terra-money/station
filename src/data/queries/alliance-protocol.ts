@@ -25,9 +25,9 @@ export const useAllianceHub = () => {
       return "terra1jwyzzsaag4t0evnuukc35ysyrx9arzdde2kg9cld28alhjurtthq0prs2s"
     } else if (chainID === "pisco-1") {
       return "terra1q95pe55eea0akft0xezak2s50l4vkkquve5emw7gzw65a7ptdl8qel50ea"
+    } else {
+      return ""
     }
-
-    throw Error("Feature available only on Terra")
   }
 
   const useConfig = () => {
