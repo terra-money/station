@@ -1,4 +1,9 @@
-import { ForwardedRef, HTMLAttributes, PropsWithChildren } from "react"
+import {
+  CSSProperties,
+  ForwardedRef,
+  HTMLAttributes,
+  PropsWithChildren,
+} from "react"
 import { forwardRef } from "react"
 import classNames from "classnames"
 import { truncate } from "@terra-money/terra-utils"
@@ -16,11 +21,12 @@ interface Props extends HTMLAttributes<HTMLAnchorElement> {
   validator?: boolean
   /* customize */
   short?: boolean
+  style?: CSSProperties
 }
 
 const FinderLink = forwardRef(
   (
-    { children, short, ...rest }: PropsWithChildren<Props>,
+    { children, short, style, ...rest }: PropsWithChildren<Props>,
     ref: ForwardedRef<HTMLAnchorElement>
   ) => {
     const { block, tx, validator, chainID, ...attrs } = rest
@@ -45,7 +51,14 @@ const FinderLink = forwardRef(
     }
 
     return (
-      <ExternalLink {...attrs} href={href} className={className} ref={ref} icon>
+      <ExternalLink
+        {...attrs}
+        href={href}
+        className={className}
+        ref={ref}
+        style={style}
+        icon
+      >
         {short && typeof children === "string" ? truncate(children) : children}
       </ExternalLink>
     )

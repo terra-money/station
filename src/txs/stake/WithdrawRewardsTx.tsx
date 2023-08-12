@@ -1,25 +1,28 @@
 import { combineState } from "data/query"
 import { useRewards } from "data/queries/distribution"
-import { useValidators } from "data/queries/staking"
 
 import WithdrawRewardsForm from "./WithdrawRewardsForm"
+import { useAllianceHub } from "data/queries/alliance-protocol"
 
 interface Props {
   chain: string
 }
 
 const WithdrawRewardsTx = ({ chain }: Props) => {
+  const allianceHub = useAllianceHub()
+
+  const { data: allianceHubRewards, ...allianceHubRewardsState } =
+    allianceHub.usePendingRewards()
   const { data: rewards, ...rewardsState } = useRewards(chain)
-  const { data: validators, ...validatorsState } = useValidators(chain)
 
-  const state = combineState(rewardsState, validatorsState)
+  const state = combineState(rewardsState, allianceHubRewardsState)
 
-  if (!rewards || !validators || !state.isSuccess) return null
+  if (!rewards || !state.isSuccess) return null
 
   return (
     <WithdrawRewardsForm
       rewards={rewards}
-      validators={validators}
+      ahRewards={allianceHubRewards ?? []}
       chain={chain ?? ""}
     />
   )
