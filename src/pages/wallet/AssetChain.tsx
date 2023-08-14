@@ -111,7 +111,6 @@ const AssetChain = (props: Props) => {
               {...props}
               amount={price * parseInt(balance)}
               fixed={2}
-              hideDenom
               denom=""
             />
           ) : (
@@ -126,7 +125,7 @@ const AssetChain = (props: Props) => {
                 {wrong ? (
                   <span className="danger">{t("Failed to query balance")}</span>
                 ) : (
-                  <Read {...props} amount={balance} hideDenom fixed={2} />
+                  <Read {...props} amount={balance} fixed={2} />
                 )}
               </>
             )}

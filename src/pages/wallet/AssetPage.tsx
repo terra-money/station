@@ -95,13 +95,13 @@ const AssetPage = () => {
         <h1>
           {currency.symbol}{" "}
           {price ? (
-            <Read amount={totalBalance * price} hideDenom denom="" fixed={2} />
+            <Read amount={totalBalance * price} denom="" fixed={2} />
           ) : (
             <span>—</span>
           )}
         </h1>
         <p>
-          <Read amount={totalBalance} hideDenom denom="" fixed={2} /> {symbol}
+          <Read amount={totalBalance} denom="" fixed={2} /> {symbol}
         </p>
       </section>
       <section className={styles.chainlist__container}>
