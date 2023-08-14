@@ -55,14 +55,13 @@ export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
   const connectedWallet = useWallet()
   const { customLCDs } = useCustomLCDs()
 
-  function withCustomLCDs(networks: Record<ChainID, InterchainNetwork>) {
-    return Object.fromEntries(
-      Object.entries(networks ?? {}).map(([key, val]) => [
+  const withCustomLCDs = (networks: Record<ChainID, InterchainNetwork>) =>
+    Object.fromEntries(
+      Object.entries(networks).map(([key, val]) => [
         key,
-        { ...val, lcd: customLCDs[val?.chainID] || val.lcd },
-      ]) ?? {}
+        { ...val, lcd: customLCDs[val.chainID] || val.lcd },
+      ])
     )
-  }
 
   // check connected wallet
   if (connectedWallet.status === WalletStatus.CONNECTED) {

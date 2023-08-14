@@ -14,6 +14,8 @@ import ProfileIcon from "./components/ProfileIcon"
 import { ValidatorJailed, ValidatorUnbonded } from "./components/ValidatorTag"
 import styles from "./Validators.module.scss"
 import { LinkButton } from "components/general"
+import { useNetwork } from "data/wallet"
+import { getChainIDFromAddress } from "utils/bech32"
 
 const ValidatorsList = ({
   chainID,
@@ -29,6 +31,7 @@ const ValidatorsList = ({
   const { t } = useTranslation()
 
   const { data: validators, ...validatorsState } = useValidators(chainID)
+  const networks = useNetwork()
 
   const state = combineState(validatorsState)
 
@@ -42,15 +45,17 @@ const ValidatorsList = ({
       .map((validator) => {
         const { operator_address } = validator
         const voting_power_rate = calcRate(operator_address)
+        const chainID = getChainIDFromAddress(operator_address, networks)
         return {
           ...validator,
+          chainID,
           rank:
             (priorityVals.includes(operator_address) ? 1 : 0) + Math.random(),
           voting_power_rate,
         }
       })
       .sort((a, b) => b.rank - a.rank)
-  }, [validators, keyword])
+  }, [validators, keyword, networks])
 
   if (!activeValidators) return null
 
@@ -135,11 +140,11 @@ const ValidatorsList = ({
               title: t("Actions"),
               dataIndex: [],
               render: (_, validator) => {
-                const { operator_address } = validator
+                const { operator_address, chainID } = validator
 
                 return (
                   <LinkButton
-                    to={`/stake/${operator_address}/${denom.replaceAll(
+                    to={`/stake/${operator_address}/${chainID}/${denom.replaceAll(
                       "/",
                       "="
                     )}#Delegate`}

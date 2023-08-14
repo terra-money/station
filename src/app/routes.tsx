@@ -106,8 +106,8 @@ export const useNav = () => {
 
     /* txs */
     { path: "/nft/transfer", element: <TransferCW721Tx /> },
-    { path: "/stake/:address/:denom", element: <StakeTx /> },
-    { path: "/stake/:address", element: <StakeTx /> },
+    { path: "/stake/:address/:chainID", element: <StakeTx /> },
+    { path: "/stake/:address/:chainID/:denom", element: <StakeTx /> },
     { path: "/rewards", element: <WithdrawRewards /> },
     { path: "/commission", element: <WithdrawCommissionTx /> },
     { path: "/proposal/new", element: <SubmitProposalTx /> },

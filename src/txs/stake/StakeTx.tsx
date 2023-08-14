@@ -8,8 +8,6 @@ import { Auto, Page, Tabs, Card } from "components/layout"
 import ValidatorCompact from "pages/stake/ValidatorCompact"
 import StakeForm, { StakeAction } from "./StakeForm"
 import { useNetwork } from "data/wallet"
-import { ValAddress } from "@terra-money/feather.js"
-import { useMemo } from "react"
 import styles from "./StakeTx.module.scss"
 import {
   getAvailableAllianceStakeActions,
@@ -19,35 +17,26 @@ import StakingDetailsCompact from "pages/stake/StakingDetailsCompact"
 
 const StakeTx = () => {
   const { t } = useTranslation()
-  const { address: destination, denom: paramDenom } = useParams() // destination validator
+  const { address: destination, denom: paramDenom, chainID } = useParams() // destination validator
   const networks = useNetwork()
 
-  const network = useMemo(() => {
-    if (!destination || !ValAddress.validate(destination)) return null
-    return Object.values(networks ?? {}).find(
-      ({ prefix }) => prefix === ValAddress.getPrefix(destination)
-    )
-  }, [networks, destination])
-
   if (!destination) throw new Error("Validator is not defined")
-  if (!network) throw new Error("Validator not found or invalid")
+  if (!chainID) throw new Error(`Chain with ID ${chainID} not found or invalid`)
 
-  const denom = paramDenom?.replaceAll("=", "/") || network.baseAsset
-  const isAlliance = denom !== network.baseAsset
+  const denom = paramDenom?.replaceAll("=", "/") || networks[chainID]?.baseAsset
+  const isAlliance = denom !== networks[chainID]?.baseAsset
 
   const location = useLocation()
   const initialTab = location.state as string
 
   const { data: balances, ...balancesState } = useBalances()
-  const { data: validators, ...validatorsState } = useValidators(
-    network?.chainID
-  )
+  const { data: validators, ...validatorsState } = useValidators(chainID)
   const { data: delegations, ...delegationsState } = useDelegations(
-    network?.chainID,
+    chainID,
     isAlliance
   )
   const { data: allianceDelegations, ...allianceDelegationsState } =
-    useAllianceDelegations(network?.chainID, !isAlliance)
+    useAllianceDelegations(chainID, !isAlliance)
 
   const state = combineState(
     balancesState,
@@ -83,7 +72,7 @@ const StakeTx = () => {
         destination,
         balances,
         validators,
-        chainID: network?.chainID,
+        chainID,
         denom,
         details: {
           isAlliance,
@@ -98,7 +87,7 @@ const StakeTx = () => {
         destination,
         balances,
         validators,
-        chainID: network?.chainID,
+        chainID,
         denom,
         details: {
           isAlliance,
@@ -131,7 +120,7 @@ const StakeTx = () => {
           />,
           <div className={styles.details__container}>
             <ValidatorCompact vertical />
-            <StakingDetailsCompact denom={denom} chainID={network?.chainID} />
+            <StakingDetailsCompact denom={denom} chainID={chainID} />
           </div>,
         ]}
       />

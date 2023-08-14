@@ -5,6 +5,8 @@ import { useNativeDenoms, TokenType } from "data/token"
 import { ValidatorLink } from "components/general"
 import { InlineFlex } from "components/layout"
 import ProfileIcon from "pages/stake/components/ProfileIcon"
+import { getChainIDFromAddress } from "utils/bech32"
+import { useNetwork } from "data/wallet"
 
 interface Props {
   address: ValAddress
@@ -16,6 +18,8 @@ interface Props {
 const StakingAssetLink = ({ address, denom }: Props) => {
   const { data: validator } = useValidator(address)
   const readNativeDenom = useNativeDenoms()
+  const networks = useNetwork()
+  const chainID = getChainIDFromAddress(address, networks)
 
   const render = () => {
     if (!validator) return null
@@ -24,7 +28,10 @@ const StakingAssetLink = ({ address, denom }: Props) => {
     } = validator
     return readNativeDenom(denom).type === TokenType.IBC ? (
       <InternalLink
-        to={`/stake/${address}/${denom.replaceAll("/", "=")}#Undelegate`}
+        to={`/stake/${address}/${chainID}/${denom.replaceAll(
+          "/",
+          "="
+        )}#Undelegate`}
       >
         <InlineFlex gap={8}>
           <ProfileIcon src={identity} size={22} /> {moniker}

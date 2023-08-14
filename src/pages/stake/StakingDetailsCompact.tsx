@@ -29,8 +29,8 @@ const StakingDetailsCompact = ({
   const token = readNativeDenom(denom)
   const { data: stakeParams, ...stakeState } = useStakingParams(chainID)
   const daysToUnbond = getChainUnbondTime(stakeParams?.unbonding_time)
+  const isAlliance = network[chainID]?.baseAsset !== denom
 
-  const isAlliance = network[chainID].baseAsset !== denom
   const { data: alliance, ...allianceState } = useAlliance(
     chainID,
     denom,
@@ -43,6 +43,9 @@ const StakingDetailsCompact = ({
   )
   const { data: allianceDelegations, ...allianceDelegationsState } =
     useAllianceDelegations(chainID, !isAlliance)
+
+  console.log(network[chainID])
+  // if (!network[chainID]) return null
 
   const delegated = isAlliance
     ? allianceDelegations?.reduce(
@@ -76,8 +79,8 @@ const StakingDetailsCompact = ({
               )}
               {network && (
                 <img
-                  src={network[chainID].icon}
-                  alt={network[chainID].name}
+                  src={network[chainID]?.icon}
+                  alt={network[chainID]?.name}
                   className={styles.chain__icon}
                 />
               )}
@@ -85,7 +88,7 @@ const StakingDetailsCompact = ({
             {token.name}
 
             <span className={styles.alliance__logo}>
-              {network[chainID].name}
+              {network[chainID]?.name}
             </span>
 
             {isAlliance && <span className={styles.alliance__logo}>🤝</span>}

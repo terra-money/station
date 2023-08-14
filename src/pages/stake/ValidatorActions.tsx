@@ -22,7 +22,7 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
   const networks = useNetworkWithFeature(ChainFeature.STAKING)
   const chain = useMemo(() => {
     const prefix = ValAddress.getPrefix(destination)
-    return Object.values(networks ?? {}).find(({ prefix: p }) => p === prefix)
+    return Object.values(networks).find(({ prefix: p }) => p === prefix)
   }, [networks, destination])
   const { data: delegation, ...delegationState } = useDelegation(destination)
   const { data: delegations, ...delegationsState } = useDelegations(
@@ -65,7 +65,7 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
       <ExtraActions align="stretch">
         {Object.values(StakeAction ?? {}).map((action) => (
           <LinkButton
-            to={`/stake/${destination}`}
+            to={`/stake/${destination}/${chain?.chainID}}`}
             state={action}
             color={action === StakeAction.DELEGATE ? "primary" : "default"}
             disabled={!availableActions[action]}
