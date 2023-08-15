@@ -197,10 +197,8 @@ const TFMSwapForm = ({ chainID }: { chainID: string }) => {
     }
   )
 
-  const decimals = offerDecimals
   const tx = {
-    token: askAsset ?? initialOfferAsset,
-    decimals,
+    token: offerAsset ?? "",
     amount,
     balance,
     estimationTxValues,
@@ -309,7 +307,7 @@ const TFMSwapForm = ({ chainID }: { chainID: string }) => {
               addonAfter={
                 <AssetReadOnly>
                   {simulatedValue && askAsset ? (
-                    <Read amount={simulatedValue} denom={askAsset} approx />
+                    <Read denom={askAsset} amount={simulatedValue} approx />
                   ) : (
                     <p className="muted">
                       {isFetching ? t("Simulating...") : "0"}
