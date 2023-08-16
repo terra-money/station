@@ -77,7 +77,7 @@ export const useValidators = (chainID: string) => {
       do {
         // @ts-expect-error
         const [list, pagination] = await lcd.staking.validators(chainID, {
-          "pagination.limit": "100",
+          ...Pagination,
           "pagination.key": key,
         })
 

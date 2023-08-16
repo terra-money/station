@@ -9,25 +9,26 @@ import ValidatorCompact from "pages/stake/ValidatorCompact"
 import StakeForm, { StakeAction } from "./StakeForm"
 import { useNetwork } from "data/wallet"
 import styles from "./StakeTx.module.scss"
+import { LoadingCircular } from "components/feedback"
 import {
   getAvailableAllianceStakeActions,
   useAllianceDelegations,
 } from "data/queries/alliance"
 import StakingDetailsCompact from "pages/stake/StakingDetailsCompact"
+import { useNetworks } from "app/InitNetworks"
 
 const StakeTx = () => {
   const { t } = useTranslation()
   const { address: destination, denom: paramDenom, chainID } = useParams() // destination validator
   const networks = useNetwork()
+  const { networksLoading } = useNetworks()
+  const location = useLocation()
+  const initialTab = location.state as string
 
-  if (!destination) throw new Error("Validator is not defined")
   if (!chainID) throw new Error(`Chain with ID ${chainID} not found or invalid`)
 
   const denom = paramDenom?.replaceAll("=", "/") || networks[chainID]?.baseAsset
   const isAlliance = denom !== networks[chainID]?.baseAsset
-
-  const location = useLocation()
-  const initialTab = location.state as string
 
   const { data: balances, ...balancesState } = useBalances()
   const { data: validators, ...validatorsState } = useValidators(chainID)
@@ -37,6 +38,8 @@ const StakeTx = () => {
   )
   const { data: allianceDelegations, ...allianceDelegationsState } =
     useAllianceDelegations(chainID, !isAlliance)
+
+  if (!destination) throw new Error("Validator is not defined")
 
   const state = combineState(
     balancesState,
@@ -64,9 +67,9 @@ const StakeTx = () => {
   }
 
   const renderTab = (tab: StakeAction) => {
+    if (networksLoading || state.isLoading) return <LoadingCircular />
     if (!(balances && validators)) return null
-    if (isAlliance) {
-      if (!allianceDelegations) return null
+    if (isAlliance && allianceDelegations) {
       const props = {
         tab,
         destination,
@@ -91,7 +94,7 @@ const StakeTx = () => {
         denom,
         details: {
           isAlliance,
-          delegations: delegations,
+          delegations,
         },
       }
       return <StakeForm {...props} />
@@ -103,7 +106,7 @@ const StakeTx = () => {
       <Auto
         columns={[
           <Tabs
-            tabs={Object.values(StakeAction ?? {}).map((tab) => {
+            tabs={Object.values(StakeAction).map((tab) => {
               return {
                 key: tab,
                 tab: t(tab),
