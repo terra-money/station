@@ -17,7 +17,6 @@ import { ChainFeature } from "types/chains"
 
 const ChainRewards = ({ chain }: { chain: string }) => {
   const { t } = useTranslation()
-  const title = t("Staking rewards")
   const calcValue = useMemoizedCalcValue()
   const readNativeDenom = useNativeDenoms()
   const allianceHub = useAllianceHub()
@@ -48,6 +47,19 @@ const ChainRewards = ({ chain }: { chain: string }) => {
     chain === "phoenix-1" || chain === "pisco-1" || chain === "all"
       ? chainRewards.total.add(getCoinsFromRewards(allianceHubRewards))
       : chainRewards.total
+
+  // The delegation rewards are returned using sdk.DecCoins type which means that
+  // after the comma there is a fraction of unit of a token available follow:
+  // ref.
+  //  - https://github.com/terra-money/cosmos-sdk/blob/upgrade/v0.46.x-terra/x/distribution/keeper/grpc_query.go#L166 .
+  //  - https://github.com/terra-money/cosmos-sdk/blob/upgrade/v0.46.x-terra/x/staking/types/staking.pb.go#L592-L599
+  //
+  // Since the user cannnot claim a 1 utoken we filter out these values
+  // e.g. 0.000000065984338625uluna < 1uluna
+  totalChainRewardsList = totalChainRewardsList.filter((rew) =>
+    rew.amount.gte(1)
+  )
+
   // Find the current chain denom
   const selectedChainDenom = networks[chain]?.baseAsset
 
@@ -67,6 +79,7 @@ const ChainRewards = ({ chain }: { chain: string }) => {
       tokensAmount += amount.toNumber() / Math.pow(10, decimals)
     }
   }
+  const title = t("Staking rewards")
 
   return (
     <ModalButton
@@ -84,16 +97,16 @@ const ChainRewards = ({ chain }: { chain: string }) => {
               )}
             </div>
           }
-          value={tokensPrice?.toString()}
+          value={tokensPrice.toString()}
           amount={tokensAmount.toString()}
           denom={selectedChainDenom}
           onClick={open}
           cardName="rewards"
-        ></StakedCard>
+        />
       )}
     >
       <TokenCardGrid maxHeight>
-        {totalChainRewardsList?.map(({ amount, denom }) => (
+        {totalChainRewardsList.map(({ amount, denom }) => (
           <WithTokenItem token={denom} key={denom}>
             {(item) => (
               <TokenCard
