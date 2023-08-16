@@ -13,6 +13,7 @@ interface Props extends Partial<FormatConfig> {
   amount?: Amount | Value
 
   approx?: boolean
+  hideDenom?: boolean
   block?: boolean
   className?: string
   auto?: boolean
@@ -21,7 +22,7 @@ interface Props extends Partial<FormatConfig> {
 
 const Read = forwardRef(
   (
-    { amount, denom, approx, block, auto, ...props }: Props,
+    { amount, denom, approx, block, auto, hideDenom, ...props }: Props,
     ref: ForwardedRef<HTMLSpanElement>
   ) => {
     const readNativeDenoms = useNativeDenoms()
@@ -61,7 +62,7 @@ const Read = forwardRef(
     }
 
     const renderSymbol = () => {
-      if (!denom) return null
+      if (!denom || hideDenom) return null
 
       return (
         <span className={styles.small}>
