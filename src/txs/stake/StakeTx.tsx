@@ -47,6 +47,7 @@ const StakeTx = () => {
     delegationsState,
     allianceDelegationsState
   )
+  console.log("state", state)
 
   const getDisabled = (tab: StakeAction) => {
     if (isAlliance) {
@@ -69,7 +70,8 @@ const StakeTx = () => {
   const renderTab = (tab: StakeAction) => {
     if (networksLoading || state.isLoading) return <LoadingCircular />
     if (!(balances && validators)) return null
-    if (isAlliance && allianceDelegations) {
+    if (isAlliance) {
+      if (!allianceDelegations) return null
       const props = {
         tab,
         destination,
