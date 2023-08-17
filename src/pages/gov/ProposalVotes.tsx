@@ -67,13 +67,8 @@ const ProposalVotes = ({
               <article className={styles.total}>
                 <h1 className={styles.title}>{t("Total voted")}</h1>
                 <section>
-                  <Read
-                    amount={total.voted}
-                    denom={baseAsset}
-                    hideDenom
-                    integer
-                  />{" "}
-                  ({readPercent(total.ratio)})
+                  <Read amount={total.voted} denom="" hideDenom integer /> (
+                  {readPercent(total.ratio)})
                   <p>
                     {isPassing ? (
                       <strong className="info">{t("Passing...")}</strong>
