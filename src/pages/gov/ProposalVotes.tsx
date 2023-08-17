@@ -94,12 +94,7 @@ const ProposalVotes = ({
                       <p className={styles.ratio}>
                         {readPercent(ratio.byVoted)}
                       </p>
-                      <Read
-                        amount={voted}
-                        hideDenom
-                        denom={baseAsset}
-                        integer
-                      />
+                      <Read amount={voted} hideDenom denom="" integer />
                     </article>
                   )
                 })}
