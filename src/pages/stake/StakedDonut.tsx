@@ -79,7 +79,7 @@ const StakedDonut = ({ chain }: { chain?: string }) => {
         <div className={styles.infoLine}>
           <p>Value: </p>
           <p>
-            <Read amount={value} denom={denom} fixed={2} decimals={0} />{" "}
+            <Read amount={value} denom="" fixed={2} decimals={0} />{" "}
             {currency.symbol}
           </p>
         </div>

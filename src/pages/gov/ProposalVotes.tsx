@@ -14,7 +14,6 @@ import { Read } from "components/token"
 import { DateTimeRenderer } from "components/display"
 import VoteProgress from "./components/VoteProgress"
 import styles from "./ProposalVotes.module.scss"
-import { useBaseAsset } from "data/token"
 
 export const options = [
   Vote.Option.VOTE_OPTION_YES,
@@ -39,7 +38,6 @@ const ProposalVotes = ({
   const { data: tally, ...tallyState } = useTally(id, chain)
   const { data: tallyParams, ...tallyParamsState } = useTallyParams(chain)
   const { data: pool, ...poolState } = useStakingPool(chain)
-  const baseAsset = useBaseAsset(chain)
 
   const state = combineState(
     proposalState,
