@@ -226,7 +226,7 @@ export const useProposalStatusItem = (status: ProposalStatus) => {
 export const useProposal = (id: string, chain: string) => {
   const networks = useNetwork()
   return useQuery(
-    [queryKey.gov.proposal, id, chain],
+    [queryKey.gov.proposal, id, networks[chain]],
     async () => {
       if (networks[chain].version === "0.46") {
         const {
@@ -274,6 +274,7 @@ export const useProposal = (id: string, chain: string) => {
     },
     {
       ...RefetchOptions.INFINITY,
+      enabled: !!networks[chain],
     }
   )
 }
