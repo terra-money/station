@@ -125,11 +125,12 @@ const AssetChain = (props: Props) => {
                 {wrong ? (
                   <span className="danger">{t("Failed to query balance")}</span>
                 ) : (
-                  <Read {...props} amount={balance} fixed={2} />
+                  <Read {...props} amount={balance} hideDenom fixed={2} />
                 )}
               </>
             )}
           </WithFetching>{" "}
+          {symbol}
         </h2>
       </section>
     </article>
