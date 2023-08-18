@@ -1,7 +1,14 @@
 import { SeedKey } from "@terra-money/feather.js"
 import useAuth from "auth/hooks/useAuth"
 import { getDecryptedKey, updateStoredWallet } from "auth/scripts/keystore"
-import { Form, FormError, FormItem, Input, Submit } from "components/form"
+import {
+  Form,
+  FormError,
+  FormHelp,
+  FormItem,
+  Input,
+  Submit,
+} from "components/form"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
@@ -71,6 +78,17 @@ const CoinTypePasswordForm = ({ close }: { close: () => void }) => {
 
   return (
     <Form onSubmit={handleSubmit(submit)}>
+      <FormItem>
+        <FormHelp>
+          <p>Station now supports Injective!</p>
+          <p>
+            Adding Injective support will allow Station users to be able to
+            carry out transactions utilizing an Injective address tied to their
+            Station wallet.
+          </p>
+        </FormHelp>
+      </FormItem>
+
       <FormItem label={t("Password")} error={errors.password?.message}>
         <Input {...register("password", { required: true })} type="password" />
       </FormItem>

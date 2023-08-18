@@ -6,6 +6,7 @@ import { TooltipIcon } from "components/display"
 import {
   Form,
   FormError,
+  FormHelp,
   FormItem,
   FormWarning,
   Input,
@@ -101,6 +102,22 @@ const CoinTypeMnemonicForm = ({ close }: { close: () => void }) => {
 
   return (
     <Form onSubmit={handleSubmit(submit)}>
+      <FormItem>
+        <FormHelp>
+          <p>Station now supports Injective!</p>
+          <p>
+            Adding Injective support will allow Station users to be able to
+            carry out transactions utilizing an Injective address tied to their
+            Station wallet.
+          </p>
+          <p>
+            If you are using an older version of Station, you will be prompted
+            for your mnemonic seed. This key will be used in generating a unique
+            Injective address which will be tied to your Station wallet.
+          </p>
+        </FormHelp>
+      </FormItem>
+
       <FormItem label={t("Password")} error={errors.password?.message}>
         <Input {...register("password", { required: true })} type="password" />
       </FormItem>
