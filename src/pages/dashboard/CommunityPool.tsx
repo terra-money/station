@@ -3,7 +3,7 @@ import { getAmount, sortCoins } from "utils/coin"
 import { useCommunityPool } from "data/queries/distribution"
 import { useMemoizedCalcValue } from "data/queries/coingecko"
 import { Card } from "components/layout"
-import { Read } from "components/token"
+import { Read, ReadToken } from "components/token"
 import SelectDenom from "./components/SelectDenom"
 import DashboardContent from "./components/DashboardContent"
 
@@ -17,7 +17,7 @@ const CommunityPool = () => {
   const render = () => {
     if (!data) return null
     const amount = getAmount(data, "uluna")
-    const value = <Read amount={amount} denom="uluna" prefix />
+    const value = <ReadToken amount={amount} denom="uluna" prefix />
     const list = sortCoins(data)
       .map((item) => ({ ...item, value: calcValue(item) }))
       .sort(({ value: a }, { value: b }) => Number(b) - Number(a))

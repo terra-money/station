@@ -12,7 +12,7 @@ import {
 import { useStakeChartData } from "data/queries/staking"
 import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined"
 import { useThemeState } from "data/settings/Theme"
-import { Read } from "components/token"
+import { Read, ReadToken } from "components/token"
 import { useCurrency } from "data/settings/Currency"
 
 const StakedDonut = ({ chain }: { chain?: string }) => {
@@ -64,25 +64,22 @@ const StakedDonut = ({ chain }: { chain?: string }) => {
 
   const RenderTooltip = (props: { payload?: any }) => {
     const { payload } = props
+    if (!payload?.length) return null
+    const { denom, amount, value, name, moniker } = payload[0].payload
 
     return (
       <div className={styles.tooltip}>
-        <h6>{payload[0]?.payload.name || payload[0]?.payload.moniker}</h6>
+        <h6>{name || moniker}</h6>
         <div className={styles.infoLine}>
           <p>Balance: </p>
           <p>
-            <Read
-              amount={payload[0]?.payload.amount}
-              fixed={2}
-              token={payload[0]?.payload.denom}
-            />
+            <ReadToken amount={amount} fixed={2} denom={denom} />
           </p>
         </div>
         <div className={styles.infoLine}>
           <p>Value: </p>
           <p>
-            <Read amount={payload[0]?.payload.value} fixed={2} decimals={0} />{" "}
-            {currency.symbol}
+            <Read amount={value} fixed={2} decimals={0} /> {currency.symbol}
           </p>
         </div>
       </div>

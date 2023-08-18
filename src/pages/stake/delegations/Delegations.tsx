@@ -7,7 +7,7 @@ import { useInterchainDelegations } from "data/queries/staking"
 import { ValidatorLink } from "components/general"
 import { ModalButton } from "components/feedback"
 import { Table } from "components/layout"
-import { Read } from "components/token"
+import { ReadToken } from "components/token"
 import StakedCard from "../components/StakedCard"
 import { useNativeDenoms } from "data/token"
 import styles from "../CardModal.module.scss"
@@ -75,7 +75,7 @@ const Delegations = () => {
     let tokenPrice = prices[token]?.price ?? 0
 
     totalTokensAmount += amount
-    return acc + (amount * tokenPrice) / 10 ** decimals
+    return acc + (amount * tokenPrice) / Math.pow(10, decimals)
   }, 0)
 
   return (
@@ -120,7 +120,7 @@ const Delegations = () => {
           {
             title: t("Delegated"),
             dataIndex: "balance",
-            render: (balance: Coin) => <Read {...balance.toData()} />,
+            render: (balance: Coin) => <ReadToken {...balance.toData()} />,
             align: "right",
           },
         ]}

@@ -4,7 +4,7 @@ import { useCurrency } from "data/settings/Currency"
 import { useThemeAnimation } from "data/settings/Theme"
 import { ChartInterval, useLunaPriceChart } from "data/Terra/TerraAPI"
 import { Flex, Grid } from "components/layout"
-import { Read } from "components/token"
+import { Read, ReadToken } from "components/token"
 import { convert, LOADING } from "../charts/components/ChartContainer"
 import ButtonGroup from "./components/ButtonGroup"
 import Chart from "./components/Chart"
@@ -17,7 +17,7 @@ const LunaPriceChart = () => {
   const animation = useThemeAnimation()
 
   const formatValue = (value: string) => (
-    <Read amount={Number(value) * 1e6} denom={denom} auto />
+    <ReadToken amount={Number(value) * 1e6} denom={denom} auto />
   )
 
   const tickFormat = {

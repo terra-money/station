@@ -59,11 +59,12 @@ const ChainRewards = ({ chain }: { chain: string }) => {
   for (const { amount, denom } of totalChainRewardsList.toArray()) {
     const { token, decimals } = readNativeDenom(denom)
     const tokenPrice = exchangeRates[token]?.price ?? 0
-    const tokensValue = (amount.toNumber() * tokenPrice) / 10 ** decimals
+    const tokensValue =
+      (amount.toNumber() * tokenPrice) / Math.pow(10, decimals)
 
     tokensPrice += tokensValue
     if (denom === selectedChainDenom) {
-      tokensAmount += amount.toNumber() / 10 ** decimals
+      tokensAmount += amount.toNumber() / Math.pow(10, decimals)
     }
   }
 

@@ -5,7 +5,7 @@ import { FormatConfig } from "@terra-money/terra-utils"
 import { getMaxHeightStyle } from "utils/style"
 import { Flex } from "../layout"
 import TokenIcon from "./TokenIcon"
-import Read from "./Read"
+import { ReadToken } from "./Read"
 import styles from "./TokenCard.module.scss"
 
 const cx = classNames.bind(styles)
@@ -46,7 +46,7 @@ const TokenCard = ({ token, icon, symbol, name, balance, ...props }: Props) => {
         <footer className={styles.footer}>
           <p className={styles.balance}>
             {balance && <AccountBalanceWalletIcon fontSize="inherit" />}
-            <Read amount={amount} {...config} />
+            <ReadToken amount={amount} denom={token} {...config} />
           </p>
         </footer>
       )}

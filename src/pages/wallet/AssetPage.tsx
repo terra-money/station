@@ -121,11 +121,10 @@ const AssetPage = () => {
                       chain={b.chain}
                       token={token}
                       denom={b.denom}
-                      decimals={decimals}
                     />
                     {token === "uluna" &&
                       symbol !== "LUNC" &&
-                      isTerraChain(b.chain) && <Vesting />}
+                      isTerraChain(b.chain) && <Vesting denom={token} />}
                   </div>
                 ))}
             </div>
@@ -147,7 +146,6 @@ const AssetPage = () => {
                       chain={b.chain}
                       token={token}
                       denom={b.denom}
-                      decimals={decimals}
                       path={
                         unknownIBCDenoms[[b.denom, b.chain].join("*")]?.chains
                       }

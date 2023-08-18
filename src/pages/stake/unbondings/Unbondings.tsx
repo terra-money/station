@@ -10,7 +10,7 @@ import {
 import { ValidatorLink } from "components/general"
 import { ModalButton } from "components/feedback"
 import { Table } from "components/layout"
-import { Read } from "components/token"
+import { ReadToken } from "components/token"
 import { DateTimeRenderer, TooltipIcon } from "components/display"
 import StakedCard from "../components/StakedCard"
 import { UnbondingDelegation } from "@terra-money/feather.js"
@@ -48,7 +48,9 @@ const Unbondings = () => {
 
       const denom = getDenomFromAddress(networks, unbonding.delegator_address)
       const { token, decimals } = readNativeDenom(denom)
-      return acc + (balance * (prices[token]?.price || 0)) / 10 ** decimals
+      return (
+        acc + (balance * (prices[token]?.price || 0)) / Math.pow(10, decimals)
+      )
     }, 0)
 
     const list = flattenUnbondings(unbondings)
@@ -94,7 +96,7 @@ const Unbondings = () => {
               title: t("Amount"),
               dataIndex: "initial_balance",
               render: (amount: Dec, { validator_address }) => (
-                <Read
+                <ReadToken
                   amount={amount.toString()}
                   denom={getDenomFromAddress(networks, validator_address)}
                 />

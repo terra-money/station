@@ -2,15 +2,14 @@ import { ForwardedRef, forwardRef, Fragment } from "react"
 import classNames from "classnames/bind"
 import { FormatConfig } from "@terra-money/terra-utils"
 import { formatPercent, readAmount, truncate } from "@terra-money/terra-utils"
-import { WithTokenItem } from "data/token"
+import { useNativeDenoms, WithTokenItem } from "data/token"
 import styles from "./Read.module.scss"
 
 const cx = classNames.bind(styles)
 
-interface Props extends Partial<FormatConfig> {
+interface ReadProps extends Partial<FormatConfig> {
   amount?: Amount | Value
   denom?: Denom
-  token?: Token
 
   approx?: boolean
   block?: boolean
@@ -20,7 +19,7 @@ interface Props extends Partial<FormatConfig> {
 
 const Read = forwardRef(
   (
-    { amount, denom, approx, block, auto, ...props }: Props,
+    { amount, denom, approx, block, auto, ...props }: ReadProps,
     ref: ForwardedRef<HTMLSpanElement>
   ) => {
     if (!(amount || Number.isFinite(amount))) return null
@@ -29,9 +28,9 @@ const Read = forwardRef(
 
     const fixed = !auto
       ? props.fixed
-      : Number(amount) >= Math.pow(10, (props.decimals ?? 6) + 3)
+      : Number(amount) >= Math.pow(10, (props.decimals ?? 0) + 3)
       ? 0
-      : Number(amount) < Math.pow(10, props.decimals ?? 6)
+      : Number(amount) < Math.pow(10, props.decimals ?? 0)
       ? props.decimals
       : 2
 
@@ -56,15 +55,13 @@ const Read = forwardRef(
     }
 
     const renderSymbol = () => {
-      const token = props.token ?? denom
-
-      if (!token) return null
+      if (!denom) return null
 
       return (
         <span className={styles.small}>
           {" "}
-          <WithTokenItem token={token}>
-            {({ symbol }) => symbol ?? truncate(token)}
+          <WithTokenItem token={denom}>
+            {({ symbol }) => symbol ?? truncate(denom)}
           </WithTokenItem>
         </span>
       )
@@ -85,6 +82,16 @@ const Read = forwardRef(
 )
 
 export default Read
+
+interface ReadTokenProps extends ReadProps {
+  denom: Denom
+}
+
+export const ReadToken = (props: ReadTokenProps) => {
+  const readNativeDenom = useNativeDenoms()
+  const { decimals } = readNativeDenom(props.denom)
+  return <Read {...props} decimals={decimals} />
+}
 
 /* percent */
 interface PercentProps extends Partial<FormatConfig> {
@@ -115,7 +122,7 @@ export const ReadPercent = forwardRef(
 )
 
 /* helpers */
-export const ReadMultiple = ({ list }: { list: Props[] }) => {
+export const ReadMultiple = ({ list }: { list: ReadProps[] }) => {
   return (
     <>
       {list.map((item, index) => (

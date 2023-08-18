@@ -1,5 +1,5 @@
 import { WithFetching } from "components/feedback"
-import { Read, TokenIcon } from "components/token"
+import { Read, ReadToken, TokenIcon } from "components/token"
 import { useExchangeRates } from "data/queries/coingecko"
 import { useCurrency } from "data/settings/Currency"
 import { useNetwork, useNetworkName } from "data/wallet"
@@ -16,7 +16,6 @@ export interface Props {
   chain: string
   balance: string
   symbol: string
-  decimals: number
   token: string
   denom: string
   path?: string[]
@@ -24,8 +23,7 @@ export interface Props {
 }
 
 const AssetChain = (props: Props) => {
-  const { chain, symbol, balance, decimals, token, path, ibcDenom, denom } =
-    props
+  const { chain, symbol, balance, token, path, ibcDenom, denom } = props
   const currency = useCurrency()
   const { data: prices, ...pricesState } = useExchangeRates()
   const { t } = useTranslation()
@@ -109,14 +107,7 @@ const AssetChain = (props: Props) => {
         <h1 className={styles.price}>
           {currency.symbol}{" "}
           {price ? (
-            <Read
-              {...props}
-              amount={price * parseInt(balance)}
-              decimals={decimals}
-              fixed={2}
-              denom=""
-              token=""
-            />
+            <Read denom="" amount={price * parseInt(balance)} fixed={2} />
           ) : (
             <span>—</span>
           )}
@@ -129,18 +120,11 @@ const AssetChain = (props: Props) => {
                 {wrong ? (
                   <span className="danger">{t("Failed to query balance")}</span>
                 ) : (
-                  <Read
-                    {...props}
-                    amount={balance}
-                    token=""
-                    fixed={2}
-                    decimals={decimals}
-                  />
+                  <ReadToken denom={props.denom} amount={balance} fixed={2} />
                 )}
               </>
             )}
           </WithFetching>{" "}
-          {symbol}
         </h2>
       </section>
     </article>
