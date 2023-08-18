@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import BigNumber from "bignumber.js"
-import { Validator, ValAddress } from "@terra-money/feather.js"
+import { MsgExecuteContract } from "@terra-money/feather.js"
 import { Rewards } from "@terra-money/feather.js"
 import { MsgWithdrawDelegatorReward } from "@terra-money/feather.js"
 import { queryKey } from "data/query"
@@ -10,8 +10,8 @@ import { useCurrency } from "data/settings/Currency"
 import { useNetwork } from "data/wallet"
 import { useMemoizedCalcValue } from "data/queries/coingecko"
 import { calcRewardsValues } from "data/queries/distribution"
-import { WithTokenItem } from "data/token"
-import { ValidatorLink } from "components/general"
+import { WithTokenItem, useNativeDenoms } from "data/token"
+import { FinderLink, ValidatorLink } from "components/general"
 import { Form, FormArrow, FormItem, Checkbox } from "components/form"
 import { Card, Flex, Grid } from "components/layout"
 import { TokenCard, TokenCardGrid } from "components/token"
@@ -20,56 +20,87 @@ import styles from "./WithdrawRewardsForm.module.scss"
 import Tx from "txs/Tx"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { Read } from "components/token"
+import { useAllianceHub } from "data/queries/alliance-protocol"
+import { AHAllRewards } from "data/types/alliance-protocol"
+import { parseRewards } from "data/parsers/alliance-protocol"
 
 interface Props {
   rewards: Rewards
-  validators: Validator[]
+  ahRewards: AHAllRewards
   chain: string
 }
 
-const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
+const WithdrawRewardsForm = ({ rewards, chain, ahRewards }: Props) => {
   const { t } = useTranslation()
+  const readNativeDenom = useNativeDenoms()
   const currency = useCurrency()
+  const allianceHub = useAllianceHub()
+  const allianceHubAddress = allianceHub.useHubAddress()
   const addresses = useInterchainAddresses()
-  const address = addresses && addresses[chain]
+  const address = addresses && (addresses[chain] as string)
   const calcValue = useMemoizedCalcValue()
-  const { byValidator } = useMemo(
-    () =>
-      calcRewardsValues(rewards, currency.id, (coin) => Number(coin.amount)),
-    [rewards, currency]
-  )
   const networks = useNetwork()
+  const listing = useMemo(() => {
+    const { byValidator: stByVal, total: stTotalByVal } = calcRewardsValues(
+      rewards,
+      currency.id,
+      (coin) => Number(coin.amount)
+    )
 
-  /* tx context */
-  const initialGasDenom = networks[chain].baseAsset
+    if (chain !== "pisco-1" && chain !== "phoenix-1") {
+      return {
+        byValidator: stByVal,
+        total: stTotalByVal,
+      }
+    }
+
+    const { byValidator: stByAllyVal, total: stTotalByAlly } = parseRewards(
+      ahRewards,
+      allianceHubAddress
+    )
+
+    return {
+      byValidator: stByVal.concat(stByAllyVal),
+      total: {
+        list: stTotalByVal.list.concat(stTotalByAlly.list),
+        total: new BigNumber(stTotalByAlly.sum)
+          .plus(new BigNumber(stTotalByAlly.sum))
+          .toString(),
+      },
+    }
+  }, [rewards, ahRewards, currency, allianceHubAddress, chain])
 
   /* select validators */
-  const init = useCallback(
-    (value = false) =>
-      byValidator.reduce(
-        (acc, { address }) => ({ ...acc, [address]: value }),
-        {}
-      ),
-    [byValidator]
+  const overwritteSelectionsAs = useCallback(
+    (value = false): Array<boolean> => {
+      const totalValidators = listing.byValidator.length
+
+      return new Array(totalValidators).fill(value, 0, totalValidators)
+    },
+    [listing.byValidator]
   )
 
-  const [state, setState] = useState<Record<ValAddress, boolean>>(init(true))
+  // Each number represents the index of the validator in the list
+  // the boolean represents whether the validator is selected or not
+  const [state, setState] = useState<Record<number, boolean>>(
+    overwritteSelectionsAs(true)
+  )
 
   useEffect(() => {
-    setState(init(true))
-  }, [init])
+    if (chain) {
+      setState(overwritteSelectionsAs(true))
+    }
+  }, [chain, overwritteSelectionsAs])
 
-  const selectable = byValidator.length >= 1
   const selected = useMemo(
-    () => Object.keys(state ?? {}).filter((address) => state[address]),
+    () => Object.keys(state).filter((address) => state[Number(address)]),
     [state]
   )
 
   /* calc */
   const selectedTotal = selected.reduce<Record<Denom, Amount>>(
-    (prev, address) => {
-      const item = byValidator.find((i) => i.address === address)
-
+    (prev, index) => {
+      const item = listing.byValidator[Number(index)]
       if (!item) return prev
 
       return {
@@ -96,18 +127,31 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
   const createTx = useCallback(() => {
     if (!address) return
 
-    const msgs = selected.map((operatorAddress) => {
-      return new MsgWithdrawDelegatorReward(address, operatorAddress)
-    })
+    const msgs: Array<MsgWithdrawDelegatorReward | MsgExecuteContract> = []
+    for (const selection of selected) {
+      const reward = listing.byValidator[Number(selection)]
+      if (!reward) return
+
+      // AllianceHub delegations are differenciated by the stakedAsset field
+      // because the smart contract needs to know the staked asset to claim the rewards
+      let msg =
+        reward?.stakedAsset !== undefined
+          ? new MsgExecuteContract(address, reward.address, {
+              claim_rewards: { native: reward.stakedAsset },
+            })
+          : new MsgWithdrawDelegatorReward(address, reward.address)
+
+      msgs.push(msg)
+    }
 
     return { msgs, chainID: chain }
-  }, [address, selected, chain])
+  }, [address, selected, chain, listing.byValidator])
 
   /* fee */
   const estimationTxValues = useMemo(() => ({}), [])
 
   const tx = {
-    initialGasDenom,
+    overwritteSelectionsAsialGasDenom: networks[chain].baseAsset,
     estimationTxValues,
     createTx,
     querykeys: [queryKey.distribution.rewards],
@@ -115,7 +159,7 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
     onSuccess: () => reset(),
   }
 
-  if (!selectable) {
+  if (!listing.byValidator?.length) {
     return <Empty>{t("No rewards on selected chain")}</Empty>
   }
 
@@ -129,7 +173,7 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
                 <button
                   type="button"
                   className={styles.button}
-                  onClick={() => setState(init(true))}
+                  onClick={() => setState(overwritteSelectionsAs(true))}
                 >
                   {t("Select All")}
                 </button>
@@ -137,7 +181,7 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
                 <button
                   type="button"
                   className={styles.button}
-                  onClick={() => setState(init(false))}
+                  onClick={() => setState(overwritteSelectionsAs(false))}
                 >
                   {t("Deselect All")}
                 </button>
@@ -149,28 +193,44 @@ const WithdrawRewardsForm = ({ rewards, validators, chain }: Props) => {
                 <dd>{t("Rewards")}</dd>
               </dl>
               <section className={styles.validators}>
-                {byValidator.map(({ address, list: [{ denom, amount }] }) => {
-                  const checked = state[address]
-                  return (
-                    <Checkbox
-                      className={styles.checkbox}
-                      checked={checked}
-                      onChange={() =>
-                        setState({ ...state, [address]: !checked })
-                      }
-                      key={address}
-                    >
-                      <dl className={styles.item}>
-                        <dt>
-                          <ValidatorLink address={address} />
-                        </dt>
-                        <dd>
-                          <Read amount={amount} denom={denom} />
-                        </dd>
-                      </dl>
-                    </Checkbox>
-                  )
-                })}
+                {listing.byValidator.map(
+                  (
+                    { address, stakedAsset, list: [{ denom, amount }] },
+                    index
+                  ) => {
+                    const checked = state[index]
+                    const { symbol } = readNativeDenom(stakedAsset ?? "")
+
+                    return (
+                      <Checkbox
+                        className={styles.checkbox}
+                        checked={checked}
+                        onChange={() =>
+                          setState({ ...state, [index]: !checked })
+                        }
+                        key={index}
+                      >
+                        <dl className={styles.item}>
+                          <dt>
+                            {address === allianceHubAddress ? (
+                              <FinderLink
+                                value={address}
+                                style={{ fontSize: "12px" }}
+                              >
+                                Alliance Hub ({symbol})
+                              </FinderLink>
+                            ) : (
+                              <ValidatorLink address={address} />
+                            )}
+                          </dt>
+                          <dd>
+                            <Read amount={amount} denom={denom} />
+                          </dd>
+                        </dl>
+                      </Checkbox>
+                    )
+                  }
+                )}
               </section>
             </Card>
             {selected.length ? <FormArrow /> : undefined}
