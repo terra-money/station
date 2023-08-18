@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom"
 import { ReactQueryDevtools } from "react-query/devtools"
 import { RecoilRoot } from "recoil"
 import { WalletProvider, getInitialConfig } from "@terra-money/wallet-kit"
+import TerraStationMobileWallet from "@terra-money/terra-station-mobile"
 import "tippy.js/dist/tippy.css"
 import { initAnalytics } from "utils/analytics"
 
@@ -29,7 +30,10 @@ getInitialConfig().then((defaultNetworks) =>
       <RecoilRoot>
         <BrowserRouter>
           <ScrollToTop />
-          <WalletProvider defaultNetworks={defaultNetworks}>
+          <WalletProvider
+            defaultNetworks={defaultNetworks}
+            extraWallets={[new TerraStationMobileWallet()]}
+          >
             <InitQueryClient>
               <InitNetworks>
                 <WithNodeInfo>
