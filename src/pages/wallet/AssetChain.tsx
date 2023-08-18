@@ -130,7 +130,6 @@ const AssetChain = (props: Props) => {
               </>
             )}
           </WithFetching>{" "}
-          {symbol}
         </h2>
       </section>
     </article>

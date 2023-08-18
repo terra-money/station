@@ -28,7 +28,7 @@ const VestingScheduleTable = ({
         {
           title: "Amount",
           dataIndex: "amount",
-          render: (value) => <Read amount={value} denom={denom} />,
+          render: (value) => <Read amount={value} hideDenom denom={denom} />,
           align: "right",
         },
       ]}

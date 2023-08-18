@@ -23,11 +23,11 @@ const Vesting = ({ denom }: { denom: string }) => {
         <dl>
           <dt>{t("Vested")}</dt>
           <dd>
-            <Read amount={schedule.amount.vested} denom={denom} />
+            <Read amount={schedule.amount.vested} hideDenom denom={denom} />
           </dd>
           <dt>{t("Total")}</dt>
           <dd>
-            <Read amount={schedule.amount.total} denom={denom} />
+            <Read amount={schedule.amount.total} hideDenom denom={denom} />
           </dd>
         </dl>
       </section>
