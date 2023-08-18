@@ -122,7 +122,7 @@ export const useProposals = (status: ProposalStatus) => {
       return {
         queryKey: [queryKey.gov.proposals, lcd, status],
         queryFn: async () => {
-          if (version === "0.46" || chainID === "phoenix-1") {
+          if (version === "0.46") {
             const {
               data: { proposals },
             } = await axios.get("/cosmos/gov/v1/proposals", {
