@@ -2,7 +2,7 @@
   "name": "terra-station",
   "description": "A web application to interact with Terra Core.",
   "hompage": "https://station.money",
-  "author": "Terra <engineering@terra.money> (https://terra.money)",
+  "author": "Terra <engineering@terra.money> (https://station.money)",
   "repository": "github:terra-money/station",
   "license": "MIT",
   "scripts": {
