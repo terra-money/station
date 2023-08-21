@@ -100,7 +100,7 @@ const AssetList = () => {
                 [key]: {
                   denom: data.token,
                   balance: amount,
-                  icon: "https://assets.terra.money/icon/svg/LUNC.svg",
+                  icon: "https://assets.terra.dev/icon/svg/LUNC.svg",
                   symbol: "LUNC",
                   price: prices?.["uluna:classic"]?.price ?? 0,
                   change: prices?.["uluna:classic"]?.change ?? 0,
