@@ -152,7 +152,9 @@ const SendForm = ({ token, decimals, balance }: Props) => {
   }
 
   const bridge = (
-    <ExternalLink href="https://bridge.terra.money">Terra Bridge</ExternalLink>
+    <ExternalLink href="https://bridge.station.money">
+      Terra Bridge
+    </ExternalLink>
   )
 
   const renderResolvedAddress = () => {

@@ -83,5 +83,5 @@ export default ProposalDescription
 
 const isWhitelisted = (url?: string) => {
   if (!url) return false
-  return new URL(url).hostname.endsWith("terra.money")
+  return new URL(url).hostname.endsWith("commonwealth.im")
 }

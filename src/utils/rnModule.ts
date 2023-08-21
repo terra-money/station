@@ -122,7 +122,7 @@ export interface TxResponse<T = any> {
 /* helpers */
 export const getIsNativeMsgFromExternal = (origin: string) => {
   return (msg: Msg) => {
-    if (origin.includes("https://station.terra.money")) return false
+    if (origin.includes("https://station.money")) return false
     return msg.toData()["@type"] !== "/terra.wasm.v1beta1.MsgExecuteContract"
   }
 }

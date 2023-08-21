@@ -7,7 +7,7 @@ const LinkEcosystem = () => {
   const { t } = useTranslation()
 
   return (
-    <Card href="https://terra.money/ecosystem">
+    <Card href="https://station.money/ecosystem">
       <Flex start gap={16}>
         <Logo width={40} height={40} />
         <Grid style={{ flex: 1 }} gap={4}>

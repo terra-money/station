@@ -395,7 +395,9 @@ const SubmitProposalForm = ({ communityPool, minDeposit }: Props) => {
     }
   }
 
-  const agoraURL = isClassic ? "classic-agora.terra.money" : "agora.terra.money"
+  const agoraURL = isClassic
+    ? "commonwealth.im/terra-classic"
+    : "commonwealth.im/terra"
 
   return (
     <Tx {...tx}>
