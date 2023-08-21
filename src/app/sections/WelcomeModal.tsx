@@ -17,7 +17,7 @@ const accordions = [
         <span className={styles.highlighted}>New wallet</span>,
         ". You can find a guide ",
         <ExternalLink
-          href="https://docs.terra.money/learn/station/wallet#create-a-wallet"
+          href="https://docs-terra.pages.dev/learn/station/wallet#create-a-wallet"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -40,7 +40,7 @@ const accordions = [
       [
         " You can find a guide ",
         <ExternalLink
-          href="https://docs.terra.money/learn/station/migration/"
+          href="https://docs-terra.pages.dev/learn/station/migration/"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -58,7 +58,7 @@ const accordions = [
         <span className={styles.highlighted}>Access with ledger</span>,
         " in the Station extension or ",
         <ExternalLink
-          href="https://station.terra.money/"
+          href="https://station.money/"
           target="_blank"
           rel="noopener noreferrer"
         >
