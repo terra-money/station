@@ -34,7 +34,7 @@
     "@terra-money/terra-utils": "^1.0.9",
     "@terra-money/terra.js": "^3.1.9",
     "@terra-money/terra.proto": "^2.0.0",
-    "@terra-money/wallet-kit": "^1.0.9",
+    "@terra-money/wallet-kit": "^1.0.11",
     "@tippyjs/react": "^4.2.6",
     "axios": "^0.27.2",
     "bech32": "^2.0.0",
