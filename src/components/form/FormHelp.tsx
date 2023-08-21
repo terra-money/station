@@ -4,10 +4,12 @@ import InfoIcon from "@mui/icons-material/Info"
 import { Flex } from "../layout"
 import styles from "./FormHelp.module.scss"
 
+const cx = classNames.bind(styles)
+
 const Component = (props: PropsWithChildren<{ className: string }>) => {
   const { children, className } = props
   return (
-    <div className={classNames(styles.component, className)}>
+    <div className={cx(styles.component, className)}>
       <Flex>
         <InfoIcon fontSize="inherit" style={{ fontSize: 18 }} />
       </Flex>

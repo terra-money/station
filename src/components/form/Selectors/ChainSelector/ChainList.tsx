@@ -3,6 +3,8 @@ import WithSearchInput from "pages/custom/WithSearchInput"
 import classNames from "classnames"
 import { InterchainNetwork } from "types/network"
 
+const cx = classNames.bind(styles)
+
 interface Props {
   list: InterchainNetwork[]
   onChange: (chain: string) => void
@@ -17,7 +19,7 @@ const ChainList = ({ list, onChange, value, small, noSearch }: Props) => {
       <WithSearchInput disabled={noSearch} inline gap={4}>
         {(search) => (
           <div
-            className={classNames(
+            className={cx(
               styles.options__container,
               small && styles.options__container__small
             )}

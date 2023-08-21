@@ -52,7 +52,7 @@ const Page = (props: PropsWithChildren<Props>) => {
                 </header>
               )}
 
-              <section className={classNames(styles.main, mainClassName)}>
+              <section className={cx(styles.main, mainClassName)}>
                 {wrong ? (
                   <Card>{wrong}</Card>
                 ) : (

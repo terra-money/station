@@ -43,6 +43,8 @@ import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { getShouldTax, useTaxCap, useTaxRate } from "data/queries/treasury"
 import { useNativeDenoms } from "data/token"
 
+const cx = classNames.bind(styles)
+
 interface Props<TxValues> {
   /* Only when the token is paid out of the balance held */
   token?: Token
@@ -320,7 +322,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
     return (
       <button
         type="button"
-        className={classNames({ muted: !isMax })}
+        className={cx({ muted: !isMax })}
         onClick={onClick ? () => onClick(max ?? "0") : () => setIsMax(!isMax)}
       >
         <Flex gap={4} start>
@@ -403,7 +405,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
                   amount={balanceAfterTx}
                   token={baseDenom ?? token}
                   decimals={decimals}
-                  className={classNames(insufficient && "danger")}
+                  className={cx(insufficient && "danger")}
                 />
               </dd>
             </>

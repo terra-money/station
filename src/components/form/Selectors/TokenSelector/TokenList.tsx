@@ -2,6 +2,8 @@ import styles from "./TokenSelector.module.scss"
 import classNames from "classnames"
 import { TokenInterface } from "./TokenSelector"
 
+const cx = classNames.bind(styles)
+
 interface Props {
   list: Record<string, TokenInterface>
   onChange: (chain?: string) => void
@@ -13,7 +15,7 @@ const TokenList = ({ list, onChange, value, small }: Props) => {
   return (
     <div className={styles.options}>
       <div
-        className={classNames(
+        className={cx(
           styles.options__container,
           small && styles.options__container__small
         )}

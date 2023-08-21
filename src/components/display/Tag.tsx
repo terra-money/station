@@ -12,7 +12,7 @@ interface Props {
 }
 
 const Tag = ({ color, small, children }: PropsWithChildren<Props>) => {
-  const className = classNames(styles.tag, `bg-${color}`, cx({ small }))
+  const className = cx(styles.tag, `bg-${color}`, cx({ small }))
   return <InlineFlex className={className}>{children}</InlineFlex>
 }
 

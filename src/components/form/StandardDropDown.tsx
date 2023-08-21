@@ -3,6 +3,8 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 import classNames from "classnames"
 import styles from "./ChainSelector.module.scss"
 
+const cx = classNames.bind(styles)
+
 interface StandardDropdownProps {
   onChange: (chain: string) => void
   setNetworkIndex: (index: number) => void
@@ -39,7 +41,7 @@ const StandardDropdown = ({
       {open && (
         <div className={styles.options}>
           <div
-            className={classNames(
+            className={cx(
               styles.options__container,
               small && styles.options__container__small
             )}

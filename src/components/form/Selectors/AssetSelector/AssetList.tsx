@@ -2,6 +2,8 @@ import styles from "../../ChainSelector.module.scss"
 import WithSearchInput from "pages/custom/WithSearchInput"
 import classNames from "classnames"
 
+const cx = classNames.bind(styles)
+
 interface AssetType {
   denom: string
   balance: string
@@ -25,7 +27,7 @@ const ChainList = ({ list, onChange, value, small, noSearch }: Props) => {
       <WithSearchInput disabled={noSearch} inline gap={4}>
         {(search) => (
           <div
-            className={classNames(
+            className={cx(
               styles.options__container,
               small && styles.options__container__small
             )}

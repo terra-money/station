@@ -5,6 +5,8 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
 import Flex from "./Flex"
 import styles from "./PaginationButtons.module.scss"
 
+const cx = classNames.bind(styles)
+
 interface Props {
   current: number
   total: number
@@ -18,7 +20,7 @@ const PaginationButtons = ({ onPrev, onNext, current, total }: Props) => {
   return (
     <Flex className={styles.group}>
       <button
-        className={classNames(styles.button, styles.prev)}
+        className={cx(styles.button, styles.prev)}
         onClick={onPrev}
         disabled={!onPrev}
       >
@@ -30,7 +32,7 @@ const PaginationButtons = ({ onPrev, onNext, current, total }: Props) => {
       </span>
 
       <button
-        className={classNames(styles.button, styles.next)}
+        className={cx(styles.button, styles.next)}
         onClick={onNext}
         disabled={!onNext}
       >

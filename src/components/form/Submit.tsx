@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes } from "react"
 import { useTranslation } from "react-i18next"
-import { Button } from "../general"
+import { Button } from "station-ui"
 import { LoadingCircular } from "../feedback"
 import styles from "./Form.module.scss"
 
@@ -13,6 +13,7 @@ const Submit = ({ submitting, ...attrs }: Props) => {
 
   return (
     <Button
+      label="experimental"
       {...attrs}
       icon={submitting && <LoadingCircular size={18} />}
       disabled={attrs.disabled || submitting}

@@ -21,7 +21,7 @@ type Props = ButtonConfig & ButtonHTMLAttributes<HTMLButtonElement>
 const Button = forwardRef(
   ({ children, ...props }: Props, ref?: ForwardedRef<HTMLButtonElement>) => {
     const { icon, size, color, outline, block, loading, ...attrs } = props
-    const className = classNames(getClassName(props), props.className)
+    const className = cx(getClassName(props), props.className)
 
     return (
       <button type="button" {...attrs} className={className} ref={ref}>
