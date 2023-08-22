@@ -188,7 +188,7 @@ export const useNativeDenoms = () => {
           token: denom,
           symbol: "LUNC",
           name: "Luna Classic",
-          icon: "https://assets.terra.money/icon/svg/LUNC.svg",
+          icon: "https://assets.terra.dev/icon/svg/LUNC.svg",
           decimals: 6,
           isNonWhitelisted: false,
         }
@@ -197,7 +197,7 @@ export const useNativeDenoms = () => {
           token: denom,
           symbol: "LUNA",
           name: "Luna",
-          icon: "https://assets.terra.money/icon/svg/Luna.svg",
+          icon: "https://assets.terra.dev/icon/svg/Luna.svg",
           decimals: 6,
           isNonWhitelisted: false,
         }
@@ -213,10 +213,10 @@ export const useNativeDenoms = () => {
         type: tokenType,
         icon:
           tokenType === TokenType.IBC
-            ? "https://assets.terra.money/icon/svg/IBC.svg"
+            ? "https://assets.terra.dev/icon/svg/IBC.svg"
             : tokenType === TokenType.FACTORY || TokenType.GAMM
             ? factoryIcon
-            : "https://assets.terra.money/icon/svg/Terra.svg",
+            : "https://assets.terra.dev/icon/svg/Terra.svg",
         decimals,
         isNonWhitelisted: true,
       }
