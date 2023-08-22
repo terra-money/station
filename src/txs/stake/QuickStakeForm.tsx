@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form"
 import { Coin } from "@terra-money/feather.js"
 import { toAmount } from "@terra-money/terra-utils"
 import { getAmount } from "utils/coin"
+import { ExternalLink } from "components/general"
 import { combineState, queryKey } from "data/query"
 import { useNetwork } from "data/wallet"
 import { Flex, FlexColumn, Grid, Page } from "components/layout"
@@ -286,23 +287,28 @@ const QuickStakeForm = (props: Props) => {
                     <ul>
                       <li>
                         {feeTokenSymbol} is the fee token used on the{" "}
-                        {network[chainID].name} blockchain
+                        {network[chainID].name} blockchain.
                       </li>
                       <li>
                         To stake {asset.symbol} on {network[chainID].name},
-                        visit the Swap page and swap any token for{" "}
-                        {feeTokenSymbol}
+                        visit{" "}
+                        <ExternalLink href="https://tfm.com/ibc">
+                          https://tfm.com/ibc
+                        </ExternalLink>{" "}
+                        and swap any token for {feeTokenSymbol} on{" "}
+                        {network[chainID].name}. Make sure the {feeTokenSymbol}{" "}
+                        is being sent to your {network[chainID].name} wallet on
+                        Station.
                       </li>
                       <li>
-                        Send {feeTokenSymbol} to {network[chainID].name} by
-                        clicking 'Send' on your wallet sidebar and selecting
-                        your {network[chainID].name} address from your address
-                        book
+                        Send your {asset.symbol} from Terra to your{" "}
+                        {network[chainID].name} wallet by clicking 'Send' on
+                        your Station wallet sidebar and selecting your{" "}
+                        {network[chainID].name} address from your address book.
                       </li>
                       <li>
-                        Return to the Stake page to stake your {asset.symbol}{" "}
-                        once you have {feeTokenSymbol} on{" "}
-                        {network[chainID].name}
+                        Return to Station's Stake page to stake your{" "}
+                        {asset.symbol} on {network[chainID].name}.
                       </li>
                     </ul>
                   </section>

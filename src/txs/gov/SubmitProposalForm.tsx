@@ -404,8 +404,8 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
               {networks[chain]?.prefix === "terra" && (
                 <FormHelp>
                   Upload proposal only after forum discussion on{" "}
-                  <ExternalLink href="https://agora.terra.money">
-                    agora.terra.money
+                  <ExternalLink href="https://commonwealth.im/terra">
+                    commonwealth.im/terra
                   </ExternalLink>
                 </FormHelp>
               )}

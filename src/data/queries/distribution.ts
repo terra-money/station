@@ -137,13 +137,3 @@ export const calcRewardsValues = (
 
   return { total, byValidator }
 }
-
-export const calcRewardsValuesForChain = (
-  rewards: Rewards | undefined,
-  currency: Denom
-) => {
-  if (!rewards) return []
-  return sortCoins(rewards?.total, currency).filter(({ amount }) => {
-    return has(amount)
-  })
-}
