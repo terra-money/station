@@ -22,7 +22,7 @@ const Nav = () => {
   return (
     <nav>
       <header className={styles.header}>
-        <div className={classNames(styles.item, styles.logo)}>
+        <div className={cx(styles.item, styles.logo)}>
           <img src={icon} alt="Station" />{" "}
           <strong className={styles.title}>Station</strong>
         </div>

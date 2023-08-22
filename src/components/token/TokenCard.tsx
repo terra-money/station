@@ -30,7 +30,7 @@ const TokenCard = ({ token, icon, symbol, name, balance, ...props }: Props) => {
   const { valueCurrency, valueConfig, ...config } = rest
 
   return (
-    <article className={classNames(styles.item, className)}>
+    <article className={cx(styles.item, className)}>
       <Flex start gap={10} className={styles.main}>
         <div className={styles.wrapper}>
           <TokenIcon token={token} icon={icon} />
