@@ -48,7 +48,6 @@ const HistoryItem = ({
   const ruleset = createActionRuleSet(networkName)
   const logMatcher = createLogMatcherForActions(ruleset)
   const getCanonicalMsgs = (txInfo: TxInfo) => {
-    // @ts-expect-error
     const matchedMsg = getTxCanonicalMsgs(txInfo, logMatcher)
     return matchedMsg
       ? matchedMsg

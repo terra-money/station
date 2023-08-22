@@ -24,7 +24,7 @@ import { useExchangeRates } from "data/queries/coingecko"
 import { useNativeDenoms } from "data/token"
 import shuffle from "utils/shuffle"
 import { getIsBonded } from "pages/stake/ValidatorsList"
-import { useNetworkWithFeature } from "data/wallet"
+import { useNetwork, useNetworkWithFeature } from "data/wallet"
 import { ChainFeature } from "types/chains"
 
 import { AllianceDelegationResponse } from "@terra-money/feather.js/dist/client/lcd/api/AllianceAPI"
@@ -34,6 +34,7 @@ import {
 } from "./alliance"
 import { useAllianceHub } from "./alliance-protocol"
 import { getAllianceDelegations } from "data/parsers/alliance-protocol"
+import { getChainIDFromAddress } from "utils/bech32"
 
 export const useInterchainValidators = () => {
   const addresses = useInterchainAddressesWithFeature(ChainFeature.STAKING)
@@ -65,7 +66,7 @@ export const useInterchainValidators = () => {
   )
 }
 
-export const useValidators = (chainID: string) => {
+export const useValidators = (chainID?: string) => {
   const lcd = useInterchainLCDClient()
 
   return useQuery(
@@ -87,7 +88,7 @@ export const useValidators = (chainID: string) => {
 
       return uniqBy(path(["operator_address"]), result)
     },
-    { ...RefetchOptions.INFINITY }
+    { ...RefetchOptions.INFINITY, enabled: !!chainID }
   )
 }
 
@@ -121,10 +122,13 @@ export const useInterchainDelegations = () => {
 
 export const useValidator = (operatorAddress: ValAddress) => {
   const lcd = useInterchainLCDClient()
+  const networks = useNetwork()
+  const chainID = getChainIDFromAddress(operatorAddress, networks)
+
   return useQuery(
     [queryKey.staking.validator, operatorAddress],
     () => lcd.staking.validator(operatorAddress),
-    { ...RefetchOptions.INFINITY }
+    { ...RefetchOptions.INFINITY, enabled: !!chainID }
   )
 }
 

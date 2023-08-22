@@ -1,7 +1,12 @@
 import { useCallback, useMemo } from "react"
 import { atom, useRecoilState } from "recoil"
 import { encode } from "js-base64"
-import { CreateTxOptions, Tx, isTxError } from "@terra-money/feather.js"
+import {
+  CreateTxOptions,
+  SeedKey,
+  Tx,
+  isTxError,
+} from "@terra-money/feather.js"
 import { AccAddress, SignDoc } from "@terra-money/feather.js"
 import { RawKey, SignatureV2 } from "@terra-money/feather.js"
 import { LedgerKey } from "@terra-money/ledger-station-js"
@@ -125,6 +130,21 @@ const useAuth = () => {
     const { name, words } = getConnectedWallet()
     const key = getKey(password)
     if (!key) throw new PasswordError("Key do not exist")
+    if ("seed" in key) {
+      const seed = new SeedKey({
+        seed: Buffer.from(key.seed, "hex"),
+        coinType: key.legacy ? 118 : 330,
+        index: key.index || 0,
+      })
+
+      const data = {
+        name,
+        address: seed.accAddress("terra"),
+        encrypted_key: encrypt(seed.privateKey.toString("hex"), password),
+      }
+      return encode(JSON.stringify(data))
+    }
+
     const data = {
       name,
       address: addressFromWords(words["330"], "terra"),
@@ -179,12 +199,26 @@ const useAuth = () => {
       return await key.createSignatureAmino(doc)
     } else {
       const pk = getKey(password)
-      if (!pk || !pk[networks[chainID].coinType])
-        throw new PasswordError("Incorrect password")
-      const key = new RawKey(
-        Buffer.from(pk[networks[chainID].coinType] ?? "", "hex")
-      )
-      return await key.createSignatureAmino(doc)
+      if (!pk) throw new PasswordError("Incorrect password")
+
+      if ("seed" in pk) {
+        const key = new SeedKey({
+          seed: Buffer.from(pk.seed, "hex"),
+          coinType:
+            pk.legacy && parseInt(networks[chainID].coinType) === 330
+              ? 118
+              : parseInt(networks[chainID].coinType),
+          index: pk.index || 0,
+        })
+        return await key.createSignatureAmino(doc)
+      } else {
+        if (!pk[networks[chainID].coinType])
+          throw new PasswordError("Incorrect password")
+        const key = new RawKey(
+          Buffer.from(pk[networks[chainID].coinType] ?? "", "hex")
+        )
+        return await key.createSignatureAmino(doc)
+      }
     }
   }
 
@@ -199,18 +233,30 @@ const useAuth = () => {
         ...txOptions,
         signMode,
       })
-    } /*else if (is.preconfigured(wallet)) {
-      const key = new MnemonicKey({ mnemonic: wallet.mnemonic })
-      return await lcd.wallet(key).createAndSignTx(txOptions)
-    }*/ else {
+    } else {
       const pk = getKey(password)
-      if (!pk || !pk[networks[txOptions?.chainID].coinType])
-        throw new PasswordError("Incorrect password")
-      const key = new RawKey(
-        Buffer.from(pk[networks[txOptions?.chainID].coinType] ?? "", "hex")
-      )
-      const wallet = lcd.wallet(key)
-      return await wallet.createAndSignTx(txOptions)
+      if (!pk) throw new PasswordError("Incorrect password")
+
+      if ("seed" in pk) {
+        const key = new SeedKey({
+          seed: Buffer.from(pk.seed, "hex"),
+          coinType:
+            pk.legacy && parseInt(networks[txOptions?.chainID].coinType) === 330
+              ? 118
+              : parseInt(networks[txOptions?.chainID].coinType),
+          index: pk.index || 0,
+        })
+        const w = lcd.wallet(key)
+        return await w.createAndSignTx(txOptions)
+      } else {
+        if (!pk[networks[txOptions.chainID].coinType])
+          throw new PasswordError("Incorrect password")
+        const key = new RawKey(
+          Buffer.from(pk[networks[txOptions.chainID].coinType] ?? "", "hex")
+        )
+        const w = lcd.wallet(key)
+        return await w.createAndSignTx(txOptions)
+      }
     }
   }
 
@@ -222,13 +268,29 @@ const useAuth = () => {
     } else {
       const pk = getKey(password)
       if (!pk) throw new PasswordError("Incorrect password")
-      const key = new RawKey(Buffer.from(pk["330"], "hex"))
-      const { signature, recid } = key.ecdsaSign(bytes)
-      if (!signature) throw new Error("Signature is undefined")
-      return {
-        recid,
-        signature: Buffer.from(signature).toString("base64"),
-        public_key: key.publicKey?.toAmino().value as string,
+
+      if ("seed" in pk) {
+        const key = new SeedKey({
+          seed: Buffer.from(pk.seed, "hex"),
+          coinType: pk.legacy ? 118 : 330,
+          index: pk.index || 0,
+        })
+        const { signature, recid } = key.ecdsaSign(bytes)
+        if (!signature) throw new Error("Signature is undefined")
+        return {
+          recid,
+          signature: Buffer.from(signature).toString("base64"),
+          public_key: key.publicKey?.toAmino().value as string,
+        }
+      } else {
+        const key = new RawKey(Buffer.from(pk["330"], "hex"))
+        const { signature, recid } = key.ecdsaSign(bytes)
+        if (!signature) throw new Error("Signature is undefined")
+        return {
+          recid,
+          signature: Buffer.from(signature).toString("base64"),
+          public_key: key.publicKey?.toAmino().value as string,
+        }
       }
     }
   }
