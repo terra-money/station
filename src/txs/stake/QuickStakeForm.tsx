@@ -294,10 +294,10 @@ const QuickStakeForm = (props: Props) => {
                         {feeTokenSymbol}
                       </li>
                       <li>
-                        Send {feeTokenSymbol} from Terra to{" "}
-                        {network[chainID].name} by clicking 'Send' on your
-                        wallet sidebar and selecting your{" "}
-                        {network[chainID].name} address from your address book
+                        Send {feeTokenSymbol} to {network[chainID].name} by
+                        clicking 'Send' on your wallet sidebar and selecting
+                        your {network[chainID].name} address from your address
+                        book
                       </li>
                       <li>
                         Return to the Stake page to stake your {asset.symbol}{" "}
