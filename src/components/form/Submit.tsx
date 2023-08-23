@@ -14,6 +14,7 @@ const Submit = ({ submitting, ...attrs }: Props) => {
     <Button
       label={t("Submit")}
       {...attrs}
+      loading={submitting}
       disabled={attrs.disabled || submitting}
       type={attrs.type ?? "submit"}
       className={styles.submit}
