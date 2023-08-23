@@ -301,7 +301,7 @@ const QuickStakeForm = (props: Props) => {
                         Station.
                       </li>
                       <li>
-                        Send {feeTokenSymbol} to {network[chainID].name} by
+                       Send {feeTokenSymbol} to {network[chainID].name} by
                         clicking 'Send' on your wallet sidebar and selecting
                         your {network[chainID].name} address from your address
                         book
