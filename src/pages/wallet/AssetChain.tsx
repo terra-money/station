@@ -11,6 +11,7 @@ import { Tooltip } from "components/display"
 import { useDevMode } from "utils/localStorage"
 import { truncate } from "@terra-money/terra-utils"
 import { useNetworks } from "app/InitNetworks"
+import { useNativeDenoms } from "data/token"
 
 export interface Props {
   chain: string
@@ -29,6 +30,8 @@ const AssetChain = (props: Props) => {
   const { t } = useTranslation()
   const networkName = useNetworkName()
   const allNetworks = useNetworks().networks[networkName]
+  const readNativeDenom = useNativeDenoms()
+  const { decimals } = readNativeDenom(denom, chain)
 
   const networks = useNetwork()
   const { devMode } = useDevMode()
@@ -107,7 +110,12 @@ const AssetChain = (props: Props) => {
         <h1 className={styles.price}>
           {currency.symbol}{" "}
           {price ? (
-            <Read denom="" amount={price * parseInt(balance)} fixed={2} />
+            <Read
+              denom=""
+              decimals={decimals}
+              amount={price * parseInt(balance)}
+              fixed={2}
+            />
           ) : (
             <span>—</span>
           )}
@@ -120,11 +128,17 @@ const AssetChain = (props: Props) => {
                 {wrong ? (
                   <span className="danger">{t("Failed to query balance")}</span>
                 ) : (
-                  <ReadToken denom={props.denom} amount={balance} fixed={2} />
+                  <ReadToken
+                    hideDenom
+                    denom={props.denom}
+                    amount={balance}
+                    fixed={2}
+                  />
                 )}
               </>
             )}
           </WithFetching>{" "}
+          {symbol}
         </h2>
       </section>
     </article>

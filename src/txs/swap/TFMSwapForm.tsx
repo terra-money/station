@@ -314,6 +314,7 @@ const TFMSwapForm = ({ chainID }: { chainID: string }) => {
                       amount={simulatedValue}
                       denom={askAsset ?? ""}
                       approx
+                      hideDenom
                     />
                   ) : (
                     <p className="muted">

@@ -68,7 +68,7 @@ const Asset = (props: Props) => {
             <h1 className={styles.price}>
               {currency.symbol}{" "}
               {coinPrice ? (
-                <Read denom="" amount={walletPrice} fixed={2} />
+                <Read amount={walletPrice} decimals={decimals} fixed={2} />
               ) : (
                 <span>—</span>
               )}

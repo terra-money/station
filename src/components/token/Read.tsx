@@ -12,6 +12,7 @@ interface ReadProps extends Partial<FormatConfig> {
   denom?: Denom
 
   approx?: boolean
+  hideDenom?: boolean
   block?: boolean
   className?: string
   auto?: boolean
@@ -19,7 +20,7 @@ interface ReadProps extends Partial<FormatConfig> {
 
 const Read = forwardRef(
   (
-    { amount, denom, approx, block, auto, ...props }: ReadProps,
+    { amount, denom, approx, block, auto, hideDenom, ...props }: ReadProps,
     ref: ForwardedRef<HTMLSpanElement>
   ) => {
     if (!(amount || Number.isFinite(amount))) return null
@@ -55,7 +56,7 @@ const Read = forwardRef(
     }
 
     const renderSymbol = () => {
-      if (!denom) return null
+      if (!denom || hideDenom) return null
 
       return (
         <span className={styles.small}>
@@ -90,7 +91,7 @@ interface ReadTokenProps extends ReadProps {
 export const ReadToken = (props: ReadTokenProps) => {
   const readNativeDenom = useNativeDenoms()
   const { decimals } = readNativeDenom(props.denom)
-  return <Read {...props} decimals={decimals} />
+  return <Read decimals={decimals} {...props} />
 }
 
 /* percent */
