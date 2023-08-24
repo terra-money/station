@@ -25,7 +25,7 @@ export const useAllianceHub = () => {
       return "terra1jwyzzsaag4t0evnuukc35ysyrx9arzdde2kg9cld28alhjurtthq0prs2s"
     } else if (chainID === "pisco-1") {
       return "terra1eaxcahzxp0x8wqejqjlqaey53tp06l728qad6z395lyzgl026qkq20xj43"
-    }
+    } else return ""
   }
 
   const useConfig = () => {
