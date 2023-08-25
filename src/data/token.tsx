@@ -15,7 +15,7 @@ import { useWhitelist } from "./queries/chains"
 import { useNetworkName, useNetwork } from "./wallet"
 import { getChainIDFromAddress } from "utils/bech32"
 
-const DEFAULT_NATIVE_DECIMALS = 6
+export const DEFAULT_NATIVE_DECIMALS = 6
 
 export const useTokenItem = (
   token: Token,
