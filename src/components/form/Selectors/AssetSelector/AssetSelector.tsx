@@ -65,7 +65,11 @@ const AssetSelector = ({
         <ArrowDropDownIcon style={{ fontSize: 20 }} className={styles.caret} />
       </button>
       {open && (
-        <AssetList list={assetList} onChange={handleSelection} value={value} />
+        <AssetList
+          list={assetList.filter(({ balance }) => !!Number(balance))}
+          onChange={handleSelection}
+          value={value}
+        />
       )}
     </div>
   )
