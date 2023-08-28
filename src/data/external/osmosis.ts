@@ -7,7 +7,7 @@ export const OSMOSIS_API_URL = "https://api-osmosis.imperator.co"
 
 export const GAMM_TOKEN_DECIMALS = 18
 export const OSMO_ICON =
-  "https://station-assets.terra.money/img/chains/Osmosis.svg"
+  "https://station-assets.terra.dev/img/chains/Osmosis.svg"
 
 interface IOsmosisPoolAsset {
   symbol: string
@@ -60,12 +60,13 @@ export const useGammTokens = () => {
 
   if (fetch.data) {
     for (const [poolId, poolAsset] of Object.entries(fetch.data ?? {})) {
-      gammTokens.set(
-        "gamm/pool/" + poolId,
-        poolAsset.map((asset) => asset.symbol).join("-") + " LP"
-      )
+      if (poolAsset.length) {
+        gammTokens.set(
+          "gamm/pool/" + poolId,
+          poolAsset.map((asset) => asset.symbol).join("-") + " LP"
+        )
+      }
     }
   }
-
   return gammTokens
 }
