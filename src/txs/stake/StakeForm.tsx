@@ -182,7 +182,7 @@ const StakeForm = (props: Props) => {
 
   const tx = {
     decimals,
-    token: denom,
+    baseDenom: denom,
     amount,
     balance,
     initialGasDenom,

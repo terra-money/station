@@ -183,7 +183,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
       ? (Number(balance) - Number(gasFee.amount)).toFixed(0)
       : balance
   }
-
   const max = !gasFee.amount
     ? undefined
     : isDenom(token)
