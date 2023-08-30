@@ -286,7 +286,7 @@ const TFMSwapForm = ({ chainID }: { chainID: string }) => {
                     valueAsNumber: true,
                     validate: validate.input(
                       toInput(max.amount, offerDecimals),
-                      offerDecimals
+                      offerDecimals ?? 6
                     ),
                   })}
                   inputMode="decimal"

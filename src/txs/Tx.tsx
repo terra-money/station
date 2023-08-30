@@ -377,6 +377,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
               <dd>
                 <ReadToken
                   amount={balanceAfterTx}
+                  debug
                   denom={baseDenom ?? token ?? ""}
                   className={classNames(insufficient && "danger")}
                 />

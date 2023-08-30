@@ -26,7 +26,7 @@ const StakingDetailsCompact = ({
   const network = useNetworkWithFeature(ChainFeature.STAKING)
   const { t } = useTranslation()
   const readNativeDenom = useNativeDenoms()
-  const token = readNativeDenom(denom)
+  const token = readNativeDenom(denom ?? "")
   const { data: stakeParams, ...stakeState } = useStakingParams(chainID)
   const daysToUnbond = getChainUnbondTime(stakeParams?.unbonding_time)
 

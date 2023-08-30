@@ -86,11 +86,13 @@ export default Read
 
 interface ReadTokenProps extends ReadProps {
   denom: Denom
+  debug?: boolean
 }
 
 export const ReadToken = (props: ReadTokenProps) => {
   const readNativeDenom = useNativeDenoms()
   const { decimals } = readNativeDenom(props.denom)
+  if (props.debug) console.log("ReadToken", { decimals, ...props })
   return <Read decimals={decimals} {...props} />
 }
 

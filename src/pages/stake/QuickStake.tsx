@@ -113,7 +113,7 @@ const QuickStake = () => {
   ]
 
   const tokenList = options.reduce((acc, { denom }) => {
-    const token = readNativeDenom(denom)
+    const token = readNativeDenom(denom ?? "")
     if (token.type === TokenType.IBC) return acc
     return token.lsd
       ? {
@@ -150,7 +150,7 @@ const QuickStake = () => {
               dataIndex: ["asset", "chainID"],
               render: (_, option) => {
                 const { denom, chainID, isAlliance } = option
-                const token = readNativeDenom(denom)
+                const token = readNativeDenom(denom ?? "")
                 const network = networks[chainID]
 
                 return (
