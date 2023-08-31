@@ -115,15 +115,15 @@ export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
     return filterEnabledNetworks({ [terra?.chainID]: terra })
   }
 
-  if (wallet && !wallet?.words?.["118"]) {
-    const chains330 = Object.values(
+  if (wallet) {
+    const enabledChains = Object.values(
       withCustomLCDs(
         networks[network as NetworkName] as Record<ChainID, InterchainNetwork>
       ) ?? {}
-    ).filter(({ coinType }) => coinType === "330")
+    ).filter(({ coinType }) => !!wallet?.words?.[coinType])
 
     return filterEnabledNetworks(
-      chains330.reduce((acc, chain) => {
+      enabledChains.reduce((acc, chain) => {
         acc[chain?.chainID] = chain
         return acc
       }, {} as Record<ChainID, InterchainNetwork>)

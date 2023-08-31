@@ -40,6 +40,7 @@ export const AssetInput = forwardRef(
         {...attrs}
         className={styles.input}
         autoComplete="off"
+        onWheel={(e) => e.currentTarget.blur()}
         step="any"
         ref={ref}
       />
