@@ -102,13 +102,17 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
   /* form */
   const form = useForm<TxValues>({
     mode: "onChange",
-    defaultValues: { input: toInput(minDeposit), coins: [defaultCoinItem] },
+    defaultValues: {
+      input: toInput(minDeposit, decimals),
+      coins: [defaultCoinItem],
+    },
   })
 
   const { register, trigger, control, watch, setValue, handleSubmit } = form
   const { errors } = form.formState
   const { input, ...values } = watch()
-  const amount = toAmount(input)
+  const amount = toAmount(input, { decimals })
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "changes",
@@ -117,8 +121,8 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
 
   /* update input */
   useEffect(() => {
-    setValue("input", toInput(minDeposit))
-  }, [minDeposit, setValue])
+    setValue("input", toInput(minDeposit, decimals))
+  }, [minDeposit, setValue, decimals])
 
   /* effect: ParameterChangeProposal */
   const shouldAppendChange =
@@ -132,13 +136,13 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
   const createTx = useCallback(
     ({ input, title, description, ...values }: TxValues) => {
       if (!addresses) return
-      const amount = toAmount(input)
+      const amount = toAmount(input, { decimals })
       const deposit = has(amount) ? new Coins({ [token]: amount }) : []
 
       const getContent = () => {
         if (values.type === ProposalType.SPEND) {
           const { input, denom, recipient } = values.spend
-          const coins = new Coins({ [denom]: toAmount(input) })
+          const coins = new Coins({ [denom]: toAmount(input, { decimals }) })
           return new CommunityPoolSpendProposal(
             title,
             description,
@@ -174,7 +178,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
       ]
       return { msgs, chainID: chain ?? "" }
     },
-    [addresses, chain, token]
+    [addresses, chain, token, decimals]
   )
 
   /* fee */
@@ -197,9 +201,10 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
   )
 
   const tx = {
-    token,
+    baseDenom: token,
     amount,
     balance,
+    decimals,
     estimationTxValues,
     createTx,
     onChangeMax,
@@ -237,7 +242,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
             <Input
               {...register("spend.input", {
                 valueAsNumber: true,
-                validate: validate.input(toInput(max), decimals),
+                validate: validate.input(toInput(max, decimals), decimals),
               })}
               inputMode="decimal"
               type="number"
@@ -477,7 +482,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
                 {...register("input", {
                   valueAsNumber: true,
                   validate: validate.input(
-                    toInput(max.amount),
+                    toInput(max.amount, decimals),
                     decimals,
                     "Initial deposit",
                     true
@@ -487,7 +492,6 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
                 token={networks[chain].baseAsset}
                 onFocus={max.reset}
                 inputMode="decimal"
-                placeholder={getPlaceholder()}
               />
             </FormItem>
 
