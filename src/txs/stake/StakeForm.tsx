@@ -118,7 +118,7 @@ const StakeForm = (props: Props) => {
   const { register, trigger, watch, setValue, handleSubmit, formState } = form
   const { errors } = formState
   const { source, input } = watch()
-  const { decimals } = readNativeDenom(denom ?? "")
+  const { decimals } = readNativeDenom(denom)
   const amount = toAmount(input, { decimals })
 
   /* tx */

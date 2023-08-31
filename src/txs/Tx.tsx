@@ -163,6 +163,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   const getGasAmount = useCallback(
     (denom: CoinDenom) => {
+      console.log("networks[chain]?.gasPrices", networks[chain]?.gasPrices)
       const gasPrice = networks[chain]?.gasPrices[denom]
       if (isNil(estimatedGas) || !gasPrice) return "0"
       return new BigNumber(estimatedGas)
@@ -175,6 +176,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   const gasAmount = getGasAmount(gasDenom)
   const gasFee = { amount: gasAmount, denom: gasDenom }
+  console.log("gasFee", gasFee)
 
   /* max */
   const getNativeMax = () => {
@@ -376,7 +378,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
               <dd>
                 <ReadToken
                   amount={balanceAfterTx}
-                  debug
                   denom={baseDenom ?? token ?? ""}
                   className={classNames(insufficient && "danger")}
                 />
