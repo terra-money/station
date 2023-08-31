@@ -106,14 +106,26 @@ export function useIBCChannels() {
       const isCW20 = AccAddress.validate(tokenAddress)
 
       if (isCW20) {
-        return networks[from]?.icsChannels?.[to]?.channel
+        const availableChannels = networks[from]?.ics20Channels?.[to]
+
+        if (!availableChannels) return
+
+        return (
+          availableChannels.find(
+            ({ tokens }) => !!tokens && tokens.includes(tokenAddress)
+          ) || availableChannels.find(({ tokens }) => !tokens)
+        )?.channel
       }
 
       if (
         icsChannel &&
-        networks[to]?.icsChannels?.[from]?.channel === icsChannel
+        !!networks[to]?.ics20Channels?.[from]?.find(
+          ({ channel }) => channel === icsChannel
+        )
       ) {
-        return networks[to]?.icsChannels?.[from]?.otherChannel
+        return networks[to]?.ics20Channels?.[from]?.find(
+          ({ channel }) => channel === icsChannel
+        )?.otherChannel
       }
 
       return networks[from]?.channels?.[to]
@@ -122,11 +134,17 @@ export function useIBCChannels() {
     getICSContract: ({
       from,
       to,
+      tokenAddress,
     }: {
       from: string
       to: string
+      tokenAddress: AccAddress
     }): string | undefined => {
-      return networks[from]?.icsChannels?.[to]?.contract
+      const channels = networks[from]?.ics20Channels?.[to]
+      return (
+        channels?.find(({ tokens }) => tokens?.includes(tokenAddress))
+          ?.contract || channels?.find(({ tokens }) => !tokens)?.contract
+      )
     },
   }
 }
