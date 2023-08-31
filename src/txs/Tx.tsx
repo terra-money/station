@@ -35,6 +35,7 @@ import ConnectWallet from "app/sections/ConnectWallet"
 import useToPostMultisigTx from "pages/multisig/utils/useToPostMultisigTx"
 import { isWallet, useAuth } from "auth"
 import { PasswordError } from "auth/scripts/keystore"
+import { useCarbonFees } from "data/queries/tx"
 
 import { toInput, CoinInput, calcTaxes } from "./utils"
 import styles from "./Tx.module.scss"
@@ -108,6 +109,8 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const shouldTax = isClassic && getShouldTax(token, isClassic)
   const { data: taxRate = "0", ...taxRateState } = useTaxRate(!shouldTax)
   const { data: taxCap = "0", ...taxCapState } = useTaxCap(token)
+  const { data: carbonFees } = useCarbonFees()
+
   const taxState = combineState(taxRateState, taxCapState)
   const taxes = isClassic
     ? calcTaxes(
@@ -138,6 +141,12 @@ function Tx<TxValues>(props: Props<TxValues>) {
       if (!(wallet || connectedWallet)) return 0
       if (!simulationTx || !simulationTx.msgs.length) return 0
       try {
+        if (chain.startsWith("carbon-")) {
+          return (
+            carbonFees?.costs[key.msgs?.[0] ?? ""] ??
+            carbonFees?.costs["default_fee"]
+          )
+        }
         const unsignedTx = await lcd.tx.create([{ address: key.address }], {
           ...simulationTx,
           gasAdjustment: key.gasAdjustment,
@@ -163,14 +172,16 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   const getGasAmount = useCallback(
     (denom: CoinDenom) => {
-      const gasPrice = networks[chain]?.gasPrices[denom]
+      const gasPrice = chain?.startsWith("carbon-")
+        ? carbonFees?.prices[denom]
+        : networks[chain]?.gasPrices[denom]
       if (isNil(estimatedGas) || !gasPrice) return "0"
       return new BigNumber(estimatedGas)
         .times(gasPrice)
         .integerValue(BigNumber.ROUND_CEIL)
         .toString()
     },
-    [estimatedGas, chain, networks]
+    [estimatedGas, chain, networks, carbonFees]
   )
 
   const gasAmount = getGasAmount(gasDenom)
@@ -178,6 +189,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   /* max */
   const getNativeMax = () => {
+    console.log(Number(balance) - Number(gasFee.amount))
     if (!balance) return
     return gasFee.denom === token
       ? (Number(balance) - Number(gasFee.amount)).toFixed(0)
