@@ -4,7 +4,7 @@ import { getMaxHeightStyle } from "utils/style"
 import { combineState } from "data/query"
 import { useExchangeRates } from "data/queries/coingecko"
 import { useInterchainDelegations } from "data/queries/staking"
-import { ValidatorLink } from "components/general"
+import { StakingAssetLink } from "components/general"
 import { ModalButton } from "components/feedback"
 import { Table } from "components/layout"
 import { ReadToken } from "components/token"
@@ -62,6 +62,8 @@ const Delegations = () => {
     })),
   ]
 
+  const hubAddress = allianceHub.useHubAddress()
+
   /* render */
   const title = t("Delegations")
 
@@ -110,10 +112,17 @@ const Delegations = () => {
             title: t("Validator"),
             dataIndex: "validator_address",
             render: (address: AccAddress, r) => {
-              if (address === allianceHub.useHubAddress()) {
+              if (address === hubAddress) {
                 return <AllianceHubStakeCTA denom={r.balance.denom} />
               } else {
-                return <ValidatorLink address={address} internal img />
+                return (
+                  <StakingAssetLink
+                    address={address}
+                    denom={r.balance.denom}
+                    internal
+                    img
+                  />
+                )
               }
             },
           },

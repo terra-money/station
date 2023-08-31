@@ -15,7 +15,7 @@ import { useWhitelist } from "./queries/chains"
 import { useNetworkName, useNetwork } from "./wallet"
 import { getChainIDFromAddress } from "utils/bech32"
 
-const DEFAULT_NATIVE_DECIMALS = 6
+export const DEFAULT_NATIVE_DECIMALS = 6
 
 export const useTokenItem = (
   token: Token,
@@ -87,6 +87,7 @@ export enum TokenType {
   IBC = "ibc",
   GAMM = "gamm",
   FACTORY = "factory",
+  STRIDE = "stride",
 }
 
 export const useNativeDenoms = () => {
@@ -110,6 +111,11 @@ export const useNativeDenoms = () => {
     } else if (denom.startsWith("gamm/")) {
       tokenType = TokenType.GAMM
       decimals = GAMM_TOKEN_DECIMALS
+    } else if (
+      denom.startsWith("stu") &&
+      (!chainID || chainID === "stride-1")
+    ) {
+      tokenType = TokenType.STRIDE
     }
 
     let fixedDenom = ""
@@ -122,7 +128,7 @@ export const useNativeDenoms = () => {
         fixedDenom = gammTokens.get(denom) ?? readDenom(denom)
         break
 
-      case TokenType.FACTORY: {
+      case TokenType.FACTORY:
         const factoryParts = denom.split(/[/:]/)
         let tokenAddress = ""
         if (factoryParts.length >= 2) {
@@ -130,10 +136,13 @@ export const useNativeDenoms = () => {
         }
         fixedDenom = tokenAddress
         break
-      }
+
+      case TokenType.STRIDE:
+        fixedDenom = `st${denom.replace("stu", "").toUpperCase()}`
+        break
 
       default:
-        fixedDenom = readDenom(denom)
+        fixedDenom = readDenom(denom) || denom
     }
 
     let factoryIcon
@@ -204,6 +213,10 @@ export const useNativeDenoms = () => {
       }
     }
 
+    const CHAIN_ICON =
+      networks[chainID ?? ""]?.icon ||
+      "https://assets.terra.dev/icon/svg/Terra.svg"
+
     return (
       cw20.find(({ token }) => denom === token) ?? {
         // default token icon
@@ -212,11 +225,12 @@ export const useNativeDenoms = () => {
         name: fixedDenom,
         type: tokenType,
         icon:
-          tokenType === TokenType.IBC
+          (tokenType === TokenType.IBC
             ? "https://assets.terra.dev/icon/svg/IBC.svg"
-            : tokenType === TokenType.FACTORY || TokenType.GAMM
-            ? factoryIcon
-            : "https://assets.terra.dev/icon/svg/Terra.svg",
+            : tokenType === TokenType.STRIDE
+            ? "https://station-assets.terra.dev/img/chains/Stride.png"
+            : (tokenType === TokenType.FACTORY || TokenType.GAMM) &&
+              factoryIcon) || CHAIN_ICON,
         decimals,
         isNonWhitelisted: true,
       }

@@ -70,7 +70,7 @@ const SendPage = () => {
     () =>
       Object.values(
         (balances ?? []).reduce((acc, { denom, amount, chain }) => {
-          const data = readNativeDenom(denom)
+          const data = readNativeDenom(denom, chain)
           // TODO: resolve ibc lun(a|c) balances better at balance fetch
           // then update max / balance / messaging to translate lun(a|c)
           // for now, check if token is LUNC and network isn't classic, discard if so
