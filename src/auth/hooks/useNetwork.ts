@@ -81,9 +81,27 @@ export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
     ) {
       setNetwork("localterra")
     }
-    return filterEnabledNetworks(
-      connectedWallet.network as Record<ChainID, InterchainNetwork>
+
+    const networksWithVersion = Object.fromEntries(
+      Object.entries(
+        connectedWallet.network as Record<ChainID, InterchainNetwork>
+      ).map(([key, value]) => {
+        if (value.version === undefined) {
+          if (key === "phoenix-1" || key === "pisco-1") {
+            return [
+              key,
+              {
+                ...value,
+                version: "0.46",
+              },
+            ]
+          }
+        }
+        return [key, value]
+      })
     )
+
+    return filterEnabledNetworks(networksWithVersion)
   }
 
   // multisig wallet are supported only on terra

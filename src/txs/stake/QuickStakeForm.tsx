@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form"
 import { Coin } from "@terra-money/feather.js"
 import { toAmount } from "@terra-money/terra-utils"
 import { getAmount } from "utils/coin"
+import { ExternalLink } from "components/general"
 import { combineState, queryKey } from "data/query"
 import { useNetwork } from "data/wallet"
 import { Flex, FlexColumn, Grid, Page } from "components/layout"
@@ -11,7 +12,7 @@ import { Form, FormHelp, FormItem, FormWarning, Input } from "components/form"
 import { getPlaceholder, toInput } from "../utils"
 import validate from "../validate"
 import Tx from "../Tx"
-import { useNativeDenoms } from "data/token"
+import { useNativeDenoms, DEFAULT_NATIVE_DECIMALS } from "data/token"
 import {
   getQuickStakeMsgs,
   getQuickUnstakeMsgs,
@@ -96,7 +97,12 @@ const QuickStakeForm = (props: Props) => {
   const { register, trigger, watch, setValue, handleSubmit, formState } = form
   const { errors } = formState
   const { input } = watch()
-  const amount = toAmount(input)
+  const { decimals } = readNativeDenom(denom)
+
+  const amount = toAmount(
+    input,
+    decimals ? { decimals } : { decimals: DEFAULT_NATIVE_DECIMALS }
+  )
 
   const daysToUnbond = getChainUnbondTime(stakeParams?.unbonding_time)
 
@@ -107,8 +113,15 @@ const QuickStakeForm = (props: Props) => {
 
   const stakeMsgs = useMemo(() => {
     if (!address || !elegibleVals) return
-    const coin = new Coin(denom, toAmount(input || toInput(1)))
     const { decimals } = readNativeDenom(denom)
+    const coin = new Coin(
+      denom,
+      toAmount(
+        input || toInput(1),
+        decimals ? { decimals } : { decimals: DEFAULT_NATIVE_DECIMALS }
+      )
+    )
+
     return getQuickStakeMsgs(
       address,
       coin,
@@ -131,7 +144,14 @@ const QuickStakeForm = (props: Props) => {
 
   const unstakeMsgs = useMemo(() => {
     if (!address || !(isAlliance ? allianceDelegations : delegations)) return
-    const coin = new Coin(denom, toAmount(input || toInput(1)))
+    const { decimals } = readNativeDenom(denom)
+    const coin = new Coin(
+      denom,
+      toAmount(
+        input || toInput(1),
+        decimals ? { decimals } : { decimals: DEFAULT_NATIVE_DECIMALS }
+      )
+    )
     return getQuickUnstakeMsgs(
       address,
       coin,
@@ -152,6 +172,7 @@ const QuickStakeForm = (props: Props) => {
     allianceDelegations,
     allianceHubContract,
     stakeOnAllianceHub,
+    readNativeDenom,
   ])
 
   /* tx */
@@ -205,8 +226,9 @@ const QuickStakeForm = (props: Props) => {
   const feeTokenSymbol = readNativeDenom(network[chainID].baseAsset).symbol
 
   const token = action === QuickStakeAction.DELEGATE ? denom : ""
+
   const tx = {
-    decimals: readNativeDenom(token)?.decimals,
+    decimals: readNativeDenom(denom)?.decimals,
     token,
     amount,
     balance,
@@ -267,7 +289,13 @@ const QuickStakeForm = (props: Props) => {
                 <Input
                   {...register("input", {
                     valueAsNumber: true,
-                    validate: validate.input(toInput(max.amount)),
+                    validate: validate.input(
+                      toInput(
+                        max.amount,
+                        decimals ? decimals : DEFAULT_NATIVE_DECIMALS
+                      ),
+                      decimals ? decimals : DEFAULT_NATIVE_DECIMALS
+                    ),
                   })}
                   type="number"
                   token={denom}
@@ -286,12 +314,18 @@ const QuickStakeForm = (props: Props) => {
                     <ul>
                       <li>
                         {feeTokenSymbol} is the fee token used on the{" "}
-                        {network[chainID].name} blockchain
+                        {network[chainID].name} blockchain.
                       </li>
                       <li>
                         To stake {asset.symbol} on {network[chainID].name},
-                        visit the Swap page and swap any token for{" "}
-                        {feeTokenSymbol}
+                        visit{" "}
+                        <ExternalLink href="https://tfm.com/ibc">
+                          https://tfm.com/ibc
+                        </ExternalLink>{" "}
+                        and swap any token for {feeTokenSymbol} on{" "}
+                        {network[chainID].name}. Make sure the {feeTokenSymbol}{" "}
+                        is being sent to your {network[chainID].name} wallet on
+                        Station.
                       </li>
                       <li>
                         Send {feeTokenSymbol} to {network[chainID].name} by
@@ -300,9 +334,8 @@ const QuickStakeForm = (props: Props) => {
                         book
                       </li>
                       <li>
-                        Return to the Stake page to stake your {asset.symbol}{" "}
-                        once you have {feeTokenSymbol} on{" "}
-                        {network[chainID].name}
+                        Return to Station's Stake page to stake your{" "}
+                        {asset.symbol} on {network[chainID].name}.
                       </li>
                     </ul>
                   </section>
