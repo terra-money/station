@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes } from "react"
 import { useTranslation } from "react-i18next"
-import { Button } from "station-ui"
+import { Button } from "components/general"
 import styles from "./Form.module.scss"
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -12,8 +12,6 @@ const Submit = ({ submitting, ...attrs }: Props) => {
 
   return (
     <Button
-      label={t("Submit")}
-      {...attrs}
       loading={submitting}
       disabled={attrs.disabled || submitting}
       type={attrs.type ?? "submit"}
@@ -21,7 +19,7 @@ const Submit = ({ submitting, ...attrs }: Props) => {
       color="primary"
       block
     >
-      {attrs.children}
+      {attrs.children || t("Submit")}
     </Button>
   )
 }

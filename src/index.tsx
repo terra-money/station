@@ -7,7 +7,7 @@ import { WalletProvider, getInitialConfig } from "@terra-money/wallet-kit"
 import TerraStationMobileWallet from "@terra-money/terra-station-mobile"
 import "tippy.js/dist/tippy.css"
 import { initAnalytics } from "utils/analytics"
-import "station-ui/dist/style.css"
+// import "station-ui/dist/style.css"
 
 import "config/lang"
 import { debug } from "utils/env"
