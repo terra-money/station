@@ -29,9 +29,9 @@ const Read = forwardRef(
 
     const fixed = !auto
       ? props.fixed
-      : Number(amount) >= Math.pow(10, (props.decimals ?? 0) + 3)
+      : Number(amount) >= Math.pow(10, (props.decimals ?? 6) + 3)
       ? 0
-      : Number(amount) < Math.pow(10, props.decimals ?? 0)
+      : Number(amount) < Math.pow(10, props.decimals ?? 6)
       ? props.decimals
       : 2
 
@@ -90,8 +90,12 @@ interface ReadTokenProps extends ReadProps {
 
 export const ReadToken = (props: ReadTokenProps) => {
   const readNativeDenom = useNativeDenoms()
-  const { decimals } = readNativeDenom(props.denom)
-  return <Read decimals={decimals} {...props} />
+  return (
+    <Read
+      decimals={props.decimals ?? readNativeDenom(props.denom).decimals}
+      {...props}
+    />
+  )
 }
 
 /* percent */

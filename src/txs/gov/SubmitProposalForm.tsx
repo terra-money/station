@@ -202,6 +202,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
 
   const tx = {
     baseDenom: token,
+    token,
     amount,
     balance,
     decimals,
