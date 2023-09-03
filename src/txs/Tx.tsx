@@ -464,12 +464,12 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const modal = !error
     ? undefined
     : {
-        title: error?.toString().includes("UserDenied")
+        title: error?.toString().includes("User denied")
           ? t("Transaction was denied by user")
           : t("Error"),
-        children: error?.toString().includes("UserDenied") ? null : (
+        children: error?.toString().includes("User denied") ? null : (
           <Pre height={120} normal break>
-            {error?.message}
+            {error?.message ?? error?.toString()}
           </Pre>
         ),
       }
