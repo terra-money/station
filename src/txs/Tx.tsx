@@ -36,7 +36,7 @@ import useToPostMultisigTx from "pages/multisig/utils/useToPostMultisigTx"
 import { isWallet, useAuth } from "auth"
 import { PasswordError } from "auth/scripts/keystore"
 
-import { toInput, CoinInput, calcTaxes } from "./utils"
+import { toInput, CoinInput, calcTaxes, parseError } from "./utils"
 import styles from "./Tx.module.scss"
 import { useInterchainLCDClient } from "data/queries/lcdClient"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
@@ -232,7 +232,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
     : props.disabled || ""
 
   const [submitting, setSubmitting] = useState(false)
-  const [error, setError] = useState<Error>()
+  const [error, setError] = useState<any>()
 
   const navigate = useNavigate()
   const toPostMultisigTx = useToPostMultisigTx()
@@ -464,12 +464,10 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const modal = !error
     ? undefined
     : {
-        title: error?.toString().includes("User denied")
-          ? t("Transaction was denied by user")
-          : t("Error"),
-        children: error?.toString().includes("User denied") ? null : (
+        title: t(parseError(error).title),
+        children: (
           <Pre height={120} normal break>
-            {error?.message ?? error?.toString()}
+            {t(parseError(error).message)}
           </Pre>
         ),
       }

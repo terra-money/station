@@ -65,3 +65,50 @@ export const calcTaxes = (
       })
   )
 }
+
+export function parseError(error: any): { title: string; message: string } {
+  if (error instanceof Error || typeof error.message === "string") {
+    const { message, name } = error
+
+    switch (message) {
+      case "Ledger device: UNKNOWN_ERROR (0x5515)":
+        return {
+          title: "Ledger error",
+          message:
+            "Please make sure your Ledger device is connected and unlocked.",
+        }
+      case "Unknown Status Code: 28161":
+        return {
+          title: "Ledger error",
+          message:
+            "Please make sure you have the Terra and Cosmos apps installed on your Ledger device.",
+        }
+      case "Failed to execute 'claimInterface' on 'USBDevice': Unable to claim interface.":
+        return {
+          title: "Ledger error",
+          message:
+            "The Ledger device is beign used on another tab, please close all the other browser windows and try again.",
+        }
+      case "User denied":
+        return {
+          title: "Error",
+          message: "Transaction was denied by user",
+        }
+      default:
+        return {
+          title: name?.includes("Ledger") ? "Ledger error" : "Error",
+          message,
+        }
+    }
+  } else if (typeof error === "string") {
+    return {
+      title: "Error",
+      message: error,
+    }
+  } else {
+    return {
+      title: "Error",
+      message: JSON.stringify(error.error ?? error, null, 2),
+    }
+  }
+}
