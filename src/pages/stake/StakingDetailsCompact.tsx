@@ -102,7 +102,12 @@ const StakingDetailsCompact = ({
               <p className={styles.delegated__amount}>
                 <img src={token.icon} alt={token.name} />
                 <p>
-                  <ReadToken amount={delegated} denom={token.token} fixed={2} />{" "}
+                  <ReadToken
+                    hideDenom
+                    amount={delegated}
+                    denom={token.token}
+                    fixed={2}
+                  />{" "}
                   {token.symbol}
                 </p>
               </p>
