@@ -90,12 +90,8 @@ interface ReadTokenProps extends ReadProps {
 
 export const ReadToken = (props: ReadTokenProps) => {
   const readNativeDenom = useNativeDenoms()
-  return (
-    <Read
-      decimals={props.decimals ?? readNativeDenom(props.denom).decimals}
-      {...props}
-    />
-  )
+  const { decimals } = readNativeDenom(props.denom)
+  return <Read decimals={decimals} {...props} />
 }
 
 /* percent */

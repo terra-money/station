@@ -11,7 +11,6 @@ import { Tooltip } from "components/display"
 import { useDevMode } from "utils/localStorage"
 import { truncate } from "@terra-money/terra-utils"
 import { useNetworks } from "app/InitNetworks"
-import { useNativeDenoms } from "data/token"
 
 export interface Props {
   chain: string
@@ -21,17 +20,17 @@ export interface Props {
   denom: string
   path?: string[]
   ibcDenom?: string
+  decimals?: number
 }
 
 const AssetChain = (props: Props) => {
-  const { chain, symbol, balance, token, path, ibcDenom, denom } = props
+  const { chain, symbol, balance, token, path, ibcDenom, denom, decimals } =
+    props
   const currency = useCurrency()
   const { data: prices, ...pricesState } = useExchangeRates()
   const { t } = useTranslation()
   const networkName = useNetworkName()
   const allNetworks = useNetworks().networks[networkName]
-  const readNativeDenom = useNativeDenoms()
-  const { decimals } = readNativeDenom(denom, chain)
 
   const networks = useNetwork()
   const { devMode } = useDevMode()
@@ -130,7 +129,8 @@ const AssetChain = (props: Props) => {
                 ) : (
                   <ReadToken
                     hideDenom
-                    denom={props.denom}
+                    denom={denom}
+                    decimals={decimals}
                     amount={balance}
                     fixed={2}
                   />
