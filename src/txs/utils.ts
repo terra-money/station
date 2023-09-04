@@ -87,7 +87,7 @@ export function parseError(error: any): { title: string; message: string } {
         return {
           title: "Ledger error",
           message:
-            "The Ledger device is beign used on another tab, please close all the other browser windows and try again.",
+            "The Ledger device is being used on another tab, please close all the other browser windows and try again.",
         }
       default:
         return {
@@ -99,7 +99,7 @@ export function parseError(error: any): { title: string; message: string } {
     return {
       title: "Error",
       message: error.includes("User denied")
-        ? "Transaction was denied by user"
+        ? "Transaction was denied by user."
         : error,
     }
   } else {
