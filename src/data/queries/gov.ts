@@ -6,8 +6,9 @@ import { AccAddress, Proposal, Vote } from "@terra-money/feather.js"
 import { Color } from "types/components"
 import { queryKey, RefetchOptions } from "../query"
 import { useInterchainLCDClientGovOverride } from "./lcdClient"
-import { useNetwork } from "data/wallet"
+import { useNetworkWithFeature } from "data/wallet"
 import axios from "axios"
+import { ChainFeature } from "types/chains"
 
 export const useVotingParams = (chain: string) => {
   const lcd = useInterchainLCDClientGovOverride()
@@ -116,7 +117,7 @@ export interface ProposalResult46 {
 
 /* proposals */
 export const useProposals = (status: ProposalStatus) => {
-  const networks = useNetwork()
+  const networks = useNetworkWithFeature(ChainFeature.GOVERNANCE)
 
   return useQueries(
     Object.values(networks ?? {}).map(({ lcd, version, chainID }) => {
@@ -231,7 +232,7 @@ export const useProposalStatusItem = (status: ProposalStatus) => {
 
 /* proposal */
 export const useProposal = (id: string, chain: string) => {
-  const networks = useNetwork()
+  const networks = useNetworkWithFeature(ChainFeature.GOVERNANCE)
   return useQuery(
     [queryKey.gov.proposal, id, networks[chain]],
     async () => {
@@ -305,7 +306,7 @@ export interface ProposalDeposit {
 
 /* proposal: deposits */
 export const useDeposits = (id: string, chain: string) => {
-  const networks = useNetwork()
+  const networks = useNetworkWithFeature(ChainFeature.GOVERNANCE)
   return useQuery(
     [queryKey.gov.deposits, id, chain],
     async () => {
@@ -376,5 +377,5 @@ export const useGetVoteOptionItem = () => {
 /* helpers */
 export const useParseProposalType = (content?: ProposalResult["content"]) => {
   const type = content?.["@type"]
-  return type ? sentenceCase(last(type.split(".")) ?? "") : "Unknowm proposal"
+  return type ? sentenceCase(last(type.split(".")) ?? "") : "Unknown proposal"
 }
