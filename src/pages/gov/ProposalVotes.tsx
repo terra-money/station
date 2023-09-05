@@ -17,9 +17,9 @@ import styles from "./ProposalVotes.module.scss"
 
 export const options = [
   Vote.Option.VOTE_OPTION_YES,
-  Vote.Option.VOTE_OPTION_ABSTAIN,
   Vote.Option.VOTE_OPTION_NO,
   Vote.Option.VOTE_OPTION_NO_WITH_VETO,
+  Vote.Option.VOTE_OPTION_ABSTAIN,
 ]
 
 const ProposalVotes = ({
@@ -164,9 +164,9 @@ const calcTallies = (
 
   const tallies = {
     [Vote.Option.VOTE_OPTION_YES]: tally.yes.toString(),
-    [Vote.Option.VOTE_OPTION_ABSTAIN]: tally.abstain.toString(),
     [Vote.Option.VOTE_OPTION_NO]: tally.no.toString(),
     [Vote.Option.VOTE_OPTION_NO_WITH_VETO]: tally.no_with_veto.toString(),
+    [Vote.Option.VOTE_OPTION_ABSTAIN]: tally.abstain.toString(),
   }
 
   const total = {

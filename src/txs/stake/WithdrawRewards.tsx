@@ -2,21 +2,23 @@ import { useTranslation } from "react-i18next"
 import { combineState } from "data/query"
 import { useInterchainDelegations } from "data/queries/staking"
 import { Page, ChainFilter } from "components/layout"
-import { Delegation } from "@terra-money/feather.js"
 import DelegationsPromote from "app/containers/DelegationsPromote"
 import WithdrawRewardsTx from "./WithdrawRewardsTx"
+import { useAllianceHub } from "data/queries/alliance-protocol"
+import { parseResToDelegation } from "data/parsers/alliance-protocol"
 
 const WithdrawRewards = () => {
   const { t } = useTranslation()
   const interchainDelegations = useInterchainDelegations()
+  const allianceHub = useAllianceHub()
 
+  const alliancesHubDelegations = allianceHub.useDelegations()
   const delegations = interchainDelegations.reduce(
     (acc, { data }) => (data ? [...acc, ...data.delegation] : acc),
-    [] as Delegation[]
+    parseResToDelegation(alliancesHubDelegations?.data)
   )
 
-  const state = combineState(...interchainDelegations)
-
+  const state = combineState(...interchainDelegations, alliancesHubDelegations)
   const render = () => {
     if (!delegations) return null
 

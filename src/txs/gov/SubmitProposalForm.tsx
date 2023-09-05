@@ -242,6 +242,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
                 validate: validate.input(toInput(max)),
               })}
               inputMode="decimal"
+              type="number"
               placeholder={placeholder}
               selectBefore={
                 <Select {...register("spend.denom")} before>
@@ -372,6 +373,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
                     valueAsNumber: true,
                   })}
                   inputMode="decimal"
+                  type="number"
                   placeholder={getPlaceholder()}
                   selectBefore={
                     <Select {...register(`coins.${index}.denom`)} before>
@@ -483,6 +485,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
                     true
                   ),
                 })}
+                type="number"
                 token={networks[chain].baseAsset}
                 onFocus={max.reset}
                 inputMode="decimal"

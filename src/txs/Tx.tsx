@@ -248,7 +248,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
         throw new Error("Fee is not estimated")
 
       const tx = createTx(values)
-
       if (!tx) throw new Error("Tx is not defined")
 
       const gasCoins = new Coins([Coin.fromData(gasFee)])
@@ -276,7 +275,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
         const { txhash } = await auth.post({ ...tx, fee }, password)
         !hideLoader && setLatestTx({ txhash, ...latestTxBase })
       } else {
-        const { result } = await post({ ...tx, fee })
+        const result = await post({ ...tx, fee })
         if (!result) throw new Error("Tx failed")
         !hideLoader && setLatestTx({ txhash: result.txhash, ...latestTxBase })
       }
@@ -376,6 +375,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
           <dd>
             {gasFee.amount && (
               <Read
+                decimals={decimals}
                 {...gasFee}
                 denom={
                   gasFee.denom === token

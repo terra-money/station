@@ -1,14 +1,21 @@
-import { ForwardedRef, forwardRef, HTMLProps, ReactNode } from "react"
+import {
+  CSSProperties,
+  ForwardedRef,
+  forwardRef,
+  HTMLProps,
+  ReactNode,
+} from "react"
 import CallMadeIcon from "@mui/icons-material/CallMade"
 import styles from "./Internal.module.scss"
 
 interface ExternalLinkProps extends HTMLProps<HTMLAnchorElement> {
   icon?: boolean
+  style?: CSSProperties
 }
 
 export const ExternalLink = forwardRef(
   (
-    { icon, children, href, ...attrs }: ExternalLinkProps,
+    { icon, style, children, href, ...attrs }: ExternalLinkProps,
     ref: ForwardedRef<HTMLAnchorElement>
   ) => {
     if (!validateLink(href)) return null
@@ -21,6 +28,7 @@ export const ExternalLink = forwardRef(
         rel="noopener noreferrer"
         onClick={(e) => e.stopPropagation()}
         ref={ref}
+        style={style}
       >
         {children}
         {icon && <CallMadeIcon fontSize="inherit" />}

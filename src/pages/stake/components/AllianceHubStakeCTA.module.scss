@@ -1,0 +1,22 @@
+@import "mixins";
+
+.AllianceHubStakeCTA {
+  @include inline-flex;
+  gap: 2px;
+  font-weight: var(--bold);
+}
+
+.AllianceHubStakeButton {
+  color: var(--button-primary-bg);
+  font-size: var(--font-size-small);
+  font-weight: var(--bold);
+  height: fit-content;
+  padding: 0;
+  min-width: auto;
+  background-color: transparent;
+
+  :hover {
+    background: transparent !important;
+    text-decoration: underline !important;
+  }
+}

@@ -21,10 +21,10 @@ import {
 import {
   useAllStakingParams,
   useInterchainDelegations,
+  getChainUnbondTime,
 } from "data/queries/staking"
 import { combineState } from "data/query"
-import { useNativeDenoms } from "data/token"
-import { readPercent } from "@terra-money/terra-utils"
+import { TokenType, useNativeDenoms } from "data/token"
 import { Tooltip, TooltipIcon } from "components/display"
 import { ChainFeature } from "types/chains"
 
@@ -69,7 +69,7 @@ const Validators = () => {
       denom: baseAsset,
       rewards: 1,
       chainID,
-      unbonding: (unbondingtime[chainID] ?? 0) / 60 / 60 / 24,
+      unbonding: getChainUnbondTime(unbondingtime[chainID]),
       isAlliance: false,
       delegatedTo: delegations.reduce(
         (acc, { balance, validator_address }) =>
@@ -83,7 +83,7 @@ const Validators = () => {
       denom: denom ?? "",
       rewards: Number(reward_weight),
       chainID,
-      unbonding: (unbondingtime[chainID] ?? 0) / 60 / 60 / 24,
+      unbonding: getChainUnbondTime(unbondingtime[chainID]),
       isAlliance: true,
       delegatedTo: allianceDelegations.reduce(
         (acc, { chainID: delChainID, delegations }) =>
@@ -110,7 +110,7 @@ const Validators = () => {
 
   const tokenList = options.reduce((acc, { denom }) => {
     const token = readNativeDenom(denom)
-    if (token.type === "ibc") return acc
+    if (token.type === TokenType.IBC) return acc
     return token.lsd
       ? {
           [token.lsd]: readNativeDenom(token.lsd),
@@ -241,33 +241,6 @@ const Validators = () => {
                   defaultSortOrder: "desc",
                   sorter: ({ unbonding: a = 0 }, { unbonding: b = 0 }) => a - b,
                   render: (value = 0) => t("{{value}} days", { value }),
-                  align: "right",
-                },
-                {
-                  title: (
-                    <span>
-                      {t("Rewards weight")}{" "}
-                      <TooltipIcon
-                        content={
-                          <article>
-                            <p>
-                              The amount of rewards an Alliance asset accrues is
-                              determined by the asset's Reward Weight.
-                            </p>
-                            <p>
-                              This parameter is set by governance and represents
-                              the maximum proportion of rewards an asset will
-                              earn.
-                            </p>
-                          </article>
-                        }
-                      />
-                    </span>
-                  ),
-                  dataIndex: "rewards",
-                  defaultSortOrder: "desc",
-                  sorter: ({ rewards: a = 0 }, { rewards: b = 0 }) => a - b,
-                  render: (rewards = 0) => readPercent(rewards),
                   align: "right",
                 },
               ]}

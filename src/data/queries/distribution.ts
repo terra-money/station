@@ -14,6 +14,7 @@ import { queryKey, RefetchOptions } from "../query"
 import { useAddress } from "../wallet"
 import { useInterchainLCDClient } from "./lcdClient"
 import { CalcValue } from "./coingecko"
+import { RewardsListing } from "data/types/rewards-form"
 import { useInterchainAddressesWithFeature } from "auth/hooks/useAddress"
 import { ChainFeature } from "types/chains"
 
@@ -119,7 +120,7 @@ export const calcRewardsValues = (
   rewards: Rewards,
   currency: Denom,
   calcValue: CalcValue
-) => {
+): RewardsListing => {
   const calc = (coins: Coins) => {
     const list = sortCoins(coins, currency).filter(({ amount }) => has(amount))
     const sum = BigNumber.sum(
@@ -135,14 +136,4 @@ export const calcRewardsValues = (
     .sort(({ sum: a }, { sum: b }) => Number(b) - Number(a))
 
   return { total, byValidator }
-}
-
-export const calcRewardsValuesForChain = (
-  rewards: Rewards | undefined,
-  currency: Denom
-) => {
-  if (!rewards) return []
-  return sortCoins(rewards?.total, currency).filter(({ amount }) => {
-    return has(amount)
-  })
 }

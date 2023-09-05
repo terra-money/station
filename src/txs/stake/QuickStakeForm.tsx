@@ -2,8 +2,9 @@ import { useCallback, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import { Coin } from "@terra-money/feather.js"
-import { readPercent, toAmount } from "@terra-money/terra-utils"
+import { toAmount } from "@terra-money/terra-utils"
 import { getAmount } from "utils/coin"
+import { ExternalLink } from "components/general"
 import { combineState, queryKey } from "data/query"
 import { useNetwork } from "data/wallet"
 import { Flex, FlexColumn, Grid, Page } from "components/layout"
@@ -12,7 +13,6 @@ import { getPlaceholder, toInput } from "../utils"
 import validate from "../validate"
 import Tx from "../Tx"
 import { useNativeDenoms } from "data/token"
-import { QuickStakeAction } from "pages/stake/QuickStake"
 import {
   getQuickStakeMsgs,
   getQuickUnstakeMsgs,
@@ -25,9 +25,11 @@ import {
 } from "data/queries/staking"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import shuffle from "utils/shuffle"
-import { memo } from "react"
 import styles from "./QuickStakeForm.module.scss"
 import { useAllianceDelegations } from "data/queries/alliance"
+import { useAllianceHub } from "data/queries/alliance-protocol"
+import BigNumber from "bignumber.js"
+import { QuickStakeAction } from "pages/stake/hooks/useQuickStake"
 
 interface TxValues {
   input?: number
@@ -38,9 +40,9 @@ interface Props {
   balances: { denom: string; amount: string }[]
   chainID: string
   denom: string
-  rewardRate: number
   unbondingTime: number
   isAlliance: boolean
+  stakeOnAllianceHub?: boolean
 }
 
 const QuickStakeForm = (props: Props) => {
@@ -49,11 +51,10 @@ const QuickStakeForm = (props: Props) => {
     balances,
     chainID,
     denom,
-    rewardRate,
     unbondingTime,
     isAlliance,
+    stakeOnAllianceHub,
   } = props
-
   const { t } = useTranslation()
   const addresses = useInterchainAddresses()
   const address = addresses?.[chainID]
@@ -63,19 +64,30 @@ const QuickStakeForm = (props: Props) => {
     chainID,
     isAlliance || action === QuickStakeAction.DELEGATE
   )
+  const allianceHub = useAllianceHub()
+  const { data: allianceHubDelegations, ...allianceHubDelegationsState } =
+    allianceHub.useDelegations()
+  const filteredHubDelegationsByChainID =
+    chainID !== undefined
+      ? allianceHubDelegations?.filter((del) => del.chainID === chainID)
+      : allianceHubDelegations
+
   const { data: allianceDelegations, ...allianceDelegationsState } =
     useAllianceDelegations(
       chainID,
       !isAlliance || action === QuickStakeAction.DELEGATE
     )
+
   const readNativeDenom = useNativeDenoms()
   const { data: stakeParams, ...stakeState } = useStakingParams(chainID)
   const state = combineState(
     validatorState,
     delegationsState,
     stakeState,
-    allianceDelegationsState
+    allianceDelegationsState,
+    allianceHubDelegationsState
   )
+  const allianceHubContract = allianceHub.useHubAddress()
 
   /* form */
   const form = useForm<TxValues>({
@@ -87,10 +99,7 @@ const QuickStakeForm = (props: Props) => {
   const { input } = watch()
   const amount = toAmount(input)
 
-  const daysToUnbond = useMemo(() => {
-    if (!stakeParams) return
-    return getChainUnbondTime(stakeParams)
-  }, [stakeParams])
+  const daysToUnbond = getChainUnbondTime(stakeParams?.unbonding_time)
 
   const elegibleVals = useMemo(() => {
     if (!validators) return
@@ -101,18 +110,50 @@ const QuickStakeForm = (props: Props) => {
     if (!address || !elegibleVals) return
     const coin = new Coin(denom, toAmount(input || toInput(1)))
     const { decimals } = readNativeDenom(denom)
-    return getQuickStakeMsgs(address, coin, elegibleVals, decimals, isAlliance)
-  }, [address, elegibleVals, denom, input, isAlliance, readNativeDenom])
+    return getQuickStakeMsgs(
+      address,
+      coin,
+      elegibleVals,
+      decimals,
+      isAlliance,
+      allianceHubContract,
+      stakeOnAllianceHub
+    )
+  }, [
+    address,
+    elegibleVals,
+    denom,
+    input,
+    isAlliance,
+    readNativeDenom,
+    allianceHubContract,
+    stakeOnAllianceHub,
+  ])
 
   const unstakeMsgs = useMemo(() => {
     if (!address || !(isAlliance ? allianceDelegations : delegations)) return
     const coin = new Coin(denom, toAmount(input || toInput(1)))
-    return getQuickUnstakeMsgs(address, coin, {
-      isAlliance,
-      // @ts-expect-error
-      delegations: isAlliance ? allianceDelegations : delegations,
-    })
-  }, [address, denom, input, delegations, isAlliance, allianceDelegations])
+    return getQuickUnstakeMsgs(
+      address,
+      coin,
+      {
+        isAlliance,
+        // @ts-expect-error
+        delegations: isAlliance ? allianceDelegations : delegations,
+      },
+      allianceHubContract,
+      stakeOnAllianceHub
+    )
+  }, [
+    address,
+    denom,
+    input,
+    delegations,
+    isAlliance,
+    allianceDelegations,
+    allianceHubContract,
+    stakeOnAllianceHub,
+  ])
 
   /* tx */
   const createTx = useCallback(
@@ -125,15 +166,33 @@ const QuickStakeForm = (props: Props) => {
     [action, unstakeMsgs, stakeMsgs, chainID]
   )
 
+  const calculateUnbondBalance = () => {
+    if (isAlliance && stakeOnAllianceHub && filteredHubDelegationsByChainID) {
+      let amount = new BigNumber(0)
+
+      for (const hubDel of filteredHubDelegationsByChainID) {
+        for (const del of hubDel.delegations) {
+          if (del.delegation.denom === denom) {
+            amount = amount.plus(del.balance.amount.toString())
+          }
+        }
+      }
+
+      return amount.toString()
+    } else if (isAlliance && allianceDelegations) {
+      return calcDelegationsTotal(allianceDelegations)
+    } else {
+      return calcDelegationsTotal(delegations)
+    }
+  }
+
   /* fee */
   const balance = {
     [QuickStakeAction.DELEGATE]: getAmount(balances, denom), // TODO flexible denom
-    [QuickStakeAction.UNBOND]: calcDelegationsTotal(
-      (isAlliance ? allianceDelegations : delegations) ?? []
-    ),
+    [QuickStakeAction.UNBOND]: calculateUnbondBalance(),
   }[action]
 
-  const estimationTxValues = useMemo(() => ({ input: toInput(1) }), [])
+  const estimationTxValues = useMemo(() => ({ input: toInput(0) }), [])
 
   const onChangeMax = useCallback(
     async (input: number) => {
@@ -156,6 +215,8 @@ const QuickStakeForm = (props: Props) => {
     createTx,
     onChangeMax,
     queryKeys: [
+      queryKey.allianceProtocol.hubPendingRewards,
+      queryKey.allianceProtocol.hubStakedBalances,
       queryKey.staking.delegations,
       queryKey.alliance.delegations,
       queryKey.staking.unbondings,
@@ -197,10 +258,6 @@ const QuickStakeForm = (props: Props) => {
                 <dt>{t("Unbonding period")}:</dt>
                 <dd>{t("{{value}} days", { value: unbondingTime })}</dd>
               </dl>
-              <dl>
-                <dt>{t("Rewards rate")}:</dt>
-                <dd>{readPercent(rewardRate)}</dd>
-              </dl>
             </FlexColumn>
             <Form onSubmit={handleSubmit(submit.fn)}>
               <FormItem
@@ -213,6 +270,7 @@ const QuickStakeForm = (props: Props) => {
                     valueAsNumber: true,
                     validate: validate.input(toInput(max.amount)),
                   })}
+                  type="number"
                   token={denom}
                   onFocus={max.reset}
                   inputMode="decimal"
@@ -229,23 +287,28 @@ const QuickStakeForm = (props: Props) => {
                     <ul>
                       <li>
                         {feeTokenSymbol} is the fee token used on the{" "}
-                        {network[chainID].name} blockchain
+                        {network[chainID].name} blockchain.
                       </li>
                       <li>
                         To stake {asset.symbol} on {network[chainID].name},
-                        visit the Swap page and swap any token for{" "}
-                        {feeTokenSymbol}
+                        visit{" "}
+                        <ExternalLink href="https://tfm.com/ibc">
+                          https://tfm.com/ibc
+                        </ExternalLink>{" "}
+                        and swap any token for {feeTokenSymbol} on{" "}
+                        {network[chainID].name}. Make sure the {feeTokenSymbol}{" "}
+                        is being sent to your {network[chainID].name} wallet on
+                        Station.
                       </li>
                       <li>
-                        Send {feeTokenSymbol} from Terra to{" "}
-                        {network[chainID].name} by clicking 'Send' on your
-                        wallet sidebar and selecting your{" "}
-                        {network[chainID].name} address from your address book
+                        Send your {asset.symbol} from Terra to your{" "}
+                        {network[chainID].name} wallet by clicking 'Send' on
+                        your Station wallet sidebar and selecting your{" "}
+                        {network[chainID].name} address from your address book.
                       </li>
                       <li>
-                        Return to the Stake page to stake your {asset.symbol}{" "}
-                        once you have {feeTokenSymbol} on{" "}
-                        {network[chainID].name}
+                        Return to Station's Stake page to stake your{" "}
+                        {asset.symbol} on {network[chainID].name}.
                       </li>
                     </ul>
                   </section>
@@ -270,12 +333,14 @@ const QuickStakeForm = (props: Props) => {
                           "A maximum 7 undelegations can be in progress at the same time"
                         )}
                       </FormWarning>
-                      <FormWarning>
-                        {t(
-                          "Undelegating funds do not accrue rewards and are locked for {{daysToUnbond}} days",
-                          { daysToUnbond }
-                        )}
-                      </FormWarning>
+                      {!stakeOnAllianceHub && (
+                        <FormWarning>
+                          {t(
+                            "Undelegating funds do not accrue rewards and are locked for {{daysToUnbond}} days",
+                            { daysToUnbond }
+                          )}
+                        </FormWarning>
+                      )}
                     </Grid>
                   ),
                 }[action]
@@ -290,4 +355,4 @@ const QuickStakeForm = (props: Props) => {
   )
 }
 
-export default memo(QuickStakeForm)
+export default QuickStakeForm

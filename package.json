@@ -4,7 +4,7 @@
   "hompage": "https://station.terra.money",
   "author": "Terra <engineering@terra.money> (https://terra.money)",
   "repository": "github:terra-money/station",
-  "version": "7.3.0",
+  "version": "7.3.1",
   "license": "MIT",
   "scripts": {
     "start": "react-scripts start",
@@ -31,7 +31,7 @@
     "@terra-money/terra-utils": "^1.0.9",
     "@terra-money/terra.js": "^3.1.9",
     "@terra-money/terra.proto": "^2.0.0",
-    "@terra-money/wallet-kit": "^1.0.4",
+    "@terra-money/wallet-kit": "^1.0.5",
     "@tippyjs/react": "^4.2.6",
     "axios": "^0.27.2",
     "bech32": "^2.0.0",
@@ -64,7 +64,7 @@
     "recoil": "^0.7.2",
     "sass": "^1.52.1",
     "secp256k1": "^4.0.3",
-    "semver": "^7.3.7",
+    "semver": "^7.5.2",
     "sentence-case": "^3.0.4",
     "xss": "1.0.11"
   },
