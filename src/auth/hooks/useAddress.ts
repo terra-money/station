@@ -16,7 +16,7 @@ export default useAddress
 
 export const isMisesWallet = async ()=>{
   const provider = await walletProvider();
-  return provider?.mode==="extension" || false
+  return ["extension", "mobile-web"].includes(provider?.mode) || false
 }
 export function useConnectWallet() {
   const [misesState, setmisesState] = useRecoilState(misesStateDefault)
