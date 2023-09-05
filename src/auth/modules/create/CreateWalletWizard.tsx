@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import { MnemonicKey } from "@terra-money/feather.js"
+import { SeedKey } from "@terra-money/feather.js"
 import createContext from "utils/createContext"
 import { addWallet } from "../../scripts/keystore"
 import CreateWalletForm from "./CreateWalletForm"
@@ -54,23 +54,36 @@ const CreateWalletWizard = ({ defaultMnemonic = "", beforeCreate }: Props) => {
   const [createdWallet, setCreatedWallet] = useState<SingleWallet>()
   const createWallet = (coinType: Bip, index = 0) => {
     const { name, password, mnemonic } = values
-    const mk330 = new MnemonicKey({ mnemonic, coinType, index })
-    const mk118 = new MnemonicKey({ mnemonic, coinType: 118, index })
+
+    const seed = SeedKey.seedFromMnemonic(mnemonic)
+    const key330 = new SeedKey({ seed, coinType, index })
+    const key118 = new SeedKey({ seed, coinType: 118, index })
+    const key60 = new SeedKey({ seed, coinType: 60, index })
     const words = {
-      "330": wordsFromAddress(mk330.accAddress("terra")),
-      "118": wordsFromAddress(mk118.accAddress("terra")),
+      "330": wordsFromAddress(key330.accAddress("terra")),
+      "118": wordsFromAddress(key118.accAddress("terra")),
+      "60": wordsFromAddress(key60.accAddress("inj")),
     }
-    const key = {
-      "330": mk330.privateKey,
-      "118": mk118.privateKey,
-    }
+
+    console.log("words", words)
     const pubkey = {
       // @ts-expect-error
       "330": key330.publicKey.key,
       // @ts-expect-error
       "118": key118.publicKey.key,
+      // @ts-expect-error
+      "60": key60.publicKey.key,
     }
-    addWallet({ name, password, words, key, pubkey })
+
+    addWallet({
+      name,
+      password,
+      words,
+      seed,
+      pubkey,
+      index,
+      legacy: coinType === 118,
+    })
     setCreatedWallet({ name, words })
     setStep(3)
   }

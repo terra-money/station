@@ -33,6 +33,7 @@ import InitBankBalance from "./InitBankBalance"
 import Wallet from "pages/wallet/Wallet"
 import NavButton from "./sections/NavButton"
 import NetworkStatus from "components/display/NetworkStatus"
+import EnableCoinType from "./sections/EnableCoinType"
 
 const App = () => {
   const { element: routes } = useNav()
@@ -62,6 +63,7 @@ const App = () => {
               <NetworkStatus />
             </section>
             <ValidatorButton />
+            <EnableCoinType />
             <ConnectWallet />
             <NavButton />
             <ActionsBackground />

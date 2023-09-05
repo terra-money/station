@@ -22,6 +22,11 @@ const isPreconfigured = (wallet?: Wallet): wallet is PreconfiguredWallet => {
   return "mnemonic" in wallet
 }
 
+const isSeed = (wallet?: Wallet): wallet is SeedStoredWallet => {
+  if (!isLocal(wallet)) return false
+  return "encryptedSeed" in wallet
+}
+
 const isSingle = (wallet?: Wallet): wallet is SingleWallet => {
   if (!isLocal(wallet)) return false
   return !isPreconfigured(wallet) && !isMultisig(wallet) && !isLedger(wallet)
@@ -40,7 +45,7 @@ const is = {
   multisig: isMultisig,
   single: isSingle,
   ledger: isLedger,
-  seedStored: isSeedStored,
+  seed: isSeed,
 }
 
 export default is

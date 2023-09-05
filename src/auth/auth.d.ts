@@ -25,10 +25,12 @@ interface SingleWallet {
   words: {
     "330": string
     "118"?: string
+    "60"?: string
   }
   pubkey?: {
     "330": string
     "118"?: string
+    "60"?: string
   }
   name: string
   lock?: boolean

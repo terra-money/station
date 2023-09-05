@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next"
 import { useQuery } from "react-query"
 import { useForm } from "react-hook-form"
 import { readAmount } from "@terra-money/terra-utils"
-import { MnemonicKey, AccAddress } from "@terra-money/feather.js"
+import { SeedKey, AccAddress } from "@terra-money/feather.js"
 import { Coins, Delegation, UnbondingDelegation } from "@terra-money/feather.js"
 import { sortCoins } from "utils/coin"
 import { useInterchainLCDClient } from "data/queries/lcdClient"
@@ -23,15 +23,16 @@ const SelectAddress = () => {
   const readNativeDenom = useNativeDenoms()
   const { values, createWallet } = useCreateWallet()
   const { mnemonic, index } = values
+  const seed = SeedKey.seedFromMnemonic(mnemonic)
 
   /* query */
   const { data: results } = useQuery(
     // FIXME: remove mnemonic from this array
-    ["mnemonic", mnemonic, index],
+    ["mnemonic", seed, index],
     async () => {
       const results = await Promise.allSettled(
         ([118, 330] as const).map(async (bip) => {
-          const mk = new MnemonicKey({ mnemonic, coinType: bip, index })
+          const mk = new SeedKey({ seed, coinType: bip, index })
           const address = mk.accAddress("terra")
           const [balance] = await lcd.bank.balance(address)
           const [delegations] = await lcd.staking.delegations(address)

@@ -5,12 +5,12 @@ import { sentenceCase } from "sentence-case"
 import { AccAddress, Proposal, Vote } from "@terra-money/feather.js"
 import { Color } from "types/components"
 import { queryKey, RefetchOptions } from "../query"
-import { useInterchainLCDClient } from "./lcdClient"
+import { useInterchainLCDClientGovOverride } from "./lcdClient"
 import { useNetwork } from "data/wallet"
 import axios from "axios"
 
 export const useVotingParams = (chain: string) => {
-  const lcd = useInterchainLCDClient()
+  const lcd = useInterchainLCDClientGovOverride()
   return useQuery(
     [queryKey.gov.votingParams, chain],
     () => lcd.gov.votingParameters(chain),
@@ -19,7 +19,7 @@ export const useVotingParams = (chain: string) => {
 }
 
 export const useDepositParams = (chain: string) => {
-  const lcd = useInterchainLCDClient()
+  const lcd = useInterchainLCDClientGovOverride()
   return useQuery(
     [queryKey.gov.depositParams, chain],
     () => lcd.gov.depositParameters(chain),
@@ -28,7 +28,8 @@ export const useDepositParams = (chain: string) => {
 }
 
 export const useTallyParams = (chain: string) => {
-  const lcd = useInterchainLCDClient()
+  const lcd = useInterchainLCDClientGovOverride()
+
   return useQuery(
     [queryKey.gov.tallyParams, chain],
     () => lcd.gov.tallyParameters(chain),
@@ -126,7 +127,10 @@ export const useProposals = (status: ProposalStatus) => {
             const {
               data: { proposals },
             } = await axios.get("/cosmos/gov/v1/proposals", {
-              baseURL: lcd,
+              baseURL:
+                chainID === "phoenix-1"
+                  ? "https://terra-api.polkachu.com/"
+                  : lcd,
               params: {
                 "pagination.limit": 999,
                 proposal_status: Proposal.Status[status],
@@ -163,7 +167,10 @@ export const useProposals = (status: ProposalStatus) => {
             const {
               data: { proposals },
             } = await axios.get("/cosmos/gov/v1beta1/proposals", {
-              baseURL: lcd,
+              baseURL:
+                chainID === "phoenix-1"
+                  ? "https://terra-api.polkachu.com/"
+                  : lcd,
               params: {
                 "pagination.limit": 999,
                 proposal_status: Proposal.Status[status],
@@ -226,7 +233,7 @@ export const useProposalStatusItem = (status: ProposalStatus) => {
 export const useProposal = (id: string, chain: string) => {
   const networks = useNetwork()
   return useQuery(
-    [queryKey.gov.proposal, id, chain],
+    [queryKey.gov.proposal, id, networks[chain]],
     async () => {
       if (networks[chain].version === "0.46") {
         const {
@@ -234,7 +241,10 @@ export const useProposal = (id: string, chain: string) => {
         } = await axios.get<{ proposal: ProposalResult46 }>(
           `/cosmos/gov/v1/proposals/${id}`,
           {
-            baseURL: networks[chain].lcd,
+            baseURL:
+              chain === "phoenix-1"
+                ? "https://terra-api.polkachu.com/"
+                : networks[chain].lcd,
           }
         )
 
@@ -266,7 +276,10 @@ export const useProposal = (id: string, chain: string) => {
         const {
           data: { proposal },
         } = await axios.get(`/cosmos/gov/v1beta1/proposals/${id}`, {
-          baseURL: networks[chain].lcd,
+          baseURL:
+            chain === "phoenix-1"
+              ? "https://terra-api.polkachu.com/"
+              : networks[chain].lcd,
         })
 
         return proposal as ProposalResult
@@ -274,6 +287,7 @@ export const useProposal = (id: string, chain: string) => {
     },
     {
       ...RefetchOptions.INFINITY,
+      enabled: !!networks[chain],
     }
   )
 }
@@ -298,7 +312,10 @@ export const useDeposits = (id: string, chain: string) => {
       const {
         data: { deposits },
       } = await axios.get(`/cosmos/gov/v1beta1/proposals/${id}/deposits`, {
-        baseURL: networks[chain].lcd,
+        baseURL:
+          chain === "phoenix-1"
+            ? "https://terra-api.polkachu.com/"
+            : networks[chain].lcd,
       })
 
       return deposits as ProposalDeposit[]
@@ -308,7 +325,7 @@ export const useDeposits = (id: string, chain: string) => {
 }
 
 export const useTally = (id: string, chain: string) => {
-  const lcd = useInterchainLCDClient()
+  const lcd = useInterchainLCDClientGovOverride()
   return useQuery(
     [queryKey.gov.tally, id, chain],
     () => lcd.gov.tally(Number(id), chain),
