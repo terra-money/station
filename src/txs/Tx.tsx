@@ -189,7 +189,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   /* max */
   const getNativeMax = () => {
-    console.log(Number(balance) - Number(gasFee.amount))
     if (!balance) return
     return gasFee.denom === token
       ? (Number(balance) - Number(gasFee.amount)).toFixed(0)
