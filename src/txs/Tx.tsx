@@ -142,9 +142,9 @@ function Tx<TxValues>(props: Props<TxValues>) {
       if (!simulationTx || !simulationTx.msgs.length) return 0
       try {
         if (chain.startsWith("carbon-")) {
-          return (
+          return Number(
             carbonFees?.costs[key.msgs?.[0] ?? ""] ??
-            carbonFees?.costs["default_fee"]
+              carbonFees?.costs["default_fee"]
           )
         }
         const unsignedTx = await lcd.tx.create([{ address: key.address }], {
