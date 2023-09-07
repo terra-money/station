@@ -117,7 +117,7 @@ export interface ProposalResult46 {
 
 /* proposals */
 export const useProposals = (status: ProposalStatus) => {
-  const networks = useNetworkWithFeature(ChainFeature.GOVERNANCE)
+  const networks = useNetworkWithFeature(ChainFeature.GOV)
 
   return useQueries(
     Object.values(networks ?? {}).map(({ lcd, version, chainID }) => {
@@ -232,7 +232,7 @@ export const useProposalStatusItem = (status: ProposalStatus) => {
 
 /* proposal */
 export const useProposal = (id: string, chain: string) => {
-  const networks = useNetworkWithFeature(ChainFeature.GOVERNANCE)
+  const networks = useNetworkWithFeature(ChainFeature.GOV)
   return useQuery(
     [queryKey.gov.proposal, id, networks[chain]],
     async () => {
@@ -306,7 +306,7 @@ export interface ProposalDeposit {
 
 /* proposal: deposits */
 export const useDeposits = (id: string, chain: string) => {
-  const networks = useNetworkWithFeature(ChainFeature.GOVERNANCE)
+  const networks = useNetworkWithFeature(ChainFeature.GOV)
   return useQuery(
     [queryKey.gov.deposits, id, chain],
     async () => {
