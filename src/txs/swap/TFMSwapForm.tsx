@@ -44,7 +44,9 @@ interface TFMSwapParams extends SwapAssets {
   slippage?: string
 }
 
-interface TxValues extends Partial<SlippageParams> {}
+interface TxValues extends Partial<SlippageParams> {
+  input: number | undefined
+}
 
 const TFMSwapForm = ({ chainID }: { chainID: string }) => {
   const { t } = useTranslation()

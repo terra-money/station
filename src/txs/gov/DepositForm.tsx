@@ -14,7 +14,7 @@ import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { useNetwork } from "data/wallet"
 
 interface TxValues {
-  input?: number
+  input: number
 }
 
 const DepositForm = () => {

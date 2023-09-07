@@ -21,7 +21,7 @@ const ExpectedPrice = ({ mode, input, ...props }: Props) => {
 
   /* decimals */
   const { findDecimals } = useSingleSwap()
-  const offerDecimals = findDecimals(offerAsset)
+  const offerDecimals = findDecimals(offerAsset ?? "")
   const askDecimals = findDecimals(askAsset)
 
   /* render: expected price */

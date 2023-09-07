@@ -36,9 +36,10 @@ import { AllianceDelegationResponse } from "@terra-money/feather.js/dist/client/
 import styles from "./StakeTx.module.scss"
 
 interface TxValues {
-  source?: ValAddress
-  input?: number
+  source: ValAddress | undefined
+  input: number
 }
+
 export enum StakeAction {
   DELEGATE = "Delegate",
   REDELEGATE = "Redelegate",
