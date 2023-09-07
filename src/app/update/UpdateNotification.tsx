@@ -3,30 +3,36 @@ import { useQuery } from "react-query"
 import styles from "./UpdateNotification.module.scss"
 import { useTranslation } from "react-i18next"
 import axios from "axios"
+import { useEffect, useRef, useState } from "react"
 
-const useIsUpdateAvailable = () => {
+const useCommithash = (disabled: boolean) => {
   return useQuery(
     [],
     async () => {
       // fetch commit_hash file created at build time
       const { data: commit_hash } = await axios.get("/commit_hash")
-      // compare the latest commit_hash (just fetched) with the current commit_hash
-      // if they are different there is an update available
-      console.log("fetched:" + commit_hash)
-      console.log("current:" + process.env.CF_PAGES_COMMIT_SHA)
-      return commit_hash !== process.env.CF_PAGES_COMMIT_SHA
+      return commit_hash
     },
-    { ...RefetchOptions.DEFAULT }
+    { ...RefetchOptions.DEFAULT, enabled: !disabled }
   )
 }
 
 export default function UpdateNotification() {
+  const old_commit_hash = useRef<string>()
   const { t } = useTranslation()
-  const { data } = useIsUpdateAvailable()
+  const [showNotification, setShownotification] = useState<boolean>(false)
+  const { data: commit_hash } = useCommithash(showNotification)
+
+  useEffect(() => {
+    if (showNotification) return
+    if (!old_commit_hash.current) old_commit_hash.current = commit_hash
+
+    setShownotification(old_commit_hash.current !== commit_hash)
+  }, [commit_hash, showNotification])
 
   // no update available or request still in progress
   // (comment out next line to test)
-  if (!data) return null
+  if (!showNotification) return null
 
   // update available
   return (
