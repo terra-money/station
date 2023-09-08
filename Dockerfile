@@ -21,7 +21,8 @@ ARG REACT_APP_ASSETS="https://assets.terra.dev" \
     REACT_APP_STATION_ASSETS="https://station-assets.terra.dev"
 
 ENV REACT_APP_ASSETS=${REACT_APP_ASSETS} \
-    REACT_APP_STATION_ASSETS=${REACT_APP_STATION_ASSETS}
+    REACT_APP_STATION_ASSETS=${REACT_APP_STATION_ASSETS} \
+    NODE_OPTIONS="--max_old_space_size=4096"
 
 RUN set -eux && \
     npm run build --openssl-legacy-provider
