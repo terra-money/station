@@ -22,7 +22,6 @@ import useAvailable from "./useAvailable"
 import { addressFromWords, wordsFromAddress } from "utils/bech32"
 import { useNetwork } from "./useNetwork"
 import { createBleTransport } from "utils/ledger"
-import { SeedKey } from "@terra-money/feather.js"
 
 export const walletState = atom({
   key: "interchain-wallet",
