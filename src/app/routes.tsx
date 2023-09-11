@@ -50,6 +50,8 @@ import Labs from "pages/labs/Labs"
 /* 404 */
 import NotFound from "pages/NotFound"
 import DonateAllVestingTokensTx from "txs/stake/DonateAllVestingTokensTx"
+import { Group } from "@mui/icons-material"
+import { Community } from "pages/community/Community"
 
 const ICON_SIZE = { width: 20, height: 20 }
 
@@ -81,6 +83,12 @@ export const useNav = () => {
       element: <Governance />,
       title: t("Governance"),
       icon: <GovernanceIcon {...ICON_SIZE} />,
+    },
+    {
+      path: "/community",
+      element: <Community />,
+      title: t("Community"),
+      icon: <Group {...ICON_SIZE} />,
     },
     ...(devMode
       ? [
@@ -128,6 +136,9 @@ export const useNav = () => {
     //{ path: "/networks", element: <ManageNetworksPage /> },
     //{ path: "/network/new", element: <AddNetworkPage /> },
     { path: "/settings", element: <Settings /> },
+
+    /* community */
+    { path: "/community", element: <Community /> },
 
     /* dev */
     { path: "/labs", element: <Labs /> },
