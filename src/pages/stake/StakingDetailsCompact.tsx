@@ -11,7 +11,7 @@ import {
 } from "data/queries/staking"
 import { useAlliance, useAllianceDelegations } from "data/queries/alliance"
 import { combineState } from "data/query"
-import { Read } from "components/token"
+import { ReadToken } from "components/token"
 import { ChainFeature } from "types/chains"
 
 const cx = classNames.bind(styles)
@@ -102,9 +102,10 @@ const StakingDetailsCompact = ({
               <p className={styles.delegated__amount}>
                 <img src={token.icon} alt={token.name} />
                 <p>
-                  <Read
+                  <ReadToken
+                    hideDenom
                     amount={delegated}
-                    decimals={token.decimals}
+                    denom={token.token}
                     fixed={2}
                   />{" "}
                   {token.symbol}

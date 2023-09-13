@@ -6,7 +6,7 @@ import { combineState } from "data/query"
 import { useProposal } from "data/queries/gov"
 import { useDeposits, useDepositParams } from "data/queries/gov"
 import { Card } from "components/layout"
-import { Read } from "components/token"
+import { ReadToken } from "components/token"
 import { DateTimeRenderer } from "components/display"
 import Orb from "./components/Orb"
 import styles from "./ProposalDeposits.module.scss"
@@ -51,7 +51,9 @@ const ProposalDeposits = ({ id, chain, card }: Props) => {
     const contents = [
       {
         title: t("Deposited"),
-        content: <Read amount={deposited} denom={networks[chain].baseAsset} />,
+        content: (
+          <ReadToken amount={deposited} denom={networks[chain].baseAsset} />
+        ),
       },
       {
         title: t("Deposit end time"),
