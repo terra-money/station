@@ -203,7 +203,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
           .toString()
       : balance
   }
-
   const max = !gasFee.amount
     ? undefined
     : isDenom(token)
