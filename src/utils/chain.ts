@@ -26,7 +26,7 @@ export const useChainsByAssetValue = () => {
       value:
         (parseInt(amount) *
           (isNonWhitelisted ? 0 : prices?.[token]?.price ?? 0)) /
-        10 ** decimals,
+        Math.pow(10, decimals),
     }
   })
 

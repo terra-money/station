@@ -17,7 +17,7 @@ const lessThan = (max: number, label = "Amount", optional = false) => {
   }
 }
 
-const decimal = (decimals = 6, label = "Amount", optional = false) => {
+const decimal = (decimals: number, label = "Amount", optional = false) => {
   return (value = 0) => {
     return (
       (optional && !value) ||
@@ -29,7 +29,7 @@ const decimal = (decimals = 6, label = "Amount", optional = false) => {
 
 const input = (
   max: number,
-  decimals = 6,
+  decimals: number,
   label = "Amount",
   optional = false
 ) => {

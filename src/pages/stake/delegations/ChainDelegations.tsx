@@ -7,7 +7,7 @@ import { AccAddress, Coin } from "@terra-money/feather.js"
 import { ValidatorLink } from "components/general"
 import { ModalButton } from "components/feedback"
 import { Table } from "components/layout"
-import { Read } from "components/token"
+import { ReadToken } from "components/token"
 import StakedCard from "../components/StakedCard"
 import { getMaxHeightStyle } from "utils/style"
 import styles from "../CardModal.module.scss"
@@ -59,8 +59,10 @@ const ChainDelegations = ({ chain }: { chain: string }) => {
           price:
             newPriceHolder +
             (balance.amount.toNumber() * (prices[token]?.price || 0)) /
-              10 ** decimals,
-          amount: newAmountHolder + balance.amount.toNumber() / 10 ** decimals,
+              Math.pow(10, decimals),
+          amount:
+            newAmountHolder +
+            balance.amount.toNumber() / Math.pow(10, decimals),
         }
       }
 
@@ -112,7 +114,7 @@ const ChainDelegations = ({ chain }: { chain: string }) => {
           {
             title: t("Delegated"),
             dataIndex: "balance",
-            render: (balance: Coin) => <Read {...balance.toData()} />,
+            render: (balance: Coin) => <ReadToken {...balance.toData()} />,
             align: "right",
           },
         ]}

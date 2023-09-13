@@ -19,7 +19,7 @@ import { queryTFMRoute, queryTFMSwap, TFM_ROUTER } from "data/external/tfm"
 /* components */
 import { Form, FormArrow, FormError, FormWarning } from "components/form"
 import { Checkbox } from "components/form"
-import { Read } from "components/token"
+import { ReadToken } from "components/token"
 
 /* tx modules */
 import { getPlaceholder, toInput } from "../utils"
@@ -286,7 +286,7 @@ const TFMSwapForm = ({ chainID }: { chainID: string }) => {
                     valueAsNumber: true,
                     validate: validate.input(
                       toInput(max.amount, offerDecimals),
-                      offerDecimals
+                      offerDecimals ?? 6
                     ),
                   })}
                   inputMode="decimal"
@@ -310,10 +310,11 @@ const TFMSwapForm = ({ chainID }: { chainID: string }) => {
               addonAfter={
                 <AssetReadOnly>
                   {simulatedValue ? (
-                    <Read
+                    <ReadToken
                       amount={simulatedValue}
-                      decimals={askDecimals}
+                      denom={askAsset ?? ""}
                       approx
+                      hideDenom
                     />
                   ) : (
                     <p className="muted">
