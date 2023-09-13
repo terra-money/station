@@ -113,6 +113,7 @@ const TxIndicator = ({ txhash }: { txhash: string }) => {
   const ruleset = createActionRuleSet(networkName)
   const logMatcher = createLogMatcherForActions(ruleset)
   const getCanonicalMsgs = (txInfo: TxInfo) => {
+    // @ts-ignore
     const matchedMsg = getTxCanonicalMsgs(txInfo, logMatcher)
     return matchedMsg
       ? matchedMsg
