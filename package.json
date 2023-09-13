@@ -7,7 +7,7 @@
   "version": "7.3.2",
   "license": "MIT",
   "scripts": {
-    "start": "NODE_OPTIONS=--openssl-legacy-provider react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "prepare": "husky install",
@@ -50,6 +50,7 @@
     "js-base64": "^3.7.2",
     "keccak256": "^1.0.6",
     "lottie-react": "^2.3.1",
+    "nostr-tools": "^1.5.0",
     "numeral": "^2.0.6",
     "prettier": "^2.6.2",
     "qrcode.react": "^3.0.2",
@@ -63,7 +64,6 @@
     "react-modal": "^3.15.1",
     "react-query": "^3.39.0",
     "react-router-dom": "^6.3.0",
-    "react-use-websocket": "^3.0.0",
     "recharts": "^2.1.16",
     "recoil": "^0.7.2",
     "sass": "^1.52.1",
@@ -111,14 +111,10 @@
   },
   "browserslist": {
     "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
+      "defaults"
     ],
     "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
+      "defaults"
     ]
   }
 }
