@@ -1,9 +1,9 @@
 /* global WebSocket */
 
-import { verifySignature, validateEvent, type Event } from "./event.ts"
-import { matchFilters, type Filter } from "./filter.ts"
-import { getHex64, getSubscriptionId } from "./fakejson.ts"
-import { MessageQueue } from "./utils.ts"
+import { verifySignature, validateEvent, type Event } from "./event"
+import { matchFilters, type Filter } from "./filter"
+import { getHex64, getSubscriptionId } from "./fakejson"
+import { MessageQueue } from "./utils"
 
 type RelayEvent = {
   connect: () => void | Promise<void>
@@ -264,7 +264,7 @@ export function relayInit(
     }: SubscriptionOptions = {}
   ): Sub<K> => {
     let subid = id
-
+    console.log("id", id)
     openSubs[subid] = {
       id: subid,
       filters,
@@ -286,6 +286,7 @@ export function relayInit(
         trySend(["CLOSE", subid])
       },
       on: (type, cb) => {
+        console.log(type, cb)
         subListeners[subid] = subListeners[subid] || {
           event: [],
           count: [],
@@ -353,6 +354,7 @@ export function relayInit(
           resolve(events)
         })
         s.on("event", (event) => {
+          console.log("event", event)
           events.push(event)
         })
       }),

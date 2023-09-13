@@ -1,5 +1,3 @@
-import "websocket-polyfill"
-
 import { relayInit } from "./relay"
 
 let relay = relayInit("wss://relay.damus.io/")

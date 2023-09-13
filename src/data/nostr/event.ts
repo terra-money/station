@@ -1,4 +1,4 @@
-import { sha256 } from "@terra-money/feather.js"
+import { RawKey, sha256 } from "@terra-money/feather.js"
 import { utf8Encoder } from "./utils"
 
 /** Designates a verified event signature. */
@@ -68,6 +68,18 @@ export function getBlankEvent<K>(kind: K | Kind.Blank = Kind.Blank) {
   }
 }
 
+export function finishEvent<K extends number = number>(
+  t: EventTemplate<K>,
+  key: RawKey
+): VerifiedEvent<K> {
+  const event = t as VerifiedEvent<K>
+  event.pubkey = key.getSchnorrPubKey().toString("hex")
+  event.id = getEventHash(event)
+  event.sig = getSignature(event, key)
+  event[verifiedSymbol] = true
+  return event
+}
+
 export function serializeEvent(evt: UnsignedEvent<number>): string {
   if (!validateEvent(evt))
     throw new Error("can't serialize event with wrong or missing properties")
@@ -120,12 +132,20 @@ export function verifySignature<K extends number>(
   if (hash !== event.id) {
     return (event[verifiedSymbol] = false)
   }
-
+  console.log(
+    event,
+    hash,
+    RawKey.verifySchnorr(
+      Buffer.from(event.sig, "hex"),
+      Buffer.from(hash, "hex"),
+      Buffer.from(event.pubkey, "hex")
+    )
+  )
   try {
-    return (event[verifiedSymbol] = schnorr.verify(
-      event.sig,
-      hash,
-      event.pubkey
+    return (event[verifiedSymbol] = RawKey.verifySchnorr(
+      Buffer.from(event.sig, "hex"),
+      Buffer.from(hash, "hex"),
+      Buffer.from(event.pubkey)
     ))
   } catch (err) {
     return (event[verifiedSymbol] = false)
@@ -135,7 +155,10 @@ export function verifySignature<K extends number>(
 /** Calculate the signature for an event. */
 export function getSignature(
   event: UnsignedEvent<number>,
-  key: string
+  key: RawKey
 ): string {
-  return bytesToHex(schnorr.sign(getEventHash(event), key))
+  const buffer = Buffer.from(getEventHash(event), "hex")
+  const sign = key.ecdsaSign(buffer)
+
+  return Buffer.from(sign.signature).toString("hex")
 }

@@ -3,9 +3,9 @@ import {
   type AddressPointer,
   type ProfilePointer,
   type EventPointer,
-} from "./nip19.ts"
+} from "./nip19"
 
-import type { Event } from "./event.ts"
+import type { Event } from "./event"
 
 type Reference = {
   text: string

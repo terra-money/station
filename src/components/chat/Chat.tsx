@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 
 export const Chat = () => {
   const { getConnectedWallet } = useAuth()
-  const [relay, setRelay] = useState(relayInit("ws://loclahost:7447"))
+  const [relay, setRelay] = useState(relayInit("ws://localhost:7447"))
   const [pubStatus, setPubStatus] = useState("")
   const [newEvent, setNewEvent] = useState<Event<any>>()
   const [events, setEvents] = useState<Event<any>[]>([])
@@ -39,7 +39,7 @@ export const Chat = () => {
   }
 
   const getEvent = async () => {
-    var sub = relay.sub([
+    let sub = relay.sub([
       {
         kinds: [
           Kind.ChannelCreation,
@@ -51,12 +51,13 @@ export const Chat = () => {
       },
     ])
     sub.on("event", (event) => {
+      console.log(event)
       setNewEvent(event)
     })
   }
 
   const getEvents = async () => {
-    var events = await relay.list([
+    let events = await relay.list([
       {
         kinds: [
           Kind.ChannelCreation,
@@ -67,6 +68,7 @@ export const Chat = () => {
         ],
       },
     ])
+    console.log(events)
     setEvents(events)
   }
 
@@ -84,7 +86,7 @@ export const Chat = () => {
       ) : (
         <p>no new event</p>
       )}
-      <button onClick={() => getEvents()}>load feedt</button>
+      <button onClick={() => getEvents()}>load feed</button>
       {events !== null &&
         events.map((event) => (
           <p key={event.sig} style={{ borderStyle: "ridge", padding: 10 }}>
