@@ -31,7 +31,7 @@ const Pre = ({ height, title, children, copy, ...props }: Props) => {
         </header>
       )}
 
-      <pre style={{ height }} className={cx(styles.pre, props)}>
+      <pre style={{ height }} className={cx(styles.pre, { ...props })}>
         {text}
       </pre>
     </Grid>

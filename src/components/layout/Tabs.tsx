@@ -52,7 +52,7 @@ const Tabs = ({ tabs, defaultActiveKey, type, reversed, state }: Props) => {
               {extra}
             </button>
           ) : disabled ? (
-            <span className={classNames(styles.tab, styles.disabled)} key={key}>
+            <span className={cx(styles.tab, styles.disabled)} key={key}>
               <div className={styles.title}>{capitalize(tab)}</div>
               {extra}
             </span>

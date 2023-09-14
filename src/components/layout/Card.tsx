@@ -77,9 +77,7 @@ const Card = (props: PropsWithChildren<Props>) => {
               </header>
             )}
 
-            <section
-              className={classNames(styles.main, mainClassName, twoTone)}
-            >
+            <section className={cx(styles.main, mainClassName, twoTone)}>
               {wrong ?? (children && <ErrorBoundary>{children}</ErrorBoundary>)}
             </section>
           </>

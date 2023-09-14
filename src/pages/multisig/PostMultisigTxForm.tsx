@@ -15,6 +15,7 @@ import { Input, Submit, TextArea } from "components/form"
 import { SAMPLE_ENCODED_TX, SAMPLE_SIGNATURE } from "./utils/placeholder"
 import ReadTx from "./ReadTx"
 import { useChainID } from "data/wallet"
+import validate from "auth/scripts/validate"
 
 interface Values {
   address: AccAddress
@@ -97,7 +98,7 @@ const PostMultisigTxForm = ({ publicKey, sequence, ...props }: Props) => {
       <Form onSubmit={handleSubmit(submit)}>
         <FormItem label={t("Multisig address")}>
           <Input
-            {...register("address", { validate: AccAddress.validate })}
+            {...register("address", { validate: validate.accAddress })}
             placeholder={SAMPLE_ADDRESS}
           />
         </FormItem>

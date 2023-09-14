@@ -28,7 +28,7 @@ interface Props {
 }
 
 interface TxValues {
-  input?: number
+  input: number
 }
 
 function Steps({

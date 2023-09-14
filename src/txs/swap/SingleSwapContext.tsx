@@ -133,7 +133,7 @@ const SingleSwapContext = ({ children }: PropsWithChildren<{}>) => {
 
     const calcExpected = (params: SlippageParams) => {
       const { offerAsset, askAsset, input, slippageInput, ratio } = params
-      const offerDecimals = findDecimals(offerAsset)
+      const offerDecimals = findDecimals(offerAsset ?? "")
       const askDecimals = findDecimals(askAsset)
 
       /* terraswap */
