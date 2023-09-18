@@ -60,12 +60,13 @@ export const useGammTokens = () => {
 
   if (fetch.data) {
     for (const [poolId, poolAsset] of Object.entries(fetch.data ?? {})) {
-      gammTokens.set(
-        "gamm/pool/" + poolId,
-        poolAsset.map((asset) => asset.symbol).join("-") + " LP"
-      )
+      if (poolAsset.length) {
+        gammTokens.set(
+          "gamm/pool/" + poolId,
+          poolAsset.map((asset) => asset.symbol).join("-") + " LP"
+        )
+      }
     }
   }
-
   return gammTokens
 }

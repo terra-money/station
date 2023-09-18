@@ -4,10 +4,9 @@ import { isDenom, truncate } from "@terra-money/terra-utils"
 import { AccAddress, Coin, Coins, ValAddress } from "@terra-money/feather.js"
 import { useAddress, useNetwork } from "data/wallet"
 import { useValidators } from "data/queries/staking"
-import { WithTokenItem } from "data/token"
 import { useCW20Contracts, useCW20Whitelist } from "data/Terra/TerraAssets"
 import { FinderLink } from "components/general"
-import { Read } from "components/token"
+import { ReadToken } from "components/token"
 import styles from "./TxMessage.module.scss"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { getChainIDFromAddress } from "utils/bech32"
@@ -66,11 +65,7 @@ const Tokens = ({ children: coins }: { children: string }) => {
               data.denom = denom.slice(0, -5)
             }
 
-            return (
-              <WithTokenItem token={data.denom} key={denom}>
-                {({ decimals }) => <Read {...data} decimals={decimals} />}
-              </WithTokenItem>
-            )
+            return <ReadToken {...data} key={data.denom} />
           })}
     </>
   )

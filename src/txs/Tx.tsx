@@ -30,13 +30,13 @@ import { Flex, Grid } from "components/layout"
 import { FormError, Submit, Select, Input, FormItem } from "components/form"
 import { Modal } from "components/feedback"
 import { Details } from "components/display"
-import { Read } from "components/token"
+import { ReadToken } from "components/token"
 import ConnectWallet from "app/sections/ConnectWallet"
 import useToPostMultisigTx from "pages/multisig/utils/useToPostMultisigTx"
 import { isWallet, useAuth } from "auth"
 import { PasswordError } from "auth/scripts/keystore"
 
-import { toInput, CoinInput, calcTaxes } from "./utils"
+import { toInput, CoinInput, calcTaxes, parseError } from "./utils"
 import styles from "./Tx.module.scss"
 import { useInterchainLCDClient } from "data/queries/lcdClient"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
@@ -183,7 +183,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
       ? (Number(balance) - Number(gasFee.amount)).toFixed(0)
       : balance
   }
-
   const max = !gasFee.amount
     ? undefined
     : isDenom(token)
@@ -232,7 +231,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
     : props.disabled || ""
 
   const [submitting, setSubmitting] = useState(false)
-  const [error, setError] = useState<Error>()
+  const [error, setError] = useState<any>()
 
   const navigate = useNavigate()
   const toPostMultisigTx = useToPostMultisigTx()
@@ -328,11 +327,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
             fontSize="inherit"
             className={styles.icon}
           />
-          <Read
-            amount={max ?? "0"}
-            token={baseDenom ?? token}
-            decimals={decimals}
-          />
+          <ReadToken amount={max ?? "0"} denom={baseDenom ?? token ?? ""} />
         </Flex>
       </button>
     )
@@ -362,47 +357,26 @@ function Tx<TxValues>(props: Props<TxValues>) {
               >
                 {availableGasDenoms.map((denom) => (
                   <option value={denom} key={denom}>
-                    {
-                      readNativeDenom(
-                        denom === token ? baseDenom ?? denom : denom
-                      ).symbol
-                    }
+                    {readNativeDenom(denom).symbol}
                   </option>
                 ))}
               </Select>
             )}
           </dt>
-          <dd>
-            {gasFee.amount && (
-              <Read
-                decimals={decimals}
-                {...gasFee}
-                denom={
-                  gasFee.denom === token
-                    ? baseDenom ?? gasFee.denom
-                    : gasFee.denom
-                }
-              />
-            )}
-          </dd>
+          <dd>{gasFee.amount && <ReadToken {...gasFee} />}</dd>
 
           {balanceAfterTx && (
             <>
               <dt>{t("Balance")}</dt>
               <dd>
-                <Read
-                  amount={balance}
-                  token={baseDenom ?? token}
-                  decimals={decimals}
-                />
+                <ReadToken amount={balance} denom={baseDenom ?? token ?? ""} />
               </dd>
 
               <dt>{t("Balance after tx")}</dt>
               <dd>
-                <Read
+                <ReadToken
                   amount={balanceAfterTx}
-                  token={baseDenom ?? token}
-                  decimals={decimals}
+                  denom={baseDenom ?? token ?? ""}
                   className={classNames(insufficient && "danger")}
                 />
               </dd>
@@ -464,12 +438,10 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const modal = !error
     ? undefined
     : {
-        title: error?.toString().includes("UserDenied")
-          ? t("Transaction was denied by user")
-          : t("Error"),
-        children: error?.toString().includes("UserDenied") ? null : (
+        title: t(parseError(error).title),
+        children: (
           <Pre height={120} normal break>
-            {error?.message}
+            {t(parseError(error).message)}
           </Pre>
         ),
       }

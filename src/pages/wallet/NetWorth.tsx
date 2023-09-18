@@ -47,7 +47,7 @@ const NetWorth = () => {
       acc +
       (parseInt(amount) *
         (symbol?.endsWith("...") ? 0 : prices?.[token]?.price ?? 0)) /
-        10 ** decimals
+        Math.pow(10, decimals)
     )
   }, 0)
 
@@ -64,7 +64,6 @@ const NetWorth = () => {
           decimals={0}
           fixed={2}
           denom=""
-          token=""
         />
       </h1>
       <div className={styles.networth__buttons}>

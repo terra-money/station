@@ -11,7 +11,7 @@ import { getMaxHeightStyle } from "utils/style"
 import { ValidatorLink } from "components/general"
 import { ModalButton } from "components/feedback"
 import { Table } from "components/layout"
-import { Read } from "components/token"
+import { ReadToken } from "components/token"
 import { DateTimeRenderer, TooltipIcon } from "components/display"
 import StakedCard from "../components/StakedCard"
 import styles from "../CardModal.module.scss"
@@ -55,8 +55,8 @@ const ChainUnbondings = ({ chain }: { chain: string }) => {
         return {
           price:
             newPriceHolder +
-            (balance * (prices[token]?.price || 0)) / 10 ** decimals,
-          amount: newAmountHolder + balance / 10 ** decimals,
+            (balance * (prices[token]?.price || 0)) / Math.pow(10, decimals),
+          amount: newAmountHolder + balance / Math.pow(10, decimals),
         }
       },
       { price: 0, amount: 0 }
@@ -108,7 +108,7 @@ const ChainUnbondings = ({ chain }: { chain: string }) => {
               title: t("Amount"),
               dataIndex: "initial_balance",
               render: (amount: Dec, { validator_address }) => (
-                <Read
+                <ReadToken
                   amount={amount.toString()}
                   denom={getDenomFromAddress(networks, validator_address)}
                 />

@@ -100,7 +100,7 @@ export const useNativeDenoms = () => {
   let decimals = DEFAULT_NATIVE_DECIMALS
 
   function readNativeDenom(
-    denom: Denom,
+    denom = "",
     chainID?: string
   ): TokenItem & { isNonWhitelisted?: boolean } {
     let tokenType = ""
