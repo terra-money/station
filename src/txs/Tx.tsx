@@ -187,13 +187,23 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const gasAmount = getGasAmount(gasDenom)
   const gasFee = { amount: gasAmount, denom: gasDenom }
 
+  /* tax */
+  const taxAmount =
+    token && amount && shouldTax
+      ? calcMinimumTaxAmount(amount, { rate: taxRate, cap: taxCap })
+      : undefined
+
   /* max */
   const getNativeMax = () => {
     if (!balance) return
     return gasFee.denom === token
-      ? (Number(balance) - Number(gasFee.amount)).toFixed(0)
+      ? new BigNumber(balance)
+          .minus(gasFee.amount)
+          .minus(taxAmount ?? 0)
+          .toString()
       : balance
   }
+
   const max = !gasFee.amount
     ? undefined
     : isDenom(token)
@@ -204,12 +214,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
   useEffect(() => {
     if (max && isMax && onChangeMax) onChangeMax(toInput(max, decimals))
   }, [decimals, isMax, max, onChangeMax])
-
-  /* tax */
-  const taxAmount =
-    token && amount && shouldTax
-      ? calcMinimumTaxAmount(amount, { rate: taxRate, cap: taxCap })
-      : undefined
 
   /* (effect): Log error on console */
   const failed = getErrorMessage(taxState.error ?? estimatedGasState.error)
@@ -307,7 +311,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
     amount &&
     new BigNumber(balance)
       .minus(amount)
-      .minus(taxAmount ?? 0)
+      .minus(taxAmount ? (gasFee.denom === token ? taxAmount : 0) : 0)
       .minus((gasFee.denom === token && gasFee.amount) || 0)
       .toString()
 
