@@ -7,8 +7,8 @@
   "version": "7.3.2",
   "license": "MIT",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "echo \"$CF_PAGES_COMMIT_SHA\" > public/commit_hash && react-scripts start",
+    "build": "echo \"$CF_PAGES_COMMIT_SHA\" > public/commit_hash && react-scripts build",
     "test": "react-scripts test",
     "prepare": "husky install",
     "pre-commit": "lint-staged",
