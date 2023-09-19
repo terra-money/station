@@ -31,13 +31,14 @@ interface InterchainNetwork {
     }
   }
   channels?: Record<ChainID, IBCChannel>
-  icsChannels?: Record<
+  ics20Channels?: Record<
     ChainID,
     {
       contract: AccAddress
       channel: IBCChannel
       otherChannel: IBCChannel
-    }
+      tokens?: AccAddress[]
+    }[]
   >
   version?: string
   isClassic?: boolean

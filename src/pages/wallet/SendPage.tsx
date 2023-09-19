@@ -267,6 +267,7 @@ const SendPage = () => {
                     contract: getICSContract({
                       from: chain,
                       to: destinationChain,
+                      tokenAddress: token.denom,
                     }),
                     amount: amount,
                     msg: Buffer.from(
