@@ -1,13 +1,19 @@
 import { Page } from "components/layout"
 import { useTranslation } from "react-i18next"
-import { Chat } from "components/chat/Chat"
+import ChannelPage from "components/channel"
+import PopoverProvider from "providers/popover"
+import RavenProvider from "providers/raven"
 
 export const Community = () => {
   const { t } = useTranslation()
 
   return (
     <Page title={t("Community")}>
-      <Chat></Chat>
+      <RavenProvider>
+        <PopoverProvider>
+          <ChannelPage></ChannelPage>
+        </PopoverProvider>
+      </RavenProvider>
     </Page>
   )
 }
