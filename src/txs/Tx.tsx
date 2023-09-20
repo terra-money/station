@@ -30,11 +30,12 @@ import { Flex, Grid } from "components/layout"
 import { FormError, Submit, Select, Input, FormItem } from "components/form"
 import { Modal } from "components/feedback"
 import { Details } from "components/display"
-import { Read } from "components/token"
+import { ReadToken } from "components/token"
 import ConnectWallet from "app/sections/ConnectWallet"
 import useToPostMultisigTx from "pages/multisig/utils/useToPostMultisigTx"
 import { isWallet, useAuth } from "auth"
 import { PasswordError } from "auth/scripts/keystore"
+import { useCarbonFees } from "data/queries/tx"
 
 import { toInput, CoinInput, calcTaxes, parseError } from "./utils"
 import styles from "./Tx.module.scss"
@@ -108,6 +109,8 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const shouldTax = isClassic && getShouldTax(token, isClassic)
   const { data: taxRate = "0", ...taxRateState } = useTaxRate(!shouldTax)
   const { data: taxCap = "0", ...taxCapState } = useTaxCap(token)
+  const { data: carbonFees } = useCarbonFees()
+
   const taxState = combineState(taxRateState, taxCapState)
   const taxes = isClassic
     ? calcTaxes(
@@ -138,6 +141,12 @@ function Tx<TxValues>(props: Props<TxValues>) {
       if (!(wallet || connectedWallet)) return 0
       if (!simulationTx || !simulationTx.msgs.length) return 0
       try {
+        if (chain.startsWith("carbon-")) {
+          return Number(
+            carbonFees?.costs[key.msgs?.[0] ?? ""] ??
+              carbonFees?.costs["default_fee"]
+          )
+        }
         const unsignedTx = await lcd.tx.create([{ address: key.address }], {
           ...simulationTx,
           gasAdjustment: key.gasAdjustment,
@@ -163,14 +172,16 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   const getGasAmount = useCallback(
     (denom: CoinDenom) => {
-      const gasPrice = networks[chain]?.gasPrices[denom]
+      const gasPrice = chain?.startsWith("carbon-")
+        ? carbonFees?.prices[denom]
+        : networks[chain]?.gasPrices[denom]
       if (isNil(estimatedGas) || !gasPrice) return "0"
       return new BigNumber(estimatedGas)
         .times(gasPrice)
         .integerValue(BigNumber.ROUND_CEIL)
         .toString()
     },
-    [estimatedGas, chain, networks]
+    [estimatedGas, chain, networks, carbonFees]
   )
 
   const gasAmount = getGasAmount(gasDenom)
@@ -183,7 +194,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
       ? (Number(balance) - Number(gasFee.amount)).toFixed(0)
       : balance
   }
-
   const max = !gasFee.amount
     ? undefined
     : isDenom(token)
@@ -328,11 +338,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
             fontSize="inherit"
             className={styles.icon}
           />
-          <Read
-            amount={max ?? "0"}
-            token={baseDenom ?? token}
-            decimals={decimals}
-          />
+          <ReadToken amount={max ?? "0"} denom={baseDenom ?? token ?? ""} />
         </Flex>
       </button>
     )
@@ -362,47 +368,26 @@ function Tx<TxValues>(props: Props<TxValues>) {
               >
                 {availableGasDenoms.map((denom) => (
                   <option value={denom} key={denom}>
-                    {
-                      readNativeDenom(
-                        denom === token ? baseDenom ?? denom : denom
-                      ).symbol
-                    }
+                    {readNativeDenom(denom).symbol}
                   </option>
                 ))}
               </Select>
             )}
           </dt>
-          <dd>
-            {gasFee.amount && (
-              <Read
-                decimals={decimals}
-                {...gasFee}
-                denom={
-                  gasFee.denom === token
-                    ? baseDenom ?? gasFee.denom
-                    : gasFee.denom
-                }
-              />
-            )}
-          </dd>
+          <dd>{gasFee.amount && <ReadToken {...gasFee} />}</dd>
 
           {balanceAfterTx && (
             <>
               <dt>{t("Balance")}</dt>
               <dd>
-                <Read
-                  amount={balance}
-                  token={baseDenom ?? token}
-                  decimals={decimals}
-                />
+                <ReadToken amount={balance} denom={baseDenom ?? token ?? ""} />
               </dd>
 
               <dt>{t("Balance after tx")}</dt>
               <dd>
-                <Read
+                <ReadToken
                   amount={balanceAfterTx}
-                  token={baseDenom ?? token}
-                  decimals={decimals}
+                  denom={baseDenom ?? token ?? ""}
                   className={classNames(insufficient && "danger")}
                 />
               </dd>

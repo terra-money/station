@@ -3,7 +3,7 @@ import { intervalToDuration } from "date-fns"
 import { useDepositParams } from "data/queries/gov"
 import { useVotingParams } from "data/queries/gov"
 import { Card } from "components/layout"
-import { Read } from "components/token"
+import { ReadToken } from "components/token"
 import DataList from "./components/DataList"
 import styles from "./GovernanceParams.module.scss"
 import { useNetwork } from "data/wallet"
@@ -23,9 +23,9 @@ const GovernanceParams = ({ chain }: { chain: string }) => {
     {
       title: t("Minimum deposit"),
       content: minDeposit && (
-        <Read
+        <ReadToken
           amount={minDeposit.amount.toString()}
-          token={network[chain].baseAsset}
+          denom={network[chain].baseAsset}
         />
       ),
     },

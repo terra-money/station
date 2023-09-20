@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { Read, ReadPercent } from "components/token"
+import { ReadPercent, ReadToken } from "components/token"
 import { SwapAssets } from "./useSwapUtils"
 import { SwapSpread } from "./SingleSwapContext"
 import { useTFMSwap } from "./TFMSwapContext"
@@ -24,9 +24,9 @@ const TFMExpectedPrice = (props: Props) => {
       </dd>
       <dt>{t("Minimum received")}</dt>
       <dd>
-        <Read
+        <ReadToken
           amount={minimum_receive}
-          token={askAsset}
+          denom={askAsset}
           decimals={findDecimals(askAsset)}
         />
       </dd>

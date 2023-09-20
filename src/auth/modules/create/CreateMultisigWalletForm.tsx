@@ -13,7 +13,7 @@ import { Grid } from "components/layout"
 import { Form, FormGroup, FormItem } from "components/form"
 import { FormError, FormWarning } from "components/form"
 import { Input, Submit, Paste } from "components/form"
-import validate from "../../scripts/validate"
+import validate from "auth/scripts/validate"
 
 interface Values {
   addresses: { value: AccAddress }[]
@@ -125,7 +125,7 @@ const CreateMultisigWalletForm = ({ onCreated }: Props) => {
             <FormItem>
               <Input
                 {...register(`addresses.${index}.value`, {
-                  validate: AccAddress.validate,
+                  validate: validate.accAddress,
                 })}
                 placeholder={SAMPLE_ADDRESS}
               />

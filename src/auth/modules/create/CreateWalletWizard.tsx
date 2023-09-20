@@ -65,7 +65,6 @@ const CreateWalletWizard = ({ defaultMnemonic = "", beforeCreate }: Props) => {
       "60": wordsFromAddress(key60.accAddress("inj")),
     }
 
-    console.log("words", words)
     const pubkey = {
       // @ts-expect-error
       "330": key330.publicKey.key,

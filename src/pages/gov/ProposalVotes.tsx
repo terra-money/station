@@ -15,6 +15,8 @@ import { DateTimeRenderer } from "components/display"
 import VoteProgress from "./components/VoteProgress"
 import styles from "./ProposalVotes.module.scss"
 
+const cx = classNames.bind(styles)
+
 export const options = [
   Vote.Option.VOTE_OPTION_YES,
   Vote.Option.VOTE_OPTION_NO,
@@ -85,7 +87,7 @@ const ProposalVotes = ({
 
                   return (
                     <article
-                      className={classNames(styles.item, `border-${color}`)}
+                      className={cx(styles.item, `border-${color}`)}
                       key={option}
                     >
                       <h1 className={styles.title}>{label}</h1>

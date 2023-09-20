@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next"
 import { PropsWithChildren } from "react"
 import { Grid, Card, Flex } from "components/layout"
 import { Props as CardProps } from "components/layout/Card"
-import { Read } from "components/token"
+import { Read, ReadToken } from "components/token"
 import styles from "./StakedCard.module.scss"
 import { useCurrency } from "data/settings/Currency"
 
@@ -43,11 +43,11 @@ const StakedCard = (props: PropsWithChildren<Props>) => {
           {hideAmount ? (
             ""
           ) : Number(amount) > 0 ? (
-            <Read
+            <ReadToken
               amount={amount}
               decimals={0}
               fixed={2}
-              denom={denom}
+              denom={denom ?? ""}
               className={styles.amount}
             />
           ) : (

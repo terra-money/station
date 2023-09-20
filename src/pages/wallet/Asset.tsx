@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
 import { WithFetching } from "components/feedback"
-import { Read, TokenIcon } from "components/token"
+import { Read, ReadToken, TokenIcon } from "components/token"
 import { useExchangeRates } from "data/queries/coingecko"
 import { combineState } from "data/query"
 import { useCurrency } from "data/settings/Currency"
@@ -68,14 +68,7 @@ const Asset = (props: Props) => {
             <h1 className={styles.price}>
               {currency.symbol}{" "}
               {coinPrice ? (
-                <Read
-                  {...props}
-                  amount={walletPrice}
-                  decimals={decimals}
-                  fixed={2}
-                  denom=""
-                  token=""
-                />
+                <Read amount={walletPrice} decimals={decimals} fixed={2} />
               ) : (
                 <span>—</span>
               )}
@@ -97,18 +90,15 @@ const Asset = (props: Props) => {
                         {t("Failed to query balance")}
                       </span>
                     ) : (
-                      <Read
-                        {...props}
+                      <ReadToken
+                        denom={props.denom}
                         amount={balance}
-                        token=""
                         fixed={2}
-                        decimals={decimals}
                       />
                     )}
                   </>
                 )}
               </WithFetching>{" "}
-              <span className={styles.sub__amount}>{symbol}</span>
             </h2>
           </div>
         </div>

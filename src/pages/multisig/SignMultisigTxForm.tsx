@@ -13,6 +13,7 @@ import { PasswordError } from "auth/scripts/keystore"
 import { SAMPLE_ENCODED_TX } from "./utils/placeholder"
 import ReadTx from "./ReadTx"
 import { useChainID } from "data/wallet"
+import validate from "auth/scripts/validate"
 
 interface TxValues {
   address: AccAddress
@@ -74,7 +75,7 @@ const SignMultisigTxForm = ({ defaultValues }: Props) => {
       <Form onSubmit={handleSubmit(submit)}>
         <FormItem label={t("Multisig address")}>
           <Input
-            {...register("address", { validate: AccAddress.validate })}
+            {...register("address", { validate: validate.accAddress })}
             placeholder={SAMPLE_ADDRESS}
             autoFocus
           />

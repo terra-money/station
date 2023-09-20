@@ -32,7 +32,7 @@ import BigNumber from "bignumber.js"
 import { QuickStakeAction } from "pages/stake/hooks/useQuickStake"
 
 interface TxValues {
-  input?: number
+  input: number
 }
 
 interface Props {
@@ -228,7 +228,7 @@ const QuickStakeForm = (props: Props) => {
   const token = action === QuickStakeAction.DELEGATE ? denom : ""
 
   const tx = {
-    decimals: readNativeDenom(denom)?.decimals,
+    decimals: asset.decimals,
     token,
     amount,
     balance,

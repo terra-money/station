@@ -36,9 +36,10 @@ import { AllianceDelegationResponse } from "@terra-money/feather.js/dist/client/
 import styles from "./StakeTx.module.scss"
 
 interface TxValues {
-  source?: ValAddress
-  input?: number
+  source: ValAddress | undefined
+  input: number
 }
+
 export enum StakeAction {
   DELEGATE = "Delegate",
   REDELEGATE = "Redelegate",
@@ -118,14 +119,15 @@ const StakeForm = (props: Props) => {
   const { register, trigger, watch, setValue, handleSubmit, formState } = form
   const { errors } = formState
   const { source, input } = watch()
-  const amount = toAmount(input)
+  const { decimals } = readNativeDenom(denom)
+  const amount = toAmount(input, { decimals })
 
   /* tx */
   const createTx = useCallback(
     ({ input, source }: TxValues) => {
       if (!address) return
 
-      const amount = toAmount(input)
+      const amount = toAmount(input, { decimals })
       const coin = new Coin(denom, amount)
 
       if (tab === StakeAction.REDELEGATE) {
@@ -151,7 +153,7 @@ const StakeForm = (props: Props) => {
 
       return { msgs, chainID }
     },
-    [address, destination, tab, denom, chainID, isAlliance]
+    [address, destination, decimals, tab, denom, chainID, isAlliance]
   )
 
   /* fee */
@@ -179,10 +181,9 @@ const StakeForm = (props: Props) => {
     [setValue, trigger]
   )
 
-  const token = tab === StakeAction.DELEGATE ? denom : ""
   const tx = {
-    decimals: readNativeDenom(token)?.decimals,
-    token,
+    decimals,
+    token: denom,
     amount,
     balance,
     initialGasDenom,
@@ -286,7 +287,10 @@ const StakeForm = (props: Props) => {
             <Input
               {...register("input", {
                 valueAsNumber: true,
-                validate: validate.input(toInput(max.amount)),
+                validate: validate.input(
+                  toInput(max.amount, decimals),
+                  decimals
+                ),
               })}
               token={denom}
               onFocus={max.reset}

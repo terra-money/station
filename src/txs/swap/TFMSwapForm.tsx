@@ -19,7 +19,7 @@ import { queryTFMRoute, queryTFMSwap, TFM_ROUTER } from "data/external/tfm"
 /* components */
 import { Form, FormArrow, FormError, FormWarning } from "components/form"
 import { Checkbox } from "components/form"
-import { Read } from "components/token"
+import { ReadToken } from "components/token"
 
 /* tx modules */
 import { getPlaceholder, toInput } from "../utils"
@@ -34,7 +34,7 @@ import SlippageControl from "./components/SlippageControl"
 import TFMExpectedPrice from "./TFMExpectedPrice"
 import { SwapAssets, validateAssets } from "./useSwapUtils"
 import { validateParams } from "./useSwapUtils"
-import { calcMinimumReceive, SlippageParams } from "./SingleSwapContext"
+import { calcMinimumReceive } from "./SingleSwapContext"
 import { useTFMSwap, validateTFMSlippageParams } from "./TFMSwapContext"
 import { useCustomTokensCW20 } from "data/settings/CustomTokens"
 import { useNativeDenoms } from "data/token"
@@ -44,7 +44,12 @@ interface TFMSwapParams extends SwapAssets {
   slippage?: string
 }
 
-interface TxValues extends Partial<SlippageParams> {}
+interface TxValues {
+  offerAsset: string
+  askAsset: string
+  input: number | undefined
+  slippageInput: number
+}
 
 const TFMSwapForm = ({ chainID }: { chainID: string }) => {
   const { t } = useTranslation()
@@ -58,7 +63,11 @@ const TFMSwapForm = ({ chainID }: { chainID: string }) => {
   /* swap context */
   const { options, findTokenItem, findDecimals } = useTFMSwap()
 
-  const initialOfferAsset = (state as Token) ?? "uluna"
+  const initialOfferAsset =
+    (state as Token) ??
+    "ibc/B3504E092456BA618CC28AC671A71FB08C6CA0FD0BE7C8A5B5A3E2DD933CC9E4"
+
+  const initialAskAsset = (state as Token) ?? "uluna"
 
   /* options */
   const [showAll, setShowAll] = useState(false)
@@ -82,7 +91,11 @@ const TFMSwapForm = ({ chainID }: { chainID: string }) => {
   /* form */
   const form = useForm<TxValues>({
     mode: "onChange",
-    defaultValues: { offerAsset: initialOfferAsset, slippageInput: 1 },
+    defaultValues: {
+      offerAsset: initialOfferAsset,
+      askAsset: initialAskAsset,
+      slippageInput: 1,
+    },
   })
 
   const { register, trigger, watch, setValue, handleSubmit, formState } = form
@@ -145,7 +158,7 @@ const TFMSwapForm = ({ chainID }: { chainID: string }) => {
 
       // empty opposite asset if select the same asset
       if (assets.offerAsset === assets.askAsset) {
-        setValue(key === "offerAsset" ? "askAsset" : "offerAsset", undefined)
+        setValue(key === "offerAsset" ? "askAsset" : "offerAsset", "")
       }
 
       // focus on input if select offer asset
@@ -286,7 +299,7 @@ const TFMSwapForm = ({ chainID }: { chainID: string }) => {
                     valueAsNumber: true,
                     validate: validate.input(
                       toInput(max.amount, offerDecimals),
-                      offerDecimals
+                      offerDecimals ?? 6
                     ),
                   })}
                   inputMode="decimal"
@@ -310,10 +323,11 @@ const TFMSwapForm = ({ chainID }: { chainID: string }) => {
               addonAfter={
                 <AssetReadOnly>
                   {simulatedValue ? (
-                    <Read
+                    <ReadToken
                       amount={simulatedValue}
-                      decimals={askDecimals}
+                      denom={askAsset ?? ""}
                       approx
+                      hideDenom
                     />
                   ) : (
                     <p className="muted">

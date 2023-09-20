@@ -40,7 +40,7 @@ const Grid = (props: PropsWithChildren<Props>) => {
   }
 
   return (
-    <div className={classNames(styles.grid, className)} style={style}>
+    <div className={cx(styles.grid, className)} style={style}>
       {children}
     </div>
   )

@@ -23,3 +23,6 @@ yarn-error.log*
 .prettierrc
 
 .vscode
+
+# commit hash used for update detection
+public/commit_hash
