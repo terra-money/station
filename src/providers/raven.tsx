@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react"
 import uniq from "lodash.uniq"
-import { nip04, nip19 } from "nostr-tools"
+import { nip04, nip19 } from "@terra-money/nostr-tools"
 
 import { initRaven, RavenEvents } from "utils/nostr/raven"
 import {

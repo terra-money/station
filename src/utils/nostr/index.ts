@@ -14,7 +14,7 @@ export const SCROLL_DETECT_THRESHOLD = 5
 export const MESSAGE_PER_PAGE = 30
 export const ACCEPTABLE_LESS_PAGE_MESSAGES = 5
 export const TERRA_CID =
-  "899c87b9677f1f220c8df29137f51c9432943b2a8a6a3981bdaa73309337b8ba"
+  "61e9000f661983b2ccc5b6665acd4aa7a42b5580985562312c6caae5d15811f3"
 
 export function notEmpty<TValue>(
   value: TValue | null | undefined

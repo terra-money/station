@@ -62,7 +62,7 @@ const useLivePublicMessages = () => {
       clean
         .filter((c) => c.root === TERRA_CID)
         .map((c) => ({ ...c, children: clean.filter((x) => x.root === c.id) })),
-    [clean, TERRA_CID]
+    [clean]
   )
 }
 

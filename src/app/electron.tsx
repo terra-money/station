@@ -1,4 +1,4 @@
-import { Event } from "nostr-tools"
+import { Event } from "@terra-money/nostr-tools"
 import { RelayDict } from "types/nostr"
 import Raven from "utils/nostr/raven"
 

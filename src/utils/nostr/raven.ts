@@ -6,7 +6,7 @@ import {
   nip04,
   signEvent,
   SimplePool,
-} from "nostr-tools"
+} from "@terra-money/nostr-tools"
 import * as Comlink from "comlink"
 import {
   PrivKey,
@@ -26,7 +26,7 @@ import {
 } from "types/nostr"
 import chunk from "lodash.chunk"
 import uniq from "lodash.uniq"
-import { BgRaven } from "./workers"
+import { BgRaven } from "./worker"
 import { DEFAULT_RELAYS, MESSAGE_PER_PAGE, TERRA_CID } from "utils/nostr"
 import { notEmpty, isSha256 } from "."
 import { TypedEventEmitter } from "providers/event-emitter"
@@ -71,25 +71,22 @@ type EventHandlerMap = {
 }
 
 class Raven extends TypedEventEmitter<RavenEvents, EventHandlerMap> {
-  private readonly worker: Worker
-  private bgRaven: Comlink.Remote<BgRaven>
+  worker: Worker
+  bgRaven: Comlink.Remote<BgRaven>
+  priv: PrivKey
+  pub: string
 
-  private readonly priv: PrivKey
-  private readonly pub: string
-
-  private readonly readRelays = Object.keys(DEFAULT_RELAYS).filter(
-    (r) => DEFAULT_RELAYS[r].read
-  )
-  private readonly writeRelays = Object.keys(DEFAULT_RELAYS).filter(
+  readRelays = Object.keys(DEFAULT_RELAYS).filter((r) => DEFAULT_RELAYS[r].read)
+  writeRelays = Object.keys(DEFAULT_RELAYS).filter(
     (r) => DEFAULT_RELAYS[r].write
   )
 
-  private eventQueue: Event[] = []
-  private eventQueueTimer: any
-  private eventQueueFlag = true
-  private eventQueueBuffer: Event[] = []
+  eventQueue: Event[] = []
+  eventQueueTimer: any
+  eventQueueFlag = true
+  eventQueueBuffer: Event[] = []
 
-  private nameCache: Record<string, number> = {}
+  nameCache: Record<string, number> = {}
 
   listenerSub: string | null = null
   messageListenerSub: string | null = null
@@ -102,7 +99,7 @@ class Raven extends TypedEventEmitter<RavenEvents, EventHandlerMap> {
     // Raven is all about relay/pool management through websockets using timers.
     // Browsers (chrome) slows down timer tasks when the window goes to inactive.
     // That is why we use a web worker to read data from relays.
-    this.worker = new Worker(new URL("worker.ts", import.meta.url))
+    this.worker = new Worker("./worker.ts")
     this.bgRaven = Comlink.wrap<BgRaven>(this.worker)
     this.bgRaven.setup(this.readRelays).then()
 
@@ -212,11 +209,11 @@ class Raven extends TypedEventEmitter<RavenEvents, EventHandlerMap> {
   public async fetchChannel(id: string): Promise<Channel | null> {
     const filters: Filter[] = [
       {
-        kinds: [Kind.ChannelCreation],
+        kinds: [40],
         ids: [id],
       },
       {
-        kinds: [Kind.ChannelMetadata, Kind.EventDeletion],
+        kinds: [41, 5],
         "#e": [id],
       },
     ]
@@ -539,7 +536,7 @@ class Raven extends TypedEventEmitter<RavenEvents, EventHandlerMap> {
             }
           }
 
-          pub[0].on("ok", (r: string) => {
+          pub.on("ok", (r: string) => {
             okRelays.push(r)
             if (!resolved) {
               resolve(event)
@@ -548,7 +545,7 @@ class Raven extends TypedEventEmitter<RavenEvents, EventHandlerMap> {
             closePool()
           })
 
-          pub[0].on("failed", (r: string) => {
+          pub.on("failed", (r: string) => {
             failedRelays.push(r)
             if (failedRelays.length === this.writeRelays.length) {
               reject("Event couldn't be published on any relay!")

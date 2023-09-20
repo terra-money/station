@@ -1,5 +1,5 @@
 import * as Comlink from "comlink"
-import { Event, Filter, SimplePool, Sub } from "nostr-tools"
+import { Event, Filter, SimplePool, Sub } from "@terra-money/nostr-tools"
 
 export class BgRaven {
   private seenOn: Record<string, string[]> = {}
@@ -65,7 +65,7 @@ export class BgRaven {
     const pool = this.getPool()
     const sub = pool.sub(this.relays, filters, { id: subId })
 
-    sub.on("event", (event) => {
+    sub.on("event", (event: Event) => {
       this.seenOn[event.id] = pool.seenOn(event.id)
       onEvent(event)
     })

@@ -20,7 +20,7 @@ const ShortEmojiPicker = (props: {
     if (frequent === null) {
       // @ts-ignore
       const promises = Object.values(
-        FrequentlyUsed.get({
+        FrequentlyUsed._get1({
           maxFrequentRows: 2,
           perLine: 3,
         })
