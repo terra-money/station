@@ -15,7 +15,7 @@ import { useNetwork } from "data/wallet"
 import { useNativeDenoms } from "data/token"
 
 interface TxValues {
-  input?: number
+  input: number
 }
 
 const DepositForm = () => {

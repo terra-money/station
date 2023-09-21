@@ -62,7 +62,7 @@ const useSwapUtils = () => {
       const { offerAsset, askAsset } = assets
       const pair = Object.entries(pairs ?? {}).find(([, item]) =>
         [offerAsset, askAsset].every(
-          (asset) => dex === item.dex && item.assets.includes(asset)
+          (asset) => dex === item.dex && item.assets.includes(asset ?? "")
         )
       )
 

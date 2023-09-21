@@ -122,7 +122,7 @@ function Table<T>({ dataSource, filter, rowKey, ...props }: Props<T>) {
 
   return (
     <div
-      className={classNames(cx(styles.container, { bordered }), className)}
+      className={cx(styles.container, className, { bordered })}
       style={style}
     >
       <table className={cx(styles.table, size)}>
@@ -211,7 +211,7 @@ function Table<T>({ dataSource, filter, rowKey, ...props }: Props<T>) {
 
                 {extra && (
                   <tr
-                    className={classNames(
+                    className={cx(
                       styles.extra__content,
                       extraActive !== index && styles.extra__content__disabled
                     )}
