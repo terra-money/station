@@ -12,21 +12,26 @@ import {
   TERRA_CID,
 } from "utils/nostr"
 import { useTranslation } from "react-i18next"
-import { Channel, Message } from "types/nostr"
+import { Message } from "types/nostr"
 import { initRaven } from "utils/nostr/raven"
-import { ravenReadyAtom } from "utils/nostr/atoms"
+import { channelAtom, ravenReadyAtom, threadRootAtom } from "utils/nostr/atoms"
 import { useAtom } from "jotai"
 import useLiveChannel from "utils/hooks/use-live-channel"
+import useLiveChannels from "utils/hooks/use-live-channels"
+import { Card } from "components/layout"
+import styles from "./Channel.module.scss"
 
 const ChannelPage = () => {
   const raven = useMemo(() => initRaven(), [])
   const { t } = useTranslation()
   const messages = useLivePublicMessages()
-  const [threadRoot, setThreadRoot] = useState<Message | null>(null)
+  const [, setChannel] = useAtom(channelAtom)
+  const [threadRoot, setThreadRoot] = useAtom(threadRootAtom)
   const [ravenReady] = useAtom(ravenReadyAtom)
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
-  const channel = useLiveChannel() as Channel
+  const channels = useLiveChannels()
+  const channel = useLiveChannel()
 
   useEffect(() => {
     const fetchPrev = () => {
@@ -51,7 +56,12 @@ const ChannelPage = () => {
   }, [messages, hasMore, loading])
 
   useEffect(() => {
+    setChannel(channels.find((x) => x.id === TERRA_CID) || null)
+  }, [channels])
+
+  useEffect(() => {
     const msg = messages.find((x) => x.id === threadRoot?.id)
+    console.log(threadRoot)
     if (threadRoot && msg && !isEqual(msg, threadRoot)) {
       setThreadRoot(msg)
     }
@@ -72,7 +82,7 @@ const ChannelPage = () => {
     }
   }, [loading])
 
-  if (!ravenReady) {
+  if (!ravenReady || !channel) {
     return (
       <Box sx={{ display: "flex", alignItems: "center" }}>
         <CircularProgress size={20} sx={{ mr: "8px" }} /> {t("Loading...")}
@@ -81,34 +91,38 @@ const ChannelPage = () => {
   }
 
   return (
-    <>
-      <ChatView messages={messages} loading={loading} />
-      <ChatInput
-        senderFn={(message: string, mentions: string[]) => {
-          return raven!
-            .sendPublicMessage(channel, message, mentions)
-            .catch((e: any) => {
-              console.error(e)
-            })
-        }}
-      />
-      {threadRoot && (
-        <ThreadChatView
-          senderFn={(message: string, mentions: string[]) => {
-            return raven!
-              .sendPublicMessage(
-                channel,
-                message,
-                [threadRoot.creator, ...mentions],
-                threadRoot.id
-              )
-              .catch((e: any) => {
-                console.error(e)
-              })
-          }}
-        />
-      )}
-    </>
+    <Card>
+      <div className={styles.ChannelView}>
+        <div>
+          <ChatView messages={messages} loading={loading} />
+          <ChatInput
+            senderFn={(message: string, mentions: string[]) => {
+              return raven!
+                .sendPublicMessage(channel, message, mentions)
+                .catch((e: any) => {
+                  console.error(e)
+                })
+            }}
+          />
+        </div>
+        {threadRoot && (
+          <ThreadChatView
+            senderFn={(message: string, mentions: string[]) => {
+              return raven!
+                .sendPublicMessage(
+                  channel,
+                  message,
+                  [threadRoot.creator, ...mentions],
+                  threadRoot.id
+                )
+                .catch((e: any) => {
+                  console.error(e)
+                })
+            }}
+          />
+        )}
+      </div>
+    </Card>
   )
 }
 

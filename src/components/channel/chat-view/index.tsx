@@ -174,8 +174,6 @@ const ChatView = (props: { messages: Message[]; loading?: boolean }) => {
                 sx={{
                   m: "0 24px",
                   fontSize: "0.7em",
-                  color: darken(theme.palette.text.secondary, 0.4),
-                  mt: i === 0 ? "100px" : null,
                 }}
               >
                 {msgDate}

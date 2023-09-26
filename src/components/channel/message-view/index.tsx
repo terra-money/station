@@ -170,7 +170,6 @@ const MessageView = (props: {
             <Tooltip title={messageDateTime} placement="right">
               <Box
                 sx={{
-                  color: darken(theme.palette.text.secondary, 0.3),
                   fontSize: "90%",
                   cursor: "default",
                 }}
@@ -186,7 +185,6 @@ const MessageView = (props: {
             mt: "4px",
             wordBreak: "break-word",
             lineHeight: "1.4em",
-            color: theme.palette.text.secondary,
           }}
         >
           {renderedBody}
@@ -201,7 +199,6 @@ const MessageView = (props: {
               fontSize: "0.8rem",
               cursor: "pointer",
               border: "1px solid transparent",
-              color: darken(theme.palette.text.secondary, 0.3),
               borderRadius: theme.shape.borderRadius,
               svg: {
                 display: "none",

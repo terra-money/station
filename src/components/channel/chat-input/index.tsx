@@ -77,7 +77,7 @@ const ChatInput = (props: {
           borderRadius: theme.shape.borderRadius,
         }}
       >
-        <Box sx={{ p: "1px 10px" }}>
+        <Box sx={{ p: "1em" }}>
           <EditorContent
             editor={editor}
             onKeyDown={(e) => {
@@ -102,6 +102,7 @@ const ChatInput = (props: {
               pl: "12px",
               display: "flex",
               alignItems: "center",
+              gap: "0.75em",
             }}
           >
             <Tools
@@ -118,8 +119,8 @@ const ChatInput = (props: {
             color="primary"
             sx={{
               minWidth: "auto",
-              width: "28px",
-              height: "28px",
+              width: "36px",
+              height: "36px",
               padding: "6px",
               borderRadius: "10px",
             }}

@@ -30,7 +30,7 @@ const Emoji = (props: { onSelect: (selected: string) => void }) => {
   }
 
   return (
-    <Box onClick={emojiClicked} className={hover ? "hover" : ""}>
+    <Box onClick={emojiClicked} className={hover ? "HoverActive" : ""}>
       <SentimentSatisfiedAltIcon height={20} />
     </Box>
   )

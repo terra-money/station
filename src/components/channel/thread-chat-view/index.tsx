@@ -12,6 +12,8 @@ import { threadRootAtom } from "utils/nostr/atoms"
 import { useTranslation } from "react-i18next"
 import { Close } from "@mui/icons-material"
 
+import styles from "./ThreadChatView.module.scss"
+
 const ThreadChatView = (props: {
   senderFn: (message: string, mentions: string[]) => Promise<any>
 }) => {
@@ -28,11 +30,11 @@ const ThreadChatView = (props: {
 
   return (
     <Box
+      className={styles.ThreadChatView}
       sx={{
         height: "100%",
         flexGrow: 0,
         flexShrink: 0,
-        background: lighten(theme.palette.background.default, 0.03),
         display: "flex",
         flexDirection: "column",
       }}
