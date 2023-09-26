@@ -6,8 +6,8 @@ import {
   nip04,
   signEvent,
   SimplePool,
+  Sub,
 } from "@terra-money/nostr-tools"
-import * as Comlink from "comlink"
 import {
   PrivKey,
   Channel,
@@ -26,10 +26,10 @@ import {
 } from "types/nostr"
 import chunk from "lodash.chunk"
 import uniq from "lodash.uniq"
-import { BgRaven } from "./worker"
 import { DEFAULT_RELAYS, MESSAGE_PER_PAGE, TERRA_CID } from "utils/nostr"
 import { notEmpty, isSha256 } from "."
 import { TypedEventEmitter } from "providers/event-emitter"
+import { storeKeys } from "utils/localStorage/nostr"
 
 enum NewKinds {
   MuteList = 10000,
@@ -71,8 +71,6 @@ type EventHandlerMap = {
 }
 
 class Raven extends TypedEventEmitter<RavenEvents, EventHandlerMap> {
-  worker: Worker
-  bgRaven: Comlink.Remote<BgRaven>
   priv: PrivKey
   pub: string
 
@@ -91,19 +89,22 @@ class Raven extends TypedEventEmitter<RavenEvents, EventHandlerMap> {
   listenerSub: string | null = null
   messageListenerSub: string | null = null
 
+  seenOn: Record<string, string[]> = {}
+  subs: Record<string, Sub> = {}
+  relays: string[] = []
+  pool = new SimplePool()
+  poolCreated = Date.now()
+
   constructor(priv: string, pub: string) {
     super()
     this.priv = priv
     this.pub = pub
+    this.relays = this.readRelays
 
-    // Raven is all about relay/pool management through websockets using timers.
-    // Browsers (chrome) slows down timer tasks when the window goes to inactive.
-    // That is why we use a web worker to read data from relays.
-    this.worker = new Worker("./worker.ts")
-    this.bgRaven = Comlink.wrap<BgRaven>(this.worker)
-    this.bgRaven.setup(this.readRelays).then()
-
-    if (priv && pub) this.init().then()
+    if (priv && pub) {
+      storeKeys({ priv, pub })
+      this.init().then()
+    }
   }
 
   private async init() {
@@ -114,6 +115,7 @@ class Raven extends TypedEventEmitter<RavenEvents, EventHandlerMap> {
       },
     ])
     events.forEach((e) => this.pushToEventBuffer(e))
+    this.emit(RavenEvents.Ready)
 
     // 2- Get channels messages
     // Build channel ids
@@ -273,22 +275,75 @@ class Raven extends TypedEventEmitter<RavenEvents, EventHandlerMap> {
     }
   }
 
-  private fetch(filters: Filter[], quitMs: number = 0): Promise<Event[]> {
-    return this.bgRaven.fetch(filters, quitMs)
+  public fetch(filters: Filter[], quitMs: number = 0): Promise<Event[]> {
+    return new Promise((resolve) => {
+      const pool = this.getPool()
+      const sub = pool.sub(this.relays, filters)
+      const events: Event[] = []
+
+      const quit = () => {
+        sub.unsub()
+        resolve(events)
+      }
+
+      let timer: any = quitMs > 0 ? setTimeout(quit, quitMs) : null
+
+      sub.on("event", (event: Event) => {
+        events.push(event)
+        this.seenOn[event.id] = pool.seenOn(event.id)
+
+        if (quitMs > 0) {
+          clearTimeout(timer)
+          timer = setTimeout(quit, quitMs)
+        }
+      })
+
+      if (quitMs === 0) {
+        sub.on("eose", () => {
+          sub.unsub()
+          resolve(events)
+        })
+      }
+    })
+  }
+
+  private getPool = (): SimplePool => {
+    if (Date.now() - this.poolCreated > 120000) {
+      // renew pool every two minutes
+      this.pool.close(this.relays)
+
+      this.pool = new SimplePool()
+      this.poolCreated = Date.now()
+    }
+
+    return this.pool
   }
 
   private sub(filters: Filter[], unsub: boolean = true) {
-    return this.bgRaven.sub(
-      filters,
-      Comlink.proxy((e: Event) => {
-        this.pushToEventBuffer(e)
-      }),
-      unsub
-    )
+    const subId = Math.random().toString().slice(2)
+    const pool = this.getPool()
+    const sub = pool.sub(this.relays, filters, { id: subId })
+
+    sub.on("event", (event: Event) => {
+      this.seenOn[event.id] = pool.seenOn(event.id)
+      this.pushToEventBuffer(event)
+    })
+
+    sub.on("eose", () => {
+      if (unsub) {
+        this.unsub(subId)
+      }
+    })
+
+    this.subs[subId] = sub
+    return subId
   }
 
   private unsub(subId: string) {
-    return this.bgRaven.unsub(subId)
+    if (this.subs[subId]) {
+      this.subs[subId].unsub()
+      delete this.subs[subId]
+    }
   }
 
   public loadChannel(id: string) {
@@ -330,10 +385,10 @@ class Raven extends TypedEventEmitter<RavenEvents, EventHandlerMap> {
 
   public listen(channels: string[], since: number) {
     if (this.listenerSub) {
-      this.unsub(this.listenerSub).then()
+      this.unsub(this.listenerSub)
     }
 
-    this.sub(
+    this.listenerSub = this.sub(
       [
         {
           authors: [this.pub],
@@ -355,14 +410,12 @@ class Raven extends TypedEventEmitter<RavenEvents, EventHandlerMap> {
         },
       ],
       false
-    ).then((id) => {
-      this.listenerSub = id
-    })
+    )
   }
 
   public listenMessages = (messageIds: string[], relIds: string[]) => {
     if (this.messageListenerSub) {
-      this.unsub(this.messageListenerSub).then()
+      this.unsub(this.messageListenerSub)
     }
 
     const filters: Filter[] = [
@@ -376,9 +429,7 @@ class Raven extends TypedEventEmitter<RavenEvents, EventHandlerMap> {
       })),
     ]
 
-    this.sub(filters, false).then((r) => {
-      this.messageListenerSub = r
-    })
+    this.messageListenerSub = this.sub(filters, false)
   }
 
   public async updateProfile(profile: Metadata) {
@@ -402,13 +453,42 @@ class Raven extends TypedEventEmitter<RavenEvents, EventHandlerMap> {
   }
 
   public async updateChannel(channel: Channel, meta: Metadata) {
-    return this.bgRaven.where(channel.id).then((relay) => {
+    return this.where(channel.id).then((relay) => {
       return this.publish(
         Kind.ChannelMetadata,
         [["e", channel.id, relay]],
         JSON.stringify(meta)
       )
     })
+  }
+
+  public async where(eventId: string) {
+    let try_ = 0
+    while (!this.seenOn[eventId]) {
+      await this.fetch([{ ids: [eventId] }])
+      try_++
+      if (try_ === 3) {
+        break
+      }
+    }
+
+    if (!this.seenOn[eventId]) {
+      throw new Error("Could not find root event")
+    }
+
+    return this.findHealthyRelay(this.seenOn[eventId])
+  }
+
+  private async findHealthyRelay(relays: string[]) {
+    const pool = this.getPool()
+    for (const relay of relays) {
+      try {
+        await pool.ensureRelay(relay)
+        return relay
+      } catch (e) {}
+    }
+
+    throw new Error("Couldn't find a working relay")
   }
 
   public async deleteEvents(ids: string[], why: string = "") {
@@ -426,7 +506,7 @@ class Raven extends TypedEventEmitter<RavenEvents, EventHandlerMap> {
     parent?: string
   ) {
     const root = parent || channel.id
-    const relay = await this.bgRaven.where(root)
+    const relay = await this.where(root)
     const tags = [["e", root, relay, "root"]]
     if (mentions) {
       mentions.forEach((m) => tags.push(["p", m]))
@@ -446,7 +526,7 @@ class Raven extends TypedEventEmitter<RavenEvents, EventHandlerMap> {
       mentions.forEach((m) => tags.push(["p", m]))
     }
     if (parent) {
-      const relay = await this.bgRaven.where(parent)
+      const relay = await this.where(parent)
       tags.push(["e", parent, relay, "root"])
     }
     return this.publish(Kind.EncryptedDirectMessage, tags, encrypted)
@@ -479,7 +559,7 @@ class Raven extends TypedEventEmitter<RavenEvents, EventHandlerMap> {
   }
 
   public async sendReaction(message: string, pubkey: string, reaction: string) {
-    const relay = await this.bgRaven.where(message)
+    const relay = await this.where(message)
     const tags = [
       ["e", message, relay, "root"],
       ["p", pubkey],
@@ -868,10 +948,6 @@ class Raven extends TypedEventEmitter<RavenEvents, EventHandlerMap> {
     this.eventQueueFlag = true
   }
 
-  close = () => {
-    this.worker.terminate()
-  }
-
   static normalizeMetadata(meta: Metadata) {
     return {
       name: meta.name || "",
@@ -910,7 +986,6 @@ export const initRaven = (): Raven | undefined => {
     pub: "npub190qv6an5relukw6xjfdzkdywk8y2qwenc5qdnsajl4zkuly46acsd6py0t",
   }
   if (window.raven) {
-    window.raven.close()
     window.raven = undefined
   }
 
