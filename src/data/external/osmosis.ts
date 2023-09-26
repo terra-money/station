@@ -43,6 +43,11 @@ export const useGammTokens = () => {
           "/pools/v2/all?low_liquidity=true",
           { baseURL: OSMOSIS_API_URL }
         )
+
+        if (!data || typeof data !== "object") {
+          throw new Error("Invalid API response format")
+        }
+
         return data
       } catch (error) {
         console.error(error)
