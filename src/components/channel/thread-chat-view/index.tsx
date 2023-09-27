@@ -1,9 +1,7 @@
 import { useRef } from "react"
 import { useAtom } from "jotai"
 import Divider from "@mui/material/Divider"
-import { darken, lighten } from "@mui/material"
 import Box from "@mui/material/Box"
-import { useTheme } from "@mui/material/styles"
 import IconButton from "@mui/material/IconButton"
 
 import MessageView from "components/channel/message-view"
@@ -17,7 +15,6 @@ import styles from "./ThreadChatView.module.scss"
 const ThreadChatView = (props: {
   senderFn: (message: string, mentions: string[]) => Promise<any>
 }) => {
-  const theme = useTheme()
   const { t } = useTranslation()
   const [threadRoot, setThreadRoot] = useAtom(threadRootAtom)
   const ref = useRef<HTMLDivElement | null>(null)
@@ -29,16 +26,7 @@ const ThreadChatView = (props: {
   }
 
   return (
-    <Box
-      className={styles.ThreadChatView}
-      sx={{
-        height: "100%",
-        flexGrow: 0,
-        flexShrink: 0,
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
+    <Box className={styles.ThreadChatView}>
       <Box
         sx={{
           flexGrow: 0,

@@ -31,9 +31,6 @@ const ReactionBtn = (props: {
         border: "1px solid transparent",
         opacity: inProgress ? 0.6 : null,
         pointerEvents: inProgress ? "none" : null,
-        ":hover": {
-          borderColor: theme.palette.divider,
-        },
       }}
       onClick={() => {
         if (inProgress) return

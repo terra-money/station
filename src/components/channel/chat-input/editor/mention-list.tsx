@@ -24,7 +24,7 @@ const MentionList = forwardRef<MentionListRef, MentionListProps>(
     const { query } = props
     const [profiles] = useAtom(profilesAtom)
     const channel = useLiveChannel()
-    const messages = useLivePublicMessages()
+    const messages = useLivePublicMessages(channel?.id)
 
     const suggestionProfiles = useMemo(() => {
       if (channel) {

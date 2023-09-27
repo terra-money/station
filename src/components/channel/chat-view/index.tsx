@@ -13,12 +13,11 @@ import {
   notEmpty,
 } from "utils/nostr"
 import { useTranslation } from "react-i18next"
-import { ravenAtom, tempPrivAtom } from "utils/nostr/atoms"
+import { ravenAtom } from "utils/nostr/atoms"
 import styles from "./ChatView.module.scss"
 
 const ChatView = (props: { messages: Message[]; loading?: boolean }) => {
   const { messages, loading } = props
-  const theme = useTheme()
   const { t } = useTranslation()
   const ref = useRef<HTMLDivElement | null>(null)
   const [isAtBottom, setIsAtBottom] = useState(true)
@@ -27,7 +26,6 @@ const ChatView = (props: { messages: Message[]; loading?: boolean }) => {
   )
   const [scrollTop, setScrollTop] = useState<number>(0)
   const [raven] = useAtom(ravenAtom)
-  const [tempPriv] = useAtom(tempPrivAtom)
 
   const scrollToBottom = () => {
     ref.current!.scroll({ top: ref.current!.scrollHeight, behavior: "auto" })
@@ -122,9 +120,9 @@ const ChatView = (props: { messages: Message[]; loading?: boolean }) => {
 
     let interval: any
     const timer = setTimeout(() => {
-      window.raven?.listenMessages(messageIds, relIds)
+      raven?.listenMessages(messageIds, relIds)
       interval = setInterval(() => {
-        window.raven?.listenMessages(messageIds, relIds)
+        raven?.listenMessages(messageIds, relIds)
       }, 10000)
     }, 500)
 
@@ -152,12 +150,7 @@ const ChatView = (props: { messages: Message[]; loading?: boolean }) => {
   }, [isAtBottom])
 
   return (
-    <Box
-      ref={ref}
-      sx={{
-        mt: "auto",
-      }}
-    >
+    <Box className={styles.ChatViewWrapper} ref={ref}>
       {messages.map((msg, i) => {
         const prevMsg = messages[i - 1]
         const msgDate = formatMessageDate(msg.created)

@@ -3,6 +3,23 @@
   width: 300px;
   border-radius: 1em;
   padding-top: 0.5em;
+  flex-grow: 0;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+
+  overflow: auto;
+  // TODO: find a better way to calculate
+  // the height to get the overflow right
+  //
+  // 14px is the padding of the input
+  height: calc(
+    100vh - var(--header-height) - var(--main-padding-horizontal) -
+      var(--border-width) - var(--border-width) - var(--main-padding-horizontal) -
+      var(--main-padding-horizontal) - var(--main-padding-horizontal) -
+      var(--card-padding) - var(--card-padding) - var(--grid-gap) -
+      var(--font-size-page-title) - 14px
+  );
 }
 
 .CloseButton {

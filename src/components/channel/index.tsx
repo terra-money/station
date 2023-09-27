@@ -12,7 +12,6 @@ import {
   TERRA_CID,
 } from "utils/nostr"
 import { useTranslation } from "react-i18next"
-import { Message } from "types/nostr"
 import { initRaven } from "utils/nostr/raven"
 import { channelAtom, ravenReadyAtom, threadRootAtom } from "utils/nostr/atoms"
 import { useAtom } from "jotai"
@@ -24,7 +23,7 @@ import styles from "./Channel.module.scss"
 const ChannelPage = () => {
   const raven = useMemo(() => initRaven(), [])
   const { t } = useTranslation()
-  const messages = useLivePublicMessages()
+  const messages = useLivePublicMessages(TERRA_CID)
   const [, setChannel] = useAtom(channelAtom)
   const [threadRoot, setThreadRoot] = useAtom(threadRootAtom)
   const [ravenReady] = useAtom(ravenReadyAtom)
@@ -39,7 +38,7 @@ const ChannelPage = () => {
 
       setLoading(true)
       raven
-        ?.fetchPrevMessages(messages[0].created)
+        ?.fetchPrevMessages(channel!.id, messages[0].created)
         .then((num) => {
           if (num < MESSAGE_PER_PAGE - ACCEPTABLE_LESS_PAGE_MESSAGES) {
             setHasMore(false)
@@ -60,8 +59,9 @@ const ChannelPage = () => {
   }, [channels])
 
   useEffect(() => {
+    console.log("messages", messages)
+    console.log("threadRoot", threadRoot)
     const msg = messages.find((x) => x.id === threadRoot?.id)
-    console.log(threadRoot)
     if (threadRoot && msg && !isEqual(msg, threadRoot)) {
       setThreadRoot(msg)
     }
@@ -71,7 +71,12 @@ const ChannelPage = () => {
     if (!loading) {
       const timer = setTimeout(() => console.log("Not Found"), 5000)
 
-      window.raven?.fetchChannel(TERRA_CID).then((channel) => {
+      if (!channel?.id) {
+        setLoading(true)
+        return
+      }
+
+      raven?.fetchChannel(channel.id).then((channel) => {
         if (channel) {
           clearTimeout(timer)
           setLoading(false)
@@ -80,7 +85,7 @@ const ChannelPage = () => {
 
       return () => clearTimeout(timer)
     }
-  }, [loading])
+  }, [loading, channel])
 
   if (!ravenReady || !channel) {
     return (

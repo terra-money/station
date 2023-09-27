@@ -1,6 +1,7 @@
 import { MutableRefObject, useEffect } from "react"
 import Emoji from "./emoji"
 import Gif from "./gif"
+import styles from "./Tools.module.scss"
 
 const Tools = (props: {
   inputRef: MutableRefObject<HTMLDivElement | null>
@@ -30,10 +31,10 @@ const Tools = (props: {
   }, [])
 
   return (
-    <>
+    <div className={styles.ToolsWrapper}>
       <Emoji onSelect={insertFn} />
       <Gif onSelect={senderFn} />
-    </>
+    </div>
   )
 }
 

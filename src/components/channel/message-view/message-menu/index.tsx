@@ -81,7 +81,6 @@ const MessageMenu = (props: { message: Message; inThreadView?: boolean }) => {
   }
 
   const openThread = () => {
-    console.log(message)
     setThreadRoot(message)
   }
 

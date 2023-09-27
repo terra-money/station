@@ -1,7 +1,6 @@
-import React, { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { useAtom } from "jotai"
 import uniq from "lodash.uniq"
-import { darken } from "@mui/material"
 import Box from "@mui/material/Box"
 import { useTheme } from "@mui/material/styles"
 import Tooltip from "@mui/material/Tooltip"
@@ -26,6 +25,7 @@ import {
   formatMessageTime,
 } from "utils/nostr"
 import MessageMenu from "./message-menu"
+import styles from "./MessageView.module.scss"
 
 const MessageView = (props: {
   message: Message
@@ -179,38 +179,10 @@ const MessageView = (props: {
             </Tooltip>
           </Box>
         )}
-        <Box
-          sx={{
-            fontSize: "0.9em",
-            mt: "4px",
-            wordBreak: "break-word",
-            lineHeight: "1.4em",
-          }}
-        >
-          {renderedBody}
-        </Box>
+        <Box className={styles.ThreadBox}>{renderedBody}</Box>
         {!inThreadView && message.children && message.children.length > 0 && (
           <Box
-            sx={{
-              p: "6px",
-              mb: "4px",
-              display: "inline-flex",
-              alignItems: "center",
-              fontSize: "0.8rem",
-              cursor: "pointer",
-              border: "1px solid transparent",
-              borderRadius: theme.shape.borderRadius,
-              svg: {
-                display: "none",
-              },
-              ":hover": {
-                borderColor: theme.palette.divider,
-                background: theme.palette.background.paper,
-                svg: {
-                  display: "block",
-                },
-              },
-            }}
+            className={styles.ThreadRoot}
             onClick={() => {
               setThreadRoot(message)
             }}
@@ -232,13 +204,7 @@ const MessageView = (props: {
                   </Box>
                 )
               })}
-            <Box
-              sx={{
-                mr: "10px",
-                color: theme.palette.primary.main,
-                fontWeight: "bold",
-              }}
-            >
+            <Box className={styles.ThreadReply}>
               {message.children.length === 1
                 ? t("1 reply")
                 : t("{{n}} replies", { n: message.children.length })}

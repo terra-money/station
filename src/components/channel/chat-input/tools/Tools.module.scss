@@ -1,0 +1,10 @@
+.ToolsWrapper {
+  display: flex;
+  gap: 10px;
+
+  button {
+    min-width: auto;
+    height: 36px;
+    padding: 8px;
+  }
+}

@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react"
 import Box from "@mui/material/Box"
 import { useTheme } from "@mui/material/styles"
 import { lighten } from "@mui/material"
-import Button from "@mui/material/Button"
+import { Button } from "components/general"
 import Tools from "./tools"
 import useMakeEditor from "./editor"
 import { EditorContent, JSONContent } from "@tiptap/react"
@@ -113,19 +113,7 @@ const ChatInput = (props: {
               insertFn={insert}
             />
           </Box>
-          <Button
-            variant="contained"
-            size="small"
-            color="primary"
-            sx={{
-              minWidth: "auto",
-              width: "36px",
-              height: "36px",
-              padding: "6px",
-              borderRadius: "10px",
-            }}
-            onClick={send}
-          >
+          <Button color="primary" onClick={send}>
             <Send height={32} />
           </Button>
         </Box>

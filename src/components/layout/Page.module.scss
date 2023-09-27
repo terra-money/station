@@ -44,14 +44,6 @@
   @include flex(space-between);
   margin-right: 24px;
 
-  @include desktop {
-    --font-size-page-title: 36px;
-  }
-
-  @include mobile {
-    --font-size-page-title: 28px;
-  }
-
   @media (max-width: 600px) {
     padding: 0 var(--main-padding-horizontal);
   }

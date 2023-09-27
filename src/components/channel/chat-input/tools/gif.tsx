@@ -1,14 +1,16 @@
 import React, { useState } from "react"
-import Box from "@mui/material/Box"
 import GifPicker from "./gif-picker"
 import usePopover from "utils/hooks/use-popover"
 import { GifBox } from "@mui/icons-material"
+import { Button } from "components/general"
 
 const Gif = (props: { onSelect: (selected: string) => void }) => {
   const [, showPopover] = usePopover()
   const [hover, setHover] = useState<boolean>(false)
 
-  const gifClicked = (event: React.MouseEvent<HTMLDivElement>) => {
+  const gifClicked = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     setHover(true)
     showPopover({
       body: (
@@ -30,9 +32,9 @@ const Gif = (props: { onSelect: (selected: string) => void }) => {
   }
 
   return (
-    <Box onClick={gifClicked} className={hover ? "HoverActive" : ""}>
+    <Button onClick={gifClicked} color="default">
       <GifBox height={20} />
-    </Box>
+    </Button>
   )
 }
 

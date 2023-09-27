@@ -9,9 +9,8 @@ import {
   keysAtom,
 } from "utils/nostr/atoms"
 import useLiveReactions from "utils/hooks/use-live-reactions"
-import { TERRA_CID } from "utils/nostr"
 
-const useLivePublicMessages = () => {
+const useLivePublicMessages = (channelId?: string) => {
   const [messages] = useAtom(publicMessagesAtom)
   const [eventDeletions] = useAtom(eventDeletionsAtom)
   const [channelMessageHides] = useAtom(channelMessageHidesAtom)
@@ -60,7 +59,7 @@ const useLivePublicMessages = () => {
   return useMemo(
     () =>
       clean
-        .filter((c) => c.root === TERRA_CID)
+        .filter((c) => c.root === channelId)
         .map((c) => ({ ...c, children: clean.filter((x) => x.root === c.id) })),
     [clean]
   )

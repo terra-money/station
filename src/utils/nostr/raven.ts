@@ -188,12 +188,12 @@ class Raven extends TypedEventEmitter<RavenEvents, EventHandlerMap> {
     return this.priv === "nip07" || this.priv === "none"
   }
 
-  public fetchPrevMessages(until: number) {
+  public fetchPrevMessages(channelID: string, until: number) {
     return this.fetch(
       [
         {
           kinds: [Kind.ChannelMessage],
-          "#e": [TERRA_CID],
+          "#e": [channelID],
           until,
           limit: MESSAGE_PER_PAGE,
         },

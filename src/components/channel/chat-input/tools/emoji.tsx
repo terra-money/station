@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import Box from "@mui/material/Box"
+import { Button } from "components/general"
 import EmojiPicker from "./emoji-picker"
 import usePopover from "utils/hooks/use-popover"
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt"
@@ -8,7 +8,9 @@ const Emoji = (props: { onSelect: (selected: string) => void }) => {
   const [, showPopover] = usePopover()
   const [hover, setHover] = useState<boolean>(false)
 
-  const emojiClicked = (event: React.MouseEvent<HTMLDivElement>) => {
+  const emojiClicked = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     setHover(true)
     showPopover({
       body: (
@@ -30,9 +32,9 @@ const Emoji = (props: { onSelect: (selected: string) => void }) => {
   }
 
   return (
-    <Box onClick={emojiClicked} className={hover ? "HoverActive" : ""}>
+    <Button onClick={emojiClicked} color="default">
       <SentimentSatisfiedAltIcon height={20} />
-    </Box>
+    </Button>
   )
 }
 
