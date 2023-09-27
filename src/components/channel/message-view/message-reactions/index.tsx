@@ -48,13 +48,8 @@ const MessageReactions = (props: { message: Message }) => {
         mb: "4px",
       }}
     >
-      {reactions.map((r, i) => (
-        <ReactionBtn
-          key={r.symbol}
-          message={message}
-          r={r}
-          mr={i < reactions.length - 1}
-        />
+      {reactions.map((r) => (
+        <ReactionBtn key={r.symbol} message={message} r={r} />
       ))}
     </Box>
   )

@@ -1,4 +1,5 @@
-import { useState } from "react"
+import { useAtom } from "jotai"
+import { popoverAtom } from "utils/nostr/atoms"
 
 export type Popover = {
   body: JSX.Element
@@ -9,7 +10,7 @@ export type Popover = {
 } | null
 
 const usePopover = (): [Popover, (popover: Popover) => void] => {
-  const [popover, setPopover] = useState<Popover>()
+  const [popover, setPopover] = useAtom(popoverAtom)
 
   const showPopover = (popover: Popover) => {
     setPopover(popover)

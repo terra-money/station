@@ -1,0 +1,21 @@
+.MessageMenu {
+  padding: 4px 6px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  display: flex;
+  color: var(--text-color);
+  gap: 4px;
+
+  button {
+    min-width: auto;
+    padding: 6px 10px;
+    background-color: transparent;
+  }
+}
+
+.ShortEmojiPickerWrapper {
+  width: 280px;
+  padding: 0;
+  color: var(--text-color);
+  border-radius: var(--border-radius);
+}

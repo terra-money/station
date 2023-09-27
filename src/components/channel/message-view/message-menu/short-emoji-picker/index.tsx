@@ -18,9 +18,9 @@ const ShortEmojiPicker = (props: {
   const [frequent, setFrequent] = useState<string[] | null>(null)
   useEffect(() => {
     if (frequent === null) {
-      // @ts-ignore
       const promises = Object.values(
-        FrequentlyUsed._get1({
+        // @ts-ignore
+        FrequentlyUsed.get({
           maxFrequentRows: 2,
           perLine: 3,
         })
@@ -62,7 +62,7 @@ const ShortEmojiPicker = (props: {
             </Box>
           ))}
           <Box sx={commonSx} onClick={onMore}>
-            <PlusOne height={20} />
+            <PlusOne height={20} color="info" />
           </Box>
         </Box>
       </Box>

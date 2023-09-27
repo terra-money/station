@@ -1,3 +1,14 @@
+.MessageWrapper {
+  display: flex;
+  padding: 6px 14px 0px;
+  position: relative;
+  border-radius: var(--border-radius);
+
+  &:hover {
+    background-color: var(--bg-muted);
+  }
+}
+
 .ThreadRoot {
   padding: 2px;
   margin-bottom: 4px;

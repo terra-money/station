@@ -1,37 +1,21 @@
 import { useState } from "react"
 import { useAtom } from "jotai"
 import Box from "@mui/material/Box"
-import { blue } from "@mui/material/colors"
-import { useTheme } from "@mui/material/styles"
 import { Message, ReactionCombined } from "types/nostr"
 import { ravenAtom } from "utils/nostr/atoms"
+import styles from "./MessageReactions.module.scss"
 
-const ReactionBtn = (props: {
-  message: Message
-  r: ReactionCombined
-  mr: boolean
-}) => {
-  const { message, r, mr } = props
-  const theme = useTheme()
+const ReactionBtn = (props: { message: Message; r: ReactionCombined }) => {
+  const { message, r } = props
   const [raven] = useAtom(ravenAtom)
   const [inProgress, setInProgress] = useState(false)
 
+  console.log(r.userReaction)
   return (
     <Box
       key={r.symbol}
-      sx={{
-        fontSize: "0.8em",
-        p: "0 6px",
-        mr: mr ? "4px" : null,
-        background: r.userReaction ? blue[800] : theme.palette.background.paper,
-        borderRadius: "8px",
-        display: "flex",
-        alignItems: "center",
-        cursor: "pointer",
-        border: "1px solid transparent",
-        opacity: inProgress ? 0.6 : null,
-        pointerEvents: inProgress ? "none" : null,
-      }}
+      style={{ backgroundColor: r.userReaction !== undefined ? "#fff" : "" }}
+      className={styles.ReactionButton}
       onClick={() => {
         if (inProgress) return
         setInProgress(true)
@@ -43,15 +27,8 @@ const ReactionBtn = (props: {
         })
       }}
     >
-      <Box sx={{ mr: "3px" }}>{r.symbol}</Box>
-      <Box
-        sx={{
-          color: theme.palette.text.disabled,
-          fontSize: "0.9em",
-        }}
-      >
-        {r.count}
-      </Box>
+      <Box className={styles.ReactionEmoji}>{r.symbol}</Box>
+      <Box className={styles.ReactionCount}>{r.count}</Box>
     </Box>
   )
 }

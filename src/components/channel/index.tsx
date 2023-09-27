@@ -59,8 +59,6 @@ const ChannelPage = () => {
   }, [channels])
 
   useEffect(() => {
-    console.log("messages", messages)
-    console.log("threadRoot", threadRoot)
     const msg = messages.find((x) => x.id === threadRoot?.id)
     if (threadRoot && msg && !isEqual(msg, threadRoot)) {
       setThreadRoot(msg)

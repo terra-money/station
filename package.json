@@ -23,6 +23,7 @@
     "@dicebear/collection": "^7.0.1",
     "@emoji-mart/data": "^1.1.2",
     "@emoji-mart/react": "^1.1.1",
+    "emoji-mart": "^5.5.2",
     "@giphy/js-types": "^4.4.0",
     "@giphy/react-components": "^9.0.1",
     "@ledgerhq/hw-transport-web-ble": "^6.27.1",

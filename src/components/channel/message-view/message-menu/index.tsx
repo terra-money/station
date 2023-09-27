@@ -1,11 +1,9 @@
-import React, { useRef } from "react"
-import IconButton from "@mui/material/IconButton"
+import { useRef } from "react"
 import Box from "@mui/material/Box"
 import Tooltip from "@mui/material/Tooltip"
-import { useTheme } from "@mui/material/styles"
 import { useAtom } from "jotai"
 import { Message } from "types/nostr"
-import { Close, InsertEmoticon, RemoveRedEye, Reply } from "@mui/icons-material"
+import { Chat, Close, InsertEmoticon, RemoveRedEye } from "@mui/icons-material"
 import useModal from "utils/hooks/use-modal"
 import EmojiPicker from "components/channel/chat-input/tools/emoji-picker"
 import usePopover from "utils/hooks/use-popover"
@@ -17,10 +15,12 @@ import {
   threadRootAtom,
 } from "utils/nostr/atoms"
 import ShortEmojiPicker from "./short-emoji-picker"
+import styles from "./MessageMenu.module.scss"
+import { Button } from "components/general"
+import { Card } from "components/layout"
 
 const MessageMenu = (props: { message: Message; inThreadView?: boolean }) => {
   const { message, inThreadView } = props
-  const theme = useTheme()
   const [keys] = useAtom(keysAtom)
   const [raven] = useAtom(ravenAtom)
   const [, setActiveMessage] = useAtom(activeMessageAtom)
@@ -50,9 +50,9 @@ const MessageMenu = (props: { message: Message; inThreadView?: boolean }) => {
     setActiveMessage(message.id)
     showPopover({
       body: (
-        <Box sx={{ width: "280px" }}>
+        <Card className={styles.ShortEmojiPickerWrapper}>
           <ShortEmojiPicker onSelect={emojiSelected} onMore={emojiFull} />
-        </Box>
+        </Card>
       ),
       toRight: true,
       toBottom: true,
@@ -67,9 +67,9 @@ const MessageMenu = (props: { message: Message; inThreadView?: boolean }) => {
     setActiveMessage(message.id)
     showPopover({
       body: (
-        <Box sx={{ width: "298px" }}>
+        <Card className={styles.ShortEmojiPickerWrapper}>
           <EmojiPicker onSelect={emojiSelected} />
-        </Box>
+        </Card>
       ),
       toRight: true,
       toBottom: true,
@@ -94,18 +94,18 @@ const MessageMenu = (props: { message: Message; inThreadView?: boolean }) => {
 
   const buttons = [
     <Tooltip title={t("Reaction")}>
-      <IconButton size="small" onClick={emoji} ref={emojiButton}>
+      <Button size="small" onClick={emoji} ref={emojiButton}>
         <InsertEmoticon height={20} />
-      </IconButton>
+      </Button>
     </Tooltip>,
   ]
 
   if (!inThreadView) {
     buttons.push(
       <Tooltip title={t("Reply in thread")}>
-        <IconButton size="small" onClick={openThread}>
-          <Reply height={18} />
-        </IconButton>
+        <Button size="small" onClick={openThread}>
+          <Chat height={18} />
+        </Button>
       </Tooltip>
     )
   }
@@ -114,9 +114,9 @@ const MessageMenu = (props: { message: Message; inThreadView?: boolean }) => {
     // only public messages
     buttons.push(
       <Tooltip title={t("Hide")}>
-        <IconButton size="small" onClick={hide}>
+        <Button size="small" onClick={hide}>
           <RemoveRedEye height={20} />
-        </IconButton>
+        </Button>
       </Tooltip>
     )
   }
@@ -124,9 +124,9 @@ const MessageMenu = (props: { message: Message; inThreadView?: boolean }) => {
   if (keys?.pub === message.creator) {
     buttons.push(
       <Tooltip title={t("Delete")}>
-        <IconButton size="small" onClick={del}>
+        <Button size="small" onClick={del}>
           <Close height={20} />
-        </IconButton>
+        </Button>
       </Tooltip>
     )
   }
@@ -134,26 +134,9 @@ const MessageMenu = (props: { message: Message; inThreadView?: boolean }) => {
   if (buttons.length === 0) return null
 
   return (
-    <Box
-      sx={{
-        padding: "4px 6px",
-        borderRadius: theme.shape.borderRadius,
-        background: theme.palette.background.paper,
-        border: `1px solid ${theme.palette.divider}`,
-        display: "flex",
-      }}
-    >
+    <Box className={styles.MessageMenu}>
       {buttons.map((b, i) => (
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            mr: i === buttons.length - 1 ? null : "6px",
-          }}
-          key={i}
-        >
-          {b}
-        </Box>
+        <Box key={i}>{b}</Box>
       ))}
     </Box>
   )

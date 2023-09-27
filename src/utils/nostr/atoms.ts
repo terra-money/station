@@ -16,6 +16,7 @@ import {
   ReadMarkMap,
   Keys,
 } from "types/nostr"
+import { Popover } from "utils/hooks/use-popover"
 import Raven from "utils/nostr/raven"
 
 export const keysAtom = atom<Keys | undefined>(undefined)
@@ -53,3 +54,4 @@ export type Modal = {
   onHide?: () => void
 } | null
 export const modalAtom = atom<Modal>(null)
+export const popoverAtom = atom<Popover>(null)

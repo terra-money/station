@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { useAtom } from "jotai"
 import uniq from "lodash.uniq"
 import Box from "@mui/material/Box"
-import { useTheme } from "@mui/material/styles"
 import Tooltip from "@mui/material/Tooltip"
 import { nip19 } from "@terra-money/nostr-tools"
 import ProfileDialog from "components/channel/message-view/profile"
@@ -34,7 +33,6 @@ const MessageView = (props: {
   inThreadView?: boolean
 }) => {
   const { message, compactView, dateFormat, inThreadView } = props
-  const theme = useTheme()
   const [profiles] = useAtom(profilesAtom)
   const profile = profiles.find((x) => x.creator === message.creator)
   const [threadRoot, setThreadRoot] = useAtom(threadRootAtom)
@@ -105,14 +103,8 @@ const MessageView = (props: {
     <Box
       data-visible={isVisible}
       data-id={message.id}
-      className="message"
+      className={styles.MessageWrapper + " message"}
       ref={holderEl}
-      sx={{
-        display: "flex",
-        p: `${!compactView ? "15px" : "3px"} 10px 0 10px`,
-        position: "relative",
-        background: activeMessage === message.id ? theme.palette.divider : null,
-      }}
       onMouseEnter={() => {
         setMenu(true)
       }}
@@ -125,7 +117,7 @@ const MessageView = (props: {
           sx={{
             position: "absolute",
             right: "10px",
-            top: "-10px",
+            top: "-8px",
           }}
         >
           <MessageMenu message={message} inThreadView={inThreadView} />

@@ -1,0 +1,18 @@
+.ReactionButton {
+  font-size: 0.8em;
+  padding: 2px 8px;
+  margin-right: 4px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  border: 1px solid var(--card-border);
+}
+
+.ReactionEmoji {
+  margin-right: 3px;
+}
+
+.ReactionCount {
+  font-size: 0.9em;
+}
