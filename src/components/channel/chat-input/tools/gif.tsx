@@ -30,7 +30,7 @@ const Gif = (props: { onSelect: (selected: string) => void }) => {
   }
 
   return (
-    <Box onClick={gifClicked} className={hover ? "hover" : ""}>
+    <Box onClick={gifClicked} className={hover ? "HoverActive" : ""}>
       <GifBox height={20} />
     </Box>
   )

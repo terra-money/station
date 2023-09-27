@@ -1,0 +1,7 @@
+.ChatViewDivider {
+  &::before,
+  &::after {
+    border-top-color: var(--menu-border) !important;
+    opacity: 0.75;
+  }
+}

@@ -10,7 +10,7 @@ import MessageView from "components/channel/message-view"
 import ChatInput from "components/channel/chat-input"
 import { threadRootAtom } from "utils/nostr/atoms"
 import { useTranslation } from "react-i18next"
-import { Close } from "@mui/icons-material"
+import CloseIcon from "@mui/icons-material/Close"
 
 import styles from "./ThreadChatView.module.scss"
 
@@ -45,22 +45,14 @@ const ThreadChatView = (props: {
           flexShrink: 0,
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            borderBottom: `1px solid ${theme.palette.divider}`,
-            alignItems: "center",
-            p: "0 20px",
-          }}
-        >
-          <Box sx={{ fontFamily: "Faktum, sans-serif" }}>{t("Thread")}</Box>
+        <Box className={styles.ChatViewHeader}>
+          <h1>{t("Thread")}</h1>
           <IconButton
             onClick={() => {
               setThreadRoot(null)
             }}
           >
-            <Close height={20} />
+            <CloseIcon className={styles.CloseButton} height={20} />
           </IconButton>
         </Box>
         <MessageView
@@ -71,10 +63,10 @@ const ThreadChatView = (props: {
         />
         {threadRoot.children && threadRoot.children.length > 0 && (
           <Divider
+            className={styles.ChatViewDivider}
             textAlign="left"
             sx={{
               fontSize: "0.7em",
-              color: darken(theme.palette.text.secondary, 0.4),
               m: "6px 0",
             }}
           >

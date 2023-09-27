@@ -14,6 +14,7 @@ import {
 } from "utils/nostr"
 import { useTranslation } from "react-i18next"
 import { ravenAtom, tempPrivAtom } from "utils/nostr/atoms"
+import styles from "./ChatView.module.scss"
 
 const ChatView = (props: { messages: Message[]; loading?: boolean }) => {
   const { messages, loading } = props
@@ -171,6 +172,7 @@ const ChatView = (props: { messages: Message[]; loading?: boolean }) => {
           return (
             <React.Fragment key={msg.id}>
               <Divider
+                className={styles.ChatViewDivider}
                 sx={{
                   m: "0 24px",
                   fontSize: "0.7em",
