@@ -15,6 +15,7 @@ const PopoverProvider = (props: { children: React.ReactNode }) => {
       {props.children}
       {popover && (
         <Popover
+          className="CommunityPopover"
           transitionDuration={0}
           open={true}
           anchorEl={popover.anchorEl}
@@ -27,12 +28,12 @@ const PopoverProvider = (props: { children: React.ReactNode }) => {
             vertical: "top",
             horizontal: popover.toRight ? "right" : "left",
           }}
-          sx={{ ml: "10px" }}
           PaperProps={{
             sx: {
-              overflowY: "hidden",
+              backgroundColor: "transparent",
             },
           }}
+          sx={{ ml: "10px" }}
         >
           {popover.body}
         </Popover>

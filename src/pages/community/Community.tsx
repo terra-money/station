@@ -13,7 +13,7 @@ export const Community = () => {
       <KeysProvider>
         <RavenProvider>
           <PopoverProvider>
-            <ChannelPage></ChannelPage>
+            <ChannelPage />
           </PopoverProvider>
         </RavenProvider>
       </KeysProvider>

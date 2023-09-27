@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
-import { Box, darken } from "@mui/material"
+import { Box } from "@mui/material"
 import Divider from "@mui/material/Divider"
-import { useTheme } from "@mui/material/styles"
 import { useAtom } from "jotai"
 
 import MessageView from "components/channel/message-view"
@@ -12,13 +11,11 @@ import {
   formatMessageTime,
   notEmpty,
 } from "utils/nostr"
-import { useTranslation } from "react-i18next"
 import { ravenAtom } from "utils/nostr/atoms"
 import styles from "./ChatView.module.scss"
 
 const ChatView = (props: { messages: Message[]; loading?: boolean }) => {
   const { messages, loading } = props
-  const { t } = useTranslation()
   const ref = useRef<HTMLDivElement | null>(null)
   const [isAtBottom, setIsAtBottom] = useState(true)
   const [firstMessageEl, setFirstMessageEl] = useState<HTMLDivElement | null>(

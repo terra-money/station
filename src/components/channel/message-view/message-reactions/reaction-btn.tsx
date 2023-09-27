@@ -4,15 +4,15 @@ import Box from "@mui/material/Box"
 import { Message, ReactionCombined } from "types/nostr"
 import { ravenAtom } from "utils/nostr/atoms"
 import styles from "./MessageReactions.module.scss"
+import { Button } from "components/general"
 
 const ReactionBtn = (props: { message: Message; r: ReactionCombined }) => {
   const { message, r } = props
   const [raven] = useAtom(ravenAtom)
   const [inProgress, setInProgress] = useState(false)
 
-  console.log(r.userReaction)
   return (
-    <Box
+    <Button
       key={r.symbol}
       style={{ backgroundColor: r.userReaction !== undefined ? "#fff" : "" }}
       className={styles.ReactionButton}
@@ -29,7 +29,7 @@ const ReactionBtn = (props: { message: Message; r: ReactionCombined }) => {
     >
       <Box className={styles.ReactionEmoji}>{r.symbol}</Box>
       <Box className={styles.ReactionCount}>{r.count}</Box>
-    </Box>
+    </Button>
   )
 }
 

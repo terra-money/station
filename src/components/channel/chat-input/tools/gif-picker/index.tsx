@@ -9,6 +9,8 @@ import {
   SearchContextManager,
 } from "@giphy/react-components"
 import { IGif } from "@giphy/js-types"
+import { Card } from "components/layout"
+import style from "./GifPicker.module.scss"
 
 const GIPHY_KEY = process.env.REACT_APP_GIPHY_KEY!
 
@@ -23,9 +25,9 @@ export const SearchBar = styled(DefaultSearchBar)`
         display: none;
       }
       > input {
-        padding: 0.625rem 1rem!important;
+        height: 45px !important;
         color: ${theme.palette.text.primary}!important;
-        background: ${theme.palette.background.paper} !important;
+        background: ${theme.palette.background.default} !important;
         border: none!important;
         outline: none;
         border-radius: ${theme.shape.borderRadius}px !important;
@@ -37,7 +39,8 @@ export const SearchBar = styled(DefaultSearchBar)`
       .giphy-search-bar-cancel {
         position: absolute;
         inset-inline-end: 1.5rem;
-      }`
+      }
+      `
   }}
 `
 
@@ -54,20 +57,13 @@ const Giphy = (props: { onSelect: (selected: string) => void }) => {
         <SearchBar placeholder="Search" autoFocus />
       </Box>
 
-      <Box
-        sx={{
-          height: "260px",
-        }}
-      >
+      <Box className={style.GifList}>
         <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            mb: "6px",
-          }}
-        >
-          <Box component="img" src="/giphy.png" sx={{ width: "260px" }} />
-        </Box>
+          className={style.GiphyIcon}
+          component="img"
+          src="/giphy.png"
+          sx={{ width: "260px" }}
+        />
         <Grid
           tabIndex={1}
           key={searchKey}
@@ -87,11 +83,11 @@ const Giphy = (props: { onSelect: (selected: string) => void }) => {
 
 const GifPicker = (props: { onSelect: (selected: string) => void }) => {
   return (
-    <Box sx={{ p: "5px", height: "310px" }}>
+    <Card className={style.GifPickerWrapper}>
       <SearchContextManager apiKey={GIPHY_KEY}>
         <Giphy onSelect={props.onSelect} />
       </SearchContextManager>
-    </Box>
+    </Card>
   )
 }
 

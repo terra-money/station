@@ -12,6 +12,7 @@ import {
   storeEditorValue,
 } from "utils/localStorage/nostr"
 import { Send } from "@mui/icons-material"
+import styles from "./ChatInput.module.scss"
 
 const ChatInput = (props: {
   senderFn: (message: string, mentions: string[]) => Promise<any>
@@ -64,20 +65,9 @@ const ChatInput = (props: {
   }
 
   return (
-    <Box
-      sx={{
-        p: `10px 10px 14px`,
-        flexGrow: 0,
-        flexShrink: 0,
-      }}
-    >
-      <Box
-        sx={{
-          background: theme.palette.divider,
-          borderRadius: theme.shape.borderRadius,
-        }}
-      >
-        <Box sx={{ p: "1em" }}>
+    <Box className={styles.ChatInputWrapper}>
+      <Box>
+        <Box className={styles.ChatInput}>
           <EditorContent
             editor={editor}
             onKeyDown={(e) => {
@@ -87,24 +77,8 @@ const ChatInput = (props: {
             }}
           />
         </Box>
-        <Box
-          sx={{
-            borderTop: `1px solid ${lighten(theme.palette.divider, 0.6)}`,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "6px",
-            height: "60px",
-          }}
-        >
-          <Box
-            sx={{
-              pl: "12px",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.75em",
-            }}
-          >
+        <Box className={styles.ChatActions}>
+          <Box className={styles.ToolsWrapper}>
             <Tools
               inputRef={inputRef}
               senderFn={(message: string) => {
@@ -113,7 +87,7 @@ const ChatInput = (props: {
               insertFn={insert}
             />
           </Box>
-          <Button color="primary" onClick={send}>
+          <Button className={styles.SendButton} color="primary" onClick={send}>
             <Send height={32} />
           </Button>
         </Box>
