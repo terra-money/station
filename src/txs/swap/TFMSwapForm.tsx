@@ -373,5 +373,12 @@ export default TFMSwapForm
 /* helpers */
 const toTFMParams = (params: TFMSwapParams) => {
   const { offerAsset: token0, askAsset: token1, amount } = params
-  return { ...params, token0, token1, amount, use_split: true }
+  return {
+    ...params,
+    token0,
+    token1,
+    amount,
+    use_split: true,
+    exchanges: "terraswap,astroport,phoenix",
+  }
 }

@@ -155,6 +155,10 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
         return unsignedTx.auth_info.fee.gas_limit
       } catch (error) {
+        console.log("simulation failed", {
+          address: key.address,
+          tx: { ...simulationTx },
+        })
         console.error(error)
         return 200_000
       }
