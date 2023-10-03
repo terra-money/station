@@ -44,7 +44,11 @@ export const useProposals = (status: Proposal.Status) => {
       const [proposals] = await lcd.gov.proposals({
         proposal_status: status,
         ...Pagination,
+        "pagination.reverse": "true",
       })
+
+      Array.isArray(proposals) && proposals.reverse()
+
       return proposals
     },
     { ...RefetchOptions.DEFAULT }
