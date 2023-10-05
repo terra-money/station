@@ -71,7 +71,7 @@ export const useGammTokens = () => {
           poolAsset.map((asset) => asset.symbol).join("-") + " LP"
         )
       } else {
-        throw new Error("Invalid API response format")
+        console.error("Invalid API response format")
       }
     }
   }
