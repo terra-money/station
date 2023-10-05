@@ -64,12 +64,14 @@ export const useGammTokens = () => {
   const gammTokens = new Map<string, string>()
 
   if (fetch.data) {
-    for (const [poolId, poolAsset] of Object.entries(fetch.data ?? {})) {
-      if (poolAsset.length) {
+    for (const [poolId, poolAsset] of Object.entries(fetch.data)) {
+      if (Array.isArray(poolAsset)) {
         gammTokens.set(
           "gamm/pool/" + poolId,
           poolAsset.map((asset) => asset.symbol).join("-") + " LP"
         )
+      } else {
+        throw new Error("Invalid API response format")
       }
     }
   }
