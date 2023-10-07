@@ -4,8 +4,13 @@ import ChannelPage from "components/channel"
 import PopoverProvider from "providers/popover"
 import RavenProvider from "providers/raven"
 import KeysProvider from "providers/keys"
+import { useAtom } from "jotai"
+import { keysAtom } from "utils/nostr/atoms"
+import NostrLogin from "components/nostr-login"
 
 export const Community = () => {
+  const [keys] = useAtom(keysAtom)
+  console.log("keys", keys)
   const { t } = useTranslation()
 
   return (
@@ -13,7 +18,7 @@ export const Community = () => {
       <KeysProvider>
         <RavenProvider>
           <PopoverProvider>
-            <ChannelPage />
+            {keys ? <ChannelPage /> : <NostrLogin />}
           </PopoverProvider>
         </RavenProvider>
       </KeysProvider>

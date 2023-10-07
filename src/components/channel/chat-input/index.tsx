@@ -18,7 +18,6 @@ const ChatInput = (props: {
   senderFn: (message: string, mentions: string[]) => Promise<any>
 }) => {
   const { senderFn } = props
-  const theme = useTheme()
   const inputRef = useRef<HTMLDivElement | null>(null)
   const storageKey = "chat-input"
 

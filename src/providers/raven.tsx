@@ -64,7 +64,7 @@ const RavenProvider = (props: { children: React.ReactNode }) => {
   const [, setDirectContacts] = useAtom(directContactsAtom)
   const [since, setSince] = useState<number>(0)
 
-  const raven = useMemo(() => initRaven(), [])
+  const raven = useMemo(() => initRaven(keys), [keys])
 
   // Listen for events in an interval.
   useEffect(() => {

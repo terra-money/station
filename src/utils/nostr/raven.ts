@@ -980,11 +980,7 @@ class Raven extends TypedEventEmitter<RavenEvents, EventHandlerMap> {
 
 export default Raven
 
-export const initRaven = (): Raven | undefined => {
-  let keys: Keys = {
-    priv: "nsec1kh58dd68plvmx4wqflgfrfndl47z5gva4wx69ld7w2vpd3uq8exshqkczs",
-    pub: "npub190qv6an5relukw6xjfdzkdywk8y2qwenc5qdnsajl4zkuly46acsd6py0t",
-  }
+export const initRaven = (keys: Keys | undefined): Raven | undefined => {
   if (window.raven) {
     window.raven = undefined
   }

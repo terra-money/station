@@ -12,7 +12,6 @@ import {
   TERRA_CID,
 } from "utils/nostr"
 import { useTranslation } from "react-i18next"
-import { initRaven } from "utils/nostr/raven"
 import { channelAtom, ravenReadyAtom, threadRootAtom } from "utils/nostr/atoms"
 import { useAtom } from "jotai"
 import useLiveChannel from "utils/hooks/use-live-channel"
@@ -21,7 +20,6 @@ import { Card } from "components/layout"
 import styles from "./Channel.module.scss"
 
 const ChannelPage = () => {
-  const raven = useMemo(() => initRaven(), [])
   const { t } = useTranslation()
   const messages = useLivePublicMessages(TERRA_CID)
   const [, setChannel] = useAtom(channelAtom)
@@ -37,7 +35,7 @@ const ChannelPage = () => {
       if (!hasMore || loading) return
 
       setLoading(true)
-      raven
+      window.raven
         ?.fetchPrevMessages(channel!.id, messages[0].created)
         .then((num) => {
           if (num < MESSAGE_PER_PAGE - ACCEPTABLE_LESS_PAGE_MESSAGES) {
@@ -74,7 +72,7 @@ const ChannelPage = () => {
         return
       }
 
-      raven?.fetchChannel(channel.id).then((channel) => {
+      window.raven?.fetchChannel(channel.id).then((channel) => {
         if (channel) {
           clearTimeout(timer)
           setLoading(false)
@@ -100,8 +98,8 @@ const ChannelPage = () => {
           <ChatView messages={messages} loading={loading} />
           <ChatInput
             senderFn={(message: string, mentions: string[]) => {
-              return raven!
-                .sendPublicMessage(channel, message, mentions)
+              return window
+                .raven!.sendPublicMessage(channel, message, mentions)
                 .catch((e: any) => {
                   console.error(e)
                 })
@@ -111,8 +109,8 @@ const ChannelPage = () => {
         {threadRoot && (
           <ThreadChatView
             senderFn={(message: string, mentions: string[]) => {
-              return raven!
-                .sendPublicMessage(
+              return window
+                .raven!.sendPublicMessage(
                   channel,
                   message,
                   [threadRoot.creator, ...mentions],
