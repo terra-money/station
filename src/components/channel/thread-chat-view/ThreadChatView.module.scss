@@ -1,0 +1,43 @@
+.ThreadChatView {
+  background-color: var(--card-bg-muted);
+  width: 320px;
+  border-radius: 1em;
+  padding-top: 0.5em;
+  flex-grow: 0;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+
+  overflow: auto;
+  // TODO: find a better way to calculate
+  // the height to get the overflow right
+  //
+  // 8px is the padding of the input
+  height: calc(
+    100vh - var(--header-height) - var(--main-padding-horizontal) -
+      var(--border-width) - var(--border-width) - var(--main-padding-horizontal) -
+      var(--main-padding-horizontal) - var(--main-padding-horizontal) -
+      var(--card-padding) - var(--card-padding) - var(--grid-gap) -
+      var(--font-size-page-title) - 8px
+  );
+}
+
+.CloseButton {
+  color: var(--text);
+}
+
+.ChatViewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--menu-border);
+}
+
+.ChatViewDivider {
+  &::before,
+  &::after {
+    border-top-color: var(--menu-border) !important;
+    opacity: 0.75;
+  }
+}

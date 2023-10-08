@@ -1,0 +1,40 @@
+.MessageWrapper {
+  display: flex;
+  padding: 6px 14px 0px;
+  position: relative;
+  border-radius: var(--border-radius);
+
+  &:hover {
+    // background-color: var(--input-bg);
+    background-color: var(--bg-muted);
+  }
+}
+
+.ThreadRoot {
+  padding: 2px;
+  margin-bottom: 4px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.8rem;
+  cursor: pointer;
+  gap: 4px;
+  opacity: 0.75;
+  transition: opacity var(--transition);
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.ThreadBox {
+  font-size: 0.9em;
+  margin-top: 4px;
+  word-break: break-word;
+  line-height: 1.4em;
+}
+
+.ThreadReply {
+  margin-right: 10px;
+  color: var(--button-primary-bg);
+  font-weight: bold;
+}

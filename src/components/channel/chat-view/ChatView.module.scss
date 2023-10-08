@@ -1,0 +1,22 @@
+.ChatViewWrapper {
+  overflow: auto;
+  // TODO: find a better way to calculate
+  // the height to get the overflow right
+  //
+  // 133px is the height of the chat input
+  height: calc(
+    100vh - var(--header-height) - var(--main-padding-horizontal) -
+      var(--border-width) - var(--border-width) - var(--main-padding-horizontal) -
+      var(--main-padding-horizontal) - var(--main-padding-horizontal) -
+      var(--card-padding) - var(--card-padding) - var(--grid-gap) -
+      var(--font-size-page-title) - 138px
+  );
+}
+
+.ChatViewDivider {
+  &::before,
+  &::after {
+    border-top-color: var(--menu-border) !important;
+    opacity: 0.75;
+  }
+}

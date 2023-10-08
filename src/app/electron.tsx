@@ -1,7 +1,22 @@
+import { Event } from "@terra-money/nostr-tools"
+import { RelayDict } from "types/nostr"
+import Raven from "utils/nostr/raven"
+
 declare global {
   interface Window {
     require: NodeRequire
     electron: any
+    raven: Raven | undefined
+    nostr?: {
+      getPublicKey: () => Promise<string>
+      signEvent: (event: Event) => Promise<Event>
+      getRelays: () => Promise<RelayDict>
+      nip04: {
+        encrypt: (pubkey: string, content: string) => Promise<string>
+        decrypt: (pubkey: string, content: string) => Promise<string>
+      }
+    }
+    requestPrivateKey: (data?: any) => Promise<string>
   }
 }
 

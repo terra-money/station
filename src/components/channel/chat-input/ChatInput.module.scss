@@ -1,0 +1,35 @@
+.ChatInputWrapper {
+  margin: 14px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  border-radius: var(--border-radius);
+  background-color: var(--bg-muted);
+}
+
+.ChatInput {
+  padding: 1em;
+}
+
+.ToolsWrapper {
+  padding-left: 12px;
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+}
+
+.ChatActions {
+  border-top: 1px solid var(--input-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px;
+  height: 60px;
+}
+.EditorContent {
+  padding: 1em;
+}
+
+.SendButton {
+  height: 38px;
+  min-width: 100px;
+}

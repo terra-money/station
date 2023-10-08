@@ -21,6 +21,14 @@
   --normal: 400;
   --bold: 500;
 
+  @include desktop {
+    --font-size-page-title: 36px;
+  }
+
+  @include mobile {
+    --font-size-page-title: 28px;
+  }
+
   // components
   --box-shadow: 0 4px 8px 0 hsl(0 0% 0% / 0.2);
   --box-shadow-btn: -5px 2px 20px rgba(0, 0, 0, 0.75);
@@ -211,7 +219,6 @@
 
 .moon {
   --border-width: 0;
-  --border-radius: 8px;
 
   --button-primary-bg-h: 201;
   --button-primary-bg-s: 90%;
