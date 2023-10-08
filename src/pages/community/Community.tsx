@@ -7,21 +7,23 @@ import KeysProvider from "providers/keys"
 import { useAtom } from "jotai"
 import { keysAtom } from "utils/nostr/atoms"
 import NostrLogin from "components/nostr-login"
+import ModalProvider from "providers/modal-provider"
 
 export const Community = () => {
   const [keys] = useAtom(keysAtom)
-  console.log("keys", keys)
   const { t } = useTranslation()
 
   return (
     <Page title={t("Community")}>
-      <KeysProvider>
-        <RavenProvider>
-          <PopoverProvider>
-            {keys ? <ChannelPage /> : <NostrLogin />}
-          </PopoverProvider>
-        </RavenProvider>
-      </KeysProvider>
+      <ModalProvider>
+        <PopoverProvider>
+          <KeysProvider>
+            <RavenProvider>
+              {keys ? <ChannelPage /> : <NostrLogin />}
+            </RavenProvider>
+          </KeysProvider>
+        </PopoverProvider>
+      </ModalProvider>
     </Page>
   )
 }

@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react"
 import { useAtom } from "jotai"
 import Box from "@mui/material/Box"
-import Divider from "@mui/material/Divider"
-import Button from "@mui/material/Button"
-import CircularProgress from "@mui/material/CircularProgress"
+import { Button, ExternalLink } from "components/general"
 import { nip06, getPublicKey } from "@terra-money/nostr-tools"
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet"
 import ImportAccount from "components/nostr-login/import-account"
@@ -20,20 +18,22 @@ import { Keys } from "types/nostr"
 import { useTranslation } from "react-i18next"
 import useModal from "utils/hooks/use-modal"
 import Add from "@mui/icons-material/Add"
-import { ImportContacts } from "@mui/icons-material"
+import { Login } from "@mui/icons-material"
+import { Card } from "components/layout"
+import styles from "./NostrLogin.module.scss"
 
 const NostrLogin = () => {
   const { t } = useTranslation()
   const [, showModal] = useModal()
   const [, setKeys] = useAtom(keysAtom)
-  const [profile, setProfile] = useAtom(profileAtom)
+  const [_, setProfile] = useAtom(profileAtom)
   const [, setBackupWarn] = useAtom(backupWarnAtom)
   const [raven] = useAtom(ravenAtom)
   const [ravenReady] = useAtom(ravenReadyAtom)
   const [step, setStep] = useState<0 | 1 | 2>(0)
 
   useEffect(() => {
-    if (step === 1 && ravenReady) setStep(2)
+    if (step === 0 && !ravenReady) setStep(1)
   }, [step, ravenReady])
 
   const createAccount = () => {
@@ -59,7 +59,7 @@ const NostrLogin = () => {
     })
   }
 
-  const loginNip07 = async () => {
+  const loginWithStation = async () => {
     if (!window.nostr) {
       // showModal({
       //     body: <InstallNip07Dialog/>
@@ -80,90 +80,61 @@ const NostrLogin = () => {
     storeKeys(keys).then(() => {
       setKeys(keys)
       setProfile(null)
-      setStep(1)
     })
   }
 
   return (
-    <>
-      <Divider sx={{ m: "28px 0" }} />
-      {(() => {
-        if (step === 1) {
-          return (
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
-              <CircularProgress />
-            </Box>
-          )
-        }
+    <Card className={styles.NostrLoginWrapper}>
+      {step === 1 && (
+        <Box>
+          <Box className={styles.LoginInfo}>
+            <b>{t("Sign in to get started. ")}</b>
+            {t("A new set of keys will be needed exclusively for Nostr. ")}
+            {t(
+              "Nostr wallet is not the same as Terra's wallet but can be bounded to it submitting a transaction on chain. "
+            )}
+          </Box>
 
-        if (step === 2) {
-          return (
-            <>
-              <Box sx={{ color: "text.secondary", mb: "28px" }}>
-                {t("Setup your profile")}
-              </Box>
-              <MetadataForm
-                skipButton={<Button>{t("Skip")}</Button>}
-                submitBtnLabel={t("Finish")}
-                onSubmit={(data: any) => {
-                  raven?.updateProfile(data)
-                }}
-              />
-            </>
-          )
-        }
+          <Box className={styles.LoginDetailsButtons}>
+            <Button onClick={createAccount} icon={<Add />} color="primary">
+              {t("Create Nostr Account")}
+            </Button>
 
-        return (
-          <>
-            <Box sx={{ color: "text.secondary", mb: "28px" }}>
-              {t("Sign in to get started")}
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <Button
-                size="large"
-                disableElevation
-                fullWidth
-                onClick={createAccount}
-                sx={{
-                  mb: "22px",
-                  p: "20px 26px",
-                  mr: "22px",
-                }}
-                startIcon={<Add width={38} />}
-              >
-                {t("Create Nostr Account")}
-              </Button>
-              <Button
-                size="large"
-                disableElevation
-                fullWidth
-                onClick={importAccount}
-                sx={{ mb: "22px", p: "20px 26px" }}
-                startIcon={<ImportContacts width={38} />}
-              >
-                {t("Import Nostr Account")}
-              </Button>
-            </Box>
+            <Button onClick={importAccount} icon={<Login />} color="primary">
+              {t("Import Nostr Account")}
+            </Button>
+
             <Button
               disabled
-              size="large"
-              disableElevation
-              fullWidth
-              onClick={loginNip07}
-              sx={{ p: "14px" }}
-              startIcon={<AccountBalanceWalletIcon height={20} />}
+              onClick={loginWithStation}
+              color="primary"
+              icon={<AccountBalanceWalletIcon />}
             >
-              {t("Use NIP-07 Wallet")}
+              {t("Use Station Wallet (coming soon)")}
             </Button>
-          </>
-        )
-      })()}
-    </>
+          </Box>
+
+          <Box className={styles.LoginInfoFooter}>
+            <ExternalLink icon href="https://nostr.com/#simple">
+              {t("Learn more about Nostr")}
+            </ExternalLink>
+          </Box>
+        </Box>
+      )}
+
+      {step === 2 && (
+        <>
+          <Box>{t("Setup your profile")}</Box>
+          <MetadataForm
+            skipButton={<Button>{t("Skip")}</Button>}
+            submitBtnLabel={t("Finish")}
+            onSubmit={(data: any) => {
+              raven?.updateProfile(data)
+            }}
+          />
+        </>
+      )}
+    </Card>
   )
 }
 

@@ -1,7 +1,5 @@
 import { useEffect, useRef } from "react"
 import Box from "@mui/material/Box"
-import { useTheme } from "@mui/material/styles"
-import { lighten } from "@mui/material"
 import { Button } from "components/general"
 import Tools from "./tools"
 import useMakeEditor from "./editor"

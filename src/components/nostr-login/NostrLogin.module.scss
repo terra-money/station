@@ -1,0 +1,20 @@
+.NostrLoginWrapper {
+}
+
+.LoginInfo {
+}
+
+.LoginDetailsButtons {
+  display: flex;
+  justify-content: space-evenly;
+  flex-flow: row wrap;
+
+  > button {
+    margin: 10px;
+  }
+}
+
+.LoginInfoFooter {
+  display: flex;
+  justify-content: end;
+}

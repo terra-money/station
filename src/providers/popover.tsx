@@ -15,7 +15,6 @@ const PopoverProvider = (props: { children: React.ReactNode }) => {
       {props.children}
       {popover && (
         <Popover
-          className="CommunityPopover"
           transitionDuration={0}
           open={true}
           anchorEl={popover.anchorEl}

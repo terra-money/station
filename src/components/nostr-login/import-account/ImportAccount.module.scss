@@ -1,0 +1,36 @@
+.ImportAccountDialogWrapper {
+  background-color: var(--card-bg);
+  color: var(--text);
+
+  .ImportAccountDialogTitle {
+    display: flex;
+    justify-content: space-between;
+
+    svg {
+      cursor: pointer;
+    }
+  }
+
+  .ImportAccountDialogContent {
+    padding-bottom: 0;
+
+    input {
+      color: var(--text) !important;
+    }
+
+    .ImportAccountInputFooter {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 10px;
+
+      .InvalidText {
+        color: var(--danger);
+      }
+    }
+  }
+
+  .ImportAccountFooter {
+    justify-content: space-between;
+    padding: 20px 24px;
+  }
+}

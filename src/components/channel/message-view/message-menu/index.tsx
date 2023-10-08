@@ -4,7 +4,6 @@ import Tooltip from "@mui/material/Tooltip"
 import { useAtom } from "jotai"
 import { Message } from "types/nostr"
 import { Chat, Close, InsertEmoticon, RemoveRedEye } from "@mui/icons-material"
-import useModal from "utils/hooks/use-modal"
 import EmojiPicker from "components/channel/chat-input/tools/emoji-picker"
 import usePopover from "utils/hooks/use-popover"
 import { useTranslation } from "react-i18next"
@@ -25,7 +24,6 @@ const MessageMenu = (props: { message: Message; inThreadView?: boolean }) => {
   const [raven] = useAtom(ravenAtom)
   const [, setActiveMessage] = useAtom(activeMessageAtom)
   const [, setThreadRoot] = useAtom(threadRootAtom)
-  const [, showModal] = useModal()
   const { t } = useTranslation()
   const [, showPopover] = usePopover()
   const emojiButton = useRef<HTMLButtonElement | null>(null)
