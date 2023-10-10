@@ -6,9 +6,9 @@ import {
 import VestingScheduleTable from "./VestingScheduleTable"
 import { useTranslation } from "react-i18next"
 import styles from "./Vesting.module.scss"
-import { Read } from "components/token"
+import { ReadToken } from "components/token"
 
-const Vesting = () => {
+const Vesting = ({ denom }: { denom: Denom }) => {
   const { t } = useTranslation()
   const { data } = useAccount()
 
@@ -23,11 +23,11 @@ const Vesting = () => {
         <dl>
           <dt>{t("Vested")}</dt>
           <dd>
-            <Read amount={schedule.amount.vested} />
+            <ReadToken denom={denom} amount={schedule.amount.vested} />
           </dd>
           <dt>{t("Total")}</dt>
           <dd>
-            <Read amount={schedule.amount.total} />
+            <ReadToken denom={denom} amount={schedule.amount.total} />
           </dd>
         </dl>
       </section>

@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next"
 import { FinderLink } from "components/general"
 import { Card } from "components/layout"
 import { Dl, DateTimeRenderer } from "components/display"
-import { ReadMultiple } from "components/token"
+import { ReadToken } from "components/token"
 import HistoryMessage from "./HistoryMessage"
 import styles from "./HistoryItem.module.scss"
 import DateRangeIcon from "@mui/icons-material/DateRange"
@@ -28,7 +28,9 @@ const HistoryItem = ({
     tx: {
       body: { memo },
       auth_info: {
-        fee: { amount: fee },
+        fee: {
+          amount: [fee],
+        },
         signer_infos,
       },
     },
@@ -40,7 +42,7 @@ const HistoryItem = ({
   const networkName = useNetworkName()
 
   const data = [
-    { title: t("Fee"), content: <ReadMultiple list={fee} /> },
+    { title: t("Fee"), content: <ReadToken {...fee} /> },
     { title: t("Memo"), content: memo },
     { title: t("Log"), content: !success && raw_log },
   ]
@@ -48,6 +50,7 @@ const HistoryItem = ({
   const ruleset = createActionRuleSet(networkName)
   const logMatcher = createLogMatcherForActions(ruleset)
   const getCanonicalMsgs = (txInfo: TxInfo) => {
+    // @ts-ignore
     const matchedMsg = getTxCanonicalMsgs(txInfo, logMatcher)
     return matchedMsg
       ? matchedMsg

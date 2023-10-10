@@ -12,6 +12,7 @@ import validate from "../validate"
 import Tx from "../Tx"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { useNetwork } from "data/wallet"
+import { useNativeDenoms } from "data/token"
 
 interface TxValues {
   input?: number
@@ -22,6 +23,7 @@ const DepositForm = () => {
   const { id, chain } = useProposalId()
   const addresses = useInterchainAddresses()
   const networks = useNetwork()
+  const readNativeDenom = useNativeDenoms()
 
   const bankBalance = useBankBalance()
   const balance =
@@ -33,7 +35,9 @@ const DepositForm = () => {
   const { register, trigger, watch, setValue, handleSubmit, formState } = form
   const { errors } = formState
   const { input } = watch()
-  const amount = toAmount(input)
+  const token = networks[chain].baseAsset
+  const decimals = readNativeDenom(token ?? "").decimals
+  const amount = toAmount(input, { decimals })
 
   /* tx */
   const createTx = useCallback(
@@ -67,7 +71,7 @@ const DepositForm = () => {
   )
 
   const tx = {
-    token: networks[chain].baseAsset,
+    token,
     amount,
     balance,
     estimationTxValues,
@@ -89,9 +93,9 @@ const DepositForm = () => {
             <Input
               {...register("input", {
                 valueAsNumber: true,
-                validate: validate.input(toInput(max.amount)),
+                validate: validate.input(toInput(max.amount), decimals),
               })}
-              token={networks[chain].baseAsset}
+              token={token}
               onFocus={max.reset}
               type="number"
               inputMode="decimal"

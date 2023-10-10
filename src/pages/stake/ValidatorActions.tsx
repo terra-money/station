@@ -10,7 +10,7 @@ import { getAvailableStakeActions } from "data/queries/staking"
 import { calcRewardsValues, useRewards } from "data/queries/distribution"
 import { LinkButton } from "components/general"
 import { Col, Card, ExtraActions, Grid } from "components/layout"
-import { Read } from "components/token"
+import { ReadToken } from "components/token"
 import { StakeAction } from "txs/stake/StakeForm"
 import styles from "./ValidatorActions.module.scss"
 import { useNetworkWithFeature } from "data/wallet"
@@ -22,7 +22,7 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
   const networks = useNetworkWithFeature(ChainFeature.STAKING)
   const chain = useMemo(() => {
     const prefix = ValAddress.getPrefix(destination)
-    return Object.values(networks ?? {}).find(({ prefix: p }) => p === prefix)
+    return Object.values(networks).find(({ prefix: p }) => p === prefix)
   }, [networks, destination])
   const { data: delegation, ...delegationState } = useDelegation(destination)
   const { data: delegations, ...delegationsState } = useDelegations(
@@ -46,9 +46,9 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
 
     return (
       <section>
-        <Read
+        <ReadToken
           amount={amount}
-          denom={chain?.baseAsset}
+          denom={chain?.baseAsset ?? ""}
           className={styles.total}
           block
         />
@@ -93,9 +93,9 @@ const ValidatorActions = ({ destination }: { destination: ValAddress }) => {
 
     return (
       <section>
-        <Read
+        <ReadToken
           amount={amount}
-          denom={chain?.baseAsset}
+          denom={chain?.baseAsset ?? ""}
           className={styles.total}
         />{" "}
         <span className={styles.small}>

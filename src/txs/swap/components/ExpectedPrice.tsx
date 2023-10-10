@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
 import { toPrice } from "utils/num"
-import { Read } from "components/token"
+import { Read, ReadToken } from "components/token"
 import { PayloadOnchain, PayloadTerraswap } from "../useSwapUtils"
 import { PayloadRouteswap } from "../useSwapUtils"
 import { SwapMode } from "../useSwapUtils"
@@ -55,11 +55,7 @@ const ExpectedPrice = ({ mode, input, ...props }: Props) => {
         {renderExpectedPrice()}
 
         <dt>{t("Trading fee")}</dt>
-        <dd>
-          {!isLoading && (
-            <Read amount={fee} denom={askAsset} decimals={askDecimals} />
-          )}
-        </dd>
+        <dd>{!isLoading && <ReadToken amount={fee} denom={askAsset} />}</dd>
       </>
     )
   }
@@ -82,9 +78,9 @@ const ExpectedPrice = ({ mode, input, ...props }: Props) => {
         <dt>{t("Minimum received")}</dt>
         <dd>
           {!isLoading && (
-            <Read
+            <ReadToken
               amount={minimum_receive}
-              token={askAsset}
+              denom={askAsset}
               decimals={findDecimals(askAsset)}
             />
           )}

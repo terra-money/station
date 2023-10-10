@@ -1,6 +1,6 @@
 import { FinderLink } from "components/general"
 import { Col, Card } from "components/layout"
-import { Read } from "components/token"
+import { ReadToken } from "components/token"
 import { ProposalResult } from "data/queries/gov"
 import DataList from "./components/DataList"
 
@@ -14,7 +14,9 @@ const ProposalSummary = ({ proposal }: { proposal: ProposalResult }) => {
       title: capitalize(key),
       content:
         key === "amount" ? (
-          content.map((coin: CoinData) => <Read {...coin} key={coin.denom} />)
+          content.map((coin: CoinData) => (
+            <ReadToken {...coin} key={coin.denom} />
+          ))
         ) : key === "recipient" ? (
           <FinderLink short>{content}</FinderLink>
         ) : key === "changes" ? (

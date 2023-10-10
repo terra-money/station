@@ -196,7 +196,7 @@ function IbcSendBackTx({ token, chainID }: Props) {
         new MsgTransfer(
           port,
           channel,
-          new Coin(IBCdenom, input * 10 ** decimals),
+          new Coin(IBCdenom, input * Math.pow(10, decimals)),
           addresses[chains[step]],
           addresses[chains[step + 1]],
           undefined,
