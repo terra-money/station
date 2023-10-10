@@ -7,6 +7,8 @@ import { Wrong } from "components/feedback"
 import Chart, { ChartProps, CHART_HEIGHT } from "./Chart"
 import styles from "./ChartContainer.module.scss"
 
+const cx = classNames.bind(styles)
+
 export const LOADING = {
   width: CHART_HEIGHT / 2,
   height: CHART_HEIGHT / 2,
@@ -33,9 +35,7 @@ const ChartContainer = (props: Props) => {
 
   const renderTotal = () => {
     if (!total)
-      return (
-        <h1 className={classNames(styles.title, "muted")}>{t("Loading...")}</h1>
-      )
+      return <h1 className={cx(styles.title, "muted")}>{t("Loading...")}</h1>
 
     return (
       <h1 className={styles.title}>

@@ -81,7 +81,7 @@ export const queryKey = mirror({
     unbondings: "",
     pool: "",
   },
-  tx: { txInfo: "", create: "" },
+  tx: { txInfo: "", create: "", fees: "" },
   wasm: { contractInfo: "", contractQuery: "" },
   interchain: {
     staking: {

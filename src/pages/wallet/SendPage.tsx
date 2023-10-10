@@ -128,17 +128,19 @@ const SendPage = () => {
 
   const defaultAsset = route?.denom || filteredAssets[0].denom
 
-  const availableChains = useMemo(
-    () =>
-      availableAssets
-        .find(({ denom }) => denom === (asset ?? defaultAsset))
-        ?.chains.sort((a, b) => {
-          if (networks[a]?.prefix === "terra") return -1
-          if (networks[b]?.prefix === "terra") return 1
-          return 0
-        }),
-    [asset, availableAssets, defaultAsset, networks]
-  )
+  const availableChains = useMemo(() => {
+    const chainsFromAsset = availableAssets.find(
+      ({ denom }) => denom === (asset ?? defaultAsset)
+    )?.chains
+
+    const uniqueChains = Array.from(new Set(chainsFromAsset))
+
+    return uniqueChains.sort((a, b) => {
+      if (networks[a]?.prefix === "terra") return -1
+      if (networks[b]?.prefix === "terra") return 1
+      return 0
+    })
+  }, [asset, availableAssets, defaultAsset, networks])
 
   const token = balances.find(
     ({ denom, chain }) =>

@@ -12,6 +12,7 @@ import GovernanceParams from "./GovernanceParams"
 import styles from "./ProposalsByStatus.module.scss"
 import ChainFilter from "components/layout/ChainFilter"
 import { combineState } from "data/query"
+import { ChainFeature } from "types/chains"
 
 const ProposalsByStatus = ({ status }: { status: ProposalStatus }) => {
   const { t } = useTranslation()
@@ -35,7 +36,7 @@ const ProposalsByStatus = ({ status }: { status: ProposalStatus }) => {
 
     return (
       <>
-        <ChainFilter all>
+        <ChainFilter all feature={ChainFeature.GOV}>
           {(chain) => {
             const filtered = proposals.filter(
               (p) => !chain || p.chain === chain

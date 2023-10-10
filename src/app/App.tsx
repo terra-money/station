@@ -34,6 +34,7 @@ import Wallet from "pages/wallet/Wallet"
 import NavButton from "./sections/NavButton"
 import NetworkStatus from "components/display/NetworkStatus"
 import EnableCoinType from "./sections/EnableCoinType"
+import UpdateNotification from "./update/UpdateNotification"
 
 const App = () => {
   const { element: routes } = useNav()
@@ -81,6 +82,7 @@ const App = () => {
           </ErrorBoundary>
         </Content>
       </Layout>
+      <UpdateNotification />
     </InitBankBalance>
   )
 }

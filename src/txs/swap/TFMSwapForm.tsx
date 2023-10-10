@@ -34,7 +34,7 @@ import SlippageControl from "./components/SlippageControl"
 import TFMExpectedPrice from "./TFMExpectedPrice"
 import { SwapAssets, validateAssets } from "./useSwapUtils"
 import { validateParams } from "./useSwapUtils"
-import { calcMinimumReceive, SlippageParams } from "./SingleSwapContext"
+import { calcMinimumReceive } from "./SingleSwapContext"
 import { useTFMSwap, validateTFMSlippageParams } from "./TFMSwapContext"
 import { useCustomTokensCW20 } from "data/settings/CustomTokens"
 import { useNativeDenoms } from "data/token"
@@ -44,7 +44,12 @@ interface TFMSwapParams extends SwapAssets {
   slippage?: string
 }
 
-interface TxValues extends Partial<SlippageParams> {}
+interface TxValues {
+  offerAsset: string
+  askAsset: string
+  input: number | undefined
+  slippageInput: number
+}
 
 const TFMSwapForm = ({ chainID }: { chainID: string }) => {
   const { t } = useTranslation()
@@ -153,7 +158,7 @@ const TFMSwapForm = ({ chainID }: { chainID: string }) => {
 
       // empty opposite asset if select the same asset
       if (assets.offerAsset === assets.askAsset) {
-        setValue(key === "offerAsset" ? "askAsset" : "offerAsset", undefined)
+        setValue(key === "offerAsset" ? "askAsset" : "offerAsset", "")
       }
 
       // focus on input if select offer asset

@@ -32,7 +32,7 @@ import BigNumber from "bignumber.js"
 import { QuickStakeAction } from "pages/stake/hooks/useQuickStake"
 
 interface TxValues {
-  input?: number
+  input: number
 }
 
 interface Props {

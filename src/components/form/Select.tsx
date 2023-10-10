@@ -18,7 +18,7 @@ const Select = forwardRef(
     const className = cx(styles.select, { small, before })
 
     return (
-      <div className={classNames(styles.wrapper, attrs.className)}>
+      <div className={cx(styles.wrapper, attrs.className)}>
         <select {...attrs} className={className} ref={ref} />
         <ArrowDropDownIcon style={{ fontSize: 18 }} className={styles.caret} />
       </div>

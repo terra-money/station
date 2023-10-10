@@ -1,0 +1,26 @@
+@import "mixins";
+
+.notification {
+  z-index: 1000;
+  position: absolute;
+  bottom: 1.2rem;
+  left: 50%;
+  transform: translate(-50%, 0);
+  background-color: var(--bg);
+  padding: 0.5rem 1.4rem;
+  border-radius: 1rem;
+  //font-size: var(--font-size-small);
+  white-space: nowrap;
+  // same shadow as send/receive/buy buttons
+  box-shadow: inset 0px 1.5px 0px 0px rgb(255 255 255 / 8%),
+    0px 4px 24px 0px rgb(36 36 40 / 30%);
+
+  button {
+    color: var(--button-primary-bg);
+    margin-left: 1rem;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

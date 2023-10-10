@@ -1,3 +1,4 @@
+import { AccAddress } from "@terra-money/feather.js"
 import { getStoredWallet } from "./keystore"
 import wordlist from "bip39/src/wordlists/english.json"
 
@@ -21,7 +22,10 @@ const validate = {
       }
     },
   },
-
+  accAddress: {
+    address: (address: string) =>
+      AccAddress.validate(address) || "Invalid address",
+  },
   password: {
     required: (password: string) => !!password.length || "Password is required",
     length: (password: string) =>

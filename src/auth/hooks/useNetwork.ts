@@ -54,6 +54,7 @@ export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
   const wallet = useRecoilValue(walletState)
   const connectedWallet = useWallet()
   const { customLCDs } = useCustomLCDs()
+  const useOverrideAssets = process.env.REACT_APP_STATION_ASSETS
 
   function withCustomLCDs(networks: Record<ChainID, InterchainNetwork>) {
     return Object.fromEntries(
@@ -62,6 +63,10 @@ export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
         { ...val, lcd: customLCDs[val?.chainID] || val.lcd },
       ]) ?? {}
     )
+  }
+
+  if (useOverrideAssets) {
+    return networks[network]
   }
 
   // check connected wallet
@@ -81,27 +86,9 @@ export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
     ) {
       setNetwork("localterra")
     }
-
-    const networksWithVersion = Object.fromEntries(
-      Object.entries(
-        connectedWallet.network as Record<ChainID, InterchainNetwork>
-      ).map(([key, value]) => {
-        if (value.version === undefined) {
-          if (key === "phoenix-1" || key === "pisco-1") {
-            return [
-              key,
-              {
-                ...value,
-                version: "0.46",
-              },
-            ]
-          }
-        }
-        return [key, value]
-      })
+    return filterEnabledNetworks(
+      connectedWallet.network as Record<ChainID, InterchainNetwork>
     )
-
-    return filterEnabledNetworks(networksWithVersion)
   }
 
   // multisig wallet are supported only on terra
