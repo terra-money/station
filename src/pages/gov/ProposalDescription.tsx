@@ -23,7 +23,7 @@ const ProposalDescription = ({ proposal }: { proposal: Proposal }) => {
   const renderPart = (part: string) => {
     const url = xss(part.match(urlRegex)?.[0] ?? "")
 
-    if (!url) return part
+    if (!url) return part.split("\\n").map((x, i) => <div>{x}</div>)
 
     if (isWhitelisted(url))
       return (
@@ -83,5 +83,5 @@ export default ProposalDescription
 
 const isWhitelisted = (url?: string) => {
   if (!url) return false
-  return new URL(url).hostname.endsWith("commonwealth.im")
+  return new URL(url).hostname.endsWith("terra.money")
 }
