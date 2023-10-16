@@ -1,12 +1,12 @@
 import { useTranslation } from "react-i18next"
 import { useAddress, useNetwork } from "data/wallet"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
+import { getChainIDFromAddress } from "utils/bech32"
+import { useContract } from "./Contract"
+import ContractQuery from "./ContractQuery"
 import { Button, LinkButton } from "components/general"
 import { ModalButton } from "components/feedback"
 import { ExtraActions } from "components/layout"
-import ContractQuery from "./ContractQuery"
-import { useContract } from "./Contract"
-import { getChainIDFromAddress } from "utils/bech32"
 
 const ContractItemActions = () => {
   const { t } = useTranslation()
