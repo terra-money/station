@@ -128,7 +128,7 @@ export const useProposals = (status: ProposalStatus) => {
         queryKey: [queryKey.gov.proposals, lcd, status],
         queryFn: async () => {
           if (
-            version === "0.46" ||
+            Number(version) >= 0.46 ||
             chainID === "phoenix-1" ||
             chainID === "pisco-1"
           ) {
@@ -242,7 +242,7 @@ export const useProposal = (id: string, chain: string) => {
     [queryKey.gov.proposal, id, networks[chain]],
     async () => {
       if (
-        networks[chain].version === "0.46" ||
+        Number(networks[chain].version) >= 0.46 ||
         chain === "phoenix-1" ||
         chain === "pisco-1"
       ) {
