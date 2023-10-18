@@ -113,6 +113,9 @@ export interface ProposalResult46 {
   voting_start_time: string
   voting_end_time: string
   metadata: string
+  title: string
+  summary: string
+  proposer: string
 }
 
 /* proposals */
@@ -124,7 +127,11 @@ export const useProposals = (status: ProposalStatus) => {
       return {
         queryKey: [queryKey.gov.proposals, lcd, status],
         queryFn: async () => {
-          if (version === "0.46") {
+          if (
+            Number(version) >= 0.46 ||
+            chainID === "phoenix-1" ||
+            chainID === "pisco-1"
+          ) {
             const {
               data: { proposals },
             } = await axios.get("/cosmos/gov/v1/proposals", {
@@ -135,32 +142,36 @@ export const useProposals = (status: ProposalStatus) => {
               },
             })
 
-            return (
-              (proposals as ProposalResult46[]).map((prop) => ({
-                ...prop,
-                proposal_id: prop.id,
-                content: prop.messages.length
-                  ? prop.messages[0]["@type"] ===
-                    "/cosmos.gov.v1.MsgExecLegacyContent"
-                    ? prop.messages[0].content
+            const propsParsed = (proposals as ProposalResult46[]).map(
+              (prop) => {
+                return {
+                  ...prop,
+                  proposal_id: prop.id,
+                  content: prop.messages.length
+                    ? prop.messages[0]["@type"] ===
+                      "/cosmos.gov.v1.MsgExecLegacyContent"
+                      ? prop.messages[0].content
+                      : {
+                          ...prop.messages[0],
+                          title: prop.title,
+                          description: prop.summary,
+                        }
                     : {
-                        ...prop.messages[0],
-                        title: JSON.parse(prop.metadata).title,
-                        description: JSON.parse(prop.metadata).summary,
-                      }
-                  : {
-                      "@type": "/cosmos.gov.v1.TextProposal",
-                      title: JSON.parse(prop.metadata).title,
-                      description: JSON.parse(prop.metadata).summary,
-                    },
-                final_tally_result: {
-                  yes: prop.final_tally_result.yes_count,
-                  abstain: prop.final_tally_result.abstain_count,
-                  no: prop.final_tally_result.no_count,
-                  no_with_veto: prop.final_tally_result.no_with_veto_count,
-                },
-              })) as ProposalResult[]
-            ).map((prop) => ({ prop, chain: chainID }))
+                        "@type": "/cosmos.gov.v1.TextProposal",
+                        title: prop.title,
+                        description: prop.summary,
+                      },
+                  final_tally_result: {
+                    yes: prop.final_tally_result.yes_count,
+                    abstain: prop.final_tally_result.abstain_count,
+                    no: prop.final_tally_result.no_count,
+                    no_with_veto: prop.final_tally_result.no_with_veto_count,
+                  },
+                }
+              }
+            ) as ProposalResult[]
+
+            return propsParsed.map((prop) => ({ prop, chain: chainID }))
           } else {
             const {
               data: { proposals },
@@ -230,7 +241,11 @@ export const useProposal = (id: string, chain: string) => {
   return useQuery(
     [queryKey.gov.proposal, id, networks[chain]],
     async () => {
-      if (networks[chain].version === "0.46") {
+      if (
+        Number(networks[chain].version) >= 0.46 ||
+        chain === "phoenix-1" ||
+        chain === "pisco-1"
+      ) {
         const {
           data: { proposal },
         } = await axios.get<{ proposal: ProposalResult46 }>(
@@ -249,13 +264,13 @@ export const useProposal = (id: string, chain: string) => {
               ? proposal.messages[0].content
               : {
                   ...proposal.messages[0],
-                  title: JSON.parse(proposal.metadata).title,
-                  description: JSON.parse(proposal.metadata).summary,
+                  title: proposal.title,
+                  description: proposal.summary,
                 }
             : {
                 "@type": "/cosmos.gov.v1.TextProposal",
-                title: JSON.parse(proposal.metadata).title,
-                description: JSON.parse(proposal.metadata).summary,
+                title: proposal.title,
+                description: proposal.summary,
               },
           final_tally_result: {
             yes: proposal.final_tally_result.yes_count,
