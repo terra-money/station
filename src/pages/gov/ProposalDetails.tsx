@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
 import { Proposal } from "@terra-money/terra.js"
-import { useProposal } from "data/queries/gov"
+import { useProposal, ProposalStatus } from "data/queries/gov"
 import { Col, Row, Page, Card, Grid } from "components/layout"
 import { useGoBackOnError } from "app/routes"
 import ProposalActions from "./ProposalActions"
@@ -42,7 +42,7 @@ const ProposalDetails = () => {
           <ProposalSummary proposal={proposal} />
         </Row>
 
-        {status === Proposal.Status.PROPOSAL_STATUS_DEPOSIT_PERIOD ? (
+        {status === ProposalStatus.PROPOSAL_STATUS_DEPOSIT_PERIOD ? (
           <Row>
             <Col>
               <ProposalDeposits id={id} card />
@@ -53,12 +53,12 @@ const ProposalDetails = () => {
             </Col>
           </Row>
         ) : (
-          status !== Proposal.Status.PROPOSAL_STATUS_REJECTED && (
+          status !== ProposalStatus.PROPOSAL_STATUS_REJECTED && (
             <ProposalVotes id={id} card />
           )
         )}
 
-        {status !== Proposal.Status.PROPOSAL_STATUS_DEPOSIT_PERIOD && (
+        {status !== ProposalStatus.PROPOSAL_STATUS_DEPOSIT_PERIOD && (
           <ProposalVotesByValidator id={id} />
         )}
 

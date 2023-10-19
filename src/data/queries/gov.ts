@@ -1,11 +1,91 @@
 import { useTranslation } from "react-i18next"
 import { useQuery } from "react-query"
+import axios from "axios"
 import { last } from "ramda"
 import { sentenceCase } from "sentence-case"
 import { Proposal, Vote } from "@terra-money/terra.js"
 import { Color } from "types/components"
-import { Pagination, queryKey, RefetchOptions, useIsClassic } from "../query"
+import { queryKey, RefetchOptions } from "../query"
 import { useLCDClient } from "./lcdClient"
+import { useNetwork } from "data/wallet"
+
+/* types */
+export interface ProposalResult {
+  proposal_id: string
+  content: {
+    "@type": string
+    title: string
+    description: string
+  } & Record<string, any>
+  status: ProposalStatus
+
+  final_tally_result: {
+    yes: string
+    abstain: string
+    no: string
+    no_with_veto: string
+  }
+  submit_time: string
+  deposit_end_time: string
+  total_deposit: [
+    {
+      denom: string
+      amount: string
+    }
+  ]
+  voting_start_time: string
+  voting_end_time: string
+}
+export interface ProposalResult46 {
+  id: string
+  messages: GovMessage[] | LegacyGovMessage[]
+  status: ProposalStatus
+  final_tally_result: {
+    yes_count: string
+    abstain_count: string
+    no_count: string
+    no_with_veto_count: string
+  }
+  submit_time: string
+  deposit_end_time: string
+  total_deposit: [
+    {
+      denom: string
+      amount: string
+    }
+  ]
+  voting_start_time: string
+  voting_end_time: string
+  metadata: string
+  title: string
+  summary: string
+  proposer: string
+}
+
+interface LegacyGovMessage {
+  "@type": "/cosmos.gov.v1.MsgExecLegacyContent"
+  content: {
+    "@type": string
+    title: string
+    description: string
+  } & Record<string, any>
+  authority: "mars10d07y265gmmuvt4z0w9aw880jnsr700j8l2urg"
+}
+
+type GovMessage = {
+  "@type": string
+  authority: "mars10d07y265gmmuvt4z0w9aw880jnsr700j8l2urg"
+} & Record<string, any>
+
+export enum ProposalStatus {
+  PROPOSAL_STATUS_UNSPECIFIED = "PROPOSAL_STATUS_UNSPECIFIED",
+  PROPOSAL_STATUS_DEPOSIT_PERIOD = "PROPOSAL_STATUS_DEPOSIT_PERIOD",
+  PROPOSAL_STATUS_VOTING_PERIOD = "PROPOSAL_STATUS_VOTING_PERIOD",
+  PROPOSAL_STATUS_PASSED = "PROPOSAL_STATUS_PASSED",
+  PROPOSAL_STATUS_REJECTED = "PROPOSAL_STATUS_REJECTED",
+  PROPOSAL_STATUS_FAILED = "PROPOSAL_STATUS_FAILED",
+  UNRECOGNIZED = "UNRECOGNIZED",
+}
 
 export const useVotingParams = () => {
   const lcd = useLCDClient()
@@ -34,22 +114,66 @@ export const useTallyParams = () => {
 
 /* proposals */
 export const useProposals = (status: Proposal.Status) => {
-  const lcd = useLCDClient()
+  const network = useNetwork()
+  const { lcd: lcdURL, name } = network
   return useQuery(
     [queryKey.gov.proposals, status],
     async () => {
-      // TODO: Pagination
-      // Required when the number of results exceed 100
-      // About 50 passed propsals from 2019 to 2021
-      const [proposals] = await lcd.gov.proposals({
-        proposal_status: status,
-        ...Pagination,
-        "pagination.reverse": "true",
-      })
+      let proposals
 
-      Array.isArray(proposals) && proposals.reverse()
+      if (name === "mainnet") {
+        const response = await axios.get<{
+          pagination: any
+          proposals: ProposalResult46[]
+        }>("/cosmos/gov/v1/proposals", {
+          baseURL: lcdURL,
+          params: {
+            "pagination.limit": 999,
+            proposal_status: Proposal.Status[status],
+          },
+        })
 
-      return proposals
+        proposals = response.data?.proposals?.map((prop) => {
+          return {
+            ...prop,
+            proposal_id: prop.id,
+            content: prop.messages.length
+              ? prop.messages[0]["@type"] ===
+                "/cosmos.gov.v1.MsgExecLegacyContent"
+                ? prop.messages[0].content
+                : {
+                    ...prop.messages[0],
+                    title: prop.title,
+                    description: prop.summary,
+                  }
+              : {
+                  "@type": "/cosmos.gov.v1.TextProposal",
+                  title: prop.title,
+                  description: prop.summary,
+                },
+            final_tally_result: {
+              yes: prop.final_tally_result.yes_count,
+              abstain: prop.final_tally_result.abstain_count,
+              no: prop.final_tally_result.no_count,
+              no_with_veto: prop.final_tally_result.no_with_veto_count,
+            },
+          }
+        })
+
+        return proposals as ProposalResult[]
+      } else {
+        const response = await axios.get<{ proposals: ProposalResult[] }>(
+          "/cosmos/gov/v1beta1/proposals",
+          {
+            baseURL: lcdURL,
+            params: {
+              "pagination.limit": 999,
+              proposal_status: Proposal.Status[status],
+            },
+          }
+        )
+        return response.data?.proposals as ProposalResult[]
+      }
     },
     { ...RefetchOptions.DEFAULT }
   )
@@ -58,33 +182,33 @@ export const useProposals = (status: Proposal.Status) => {
 export const useGetProposalStatusItem = () => {
   const { t } = useTranslation()
 
-  return (status: Proposal.Status) =>
+  return (status: ProposalStatus) =>
     ({
-      [Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD]: {
+      [ProposalStatus.PROPOSAL_STATUS_VOTING_PERIOD]: {
         label: t("Voting"),
         color: "info" as Color,
       },
-      [Proposal.Status.PROPOSAL_STATUS_DEPOSIT_PERIOD]: {
+      [ProposalStatus.PROPOSAL_STATUS_DEPOSIT_PERIOD]: {
         label: t("Deposit"),
         color: "info" as Color,
       },
-      [Proposal.Status.PROPOSAL_STATUS_PASSED]: {
+      [ProposalStatus.PROPOSAL_STATUS_PASSED]: {
         label: t("Passed"),
         color: "success" as Color,
       },
-      [Proposal.Status.PROPOSAL_STATUS_REJECTED]: {
+      [ProposalStatus.PROPOSAL_STATUS_REJECTED]: {
         label: t("Rejected"),
         color: "danger" as Color,
       },
-      [Proposal.Status.PROPOSAL_STATUS_FAILED]: {
+      [ProposalStatus.PROPOSAL_STATUS_FAILED]: {
         label: t("Error during execution"),
         color: "danger" as Color,
       },
-      [Proposal.Status.PROPOSAL_STATUS_UNSPECIFIED]: {
+      [ProposalStatus.PROPOSAL_STATUS_UNSPECIFIED]: {
         label: "",
         color: "danger" as Color,
       },
-      [Proposal.Status.UNRECOGNIZED]: {
+      [ProposalStatus.UNRECOGNIZED]: {
         label: "",
         color: "danger" as Color,
       },
@@ -98,10 +222,58 @@ export const useProposalStatusItem = (status: Proposal.Status) => {
 
 /* proposal */
 export const useProposal = (id: number) => {
-  const lcd = useLCDClient()
-  return useQuery([queryKey.gov.proposal, id], () => lcd.gov.proposal(id), {
-    ...RefetchOptions.INFINITY,
-  })
+  const network = useNetwork()
+  const { lcd: lcdURL, name } = network
+  return useQuery(
+    [queryKey.gov.proposal, id],
+    async () => {
+      if (name === "mainnet") {
+        const response = await axios.get<{
+          pagination: any
+          proposal: ProposalResult46
+        }>(`/cosmos/gov/v1/proposals/${id}`, {
+          baseURL: lcdURL,
+        })
+
+        const { proposal: prop } = response.data
+
+        return {
+          ...prop,
+          proposal_id: prop.id,
+          content: prop.messages.length
+            ? prop.messages[0]["@type"] ===
+              "/cosmos.gov.v1.MsgExecLegacyContent"
+              ? prop.messages[0].content
+              : {
+                  ...prop.messages[0],
+                  title: prop.title,
+                  description: prop.summary,
+                }
+            : {
+                "@type": "/cosmos.gov.v1.TextProposal",
+                title: prop.title,
+                description: prop.summary,
+              },
+          final_tally_result: {
+            yes: prop.final_tally_result.yes_count,
+            abstain: prop.final_tally_result.abstain_count,
+            no: prop.final_tally_result.no_count,
+            no_with_veto: prop.final_tally_result.no_with_veto_count,
+          },
+        } as ProposalResult
+      } else {
+        const response = await axios.get<{ proposal: ProposalResult }>(
+          `/cosmos/gov/v1beta1/proposals/${id}`,
+          {
+            baseURL: lcdURL,
+          }
+        )
+        console.log(response.data)
+        return response.data.proposal
+      }
+    },
+    { ...RefetchOptions.DEFAULT }
+  )
 }
 
 /* proposal: deposits */
@@ -165,8 +337,7 @@ export const useGetVoteOptionItem = () => {
 }
 
 /* helpers */
-export const useParseProposalType = (content: Proposal.Content) => {
-  const isClassic = useIsClassic()
-  const { "@type": type } = content.toData(isClassic)
-  return sentenceCase(last(type.split(".")) ?? "")
+export const useParseProposalType = (content?: ProposalResult["content"]) => {
+  const type = content?.["@type"]
+  return type ? sentenceCase(last(type.split(".")) ?? "") : "Unknown proposal"
 }

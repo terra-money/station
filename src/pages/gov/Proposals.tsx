@@ -1,4 +1,4 @@
-import { Proposal } from "@terra-money/terra.js"
+import { ProposalStatus } from "data/queries/gov"
 import { useGetProposalStatusItem } from "data/queries/gov"
 import { Tabs } from "components/layout"
 import ProposalsByStatus from "./ProposalsByStatus"
@@ -8,12 +8,12 @@ const Proposals = () => {
   const getTranslation = useGetProposalStatusItem()
 
   const tabs = [
-    Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD,
-    Proposal.Status.PROPOSAL_STATUS_DEPOSIT_PERIOD,
-    Proposal.Status.PROPOSAL_STATUS_PASSED,
-    Proposal.Status.PROPOSAL_STATUS_REJECTED,
+    ProposalStatus.PROPOSAL_STATUS_VOTING_PERIOD,
+    ProposalStatus.PROPOSAL_STATUS_DEPOSIT_PERIOD,
+    ProposalStatus.PROPOSAL_STATUS_PASSED,
+    ProposalStatus.PROPOSAL_STATUS_REJECTED,
   ].map((key) => ({
-    key: Proposal.Status[key],
+    key: ProposalStatus[key],
     tab: getTranslation(key).label,
     children: <ProposalsByStatus status={key} />,
   }))

@@ -1,13 +1,15 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { reverse } from "ramda"
-import { Proposal } from "@terra-money/terra.js"
 import { combineState } from "data/query"
-import { useProposals, useProposalStatusItem } from "data/queries/gov"
+import {
+  useProposals,
+  useProposalStatusItem,
+  ProposalStatus,
+} from "data/queries/gov"
 import { useTerraAssets } from "data/Terra/TerraAssets"
 import { Col, Card } from "components/layout"
 import { Fetching, Empty } from "components/feedback"
-import { Toggle } from "components/form"
 import ProposalItem from "./ProposalItem"
 import GovernanceParams from "./GovernanceParams"
 import styles from "./ProposalsByStatus.module.scss"
@@ -15,7 +17,7 @@ import { useNetworkName } from "data/wallet"
 import { isWallet } from "auth"
 import PageLoading from "auth/modules/PageLoading"
 
-const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
+const ProposalsByStatus = ({ status }: { status: ProposalStatus }) => {
   const { t } = useTranslation()
   const networkName = useNetworkName()
 
@@ -24,8 +26,7 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
   }>("/station/proposals.json")
   const whitelist = whitelistData?.[networkName]
 
-  const [showAll, setShowAll] = useState(!!whitelist)
-  const toggle = () => setShowAll((state) => !state)
+  const [showAll] = useState(true)
 
   const { data, ...proposalState } = useProposals(status)
   const { label } = useProposalStatusItem(status)
@@ -37,8 +38,10 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
       return isWallet.mobileNative() ? <PageLoading inCard /> : null
 
     const proposals =
-      status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && !showAll
-        ? data.filter(({ id }) => whitelist?.includes(id))
+      status === ProposalStatus.PROPOSAL_STATUS_VOTING_PERIOD && !showAll
+        ? data.filter(({ proposal_id }) =>
+            whitelist?.includes(Number(proposal_id))
+          )
         : data
 
     return !proposals.length ? (
@@ -57,9 +60,9 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
         <section className={styles.list}>
           {reverse(proposals).map((item) => (
             <Card
-              to={`/proposal/${item.id}`}
+              to={`/proposal/${item.proposal_id}`}
               className={styles.link}
-              key={item.id}
+              key={item.proposal_id}
             >
               <ProposalItem proposal={item} showVotes={!showAll} />
             </Card>
@@ -73,18 +76,7 @@ const ProposalsByStatus = ({ status }: { status: Proposal.Status }) => {
 
   return (
     <Fetching {...state}>
-      <Col>
-        {!!whitelist &&
-          status === Proposal.Status.PROPOSAL_STATUS_VOTING_PERIOD && (
-            <Card className={isWallet.mobile() ? "blankSidePad" : "blank"}>
-              <Toggle checked={showAll} onChange={toggle}>
-                {t("Show all")}
-              </Toggle>
-            </Card>
-          )}
-
-        {render()}
-      </Col>
+      <Col>{render()}</Col>
     </Fetching>
   )
 }

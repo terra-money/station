@@ -7,7 +7,7 @@ import { useProposal } from "data/queries/gov"
 import { useDeposits, useDepositParams } from "data/queries/gov"
 import { Card } from "components/layout"
 import { Read } from "components/token"
-import { ToNow } from "components/display"
+import DateTimeRenderer from "components/display/DateTimeRenderer"
 import Orb from "./components/Orb"
 import styles from "./ProposalDeposits.module.scss"
 
@@ -48,7 +48,11 @@ const ProposalDeposits = ({ id, card }: Props) => {
       },
       {
         title: t("Deposit end time"),
-        content: <ToNow>{deposit_end_time}</ToNow>,
+        content: (
+          <DateTimeRenderer format={"localestring"}>
+            {deposit_end_time}
+          </DateTimeRenderer>
+        ),
       },
     ]
 

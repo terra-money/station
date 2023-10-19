@@ -1,13 +1,13 @@
 import { Fragment, useState } from "react"
 import { useTranslation } from "react-i18next"
 import xss from "xss"
-import { Proposal } from "@terra-money/terra.js"
 import { ExternalLink } from "components/general"
 import { Grid } from "components/layout"
 import { TooltipIcon } from "components/display"
 import { Checkbox, FormHelp, FormWarning } from "components/form"
+import { ProposalResult } from "data/queries/gov"
 
-const ProposalDescription = ({ proposal }: { proposal: Proposal }) => {
+const ProposalDescription = ({ proposal }: { proposal: ProposalResult }) => {
   const { description } = proposal.content
 
   const { t } = useTranslation()

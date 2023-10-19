@@ -11,7 +11,7 @@ import { useStakingPool } from "data/queries/staking"
 import { Col, Row, Card, Grid } from "components/layout"
 import { Fetching, Empty } from "components/feedback"
 import { Read } from "components/token"
-import { ToNow } from "components/display"
+import DateTimeRenderer from "components/display/DateTimeRenderer"
 import VoteProgress from "./components/VoteProgress"
 import styles from "./ProposalVotes.module.scss"
 
@@ -112,8 +112,10 @@ const ProposalVotes = ({ id, card }: { id: number; card?: boolean }) => {
           )}
 
           <p className={styles.end}>
-            {voting_end_time > new Date() ? t("Ends") : t("Ended")}{" "}
-            <ToNow>{voting_end_time}</ToNow>
+            {new Date(voting_end_time) > new Date() ? t("Ends") : t("Ended")}{" "}
+            <DateTimeRenderer format={"localestring"}>
+              {voting_end_time}
+            </DateTimeRenderer>
           </p>
         </Grid>
       </Grid>

@@ -1,14 +1,14 @@
-import { Proposal } from "@terra-money/terra.js"
 import { FinderLink } from "components/general"
 import { Col, Card } from "components/layout"
 import { Read } from "components/token"
-import { useIsClassic } from "data/query"
 import DataList from "./components/DataList"
+import { ProposalResult } from "data/queries/gov"
 
-const ProposalSummary = ({ proposal }: { proposal: Proposal }) => {
-  const isClassic = useIsClassic()
-  const contentData = proposal.content.toData(isClassic)
-  const details = Object.entries(contentData)
+const ProposalSummary = ({ proposal }: { proposal: ProposalResult }) => {
+  if (!proposal.content) return null
+  const contentData = proposal.content
+
+  const details = Object.entries(contentData ?? {})
     .filter(([key]) => !["@type", "title", "description"].includes(key))
     .map(([key, content]) => ({
       title: capitalize(key),
