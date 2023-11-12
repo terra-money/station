@@ -6,6 +6,7 @@ import TFMSwapContext from "./TFMSwapContext"
 import TFMSwapForm from "./TFMSwapForm"
 import TFMPoweredBy from "./TFMPoweredBy"
 import { ExternalLink } from "components/general"
+import PageBanner from "app/sections/PageBanner"
 
 // The sequence below is required before rendering the Swap form:
 // 1. `SwapContext` - Complete the network request related to swap.
@@ -37,8 +38,20 @@ const SwapTx = () => {
     )
   }
 
+  const AnnouncementBanner = (
+    <PageBanner
+      title="Something is coming to Station 🎉"
+      buttonHref="https://station.terra.money/swap"
+    />
+  )
+
   return (
-    <Page title={t("Swap")} small extra={<TFMPoweredBy />}>
+    <Page
+      title={t("Swap")}
+      small
+      extra={<TFMPoweredBy />}
+      banner={AnnouncementBanner}
+    >
       <TFMSwapContext>
         <ChainFilter
           outside

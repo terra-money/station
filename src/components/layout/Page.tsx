@@ -17,6 +17,7 @@ interface Props extends QueryState {
   sub?: boolean // used as a page in a page
   invisible?: boolean // used as a page in a page with no margin
   backButtonPath?: string
+  banner?: ReactNode
 }
 
 const Page = (props: PropsWithChildren<Props>) => {
@@ -30,6 +31,7 @@ const Page = (props: PropsWithChildren<Props>) => {
     invisible,
     mainClassName,
     backButtonPath,
+    banner,
   } = props
 
   return (
@@ -38,7 +40,10 @@ const Page = (props: PropsWithChildren<Props>) => {
         <>
           {progress}
 
-          <article className={cx(styles.page, { sub, small, invisible })}>
+          <article
+            className={cx(styles.page, { sub, small, invisible, banner })}
+          >
+            {banner && banner}
             <Container className={styles.grid}>
               {title && (
                 <header className={styles.header}>
