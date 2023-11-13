@@ -1,14 +1,13 @@
 .page__banner__container {
   width: 100%;
   background-color: var(--button-primary-bg);
-  padding: 12px 24px;
+  padding: 12px;
   position: absolute;
   top: 0;
   left: 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+  gap: 42px;
 
   .content {
     display: flex;
@@ -18,7 +17,6 @@
 
   .close__icon {
     cursor: pointer;
-    margin-right: 28px;
   }
 
   .button {
@@ -40,6 +38,14 @@
 
     &:hover {
       background-color: #ffffff1f;
+    }
+  }
+
+  @media (max-width: 600px) {
+    gap: 20px;
+
+    .content {
+      gap: 18px;
     }
   }
 }

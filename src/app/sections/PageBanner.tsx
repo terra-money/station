@@ -12,6 +12,7 @@ const PageBanner = ({
 }) => {
   return (
     <div className={styles.page__banner__container}>
+      {onClose && <Close onClick={onClose} className={styles.close__icon} />}
       <div className={styles.content}>
         <h4>{title}</h4>
         <a
@@ -23,7 +24,6 @@ const PageBanner = ({
           Learn More
         </a>
       </div>
-      {onClose && <Close onClick={onClose} className={styles.close__icon} />}
     </div>
   )
 }
