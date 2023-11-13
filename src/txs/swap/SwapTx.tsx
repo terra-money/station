@@ -7,6 +7,7 @@ import TFMSwapForm from "./TFMSwapForm"
 import TFMPoweredBy from "./TFMPoweredBy"
 import { ExternalLink } from "components/general"
 import PageBanner from "app/sections/PageBanner"
+import { useEffect, useState } from "react"
 
 // The sequence below is required before rendering the Swap form:
 // 1. `SwapContext` - Complete the network request related to swap.
@@ -38,19 +39,36 @@ const SwapTx = () => {
     )
   }
 
-  const AnnouncementBanner = (
-    <PageBanner
-      title="Pulsar Finance is coming to Station 🎉"
-      buttonHref="https://medium.com/terra-money/terraform-labs-acquires-pulsar-finance-82a3890468ca"
-    />
-  )
+  const AnnouncementBanner = () => {
+    const [isClosed, setIsClosed] = useState(false)
+
+    useEffect(() => {
+      const closedStorage = localStorage.getItem("pageBannerClosed")
+      if (closedStorage) setIsClosed(true)
+    }, [])
+
+    if (isClosed) return null
+
+    const handleClose = () => {
+      localStorage.setItem("pageBannerClosed", "true")
+      setIsClosed(true)
+    }
+
+    return (
+      <PageBanner
+        title="Pulsar Finance is coming to Station 🎉"
+        buttonHref="https://medium.com/terra-money/terraform-labs-acquires-pulsar-finance-82a3890468ca"
+        onClose={handleClose}
+      />
+    )
+  }
 
   return (
     <Page
       title={t("Swap")}
       small
       extra={<TFMPoweredBy />}
-      banner={AnnouncementBanner}
+      banner={AnnouncementBanner()}
     >
       <TFMSwapContext>
         <ChainFilter

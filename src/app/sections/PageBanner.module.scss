@@ -7,7 +7,19 @@
   left: 0;
   display: flex;
   align-items: center;
-  gap: 28px;
+  justify-content: space-between;
+  gap: 16px;
+
+  .content {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .close__icon {
+    cursor: pointer;
+    margin-right: 28px;
+  }
 
   .button {
     display: inline-flex;
