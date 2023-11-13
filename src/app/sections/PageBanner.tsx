@@ -1,6 +1,5 @@
 import { Close } from "@mui/icons-material"
 import styles from "./PageBanner.module.scss"
-import { useEffect, useState } from "react"
 
 const PageBanner = ({
   title,
