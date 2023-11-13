@@ -1,0 +1,50 @@
+.page__banner__container {
+  width: 100%;
+  background-color: var(--button-primary-bg);
+  padding: 12px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 42px;
+
+  .content {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .close__icon {
+    cursor: pointer;
+  }
+
+  .button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    height: 26px;
+    border: var(--border-width) solid currentColor;
+    border-radius: 15px;
+    font-size: 11px;
+    font-weight: var(--bold);
+    color: currentColor;
+    line-height: 1;
+    padding: 0 16px;
+    text-decoration: none;
+    transition: background-color 0.2s ease-in-out;
+
+    &:hover {
+      background-color: #ffffff1f;
+    }
+  }
+
+  @media (max-width: 600px) {
+    gap: 20px;
+
+    .content {
+      gap: 18px;
+    }
+  }
+}
