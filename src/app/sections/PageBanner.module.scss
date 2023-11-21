@@ -9,6 +9,24 @@
   align-items: center;
   gap: 42px;
 
+  color: var(--menu-text);
+
+  &.blossom {
+    color: #ffffff;
+  }
+
+  &.madness {
+    color: var(--button-primary-text);
+
+    .content {
+      .button {
+        &:hover {
+          background-color: rgba(20, 20, 20, 0.1215686275);
+        }
+      }
+    }
+  }
+
   .content {
     display: flex;
     align-items: center;
@@ -25,7 +43,7 @@
     align-items: center;
     gap: 5px;
     height: 26px;
-    border: var(--border-width) solid currentColor;
+    border: 1px solid currentColor;
     border-radius: 15px;
     font-size: 11px;
     font-weight: var(--bold);

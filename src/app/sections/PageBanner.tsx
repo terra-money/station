@@ -1,5 +1,9 @@
 import { Close } from "@mui/icons-material"
 import styles from "./PageBanner.module.scss"
+import { useTheme } from "data/settings/Theme"
+import classNames from "classnames/bind"
+
+const cx = classNames.bind(styles)
 
 const PageBanner = ({
   title,
@@ -10,8 +14,11 @@ const PageBanner = ({
   buttonHref: string
   onClose?: () => void
 }) => {
+  const theme = useTheme()
+  console.log("🚀 ~ file: PageBanner.tsx:15 ~ theme:", theme)
+
   return (
-    <div className={styles.page__banner__container}>
+    <div className={cx(styles.page__banner__container, theme.name)}>
       {onClose && <Close onClick={onClose} className={styles.close__icon} />}
       <div className={styles.content}>
         <h4>{title}</h4>
