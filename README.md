@@ -22,7 +22,7 @@ This project was bootstrapped with [Create React App](https://create-react-app.d
 Run Station with the following commands:
 
 ```
-git clone https://github.com/terra-money/station.git
+git clone git@github.com:ramackersjp/station.git
 cd station
 npm i
 npm run start
