@@ -7,8 +7,8 @@
   "version": "7.3.5",
   "license": "MIT",
   "scripts": {
-    "start": "echo \"$CF_PAGES_COMMIT_SHA\" > public/commit_hash && react-scripts start",
-    "build": "echo \"$CF_PAGES_COMMIT_SHA\" > public/commit_hash && react-scripts build",
+    "start": "export SET NODE_OPTIONS=--openssl-legacy-provider && react-scripts start",
+    "build": "export SET NODE_OPTIONS=--openssl-legacy-provider && react-scripts start",
     "test": "react-scripts test",
     "prepare": "husky install",
     "pre-commit": "lint-staged",
