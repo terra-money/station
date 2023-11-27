@@ -11,6 +11,10 @@
 
   color: var(--menu-text);
 
+  &.light {
+    color: var(--button-primary-text);
+  }
+
   &.blossom {
     color: #ffffff;
   }
@@ -63,6 +67,56 @@
 
     .content {
       gap: 18px;
+    }
+  }
+
+  @media (max-width: 500px) {
+    gap: 12px;
+    padding: 12px 10px;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .content {
+      gap: 14px;
+    }
+
+    h4 {
+      font-size: 12px;
+    }
+
+    .button {
+      font-size: 10px;
+      padding: 0 8px;
+      height: 22px;
+      min-width: 76px;
+    }
+  }
+
+  @media (max-width: 425px) {
+    gap: 8px;
+    padding: 12px 6px;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .content {
+      gap: 10px;
+    }
+
+    h4 {
+      font-size: 11px;
+    }
+
+    .button {
+      font-size: 10px;
+      padding: 0 8px;
+      height: 22px;
+      min-width: 76px;
     }
   }
 }
