@@ -1,0 +1,50 @@
+.content__container {
+  padding: 24px 24px 12px 24px;
+
+  .confirmation__wrapper {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    margin-top: 28px;
+
+    .checkbox__text {
+      font-size: 12px;
+      line-height: 16px;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .bottom__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+
+    .routing__warning {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .button__wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      width: 100%;
+
+      button {
+        flex: 1;
+      }
+    }
+  }
+
+  @media (max-width: 767px) {
+    padding: 0px;
+
+    .confirmation__wrapper {
+      margin-top: 14px;
+    }
+  }
+}
