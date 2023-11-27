@@ -6,4 +6,8 @@
   height: 125%;
   right: 0px;
   filter: blur(45px);
+
+  @media (max-width: 992px) {
+    display: none;
+  }
 }
