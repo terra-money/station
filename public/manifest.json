@@ -7,6 +7,12 @@
       "type": "image/png",
       "sizes": "128x128"
     }
+    ,
+    {
+      "src": "chrome-icon.png",
+      "type": "image/png",
+      "sizes": "1192x192"
+    }
   ],
   "start_url": ".",
   "display": "fullscreen"
