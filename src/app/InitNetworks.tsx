@@ -38,9 +38,8 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
   const testBase = networks
     ? Object.values(
         {
-          ...networks.mainnet,
-          ...networks.testnet,
           ...networks.classic,
+          ...networks.testnet,
           ...networks.localterra,
         } ?? {}
       ).map((chain) => {

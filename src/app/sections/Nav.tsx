@@ -23,8 +23,8 @@ const Nav = () => {
     <nav>
       <header className={styles.header}>
         <div className={cx(styles.item, styles.logo)}>
-          <img src={icon} alt="Station" />{" "}
-          <strong className={styles.title}>Station</strong>
+          <img src={icon} alt="Classic Station" />{" "}
+          <strong className={styles.title}>Classic Station</strong>
         </div>
         {isOpen && (
           <button className={styles.toggle} onClick={close}>

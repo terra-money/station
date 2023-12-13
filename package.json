@@ -1,9 +1,9 @@
 {
-  "name": "terra-station",
+  "name": "terra-classic-station",
   "description": "A web application to interact with Terra Core.",
-  "hompage": "https://station.money",
+  "hompage": ".",
   "author": "Terra <engineering@terra.money> (https://station.money)",
-  "repository": "github:terra-money/station",
+  "repository": "https://github.com/ramackersjp/station",
   "version": "7.3.5",
   "license": "MIT",
   "scripts": {

@@ -3,6 +3,7 @@ import { getAmount, sortCoins } from "utils/coin"
 import { useCommunityPool } from "data/queries/distribution"
 import { useMemoizedCalcValue } from "data/queries/coingecko"
 import { Card } from "components/layout"
+// eslint-disable-next-line
 import { Read, ReadToken } from "components/token"
 import SelectDenom from "./components/SelectDenom"
 import DashboardContent from "./components/DashboardContent"

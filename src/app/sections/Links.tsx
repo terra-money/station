@@ -18,7 +18,7 @@ const Links = () => {
     discord: "https://terra.sc/discord",
     telegram: "https://t.me/TerraNetworkLobby",
     twitter: "https://twitter.com/terra_money",
-    github: "https://github.com/terra-money/station",
+    github: "https://github.com/ramackersjp/station",
   }
 
   return (

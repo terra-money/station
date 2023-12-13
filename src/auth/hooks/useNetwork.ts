@@ -29,9 +29,8 @@ export const useNetworkState = () => {
 /* helpers */
 export const useNetworkOptions = () => {
   return [
-    { value: "mainnet", label: "Mainnets" },
-    { value: "testnet", label: "Testnets" },
     { value: "classic", label: "Terra Classic" },
+    { value: "testnet", label: "Testnets" },
     { value: "localterra", label: "LocalTerra" },
   ]
 }
@@ -71,8 +70,8 @@ export const useNetwork = (): Record<ChainID, InterchainNetwork> => {
 
   // check connected wallet
   if (connectedWallet.status === WalletStatus.CONNECTED) {
-    if (network !== "mainnet" && "phoenix-1" in connectedWallet.network) {
-      setNetwork("mainnet")
+    if (network !== "classic" && "phoenix-1" in connectedWallet.network) {
+      setNetwork("clasiic")
     } else if (network !== "testnet" && "pisco-1" in connectedWallet.network) {
       setNetwork("testnet")
     } else if (

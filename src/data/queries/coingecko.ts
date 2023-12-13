@@ -67,7 +67,7 @@ export const useExchangeRates = () => {
             `https://price.api.tfm.com/tokens/?limit=1500`
           ),
           (async () => {
-            if (currency.id === "USD") return 1
+            if (currency.id === "LUNC") return 1
 
             const { data } = await axios.get<{
               quotes: Record<string, number>
@@ -75,7 +75,7 @@ export const useExchangeRates = () => {
               `https://apilayer.net/api/live?source=USD&currencies=${currency.id}&access_key=${CURRENCY_KEY}`
             )
 
-            return data?.quotes?.[`USD${currency.id}`] ?? 1
+            return data?.quotes?.[`LUNC${currency.id}`] ?? 1
           })(),
         ])
 

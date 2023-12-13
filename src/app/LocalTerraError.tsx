@@ -18,7 +18,7 @@ const LocalTerraError = ({ refresh }: { refresh: () => void }) => {
       <article>
         <h1 className={styles.title}>{t("LocalTerra is not running")}</h1>
 
-        <ExternalLink href="https://github.com/terra-money/localterra">
+        <ExternalLink href="https://github.com/ramackersjp/station">
           {t("Learn more")}
         </ExternalLink>
       </article>
