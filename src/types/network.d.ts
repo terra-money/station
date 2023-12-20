@@ -39,6 +39,17 @@ interface InterchainNetwork {
       otherChannel: IBCChannel
     }
   >
+  ics20Channels?: Record<
+    ChainID,
+    {
+      contract: AccAddress
+      channel: IBCChannel
+      otherChannel: IBCChannel
+      // contract adress of tokens that can be sent through this channel
+      // if it does not exists, all tokens can be transfered
+      tokens?: AccAddress[]
+    }[]
+  >
   version?: string
   isClassic?: boolean
   explorer: {
