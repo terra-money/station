@@ -43,14 +43,14 @@ const SwapTx = () => {
     const [isClosed, setIsClosed] = useState(false)
 
     useEffect(() => {
-      const closedStorage = localStorage.getItem("pageBannerClosed")
+      const closedStorage = localStorage.getItem("v3BannerClosed")
       if (closedStorage) setIsClosed(true)
     }, [])
 
     if (isClosed) return null
 
     const handleClose = () => {
-      localStorage.setItem("pageBannerClosed", "true")
+      localStorage.setItem("v3BannerClosed", "true")
       setIsClosed(true)
     }
 
