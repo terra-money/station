@@ -56,8 +56,8 @@ const SwapTx = () => {
 
     return (
       <PageBanner
-        title="Pulsar Finance is coming to Station 🎉"
-        buttonHref="https://medium.com/terra-money/terraform-labs-acquires-pulsar-finance-82a3890468ca"
+        title="Station v3 Extension is available – upgrade today!"
+        buttonHref="https://medium.com/terra-money/"
         onClose={handleClose}
       />
     )
