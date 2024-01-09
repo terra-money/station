@@ -17,8 +17,7 @@ export const FINDER = "https://terrascope.info"
 export const MINTSCAN = "https://www.mintscan.io"
 export const EXTENSION =
   "https://chrome.google.com/webstore/detail/aiifbnbfobpmeekipheeijimdpnlpgpp"
-export const DOCUMENTATION =
-  "https://docs-terra.pages.dev/learn/station/download/station-desktop.html"
+export const DOCUMENTATION = "https://docs.terra.money/station/get-started"
 export const SETUP = "https://setup.station.money/"
 export const MARS_TEST_EXPLORER = "https://testnet-explorer.marsprotocol.io"
 export const MARS_EXPLORER = "https://explorer.marsprotocol.io"
