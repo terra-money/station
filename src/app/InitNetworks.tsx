@@ -29,6 +29,10 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
           baseURL: STATION_ASSETS,
         }
       )
+
+      if (chains?.mainnet?.["noble-1"]) {
+        delete chains.mainnet["noble-1"]
+      }
       setNetworks(chains)
     }
 
