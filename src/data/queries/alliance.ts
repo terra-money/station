@@ -80,8 +80,11 @@ export const useAllAlliances = () => {
             // and should not be visibile in the frontend UI bcause the stake is held by the Hub contract
             // https://github.com/terra-money/alliance-protocol/blob/main/contracts/alliance-hub/src/contract.rs#L49-L51
             if (alliances?.length) {
+              const excludeEndings = ["/ualliance", "/AllianceNFT"] // move filter to config
+
               alliances = alliances.filter(
-                (a) => !a.denom.endsWith("/ualliance")
+                (a) =>
+                  !excludeEndings.some((ending) => a.denom.endsWith(ending))
               )
             }
 
