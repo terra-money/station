@@ -35,9 +35,20 @@ import NavButton from "./sections/NavButton"
 import NetworkStatus from "components/display/NetworkStatus"
 import EnableCoinType from "./sections/EnableCoinType"
 import UpdateNotification from "./update/UpdateNotification"
+import { useEffect } from "react"
 
 const App = () => {
   const { element: routes } = useNav()
+
+  useEffect(() => {
+    // if the user is not coming from the desktop app
+    if (!navigator.userAgent.includes("Electron")) {
+      // redirect them to the new domain and keep the current path
+      window.location.href = `https://dashboard.station.money${
+        new URL(window.location.href).pathname
+      }`
+    }
+  }, [])
 
   return (
     <InitBankBalance>
