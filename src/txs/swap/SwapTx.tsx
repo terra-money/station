@@ -56,8 +56,8 @@ const SwapTx = () => {
 
     return (
       <PageBanner
-        title="Station v3 Extension is available – upgrade today!"
-        buttonHref="https://medium.com/terra-money/introducing-station-v3-extension-121fab67bb74"
+        title="For Desktop app users, please migrate to Station Extension before Dec 31, 2024"
+        buttonHref="https://swgee.medium.com/c371a280b244"
         onClose={handleClose}
       />
     )

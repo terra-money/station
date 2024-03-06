@@ -15,7 +15,6 @@ const PageBanner = ({
   onClose?: () => void
 }) => {
   const theme = useTheme()
-  console.log("🚀 ~ file: PageBanner.tsx:15 ~ theme:", theme)
 
   return (
     <div className={cx(styles.page__banner__container, theme.name)}>
