@@ -28,9 +28,11 @@ initAnalytics()
 // if the user is not coming from the desktop app and is visiting the webpage from a large screen
 if (!navigator.userAgent.includes("Electron") && window.innerWidth > 992) {
   // redirect them to the new domain and keep the current path
+  /*
   window.location.href = `https://dashboard.station.money${
     new URL(window.location.href).pathname
   }`
+  */
 }
 
 getInitialConfig().then((defaultNetworks) =>
