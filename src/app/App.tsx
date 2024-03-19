@@ -27,6 +27,7 @@ import LatestTx from "./sections/LatestTx"
 import ValidatorButton from "./sections/ValidatorButton"
 import DevTools from "./sections/DevTools"
 import BackgroundBlobs from "components/layout/BackgroundBlobs"
+import TermsOfUseModal from "./sections/TermsOfUseModal"
 
 /* init */
 import InitBankBalance from "./InitBankBalance"
@@ -78,6 +79,7 @@ const App = () => {
               <BackgroundBlobs />
               {routes}
               <Wallet />
+              <TermsOfUseModal />
             </MainContainer>
           </ErrorBoundary>
         </Content>
